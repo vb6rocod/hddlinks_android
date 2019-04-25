@@ -1,0 +1,82 @@
+
+body {background-color:Black;color:White;margin:0px 0px 0px 0px;}
+.balloon { position: absolute; width: 214px; height: 317px; background: #000; border: 1px solid #fff; z-index: 10; display: none; }
+a { text-decoration:none }
+a:link {color:White;}      /* unvisited link */
+a:visited {color:White;}  /* visited link */
+a:hover {color:Magenta;}  /* mouse over link */
+a:active {color:Magenta;}  /* selected link */
+a:focus {color:#e6e600;}
+
+
+
+h2 {
+ background-color:#0a6996;
+ color:#64c8ff;
+    margin-top: 0;
+    margin-bottom: 0;
+    margin-left: 0;
+    margin-right: 0;
+    font-size: 2em;
+    font-weight: bold;
+ text-align:center;
+ vertical-align:middle;
+}
+
+th.cat {
+  color:black;
+  background-color:#0a6996;
+  color:#64c8ff;
+  text-align:center;
+  font-style: bold;
+  font-size: 30px;
+}
+td.cat {
+    font-style: bold;
+    font-size: 20px;
+    text-align: left;
+}
+td.form {
+    font-style: bold;
+    font-size: 20px;
+    text-align: left;
+}
+
+ td.mp:focus-within {
+  /* background:#3D9970; */
+  background:#2b4163;
+  }
+
+td.mp {
+    text-align: center;
+    font-style: bold;
+    font-size: 20px;
+    max-width: 500px;
+    text-overflow: initial;
+    white-space: wrap;
+    word-wrap: break-word;
+}
+td.nav {
+    font-style: bold;
+    font-size: 20px;
+}
+
+td.salt {
+    text-align: center;
+    font-style: bold;
+    font-size: 18px;
+    text-overflow: initial;
+    white-space: wrap;
+    word-wrap: break-word;
+}
+
+td.sez {
+    text-align: center;
+    font-style: bold;
+    font-size: 18px;
+    text-overflow: initial;
+    white-space: wrap;
+    word-wrap: break-word;
+}
+ a.imdb:focus {color:#e6e600;}
+ a.nav:focus {color:#e6e600; border: 2px solid #cccc66;}

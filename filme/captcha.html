@@ -1,0 +1,73 @@
+<html><head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+
+      <meta charset="utf-8">
+      <title>Rezolvati captcha</title>
+   	  <link rel="stylesheet" type="text/css" href="../custom.css" />
+     <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.0/jquery.min.js"></script>
+ <script src="../jquery.fancybox.min.js"></script>
+<link rel="stylesheet" type="text/css" href="../jquery.fancybox.min.css">
+<script type="text/javascript">
+// create the XMLHttpRequest object, according browser
+function get_XmlHttp() {
+  // create the variable that will contain the instance of the XMLHttpRequest object (initially with null value)
+  var xmlHttp = null;
+  if(window.XMLHttpRequest) {		// for Forefox, IE7+, Opera, Safari, ...
+    xmlHttp = new XMLHttpRequest();
+  }
+  else if(window.ActiveXObject) {	// for Internet Explorer 5 or 6
+    xmlHttp = new ActiveXObject("Microsoft.XMLHTTP");
+  }
+  return xmlHttp;
+}
+
+// sends data to a php file, via POST, and displays the received answer
+function ajaxrequest1(link) {
+  var request =  get_XmlHttp();		// call the function for the XMLHttpRequest instance
+
+  // create pairs index=value with data that must be sent to server
+  //var the_data = {mod:add,title:title, link:link}; //Array
+  document.getElementById("server").innerHTML = '<font size="6" color="red">Asteptati..................</font>';
+  var the_data = link;
+  var php_file="hqq2.php";
+  request.open("POST", php_file, true);			// set the request
+
+  // adds a header to tell the PHP script to recognize the data as is sent via POST
+  request.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+  request.send(the_data);		// calls the send() method with datas as parameter
+
+  // Check request status
+  // If the response is received completely, will be transferred to the HTML tag with tagID
+  request.onreadystatechange = function() {
+    if (request.readyState == 4) {
+       //alert (request.responseText);
+       document.getElementById("demo").innerHTML = request.responseText;
+       document.getElementById("server").innerHTML = '<font size="6" color="lightblue">Rezolvati captcha (valabil ~ 50 min.)</font>';
+
+    }
+  }
+}
+
+</script>
+
+
+</head>
+<body>
+<BR>
+<label id="server"><font size="6" color="lightblue">Rezolvati captcha, copiati adresa rezultata in campul de mai jos</font></label><BR>
+<BR>
+<BR>
+<a href="http://hqq.watch/sec/player/embed_player_04416513754224205.php?iss=NzguOTYuODAuMTAw&vid=ZFNsVjBvblI1T2NpMHk3SHJBcjNHUT09&at=f8190d06c5c55f185b6128c991f9e1e0&autoplayed=yes&referer=on&http_referer=aHR0cHM6Ly93d3cuZmlsbWVvbmxpbmUuYml6L25ldmVyLWdyb3ctb2xkLXNhLW51LWltYmF0cmFuZXN0aS1uaWNpb2RhdGEtMjAxOS5odG1s&pass=&embed_from=&need_captcha=0&secured=0" target="_blank"><font size="6" color="yellow">Rezolvati captcha</font></a>
+<input type="text" id="gt" value="" size="70" onpaste="setTimeout(msg1,1000)">
+<BR>
+<p><font size="4">Ctrl+L = selecteaza adresa; Ctrl+C = copiaza adresa; Ctrl+W = Inchide tab-ul; Ctrl+V = paste</font></p>
+<div id="demo"></div>
+<script>
+function msg1() {
+     val_l=document.getElementById("gt").value;
+     msg="file=" + encodeURIComponent(val_l);
+     ajaxrequest1(msg);
+}
+</script>
+</body>
+</html>

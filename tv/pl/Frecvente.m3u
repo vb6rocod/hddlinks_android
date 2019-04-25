@@ -1,0 +1,16 @@
+#EXTINF:-1, DIGI24
+http://82.76.40.81:80/digi24edge/digi24hdhqhls/index.m3u8
+#EXTINF:-1, TVR Moldova
+https://mn-nl.mncdn.com/tvr_moldova_live/tvr_moldova_live2/playlist.m3u8
+#EXTINF:-1,OneTV
+http://ONETV.srfms.com:1935/ONETV/livestream/playlist.m3u8
+#EXTINF:-1, ProTV Chisinau
+http://hls.protv.md/hls/protv.m3u8
+#EXTINF:-1, Iasi TV Life
+http://webmobile.xdev.ro:81/tv24/playlist.m3u8
+#EXTINF:-1, Jurnal TV
+http://live.cdn.jurnaltv.md/JurnalTV_HD/index.m3u8?token=a94ee1aadbea218dfb2a41024770107921a59a3c
+#EXTINF:-1, Vocea Basarabiei
+http://hls.voceabasarabiei.md/hls/vocea_basarabiei.m3u8
+#EXTINF:-1, Bucuresti TV
+https://ppext.arktv.ro/hls/channel3/adaptive.m3u8

@@ -1,0 +1,6 @@
+
+#mainnav a:hover, #mainnav a:active, #mainnav a:focus {
+  background-color: #DCFFFF;
+  color:#000000;
+  border: 2px solid #FF0000;
+}
