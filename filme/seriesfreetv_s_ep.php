@@ -36,12 +36,15 @@ echo '<table border="1" width="100%">'."\n\r";
 $requestLink=$link;
 //echo $link;
 //die();
+$ua = $_SERVER['HTTP_USER_AGENT'];
+$cookie=$base_cookie."hdpopcorns.dat";
   $ch = curl_init($requestLink);
-  curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows; U; Windows NT 6.1; en-US; rv:1.9.1.2) Gecko/20090729 Firefox/3.5.2 GTB5');
+  curl_setopt($ch, CURLOPT_USERAGENT,$ua);
   curl_setopt($ch, CURLOPT_REFERER, "https://seriesfreetv.com");
   curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER  ,1);  // RETURN THE CONTENTS OF THE CALL
   curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+  curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie);
   curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
   curl_setopt($ch, CURLOPT_TIMEOUT, 15);
   $h = curl_exec($ch);

@@ -10,6 +10,7 @@ function decode_entities($text) {
 //https://www4.the123movieshub.net/tv-series.html
 //https://www.seriestop.net/browse-shows.php
 include ("../common.php");
+include ("../util.php");
 if (file_exists($base_cookie."seriale.dat"))
   $val_search=file_get_contents($base_cookie."seriale.dat");
 else
@@ -40,6 +41,48 @@ Cautare serial:  <input type="text" id="title" name="title" value="'.$val_search
 <input type="hidden" id="page" name="page" value="'.$page.'">
 <input type="hidden" id="tip" name="tip" value="search">
 <input type="submit" id="send" value="Cauta !"></form>';
+$ua = $_SERVER['HTTP_USER_AGENT'];
+$cookie=$base_cookie."hdpopcorns.dat";
+$requestLink="https://seriesfreetv.com/";
+//$requestLink="http://hdpopcorns.co/category/latest-movies/";
+if ($page==1 && $tip !="search") {
+if (file_exists($cookie)) unlink ($cookie);
+$head=array(
+'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+'Accept-Language: en-US,en;q=0.5',
+'Accept-Encoding: deflate, br',
+'Connection: keep-alive',
+'Upgrade-Insecure-Requests: 1');
+  $ch = curl_init();
+  curl_setopt($ch, CURLOPT_URL, $requestLink);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
+  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+  curl_setopt($ch,CURLOPT_HTTPHEADER,$head);
+  curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie);
+  curl_setopt($ch, CURLOPT_COOKIEJAR, $cookie);
+  curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'GET');
+  curl_setopt($ch, CURLOPT_HTTPGET, true);
+  curl_setopt($ch, CURLINFO_HEADER_OUT, true);
+  curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
+  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+  curl_setopt($ch, CURLOPT_HEADER,1);
+  $h = curl_exec($ch);
+ if (strpos($h,"503 Service") !== false) {
+  if (strpos($h,'id="cf-dn') === false)
+   $q= getClearanceLink_old($h,$requestLink);
+  else
+   $q= getClearanceLink($h,$requestLink);
+
+  curl_setopt($ch, CURLOPT_URL, $q);
+  $h = curl_exec($ch);
+  curl_close($ch);
+ } else {
+    curl_close($ch);
+ }
+}
 $r=array();
 if ($tip=="release") {
   if ($page > 1)
@@ -49,9 +92,10 @@ if ($tip=="release") {
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $l);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-  curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 10.0; rv:55.0) Gecko/20100101 Firefox/55.0');
+  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
   curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
   curl_setopt($ch, CURLOPT_ENCODING, "");
+  curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie);
   curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
   curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
   curl_setopt($ch, CURLOPT_TIMEOUT, 15);
@@ -65,12 +109,13 @@ if ($tip=="release") {
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $l);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-  curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 10.0; rv:55.0) Gecko/20100101 Firefox/55.0');
+  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
   curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
   curl_setopt($ch, CURLOPT_REFERER, "https://seriesfreetv.com");
   curl_setopt($ch, CURLOPT_ENCODING, "");
   curl_setopt ($ch, CURLOPT_POST, 1);
   curl_setopt ($ch, CURLOPT_POSTFIELDS, $post);
+  curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie);
   curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
   curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
   curl_setopt($ch, CURLOPT_TIMEOUT, 15);
