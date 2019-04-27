@@ -151,7 +151,8 @@ for ($k=0;$k<count($arr);$k++) {
     break;
   }
 }
-
+$movie = preg_replace("/trial\d+/","trial4",$movie);   // set to Netherlands
+//echo $movie; die();
 $b = basename($movie);
 $y=explode("?",$b);
 $movie_name = $y[0];
@@ -312,7 +313,6 @@ else
    fwrite($fh, $delay, strlen($delay));
    fclose($fh);
 }
-
 
 if ($flash=="mpc") {
  if (strpos($q,"Part") !== false) {

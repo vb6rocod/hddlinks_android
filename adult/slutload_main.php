@@ -33,7 +33,7 @@ function str_between($string, $start, $end){
 }
 echo '<table border="1px" width="100%">'."\n\r";
 echo '<TR><td style="color:black;background-color:#0a6996;color:#64c8ff;text-align:center" colspan="3"><font size="6"><b>slutload</b></TD></TR>';
-echo '<TR><TD class="cat">'.'<a href="slutload.php?page=1,https://www.slutload.com/videos,Recente" target="_blank"><b>Recente</b></a></TD>';
+echo '<TR><TD class="cat">'.'<a href="slutload.php?page=1,https://www.slutload.com/latest/,Recente" target="_blank"><b>Recente</b></a></TD>';
 //<TD colspan="2"><form action="hdfilm_s.php" target="_blank">Cautare film:  <input type="text" id="src" name="src" value="'.$val_search.'"><input type="submit" value="send" id="send"></form></td>
 echo '<TD class="form" colspan="2"><form action="slutload.php" target="_blank">Cautare <input type="hidden" name="page1" id="page1" value="1"><input type="text" id="src" name="src" value="'.$val_search.'"><input type="submit" value="send" id="send"></form></td>';
 echo '</TR>';
@@ -51,16 +51,16 @@ $l="https://www.slutload.com/categories/";
   $html = curl_exec($ch);
   curl_close($ch);
 //$html = str_between($html,'ALL SEX VIDEOS:','XXX Porn Tube:');
-$videos = explode('<div class="cat-each', $html);
+$videos = explode('a class="item', $html);
 unset($videos[0]);
 $videos = array_values($videos);
 foreach($videos as $video) {
     $t1=explode('href="',$video);
     $t2=explode('"',$t1[1]);
     //$t1=explode('"',$t[1]);
-    $link="https://www.slutload.com".str_replace("\/","/",$t2[0]);
+    $link=$t2[0];
 
-    $t2=explode('<h3>',$video);
+    $t2=explode('class="title">',$video);
     $t3=explode('<',$t2[1]);
   	$title=$t3[0];
     $link="slutload.php?page=1,".$link.",".urlencode($title);

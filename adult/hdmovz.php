@@ -164,6 +164,7 @@ if (strpos($search,"latest-update") !== false)
    $search3  = $search.$page."/";
 else
    $search3  = $search."-".$page.".html";
+//echo $search3;
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $search3);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
@@ -180,7 +181,7 @@ $n=0;
 //$videos = explode('<div class="video">', $html);
 //$videos=explode('<span class="video-title">',$html);
 //$videos = explode('class="frame video', $html);
-$videos = explode('div class="content-block">',$html);
+$videos = explode('class="content-block item"',$html);
 
 unset($videos[0]);
 $videos = array_values($videos);
@@ -192,12 +193,12 @@ foreach($videos as $video) {
     $t1=explode('class="name">',$video);
     $t3=explode('<',$t1[1]);
     $title=$t3[0];
-    $t1 = explode('src="', $video);
+    $t1 = explode('data-original="', $video);
     $t2 = explode('"', $t1[1]);
     $image = $t2[0];
     //$image = str_replace("https","http",$image);
     //$image="../filme/r_m.php?file=".$image;
-    $t1=explode('<i>',$video);
+    $t1=explode('class="item_duration">',$video);
     //$t2=explode('>',$t1[1]);
     $t3=explode("<",$t1[1]);
     $data=" (".trim($t3[0]).")";

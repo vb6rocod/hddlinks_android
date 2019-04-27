@@ -54,13 +54,13 @@ $l="https://www.hdmovz.com/cats.html";
   $html = curl_exec($ch);
   curl_close($ch);
 
-$html = str_between($html,'class="list_categories">','</div>');
-$videos = explode('href="', $html);
+//$html = str_between($html,'class="list_categories">','</div>');
+$videos = explode('a class="item', $html);
 unset($videos[0]);
 $videos = array_values($videos);
 foreach($videos as $video) {
-    //$t=explode('href="',$video);
-    $t1=explode('"',$video);
+    $t=explode('href="',$video);
+    $t1=explode('"',$t[1]);
     $link=str_replace(".html","",$t1[0]);
 
     $t2=explode('title="',$video);

@@ -2118,7 +2118,7 @@ require_once("JavaScriptUnpacker.php");
   curl_setopt($ch, CURLOPT_TIMEOUT, 15);
   $h2 = curl_exec($ch);
   curl_close($ch);
-//echo $h2;
+
   preg_match('/([http|https][\.\d\w\-\.\/\\\:\?\&\#\%\_\,]*(\.mp4))/', $h2, $m);
   $link=$m[1];
   $link=str_replace("https","http",$link);

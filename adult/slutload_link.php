@@ -42,9 +42,47 @@ $title = $_GET["title"];
   $html = curl_exec($ch);
   curl_close($ch);
   //echo $html;
-$link1 = urldecode(str_between($html, 'data-url="', '"'));
-$link1=str_replace("&amp;","&",$link1);
-$link1=str_replace("https","http",$link1);
+$t1 = explode("license_code: '", $html);
+$t2 = explode("'", $t1[1]);
+$d = $t2[0];
+$t1 = explode("function/0/", $html);
+$t2 = explode("'", $t1[count($t1)-1]);
+$orig = $t2[0];
+$c = 16;
+
+for ($f = "", $g = 1; $g < strlen($d); $g++)
+	{
+	$f.= preg_match("/[1-9]/", $d[$g]) ? $d[$g] : 1;
+	}
+
+for ($j = intval(strlen($f) / 2) , $k = substr($f, 0, $j + 1) , $l = substr($f, $j) , $g = $l - $k, $g < 0 && ($g = - $g) , $f = $g, $g = $k - $l, $g < 0 && ($g = - $g) , $f+= $g, $f = $f * 2, $f = "" . $f, $i = $c / 2 + 2, $m = "", $g = 0; $g < $j + 1; $g++)
+	{
+	for ($h = 1; $h <= 4; $h++)
+		{
+		$n = $d[$g + $h] + $f[$g];
+		$n >= $i && ($n-= $i);
+		$m.= $n;
+		}
+	}
+
+$t1 = explode("/", $orig);
+$j = $t1[5];
+$h = substr($j, 0, 32);
+$i = $m;
+
+for ($j = $h, $k = strlen($h) - 1; $k >= 0; $k--)
+	{
+	for ($l = $k, $m = $k; $m < strlen($i); $m++) $l+= $i[$m];
+	for (; $l >= strlen($h);) $l-= strlen($h);
+	for ($n = "", $o = 0; $o < strlen($h); $o++)
+		{
+		$n.= $o == $k ? $h[$l] : ($o == $l ? $h[$k] : $h[$o]);
+		}
+
+	$h = $n;
+	}
+
+$link1 = str_replace($j, $h, $orig);
 /*
       $ch = curl_init();
       curl_setopt($ch, CURLOPT_URL, $link1);

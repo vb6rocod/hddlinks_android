@@ -18,10 +18,8 @@ if($query) {
 file_put_contents($base_cookie."adult.dat",urldecode($search1));
  $search3=str_replace(" ","+",$search1);
  $page_title="Cautare: ".str_replace("+"," ",$search1);
- $search2="https://www.slutload.com/s/?q=".$search3."&page=".$page1;
- //http://www.slutload.com/s/?q=mom%20son
- //http://www.slutload.com/s/?q=mom+son&page=2
- 
+ $search2="https://www.slutload.com/search/?q=".$search3."&page=".$page1;
+ $search2="https://www.slutload.com/search/".$search3."/?mode=async&function=get_block&block_id=list_videos_videos_list_search_result&q=".$search3."&category_ids=&sort_by=&from_videos=".$page1."&from_albums=02&_=";
 }
 ?>
 <html><head>
@@ -148,11 +146,13 @@ echo '<a href="slutload.php?page1='.($page1+1).'&src='.$search1.'">&nbsp;&gt;&gt
 }
 if (!$page1) {
 if ($page> 1) {
-  if (strpos($search,"tag") !== false)
-    $link=$search."/rating/all/".$page;
+  if (strpos($search,"latest") !== false)
+    $link=$search."".$page."/";
   else
-    $link=$search."/all/".$page;
+    $link=$search."?mode=async&function=get_block&block_id=list_videos_common_videos_list&sort_by=post_date&from=".$page."&_=";
   //http://www.slutload.com/tag/asian/rating/all/2
+  //https://www.slutload.com/latest/3/
+//https://www.slutload.com/categories/amateur/?mode=async&function=get_block&block_id=list_videos_common_videos_list&sort_by=post_date&from=03&_=1556347987181
 } else {
   //http://www.xnxx.com/c/Blowjob-15
   $link=$search;
@@ -172,7 +172,8 @@ if ($page> 1) {
   curl_setopt($ch, CURLOPT_TIMEOUT, 15);
   $html = curl_exec($ch);
   curl_close($ch);
-$videos = explode('<div class="eachThumb', $html);
+  //echo $html;
+$videos = explode('div class="item', $html);
 
 unset($videos[0]);
 $videos = array_values($videos);
@@ -180,16 +181,16 @@ $videos = array_values($videos);
 foreach($videos as $video) {
     $t1=explode('href="',$video);
     $t2 = explode('"', $t1[1]);
-    $link = "https://www.slutload.com".$t2[0];
+    $link = $t2[0];
 
-    $title=str_between($video,'class="et-hdd">','<');
+    $title=str_between($video,'title="','"');
 
-    $t1 = explode('src="', $video);
+    $t1 = explode('data-original="', $video);
     $t2 = explode('"', $t1[1]);
     $image = $t2[0];
     //$title = htmlspecialchars_decode($t2[0]);
 
-    $data = " (".trim(str_between($video,'class="etdts-mn">',"<")).")";
+    $data = " (".trim(str_between($video,'class="duration">',"<")).")";
   if ($n==0) echo '<TR>';
   if ($flash != "mp") {
   $link = "slutload_link.php?file=".$link."&title=".urlencode($title);
