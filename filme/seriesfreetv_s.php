@@ -300,6 +300,7 @@ for ($k=0;$k<$c;$k++) {
   $link_film=$r[$k][1];
   $image=$r[$k][2];
   $fav_link="mod=add&title=".urlencode(fix_t($title))."&link=".$link_film."&image=".urlencode($image);
+  $image = "r_m.php?file=".$image;
   if ($n==0) echo '<TR>';
   $link="seriesfreetv_s_ep.php?tip=tv&title=".urlencode(fix_t($title))."&link=".urlencode($link_film)."&image=".$image."&sez=&ep=%ep_tit=";
    if ($tast == "NU")

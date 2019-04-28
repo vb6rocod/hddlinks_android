@@ -26,7 +26,9 @@ echo '<h2>'.$tit.'</h2>';
 echo '<table border="1" width="100%">'."\n\r";
 //echo '<TR><td style="color:#000000;background-color:deepskyblue;text-align:center" colspan="3" align="center">'.$tit.'</TD></TR>';
 ///flixanity_s_ep.php?tip=serie&file=http://flixanity.watch/the-walking-dead&title=The Walking Dead&image=http://flixanity.watch/thumbs/show_85a60e7d66f57fb9d75de9eefe36c42c.jpg
-
+$host=file_get_contents($base_cookie."seriestop.dat");
+$link=str_replace(parse_url($link)['host'],$host,$link);
+//echo $link;
 $requestLink=$link;
   $ch = curl_init($requestLink);
   curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows; U; Windows NT 6.1; en-US; rv:1.9.1.2) Gecko/20090729 Firefox/3.5.2 GTB5');

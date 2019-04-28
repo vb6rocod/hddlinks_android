@@ -40,6 +40,32 @@ Cautare serial:  <input type="text" id="title" name="title" value="'.$val_search
 <input type="hidden" id="page" name="page" value="'.$page.'">
 <input type="hidden" id="tip" name="tip" value="search">
 <input type="submit" id="send" value="Cauta !"></form>';
+if (!file_exists($base_cookie."seriestop.dat")) {
+  $l="https://srstop.in/";
+  $ch = curl_init();
+  curl_setopt($ch, CURLOPT_URL, $l);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+  curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 10.0; rv:55.0) Gecko/20100101 Firefox/55.0');
+  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+  curl_setopt($ch, CURLOPT_ENCODING, "");
+  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+  curl_setopt($ch, CURLOPT_HEADER,1);
+  curl_setopt($ch, CURLOPT_NOBODY,1);
+  $test = curl_exec($ch);
+  curl_close($ch);
+  if (strpos($test,"302 Moved Temporarily") !== false) {
+    $t1=explode("Location:",$test);
+    $t2=explode("\n",$t1[1]);
+    $host=parse_url(trim($t2[0]))['host'];
+  } else {
+    $host=parse_url($l)['host'];
+  }
+  file_put_contents($base_cookie."seriestop.dat",$host);
+} else {
+  $host=file_get_contents($base_cookie."seriestop.dat");
+}
 $r=array();
 $head=array('Accept: text/html, */*; q=0.01',
 'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
@@ -49,6 +75,7 @@ $head=array('Accept: text/html, */*; q=0.01',
 if ($tip=="release") {
   $l="https://www.seriestop.net/browse-shows.php";
   $l="https://srstop.online/browse-shows.php";
+  $l="https://".$host."/browse-shows.php";
   $post='genres=["0"]&genreName=All Genres&years=["0"]&star=&sortby=date&p='.$page.'&ajax=1';
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $l);
@@ -68,6 +95,7 @@ if ($tip=="release") {
 } else {
   $l="https://www.seriestop.net/ajax/search.php";
   $l="https://srstop.online/ajax/search.php";
+  $l="https://".$host."/ajax/search.php";
   $search=str_replace(" ","+",$tit);
   $post="q=".$search."&limit=100&timestamp=1539848631477&verifiedCheck=";
   $ch = curl_init();

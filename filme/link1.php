@@ -1652,27 +1652,33 @@ function abc($a52, $a10) {
   }
   if (strpos("http",$srt) === false && $srt) $srt="http://streamplay.to".$srt;
   
-  preg_match("/var\s+(_0x[a-z0-9]{4,})\s?\=\s?\[(.*)\]/",$h,$m);
-  $t1=explode(";",$m[2]);
-  $php_code="\$c0=array(".str_replace("]","",$t1[0]).");";
-  eval($php_code);
-  $pat="/\(".$m[1]."\,(0x[a-z0-9]+)/";
-  preg_match($pat,$m[0],$n);
-  $x=hexdec($n[1]);
-  //echo $x;
-  for ($k=0;$k<$x;$k++) {
-    array_push($c0, array_shift($c0));
-  }
+    preg_match("/var\s+(_0x[a-z0-9]{4,})\s?\=\s?\[(.*)\]/", $h, $m);
+    $t1       = explode(";", $m[2]);
+    $php_code = "\$c0=array(" . str_replace("]", "", $t1[0]) . ");";
+    eval($php_code);
+    $pat = "/\(" . $m[1] . "\,(0x[a-z0-9]+)/";
+    preg_match($pat, $m[0], $n);
+    $x = hexdec($n[1]);
+    //echo $x;
+    for ($k = 0; $k < $x; $k++) {
+        array_push($c0, array_shift($c0));
+    }
     $t1=explode('Array[',$h);     //Array[_0x52e0(_0x54d7('0x22','suqw'
     $t2=explode('(',$t1[1]);
     $t3=$t2[1];
     $pat="/(".$t3.")\(\'(0x[a-z0-9]+)\',\s*\'([\w\#\[\]\(\)\%\&\!\^\@\$\{\}]+)\'\)/";
+    $pat="/(".$t3.")\(\'(0x[a-z0-9]+)\',\s*\'(.*?)\'\)/";
     preg_match_all($pat,$h,$p);
     $js="";
-    for ($z=5;$z<10;$z++) {
-     $js .= base64_decode(abc($c0[hexdec($p[2][$z])],$p[3][$z]));
+    $code=array();
+    for ($z=0;$z<count($p[0]);$z++) {
+     $v= abc($c0[hexdec($p[2][$z])],$p[3][$z]);
+     if (preg_match("/^0x[a-f0-9]+/",$v,$index))
+       $code[hexdec($index[0])]=base64_decode($code[hexdec($index[0])]);
+     else
+       $code[$z]=$v;
     }
-
+    $js=implode($code);
     preg_match("/\(\"body\"\)\.data\(\"e0\"\,(\d+)\)/",$js,$e0);
     $js=str_replace("$".$e0[0].";","",$js);
     $js=str_replace('$("body").data("e0")',$e0[1],$js);
@@ -1688,7 +1694,8 @@ function abc($a52, $a10) {
     $js=str_replace('"',"",$js);
     $d = str_replace("r.splice(", "array_splice(\$r,", $js);
     $d = str_replace("r[", "\$r[", $d);
-
+    preg_match("/(array\_splice(.*))\;/",$d,$f);
+    $d=$f[0];
     $r = str_split(strrev($a145));
     eval($d);
     $x    = implode($r);

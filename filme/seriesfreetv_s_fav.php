@@ -146,7 +146,7 @@ foreach($arr as $key => $value) {
     //$link='putlockerfit_s_ep.php?tip=serie&file='.$link1.'&title='.urlencode(fix_t($title11)).'&image='.urlencode($image);
 
     $link="seriesfreetv_s_ep.php?tip=tv&title=".urlencode(fix_t($title11))."&link=".urlencode($link1)."&image=".$image."&sez=&ep=%ep_tit=";
-
+    $image = "r_m.php?file=".$image;
   if ($n==0) echo '<TR>';
   $fav_link="mod=del&title=".urlencode(fix_t($title11))."&link=".$link1."&image=".urlencode($image);
   if ($tast == "NU") {

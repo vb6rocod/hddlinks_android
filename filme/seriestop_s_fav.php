@@ -143,6 +143,8 @@ foreach($arr as $key => $value) {
     $link1=$link;
     $title11 = $key;
     $image=$arr[$key]["image"];
+    $host=file_get_contents($base_cookie."seriestop.dat");
+    $image=str_replace(parse_url($link)['host'],$host,$image);
     //$link='putlockerfit_s_ep.php?tip=serie&file='.$link1.'&title='.urlencode(fix_t($title11)).'&image='.urlencode($image);
 
     $link="seriestop_s_ep.php?tip=tv&title=".urlencode(fix_t($title11))."&link=".urlencode($link1)."&image=".$image."&sez=&ep=%ep_tit=";
