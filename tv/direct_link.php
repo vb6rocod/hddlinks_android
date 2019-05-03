@@ -635,40 +635,44 @@ $head=array('Accept: */*',
   //$flash="flash";
   //$link=str_replace("https","http",$link);
 }
+/*
 if ($from=="tvmobil") {
 //echo $link;
 //die();
 //http://tvpemobil.net/wap/tv-online.php?categorie=generaliste&canal=1&sid=7e8962323978b6939b9d45549cd84543
 //http://tvpemobil.net/wap/tv-online.php?categorie=generaliste&canal=1&sid=7e8962323978b6939b9d45549cd84543
-/*
+if (strpos($link,"televiziune.live") !== false) {
 $ua     =   $_SERVER['HTTP_USER_AGENT'];
 $cookie=$base_cookie."tvmobil.dat";
+//echo $link;
+//$link=str_replace("2.ts","HBO.ts",$link);
       $ch = curl_init();
       curl_setopt($ch, CURLOPT_URL, $link);
       curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-      curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+      curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,0);
       curl_setopt($ch, CURLOPT_USERAGENT, $ua);
       curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie);
       curl_setopt($ch, CURLOPT_COOKIEJAR, $cookie);
       curl_setopt($ch, CURLOPT_HEADER,1);
       //curl_setopt($ch, CURLOPT_NOBODY,1);
-      curl_setopt($ch,CURLOPT_REFERER,"http://tvpemobil.net/");
+      curl_setopt($ch,CURLOPT_REFERER,"http://televiziune.live/");
       curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
       curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie);
       curl_setopt($ch, CURLOPT_COOKIEJAR, $cookie);
+      curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+      curl_setopt($ch, CURLOPT_TIMEOUT, 10);
       //curl_setopt($ch, CURLOPT_REFERER, "http://hqq.tv/");
       $h = curl_exec($ch);
       curl_close($ch);
-echo $h;
-die();
+if ($h) {
 $t1=explode("Location:",$h);
 $t2=explode("\n",$t1[1]);
-$l11=trim($t2[0]);
-if ($l11)
-  $link=$l11;
-*/
+$l1=trim($t2[0]);
+if ($l1) $link=$l1;
 }
-
+}
+}
+*/
 if ($from=="digi24") {
 //$cookie=$base_cookie."digi.dat";
   $ch = curl_init();

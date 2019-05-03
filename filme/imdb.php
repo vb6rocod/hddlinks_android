@@ -32,20 +32,62 @@ function str_between($string, $start, $end){
 	if ($ini == 0) return ""; $ini += strlen($start); $len = strpos($string,$end,$ini) - $ini;
 	return substr($string,$ini,$len);
 }
-$key="f8cf02e6b30bf8cc33c04c60695781aa";
-if (!$imdb) {
-//$title = "2036 origin unknow 2018";
+$f=$base_pass."tmdb.txt";
+if (file_exists($f)) {
+   $key = file_get_contents($f);
+   $useIMDB=false;
+} else
+   $useIMDB=true;
+$f=$base_pass."omdb.txt";  // use omdb over tmdb
+if (file_exists($f)) $useIMDB=true;
+  $title=htmlspecialchars_decode($title,ENT_QUOTES);
+  $title=html_entity_decode($title,ENT_QUOTES);
   $title=str_replace("&#8211;","-",$title);
   $title=str_replace("&#8217;","'",$title);
   $title=preg_replace("/sezonul\s*\d+/i","",$title);
   $title=preg_replace("/season\s*\d+/i","",$title);
   $title=trim(preg_replace("/(gratis|subtitrat|onlin|film|sbtitrat|\shd)(.*)/i","",$title));
+  //echo $title;
   if (!$year) {
   if (preg_match("/\(?((1|2)\d{3})\)?/",$title,$r)) {
      //print_r ($r);
      $year=$r[1];
   }
   }
+  $t1=explode(" - ",$title);
+  $title=trim($t1[0]);
+if (!$imdb) {
+  if ($tip == "tv") {
+    if (!$year)
+     $find=$title." serie";
+    else
+     $find=$title." serie ".$year;
+  } else {
+    if (!$year)
+     $find=$title." movie";
+    else
+     $find=$title." movie ".$year;
+  }
+  //$find=$title;
+  //$ua       = $_SERVER["HTTP_USER_AGENT"];
+  $url = "https://www.google.com/search?q=imdb+" . rawurlencode($find);
+  //echo $url;
+  $ch = curl_init();
+  curl_setopt($ch, CURLOPT_URL, $url);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+  curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows; U; Windows NT 6.1; en-US; rv:1.9.1.2) Gecko/20090729 Firefox/3.5.2 GTB5');
+  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+  $h = curl_exec($ch);
+  curl_close($ch);
+  if (preg_match('/https:\/\/www.imdb.com\/title\/(tt\d+)/ms', $h, $match))
+   $imdb=$match[1];
+  //print_r ($match);
+}
+//echo $imdb;
+if (!$imdb && !$useIMDB) { // TMDB key =>use TMDB
   $t1=explode(" - ",$title);
   $t=trim($t1[0]);
   $rest = substr($t, -6);
@@ -144,8 +186,21 @@ $ttxml='<font size="4">';
 } else {
 $iit = $tit3;
 }
-} else {
+} else if ($imdb && $useIMDB && !file_exists($base_pass."omdb.txt")) {   //no TMDB key or OMDB key => use IMDB
+  include ("../util.php");
+  //echo $imdb;
+  $r=getIMDBDetail($imdb);
+  $img=$r['poster'];
+  $tit=$r["Title"];
+  $desc=$r['plot'];
+  $year="Year: ".$r["Year"];
+  $imdb="IMDB: ".$r["imdbRating"];
+  $cast="<b>Cast: </b>".$r["Actors"];
+  $durata="Duration: ".$r["Runtime"];
+  $gen="Genre: ".$r["Genre"];
+} else if ($imdb && !$useIMDB) {   //TMDB key  => use TMDB
 //$imdb=str_replace("tt","",$imdb);
+//echo $imdb;
 if (strpos($imdb,"tt") === false) $imdb="tt".$imdb;
 $l="http://api.themoviedb.org/3/find/".$imdb."?api_key=".$key."&language=en-US&external_source=imdb_id";
 //echo $l;
@@ -161,6 +216,13 @@ $l="http://api.themoviedb.org/3/find/".$imdb."?api_key=".$key."&language=en-US&e
   $Data = curl_exec($ch);
   curl_close($ch);
 $r = json_decode($Data,1);
+//print_r ($r);
+//if ($tip=="movie") {
+  if (isset($r["movie_results"][0]))
+    $tip="movie";
+  else if (isset($r["tv_results"][0]))
+    $tip="tv";
+//}
 if ($tip=="movie") {
 //if ($r["movie_results"][0]["id"]) {
 //$img="https://api.themoviedb.org".$r["results"][0]["poster_path"];
@@ -241,6 +303,34 @@ for ($k=0;$k<$c;$k++) {
  $cast .=$r["cast"][$k]["name"].",";
 }
 $cast = substr($cast, 0, -1);
+} else if ($imdb && file_exists($base_pass."omdb.txt") && $useIMDB) {  //No TMDB key OMDB key use OMDB
+  //echo $imdb;
+  //tt0122459
+  //tt000000000122459  --->> bad
+  $imdb=preg_replace("/^tt0{2,}/","tt0",$imdb);
+  $key=file_get_contents($base_pass."omdb.txt");
+  $url="http://www.omdbapi.com/?apikey=".$key."&i=".$imdb."&plot=full";
+  $ch = curl_init();
+  curl_setopt($ch, CURLOPT_URL, $url);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+  curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows; U; Windows NT 6.1; en-US; rv:1.9.1.2) Gecko/20090729 Firefox/3.5.2 GTB5');
+  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+  $h = curl_exec($ch);
+  curl_close($ch);
+  $r=json_decode($h,1);
+  //print_r ($r);
+  $tit=$r["Title"];
+  $year="Year: ".$r["Year"];
+  $gen="Genre: ".$r["Genre"];
+  $durata ="Duration: ".$r["Runtime"];
+  $imdb="IMDB: ".$r["imdbRating"];
+  $cast="Cast: ".$r["Actors"];
+  $desc = $r["Plot"];
+  $img=$r["Poster"];
+  if (!$img) $img="blank.jpg";
 }
 //print_r ($r);
 

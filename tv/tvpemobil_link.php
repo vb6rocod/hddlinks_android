@@ -170,7 +170,7 @@ $cookie=$base_cookie."tvmobil.dat";
   curl_setopt($ch, CURLOPT_URL, $search);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
   curl_setopt($ch, CURLOPT_USERAGENT, $ua);
-  curl_setopt($ch,CURLOPT_REFERER,"http://tvpemobil.net/");
+  curl_setopt($ch,CURLOPT_REFERER,"http://televiziune.live");
   curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
   curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
   curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie);
@@ -211,7 +211,7 @@ foreach($videos as $video) {
       echo '<TD style="text-align:center">'.'<a href="'.$link.'" target="_blank">'.$title.'</a></TD>';
     } elseif (preg_match('/([http|https][\.\d\w\-\.\/\\\:\?\&\#\%\_\,]*(\.(m3u8|mp4|flv|ts)))/', $h1, $m)) {
       $file=$m[1];
-      $from="";
+      $from="tvmobil";
       $mod="direct";
       $title=$m[2];
     $link="direct_link.php?link=".urlencode(fix_t($file))."&title=".urlencode(fix_t($page_title))."&from=".$from."&mod=direct";

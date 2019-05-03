@@ -164,6 +164,13 @@ if ($avb_vers <> $curr_vers) {
   echo '<p>'.$info.'</p>';
 }
 }
+// patch install
+$base_url=dirname($_SERVER['SCRIPT_FILENAME']);
+if (!file_exists($base_url."/subs"))  @mkdir($base_url."/subs", 0777);
+$parent_url= dirname($base_url);
+if (!file_exists($parent_url."/data"))  @mkdir($parent_url."/data", 0777);
+if (!file_exists($parent_url."/cookie"))  @mkdir($parent_url."/cookie", 0777);
+if (!file_exists($parent_url."/parole"))  @mkdir($parent_url."/parole", 0777);
 ?>
 <BR><BR>
 <table align="center" width="90%">

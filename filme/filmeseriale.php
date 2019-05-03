@@ -13,14 +13,16 @@ function decode_entities($text) {
     return $text;
 }
 include ("../common.php");
+include ("../util.php");
 $link=$_GET["file"];
 $tit=unfix_t(urldecode($_GET["title"]));
 $tit=html_entity_decode($tit,ENT_QUOTES,'UTF-8');
 $tit=str_replace(urldecode("%E2%80%99"),urldecode("%27"),$tit);
-$f=$base_pass."tvplay.txt";
-if (file_exists($f))
+$f=$base_pass."tmdb.txt";
+if (file_exists($f)) {
+   $api_key = file_get_contents($f);
    $user=true;
-else
+} else
    $user=false;
 
 ?>
@@ -34,8 +36,46 @@ else
 </head>
 <body><BR>
 <?php
-
-//$link="filmeseriale.php?file=".$link1.",".urlencode(fix_t($title11));
+if (!$user) {
+// Get serie IMDB
+  $tit_IMDB=htmlspecialchars_decode($tit,ENT_QUOTES);
+  $tit_IMDB=html_entity_decode($tit_IMDB,ENT_QUOTES);
+  $tit_IMDB=str_replace("&#8211;","-",$tit_IMDB);
+  $tit_IMDB=str_replace("&#8217;","'",$tit_IMDB);
+  $tit_IMDB=preg_replace("/sezonul\s*\d+/i","",$tit_IMDB);
+  $tit_IMDB=preg_replace("/season\s*\d+/i","",$tit_IMDB);
+  $tit_IMDB=trim(preg_replace("/(gratis|subtitrat|onlin|film|sbtitrat|\shd)(.*)/i","",$tit_IMDB));
+  //echo $title;
+  if (!$year) {
+  if (preg_match("/\(?((1|2)\d{3})\)?/",$tit_IMDB,$r)) {
+     //print_r ($r);
+     $year=$r[1];
+  }
+  }
+  $t1=explode(" - ",$tit_IMDB);
+  $tit_IMDB=trim($t1[0]);
+  if (!$year)
+   $find=$tit_IMDB." serie";
+  else
+   $find=$tit_IMDB." serie ".$year;
+   
+  $url = "https://www.google.com/search?q=imdb+" . rawurlencode($find);
+  //echo $url;
+  $ch = curl_init();
+  curl_setopt($ch, CURLOPT_URL, $url);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+  curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows; U; Windows NT 6.1; en-US; rv:1.9.1.2) Gecko/20090729 Firefox/3.5.2 GTB5');
+  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+  $h = curl_exec($ch);
+  curl_close($ch);
+  if (preg_match('/https:\/\/www.imdb.com\/title\/(tt\d+)/ms', $h, $match))
+   $imdb=$match[1];
+  else
+   $imdb="";
+}
 echo '<h2>'.$tit.'</h2>';
 echo '<div id="mainnav">';
 echo '<table border="1" width="100%">'."\n\r";
@@ -89,7 +129,6 @@ echo '</TR></TABLE>';
 //print_r ($sezoane);
 /////////////////////////////////////////////////////////////////////////////
 if ($user) {
-$api_key="f8cf02e6b30bf8cc33c04c60695781aa";
 $api_url="https://api.themoviedb.org/3/search/tv?api_key=".$api_key."&query=".urlencode($tit);
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $api_url);
@@ -161,11 +200,14 @@ foreach ($episoade as $key=>$value) {
        $r=json_decode($h,1);
  }
  //print_r ($r);
+ if ($imdb && !$user) {
+   $r=getIMDBSeason($imdb,$sez);
+ }
  for ($k=0;$k<count($episoade[$sez]);$k++) {
   $ep=$episoade[$sez][$k]["ep"];
   $title2=$episoade[$sez][$k]["title"];
   $link=$episoade[$sez][$k]["link"];
-
+    if ($user) {
     if ($r) {
      $title2 = $r["episodes"][$ep-1]["name"];
      $title2=html_entity_decode($title2,ENT_QUOTES,'UTF-8');
@@ -181,6 +223,12 @@ foreach ($episoade as $key=>$value) {
     $title=$sez."x".$ep." - ".$title2;
     else
     $title=$sez."x".$ep;
+    } else {
+      $title2 = $r[$ep]['title'];
+      $desc = $r[$ep]['plot'];
+      $img_ep= $r[$ep]['poster'];
+      $title=$sez."x".$ep." - ".$title2;
+    }
     $link22 = 'filme_link.php?file='.urlencode($link).",".urlencode(fix_t($tit." - ".$title));
     if ($n==0) echo "<TR>";
     if ($first) {

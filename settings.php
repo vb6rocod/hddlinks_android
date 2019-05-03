@@ -38,6 +38,18 @@ if ($tip=="cineplex") {
  $fh = fopen($new_file, 'w');
  fwrite($fh, $txt);
  fclose($fh);
+} elseif ($tip=="tmdb") {
+ $txt=$user;
+ $new_file = $base_pass."tmdb.txt";
+ $fh = fopen($new_file, 'w');
+ fwrite($fh, $txt);
+ fclose($fh);
+} elseif ($tip=="omdb") {
+ $txt=$user;
+ $new_file = $base_pass."omdb.txt";
+ $fh = fopen($new_file, 'w');
+ fwrite($fh, $txt);
+ fclose($fh);
 } elseif ($tip=="mpc") {
  $txt=$user;
  $new_file = $base_pass."mpc.txt";
@@ -394,6 +406,48 @@ echo '</select>
 <input type="submit" value="Memoreaza">
 </form>
 <BR>
+<hr>
+';
+$f=$base_pass."tmdb.txt";
+if (file_exists($f)) {
+$h=file_get_contents($f);
+$t1=explode("|",$h);
+$user=$t1[0];
+if (sizeof ($t1) > 1 )
+	$pass=$t1[1];
+} else {
+$user="";
+$pass="";
+}
+
+echo '
+<h4>TMDB Api Key (https://www.themoviedb.org/settings/api)</h4>
+<form action="settings.php">
+cod:<input type="text" name="user" value="'.$user.'" size="40"></BR>
+<input type="hidden" name="tip" value="tmdb">
+<input type="submit" value="Memoreaza">
+</form>
+<hr>
+';
+$f=$base_pass."omdb.txt";
+if (file_exists($f)) {
+$h=file_get_contents($f);
+$t1=explode("|",$h);
+$user=$t1[0];
+if (sizeof ($t1) > 1 )
+	$pass=$t1[1];
+} else {
+$user="";
+$pass="";
+}
+
+echo '
+<h4>OMDB Api Key (http://www.omdbapi.com/apikey.aspx)</h4>
+<form action="settings.php">
+cod:<input type="text" name="user" value="'.$user.'" size="40"></BR>
+<input type="hidden" name="tip" value="omdb">
+<input type="submit" value="Memoreaza">
+</form>
 <hr>
 ';
 $f=$base_pass."filmeseriale.txt";

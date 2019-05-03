@@ -7,6 +7,15 @@
       <title>filmeonline.biz</title>
 <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
 <link rel="stylesheet" type="text/css" href="../custom.css" />
+<script type="text/javascript">
+   function zx(e){
+     var charCode = (typeof e.which == "number") ? e.which : e.keyCode
+     if (charCode == "53" && e.target.type != "text") {
+      document.getElementById("send").click();
+    }
+   }
+document.onkeypress =  zx;
+</script>
 </head>
 <body><div id="mainnav">
 <H2></H2>

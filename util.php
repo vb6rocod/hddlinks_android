@@ -136,4 +136,147 @@ return sprintf("%s://%s/cdn-cgi/l/chk_jschl?%s",
                 http_build_query($params)
             );
     }
+function getIMDBSeason($tt_imdb_series,$season_serie) {
+  $l="https://www.imdb.com/title/".$tt_imdb_series."/episodes?season=".$season_serie;
+  $ch = curl_init($l);
+  curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows; U; Windows NT 6.1; en-US; rv:1.9.1.2) Gecko/20090729 Firefox/3.5.2 GTB5');
+  curl_setopt($ch,CURLOPT_REFERER,$l);
+  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER  ,1);
+  curl_setopt($ch, CURLOPT_HEADER, true);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+  curl_setopt($ch, CURLOPT_HEADER,1);
+  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+  $h = curl_exec($ch);
+  curl_close ($ch);
+  if (preg_match("/class\=\"poster\".*?src\=\"(.*?\.jpg)/ms",$h,$p))
+    $poster_serie=$p[1];
+  else
+    $poster_serie="blank.jpg";
+  $arr=array();
+    if (preg_match_all("/div class\=\"image\"\>(.*?)class\=\"clear\">/ms",$h,$m)) {
+        for ($k = 0; $k < count($m[0]); $k++) {
+            preg_match("/episodeNumber\" content\=\"(\d+)\"/ms",$m[0][$k],$n);
+            if (isset($n[1]))
+              $ep       = $n[1];
+            else
+              $ep       = "N/A";
+            preg_match("/itemprop\=\"name\"\>(.*?)\</ms",$m[0][$k],$n);
+            if (isset($n[1]))
+              $title       = $n[1];
+            else
+              $title       = "N/A";
+            preg_match("/src\=\"(.*?\.jpg)\"/ms",$m[0][$k],$n);
+            if (isset($n[1]))
+              $poster   = $n[1];
+            else
+              $poster   = $poster_serie;
+            preg_match("/itemprop\=\"description\"\>(.*?)\</ms",$m[0][$k],$n);
+            if (isset($n[1]))
+              $plot       = trim($n[1]);
+            else
+              $plot       = "N/A";
+            preg_match("/data-const\=\"(.*?)\"/ms",$m[0][$k],$n);
+            if (isset($n[1]))
+              $imdb       = $n[1];
+            else
+              $imdb       = "N/A";
+            preg_match("/class\=\"ipl-rating-star__rating\"\>(.*?)\</ms",$m[0][$k],$n);
+            if (isset($n[1]))
+              $rating       = $n[1];
+            else
+              $rating       = "N/A";
+            $arr[$ep] = array(
+                'episod' => $ep,
+                'title' => $title,
+                'poster' => $poster,
+                'plot' => $plot,
+                'imdb' => $imdb,
+                'rating' => $rating
+            );
+        }
+    return $arr;
+    } else {
+      return false;
+    }
+}
+function getIMDBDetail($tt_imdb)
+{
+    $l  = "https://www.imdb.com/title/" . $tt_imdb . "/reference";
+    $ch = curl_init($l);
+    curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows; U; Windows NT 6.1; en-US; rv:1.9.1.2) Gecko/20090729 Firefox/3.5.2 GTB5');
+    curl_setopt($ch, CURLOPT_REFERER, $l);
+    curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1); // RETURN THE CONTENTS OF THE CALL
+    curl_setopt($ch, CURLOPT_HEADER, true);
+    curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+    curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+    curl_setopt($ch, CURLOPT_HEADER, 1);
+    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+    $h = curl_exec($ch);
+    curl_close($ch);
+    $arr = array();
+    preg_match("/class=\"titlereference-primary-image\".*?src\=\"(.*?)\"/ms", $h, $m);
+    if (isset($m[1]))
+        $arr["poster"] = $m[1];
+    else
+        $arr["poster"] = "";
+    preg_match('/<title>.*?\(.*?(\d{4}).*?\).*?<\/title>/ms', $h, $m);
+    if (isset($m[1]))
+        $arr["Year"] = trim($m[1]);
+    else
+        $arr["Year"] = "N/A";
+    preg_match('/<title>(IMDb \- )*(.*?) \(.*?<\/title>/ms', $h, $m);
+    if (isset($m[2]))
+        $arr['Title'] = trim($m[2]);
+    else
+        $arr["Title"] = "N/A";
+    preg_match('/<\/svg>.*?<\/span>.*?<span class="ipl-rating-star__rating">(.*?)<\/span>/ms', $h, $m);
+    if (isset($m[1]))
+        $arr["imdbRating"] = $m[1];
+    else
+        $arr["imdbRating"] = "";
+    preg_match('/Runtime<\/td>.*?(\d+ min).*?<\/li>/ms', $h, $m);
+    if (isset($m[1]))
+        $arr["Runtime"] = trim($m[1]);
+    else
+        $arr["Runtime"] = "";
+    preg_match("/titlereference-section-overview\"\>(.*?)\<div class=\"titlereference-overview-section/ms", $h, $m);
+    $p = strip_tags($m[1]);
+    preg_match_all("/\d{4}+\n/ms", $p, $x);
+    if (isset($x[0]) && count($x[0]) > 0) {
+        $t1 = explode($x[0][count($x[0]) - 1], $p);
+        $p  = $t1[1];
+    }
+    $t1 = explode("See all &raquo;", $p);
+    if (isset($t1)) {
+        $plot = $t1[count($t1) - 1];
+    } else {
+        $plot = trim($p);
+    }
+    $t3          = explode("See more &raquo;", $plot);
+    $plot        = trim($t3[0]);
+    $arr["plot"] = $plot;
+    preg_match('/Genres<\/td>.*?<td>(.*?)<\/td>/ms', $h, $m);
+    if (isset($m[0])) {
+        preg_match_all('/<a.*?\>(.*?)<\/a>/ms', $m[0], $n);
+        if (isset($n[1]))
+            $arr['Genre'] = implode(", ", $n[1]);
+        else
+            $arr['Genre'] = "N/A";
+    } else {
+        $arr['Genre'] = "N/A";
+    }
+    preg_match_all("/class\=\"primary_photo\"\>.*?itemprop\=\"name\"\>(.*?)\<\/span/ms",$h,$m);
+    if (isset($m[1])) {
+       if (count($m[1]) > 20)
+        $act=array_slice($m[1], 0, 20);
+       else
+        $act=$m[1];
+       $arr['Actors'] = implode(", ", $act);
+    } else
+            $arr['Actors'] = "N/A";
+    return $arr;
+}
 ?>

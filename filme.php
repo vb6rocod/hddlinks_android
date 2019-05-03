@@ -1,4 +1,7 @@
 <!DOCTYPE html>
+<?php
+include ("common.php");
+?>
 <html><head>
 <meta http-equiv="content-type" content="text/html; charset=UTF-8">
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate"/>
@@ -14,6 +17,21 @@ td {
     text-align: left;
 }
 </style>
+<script type="text/javascript">
+   function zx(e){
+     var charCode = (typeof e.which == "number") ? e.which : e.keyCode
+     if (charCode == "50") {
+      <?php
+      if (file_exists($base_pass."tmdb.txt"))
+       echo 'window.open("filme/search_tmdb.php?page=1");';
+      else
+       echo 'window.open("filme/search_imdb.php");';
+      ?>
+    }
+   }
+document.onkeypress =  zx;
+</script>
+</head>
 <BODY>
 
 <BR><BR>
@@ -31,7 +49,7 @@ td {
 <TD width="25%"><a href="filme/filmehd_main.php" target="_blank">filmehd</a></TD>
 </TR>
 <TR>
-<TD width="25%"><a href="filme/filmeseriale_filme.php?page=1,http://www.filmeserialeonline.org/filme-online,filmeseriale.online" target="_blank">filmeseriale.online</a></TD>
+<TD width="25%"><a href="filme/filmeseriale_filme.php?page=1&file=release&title=filmeseriale" target="_blank">filmeseriale.online</a></TD>
 <TD width="25%"><a href="filme/filmeonline2016_main.php" target="_blank">filmeonline2016</a></TD>
 <TD width="25%"><a href="filme/filme-seriale_f.php?page=1&file=release&title=filme-seriale" target="_blank">filme-seriale</a></TD>
 <TD width="25%"><a href="filme/filmenoihd_main.php" target="_blank">filmenoihd</a></TD>
@@ -77,7 +95,6 @@ td {
 </TR>
 
 <?php
-include ("common.php");
 if (file_exists($base_pass."tvplay.txt")) {
 echo '
 <TR>
@@ -110,6 +127,12 @@ echo '
 <TR><TD>* Folositi tasta 2 pentru a accesa direct pagina de "Favorite".<TD></TR>
 <TR><TD>* Folositi tasta 5 pentru a simula butonul de cautare.<TD></TR>
 </TABLE>';
+}
+if (!file_exists($base_pass."tmdb.txt") && !file_exists($base_pass."omdb.txt")) {
+echo '<table border="0" align="center" width="90%">
+<TR><TD>* Pentru rezultate mai rapide la "info film/serial" folositi TMDB sau/si OMDB (vezi setari).</TR></TD>
+</TABLE>
+';
 }
 ?>
 

@@ -1,14 +1,19 @@
 <!DOCTYPE html>
 <?php
 include ("../common.php");
-$query = $_GET["page"];
-if($query) {
-   $queryArr = explode(',', $query);
-   $page = $queryArr[0];
-   $search = $queryArr[1];
-   $page_title=urldecode($queryArr[2]);
-   $search=str_replace("|","&",$search);
-}
+if (file_exists($base_cookie."filme.dat"))
+  $val_search=file_get_contents($base_cookie."filme.dat");
+else
+  $val_search="";
+$title = $_GET["title"];
+$page = $_GET["page"];
+$file=$_GET["file"];
+$tip=$file;
+if ($tip=="search"){
+  $page_title="Cautare: ".urldecode($title);
+  file_put_contents($base_cookie."filme.dat",urldecode($title));
+} else
+  $page_title=urldecode($title);
 //https://filmeseriale.online/seriale/
 ?>
 <html><head>
@@ -41,9 +46,11 @@ function isValid(evt) {
    function zx(e){
      var instance = $.fancybox.getInstance();
      var charCode = (typeof e.which == "number") ? e.which : e.keyCode
-     if (charCode == "13"  && instance !== false) {
+     if (charCode == "13"  && instance !== false && e.target.type != "text") {
        $.fancybox.close();
        setTimeout(function(){ document.getElementById(id_link).focus(); }, 500);
+    } else if (charCode == "53" && e.target.type != "text") {
+      document.getElementById("send").click();
     }
    }
 $(document).on('keyup', '.imdb', isValid);
@@ -71,13 +78,24 @@ $w=0;
 $year="";
 echo '<H2>'.$page_title.'</H2>';
 
-echo '<table class="arrow-nav" border="1px" width="100%">'."\n\r";
+echo '<table border="1px" width="100%">'."\n\r";
+if ($tip=="release") {
+echo "<TR>";
+if ($page > 1) {
 echo '<tr><TD class="nav" colspan="4" align="right">';
-if ($page > 1)
-echo '<a class="nav" href="filmeseriale_filme.php?page='.($page-1).','.$search.','.urlencode($page_title).'">&nbsp;&lt;&lt;&nbsp;</a> | <a class="nav" href="filmeseriale_filme.php?page='.($page+1).','.$search.','.urlencode($page_title).'">&nbsp;&gt;&gt;&nbsp;</a></TD></TR>';
+echo '<a class="nav" href="filmeseriale_filme.php?page='.($page-1).'&file='.$file.'&title='.urlencode($title).'">&nbsp;&lt;&lt;&nbsp;</a> | <a class="nav" href="filmeseriale_filme.php?page='.($page+1).'&file='.$file.'&title='.urlencode($title).'">&nbsp;&gt;&gt;&nbsp;</a></TD></TR>';
+}else {
+echo '<TD class="form" colspan="2">';
+//title=star&page=1&file=search
+echo '<form action="filmeseriale_filme.php" target="_blank">Cautare film:';
+echo '<input type="text" id="title" name="title" value="'.$val_search.'"><input type="hidden" id="page" name="page" value="1"><input type="hidden" id="file" name="file" value="search"><input type="submit" id="send" value="Cauta..."></form></TD>';
+echo '<TD class="nav" colspan="2" align="right"><a href="filmeseriale_filme.php?page='.($page+1).'&file='.$file.'&title='.urlencode($title).'">&nbsp;&gt;&gt;&nbsp;</a></TD></TR>';
+}
+}
+if ($tip=="release")
+$l ="http://www.filmeserialeonline.org/filme-online/page/".$page."/";
 else
-echo '<a class="nav" href="filmeseriale_filme.php?page='.($page+1).','.$search.','.urlencode($page_title).'">&nbsp;&gt;&gt;&nbsp;</a></TD></TR>';
-$l =$search."/page/".$page."/";
+$l = "http://www.filmeserialeonline.org/?s=".str_replace(" ","+",$title);
 //https://filmeseriale.online/seriale/page/2/
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $l);
@@ -110,6 +128,7 @@ foreach($videos as $video) {
     $t2 = explode('"', $t1[1]);
     $image=$t2[0];
     //$link="fs.php?link=".$link1."&title=".urlencode($title)."&tip=movie";
+    if (strpos($link1,"/seriale") === false) {
     $link = 'filme_link.php?file='.urlencode($link1).",".urlencode($title);
   if ($n==0) echo '<TR>';
   if ($tast == "NU")
@@ -124,13 +143,15 @@ foreach($videos as $video) {
   echo '</tr>';
   $n=0;
   }
+  }
 }
+if ($tip=="release") {
 echo '<tr><TD class="nav" colspan="4" align="right">';
 if ($page > 1)
-echo '<a class="nav" href="filmeseriale_filme.php?page='.($page-1).','.$search.','.urlencode($page_title).'">&nbsp;&lt;&lt;&nbsp;</a> | <a class="nav" href="filmeseriale_filme.php?page='.($page+1).','.$search.','.urlencode($page_title).'">&nbsp;&gt;&gt;&nbsp;</a></TD></TR>';
+echo '<a class="nav" href="filmeseriale_filme.php?page='.($page-1).'&file='.$file.'&title='.urlencode($title).'">&nbsp;&lt;&lt;&nbsp;</a> | <a class="nav" href="filmeseriale_filme.php?page='.($page+1).'&file='.$file.'&title='.urlencode($title).'">&nbsp;&gt;&gt;&nbsp;</a></TD></TR>';
 else
-echo '<a class="nav" href="filmeseriale_filme.php?page='.($page+1).','.$search.','.urlencode($page_title).'">&nbsp;&gt;&gt;&nbsp;</a></TD></TR>';
-
+echo '<a class="nav" href="filmeseriale_filme.php?page='.($page+1).'&file='.$file.'&title='.urlencode($title).'">&nbsp;&gt;&gt;&nbsp;</a></TD></TR>';
+}
 echo "</table>";
 ?>
 <br></div></body>

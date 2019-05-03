@@ -119,6 +119,13 @@ echo '
 <TD width="25%"><a href="adult/eroxia_main.php" target="_blank">eroxia</a></TD>
 <TD width="25%"><a href="adult/deviantclip_main.php" target="_blank">deviantclip</a></TD>
 </TR>
+
+<TR>
+<TD width="25%"><a href="adult/trannytube_main.php" target="_blank">trannytube</a></TD>
+<TD width="25%"><a href="adult/eporner_main.php" target="_blank">eporner</a></TD>
+<TD width="25%"><a href="adult/extremetube_main.php" target="_blank">extremetube</a></TD>
+<TD width="25%"><a href="adult/porntrex_main.php" target="_blank">porntrex</a></TD>
+</TR>
 <!--
 <TR>
 <TD width="25%"><a href="adult/h2porn_main.php" target="_blank">h2porn</a></TD>
