@@ -33,6 +33,10 @@ if (file_exists($base_cookie."seriale.dat"))
   $val_search=file_get_contents($base_cookie."seriale.dat");
 else
   $val_search="";
+if (file_exists($base_pass."cineplex_host.txt"))
+  $host=file_get_contents($base_pass."cineplex_host.txt");
+else
+  $host="cinogen.net";
 $cookie=$base_cookie."cineplex.dat";
 $cont=$base_pass."cineplex.txt";
 
@@ -50,7 +54,7 @@ if (file_exists($cont) && !file_exists($cookie)) {
   $user=trim($a[0]);
   //$user=str_replace("@","%40",$user);
   $pass=trim($a[1]);
-  $l="https://cinogen.net/";
+  $l="https://".$host."/";
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $l);
   curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 10.0; rv:55.0) Gecko/20100101 Firefox/55.0');
@@ -62,7 +66,7 @@ if (file_exists($cont) && !file_exists($cookie)) {
   curl_setopt($ch, CURLOPT_TIMEOUT, 15);
   $h1 = curl_exec($ch);
   curl_close($ch);
-  $l="https://cinogen.net/session/userlogin";
+  $l="https://".$host."/session/userlogin";
   $post="username=".$user."&password=".$pass."&remember=1";
   //echo $post;
   $head=array('Accept-Language: ro-ro,ro;q=0.8,en-us;q=0.6,en-gb;q=0.4,en;q=0.2','Accept-Encoding: gzip, deflate','Content-Type: application/x-www-form-urlencoded','Content-Length: '.strlen($post));
@@ -83,7 +87,7 @@ if (file_exists($cont) && !file_exists($cookie)) {
   curl_close($ch);
 }
 $l="https://cineplex.to/movies";
-$l="https://cinogen.net/series";
+$l="https://".$host."/series";
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $l);
   curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 10.0; rv:55.0) Gecko/20100101 Firefox/55.0');

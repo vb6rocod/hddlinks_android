@@ -48,10 +48,14 @@ if ($tip=="movie") {
    $tit2=$tit." - ".$sez."x".$ep." - ".$ep_tit;
 }
 $cookie=$base_cookie."cineplex.dat";
-if ($tip=="movie")
-$l="https://cinogen.net/movies/getMovieLink?id=".$id."&token=".$token."&oPid=&_=";
+if (file_exists($base_pass."cineplex_host.txt"))
+  $host=file_get_contents($base_pass."cineplex_host.txt");
 else
-$l="https://cinogen.net/series/getTvLink?id=".$id."&token=".$token."&s=".$sez."&e=".$ep."&oPid=&_=";
+  $host="cinogen.net";
+if ($tip=="movie")
+$l="https://".$host."/movies/getMovieLink?id=".$id."&token=".$token."&oPid=&_=";
+else
+$l="https://".$host."/series/getTvLink?id=".$id."&token=".$token."&s=".$sez."&e=".$ep."&oPid=&_=";
 //echo $l;
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $l);
@@ -80,6 +84,19 @@ $l="https://cinogen.net/series/getTvLink?id=".$id."&token=".$token."&s=".$sez."&
       <title><?php echo $tit2; ?></title>
 	  <link rel="stylesheet" type="text/css" href="../custom.css" />
      <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.0/jquery.min.js"></script>
+<style>
+input[type=radio] + label {
+  color: #ccc;
+  font-style: normal;
+}
+input[type=radio]:checked + label {
+  color: #f00;
+  font-style: normal;
+}
+input[type=radio]:focus + label {
+  outline: 2px solid yellow;
+}
+</style>
 <script type="text/javascript">
 function get_XmlHttp() {
   // create the variable that will contain the instance of the XMLHttpRequest object (initially with null value)
@@ -94,6 +111,7 @@ function get_XmlHttp() {
 }
 function openlink(title) {
   link="";
+  link = document.querySelector('input[name="svr"]:checked').value;
   msg="cineplex_fs_link.php?serv=" + link + "&" + title;
   window.open(msg);
 }
@@ -104,6 +122,7 @@ function openlink1(title) {
   // create pairs index=value with data that must be sent to server
   //var the_data = {mod:add,title:title, link:link}; //Array
   link="";
+  link = document.querySelector('input[name="svr"]:checked').value;
   var the_data = "serv="+ link +"&"+title;
   var php_file="cineplex_fs_link.php";
   request.open("POST", php_file, true);			// set the request
@@ -129,6 +148,16 @@ function changeserver(s) {
   //alert (document.getElementById('server').innerHTML);
   //history.back();
 }
+</script>
+<script type="text/javascript">
+   function zx(e){
+     var charCode = (typeof e.which == "number") ? e.which : e.keyCode
+     if (charCode == "13" && e.target.type == "radio") {
+      document.getElementById(e.target.id).click();
+      //alert (e.target.id);
+    }
+   }
+document.onkeypress =  zx;
 </script>
   </head>
    <body><div id="mainnav">
@@ -187,6 +216,7 @@ if ($user=="free" && file_exists($amigo)) {
 echo '<table border="1" width="100%">';
 echo '<TR><TD align="center" colspan="'.(count($arr)*2).'"><font size="4"><b>Vizionati !</b></font></td></TR>';
 echo '<TR>';
+
 foreach ($arr as $key => $value) {
   //print_r ($value);
   //echo $key;
@@ -206,6 +236,7 @@ foreach ($arr as $key => $value) {
   echo '<TD align="center"><font size="4"><b><a href="#" onclick="openlink1('."'".$openlink."'".');return false;">'.$openload.'</a></b></font></td>';
   }
 }
+
 } else {
 echo '<table border="1" width="100%">';
 echo '<TR><TD align="center" colspan="'.(count($arr)*2).'"><font size="4"><b>Vizionati !</b></font></td></TR>';
@@ -226,6 +257,20 @@ foreach ($arr as $key => $value) {
 
 echo '</tr>';
 echo '</table>';
+$movie=$arr[0]["file"];
+if (preg_match("/trial(\d+)/",$movie,$m)) {
+ $serv = $m[1];
+ echo '<hr><table border="1" width="100%">';
+ echo '<TR><TD class="cat">Alegeti alt server:</TD>';
+ echo '<TD class="cat">';
+ for ($k=1;$k<7;$k++) {
+  if ($k==hexdec($serv))
+   echo '<input type="radio" name="svr" id="svr'.$k.'" value="'.$k.'" checked><label for="svr'.$k.'">Server: '.$k.'</label>';
+  else
+   echo '<input type="radio" name="svr" id="svr'.$k.'" value="'.$k.'"><label for="svr'.$k.'">Server: '.$k.'</label>';
+ }
+ echo '</TD></TR></TABLE>';
+}
 echo '<BR><table border="0px" width="100%"><TR>'."\n\r";
 echo '<TD align="center"><label id="wait"></label></TR></TABLE>';
 echo '<br></div></body>

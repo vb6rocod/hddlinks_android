@@ -18,7 +18,8 @@ if($query) {
 file_put_contents($base_cookie."adult.dat",urldecode($search1));
  $search1=str_replace(" ","-",$search1);
  $page_title="Cautare: ".str_replace("-"," ",$search1);
- $search3 = "https://www.porntrex.com/search/".$search1."/?mode=async&function=get_block&block_id=list_videos_videos&q=mom+son&category_ids=&sort_by=relevance&from_videos=".$page1."&from_albums=02&_=1556827208252";
+ $search3 = "https://www.porntrex.com/search/".$search1."/?mode=async&function=get_block&block_id=list_videos_videos&q=".$search1."&category_ids=&sort_by=latest-updates&from_videos=".$page1."&from_albums=02&_=1556827208252";
+ //$search3="https://www.porntrex.com/search/german/?mode=async&function=get_block&block_id=list_videos_videos&q=german&category_ids=&sort_by=relevance&from_videos=01&from_albums=02&_=1557258288270";
 }
 ?>
 <html><head>

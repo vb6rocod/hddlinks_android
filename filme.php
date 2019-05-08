@@ -90,8 +90,9 @@ document.onkeypress =  zx;
 <TR>
 <TD width="25%"><a href="filme/hdpopcorns.php?page=1&file=release&title=hdpopcorns" target="_blank">hdpopcorns</TD>
 <TD width="25%"><a href="filme/spacemov.php?page=1&file=release&title=spacemov" target="_blank">spacemov</TD>
-<TD width="25%"></TD>
-<TD width="25%"></TD>
+<TD width="25%"><a href="filme/flixtor_f.php?page=1&file=release&title=flixtor" target="_blank">flixtor (PC)</TD>
+<TD width="25%"><a href="filme/moviesjoy_f.php?page=1&file=release&title=moviesjoy" target="_blank">moviesjoy</TD>
+
 </TR>
 
 <?php

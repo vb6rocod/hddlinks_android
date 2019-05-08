@@ -96,6 +96,7 @@ $id=$_POST["imdb"];
 $q=$_POST["q"];
 $tip=$_POST["tip"];
 $token=$_POST["token"];
+$svr=$_POST['serv'];
 if ($tip=="series") {
      $sez=$_POST["sez"];
      $ep=$_POST["ep"];
@@ -110,6 +111,7 @@ $id=$_GET["imdb"];
 $q=$_GET["q"];
 $tip=$_GET["tip"];
 $token=$_GET["token"];
+$svr=$_GET['serv'];
 if ($tip=="series") {
      $sez=$_GET["sez"];
      $ep=$_GET["ep"];
@@ -120,10 +122,14 @@ if ($tip=="series") {
 $t1=explode("|",$q);
 //echo $sub;
 $cookie=$base_cookie."cineplex.dat";
-if ($tip=="movie")
- $l="https://cinogen.net/movies/getMovieLink?id=".$id."&token=".$token."&oPid=&_=";
+if (file_exists($base_pass."cineplex_host.txt"))
+  $host=file_get_contents($base_pass."cineplex_host.txt");
 else
- $l="https://cinogen.net/series/getTvLink?id=".$id."&token=".$token."&s=".$sez."&e=".$ep."&oPid=&_=";
+  $host="cinogen.net";
+if ($tip=="movie")
+ $l="https://".$host."/movies/getMovieLink?id=".$id."&token=".$token."&oPid=&_=";
+else
+ $l="https://".$host."/series/getTvLink?id=".$id."&token=".$token."&s=".$sez."&e=".$ep."&oPid=&_=";
 //echo $l;
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $l);
@@ -151,7 +157,9 @@ for ($k=0;$k<count($arr);$k++) {
     break;
   }
 }
-$movie = preg_replace("/trial\d+/","trial4",$movie);   // set to Netherlands
+//$movie=str_replace("cineplex.to","cinogen.net",$movie);
+$movie = preg_replace("/trial\d+/","trial".$svr,$movie);   // set to Netherlands
+//$movie = preg_replace("/trial6/","trial2",$movie);   // set to Netherlands
 //echo $movie; die();
 $b = basename($movie);
 $y=explode("?",$b);

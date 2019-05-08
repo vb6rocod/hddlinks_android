@@ -6,6 +6,10 @@ if (file_exists($base_cookie."filme.dat"))
   $val_search=file_get_contents($base_cookie."filme.dat");
 else
   $val_search="";
+if (file_exists($base_pass."cineplex_host.txt"))
+  $host=file_get_contents($base_pass."cineplex_host.txt");
+else
+  $host="cinogen.net";
 $cookie=$base_cookie."cineplex.dat";
 $title = $_GET["title"];
 $page = $_GET["page"];
@@ -140,7 +144,7 @@ echo '<TD colspan="4" align="right"><a class="nav" href="cineplex_f.php?page='.(
 
 if ($tip=="search") {
 //$l="https://cineplex.to/search/auto?q=".str_replace("+","%20",urlencode($title))."&_=";
-$l="https://cinogen.net/index/loadmovies";
+$l="https://".$host."/index/loadmovies";
 $post="loadmovies=showData&page=1&abc=All&genres=&sortby=Recent&quality=All&type=movie&q=".str_replace("+","%20",urlencode($title))."&token=".$token;
 $head=array('Accept-Language: ro-ro,ro;q=0.8,en-us;q=0.6,en-gb;q=0.4,en;q=0.2','Accept-Encoding: deflate','Content-Type: application/x-www-form-urlencoded','X-Requested-With: XMLHttpRequest','Content-Length: '.strlen($post));
 
@@ -159,7 +163,7 @@ $head=array('Accept-Language: ro-ro,ro;q=0.8,en-us;q=0.6,en-gb;q=0.4,en;q=0.2','
   $html = curl_exec($ch);
   curl_close($ch);
 } else {
-  $l="https://cinogen.net/index/loadmoviesnew";
+  $l="https://".$host."/index/loadmoviesnew";
   $post="loadmovies=showData&page=".$page."&abc=All&genres=".$gen."&sortby=Recent&quality=All&type=movie&q=&token=".$token;
   //echo $post;
   $head=array('Accept-Language: ro-ro,ro;q=0.8,en-us;q=0.6,en-gb;q=0.4,en;q=0.2','Accept-Encoding: deflate','Content-Type: application/x-www-form-urlencoded','X-Requested-With: XMLHttpRequest','Content-Length: '.strlen($post));
@@ -196,7 +200,7 @@ if ($tip=="search") {
     $image= $t2[0];
     $t1=explode('href="',$video);
     $t2=explode('"',$t1[1]);
-    $imdb="https://cinogen.net".$t2[0];
+    $imdb="https://".$host.$t2[0];
     $link_fs='cineplex_fs.php?tip=movie&imdb='.$imdb.'&title='.urlencode(fix_t($title1)).'&image='.$image."&year=".$year."&token=".$token;
 
   $fav_link="mod=add&title=".urlencode(fix_t($title1))."&imdb=".$imdb."&year=".$year."&image=".$image;
@@ -234,7 +238,7 @@ if ($tip=="search") {
     $image= $t2[0];
     $t1=explode('href="',$video);
     $t2=explode('"',$t1[1]);
-    $imdb="https://cinogen.net".$t2[0];
+    $imdb="https://".$host.$t2[0];
     $link_fs='cineplex_fs.php?tip=movie&imdb='.$imdb.'&title='.urlencode(fix_t($title1)).'&image='.$image."&year=".$year."&token=".$token;
   //if ($title11 && strpos($link1,"/tv") !== false) {
   $val_imdb="title=".unfix_t(urldecode($title1))."&year=".$year."&imdb=";

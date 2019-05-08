@@ -30,10 +30,14 @@ echo '<table border="1" width="100%">'."\n\r";
 ///flixanity_s_ep.php?tip=serie&file=http://flixanity.watch/the-walking-dead&title=The Walking Dead&image=http://flixanity.watch/thumbs/show_85a60e7d66f57fb9d75de9eefe36c42c.jpg
 $id=str_between($link,"series/","-");
 $cookie=$base_cookie."cineplex.dat";
+if (file_exists($base_pass."cineplex_host.txt"))
+  $host=file_get_contents($base_pass."cineplex_host.txt");
+else
+  $host="cinogen.net";
 $episoade=array();
 $sez="1";
 while (true) {
-  $l="https://cinogen.net/series/season?id=".$id."&s=".$sez."&token=".$token."&_";
+  $l="https://".$host."/series/season?id=".$id."&s=".$sez."&token=".$token."&_";
   //echo $l;
   //echo $post;
   $ch = curl_init();

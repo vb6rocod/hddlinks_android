@@ -33,6 +33,10 @@ if (file_exists($base_cookie."seriale.dat"))
   $val_search=file_get_contents($base_cookie."seriale.dat");
 else
   $val_search="";
+if (file_exists($base_pass."cineplex_host.txt"))
+  $host=file_get_contents($base_pass."cineplex_host.txt");
+else
+  $host="cinogen.net";
 $cookie=$base_cookie."cineplex.dat";
 $cont=$base_pass."cineplex.txt";
 
@@ -45,7 +49,7 @@ $n=0;
 if (file_exists($cookie)) unlink ($cookie);
 $token="1111111111111111111111";
 $id="941223";
-$l="https://cinogen.net/movies/getMovieLink?id=".$id."&token=".$token."&oPid=&_=";
+$l="https://".$host."/movies/getMovieLink?id=".$id."&token=".$token."&oPid=&_=";
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $l);
   curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 10.0; rv:55.0) Gecko/20100101 Firefox/55.0');

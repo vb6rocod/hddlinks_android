@@ -381,7 +381,7 @@ if ($from=="digifree") {
     $link=str_between($h,'file":"','"');
     $link=preg_replace("/edge\d+\.rcs\-rds\.ro/","82.76.40.81",$link);
     $link=preg_replace("/edge\d+\.rdsnet\.ro/","82.76.40.81",$link);
-    $link="http:".$link;
+    if ($link) $link="http:".$link;
 
 }
 if ($from=="neterra") {
