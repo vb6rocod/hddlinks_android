@@ -307,7 +307,7 @@ $cast = substr($cast, 0, -1);
   //echo $imdb;
   //tt0122459
   //tt000000000122459  --->> bad
-  $imdb=preg_replace("/^tt0{2,}/","tt0",$imdb);
+  $imdb=preg_replace("/^tt0{2,}/","tt00",$imdb);
   $key=file_get_contents($base_pass."omdb.txt");
   $url="http://www.omdbapi.com/?apikey=".$key."&i=".$imdb."&plot=full";
   $ch = curl_init();

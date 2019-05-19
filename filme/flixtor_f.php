@@ -120,10 +120,15 @@ $tast=trim(file_get_contents($base_pass."tastatura.txt"));
 } else {
 $tast="NU";
 }
+if (file_exists($base_pass."player.txt")) {
+$flash=trim(file_get_contents($base_pass."player.txt"));
+} else {
+$flash="direct";
+}
 $w=0;
 $n=0;
 $w=0;
-if ($tip=="release" && $page == 1) {
+if ($tip=="release" && $page == 1 && $flash=="flash") {
 echo '<iframe src="https://flixtor.ac/avengers-infinity-war-stream-1472646.html" style="display: none;"></iframe>';
 }
 //echo '<H2>'.$page_title.'</H2>';

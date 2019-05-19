@@ -70,7 +70,7 @@ echo '<TD width="25%"><a href="filme/filmeseriale_main.php?page=1&file=release&t
 <TR>
 <TD width="25%"><a href="filme/filmetop.php?page=1&tip=release&title=filmetop" target="_blank">filmetop</a></TD>
 <TD width="25%"><a href="filme/filme--online.php?page=1&tip=release&title=filme--online" target="_blank">filme--online</a></TD>
-<TD width="25%"></TD>
+<TD width="25%"><a href="filme/filmeseriale_eu.php?page=1&tip=release&title=filmeseriale.eu" target="_blank">filmeseriale.eu</a></TD>
 <TD width="25%"></TD>
 </TR>
 <!-- straine -->
@@ -89,7 +89,8 @@ echo '<TD width="25%"><a href="filme/filmeseriale_main.php?page=1&file=release&t
 <TR>
 <TD width="25%"><a href="filme/openloadmovies_s.php?page=1&file=release&title=openloadmovies" target="_blank">openloadmovies</TD>
 <TD width="25%"><a href="filme/seriesfreetv_s.php?page=1&tip=release&title=seriesfreetv" target="_blank">seriesfreetv</a></TD>
-<TD width="25%"></TD>
+<TD width="25%"><a href="filme/moviesjoy_s.php?page=1&tip=release&title=moviesjoy" target="_blank">moviesjoy</a></TD>
+
 <TD width="25%"></TD>
 </TR>
 <?php

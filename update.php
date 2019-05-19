@@ -62,7 +62,7 @@ $fp = fopen($path, 'w');
 
 $ch = curl_init($url);
 curl_setopt($ch, CURLOPT_FILE, $fp);
-
+curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
 $data = curl_exec($ch);
 
 curl_close($ch);

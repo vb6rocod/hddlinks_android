@@ -15,15 +15,13 @@ if($query) {
 }
 } else {
  $search1=$_GET["src"];
- file_put_contents($base_cookie."adult.dat",urldecode($search1));
+file_put_contents($base_cookie."adult.dat",urldecode($search1));
  $search1=str_replace(" ","+",$search1);
  $page_title="Cautare: ".str_replace("+"," ",$search1);
  if ($page1 > 1)
- $search="https://www.tube8.com/searches.html?q=".$search1."&page=".$page1;
+ $search="https://www.ashemaletube.com/search/".str_replace("+","_",$search1)."/".$page1."/?sort=re";
  else
- $search="https://www.tube8.com/searches.html?q=".$search1;
-//http://www.tube8.com/searches.html
-//http://www.tube8.com/searches.html?q=mom&page=2
+ $search="https://www.ashemaletube.com/search/".str_replace("+","_",$search1)."?sort=re";
 }
 ?>
 <html><head>
@@ -65,7 +63,7 @@ function ajaxrequest(title, link) {
   //var the_data = {mod:add,title:title, link:link}; //Array
   on();
   var the_data = "mod=add&title="+ title +"&link="+link;
-  var php_file="tube8_link.php";
+  var php_file="astube_link.php";
   request.open("POST", php_file, true);			// set the request
 
   // adds a header to tell the PHP script to recognize the data as is sent via POST
@@ -153,77 +151,66 @@ echo '<table border="1px" width="100%">'."\n\r";
 echo '<tr><TD colspan="4" align="right">';
 if ($page1) {
 if ($page1 > 1)
-echo '<a href="tube8.php?page1='.($page1-1).'&src='.$search1.'">&nbsp;&lt;&lt;&nbsp;</a> | <a href="tube8.php?page1='.($page1+1).'&src='.$search1.'">&nbsp;&gt;&gt;&nbsp;</a></TD></TR>';
+echo '<a href="astube.php?page1='.($page1-1).'&src='.$search1.'">&nbsp;&lt;&lt;&nbsp;</a> | <a href="astube.php?page1='.($page1+1).'&src='.$search1.'">&nbsp;&gt;&gt;&nbsp;</a></TD></TR>';
 else
-echo '<a href="tube8.php?page1='.($page1+1).'&src='.$search1.'">&nbsp;&gt;&gt;&nbsp;</a></TD></TR>';
+echo '<a href="astube.php?page1='.($page1+1).'&src='.$search1.'">&nbsp;&gt;&gt;&nbsp;</a></TD></TR>';
 } else {
 if ($page > 1)
-echo '<a href="tube8.php?page='.($page-1).','.$search.','.urlencode($page_title).'">&nbsp;&lt;&lt;&nbsp;</a> | <a href="tube8.php?page='.($page+1).','.$search.','.urlencode($page_title).'">&nbsp;&gt;&gt;&nbsp;</a></TD></TR>';
+echo '<a href="astube.php?page='.($page-1).','.$search.','.urlencode($page_title).'">&nbsp;&lt;&lt;&nbsp;</a> | <a href="astube.php?page='.($page+1).','.$search.','.urlencode($page_title).'">&nbsp;&gt;&gt;&nbsp;</a></TD></TR>';
 else
-echo '<a href="tube8.php?page='.($page+1).','.$search.','.urlencode($page_title).'">&nbsp;&gt;&gt;&nbsp;</a></TD></TR>';
+echo '<a href="astube.php?page='.($page+1).','.$search.','.urlencode($page_title).'">&nbsp;&gt;&gt;&nbsp;</a></TD></TR>';
 }
 if (!$page1) {
-if($page>1) {
-    if($search) {
-        $l = str_replace(" ","%20",$search)."page/".$page."/";
-    } else {
-        $l = str_replace(" ","%20",$search)."page/".$page."/";
-    }
-} else {
-    if($search) {
-        $l = str_replace(" ","%20",$search);
-    } else {
-        $l = str_replace(" ","%20",$search);
-    }
-}
+  if ($page>1)
+  $l = $search.$page."/";
+  else
+  $l = $search;
 } else {
 //echo $search;
 $l = $search;
 }
 //echo $l;
-//$l="https://www.tube8.com/cat/asian/12/page/2/";
+//$l="https://www.ashemaletube.com/videos/best-recent/3/";
        $ch = curl_init();
       curl_setopt($ch, CURLOPT_URL, $l);
       curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
       curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
       curl_setopt($ch, CURLOPT_USERAGENT, "Mozilla/5.0 (Windows NT 10.0; WOW64; rv:46.0) Gecko/20100101 Firefox/46.0");
       curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-      curl_setopt($ch, CURLOPT_REFERER, "https://www.tube8.com");
+      curl_setopt($ch, CURLOPT_REFERER, "https://www.ashemaletube.com");
       curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
       curl_setopt($ch, CURLOPT_TIMEOUT, 15);
       $html = curl_exec($ch);
       curl_close($ch);
+      //echo $html;
 $n=0;
-if (strpos($html,'category_video_list">') !== false) {
-$t1=explode('category_video_list">',$html);
-$html=$t1[1];
-}
 //$videos = explode('<div class="video">', $html);
 //echo $html;
-$videos = explode('<div id="video_', $html);
+$videos = explode('data-video-id="', $html);
 unset($videos[0]);
 $videos = array_values($videos);
 
 foreach($videos as $video) {
-    $t1 = explode('<a href="', $video);
+    $t1 = explode('href="', $video);
     $t2 = explode('"', $t1[1]);
-    $link = $t2[0];
+    $link = "https://www.ashemaletube.com".$t2[0];
 
     //http://img02.redtubefiles.com/_thumbs/0000350/0350855/0350855_009m.jpg
-    //$t1 = explode('src="', $video);
-    //$t2 = explode('"', $t1[1]);
-    //$image = $t2[0];
-    //if (strpos($image,".gif") !== false) {
-     $image=str_between($video,'data-thumb="','"');
+    $t1 = explode('src="', $video);
+    $t2 = explode('"', $t1[1]);
+    $image = $t2[0];
     //}
 
-    $t1 = explode('title="', $video);
-    $t2 = explode('"', $t1[1]);
-    $title = $t2[0];
-    $data = " (".trim(str_between($video,'video-duration">',"<")).")";
+    $t1=explode('title="',$video);
+    $t2=explode('"',$t1[1]);
+    $title=$t2[0];
+    $t1=explode('time-label-wrapper">',$video);
+    $t2=explode('</div',$t1[1]);
+    $durata=trim(strip_tags($t2[0]));
+    $data = " (".trim($durata).")";
   if ($n==0) echo '<TR>';
    if ($flash != "mp") {
-   $link = "tube8_link.php?file=".urlencode($link)."&title=".urlencode($title);
+   $link = "astube_link.php?file=".urlencode($link)."&title=".urlencode($title);;
   echo '<td class="mp" align="center" width="25%"><a href="'.$link.'" target="_blank"><img src="'.$image.'" width="200px" height="150px"><BR>'.$title.$data.'</a></TD>';
   } else {
 
@@ -238,14 +225,14 @@ foreach($videos as $video) {
 echo '<tr><TD colspan="4" align="right">';
 if ($page1) {
 if ($page1 > 1)
-echo '<a href="tube8.php?page1='.($page1-1).'&src='.$search1.'">&nbsp;&lt;&lt;&nbsp;</a> | <a href="tube8.php?page1='.($page1+1).'&src='.$search1.'">&nbsp;&gt;&gt;&nbsp;</a></TD></TR>';
+echo '<a href="astube.php?page1='.($page1-1).'&src='.$search1.'">&nbsp;&lt;&lt;&nbsp;</a> | <a href="astube.php?page1='.($page1+1).'&src='.$search1.'">&nbsp;&gt;&gt;&nbsp;</a></TD></TR>';
 else
-echo '<a href="tube8.php?page1='.($page1+1).'&src='.$search1.'">&nbsp;&gt;&gt;&nbsp;</a></TD></TR>';
+echo '<a href="astube.php?page1='.($page1+1).'&src='.$search1.'">&nbsp;&gt;&gt;&nbsp;</a></TD></TR>';
 } else {
 if ($page > 1)
-echo '<a href="tube8.php?page='.($page-1).','.$search.','.urlencode($page_title).'">&nbsp;&lt;&lt;&nbsp;</a> | <a href="tube8.php?page='.($page+1).','.$search.','.urlencode($page_title).'">&nbsp;&gt;&gt;&nbsp;</a></TD></TR>';
+echo '<a href="astube.php?page='.($page-1).','.$search.','.urlencode($page_title).'">&nbsp;&lt;&lt;&nbsp;</a> | <a href="astube.php?page='.($page+1).','.$search.','.urlencode($page_title).'">&nbsp;&gt;&gt;&nbsp;</a></TD></TR>';
 else
-echo '<a href="tube8.php?page='.($page+1).','.$search.','.urlencode($page_title).'">&nbsp;&gt;&gt;&nbsp;</a></TD></TR>';
+echo '<a href="astube.php?page='.($page+1).','.$search.','.urlencode($page_title).'">&nbsp;&gt;&gt;&nbsp;</a></TD></TR>';
 }
 echo "</table>";
 ?>

@@ -7,6 +7,10 @@ $link=$_GET["imdb"];
 $tip=$_GET["tip"];
 $year=$_GET["year"];
 $token=$_GET["token"];
+if ($year)
+$tit2=$tit." (".$year.")";
+else
+$tit2=$tit;
 ?>
 <html><head>
 <meta http-equiv="content-type" content="text/html; charset=UTF-8">
@@ -24,7 +28,7 @@ function str_between($string, $start, $end){
 	if ($ini == 0) return ""; $ini += strlen($start); $len = strpos($string,$end,$ini) - $ini;
 	return substr($string,$ini,$len);
 }
-echo '<h2>'.$tit.'</h2>';
+echo '<h2>'.$tit2.'</h2>';
 echo '<table border="1" width="100%">'."\n\r";
 //echo '<TR><td style="color:#000000;background-color:deepskyblue;text-align:center" colspan="3" align="center">'.$tit.'</TD></TR>';
 ///flixanity_s_ep.php?tip=serie&file=http://flixanity.watch/the-walking-dead&title=The Walking Dead&image=http://flixanity.watch/thumbs/show_85a60e7d66f57fb9d75de9eefe36c42c.jpg

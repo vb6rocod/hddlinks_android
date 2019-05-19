@@ -4,7 +4,7 @@
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate"/>
 <meta http-equiv="Pragma" content="no-cache"/>
 <meta http-equiv="Expires" content="0"/>
-      <title>filmeonline2016</title>
+      <title>vezionline</title>
 <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
 <link rel="stylesheet" type="text/css" href="../custom.css" />
 <script type="text/javascript">
@@ -29,7 +29,7 @@ if (file_exists($base_cookie."filme.dat"))
   $val_search=file_get_contents($base_cookie."filme.dat");
 else
   $val_search="";
-$form='<TD class="form" colspan="2"><form action="filmeonline2016.php" target="_blank">
+$form='<TD class="form" colspan="2"><form action="vezionline.php" target="_blank">
 Cautare film:  <input type="text" id="title" name="title" value="'.$val_search.'">
 <input type="hidden" name="page" id="page" value="1">
 <input type="hidden" name="tip" id="tip" value="search">
@@ -37,13 +37,12 @@ Cautare film:  <input type="text" id="title" name="title" value="'.$val_search.'
 <input type="submit" id="send" value="Cauta..."></form>
 </td>';
 echo '<table border="1px" width="100%" style="table-layout:fixed;">'."\n\r";
-echo '<TR><th class="cat" colspan="3">filmeonline2016</th><TR>';
-echo '<TR><TD class="cat">'.'<a class ="nav" href="filmeonline2016.php?page=1&tip=release&link=https://filmeonline.st/&title=Recente" target="_blank">Recente...</a></TD>';
+echo '<TR><th class="cat" colspan="3">vezionline</th><TR>';
+echo '<TR><TD class="cat">'.'<a class ="nav" href="vezionline.php?page=1&tip=release&link=https://vezionline.net&title=Recente" target="_blank">Recente...</a></TD>';
 echo $form;
 echo '</TR>';
 $n=0;
-$l="http://www.filmeonline2016.biz/";
-$l="https://filmeonline.st/";
+$l="https://vezionline.net/";
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $l);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
@@ -55,21 +54,23 @@ $l="https://filmeonline.st/";
   $html = curl_exec($ch);
   curl_close($ch);
 
-$videos = explode('class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-', $html);
+//$html = str_between($html,"<ul class='homepage-menu'>","</ul>" );
+
+$videos = explode('li class="cat-item', $html);
 unset($videos[0]);
 $videos = array_values($videos);
 
 foreach($videos as $video) {
     $t0 = explode('href="',$video);
     $t1 = explode('"', $t0[1]);
-    $link = $t1[0];
+    $link=$t1[0];
     $t2 = explode('>', $t0[1]);
     $t3 = explode('<', $t2[1]);
     $title = $t3[0];
-    $link="filmeonline2016.php?page=1&tip=release&link=".$link."&title=".urlencode($title);
-    if (!preg_match("/IN CURAND|FILME SERIALE|seriale/i",$title)) {
+    $link="vezionline.php?page=1&tip=release&link=".$link."&title=".urlencode($title);
+    if (!preg_match("/IN CURAND|FILME SERIALE/",$title)) {
 	if ($n == 0) echo "<TR>"."\n\r";
-    echo '<TD class="cat">'.'<a class ="nav" href="'.$link.'" target="_blank">'.$title.'</a></TD>';
+	echo '<TD class="cat">'.'<a class ="nav" href="'.$link.'" target="_blank">'.$title.'</a></TD>';
     $n++;
     if ($n > 2) {
      echo '</TR>'."\n\r";
@@ -80,5 +81,5 @@ foreach($videos as $video) {
  if ($n<3) echo "</TR>"."\n\r";
  echo '</table>';
 ?>
-</body>
+<BODY>
 </HTML>

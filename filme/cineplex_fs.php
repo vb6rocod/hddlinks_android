@@ -12,7 +12,7 @@ $list = glob($base_sub."*.srt");
     str_replace(" ","%20",$l);
     unlink($l);
 }
-$amigo=$base_pass."tvplay.txt";
+$amigo=$base_pass."tvplay1.txt";
 if (file_exists($base_pass."player.txt")) {
 $flash=trim(file_get_contents($base_pass."player.txt"));
 } else {
@@ -30,7 +30,7 @@ if (preg_match("/android|ipad/i",$user_agent) && preg_match("/chrome|firefox|mob
 //query=8612&tv=0&title=The+Intervention+(2016)&serv=30&hd=NU
 //$link_fs='cineplex_fs.php?tip=movie&imdb='.$imdb.'&title='.urlencode(fix_t($title1)).'&image='.$image."&year=".$year;
 
-
+$user="";
 $tit=unfix_t(urldecode($_GET["title"]));
 $image=$_GET["image"];
 $link=$_GET["imdb"];
@@ -38,7 +38,10 @@ $tip=$_GET["tip"];
 $year=$_GET["year"];
 $token=$_GET["token"];
 if ($tip=="movie") {
-   $tit2=$tit;
+   if (!$year)
+     $tit2=$tit;
+   else
+     $tit2=$tit." (".$year.")";
    $id=str_between($link,"/movies/","-");
 } else {
    $id=str_between($link,"series/","-");
@@ -56,12 +59,13 @@ if ($tip=="movie")
 $l="https://".$host."/movies/getMovieLink?id=".$id."&token=".$token."&oPid=&_=";
 else
 $l="https://".$host."/series/getTvLink?id=".$id."&token=".$token."&s=".$sez."&e=".$ep."&oPid=&_=";
+$rh="https://".$host;
 //echo $l;
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $l);
   curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 10.0; rv:55.0) Gecko/20100101 Firefox/55.0');
   //curl_setopt($ch,CURLOPT_HTTPHEADER,$head);
-  curl_setopt($ch,CURLOPT_REFERER,"https://cineplex.to");
+  curl_setopt($ch,CURLOPT_REFERER,$rh);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
   curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie);
   curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
@@ -155,7 +159,19 @@ function changeserver(s) {
      if (charCode == "13" && e.target.type == "radio") {
       document.getElementById(e.target.id).click();
       //alert (e.target.id);
-    }
+    } else if (charCode == "49") {
+      document.getElementById("opensub").click();
+     } else if (charCode == "50") {
+      document.getElementById("titrari").click();
+     } else if (charCode == "51") {
+      document.getElementById("subs").click();
+     } else if (charCode == "52") {
+      document.getElementById("subtitrari").click();
+     } else if (charCode == "53") {
+      document.getElementById("v0").click();
+     } else if (charCode == "54") {
+      document.getElementById("v1").click();
+     }
    }
 document.onkeypress =  zx;
 </script>
@@ -202,15 +218,15 @@ echo '</table><br>';
 echo '<table border="1" width="100%">';
 echo '<TR><TD style="background-color:#0a6996;color:#64c8ff;text-align:center;vertical-align:middle;height:15px" colspan="4"><font size="4"><b>Alegeti o subtitrare</b></font></td></TR>';
 echo '<TR>';
-echo '<TD align="center"><font size="4"><b><a href="opensubtitles.php?'.$sub_link.'">opensubtitles</b</font></a></td>';
-echo '<TD align="center"><font size="4"><b><a href="titrari_main.php?page=1&'.$sub_link.'">titrari.ro</b</font></a></td>';
-echo '<TD align="center"><font size="4"><b><a href="subs_main.php?'.$sub_link.'">subs.ro</b</font></a></td>';
-echo '<TD align="center"><font size="4"><b><a href="subtitrari_main.php?'.$sub_link.'">subtitrari_noi.ro</b</font></a></td>';
+echo '<TD align="center"><font size="4"><b><a id="opensub" href="opensubtitles.php?'.$sub_link.'">opensubtitles</b</font></a></td>';
+echo '<TD align="center"><font size="4"><b><a id="titrari" href="titrari_main.php?page=1&'.$sub_link.'">titrari.ro</b</font></a></td>';
+echo '<TD align="center"><font size="4"><b><a id="subs" href="subs_main.php?'.$sub_link.'">subs.ro</b</font></a></td>';
+echo '<TD align="center"><font size="4"><b><a id="subtitrari" href="subtitrari_main.php?'.$sub_link.'">subtitrari_noi.ro</b</font></a></td>';
 echo '</TR><TR></TABLE>';
 if ($tip=="movie") {
-$openlink1="tip=movie&imdb=".$id."&title=".urlencode(fix_t($tit))."&image=".$image."&token=".$token;
+$openlink1="tip=movie&imdb=".$id."&title=".urlencode(fix_t($tit))."&image=".$image."&token=".$token."&year=".$year;
 } else {
-$openlink1="tip=series&imdb=".$id."&title=".urlencode(fix_t($tit))."&image=".$image."&token=".$token."&sez=".$sez."&ep=".$ep."&ep_tit=".urlencode(fix_t($ep_tit));
+$openlink1="tip=series&imdb=".$id."&title=".urlencode(fix_t($tit))."&image=".$image."&token=".$token."&sez=".$sez."&ep=".$ep."&ep_tit=".urlencode(fix_t($ep_tit))."&year=".$year;
 }
 if ($user=="free" && file_exists($amigo)) {
 echo '<table border="1" width="100%">';
@@ -241,17 +257,19 @@ foreach ($arr as $key => $value) {
 echo '<table border="1" width="100%">';
 echo '<TR><TD align="center" colspan="'.(count($arr)*2).'"><font size="4"><b>Vizionati !</b></font></td></TR>';
 echo '<TR>';
+$w=0;
 foreach ($arr as $key => $value) {
   //print_r ($value);
   if ($flash != "mp") {
   $openload=$arr[$key]["label"];
   $openlink=$openlink1."&q=".$openload;
-  echo '<TD align="center"><font size="4"><b><a href="#" onclick="openlink('."'".$openlink."'".');return false;">'.$openload.'</a></b></font></td>';
+  echo '<TD align="center"><font size="4"><b><a id="v'.$w.'" href="#" onclick="openlink('."'".$openlink."'".');return false;">'.$openload.'</a></b></font></td>';
   } else {
   $openload=$arr[$key]["label"];
   $openlink=$openlink1."&q=".$openload;
-  echo '<TD align="center"><font size="4"><b><a href="#" onclick="openlink1('."'".$openlink."'".');return false;">'.$openload.'</a></b></font></td>';
+  echo '<TD align="center"><font size="4"><b><a id="v'.$w.'" href="#" onclick="openlink1('."'".$openlink."'".');return false;">'.$openload.'</a></b></font></td>';
   }
+  $w++;
 }
 }
 
@@ -270,8 +288,23 @@ if (preg_match("/trial(\d+)/",$movie,$m)) {
    echo '<input type="radio" name="svr" id="svr'.$k.'" value="'.$k.'"><label for="svr'.$k.'">Server: '.$k.'</label>';
  }
  echo '</TD></TR></TABLE>';
+} else {
+$arr=$r["server"]["list"];
+$serv=$r["server"]["selected"];
+ echo '<hr><table border="1" width="100%">';
+ echo '<TR><TD class="cat">Alegeti alt server:</TD>';
+ echo '<TD class="cat">';
+foreach ($arr as $key => $value) {
+  //print_r ($value);
+  //echo $key;
+  if ($key==hexdec($serv))
+   echo '<br><input type="radio" name="svr" id="svr'.$key.'" value="'.$value.'" checked><label for="svr'.$key.'">Server: '.$value.'</label>';
+  else
+   echo '<br><input type="radio" name="svr" id="svr'.$key.'" value="'.$value.'"><label for="svr'.$key.'">Server: '.$value.'</label>';
+}
 }
 echo '<BR><table border="0px" width="100%"><TR>'."\n\r";
-echo '<TD align="center"><label id="wait"></label></TR></TABLE>';
+echo '<TD><font size="4"><b>Scurtaturi: 1=opensubtitles, 2=titrari, 3=subs, 4=subtitrari, 5,6=vizionare</b></font></TD></TR>';
+echo '<TR><TD align="center"><label id="wait"></label></TR></TABLE>';
 echo '<br></div></body>
 </html>';

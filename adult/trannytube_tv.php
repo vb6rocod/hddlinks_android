@@ -15,15 +15,10 @@ if($query) {
 }
 } else {
  $search1=$_GET["src"];
- file_put_contents($base_cookie."adult.dat",urldecode($search1));
- $search1=str_replace(" ","+",$search1);
- $page_title="Cautare: ".str_replace("+"," ",$search1);
- if ($page1 > 1)
- $search="https://www.tube8.com/searches.html?q=".$search1."&page=".$page1;
- else
- $search="https://www.tube8.com/searches.html?q=".$search1;
-//http://www.tube8.com/searches.html
-//http://www.tube8.com/searches.html?q=mom&page=2
+file_put_contents($base_cookie."adult.dat",urldecode($search1));
+ $search1=str_replace(" ","%20",$search1);
+ $page_title="Cautare: ".str_replace("%20"," ",$search1);
+ $search3 = "https://www.trannytube.tv/search/".$search1."?page=".$page1;
 }
 ?>
 <html><head>
@@ -34,15 +29,6 @@ if($query) {
 <meta http-equiv="Expires" content="0"/>
       <title><?php echo $page_title; ?></title>
 <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.0/jquery.min.js"></script>
-<html><head>
-<meta http-equiv="content-type" content="text/html; charset=UTF-8">
-
-      <meta charset="utf-8">
-      <title><?php echo $page_title; ?></title>
-   	  <link rel="stylesheet" type="text/css" href="../custom.css" />
-     <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.0/jquery.min.js"></script>
-      <script type="text/javascript" src="../jquery.fancybox.js?v=2.1.5"></script>
-      <link rel="stylesheet" type="text/css" href="../jquery.fancybox.css?v=2.1.5" media="screen" />
 <script type="text/javascript">
 // create the XMLHttpRequest object, according browser
 function get_XmlHttp() {
@@ -65,7 +51,7 @@ function ajaxrequest(title, link) {
   //var the_data = {mod:add,title:title, link:link}; //Array
   on();
   var the_data = "mod=add&title="+ title +"&link="+link;
-  var php_file="tube8_link.php";
+  var php_file="trannytube_tv_link.php";
   request.open("POST", php_file, true);			// set the request
 
   // adds a header to tell the PHP script to recognize the data as is sent via POST
@@ -109,6 +95,7 @@ function ajaxrequest(title, link) {
     -ms-transform: translate(-50%,-50%);
 }
 </style>
+
 </head>
 <body>
 <script>
@@ -126,8 +113,6 @@ function str_between($string, $start, $end){
 	if ($ini == 0) return ""; $ini += strlen($start); $len = strpos($string,$end,$ini) - $ini;
 	return substr($string,$ini,$len);
 }
-//intent:#Intent;package=com.mxtech.videoplayer.pro;S.title=PornPros+-+Samantha+Rone+and+Preston+get+off+with+dual+masturbation;end
-//intent:https://ep3.t8cdn.com/videos/201610/25/94086031/480P_600K_94086031.mp4?validfrom=1533467996&validto=1533475196&rate=121k&burst=1200k&ip=82.210.178.241&hash=uRnDnoRHUoHJzdNh04Fym7zhhF0%3D#Intent;package=com.mxtech.videoplayer.pro;S.title=TEAMSKEET+-+Hot+Teen+Fucked+During+Gym+Workout;end
 if (file_exists($base_pass."player.txt")) {
 $flash=trim(file_get_contents($base_pass."player.txt"));
 } else {
@@ -142,10 +127,6 @@ $user_agent     =   $_SERVER['HTTP_USER_AGENT'];
 if ($flash != "mp") {
 if (preg_match("/android|ipad/i",$user_agent) && preg_match("/chrome|firefox|mobile/i",$user_agent)) $flash="chrome";
 }
-//http://www.hdfilm.ro/index.php?p=filme&gen=Actiune&page=1
-//$out1="http://127.0.0.1:8080/scripts/subs/out.m3u8";
-//$title="play...";
-//$c="intent:".$out1."#Intent;package=com.mxtech.videoplayer.".$mx.";S.title=".urlencode($title).";end";
 $c="";
   echo "<a href='".$c."' id='mytest1'></a>".'<div id="mainnav">';
 echo '<H2>'.$page_title.'</H2>';
@@ -153,80 +134,77 @@ echo '<table border="1px" width="100%">'."\n\r";
 echo '<tr><TD colspan="4" align="right">';
 if ($page1) {
 if ($page1 > 1)
-echo '<a href="tube8.php?page1='.($page1-1).'&src='.$search1.'">&nbsp;&lt;&lt;&nbsp;</a> | <a href="tube8.php?page1='.($page1+1).'&src='.$search1.'">&nbsp;&gt;&gt;&nbsp;</a></TD></TR>';
+echo '<a href="trannytube_tv.php?page1='.($page1-1).'&src='.$search1.'">&nbsp;&lt;&lt;&nbsp;</a> | <a href="trannytube_tv.php?page1='.($page1+1).'&src='.$search1.'">&nbsp;&gt;&gt;&nbsp;</a></TD></TR>';
 else
-echo '<a href="tube8.php?page1='.($page1+1).'&src='.$search1.'">&nbsp;&gt;&gt;&nbsp;</a></TD></TR>';
+echo '<a href="trannytube_tv.php?page1='.($page1+1).'&src='.$search1.'">&nbsp;&gt;&gt;&nbsp;</a></TD></TR>';
+//echo $search3;
+//https://www.youjizz.com/search/mature-mom-anal-1.html?
+//https://www.youjizz.com/search/mature-mom-anal-1.html?
+  $ch = curl_init();
+  curl_setopt($ch, CURLOPT_URL, $search3);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+  curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows; U; Windows NT 6.1; en-US; rv:1.9.1.2) Gecko/20090729 Firefox/3.5.2 GTB5');
+  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+  curl_setopt($ch, CURLOPT_REFERER, "https://www.youjizz.com/");
+  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+  $html = curl_exec($ch);
+  curl_close($ch);
 } else {
 if ($page > 1)
-echo '<a href="tube8.php?page='.($page-1).','.$search.','.urlencode($page_title).'">&nbsp;&lt;&lt;&nbsp;</a> | <a href="tube8.php?page='.($page+1).','.$search.','.urlencode($page_title).'">&nbsp;&gt;&gt;&nbsp;</a></TD></TR>';
+echo '<a href="trannytube_tv.php?page='.($page-1).','.$search.','.urlencode($page_title).'">&nbsp;&lt;&lt;&nbsp;</a> | <a href="trannytube_tv.php?page='.($page+1).','.$search.','.urlencode($page_title).'">&nbsp;&gt;&gt;&nbsp;</a></TD></TR>';
 else
-echo '<a href="tube8.php?page='.($page+1).','.$search.','.urlencode($page_title).'">&nbsp;&gt;&gt;&nbsp;</a></TD></TR>';
+echo '<a href="trannytube_tv.php?page='.($page+1).','.$search.','.urlencode($page_title).'">&nbsp;&gt;&gt;&nbsp;</a></TD></TR>';
+//$html = file_get_contents($search."?page=".$page);
+//https://www.porn.com/videos?p=2
+
+$search3  = $search."?page=".$page;  //http://www.4tube.com/videos?p=2&sort=date
+  $ch = curl_init();
+  curl_setopt($ch, CURLOPT_URL, $search3);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+  curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows; U; Windows NT 6.1; en-US; rv:1.9.1.2) Gecko/20090729 Firefox/3.5.2 GTB5');
+  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+  curl_setopt($ch, CURLOPT_REFERER, "https://www.trannytube.tv/");
+  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+  $html = curl_exec($ch);
+  curl_close($ch);
 }
-if (!$page1) {
-if($page>1) {
-    if($search) {
-        $l = str_replace(" ","%20",$search)."page/".$page."/";
-    } else {
-        $l = str_replace(" ","%20",$search)."page/".$page."/";
-    }
-} else {
-    if($search) {
-        $l = str_replace(" ","%20",$search);
-    } else {
-        $l = str_replace(" ","%20",$search);
-    }
-}
-} else {
-//echo $search;
-$l = $search;
-}
-//echo $l;
-//$l="https://www.tube8.com/cat/asian/12/page/2/";
-       $ch = curl_init();
-      curl_setopt($ch, CURLOPT_URL, $l);
-      curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-      curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
-      curl_setopt($ch, CURLOPT_USERAGENT, "Mozilla/5.0 (Windows NT 10.0; WOW64; rv:46.0) Gecko/20100101 Firefox/46.0");
-      curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-      curl_setopt($ch, CURLOPT_REFERER, "https://www.tube8.com");
-      curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
-      curl_setopt($ch, CURLOPT_TIMEOUT, 15);
-      $html = curl_exec($ch);
-      curl_close($ch);
 $n=0;
-if (strpos($html,'category_video_list">') !== false) {
-$t1=explode('category_video_list">',$html);
-$html=$t1[1];
-}
-//$videos = explode('<div class="video">', $html);
+//echo $search3;
 //echo $html;
-$videos = explode('<div id="video_', $html);
+//$videos = explode('<div class="video">', $html);
+//$videos=explode('<span class="video-title">',$html);
+//$videos = explode('class="frame video', $html);
+$videos = explode('class="b-thumb-item">',$html);
+
 unset($videos[0]);
 $videos = array_values($videos);
 
 foreach($videos as $video) {
-    $t1 = explode('<a href="', $video);
+    $t1=explode('href="',$video);
     $t2 = explode('"', $t1[1]);
-    $link = $t2[0];
-
-    //http://img02.redtubefiles.com/_thumbs/0000350/0350855/0350855_009m.jpg
-    //$t1 = explode('src="', $video);
-    //$t2 = explode('"', $t1[1]);
-    //$image = $t2[0];
-    //if (strpos($image,".gif") !== false) {
-     $image=str_between($video,'data-thumb="','"');
-    //}
-
-    $t1 = explode('title="', $video);
+    $link = "https://www.trannytube.tv".$t2[0];
+    $t1=explode('title="',$video);
+    $t3=explode('"',$t1[1]);
+    $title=$t3[0];
+    $t1 = explode('src="', $video);
     $t2 = explode('"', $t1[1]);
-    $title = $t2[0];
-    $data = " (".trim(str_between($video,'video-duration">',"<")).")";
+    $image = $t2[0];
+    //$image = str_replace("https","http",$image);
+    //$image="../filme/r_m.php?file=".$image;
+    $t1=explode('gallery-duration">',$video);
+    //$t2=explode('>',$t1[1]);
+    $t3=explode("<",$t1[1]);
+    $data=" (".trim($t3[0]).")";
+  if (strpos($link,"out.php") === false) {
   if ($n==0) echo '<TR>';
-   if ($flash != "mp") {
-   $link = "tube8_link.php?file=".urlencode($link)."&title=".urlencode($title);
+  if ($flash != "mp") {
+  $link = "trannytube_tv_link.php?file=".$link."&title=".urlencode($title);
   echo '<td class="mp" align="center" width="25%"><a href="'.$link.'" target="_blank"><img src="'.$image.'" width="200px" height="150px"><BR>'.$title.$data.'</a></TD>';
   } else {
-
   echo '<td class="mp" align="center" width="25%"><a onclick="ajaxrequest('."'".urlencode($title)."', '".urlencode($link)."')".'"'." style='cursor:pointer;'>".'<img src="'.$image.'" width="200px" height="150px"><BR>'.$title.$data.'</a></TD>';
   }
   $n++;
@@ -234,20 +212,22 @@ foreach($videos as $video) {
   echo '</tr>';
   $n=0;
   }
+  }
 }
 echo '<tr><TD colspan="4" align="right">';
 if ($page1) {
 if ($page1 > 1)
-echo '<a href="tube8.php?page1='.($page1-1).'&src='.$search1.'">&nbsp;&lt;&lt;&nbsp;</a> | <a href="tube8.php?page1='.($page1+1).'&src='.$search1.'">&nbsp;&gt;&gt;&nbsp;</a></TD></TR>';
+echo '<a href="trannytube_tv.php?page1='.($page1-1).'&src='.$search1.'">&nbsp;&lt;&lt;&nbsp;</a> | <a href="trannytube_tv.php?page1='.($page1+1).'&src='.$search1.'">&nbsp;&gt;&gt;&nbsp;</a></TD></TR>';
 else
-echo '<a href="tube8.php?page1='.($page1+1).'&src='.$search1.'">&nbsp;&gt;&gt;&nbsp;</a></TD></TR>';
+echo '<a href="trannytube_tv.php?page1='.($page1+1).'&src='.$search1.'">&nbsp;&gt;&gt;&nbsp;</a></TD></TR>';
+
 } else {
 if ($page > 1)
-echo '<a href="tube8.php?page='.($page-1).','.$search.','.urlencode($page_title).'">&nbsp;&lt;&lt;&nbsp;</a> | <a href="tube8.php?page='.($page+1).','.$search.','.urlencode($page_title).'">&nbsp;&gt;&gt;&nbsp;</a></TD></TR>';
+echo '<a href="trannytube_tv.php?page='.($page-1).','.$search.','.urlencode($page_title).'">&nbsp;&lt;&lt;&nbsp;</a> | <a href="trannytube_tv.php?page='.($page+1).','.$search.','.urlencode($page_title).'">&nbsp;&gt;&gt;&nbsp;</a></TD></TR>';
 else
-echo '<a href="tube8.php?page='.($page+1).','.$search.','.urlencode($page_title).'">&nbsp;&gt;&gt;&nbsp;</a></TD></TR>';
-}
-echo "</table>";
+echo '<a href="trannytube_tv.php?page='.($page+1).','.$search.','.urlencode($page_title).'">&nbsp;&gt;&gt;&nbsp;</a></TD></TR>';
+
+}echo "</table>";
 ?>
 <br></div>
 <div id="overlay"">

@@ -152,7 +152,7 @@ echo '<TD colspan="1" align="right"><a class="nav" href="moviesjoy_f.php?page='.
 }
 //https://www.moviesjoy.net/search/star+trek/page-2.html
 if ($tip=="search")
-  $requestLink = "https://www.moviesjoy.net/search/".str_replace(" ","+",$title)."page-".$page.".html";
+  $requestLink = "https://www.moviesjoy.net/search/".str_replace(" ","+",$title)."/page-".$page.".html";
  else
 $requestLink="https://www.moviesjoy.net/movie/filter/movie/all/all/all/all/all/all/page-".$page.".html";
 

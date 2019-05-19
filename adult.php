@@ -59,7 +59,8 @@ echo '
 
 
 <TD width="25%"><a href="adult/slutload_main.php" target="_blank">slutload</a></TD>
-<TD width="25%"><a href="adult/ah-me_main.php" target="_blank">ah-me</a></TD>
+<!-- <TD width="25%"><a href="adult/ah-me_main.php" target="_blank">ah-me</a></TD> -->
+<TD width="25%"><a href="adult/tvporn_main.php" target="_blank">tvporn</a></TD>
 <TD width="25%"><a href="adult/fapbox_main.php" target="_blank">fapbox</a></TD>
 <TD width="25%"><a href="adult/pornhub_main.php" target="_blank">porhub</a></TD>
 </TR>
@@ -126,11 +127,14 @@ echo '
 <TD width="25%"><a href="adult/extremetube_main.php" target="_blank">extremetube</a></TD>
 <TD width="25%"><a href="adult/porntrex_main.php" target="_blank">porntrex</a></TD>
 </TR>
-<!--
+
 <TR>
-<TD width="25%"><a href="adult/h2porn_main.php" target="_blank">h2porn</a></TD>
+<TD width="25%"><a href="adult/streamporn_main.php" target="_blank">streamporn</a></TD>
+<TD width="25%"><a href="adult/xopenload_main.php" target="_blank">xopenload</a></TD>
+<TD width="25%"><a href="adult/trannytube_tv_main.php" target="_blank">trannytube.tv</a></TD>
+<TD width="25%"><a href="adult/astube_main.php" target="_blank">astube</a></TD>
 </TR>
--->
+
 ';
 
 echo '

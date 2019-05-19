@@ -165,14 +165,18 @@ $l=$search;
   //die();
 //$html=str_between($html,'<section','</section');
 //echo $html;
-$videos = explode(' <article class="card', $html);
+$videos = explode('article class="article', $html);
 
 unset($videos[0]);
 $videos = array_values($videos);
 
 foreach($videos as $video) {
  $video=html_entity_decode($video);
- $title=str_between($video,'title="','"');
+ $t1=explode('href="',$video);
+ $t2=explode(">",$t1[2]);
+ $t3=explode("<",$t2[1]);
+ $title=trim($t3[0]);
+ //$title=str_between($video,'title="','"');
  $descriere=$title;
  $image=urldecode(str_between($video,'src="','"'));
  $link="https://www.digi24.ro".str_between($video,'href="','"');

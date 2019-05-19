@@ -29,7 +29,30 @@ function str_between($string, $start, $end){
 	if ($ini == 0) return ""; $ini += strlen($start); $len = strpos($string,$end,$ini) - $ini;
 	return substr($string,$ini,$len);
 }
-
+if (preg_match("/(.*?)\s+\-\s+(\d+)x(\d+)/i",$pg,$m)) {
+  $tit=$m[1];
+  $sez=$m[2];
+  $ep=$m[3];
+  $ep_tit=$sez."x".$ep;
+  $tip="series";
+} else if (preg_match("/(.*?)\s+Sezonul\s+(\d+)\s+Episodul\s+(\d+)/i",$pg,$m)) {
+  $tit=$m[1];
+  $sez=$m[2];
+  $ep=$m[3];
+  $ep_tit=$sez."x".$ep;
+  $tip="tv";
+} else {
+  $tit=$pg;
+  $sez="";
+  $ep="";
+  $ep_tit="";
+  $tip="movie";
+}
+$from="";
+$imdbid="";
+$tit_serial=$tit;
+$link_page="";
+$sub_link ="from=".$from."&tip=".$tip."&sez=".$sez."&ep=".$ep."&imdb=".$imdbid."&title=".urlencode(fix_t($tit_serial))."&link=".$link_page."&ep_tit=".urlencode(fix_t($ep_tit));
 
 /**####################################**/
 /** Here we start.......**/
@@ -799,7 +822,7 @@ foreach($videos as $video) {
  $html .=$h;
 }
 //echo $html;
-} elseif (strpos($filelink,"filmeonline2016.biz") !== false) {
+} elseif (strpos($filelink,"filmeonline2016.biz") !== false || strpos($filelink,"filmeonline.st") !== false) {
   $ua=$_SERVER['HTTP_USER_AGENT'];
   $ch = curl_init($filelink);
   curl_setopt($ch, CURLOPT_USERAGENT,$ua);
@@ -992,16 +1015,32 @@ $links=$matches[1];
 //print_r ($links);
 }
 $s="/adf\.ly|vidxden\.c|divxden\.c|vidbux\.c|movreel\.c|videoweed\.(c|e)|novamov\.(c|e)|vk\.com|gounlimited\.to";
-$s=$s."|movshare\.net|youtube\.com|youtube-nocookie\.com|flvz\.com|rapidmov\.net|putlocker\.com|mixturevideo\.com|played\.to|";
-$s=$s."peteava\.ro\/embed|peteava\.ro\/id|content\.peteava\.ro|divxstage\.net|divxstage\.eu|thevideo\.me|grab\.php\?link1=";
-$s=$s."|vimeo\.com|googleplayer\.swf|filebox\.ro\/get_video|vkontakte\.ru|megavideo\.com|videobam\.com|vidzi\.tv|estream\.to|briskfile\.com|playedto\.me";
-$s=$s."|fastupload|video\.rol\.ro|zetshare\.net\/embed|ufliq\.com|stagero\.eu|ovfile\.com|videofox\.net|fastplay\.cc|watchers\.to|fastplay\.to";
-$s=$s."|trilulilu|proplayer\/playlist-controller.php|viki\.com|modovideo\.com|roshare|rosharing|ishared\.eu|stagevu\.com|vidup\.me|vidup\.io";
-$s=$s."|filebox\.com|glumbouploads\.com|uploadc\.com|sharefiles4u\.com|zixshare\.com|uploadboost\.com|hqq\.tv|hqq\.watch|waaw\.|vidtodo\.com|vshare\.eu|bit\.ly";
-$s=$s."|nowvideo\.eu|nowvideo\.co|vreer\.com|180upload\.com|dailymotion\.com|nosvideo\.com|vidbull\.com|purevid\.com|videobam\.com|streamcloud\.eu|donevideo\.com|upafile\.com|docs\.google|mail\.ru|superweb|moviki\.ru|entervideos\.com";
-$s=$s."|indavideo\.hu|redfly\.us|videa\.hu|videakid\.hu|mooshare\.biz|streamin\.to|kodik\.biz|videomega\.tv|ok\.ru|realvid\.net|up2stream\.com|openload|allvid\.ch|oload|verystream|";
-$s=$s."vidoza\.net|spankbang\.com|sexiz\.net|streamflv\.com|streamdefence\.com|veehd\.com|coo5shaine\.com|divxme\.com|movdivx\.com|thevideobee\.to|speedvid\.net|streamango|fruithosts|streamplay\.|gorillavid\.in|daclips\.in|movpod\.in|vodlocker\.com|filehoot\.com|bestreams\.net|vidto\.me|cloudyvideos\.com|allmyvideos\.net|goo\.gl|cloudy\.ec|rapidvideo\.com|megavideo\.pro|raptu\.com|vidlox|flashservice\.xvideos\.com|xhamster\.com|entervideo\.net|vcstream\.to|vev\.io|vidcloud\.icu|powvideo|povvideo|cloudvideo|vidtodo|vidcloud\.co|flashx\.";
-$s=$s."|putload\.|event\.2target\.net|fembed\.com|streamcherry\.com|hideiframe\.com|filmeonlinehd\.tv\/sharemovie|rovideo\.net|flix555\.com|gamovideo\.com|playhd\.fun|idtbox\.com|bitporno\.com|thevideobee\.to/i";
+$s=$s."|movshare\.net|youtube\.com|youtube-nocookie\.com|flvz\.com|rapidmov\.net|putlocker\.com|";
+$s=$s."mixturevideo\.com|played\.to|";
+$s=$s."peteava\.ro\/embed|peteava\.ro\/id|content\.peteava\.ro|divxstage\.net|divxstage\.eu|thevideo\.me|";
+$s=$s."grab\.php\?link1=";
+$s=$s."|vimeo\.com|googleplayer\.swf|filebox\.ro\/get_video|vkontakte\.ru|megavideo\.com|videobam\.com|";
+$s=$s."vidzi\.tv|estream\.to|briskfile\.com|playedto\.me";
+$s=$s."|fastupload|video\.rol\.ro|zetshare\.net\/embed|ufliq\.com|stagero\.eu|ovfile\.com|videofox\.net|";
+$s=$s."fastplay\.cc|watchers\.to|fastplay\.to";
+$s=$s."|trilulilu|proplayer\/playlist-controller.php|viki\.com|modovideo\.com|roshare|rosharing|ishared\.eu|";
+$s=$s."stagevu\.com|vidup\.me|vidup\.io";
+$s=$s."|filebox\.com|glumbouploads\.com|uploadc\.com|sharefiles4u\.com|zixshare\.com|uploadboost\.com|";
+$s=$s."hqq\.tv|hqq\.watch|waaw\.|vidtodo\.com|vshare\.eu|bit\.ly";
+$s=$s."|nowvideo\.eu|nowvideo\.co|vreer\.com|180upload\.com|dailymotion\.com|nosvideo\.com|vidbull\.com|";
+$s=$s."purevid\.com|videobam\.com|streamcloud\.eu|donevideo\.com|upafile\.com|docs\.google|mail\.ru|";
+$s=$s."superweb|moviki\.ru|entervideos\.com";
+$s=$s."|indavideo\.hu|redfly\.us|videa\.hu|videakid\.hu|mooshare\.biz|streamin\.to|kodik\.biz|videomega\.tv|";
+$s=$s."ok\.ru|realvid\.net|up2stream\.com|openload|allvid\.ch|oload|verystream|";
+$s=$s."vidoza\.net|spankbang\.com|sexiz\.net|streamflv\.com|streamdefence\.com|veehd\.com|coo5shaine\.com|";
+$s=$s."divxme\.com|movdivx\.com|thevideobee\.to|speedvid\.net|streamango|fruithosts|streamplay\.|";
+$s=$s."gorillavid\.in|daclips\.in|movpod\.in|vodlocker\.com|filehoot\.com|bestreams\.net|vidto\.me|";
+$s=$s."cloudyvideos\.com|allmyvideos\.net|goo\.gl|cloudy\.ec|rapidvideo\.com|megavideo\.pro|raptu\.com|";
+$s=$s."vidlox|flashservice\.xvideos\.com|xhamster\.com|entervideo\.net|vcstream\.to|vev\.io|vidcloud\.icu|";
+$s=$s."powvideo|povvideo|cloudvideo|vidtodo|vidcloud\.co|flashx\.";
+$s=$s."|putload\.|event\.2target\.net|fembed\.com|streamcherry\.com|hideiframe\.com|";
+$s=$s."filmeonlinehd\.tv\/sharemovie|rovideo\.net|flix555\.com|gamovideo\.com|playhd\.fun|idtbox\.com|";
+$s=$s."bitporno\.com|thevideobee\.to|mangovideo\./i";
 for ($i=0;$i<count($links);$i++) {
   if (strpos($links[$i],"http") !== false) {
     $t1=explode("http:",$links[$i]);
@@ -1201,7 +1240,9 @@ $head=array('Accept: application/json, text/javascript, */*; q=0.01',
        $cur_link=trim($t2[0]);
      }
    }
-      if (!preg_match("/hqq\.tv\/player\/script\.php|top\.mail\.ru|facebook|twitter|player\.swf|img\.youtube|youtube\.com\/user|radioarad|\.jpg|\.png|\.gif|jq\/(js|css)|fsplay\.net\?s|changejplayer\.js|validateemb\.php|restore_google\.php/i",$cur_link)) {
+   /* try to remove links like http://abc.com or http://abc.com/ */
+   if (parse_url($cur_link)["path"] =="") $cur_link="";
+      if (!preg_match("/xopenload\.me|hqq\.tv\/player\/script\.php|top\.mail\.ru|facebook|twitter|player\.swf|img\.youtube|youtube\.com\/user|radioarad|\.jpg|\.png|\.gif|jq\/(js|css)|fsplay\.net\?s|changejplayer\.js|validateemb\.php|restore_google\.php|ExoLoader.addZone/i",$cur_link)) {
         $t1=explode("proxy.link=",$cur_link); //filmeonline.org
       if (sizeof ($t1) > 1 ) {
         if ($t1[1] <> "") {
@@ -1217,32 +1258,8 @@ $head=array('Accept: application/json, text/javascript, */*; q=0.01',
         }
         $cur_link=$a[0];
         }
-
-        if (strpos($cur_link,"adf.ly") !==false) { //onlinemoca
-           $a1=explode($cur_link,$html);
-           $a2=explode('server/',$a1[1]);
-           $a3=explode('.',$a2[1]);
-           $server=$a3[0];
-        } else {
-          $server = str_between($cur_link,"http://","/");
-          //echo "aasasasas ";
-          if (!$server) $server = str_between($cur_link,"https://","/");
-          //echo "Server=".$server;
-        }
-        //if (!$server) $server = str_between($cur_link,"https://","/");
         $cur_link=str_replace(urldecode("%0A"),"",$cur_link);
         $last_link=$cur_link;
-        if (strpos($cur_link,"google") !==false) {
-        //echo $cur_link."<BR>";
-          $t1=explode("docid=",$cur_link);
-          $t2=explode("&",$t1[1]);
-          $docid=$t2[0];
-          $mysrt_google="http://video.google.com/videotranscript?frame=c&docid=".$docid."&hl=ro&type=track&name=ro&lang=ro";
-        }
-        if (strpos($cur_link,"viki.com") !==false) {
-          preg_match('/(viki\.com\/player\/medias\/)([\w\-]+)/', $cur_link, $match);
-          $viki_id = $match[2];
-        }
         $link_f[]=$cur_link;
       }
     }
@@ -1352,12 +1369,16 @@ function ajaxrequest1(link) {
 
    function zx(e){
      var charCode = (typeof e.which == "number") ? e.which : e.keyCode
-    if (charCode == "53") {   // 5
-    //alert (charCode);
-     //$.fancybox.close();
-     //$.fancybox.close();
-     //closeIFrame();
-    }
+     //alert (charCode);
+     if (charCode == "49") {
+      document.getElementById("opensub").click();
+     } else if (charCode == "50") {
+      document.getElementById("titrari").click();
+     } else if (charCode == "51") {
+      document.getElementById("subs").click();
+     } else if (charCode == "52") {
+      document.getElementById("subtitrari").click();
+     }
    }
 document.onkeypress =  zx;
 </script>
@@ -1389,8 +1410,8 @@ echo '<table border="0" width="90%">'."\n\r";
 foreach($link_f as $k=>$val) {
 $server="";
 //echo $link_f[$k]."\n";
-$server= str_between(trim($link_f[$k]),"http://","/");
-if (!$server) $server = str_between($link_f[$k],"https://","/");
+
+$server = parse_url($link_f[$k])["host"];
 if (strpos($filelink,"blogspot.ro") !== false && (strpos($filelink,"sezonul") !== false) && $n>5) $server=$server." - Episodul ".($k+1);
  if ($flash != "mp")  {
    //echo $link_f[$k];
@@ -1596,8 +1617,20 @@ echo '<TR><td class="link"><a onclick="ajaxrequest('."'".urlencode($pg)."', '".u
 echo '</TABLE>';
 //echo '<img id="load" src= "load.jpg" width="450px" height="450px">';
 
-echo '<br></div></body>
-</html>';
+
+echo '<BR><table border="1" width="100%">';
+echo '<TR>';
+echo '<TD align="center"><font size="4"><b><a id="opensub" href="opensubtitles.php?'.$sub_link.'">opensubtitles</b</font></a></td>';
+echo '<TD align="center"><font size="4"><b><a id="titrari" href="titrari_main.php?page=1&'.$sub_link.'">titrari.ro</b</font></a></td>';
+echo '<TD align="center"><font size="4"><b><a id="subs" href="subs_main.php?'.$sub_link.'">subs.ro</b</font></a></td>';
+echo '<TD align="center"><font size="4"><b><a id="subtitrari" href="subtitrari_main.php?'.$sub_link.'">subtitrari_noi.ro</b</font></a></td>';
+echo '</TR></TABLE>';
+echo '<BR><table border="0px" width="100%">
+<TR>
+<TD><font size="4"><b>Scurtaturi: 1=opensubtitles, 2=titrari, 3=subs, 4=subtitrari</b></font></TD></TR></TABLE>';
+
+echo '<br></div></body>';
+echo '</html>';
 }
 } else {
 echo '

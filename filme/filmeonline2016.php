@@ -31,7 +31,7 @@ if($tip=="release") {
   $l=$link;
 } else {
   $search=str_replace(" ","+",$tit);
-  $l="http://www.filmeonline2016.biz?s=".$search;
+  $l="https://filmeonline.st?s=".$search;
 }
 ?>
 <html><head>

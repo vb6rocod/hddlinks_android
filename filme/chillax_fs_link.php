@@ -191,6 +191,7 @@ if (strpos($movie,"plink?") !== false) {
   //echo $movie;
   //die();
 }
+
 $b = basename($movie);
 $y=explode("?",$b);
 $movie_name = $y[0];

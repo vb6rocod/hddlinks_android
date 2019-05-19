@@ -96,6 +96,7 @@ $id=$_POST["imdb"];
 $q=$_POST["q"];
 $tip=$_POST["tip"];
 $token=$_POST["token"];
+$year=$_GET["year"];
 $svr=$_POST['serv'];
 if ($tip=="series") {
      $sez=$_POST["sez"];
@@ -112,6 +113,7 @@ $q=$_GET["q"];
 $tip=$_GET["tip"];
 $token=$_GET["token"];
 $svr=$_GET['serv'];
+$year=$_GET["year"];
 if ($tip=="series") {
      $sez=$_GET["sez"];
      $ep=$_GET["ep"];
@@ -126,16 +128,18 @@ if (file_exists($base_pass."cineplex_host.txt"))
   $host=file_get_contents($base_pass."cineplex_host.txt");
 else
   $host="cinogen.net";
-if ($tip=="movie")
+if ($tip=="movie") {
+ $title=$title." (".$year.")";
  $l="https://".$host."/movies/getMovieLink?id=".$id."&token=".$token."&oPid=&_=";
-else
+} else
  $l="https://".$host."/series/getTvLink?id=".$id."&token=".$token."&s=".$sez."&e=".$ep."&oPid=&_=";
+$rh="https://".$host;
 //echo $l;
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $l);
   curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 10.0; rv:55.0) Gecko/20100101 Firefox/55.0');
   //curl_setopt($ch,CURLOPT_HTTPHEADER,$head);
-  curl_setopt($ch,CURLOPT_REFERER,"https://cineplex.to");
+  curl_setopt($ch,CURLOPT_REFERER,$rh);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
   curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie);
   curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
@@ -158,9 +162,37 @@ for ($k=0;$k<count($arr);$k++) {
   }
 }
 //$movie=str_replace("cineplex.to","cinogen.net",$movie);
-$movie = preg_replace("/trial\d+/","trial".$svr,$movie);   // set to Netherlands
-//$movie = preg_replace("/trial6/","trial2",$movie);   // set to Netherlands
+$orig=$movie;
+$host_movie=parse_url($movie)['host'];
+$host_movie_new = preg_replace("/trial\d+/","trial".$svr,$host_movie);
+$host_movie_new = preg_replace("/sv\d+/","sv".$svr,$host_movie);
+$host_movie_dl=str_replace("sv","dl",$host_movie_new);  // sa mearga doar pe premium
+$movie=str_replace($host_movie,$host_movie_new,$orig);
+$movie_dl=str_replace($host_movie,$host_movie_dl,$orig);
+$amigo=$base_pass."tvplay.txt";
+if (file_exists($amigo)) {
+  $movie_file=preg_replace("/\\|\/|\?|\:|\s|\'|\"/","_",$title);
+  $host_movie_new = preg_replace("/trial\d+/","sv".$svr,$host_movie);
+  $host_movie_dl=str_replace("sv","dl",$host_movie_new);
+  $movie=str_replace($host_movie,$host_movie_new,$orig);
+  $movie_dl=str_replace($host_movie,$host_movie_dl,$orig);
+  $movie=str_replace("&end=","&u=",$movie);
+  $movie_dl=str_replace("&end=","&u=",$movie_dl)."&file=".$movie_file;
+}
+//$movie = preg_replace("/trial6/","sv6",$movie);   // set to Netherlands
 //echo $movie; die();
+//$host_movie=parse_url($movie)["host"];
+//$ip = gethostbyname($host_movie);
+//$movie = str_replace($host_movie,$ip,$movie);
+/*
+if (!preg_match('/^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}\z/', $ip)) {
+  $host_movie_new = str_replace("trial","sv",$host_movie);
+  $ip_new = gethostbyname($host_movie_new);
+  $movie = str_replace($host_movie,$ip_new,$movie);
+}
+*/
+  //$movie=str_replace("trial6.".$host,"95.211.175.149",$movie);
+//$movie=str_replace("trial6.".$host,"sv6.".$host,$movie);
 $b = basename($movie);
 $y=explode("?",$b);
 $movie_name = $y[0];
@@ -172,7 +204,11 @@ if ($tip=="movie") {
 } else {
   $movie_delay=$movie."&start=".$delay_movie;
 }
-
+//$movie_file = "ceva.mp4";
+//header('Content-type: application/octet-stream');
+//header('Content-Disposition: attachment; filename="'.$movie_file.'"');
+//header("Location: $movie");
+//die();
 //////////////////////////////////////////////////////////////////////////////
 $h="";
 if (file_exists($base_sub."sub_extern.srt")) {
@@ -184,7 +220,7 @@ if (file_exists($base_sub."sub_extern.srt")) {
   curl_setopt($ch, CURLOPT_URL, $srt_int);
   curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 10.0; rv:55.0) Gecko/20100101 Firefox/55.0');
   //curl_setopt($ch,CURLOPT_HTTPHEADER,$head);
-  curl_setopt($ch,CURLOPT_REFERER,"https://cineplex.to");
+  curl_setopt($ch,CURLOPT_REFERER,$rh);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
   curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie);
   curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
@@ -458,11 +494,11 @@ body {background-color:#000000;}
 </style>
 <script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
 <script src="../jwplayer.js"></script>
-
 </HEAD>
 <body><div id="mainnav">
 <div id="container"></div>
 <script type="text/javascript">
+var player = jwplayer("container");
 jwplayer("container").setup({
 "playlist": "../subs/play.rss",
     captions: {
@@ -487,6 +523,20 @@ jwplayer("container").setup({
 "wmode": "direct",
 "stagevideo": true
 });
+player.addButton(
+  //This portion is what designates the graphic used for the button
+  "https://developer.jwplayer.com/jw-player/demos/basic/add-download-button/assets/download.svg",
+  //This portion determines the text that appears as a tooltip
+  "Download Video",
+  //This portion designates the functionality of the button itself
+  //player.getPlaylistItem()["file"]
+  function() {
+    //With the below code,
+    window.location.href = "'.$movie_dl.'";
+  },
+  //And finally, here we set the unique ID of the button itself.
+  "download"
+);
 </script>
 </div></body>
 </HTML>

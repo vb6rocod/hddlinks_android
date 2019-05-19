@@ -4,9 +4,8 @@
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate"/>
 <meta http-equiv="Pragma" content="no-cache"/>
 <meta http-equiv="Expires" content="0"/>
-      <title>pornfree.tv</title>
+      <title>astube</title>
 <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.0/jquery.min.js"></script>
-
 <link rel="stylesheet" type="text/css" href="../custom.css" />
 <script type="text/javascript">
    function zx(e){
@@ -33,39 +32,37 @@ function str_between($string, $start, $end){
 	return substr($string,$ini,$len);
 }
 echo '<table border="1px" width="100%">'."\n\r";
-echo '<TR><td style="color:black;background-color:#0a6996;color:#64c8ff;text-align:center" colspan="3"><font size="6"><b>pornfree.tv</b></TD></TR>';
-echo '<TR><TD class="cat" colspan="1">'.'<a href="pornfree.php?page=1,https://pornfree.tv/,All+Sex" target="_blank"><b>Recente</b></a></TD>';
-echo '<TD class="form" colspan="2"><form action="pornfree.php" target="_blank">Cautare <input type="hidden" name="page1" id="page1" value="1"><input type="text" id="src" name="src" value="'.$val_search.'"><input type="submit" value="Cauta" id="send"></form></td>';
-//http://www.pornjam.com/page2.html
-//<TD colspan="2"><form action="hdfilm_s.php" target="_blank">Cautare film:  <input type="text" id="src" name="src" value="'.$val_search.'"><input type="submit" value="send" id="send"></form></td>
+echo '<TR><td style="color:black;background-color:#0a6996;color:#64c8ff;text-align:center" colspan="3"><font size="6"><b>astube</b></TD></TR>';
+echo '<TR><TD class="cat" colspan="1">'.'<a href="astube.php?page=1,https://www.ashemaletube.com/videos/best-recent/,Recente" target="_blank"><b>Recente</b></a></TD>';
+echo '<TD class="form" colspan="2"><form action="astube.php" target="_blank">Cautare <input type="hidden" name="page1" id="page1" value="1"><input type="text" id="src" name="src" value="'.$val_search.'"><input type="submit" value="Cauta" id="send"></form></td>';
+//http://www.tube8.com/searches.html?q=&page=2
 echo '</TR>';
 $n=0;
-$l="https://pornfree.tv/";
+$l="https://www.ashemaletube.com/tags/";
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $l);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
   curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows; U; Windows NT 6.1; en-US; rv:1.9.1.2) Gecko/20090729 Firefox/3.5.2 GTB5');
   curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
-  curl_setopt($ch, CURLOPT_REFERER, "https://pornfree.tv/");
   curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+  curl_setopt($ch, CURLOPT_REFERER, "https://www.ashemaletube.com");
   curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
   curl_setopt($ch, CURLOPT_TIMEOUT, 15);
   $html = curl_exec($ch);
   curl_close($ch);
-//$html=str_between($html,'<ul class="ordenar','</ul');
-$html = str_between($html,'Categories','</ul');
-//echo $html;
-$videos = explode('href="', $html);
+//$html=str_between($html,'<p>Categories</p>','<section id="content">');
+$videos = explode('a title="', $html);
 unset($videos[0]);
 $videos = array_values($videos);
 foreach($videos as $video) {
-    $t1=explode('"',$video);
+    $t=explode('href="',$video);
+    $t1=explode('"',$t[1]);
     $link=$t1[0];
-    $t2=explode('class="ubermenu',$video);
-    $t3=explode(">",$t2[1]);
-    $t4=explode("<",$t3[1]);
-  	$title=$t4[0];
-    $link="pornfree.php?page=1,".$link.",".urlencode($title);
+	$link="https://www.ashemaletube.com".$link."";
+  	$t2=explode(">",$t[1]);
+    $t1=explode("<",$t2[1]);
+    $title=$t1[0];
+    $link="astube.php?page=1,".$link.",".urlencode($title);
     if ((strpos($title,"Adultxxx") === false)) {
 	if ($n == 0) echo "<TR>"."\n\r";
 	echo '<TD class="cat">'.'<a href="'.$link.'" target="_blank">'.$title.'</a></TD>';
@@ -79,5 +76,5 @@ foreach($videos as $video) {
  if ($n<3) echo "</TR>"."\n\r";
  echo '</table>';
 ?>
-</body>
+<body><div id="mainnav">
 </HTML>

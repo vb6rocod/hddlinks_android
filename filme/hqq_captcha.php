@@ -319,7 +319,7 @@ function msg1() {
      ajaxrequest1(msg);
 }
 function msg2() {
-     val_l= document.getElementById("gt").value;
+     val_l= document.getElementById("gt1").value;
      msg="file=" + encodeURIComponent(val_l);
      ajaxrequest1(msg);
 }

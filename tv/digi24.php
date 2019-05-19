@@ -149,9 +149,9 @@ $link="https://www.digi24.ro/video";
   curl_setopt($ch, CURLOPT_TIMEOUT, 15);
   $html = curl_exec($ch);
   curl_close($ch);
-$t1=explode('h3">Video',$html);
-$html=$t1[1];
-$videos = explode('<figure class="card', $html);
+//$t1=explode('h3">Video',$html);
+//$html=$t1[1];
+$videos = explode('article class="article"', $html);
 
 unset($videos[0]);
 $videos = array_values($videos);

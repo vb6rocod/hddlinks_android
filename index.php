@@ -216,7 +216,7 @@ echo '
 </TABLE>
 <BR><BR>
 <table border="0px" align="center" width="90%">
-<TR><TD><a href="info.html"><font size="5">Sfaturi</font></a></TR></TABLE>
+<TR><TD align="right"><a href="info.html"><font size="5">Sfaturi</font></a></TR></TABLE>
 <?php
 if (file_exists($base_pass."player.txt")) {
    $mod=file_get_contents($base_pass."player.txt");

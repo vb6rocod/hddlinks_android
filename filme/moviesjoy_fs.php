@@ -149,6 +149,7 @@ document.onkeypress =  zx;
 <?php
 echo '<h2>'.$tit.' '.$tit2.'</H2>';
 echo '<BR>';
+if ($tip=="movie") {
 $r=parse_url($link);
 //print_r ($r);
 //echo $link;
@@ -213,7 +214,24 @@ $host=$r["host"];
       $r[]=$l;
     }
   }
-
+} else {
+  $r=array();
+  if (strpos($link,"movie_sources") !== false)
+    $r[]=$link;
+  else {
+      $ch = curl_init($link);
+      curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+      curl_setopt($ch, CURLOPT_REFERER, $link);
+      curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 10.0; rv:55.0) Gecko/20100101 Firefox/55.0');
+      curl_setopt($ch, CURLOPT_RETURNTRANSFER  ,1);  // RETURN THE CONTENTS OF THE CALL
+      curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+      $h = curl_exec($ch);
+      curl_close($ch);
+      $y=json_decode($h,1);
+      //print_r ($y);
+      if (strpos($y['src'],"http") !== false) $r[]=$y['src'];
+  }
+}
   $siteParts = parse_url($r[0]);
   $server_select =$siteParts['host'];
 echo '<table border="1" width="100%">';

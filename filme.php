@@ -65,14 +65,15 @@ document.onkeypress =  zx;
 <TD width="25%"><a href="filme/pefilme_main.php" target="_blank">pefilme</a></TD>
 <TD width="25%"><a href="filme/topfilmenoi_main.php" target="_blank">topfilmenoi</a></TD>
 <TD width="25%"><a href="filme/divxfilmeonline.php?page=1&file=release&title=divxfilmeonline" target="_blank">divxfilmeonline</a></TD>
-<TD width="25%"></TD>
+<TD width="25%"><a href="filme/filmeseriale_eu_f.php?page=1&tip=release&title=filmeseriale.eu" target="_blank">filmeseriale.eu</a></TD>
+
 </TR>
-<!--- desene -->
+<!--- desene si filme...-->
 <TR>
+<TD width="25%"><a href="filme/vezionline_main.php" target="_blank">vezionline</a></TD>
 <TD width="25%"><a href="filme/deseneledublate.php?page=1,,desenedublate" target="_blank">deseneledublate</a></TD>
 <TD width="25%"><a href="filme/desenefaine_main.php" target="_blank">desenefaine.ro</a></TD>
- <TD width="25%"></TD>
- <TD width="25%"></TD>
+<TD width="25%"></TD>
 </TR>
 <!-- straine -->
 <TR>
@@ -101,7 +102,8 @@ echo '
 <TR>
 <TD width="25%"><a href="filme/cineplex_f_main1.php" target="_blank">cineplex</a></TD>
 <TD width="25%"><a href="filme/chillax_f_main.php" target="_blank">chillax</a></TD>';
-echo '<TD width="25%"></TD><TD width="25%"></TD>';
+echo '<TD width="25%"></TD>
+<TD width="25%"></TD>';
 echo '</TR>';
 } else {
 //echo '<TD width="25%"></TD><TD width="25%"></TD>';

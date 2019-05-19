@@ -24,6 +24,7 @@ echo '<table border="1px" width="100%">'."\n\r";
 $n=0;
 echo '<TR>';
 $l="https://www.digi24.ro/emisiuni";
+$l="https://www.digi24.ro/emisiuni/toate-emisiunile";
 //echo '<TR><TD style="text-align:center">'.'<a href="digi_fata.php" target="_blank">In fata ta</a></TD>';
 //echo '<TD style="text-align:center">'.'<a href="digi_starea.php" target="_blank">Starea Natiei</a></TD>';
 $n=0;
@@ -42,9 +43,9 @@ $n=0;
   $html = curl_exec($ch);
   curl_close($ch);
   //echo $html;
-$html=str_between($html,'<section','</section');
+//$html=str_between($html,'<section','</section');
 //echo $html;
-$videos = explode('<figure class="card', $html);
+$videos = explode('article class="article', $html);
 
 unset($videos[0]);
 $videos = array_values($videos);
@@ -53,7 +54,7 @@ foreach($videos as $video) {
  $video=html_entity_decode($video);
  $title=str_between($video,'title="','"');
  $descriere=$title;
- $image=urldecode(str_between($video,'data-src="','"'));
+ $image=urldecode(str_between($video,'src="','"'));
  $link="https://www.digi24.ro".str_between($video,'href="','"');
     $link="digi24_e_main.php?page=1,".$link.",".urlencode($title);
     if (preg_match("/emisiuni\//",$link)) {
