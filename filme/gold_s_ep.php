@@ -47,14 +47,15 @@ $t3=explode('"',$t2[1]);
 $pageimage=str_replace("https","http",$t3[0]);
    echo '<table border="1px" width="100%">'."\n\r";
    $n=0;
- $videos = explode('class="se-t">', $html);
+ //$videos = explode('class="se-t">', $html);
+ $videos = explode('class="se-t',$html);
 $sezoane=array();
 unset($videos[0]);
 $videos = array_values($videos);
 //$videos = array_reverse($videos);
 foreach($videos as $video) {
-  //$t1=explode('Season',$video);
-  $t2=explode("<",$video);
+  $t1=explode('>',$video);
+  $t2=explode("<",$t1[1]);
   $sezoane[]=trim($t2[0]);
 }
 echo '<table border="1" width="100%">'."\n\r";
@@ -65,8 +66,8 @@ echo '<td class="sez" style="color:black;text-align:center"><a href="#sez'.($sez
 }
 echo '</TR></TABLE>';
 foreach($videos as $video) {
-  //$t1=explode('Season',$video);
-  $t2=explode("<",$video);
+  $t1=explode('>',$video);
+  $t2=explode("<",$t1[1]);
   $season=trim($t2[0]);
   $sez = $season;
   $first=true;

@@ -20,7 +20,7 @@ if ($token)
  $l2="https://graph.facebook.com/v3.1/".$search."/videos?access_token=".$key."&limit=25&after=".$token;
 else
  $l2="https://graph.facebook.com/v3.1/".$search."/videos?access_token=".$key."&limit=25";
-
+//echo $l2;
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $l2);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);

@@ -67,7 +67,7 @@ foreach($videos as $video) {
     $t3=explode('<',$t2[1]);
   	$title=$t3[0];
     $link="porn300.php?page=1,".$link.",".urlencode($title);
-    if ((strpos($link,"/video") === false)) {
+    if (strpos($link,"/video") === false && strpos($link,"/search") === false) {
 	if ($n == 0) echo "<TR>"."\n\r";
 	echo '<TD class="cat">'.'<a href="'.$link.'" target="_blank">'.$title.'</a></TD>';
     $n++;

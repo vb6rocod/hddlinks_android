@@ -93,8 +93,27 @@ if (strpos($filelink,"desenefaine.ro") !== false) {
   //echo $html;
   //https://www.rovideo.net/get_file/1/07efb813ad617039eaf239afb6cd93364002a2b255/2000/2011/2011.mp4/?embed=true&rnd=1550392933101
   //https://www.rovideo.net/get_file/1/837300ba6f936f33dd1c1eeb29f9a67a4002a2b255/2000/2011/2011.mp4/?embed=true&rnd=1550317566
-} elseif (strpos($filelink,"rovideo.") !== false) {
-  $html='"'.$filelink.'"';
+} elseif (strpos($filelink,"pornhdo.com") !== false) {
+  $ch = curl_init();
+  curl_setopt($ch, CURLOPT_URL, $filelink);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+  curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows; U; Windows NT 6.1; en-US; rv:1.9.1.2) Gecko/20090729 Firefox/3.5.2 GTB5');
+  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+  curl_setopt($ch, CURLOPT_REFERER, "https://pornhdo.com");
+  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+  $h = curl_exec($ch);
+  curl_close($ch);
+  //echo $h;
+  $t1=explode('var code="',$h);
+  $t2=explode('"',$t1[1]);
+  $code=$t2[0];
+  $res="";
+  for ($i=0;$i<strlen($code);$i++) {
+      $res .=chr(ord($code[$i])^2);
+  }
+  $html = $h.urldecode($res);
 } elseif (strpos($filelink,"filmeonline2019.us") !== false) {
   $ua = $_SERVER['HTTP_USER_AGENT'];
   $html="";
@@ -1040,7 +1059,7 @@ $s=$s."vidlox|flashservice\.xvideos\.com|xhamster\.com|entervideo\.net|vcstream\
 $s=$s."powvideo|povvideo|cloudvideo|vidtodo|vidcloud\.co|flashx\.";
 $s=$s."|putload\.|event\.2target\.net|fembed\.com|streamcherry\.com|hideiframe\.com|";
 $s=$s."filmeonlinehd\.tv\/sharemovie|rovideo\.net|flix555\.com|gamovideo\.com|playhd\.fun|idtbox\.com|";
-$s=$s."bitporno\.com|thevideobee\.to|mangovideo\./i";
+$s=$s."bitporno\.com|thevideobee\.to|mangovideo\.|smartshare\.tv|datoporn\.co|xstreamcdn\.com/i";
 for ($i=0;$i<count($links);$i++) {
   if (strpos($links[$i],"http") !== false) {
     $t1=explode("http:",$links[$i]);
@@ -1051,6 +1070,25 @@ for ($i=0;$i<count($links);$i++) {
   } else {
   $cur_link="http:".$links[$i];
   }
+  if (strpos($links[$i],"openloads.tk") !== false) {
+  $l=trim("https:".$links[$i]);
+  //echo $l;
+  $ch = curl_init();
+  curl_setopt($ch, CURLOPT_URL, $l);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+  curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 5.1; rv:22.0) Gecko/20100101 Firefox/22.0');
+  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,0);
+  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+  curl_setopt($ch, CURLOPT_HEADER,0);
+  curl_setopt($ch, CURLOPT_NOBODY,0);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+  $h2 = curl_exec($ch);
+  curl_close($ch);
+  $t1=explode("url=",$h2);
+  $t2=explode('"',$t1[1]);
+  $cur_link=$t2[0];
+}
   if (strpos($links[$i],"bit.ly") !== false) {
   $l=trim("https:".$links[$i]);
   //echo $l;
@@ -1240,9 +1278,19 @@ $head=array('Accept: application/json, text/javascript, */*; q=0.01',
        $cur_link=trim($t2[0]);
      }
    }
-   /* try to remove links like http://abc.com or http://abc.com/ */
-   if (parse_url($cur_link)["path"] =="") $cur_link="";
-      if (!preg_match("/xopenload\.me|hqq\.tv\/player\/script\.php|top\.mail\.ru|facebook|twitter|player\.swf|img\.youtube|youtube\.com\/user|radioarad|\.jpg|\.png|\.gif|jq\/(js|css)|fsplay\.net\?s|changejplayer\.js|validateemb\.php|restore_google\.php|ExoLoader.addZone/i",$cur_link)) {
+   /* try to remove links like http://abc.com or http://abc.com/ but not http://abc.com?x=y or http://abc.com/?x=y*/
+   //print_r (parse_url($cur_link));
+   if (isset(parse_url($cur_link)["path"]))
+      $path=parse_url($cur_link)["path"];
+   else
+      $path="";
+   if (!$path && !isset(parse_url($cur_link)["query"])) $cur_link="";
+   if ($path=="/" && !isset(parse_url($cur_link)["query"])) $cur_link="";
+   $pat="/xopenload\.me|hqq\.tv\/player\/script\.php|top\.mail\.ru|facebook|twitter|player\.swf";
+   $pat .="|img\.youtube|youtube\.com\/user|radioarad|\.jpg|\.png|\.gif|jq\/(js|css)";
+   $pat .="|fsplay\.net\?s|changejplayer\.js|validateemb\.php|restore_google\.php|";
+   $pat .="ExoLoader.addZone|js\/api\/share\.js/i";
+      if (!preg_match($pat,$cur_link)) {
         $t1=explode("proxy.link=",$cur_link); //filmeonline.org
       if (sizeof ($t1) > 1 ) {
         if ($t1[1] <> "") {
@@ -1260,7 +1308,7 @@ $head=array('Accept: application/json, text/javascript, */*; q=0.01',
         }
         $cur_link=str_replace(urldecode("%0A"),"",$cur_link);
         $last_link=$cur_link;
-        $link_f[]=$cur_link;
+        if ($cur_link) $link_f[]=$cur_link;
       }
     }
   //echo $cur_link;
@@ -1289,9 +1337,8 @@ if (preg_match("/android|ipad/i",$user_agent) && preg_match("/chrome|firefox|mob
 }
 $link_f=array_unique($link_f);
 //print_r ($link_f);
-$n= count($link_f);
-if (isset($link_f[0])) {
-if ($n>1 || strpos($link_f[0],"http") !== false) {
+//$n= count($link_f);
+if (count ($link_f) > 0) {
 echo '
 <html><head>
 <meta http-equiv="content-type" content="text/html; charset=UTF-8">
@@ -1631,7 +1678,6 @@ echo '<BR><table border="0px" width="100%">
 
 echo '<br></div></body>';
 echo '</html>';
-}
 } else {
 echo '
 <html><head>

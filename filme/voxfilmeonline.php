@@ -7,6 +7,7 @@ $tit=$_GET["title"];
 $link=$_GET["link"];
 $width="200px";
 $height="278px";
+$year="";
 if ($tip=="search") {
   $page_title = "Cautare: ".$tit;
   file_put_contents($base_cookie."filme.dat",urldecode($tit));

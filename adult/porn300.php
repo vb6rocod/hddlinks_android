@@ -53,7 +53,7 @@ function ajaxrequest(title, link) {
   //var the_data = {mod:add,title:title, link:link}; //Array
   on();
   var the_data = "mod=add&title="+ title +"&link="+link;
-  var php_file="porn300_link.php";
+  var php_file="adult_link.php";
   request.open("POST", php_file, true);			// set the request
 
   // adds a header to tell the PHP script to recognize the data as is sent via POST
@@ -201,7 +201,7 @@ foreach($videos as $video) {
     $data=" (".trim($t3[0]).")";
   if ($n==0) echo '<TR>';
   if ($flash != "mp") {
-  $link = "porn300_link.php?file=".$link."&title=".urlencode($title);
+  $link = "adult_link.php?link=".urlencode($link)."&title=".urlencode($title);
   echo '<td class="mp" align="center" width="25%"><a href="'.$link.'" target="_blank"><img src="'.$image.'" width="200px" height="150px"><BR>'.$title.$data.'</a></TD>';
   } else {
   echo '<td class="mp" align="center" width="25%"><a onclick="ajaxrequest('."'".urlencode($title)."', '".urlencode($link)."')".'"'." style='cursor:pointer;'>".'<img src="'.$image.'" width="200px" height="150px"><BR>'.$title.$data.'</a></TD>';

@@ -145,9 +145,10 @@ $link="http://inprofunzime.md/emisiuni/shows/in-profunzime-cu-lorena-bogza/";
 $link="http://inprofunzime.protv.md/emisiuni/shows/in-profunzime-cu-lorena-bogza/";
 //http://inpro.protv.md/emisiuni
 $link="http://inpro.protv.md/api/category-page";
+$link="http://inprofunzime.protv.md/api/category-page";
 $post="link=emisiuni&page=1";
 $head=array('Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
-'Accept-Encoding: gzip, deflate',
+'Accept-Encoding: deflate',
 'Referer: http://inpro.protv.md/emisiuni',
 'Content-Type: application/x-www-form-urlencoded; charset=UTF-8',
 'X-Requested-With: XMLHttpRequest',
@@ -167,6 +168,7 @@ $head=array('Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
   $html = curl_exec($ch);
   $p=json_decode($html,1);
   //print_r ($p);
+  //echo $html;
   $r=$p["items"];
 for ($k=0;$k<count($r);$k++) {
 

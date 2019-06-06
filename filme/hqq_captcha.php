@@ -202,7 +202,8 @@ $ua="Mozilla/5.0 (iPad; U; CPU OS 3_2 like Mac OS X; en-us) AppleWebKit/531.21.1
      preg_match("/vid\s*\'\:\s*\'(?P<vid>[^\']+)\'/",$h1,$m);
      $vid=$m["vid"];
      }
-$l="http://hqq.watch/player/embed_player.php?vid=".$vid."&autoplay=no";
+$l="http://hqq.tv/player/embed_player.php?vid=".$vid."&autoplay=no";
+//echo $l;
       $ch = curl_init();
       curl_setopt($ch, CURLOPT_URL, $l);
       curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
@@ -228,15 +229,15 @@ $t1=explode(";;",$h);
 $h=$t1[1];
 preg_match_all("/;}\('(\w+)','(\w*)','(\w*)','(\w*)'\)\)/",$h,$m);
 $h= decode3($m[1][0],$m[2][0],$m[3][0],$m[4][0]);
-
-$l="http://hqq.watch/player/ip.php?type=json";
+//echo $h;
+$l="http://hqq.tv/player/ip.php?type=json";
 $x=file_get_contents($l);
 //echo $x;
 //die();
 $iss=str_between($x,'ip":"','"');
-$vid=str_between($h,'videokeyorig = "','"');
-$at=str_between($h,'at=','&');
-$http_referer=str_between($h,'http_referer=','&');
+$vid=str_between($h,"videokeyorig='","'");
+$at=str_between($h,"attoken='","'");
+$http_referer=str_between($h,"server_referer='","'");
 ?>
 <html><head>
 <meta http-equiv="content-type" content="text/html; charset=UTF-8">
@@ -285,7 +286,11 @@ function ajaxrequest1(link) {
     }
   }
 }
-
+document.onreadystatechange = function () {
+  if (document.readyState === 'complete') {
+    document.getElementById("mytest1").click();
+  }
+}
 </script>
 
 

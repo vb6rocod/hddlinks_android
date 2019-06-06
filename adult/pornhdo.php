@@ -33,7 +33,17 @@ file_put_contents($base_cookie."adult.dat",urldecode($search1));
 
 <link rel="stylesheet" type="text/css" href="../custom.css" />
 </head>
-<body><div id="mainnav">
+<body>
+<script>
+function on() {
+    document.getElementById("overlay").style.display = "block";
+}
+
+function off() {
+    document.getElementById("overlay").style.display = "none";
+}
+</script>
+<div id="mainnav">
 
 <?php
 function str_between($string, $start, $end){
@@ -47,17 +57,15 @@ echo '<table border="1px" width="100%">'."\n\r";
 echo '<tr><TD colspan="4" align="right">';
 if ($page1) {
 if ($page1 > 1)
-echo '<a href="taboop.php?page1='.($page1-1).'&src='.$search1.'">&nbsp;&lt;&lt;&nbsp;</a> | <a href="taboop.php?page1='.($page1+1).'&src='.$search1.'">&nbsp;&gt;&gt;&nbsp;</a></TD></TR>';
+echo '<a href="pornhdo.php?page1='.($page1-1).'&src='.$search1.'">&nbsp;&lt;&lt;&nbsp;</a> | <a href="pornhdo.php?page1='.($page1+1).'&src='.$search1.'">&nbsp;&gt;&gt;&nbsp;</a></TD></TR>';
 else
-echo '<a href="taboop.php?page1='.($page1+1).'&src='.$search1.'">&nbsp;&gt;&gt;&nbsp;</a></TD></TR>';
+echo '<a href="pornhdo.php?page1='.($page1+1).'&src='.$search1.'">&nbsp;&gt;&gt;&nbsp;</a></TD></TR>';
 //$post = "s=".$search;
 //https://www.incestvidz.com/page/2/?s=mom
 if ($page1>1)
-  $search3="https://taboop.com/page/".$page1."/?s=".$search;
-  
+  $search3="https://pornhdo.com/page/".$page1."/?s=".str_replace(" ","+",$search);
 else
-  $search3="https://taboop.com/page/".$page1."/?s=".$search;
-  //$search3="https://www.incestvidz.com/page/2/?s=mom";
+  $search3="https://pornhdo.com/page/".$page1."/?s=".str_replace(" ","+",$search);
      $ch = curl_init();
      curl_setopt($ch, CURLOPT_URL, $search3);
      //curl_setopt ($ch, CURLOPT_POST, 1);
@@ -73,10 +81,11 @@ else
      //echo $html;
 } else {
 if ($page > 1)
-echo '<a href="taboop.php?page='.($page-1).','.$search.','.urlencode($page_title).'">&nbsp;&lt;&lt;&nbsp;</a> | <a href="taboop.php?page='.($page+1).','.$search.','.urlencode($page_title).'">&nbsp;&gt;&gt;&nbsp;</a></TD></TR>';
+echo '<a href="pornhdo.php?page='.($page-1).','.$search.','.urlencode($page_title).'">&nbsp;&lt;&lt;&nbsp;</a> | <a href="pornhdo.php?page='.($page+1).','.$search.','.urlencode($page_title).'">&nbsp;&gt;&gt;&nbsp;</a></TD></TR>';
 else
-echo '<a href="taboop.php?page='.($page+1).','.$search.','.urlencode($page_title).'">&nbsp;&gt;&gt;&nbsp;</a></TD></TR>';
-  $search3=$search."page/".$page."/";
+echo '<a href="pornhdo.php?page='.($page+1).','.$search.','.urlencode($page_title).'">&nbsp;&gt;&gt;&nbsp;</a></TD></TR>';
+  //$search3=$search."page/".$page."/";
+  $search3 = $search."page/".$page."/";
   //echo $search3;
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $search3);
@@ -92,7 +101,13 @@ echo '<a href="taboop.php?page='.($page+1).','.$search.','.urlencode($page_title
 }
 //http://www.incestvidz.com/page/2/
 $n=0;
-$videos=explode('div id="post-',$html);
+//$videos = explode('<div class="video">', $html);
+//$videos=explode('<span class="video-title">',$html);
+//$t1=explode('<div class="post',$html);
+//$p=count($t1);
+//$html=$t1[count($t1)-1];
+//echo $html;
+$videos=explode('article id="post-',$html);
 unset($videos[0]);
 $videos = array_values($videos);
 
@@ -105,14 +120,21 @@ foreach($videos as $video) {
     $t1 = explode('src="', $video);
     $t2 = explode('"', $t1[1]);
     $image = $t2[0];
-
-    $title=str_between($video,'title="','"');
-    $image = $t2[0];
-
+    if (strpos($image,"http") === false) $image="http:".$image;
+    //$image="r.php?file=".$image;
+    //$t1=explode("h3>",$video);
+    //$t2=explode(">",$t1[1]);
+    //$t3=explode("<",$t2[1]);
+    $t1=explode('title="',$video);
+    $t2=explode('"',$t1[1]);
+    $title=strip_tags($t2[0]);
+    $t1=explode('fa-clock-o">',$video);
+    $t2=explode('</span',$t1[1]);
+    $durata = trim(strip_tags($t2[0]));
     $link = "../filme/filme_link.php?file=".urlencode($link)."&title=".urlencode($title);
   if ($title) {
   if ($n==0) echo '<TR>';
-  echo '<td class="mp" align="center" width="25%"><a href="'.$link.'" target="_blank"><img src="'.$image.'" width="200px" height="150px"><BR>'.$title.'</a></TD>';
+  echo '<td class="mp" align="center" width="25%"><a href="'.$link.'" target="_blank"><img src="'.$image.'" width="210px" height="120px"><BR>'.$title.' ('.$durata.')</a></TD>';
   $n++;
   if ($n == 4) {
   echo '</tr>';
@@ -123,15 +145,15 @@ foreach($videos as $video) {
 echo '<tr><TD colspan="4" align="right">';
 if ($page1) {
 if ($page1 > 1)
-echo '<a href="taboop.php?page1='.($page1-1).'&src='.$search1.'">&nbsp;&lt;&lt;&nbsp;</a> | <a href="taboop.php?page1='.($page1+1).'&src='.$search1.'">&nbsp;&gt;&gt;&nbsp;</a></TD></TR>';
+echo '<a href="pornhdo.php?page1='.($page1-1).'&src='.$search1.'">&nbsp;&lt;&lt;&nbsp;</a> | <a href="pornhdo.php?page1='.($page1+1).'&src='.$search1.'">&nbsp;&gt;&gt;&nbsp;</a></TD></TR>';
 else
-echo '<a href="taboop.php?page1='.($page1+1).'&src='.$search1.'">&nbsp;&gt;&gt;&nbsp;</a></TD></TR>';
+echo '<a href="pornhdo.php?page1='.($page1+1).'&src='.$search1.'">&nbsp;&gt;&gt;&nbsp;</a></TD></TR>';
 
 } else {
 if ($page > 1)
-echo '<a href="taboop.php?page='.($page-1).','.$search.','.urlencode($page_title).'">&nbsp;&lt;&lt;&nbsp;</a> | <a href="taboop.php?page='.($page+1).','.$search.','.urlencode($page_title).'">&nbsp;&gt;&gt;&nbsp;</a></TD></TR>';
+echo '<a href="pornhdo.php?page='.($page-1).','.$search.','.urlencode($page_title).'">&nbsp;&lt;&lt;&nbsp;</a> | <a href="pornhdo.php?page='.($page+1).','.$search.','.urlencode($page_title).'">&nbsp;&gt;&gt;&nbsp;</a></TD></TR>';
 else
-echo '<a href="taboop.php?page='.($page+1).','.$search.','.urlencode($page_title).'">&nbsp;&gt;&gt;&nbsp;</a></TD></TR>';
+echo '<a href="pornhdo.php?page='.($page+1).','.$search.','.urlencode($page_title).'">&nbsp;&gt;&gt;&nbsp;</a></TD></TR>';
 
 }echo "</table>";
 ?>

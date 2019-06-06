@@ -46,6 +46,7 @@ if(preg_match('/youtube\.com\/(v\/|watch\?v=|embed\/)([\w\-]+)/', $file, $match)
   $html="";
   $p=0;
   //echo $l;
+  /*
   while($html == "" && $p<10) {
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $l);
@@ -62,7 +63,9 @@ if(preg_match('/youtube\.com\/(v\/|watch\?v=|embed\/)([\w\-]+)/', $file, $match)
   curl_close($ch);
   $p++;
   }
+  */
   //echo $html;
+  $html=@file_get_contents($l);
   $html = str_between($html,'ytplayer.config = ',';ytplayer.load');
   $parts = json_decode($html,1);
   //preg_match('#config = {(?P<out>.*)};#im', $html, $out);
@@ -122,13 +125,15 @@ foreach ($videos as $video) {
 	if (isset($output['fallback_host'])) unset($output['fallback_host']);
 
 	//$r=urldecode($path.http_build_query($output));
-	if (isset($output['sig'])) {
-		$signature=($output['sig']);
-
+	if (!isset($output['s'])) {
+		//$signature=($output['sig']);
+        //print_r ($output);
+        $r=$output['url'];
 	} else {
   $sA="";
   $s=$output["s"];
   //echo $s;
+  $tip=$output["sp"];
   $l = "https://s.ytimg.com".$parts['assets']['js'];
   //echo $l;
   $ch = curl_init();
@@ -203,9 +208,8 @@ foreach ($videos as $video) {
     }
   }
   $signature = $sA;
+  $r=$output['url']."&".$tip."=".$signature;
 }
-    $r=$output['url']."&signature=".$signature;
-
 return $r;
 }
 } else
@@ -232,6 +236,22 @@ $from=$_GET["from"];
 //$link="http://89.136.209.30:1935/liveedge/TVRMOLDOVA.stream/playlist.m3u8";
 //$link=urldecode("https%3A%2F%2Fwww.youtube.com%2Fwatch%3Fv%3Dr_d4ryn9UsA&title=Gaming%20Music%20Radio%20%E2%9A%A1%2024/7%20NCS%20Live%20Stream%20%E2%9A%A1%20Trap,%20Chill,%20Electro,%20Dubstep,%20Future%20Bass,%20EDM");
 //$mod="direct";
+if (strpos($link,"jurnaltv.md/JurnalTV") !== false) {
+    $l="http://www.jurnaltv.md/page/live";
+    $ch = curl_init();
+    curl_setopt($ch, CURLOPT_URL, $l);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+    curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 10.0; rv:64.0) Gecko/20100101 Firefox/64.0');
+    curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+    //curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
+    //curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
+    curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+    curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+    $h = curl_exec($ch);
+    curl_close($ch);
+    $link=str_between($h,'source src="','"');
+}
 if ($from=="profunzime") {
     $ch = curl_init();
     curl_setopt($ch, CURLOPT_URL, $link);
@@ -273,7 +293,7 @@ if ($from=="protvmd") {
 $l="http://protv.md/api/article-page";
 $post="article_id=-".$link;
 $head=array('Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
-'Accept-Encoding: gzip, deflate',
+'Accept-Encoding: deflate',
 'Referer: http://inpro.protv.md/emisiuni',
 'Content-Type: application/x-www-form-urlencoded; charset=UTF-8',
 'X-Requested-With: XMLHttpRequest',

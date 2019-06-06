@@ -74,7 +74,7 @@ echo '
 
 <TR>
 <TD width="25%"><a href="adult/thumbzilla_main.php" target="_blank">thumbzilla</a></TD>
-<TD width="25%"><a href="adult/taboop_main.php" target="_blank">taboop</a></TD>
+<TD width="25%"><a href="adult/hellmoms_main.php" target="_blank">hellmoms</a></TD>
 <TD width="25%"><a href="adult/lubetube_main.php" target="_blank">lubetube</a></TD>
 <TD width="25%"><a href="adult/pornhd_main.php" target="_blank">pornhd</a></TD>
 </TR>
@@ -88,14 +88,14 @@ echo '
 
 <TR>
 <TD width="25%"><a href="adult/nuvid_main.php" target="_blank">nuvid</a></TD>
-<TD width="25%"><a href="adult/sunporno_main.php" target="_blank">sunporno</a></TD>
+<TD width="25%"><a href="adult/bravoporn_main.php" target="_blank">bravoporn</a></TD>
 <TD width="25%"><a href="adult/porn300_main.php" target="_blank">porn300</a></TD>
 <TD width="25%"><a href="adult/zbporn_main.php" target="_blank">zbporn</a></TD>
 </TR>
 
 <TR>
 <TD width="25%"><a href="adult/mofosex_main.php" target="_blank">mofosex</a></TD>
-<TD width="25%"><a href="adult/xbabe_main.php" target="_blank">xbabe</a></TD>
+<TD width="25%"><a href="adult/pornhdo_main.php" target="_blank">pornhdo</a></TD>
 <TD width="25%"><a href="adult/porndroids_main.php" target="_blank">porndroids</a></TD>
 <TD width="25%"><a href="adult/befuck_main.php" target="_blank">befuck</a></TD>
 </TR>

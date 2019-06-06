@@ -33,7 +33,7 @@ function str_between($string, $start, $end){
 	return substr($string,$ini,$len);
 }
 echo '<table border="1px" width="100%">'."\n\r";
-echo '<TR><td style="color:black;background-color:#0a6996;color:#64c8ff;text-align:center" colspan="3"><font size="6"><b>tvporn</b></TD></TR>';
+echo '<TR><td style="color:black;background-color:#0a6996;color:#64c8ff;text-align:center" colspan="3"><font size="6"><b>streamporn</b></TD></TR>';
 echo '<TR><TD class="cat" colspan="1">'.'<a href="streamporn.php?page=1,https://streamporn.pw/movies,Recente" target="_blank"><b>Recente</b></a></TD>';
 echo '<TD class="form" colspan="2"><form action="streamporn.php" target="_blank">Cautare <input type="hidden" name="page1" id="page1" value="1"><input type="text" id="src" name="src" value="'.$val_search.'"><input type="submit" value="Cauta" id="send"></form></td>';
 //http://www.pornjam.com/page2.html

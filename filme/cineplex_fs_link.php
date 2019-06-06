@@ -177,7 +177,7 @@ if (file_exists($amigo)) {
   $movie=str_replace($host_movie,$host_movie_new,$orig);
   $movie_dl=str_replace($host_movie,$host_movie_dl,$orig);
   $movie=str_replace("&end=","&u=",$movie);
-  $movie_dl=str_replace("&end=","&u=",$movie_dl)."&file=".$movie_file;
+  $movie_dl=str_replace("&end=","&u=",$movie_dl)."&file=".$movie_file.".mp4";
 }
 //$movie = preg_replace("/trial6/","sv6",$movie);   // set to Netherlands
 //echo $movie; die();

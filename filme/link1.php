@@ -40,7 +40,6 @@ $filelink=urldecode($t1[0]);
 $filelink=urldecode($filelink);
 }
 }
-
 if (strpos($filelink,"stareanatiei.ro") !== false) {
    $referer="https://www.stareanatiei.ro";
    $ch = curl_init();
@@ -349,6 +348,7 @@ if(preg_match('/youtube\.com\/(v\/|watch\?v=|embed\/)([\w\-]+)/', $file, $match)
   $html="";
   $p=0;
   //echo $l;
+  /*
   while($html == "" && $p<10) {
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $l);
@@ -365,7 +365,9 @@ if(preg_match('/youtube\.com\/(v\/|watch\?v=|embed\/)([\w\-]+)/', $file, $match)
   curl_close($ch);
   $p++;
   }
+  */
   //echo $html;
+  $html=@file_get_contents($l);
   $html = str_between($html,'ytplayer.config = ',';ytplayer.load');
   $parts = json_decode($html,1);
   //print_r ($parts);
@@ -427,15 +429,17 @@ if(preg_match('/youtube\.com\/(v\/|watch\?v=|embed\/)([\w\-]+)/', $file, $match)
 	if (isset($output['quality']))       unset($output['quality']);
 	if (isset($output['codecs']))        unset($output['codecs']);
 	if (isset($output['fallback_host'])) unset($output['fallback_host']);
-
+    //print_r ($output);
 	//$r=urldecode($path.http_build_query($output));
-	if (isset($output['sig'])) {
-		$signature=($output['sig']);
-
+	if (!isset($output['s'])) {
+		//$signature=($output['sig']);
+        //print_r ($output);
+        $r=$output['url'];
 	} else {
   $sA="";
   $s=$output["s"];
   //echo $s;
+  $tip=$output["sp"];
   $l = "https://s.ytimg.com".$parts['assets']['js'];
   //echo $l;
   $ch = curl_init();
@@ -510,8 +514,9 @@ if(preg_match('/youtube\.com\/(v\/|watch\?v=|embed\/)([\w\-]+)/', $file, $match)
     }
   }
   $signature = $sA;
+  $r=$output['url']."&".$tip."=".$signature;
 }
-    $r=$output['url']."&signature=".$signature;
+
 
 return $r;
 }
@@ -682,6 +687,18 @@ $link = str_replace($j, $h, $orig);
    $link=$t2[0];
   } else
    $link="";
+} elseif (strpos($filelink,"megaxfer.ru") !== false) {
+  //https://megaxfer.ru/embed/5cea5502e49c0
+  $pattern = '@(?:\/\/|\.)(megaxfer\.ru)\/(?:embed)?\/([a-zA-Z0-9]+)@';
+  preg_match($pattern,$filelink,$m);
+
+  //echo $l;
+  $l="https://megaxfer.ru/player?fid=".$m[2]."&page=embed";   // ??? vidcloud
+  $h2=file_get_contents($l);   // ???? why ?????????
+  $h2=str_replace("\\","",$h2);
+  $h2=str_replace("\n","",$h2);
+  $link=str_between($h2,'file":"','"');
+
 } elseif (strpos($filelink,"idtbox.com") !== false) {
   //https://idtbox.com/avslpcj48so9
   $pattern = '@(?:\/\/|\.)(idtbox\.com)\/(?:embed-)?([a-zA-Z0-9]+)@';
@@ -708,6 +725,32 @@ $link = str_replace($j, $h, $orig);
   } else {
     $link="";
   }
+} elseif (strpos($filelink,"datoporn.co") !== false) {
+  //https://datoporn.co/embed-24ynitvgmfow-658x400.html
+  $pattern = '@(?:\/\/|\.)(datoporn\.(co|com))\/(?:embed-)?([a-zA-Z0-9]+)@';
+  preg_match($pattern,$filelink,$r);
+  $l="https://datoporn.co/embed-".$r[3]."-658x400.html";
+  //echo $l;
+  require_once("JavaScriptUnpacker.php");
+  $ch = curl_init();
+  curl_setopt($ch, CURLOPT_URL, $l);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+  curl_setopt($ch, CURLOPT_USERAGENT, "Mozilla/5.0 (Windows NT 10.0; rv:65.0) Gecko/20100101 Firefox/65.0");
+  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+  //curl_setopt($ch,CURLOPT_REFERER,"http://gamovideo.com/");
+  curl_setopt($ch, CURLOPT_ENCODING, "");
+  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+  $h3 = curl_exec($ch);
+  curl_close($ch);
+  //echo $h3;
+  $jsu = new JavaScriptUnpacker();
+  $out = $jsu->Unpack($h3);
+  //echo $out;
+  if (preg_match('/((http|https)[\.\d\w\-\.\/\\\:\?\&\#\%\_\,]*(\.mp4))/', $out, $m)) {
+  $link=$m[1];
+  } else $link="";
 } elseif (strpos($filelink,"gamovideo.") !== false) {
   //http://gamovideo.com/gd82bzc3i6eq
   //http://gamovideo.com/embed-gd82bzc3i6eq-640x360.html
@@ -1215,6 +1258,89 @@ $h3 = @file_get_contents($url, false, $context);
   //echo $l1;
   //$link=$l1;
   //$link=str_replace("https","http",$link);
+} elseif (strpos($filelink,"xstreamcdn.com") !== false) {
+  //https://www.xstreamcdn.com/v/132y5bj8mxx77yz
+     preg_match("/\/v\/([0-9a-zA-Z\-\_]+)/",$filelink,$m);
+     $id=$m[1];
+     $l="https://xstreamcdn.com/api/source/".$id;
+
+  $post="r=";
+$url = $l;
+$data = array('r' => '');
+$options = array(
+        'http' => array(
+        'header'  => "Content-type: application/x-www-form-urlencoded\r\n",
+        'method'  => 'POST',
+        'content' => http_build_query($data),
+    )
+);
+
+$context  = stream_context_create($options);
+$h3 = @file_get_contents($url, false, $context);
+  $r=json_decode($h3,1);
+  //print_r ($r);
+  //die();
+  //https://www.fembed.com/asset/caption/05ol0yz4no6/bloom-s01e01-srt_2019-01-13.srt
+  if (isset($r["captions"][0]["path"])) {
+   if (strpos($r["captions"][0]["path"],"http") === false)
+    $srt="https://xstreamcdn.com/asset".$r["captions"][0]["path"];
+   else
+    $srt=$r["captions"][0]["path"];
+  }
+  $c = count($r["data"]);
+  if (strpos($r["data"][$c-1]["file"],"http") === false)
+   $link="https://xstreamcdn.com".$r["data"][$c-1]["file"];
+  else
+   $link=$r["data"][$c-1]["file"];
+} elseif (strpos($filelink,"smartshare.tv") !== false) {
+  //https://smartshare.tv/v/1xvqqndmnxv
+  //$filelink="https://smartshare.tv/v/1xvqqndmnxv";
+
+     preg_match("/\/v\/([0-9a-zA-Z]+)/",$filelink,$m);
+     $id=$m[1];
+     $l="https://smartshare.tv/api/source/".$id;
+
+  $post="r=";
+$url = $l;
+$data = array('r' => '');
+$options = array(
+        'http' => array(
+        'header'  => "Content-type: application/x-www-form-urlencoded\r\n",
+        'method'  => 'POST',
+        'content' => http_build_query($data),
+    )
+);
+
+$context  = stream_context_create($options);
+$h3 = @file_get_contents($url, false, $context);
+  $r=json_decode($h3,1);
+  //print_r ($r);
+  //die();
+  //https://www.fembed.com/asset/caption/05ol0yz4no6/bloom-s01e01-srt_2019-01-13.srt
+  if (isset($r["captions"][0]["path"])) {
+   if (strpos($r["captions"][0]["path"],"http") === false)
+    $srt="https://smartshare.tv/asset".$r["captions"][0]["path"];
+   else
+    $srt=$r["captions"][0]["path"];
+  }
+  $c = count($r["data"]);
+  if (strpos($r["data"][$c-1]["file"],"http") === false)
+   $l1="https://smartshare.tv".$r["data"][$c-1]["file"];
+  else
+   $l1=$r["data"][$c-1]["file"];
+   $link=$l1;
+  /*
+  $h4=@get_headers($l1);
+  //print_r ($h4);
+  foreach ($h4 as $key => $value) {
+    if (preg_match("/Location/",$value)) {
+       $t1=explode("Location:",$value);
+       $t2=explode("\n",$t1[1]);
+       $link=trim($t2[0]);
+       break;
+    }
+  }
+  */
 } elseif (strpos($filelink,"vshare.eu") !== false) {
   //http://vshare.eu/25td5yq2cd6k.htm
   //http://vshare.eu/embed-25td5yq2cd6k-600x300.html
@@ -1572,8 +1698,13 @@ function abc($a52, $a10)
     $a58 = '';
     $a52 = base64_decode($a52);
     $a52 = mb_convert_encoding($a52, 'ISO-8859-1', 'UTF-8');
+    /*
     for ($a72 = 0x0; $a72 < 0x100; $a72++) {
         $a54[$a72] = $a72;
+    }
+    */
+    for ($a72 = 0x0; $a72 < 0x100; $a72++) {     //new
+        $a54[$a72] = (0x3 + $a72) % 0x100;
     }
     for ($a72 = 0x0; $a72 < 0x100; $a72++) {
         $a55       = ($a55 + $a54[$a72] + ord($a10[($a72 % strlen($a10))])) % 0x100;
@@ -1645,6 +1776,7 @@ function abc($a52, $a10)
     if (preg_match("/(var\s+(_0x[a-z0-9]+))\=\[(\'[a-zA-Z0-9\=\+\/]+\'\,?)+\]/ms", $h, $m)) {
         $php_code = str_replace($m[1], "\$c0", $m[0]) . ";";
         eval($php_code);
+        //print_r ($c0);
         /* rotate with 0xd0 search (_0x1107,0xd0)) */
         $pat = "/\(" . $m[2] . "\,(0x[a-z0-9]+)/";
         if (preg_match($pat, $h, $n)) {
@@ -1653,6 +1785,7 @@ function abc($a52, $a10)
                 array_push($c0, array_shift($c0));
             }
         }
+        //echo $x;
         $h = str_replace("+", "", $h);
         /* check if exist second array and get replacement for abc function and slice*/
         /* search Array[_0x3504(_0xfcc8('0x22','uSSR'))] */
@@ -1663,24 +1796,29 @@ function abc($a52, $a10)
             $pat   = "/(" . $func . ")\(\'(0x[a-z0-9]+)\',\s?\'(.*?)\'\)/"; //better
             if (preg_match_all($pat, $h, $p)) {
                 for ($z = 0; $z < count($p[0]); $z++) {
-                    $h = str_replace($p[0][$z], abc($c0[hexdec($p[2][$z])], $p[3][$z]), $h);
+                    $h = str_replace($p[0][$z], "'".abc($c0[hexdec($p[2][$z])], $p[3][$z])."'", $h);
                 }
             }
+            //echo $h;
             /* search for second array var _0x13e4=[xcxcxc,xcxc,xcxcx ...] */
-            if (preg_match("/(var\s+(_0x[a-z0-9]+))\=\[([a-zA-Z0-9\=\+\/]+\,?)+\]/ms", $h, $m)) {
-                $php_code = str_replace(",", "','", $m[0]);
-                $php_code = str_replace("[", "['", $php_code);
-                $php_code = str_replace("]", "']", $php_code);
-                $php_code = str_replace($m[1], "\$c1", $php_code) . ";";
+            if (preg_match_all("/(var\s+(_0x[a-z0-9]+))\=\[(\'[a-zA-Z0-9\=\+\/]+\'\,?)+\]/ms", $h, $m)) {
+            //print_r ($m);
+            if (isset($m[1][1])) {
+                $php_code = $m[0][1];
+                $php_code = str_replace($m[1][1], "\$c1", $php_code) . ";";
                 /* get second array $c1 and rotate */
                 eval($php_code);
-                $pat = "/\(" . $m[2] . "\,(0x[a-z0-9]+)/ms";
+                //print_r ($c1);
+                //die();
+                $pat = "/\(" . $m[2][1] . "\,(0x[a-z0-9]+)/ms";
                 if (preg_match($pat, $h, $n)) {
                     $x = hexdec($n[1]);
                     for ($k = 0; $k < $x; $k++) {
                         array_push($c1, array_shift($c1));
                     }
                 }
+                //print_r ($c1);
+                //echo $x;
                 /* Variant 1 only decode $c1 and get r.splice.... may be a solution
                 $out = "";
                 for ($k = 0; $k < count($c1); $k++) {
@@ -1689,11 +1827,20 @@ function abc($a52, $a10)
                 echo $out;
                 */
                 /* search and replace _0x3504(0x6) etc with second array $c1 */
-                $pat = "/" . $func1 . "\((0x[0-9a-f]+)\)/ms";
-                preg_match_all($pat, $h, $q);
-                for ($k = 0; $k < count($q[1]); $k++) {
+                $pat = "/" . $func1 . "\(\'(0x[0-9a-f]+)\'\)/ms";
+                $pat1   = "/(" . $func1 . ")\(\'(0x[a-z0-9]+)\',\s?\'(.*?)\'\)/"; //better
+                if (preg_match_all($pat, $h, $q)) {
+                   for ($k = 0; $k < count($q[1]); $k++) {
                     $h = str_replace($q[0][$k], base64_decode($c1[hexdec($q[1][$k])]), $h);
+                   }
+                } else if (preg_match_all($pat1, $h, $p)) {
+                   //print_r ($p);
+                   for ($z = 0; $z < count($p[0]); $z++) {
+                    $h = str_replace($p[0][$z], abc($c1[hexdec($p[2][$z])], $p[3][$z]), $h);
+                   }
+                   //echo $h;
                 }
+            }
             }
             /* now $h contain  var _0x1d4745=r.splice ..... eval(_0x1d4745) */
             if (preg_match("/((\w)\.splice.*?)eval/ms", $h, $e)) {
@@ -1712,6 +1859,7 @@ function abc($a52, $a10)
             for ($z = 0; $z < count($p[0]); $z++) {
                 $h = str_replace($p[0][$z], abc($c0[hexdec($p[2][$z])], $p[3][$z]), $h);
             }
+            //echo $h;
             /* now $h contain  var _0x1d4745=r.splice ..... eval(_0x1d4745) */
             if (preg_match("/((\w)\.splice.*?)eval/ms", $h, $e)) {
                 $out = str_replace(";;", ";", $e[1]);
@@ -1797,6 +1945,8 @@ function abc($a52, $a10)
         }
     }
     /* $out */
+    $out=str_replace("(Math.round(","",$out);
+    $out=str_replace("))","",$out);
     if (preg_match_all("/\(\"body\"\)\.data\(\"(\w\s*\d)\"\,(\d+)\)/", $out, $u)) {
         for ($k = 0; $k < count($u[0]); $k++) {
             $out = str_replace("$" . $u[0][$k] . ";", "", $out);
@@ -2000,7 +2150,7 @@ function abc($a52, $a10) {
             return $a57;
 }
 preg_match('/(?:\/\/|\.)(streamplay\.(?:to|club|top|me))\/(?:embed-|player-)?([0-9a-zA-Z]+)/', $filelink, $m);
-$filelink = "https://streamplay.to/player-" . $m[2] . "-920x360.html";
+$filelink = "https://streamplay.me/player-" . $m[2] . "-920x360.html";
 $ua       = $_SERVER["HTTP_USER_AGENT"];
 $head     = array(
     'Cookie: lang=1; ref_yrp=http%3A%2F%2Fcecileplanche-psychologue-lyon.com%2Fshow%2Fthe-good-cop%2Fseason-1%2Fepisode-2; ref_kun=1'
@@ -2043,6 +2193,7 @@ if (preg_match('/([http|https][\.\d\w\-\.\/\\\:\?\&\#\%\_]*(\.mp4))/', $out, $m)
     if (preg_match("/(var\s+(_0x[a-z0-9]+))\=\[(\'[a-zA-Z0-9\=\+\/]+\'\,?)+\]/ms", $h, $m)) {
         $php_code = str_replace($m[1], "\$c0", $m[0]) . ";";
         eval($php_code);
+        //print_r ($c0);
         /* rotate with 0xd0 search (_0x1107,0xd0)) */
         $pat = "/\(" . $m[2] . "\,(0x[a-z0-9]+)/";
         if (preg_match($pat, $h, $n)) {
@@ -2051,6 +2202,7 @@ if (preg_match('/([http|https][\.\d\w\-\.\/\\\:\?\&\#\%\_]*(\.mp4))/', $out, $m)
                 array_push($c0, array_shift($c0));
             }
         }
+        //echo $x;
         $h = str_replace("+", "", $h);
         /* check if exist second array and get replacement for abc function and slice*/
         /* search Array[_0x3504(_0xfcc8('0x22','uSSR'))] */
@@ -2061,24 +2213,29 @@ if (preg_match('/([http|https][\.\d\w\-\.\/\\\:\?\&\#\%\_]*(\.mp4))/', $out, $m)
             $pat   = "/(" . $func . ")\(\'(0x[a-z0-9]+)\',\s?\'(.*?)\'\)/"; //better
             if (preg_match_all($pat, $h, $p)) {
                 for ($z = 0; $z < count($p[0]); $z++) {
-                    $h = str_replace($p[0][$z], abc($c0[hexdec($p[2][$z])], $p[3][$z]), $h);
+                    $h = str_replace($p[0][$z], "'".abc($c0[hexdec($p[2][$z])], $p[3][$z])."'", $h);
                 }
             }
+            //echo $h;
             /* search for second array var _0x13e4=[xcxcxc,xcxc,xcxcx ...] */
-            if (preg_match("/(var\s+(_0x[a-z0-9]+))\=\[([a-zA-Z0-9\=\+\/]+\,?)+\]/ms", $h, $m)) {
-                $php_code = str_replace(",", "','", $m[0]);
-                $php_code = str_replace("[", "['", $php_code);
-                $php_code = str_replace("]", "']", $php_code);
-                $php_code = str_replace($m[1], "\$c1", $php_code) . ";";
+            if (preg_match_all("/(var\s+(_0x[a-z0-9]+))\=\[(\'[a-zA-Z0-9\=\+\/]+\'\,?)+\]/ms", $h, $m)) {
+            //print_r ($m);
+            if (isset($m[1][1])) {
+                $php_code = $m[0][1];
+                $php_code = str_replace($m[1][1], "\$c1", $php_code) . ";";
                 /* get second array $c1 and rotate */
                 eval($php_code);
-                $pat = "/\(" . $m[2] . "\,(0x[a-z0-9]+)/ms";
+                //print_r ($c1);
+                //die();
+                $pat = "/\(" . $m[2][1] . "\,(0x[a-z0-9]+)/ms";
                 if (preg_match($pat, $h, $n)) {
                     $x = hexdec($n[1]);
                     for ($k = 0; $k < $x; $k++) {
                         array_push($c1, array_shift($c1));
                     }
                 }
+                //print_r ($c1);
+                //echo $x;
                 /* Variant 1 only decode $c1 and get r.splice.... may be a solution
                 $out = "";
                 for ($k = 0; $k < count($c1); $k++) {
@@ -2087,11 +2244,20 @@ if (preg_match('/([http|https][\.\d\w\-\.\/\\\:\?\&\#\%\_]*(\.mp4))/', $out, $m)
                 echo $out;
                 */
                 /* search and replace _0x3504(0x6) etc with second array $c1 */
-                $pat = "/" . $func1 . "\((0x[0-9a-f]+)\)/ms";
-                preg_match_all($pat, $h, $q);
-                for ($k = 0; $k < count($q[1]); $k++) {
+                $pat = "/" . $func1 . "\(\'(0x[0-9a-f]+)\'\)/ms";
+                $pat1   = "/(" . $func1 . ")\(\'(0x[a-z0-9]+)\',\s?\'(.*?)\'\)/"; //better
+                if (preg_match_all($pat, $h, $q)) {
+                   for ($k = 0; $k < count($q[1]); $k++) {
                     $h = str_replace($q[0][$k], base64_decode($c1[hexdec($q[1][$k])]), $h);
+                   }
+                } else if (preg_match_all($pat1, $h, $p)) {
+                   //print_r ($p);
+                   for ($z = 0; $z < count($p[0]); $z++) {
+                    $h = str_replace($p[0][$z], abc($c1[hexdec($p[2][$z])], $p[3][$z]), $h);
+                   }
+                   //echo $h;
                 }
+            }
             }
             /* now $h contain  var _0x1d4745=r.splice ..... eval(_0x1d4745) */
             if (preg_match("/((\w)\.splice.*?)eval/ms", $h, $e)) {
@@ -2110,6 +2276,7 @@ if (preg_match('/([http|https][\.\d\w\-\.\/\\\:\?\&\#\%\_]*(\.mp4))/', $out, $m)
             for ($z = 0; $z < count($p[0]); $z++) {
                 $h = str_replace($p[0][$z], abc($c0[hexdec($p[2][$z])], $p[3][$z]), $h);
             }
+            //echo $h;
             /* now $h contain  var _0x1d4745=r.splice ..... eval(_0x1d4745) */
             if (preg_match("/((\w)\.splice.*?)eval/ms", $h, $e)) {
                 $out = str_replace(";;", ";", $e[1]);
@@ -2195,6 +2362,8 @@ if (preg_match('/([http|https][\.\d\w\-\.\/\\\:\?\&\#\%\_]*(\.mp4))/', $out, $m)
         }
     }
     /* $out */
+    $out=str_replace("(Math.round(","",$out);
+    $out=str_replace("))","",$out);
     if (preg_match_all("/\(\"body\"\)\.data\(\"(\w\s*\d)\"\,(\d+)\)/", $out, $u)) {
         for ($k = 0; $k < count($u[0]); $k++) {
             $out = str_replace("$" . $u[0][$k] . ";", "", $out);
@@ -2638,7 +2807,7 @@ require_once("JavaScriptUnpacker.php");
   if (strpos($srt,"empty") !== false) $srt="";
 } elseif (strpos($filelink,"hqq.tv") !== false || strpos($filelink,"hqq.watch") !== false || strpos($filelink,"waaw.tv") !== false || strpos($filelink,"waaw1.tv") !== false) {
 //echo $filelink;
-  if (!file_exists($base_script."filme/result.txt")) die();
+  //if (!file_exists($base_script."filme/result.txt")) die();
     function decodeUN($a) {
         $a=substr($a, 1);
         //echo $a;
@@ -2844,10 +3013,10 @@ $pattern = "@(?:\/\/|\.)((?:waaw1?|netu|hqq)\.(?:tv|watch))\/(?:watch_video\.php
      preg_match("/vid\s*\'\:\s*\'(?P<vid>[^\']+)\'/",$h1,$m);
      $vid=$m["vid"];
      }
-$l="http://hqq.watch/player/embed_player.php?vid=".$vid."&autoplay=no";
+$l="http://hqq.tv/player/embed_player.php?vid=".$vid."&autoplay=no";
 //echo $l;
 //$l="http://hqq.watch/player/embed_player.php?vid=UXZUYWRacWFnTmZ2RUswa2M3bkh6Zz09&autoplay=no";
-$cookie="C:/EasyPhp/data/localweb/mobile1/hqq/hqq.dat";
+
 $cookie=$base_cookie."hqq.txt";
 $head=array('Cookie: gt=9608159b3d3d54bc27df0ae9ac530d6c');
 //echo  date('Y-m-d h:i:s', 1552082450);
@@ -2878,17 +3047,17 @@ $h=$t1[1];
 preg_match_all("/;}\('(\w+)','(\w*)','(\w*)','(\w*)'\)\)/",$h,$m);
 $h= decode3($m[1][0],$m[2][0],$m[3][0],$m[4][0]);
 
-$l="http://hqq.watch/player/ip.php?type=json";
+$l="http://hqq.tv/player/ip.php?type=json";
 $x=file_get_contents($l);
 //echo $x;
 //die();
 $iss=str_between($x,'ip":"','"');
-$vid=str_between($h,'videokeyorig = "','"');
-$at=str_between($h,'at=','&');
-$http_referer=str_between($h,'http_referer=','&');
+$vid=str_between($h,"videokeyorig='","'");
+$at=str_between($h,"attoken='","'");
+$http_referer=str_between($h,"server_referer='","'");
 //echo $vid."<BR>".$at."<BR>".$http_referer."<BR>";
 //die();
-$l="http://hqq.watch/sec/player/embed_player_9331445831509874.php?vid=".$vid."&need_captcha=1&iss=".$iss."&vid=".$vid."&at=".$at."&autoplayed=yes&referer=on&http_referer=".$http_referer."&pass=&embed_from=&need_captcha=0&hash_from=&secured=0&token=03";
+$l="http://hqq.tv/sec/player/embed_player_9331445831509874.php?vid=".$vid."&need_captcha=1&iss=".$iss."&vid=".$vid."&at=".$at."&autoplayed=yes&referer=on&http_referer=".$http_referer."&pass=&embed_from=&need_captcha=0&hash_from=&secured=0&token=03";
 $l_ref=$l;
 //echo $l;
       $ch = curl_init();
@@ -2907,14 +3076,11 @@ $l_ref=$l;
       //curl_setopt($ch, CURLOPT_NOBODY,1);
       $h = curl_exec($ch);
       curl_close($ch);
-      $h=str_replace('action="','action="http://hqq.watch/sec/player/embed_player_9331445831509874.php',$h);
-//file_put_contents("hqq.html",$h);
-//sleep (1);
-//echo '<a href="hqq.html" target="_blank">captcha</a>';
+
 $h=urldecode($h);
 //echo $h;
 //$h=file_get_contents("result.txt");
-if (!preg_match("/get_md5/",$h)) die();
+if (preg_match("/get_md5/",$h)){
   if (preg_match('/([http|https][\.\d\w\-\.\/\\\:\?\&\#\%\_\,]*(\.(srt|vtt)))/', $h, $m)) {
   $srt=$m[1];
   $srt=urldecode(str_replace("https","http",$srt));
@@ -2981,7 +3147,7 @@ $at=$m[1];
 //echo $r;
 //echo urldecode(urldecode($h));
 $l="https://hqq.tv/player/get_md5.php?at=".$at."&adb=0%2F&b=1&link_1=".$vid_link."&server_2=".$vid_server."&vid=".$vid;
-$l="http://hqq.watch/player/get_md5.php?at=".$at."&adb=0%2F&b=1&link_1=".$vid_link."&server_2=".$vid_server."&vid=".$vid;
+$l="http://hqq.tv/player/get_md5.php?at=".$at."&adb=0%2F&b=1&link_1=".$vid_link."&server_2=".$vid_server."&vid=".$vid;
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $l);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
@@ -3016,6 +3182,9 @@ if ($y)
 $link=$y.".mp4.m3u8";
 else
 $link="";
+} else {
+ $link="";
+}
 } elseif (strpos($filelink,"thevideo.me") !== false || strpos($filelink,"vev.io") !== false) {
   //http://thevideo.me/embed-0eqr3o05491w.html
   //https://vev.io/embed/78r81xm7ym34  ==> https://thevideo.me/embed-afdtxrbc8wrg.html
@@ -3191,10 +3360,12 @@ $ua="Mozilla/5.0 (Windows NT 10.0; rv:63.0) Gecko/20100101 Firefox/63.0";
     $filelink=str_replace("youtube-nocookie","youtube",$filelink);
     //echo $filelink;
     $link=youtube($filelink);
+    /*
     if ($link && strpos($link,"m3u8") === false) {
       $t1=explode("?",$link);
       $link=$t1[0]."/youtube.mp4?".$t1[1];
     }
+    */
     //$link=$link."&video_link/video.mp4";
     //$link=$link."&type=.mp4";
 } elseif (strpos($filelink,'vimeo.com') !==false){

@@ -53,13 +53,13 @@ document.onkeypress =  zx;
 
 <?php
 if ($tast=="DA1" && $flash=="mp")
-echo '<TD width="25%"><a href="filme/filmeseriale2_main.php?page=1&file=release&title=filmeseriale.online" target="_blank">filmeseriale.online (toate)</TD>';
+echo '<TD width="25%"><a href="filme/filmeseriale2_main.php?page=1&file=release&title=filmeseriale.online" target="_blank">filmeseriale.online (toate)</a></TD>';
 else
-echo '<TD width="25%"><a href="filme/filmeseriale_main.php?page=1&file=release&title=filmeseriale.online" target="_blank">filmeseriale.online (toate)</TD>';
+echo '<TD width="25%"><a href="filme/filmeseriale_main.php?page=1&file=release&title=filmeseriale.online" target="_blank">filmeseriale.online (toate)</a></TD>';
 ?>
-<TD width="25%"><a href="filme/filmeseriale1_main.php?page=1&file=release&title=filmeseriale.online" target="_blank">filmeseriale.online</TD>
-<TD width="25%"><a href="filme/tvhub_s.php?page=1&file=release&title=tvhub" target="_blank">tvhub</TD>
-<TD width="25%"><a href="filme/gold_s.php?page=1&file=release&title=filme-seriale.gold" target="_blank">filme-seriale.gold</TD>
+<TD width="25%"><a href="filme/filmeseriale1_main.php?page=1&file=release&title=filmeseriale.online" target="_blank">filmeseriale.online</a></TD>
+<TD width="25%"><a href="filme/tvhub_s.php?page=1&file=release&title=tvhub" target="_blank">tvhub</a></TD>
+<TD width="25%"><a href="filme/gold_s.php?page=1&file=release&title=filme-seriale.gold" target="_blank">filme-seriale.gold</a></TD>
 </TR>
 <TR>
 <TD width="25%"><a href="filme/veziseriale_s_fav.php" target="_blank">veziseriale.info</a></TD>
@@ -76,9 +76,9 @@ echo '<TD width="25%"><a href="filme/filmeseriale_main.php?page=1&file=release&t
 <!-- straine -->
 <TR>
 <TD width="25%"><a href="filme/tvseries_s.php?page=1&file=release&title=tvseries" target="_blank">tvseries</a></TD>
-<TD width="25%"><a href="filme/putlockerfit_s.php?page=1&file=release&title=putlockerfit" target="_blank">putlockerfit</TD>
+<TD width="25%"><a href="filme/putlockerfit_s.php?page=1&file=release&title=putlockerfit" target="_blank">putlockerfit</a></TD>
 <TD width="25%"><a href="filme/popcorn_s.php?page=1&file=release&title=seriale+noi" target="_blank">Popcorn (torrent)</a></TD>
-<TD width="25%"><a href="filme/hdfull_s.php?page=1&file=release&title=hdfull" target="_blank">hdfull</TD>
+<TD width="25%"><a href="filme/hdfull_s.php?page=1&file=release&title=hdfull" target="_blank">hdfull</a></TD>
 </TR>
 <TR>
 <TD width="25%"><a href="filme/seriestop_s.php?page=1&tip=release&title=seriestop" target="_blank">seriestop</a></TD>
@@ -87,7 +87,7 @@ echo '<TD width="25%"><a href="filme/filmeseriale_main.php?page=1&file=release&t
 <TD width="25%"><a href="filme/cineplex_s_main.php" target="_blank">cineplex (cont)</a></TD>
 </TR>
 <TR>
-<TD width="25%"><a href="filme/openloadmovies_s.php?page=1&file=release&title=openloadmovies" target="_blank">openloadmovies</TD>
+<TD width="25%"><a href="filme/openloadmovies_s.php?page=1&file=release&title=openloadmovies" target="_blank">openloadmovies</a></TD>
 <TD width="25%"><a href="filme/seriesfreetv_s.php?page=1&tip=release&title=seriesfreetv" target="_blank">seriesfreetv</a></TD>
 <TD width="25%"><a href="filme/moviesjoy_s.php?page=1&tip=release&title=moviesjoy" target="_blank">moviesjoy</a></TD>
 

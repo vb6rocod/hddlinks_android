@@ -55,7 +55,11 @@ foreach($videos as $video) {
  $title=str_between($video,'title="','"');
  $descriere=$title;
  $image=urldecode(str_between($video,'src="','"'));
- $link="https://www.digi24.ro".str_between($video,'href="','"');
+ $l=str_between($video,'href="','"');
+ if (strpos($l,"http") === false)
+    $link="https://www.digi24.ro".$l;
+ else
+    $link=$l;
     $link="digi24_e_main.php?page=1,".$link.",".urlencode($title);
     if (preg_match("/emisiuni\//",$link)) {
 	if ($n == 0) echo "<TR>"."\n\r";

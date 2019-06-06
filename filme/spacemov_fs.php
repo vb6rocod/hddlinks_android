@@ -44,6 +44,41 @@ function str_between($string, $start, $end){
 	if ($ini == 0) return ""; $ini += strlen($start); $len = strpos($string,$end,$ini) - $ini;
 	return substr($string,$ini,$len);
 }
+function loadsource($data_host, $data_id) {
+    $link_host = '';
+    switch ($data_host) {
+        case 0:
+            $link_host = 'https://openload.co/embed/' . $data_id;
+            break;
+        case 1:
+            $link_host = 'https://streamango.com/embed/' . $data_id;
+            break;
+        case 2:
+            $link_host = 'https://www.rapidvideo.com/e/' . $data_id;
+            break;
+        case 3:
+            $link_host = 'https://gounlimited.to/embed-' . $data_id . '.html';
+            break;
+        case 4:
+            $link_host = 'https://vidcloud.icu/load.php?id=' . $data_id;
+            break;
+        case 5:
+            $link_host = 'https://verystream.com/e/' . $data_id;
+            break;
+        case 6:
+            $link_host = 'https://flix555.com/embed-' . $data_id . '.html';
+            break;
+        case 7:
+            $link_host = 'https://vidlox.me/embed-' . $data_id . '.html';
+            break;
+        case 8:
+            $link_host = 'https://xstreamcdn.com/v/' . $data_id;
+            break;
+        default:
+            $link_host = 'https://openload.co/embed/' . $data_id;
+    }
+    return $link_host;
+}
 function get_value($q, $string) {
    $t1=explode($q,$string);
    return str_between($t1[1],"<string>","</string>");
@@ -215,7 +250,29 @@ foreach($videos as $video) {
   }
   */
   }
-  if (strpos($openload,"http") !== false) $r[]=$openload;
+  if (strpos($openload,"oload.party") !== false) {
+     $l="https://oload.party/watch";
+     $ref=$openload;
+     $head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:67.0) Gecko/20100101 Firefox/67.0',
+     'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+     'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
+     'Accept-Encoding: deflate',
+     'Referer: '.$ref.'',
+     'Connection: keep-alive');
+     $ch = curl_init();
+     curl_setopt($ch, CURLOPT_URL, $l);
+     curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+     curl_setopt($ch,CURLOPT_HTTPHEADER,$head);
+     curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+     curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+     $h=curl_exec($ch);
+     curl_close($ch);
+     if (preg_match_all("/data-host\=\"(\d+)\" data-id\=\"(.*?)\"/",$h,$m)) {
+       for ($k=0;$k<count($m[1]);$k++) {
+         $r[] = loadsource($m[1][$k],$m[2][$k]);
+       }
+     }
+  } else if (strpos($openload,"http") !== false) $r[]=$openload;
 }
   $siteParts = parse_url($r[0]);
   $server_select =$siteParts['host'];

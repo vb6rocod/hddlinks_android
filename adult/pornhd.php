@@ -53,7 +53,7 @@ function ajaxrequest(title, link) {
   //var the_data = {mod:add,title:title, link:link}; //Array
   on();
   var the_data = "mod=add&title="+ title +"&link="+link;
-  var php_file="pornhd_link.php";
+  var php_file="adult_link.php";
   request.open("POST", php_file, true);			// set the request
 
   // adds a header to tell the PHP script to recognize the data as is sent via POST
@@ -115,6 +115,7 @@ function str_between($string, $start, $end){
 	if ($ini == 0) return ""; $ini += strlen($start); $len = strpos($string,$end,$ini) - $ini;
 	return substr($string,$ini,$len);
 }
+$cookie=$base_cookie."adult.dat";
 if (file_exists($base_pass."player.txt")) {
 $flash=trim(file_get_contents($base_pass."player.txt"));
 } else {
@@ -139,6 +140,7 @@ if ($page1 > 1)
 echo '<a href="pornhd.php?page1='.($page1-1).'&src='.$search1.'">&nbsp;&lt;&lt;&nbsp;</a> | <a href="pornhd.php?page1='.($page1+1).'&src='.$search1.'">&nbsp;&gt;&gt;&nbsp;</a></TD></TR>';
 else
 echo '<a href="pornhd.php?page1='.($page1+1).'&src='.$search1.'">&nbsp;&gt;&gt;&nbsp;</a></TD></TR>';
+
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $search3);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
@@ -146,6 +148,8 @@ echo '<a href="pornhd.php?page1='.($page1+1).'&src='.$search1.'">&nbsp;&gt;&gt;&
   curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
   curl_setopt($ch, CURLOPT_REFERER, "https://www.pornhd.com");
   curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+  //curl_setopt($ch, CURLOPT_COOKIEJAR, $cookie);
+  //curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie);
   curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
   curl_setopt($ch, CURLOPT_TIMEOUT, 15);
   $html = curl_exec($ch);
@@ -163,6 +167,8 @@ $search3  = $search."?page=".$page;  //http://www.4tube.com/videos?p=2&sort=date
   curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows; U; Windows NT 6.1; en-US; rv:1.9.1.2) Gecko/20090729 Firefox/3.5.2 GTB5');
   curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
   curl_setopt($ch, CURLOPT_REFERER, "https://www.pornhd.com");
+  //curl_setopt($ch, CURLOPT_COOKIEJAR, $cookie);
+  //curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie);
   curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
   curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
   curl_setopt($ch, CURLOPT_TIMEOUT, 15);
@@ -203,7 +209,7 @@ foreach($videos as $video) {
     $data=" (".$t3[0].")";
   if ($n==0) echo '<TR>';
   if ($flash != "mp") {
-  $link = "pornhd_link.php?file=".$link."&title=".urlencode($title);
+  $link = "adult_link.php?link=".urlencode($link)."&title=".urlencode($title);
   echo '<td class="mp" align="center" width="25%"><a href="'.$link.'" target="_blank"><img src="'.$image.'" width="200px" height="150px"><BR>'.$title.$data.'</a></TD>';
   } else {
   echo '<td class="mp" align="center" width="25%"><a onclick="ajaxrequest('."'".urlencode($title)."', '".urlencode($link)."')".'"'." style='cursor:pointer;'>".'<img src="'.$image.'" width="200px" height="150px"><BR>'.$title.$data.'</a></TD>';

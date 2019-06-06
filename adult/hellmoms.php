@@ -15,12 +15,10 @@ if($query) {
 }
 } else {
  $search1=$_GET["src"];
-file_put_contents($base_cookie."adult.dat",$search1);
- $search1=str_replace(" ","+",$search1);
- $page_title="Cautare: ".str_replace("+"," ",$search1);
- //$search="http://www.redtube.com/?search=".$search1."&page=".$page1;
- //https://www.porn.com/videos/search?q=mom+son&p=2
- $search3 = "https://www.porn.com/videos/search?q=".$search1."&p=".$page1;
+file_put_contents($base_cookie."adult.dat",urldecode($search1));
+ $search2=str_replace(" ","+",$search1);
+ $page_title="Cautare: ".str_replace(" "," ",$search1);
+ $search3 = "https://hellmoms.com/q/".$search2."/".$page1."/";
 }
 ?>
 <html><head>
@@ -53,7 +51,7 @@ function ajaxrequest(title, link) {
   //var the_data = {mod:add,title:title, link:link}; //Array
   on();
   var the_data = "mod=add&title="+ title +"&link="+link;
-  var php_file="fapdu_link.php";
+  var php_file="adult_link.php";
   request.open("POST", php_file, true);			// set the request
 
   // adds a header to tell the PHP script to recognize the data as is sent via POST
@@ -136,9 +134,9 @@ echo '<table border="1px" width="100%">'."\n\r";
 echo '<tr><TD colspan="4" align="right">';
 if ($page1) {
 if ($page1 > 1)
-echo '<a href="fapdu.php?page1='.($page1-1).'&src='.$search1.'"><font size="4">&nbsp;&lt;&lt;&nbsp;</font></a> | <a href="fapdu.php?page1='.($page1+1).'&src='.$search1.'"><font size="4">&nbsp;&gt;&gt;&nbsp;</font></a></TD></TR>';
+echo '<a href="hellmoms.php?page1='.($page1-1).'&src='.$search1.'">&nbsp;&lt;&lt;&nbsp;</a> | <a href="hellmoms.php?page1='.($page1+1).'&src='.$search1.'">&nbsp;&gt;&gt;&nbsp;</a></TD></TR>';
 else
-echo '<a href="fapdu.php?page1='.($page1+1).'&src='.$search1.'"><font size="4">&nbsp;&gt;&gt;&nbsp;</font></a></TD></TR>';
+echo '<a href="hellmoms.php?page1='.($page1+1).'&src='.$search1.'">&nbsp;&gt;&gt;&nbsp;</a></TD></TR>';
 //echo $search3;
 //https://www.youjizz.com/search/mature-mom-anal-1.html?
 //https://www.youjizz.com/search/mature-mom-anal-1.html?
@@ -147,26 +145,30 @@ echo '<a href="fapdu.php?page1='.($page1+1).'&src='.$search1.'"><font size="4">&
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
   curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows; U; Windows NT 6.1; en-US; rv:1.9.1.2) Gecko/20090729 Firefox/3.5.2 GTB5');
   curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
-  curl_setopt($ch, CURLOPT_REFERER, "http://fapdu.com");
+  curl_setopt($ch, CURLOPT_REFERER, "https://hellmoms.com");
   curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
   $html = curl_exec($ch);
   curl_close($ch);
 } else {
 if ($page > 1)
-echo '<a href="fapdu.php?page='.($page-1).','.$search.','.urlencode($page_title).'"><font size="4">&nbsp;&lt;&lt;&nbsp;</font></a> | <a href="fapdu.php?page='.($page+1).','.$search.','.urlencode($page_title).'"><font size="4">&nbsp;&gt;&gt;&nbsp;</font></a></TD></TR>';
+echo '<a href="hellmoms.php?page='.($page-1).','.$search.','.urlencode($page_title).'">&nbsp;&lt;&lt;&nbsp;</a> | <a href="hellmoms.php?page='.($page+1).','.$search.','.urlencode($page_title).'">&nbsp;&gt;&gt;&nbsp;</a></TD></TR>';
 else
-echo '<a href="fapdu.php?page='.($page+1).','.$search.','.urlencode($page_title).'"><font size="4">&nbsp;&gt;&gt;&nbsp;</font></a></TD></TR>';
+echo '<a href="hellmoms.php?page='.($page+1).','.$search.','.urlencode($page_title).'">&nbsp;&gt;&gt;&nbsp;</a></TD></TR>';
 //$html = file_get_contents($search."?page=".$page);
 //https://www.porn.com/videos?p=2
 
-$search3  = $search."/".$page;  //http://www.4tube.com/videos?p=2&sort=date
+$search3  = $search.$page."/";  //http://www.4tube.com/videos?p=2&sort=date
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $search3);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
   curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows; U; Windows NT 6.1; en-US; rv:1.9.1.2) Gecko/20090729 Firefox/3.5.2 GTB5');
   curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
-  curl_setopt($ch, CURLOPT_REFERER, "http://fapdu.com");
+  curl_setopt($ch, CURLOPT_REFERER, "https://hellmoms.com");
   curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
   $html = curl_exec($ch);
   curl_close($ch);
 }
@@ -174,7 +176,7 @@ $n=0;
 //$videos = explode('<div class="video">', $html);
 //$videos=explode('<span class="video-title">',$html);
 //$videos = explode('class="frame video', $html);
-$videos = explode('div class="thumb">',$html);
+$videos = explode('div class="thumb',$html);
 
 unset($videos[0]);
 $videos = array_values($videos);
@@ -182,44 +184,46 @@ $videos = array_values($videos);
 foreach($videos as $video) {
     $t1=explode('href="',$video);
     $t2 = explode('"', $t1[1]);
-    $link = "https://www.porn.com".$t2[0];
-    $t1=explode('title="',$video);
-    $t3=explode('"',$t1[1]);
+    $link = $t2[0];
+    $t1=explode('span>',$video);
+    $t3=explode('<',$t1[1]);
     $title=$t3[0];
-    $t1 = explode('src="', $video);
+    $t1 = explode('data-original="', $video);
     $t2 = explode('"', $t1[1]);
     $image = $t2[0];
     //$image = str_replace("https","http",$image);
-    $image="../filme/r_m.php?file=".$image;
-    $t1=explode('class="meta">',$video);
-    $t2=explode('span>',$t1[1]);
+    //$image="../filme/r_m.php?file=".$image;
+    $t1=explode('class="duration"',$video);
+    $t2=explode('>',$t1[1]);
     $t3=explode("<",$t2[1]);
     $data=" (".$t3[0].")";
+  if ($link) {
   if ($n==0) echo '<TR>';
   if ($flash != "mp") {
-  $link = "fapdu_link.php?file=".$link."&title=".urlencode($title);
-  echo '<td align="center" width="25%"><a href="'.$link.'" target="_blank"><img src="'.$image.'" width="200px" height="150px"><BR><font size="4">'.$title.$data.'</font></a></TD>';
+  $link = "adult_link.php?link=".urlencode($link)."&title=".urlencode($title);
+  echo '<td class="mp" align="center" width="25%"><a href="'.$link.'" target="_blank"><img src="'.$image.'" width="200px" height="150px"><BR>'.$title.$data.'</a></TD>';
   } else {
-  echo '<td align="center" width="25%"><a onclick="ajaxrequest('."'".urlencode($title)."', '".urlencode($link)."')".'"'." style='cursor:pointer;'>".'<img src="'.$image.'" width="200px" height="150px"><BR><font size="4">'.$title.$data.'</font></a></TD>';
+  echo '<td class="mp" align="center" width="25%"><a onclick="ajaxrequest('."'".urlencode($title)."', '".urlencode($link)."')".'"'." style='cursor:pointer;'>".'<img src="'.$image.'" width="200px" height="150px"><BR>'.$title.$data.'</a></TD>';
   }
   $n++;
   if ($n == 4) {
   echo '</tr>';
   $n=0;
   }
+  }
 }
 echo '<tr><TD colspan="4" align="right">';
 if ($page1) {
 if ($page1 > 1)
-echo '<a href="fapdu.php?page1='.($page1-1).'&src='.$search1.'"><font size="4">&nbsp;&lt;&lt;&nbsp;</font></a> | <a href="fapdu.php?page1='.($page1+1).'&src='.$search1.'"><font size="4">&nbsp;&gt;&gt;&nbsp;</font></a></TD></TR>';
+echo '<a href="hellmoms.php?page1='.($page1-1).'&src='.$search1.'">&nbsp;&lt;&lt;&nbsp;</a> | <a href="hellmoms.php?page1='.($page1+1).'&src='.$search1.'">&nbsp;&gt;&gt;&nbsp;</a></TD></TR>';
 else
-echo '<a href="fapdu.php?page1='.($page1+1).'&src='.$search1.'"><font size="4">&nbsp;&gt;&gt;&nbsp;</font></a></TD></TR>';
+echo '<a href="hellmoms.php?page1='.($page1+1).'&src='.$search1.'">&nbsp;&gt;&gt;&nbsp;</a></TD></TR>';
 
 } else {
 if ($page > 1)
-echo '<a href="fapdu.php?page='.($page-1).','.$search.','.urlencode($page_title).'"><font size="4">&nbsp;&lt;&lt;&nbsp;</font></a> | <a href="fapdu.php?page='.($page+1).','.$search.','.urlencode($page_title).'"><font size="4">&nbsp;&gt;&gt;&nbsp;</font></a></TD></TR>';
+echo '<a href="hellmoms.php?page='.($page-1).','.$search.','.urlencode($page_title).'">&nbsp;&lt;&lt;&nbsp;</a> | <a href="hellmoms.php?page='.($page+1).','.$search.','.urlencode($page_title).'">&nbsp;&gt;&gt;&nbsp;</a></TD></TR>';
 else
-echo '<a href="fapdu.php?page='.($page+1).','.$search.','.urlencode($page_title).'"><font size="4">&nbsp;&gt;&gt;&nbsp;</font></a></TD></TR>';
+echo '<a href="hellmoms.php?page='.($page+1).','.$search.','.urlencode($page_title).'">&nbsp;&gt;&gt;&nbsp;</a></TD></TR>';
 
 }echo "</table>";
 ?>

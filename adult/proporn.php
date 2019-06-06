@@ -53,7 +53,7 @@ function ajaxrequest(title, link) {
   //var the_data = {mod:add,title:title, link:link}; //Array
   on();
   var the_data = "mod=add&title="+ title +"&link="+link;
-  var php_file="proporn_link.php";
+  var php_file="adult_link.php";
   request.open("POST", php_file, true);			// set the request
 
   // adds a header to tell the PHP script to recognize the data as is sent via POST
@@ -186,7 +186,8 @@ $videos = array_values($videos);
 foreach($videos as $video) {
     $t1=explode('id="rotate_',$video);
     $t2 = explode('_', $t1[1]);
-    $link = $t2[0];
+    $id = $t2[0];
+    $link="https://www.proporn.com//player_config_json/?vid=".$id;
     $t1=explode('alt="',$video);
     $t3=explode('"',$t1[1]);
     $title=$t3[0];
@@ -199,9 +200,10 @@ foreach($videos as $video) {
     $t2=explode('>',$t1[1]);
     $t3=explode("<",$t2[1]);
     $data=" (".$t3[0].")";
+  if ($id) {
   if ($n==0) echo '<TR>';
   if ($flash != "mp") {
-  $link = "proporn_link.php?file=".$link."&title=".urlencode($title);
+  $link = "adult_link.php?link=".urlencode($link)."&title=".urlencode($title);
   echo '<td class="mp" align="center" width="25%"><a href="'.$link.'" target="_blank"><img src="'.$image.'" width="200px" height="150px"><BR>'.$title.$data.'</a></TD>';
   } else {
   echo '<td class="mp" align="center" width="25%"><a onclick="ajaxrequest('."'".urlencode($title)."', '".urlencode($link)."')".'"'." style='cursor:pointer;'>".'<img src="'.$image.'" width="200px" height="150px"><BR>'.$title.$data.'</a></TD>';
@@ -210,6 +212,7 @@ foreach($videos as $video) {
   if ($n == 4) {
   echo '</tr>';
   $n=0;
+  }
   }
 }
 echo '<tr><TD colspan="4" align="right">';

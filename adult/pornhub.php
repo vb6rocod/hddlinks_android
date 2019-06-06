@@ -54,7 +54,7 @@ function ajaxrequest(title, link) {
   //var the_data = {mod:add,title:title, link:link}; //Array
   on();
   var the_data = "mod=add&title="+ title +"&link="+link;
-  var php_file="pornhub_link.php";
+  var php_file="adult_link.php";
   request.open("POST", php_file, true);			// set the request
 
   // adds a header to tell the PHP script to recognize the data as is sent via POST
@@ -186,7 +186,8 @@ $videos = array_values($videos);
 foreach($videos as $video) {
     $t1 = explode('_vkey="', $video);
     $t2 = explode('"', $t1[1]);
-    $link = $t2[0];
+    $id = $t2[0];
+    $link="https://www.pornhub.com/view_video.php?viewkey=".$id;
     //http://img02.redtubefiles.com/_thumbs/0000350/0350855/0350855_009m.jpg
     $t1 = explode('data-mediumthumb="', $video);
     $t2 = explode('"', $t1[1]);
@@ -203,7 +204,7 @@ foreach($videos as $video) {
   if ($image) {
   if ($n==0) echo '<TR>';
   if ($flash != "mp") {
-  $link="pornhub_link.php?file=".$link."&title=".$title;
+  $link="adult_link.php?link=".urlencode($link)."&title=".$title;
   echo '<td class="mp" align="center" width="25%"><a href="'.$link.'" target="_blank"><img src="'.$image.'" width="200px" height="150px"><BR>'.$title.$data.'</a></TD>';
   } else {
   echo '<td class="mp" align="center" width="25%"><a onclick="ajaxrequest('."'".urlencode($title)."', '".urlencode($link)."')".'"'." style='cursor:pointer;'>".'<img src="'.$image.'" width="200px" height="150px"><BR>'.$title.$data.'</a></TD>';

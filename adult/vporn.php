@@ -51,7 +51,7 @@ function ajaxrequest(title, link) {
   //var the_data = {mod:add,title:title, link:link}; //Array
   on();
   var the_data = "mod=add&title="+ title +"&link="+link;
-  var php_file="vporn_link.php";
+  var php_file="adult_link.php";
   request.open("POST", php_file, true);			// set the request
 
   // adds a header to tell the PHP script to recognize the data as is sent via POST
@@ -130,7 +130,7 @@ if (preg_match("/android|ipad/i",$user_agent) && preg_match("/chrome|firefox|mob
 $c="";
   echo "<a href='".$c."' id='mytest1'></a>".'<div id="mainnav">';
 echo '<H2>'.$page_title.'</H2>';
-echo '<table border="1px" width="100%">'."\n\r";
+echo '<table style="table-layout:fixed" border="1px" width="100%">'."\n\r";
 echo '<tr><TD colspan="4" align="right">';
 if ($page1) {
 if ($page1 > 1)
@@ -199,7 +199,7 @@ foreach($videos as $video) {
     $data=" (".$t3[0].")";
   if ($n==0) echo '<TR>';
   if ($flash != "mp") {
-  $link = "vporn_link.php?file=".$link."&title=".urlencode($title);
+  $link = "adult_link.php?link=".urlencode($link)."&title=".urlencode($title);
   echo '<td class="mp" align="center" width="25%"><a href="'.$link.'" target="_blank"><img src="'.$image.'" width="200px" height="150px"><BR>'.$title.$data.'</a></TD>';
   } else {
   echo '<td class="mp" align="center" width="25%"><a onclick="ajaxrequest('."'".urlencode($title)."', '".urlencode($link)."')".'"'." style='cursor:pointer;'>".'<img src="'.$image.'" width="200px" height="150px"><BR>'.$title.$data.'</a></TD>';

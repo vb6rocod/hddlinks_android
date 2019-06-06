@@ -4,14 +4,15 @@
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate"/>
 <meta http-equiv="Pragma" content="no-cache"/>
 <meta http-equiv="Expires" content="0"/>
-      <title>fapdu</title>
+      <title>hellmoms</title>
 <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.0/jquery.min.js"></script>
 
 <link rel="stylesheet" type="text/css" href="../custom.css" />
 <script type="text/javascript">
    function zx(e){
      var charCode = (typeof e.which == "number") ? e.which : e.keyCode
-     if (charCode == "53") {
+     //alert (charCode);
+     if (charCode == "53"  && e.target.type != "text") {
       document.getElementById("send").click();
     }
    }
@@ -33,40 +34,41 @@ function str_between($string, $start, $end){
 	return substr($string,$ini,$len);
 }
 echo '<table border="1px" width="100%">'."\n\r";
-echo '<TR><td style="color:black;background-color:#0a6996;color:#64c8ff;text-align:center" colspan="3"><font size="6"><b>fapdu</b></font></TD></TR>';
-echo '<TR><TD colspan="1"><font size="4">'.'<a href="fapdu.php?page=1,http://fapdu.com/videos,Recente" target="_blank"><b>Recente</b></a></font></TD>';
-echo '<TD colspan="2"><font size="4"><form action="fapdu.php" target="_blank">Cautare <input type="hidden" name="page1" id="page1" value="1"><input type="text" id="src" name="src" value="'.$val_search.'"><input type="submit" value="send" id="send"></form></font></td>';
+echo '<TR><td style="color:black;background-color:#0a6996;color:#64c8ff;text-align:center" colspan="3"><font size="6"><b>hellmoms</b></TD></TR>';
+echo '<TR><TD class="cat" colspan="1">'.'<a href="hellmoms.php?page=1,https://hellmoms.com/,Recente" target="_blank"><b>Recente</b></a></TD>';
+echo '<TD class="form" colspan="2"><form action="hellmoms.php" target="_blank">Cautare <input type="hidden" name="page1" id="page1" value="1"><input type="text" id="src" name="src" value="'.$val_search.'"><input type="submit" value="Cauta" id="send"></form></td>';
 //https://lubetube.com/view/basic/mostrecent/?page=2
-//<TD colspan="2"><font size="4"><form action="hdfilm_s.php" target="_blank">Cautare film:  <input type="text" id="src" name="src" value="'.$val_search.'"><input type="submit" value="send" id="send"></form></font></td>
+//<TD colspan="2"><form action="hdfilm_s.php" target="_blank">Cautare film:  <input type="text" id="src" name="src" value="'.$val_search.'"><input type="submit" value="send" id="send"></form></td>
 echo '</TR>';
 $n=0;
-$l="http://fapdu.com/videos";
+$l="https://hellmoms.com/";
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $l);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
   curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows; U; Windows NT 6.1; en-US; rv:1.9.1.2) Gecko/20090729 Firefox/3.5.2 GTB5');
   curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
-  curl_setopt($ch, CURLOPT_REFERER, "http://fapdu.com/");
+  curl_setopt($ch, CURLOPT_REFERER, "https://hellmoms.com");
   curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
   $html = curl_exec($ch);
   curl_close($ch);
 
 //$html = str_between($html,'<ul id="footer','</ul>');
-$videos = explode('<li', $html);
+$videos = explode('li><a href=', $html);
 unset($videos[0]);
 $videos = array_values($videos);
 foreach($videos as $video) {
-    $t=explode('href="',$video);
-    $t1=explode('"',$t[1]);
-    $link="http://fapdu.com".$t1[0];
+    $t=explode('"',$video);
+    $link=$t[1];
 
     $t2=explode('>',$video);
     $t3=explode('<',$t2[1]);
   	$title=$t3[0];
-    $link="fapdu.php?page=1,".$link.",".urlencode($title);
-    if ((strpos($title,"Adultxxx") === false)) {
+    $link="hellmoms.php?page=1,".$link.",".urlencode($title);
+    if ((strpos($link,"/c/") !== false)) {
 	if ($n == 0) echo "<TR>"."\n\r";
-	echo '<TD style="text-align:center"><font size="4">'.'<a href="'.$link.'" target="_blank">'.$title.'</a></font></TD>';
+	echo '<TD class="cat">'.'<a href="'.$link.'" target="_blank">'.$title.'</a></TD>';
     $n++;
     if ($n > 2) {
      echo '</TR>'."\n\r";

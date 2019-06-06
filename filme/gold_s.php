@@ -212,7 +212,7 @@ $videos = array_values($videos);
 foreach($videos as $video) {
   $link1 = trim(str_between($video,'href="','"'));
   $title11=str_between($video,'class="tt">','</');
-  $title11=trim(preg_replace("/Watch|Putlocker/i","",$title11));
+  $title11=trim(preg_replace("/(online subtitrat|serial).*/i","",$title11));
   $id1=$link1;
   //$title=trim(preg_replace("/- filme online subtitrate/i","",$title));
   $title11=htmlspecialchars_decode($title11,ENT_QUOTES);

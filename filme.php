@@ -78,21 +78,21 @@ document.onkeypress =  zx;
 <!-- straine -->
 <TR>
 <TD width="25%"><a href="filme/tvseries_f.php?page=1&file=release&title=tvseries" target="_blank">tvseries</a></TD>
-<TD width="25%"><a href="filme/putlockerfit_f.php?page=1&file=release&title=putlockerfit" target="_blank">putlockerfit</TD>
+<TD width="25%"><a href="filme/putlockerfit_f.php?page=1&file=release&title=putlockerfit" target="_blank">putlockerfit</a></TD>
 <TD width="25%"><a href="filme/dwatchmovies_f.php?page=1&file=release&title=dwatchmovies" target="_blank">dwatchmovies</a></TD>
 <TD width="25%"><a href="filme/popcorn_f.php?page=1&file=release&title=filme+noi" target="_blank">Popcorn (torrent)</a></TD>
 </TR>
 <TR>
 <TD width="25%"><a href="filme/hdfull_f.php?page=1&file=release&title=hdfull" target="_blank">hdfull</a></TD>
-<TD width="25%"><a href="filme/subsmovies_f.php?page=1&file=release&title=subsmovies" target="_blank">subsmovies</TD>
+<TD width="25%"><a href="filme/subsmovies_f.php?page=1&file=release&title=subsmovies" target="_blank">subsmovies</a></TD>
 <TD width="25%"><a href="filme/cineplex_f_main.php" target="_blank">cineplex (cont)</a></TD>
-<TD width="25%"><a href="filme/openloadmovies.php?page=1&file=release&title=openloadmovies" target="_blank">openloadmovies</TD>
+<TD width="25%"><a href="filme/openloadmovies.php?page=1&file=release&title=openloadmovies" target="_blank">openloadmovies</a></TD>
 </TR>
 <TR>
-<TD width="25%"><a href="filme/hdpopcorns.php?page=1&file=release&title=hdpopcorns" target="_blank">hdpopcorns</TD>
-<TD width="25%"><a href="filme/spacemov.php?page=1&file=release&title=spacemov" target="_blank">spacemov</TD>
-<TD width="25%"><a href="filme/flixtor_f.php?page=1&file=release&title=flixtor" target="_blank">flixtor (PC)</TD>
-<TD width="25%"><a href="filme/moviesjoy_f.php?page=1&file=release&title=moviesjoy" target="_blank">moviesjoy</TD>
+<TD width="25%"><a href="filme/hdpopcorns.php?page=1&file=release&title=hdpopcorns" target="_blank">hdpopcorns</a></TD>
+<TD width="25%"><a href="filme/spacemov.php?page=1&file=release&title=spacemov" target="_blank">spacemov</a></TD>
+<TD width="25%"></TD>
+<TD width="25%"><a href="filme/moviesjoy_f.php?page=1&file=release&title=moviesjoy" target="_blank">moviesjoy</a></TD>
 
 </TR>
 

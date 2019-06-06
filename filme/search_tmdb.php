@@ -147,6 +147,8 @@ $l="https://api.themoviedb.org/3/search/multi?api_key=".$key."&language=en-US&qu
 //echo $h;
 $result=json_decode($h,1);
 //print_r ($result);
+//$x="https://api.themoviedb.org/3/tv/61378?api_key=".$key;
+//echo $x;
 $r=$result['results'];
 echo '<table border="1px" width="100%">'."\n";
 $w=0;

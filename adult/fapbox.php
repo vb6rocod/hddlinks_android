@@ -59,7 +59,7 @@ function ajaxrequest(title, link) {
   //var the_data = {mod:add,title:title, link:link}; //Array
   on();
   var the_data = "mod=add&title="+ title +"&link="+link;
-  var php_file="fapbox_link.php";
+  var php_file="adult_link.php";
   request.open("POST", php_file, true);			// set the request
 
   // adds a header to tell the PHP script to recognize the data as is sent via POST
@@ -178,7 +178,7 @@ $videos = array_values($videos);
 foreach($videos as $video) {
     $t1=explode('/video/',$video);
     $t2 = explode('"', $video);
-    $link = "http://fapbox.com".$t2[0];
+    $link = "http://fapbox.com".trim($t2[0]);
     $t3=explode('alt="',$video);
     $t4=explode('"',$t3[1]);
     $title=$t4[0];
@@ -196,8 +196,8 @@ foreach($videos as $video) {
   if ($title) {
 	if ($n == 0) echo "<TR>"."\n\r";
 	if ($flash != "mp") {
-	$link = "fapbox_link.php?file=".$link;
-    echo '<td class="mp" align="center" width="25%"><a href="'.$link.'&title='.$title.'" target="_blank"><img src="'.$image.'" width="200px" height="150px"></a><BR><a href="'.$link.'" target="_blank">'.$data.'</a></TD>';
+	$link = "adult_link.php?link=".urlencode($link);
+    echo '<td class="mp" align="center" width="25%"><a href="'.$link.'&title='.urlencode($title).'" target="_blank"><img src="'.$image.'" width="200px" height="150px"></a><BR><a href="'.$link.'" target="_blank">'.$data.'</a></TD>';
   } else {
   echo '<td class="mp" align="center" width="25%"><a onclick="ajaxrequest('."'".urlencode($title)."', '".urlencode($link)."')".'"'." style='cursor:pointer;'>".'<img src="'.$image.'" width="200px" height="150px"><BR>'.$data.'</a></TD>';
   }

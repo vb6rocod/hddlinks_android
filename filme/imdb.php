@@ -330,7 +330,7 @@ $cast = substr($cast, 0, -1);
   $cast="Cast: ".$r["Actors"];
   $desc = $r["Plot"];
   $img=$r["Poster"];
-  if (!$img) $img="blank.jpg";
+  if (!$img || $img=="N/A") $img="blank.jpg";
 }
 //print_r ($r);
 

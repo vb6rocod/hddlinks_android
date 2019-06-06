@@ -53,7 +53,7 @@ function ajaxrequest(title, link) {
   //var the_data = {mod:add,title:title, link:link}; //Array
   on();
   var the_data = "mod=add&title="+ title +"&link="+link;
-  var php_file="tnaflix_link.php";
+  var php_file="adult_link.php";
   request.open("POST", php_file, true);			// set the request
 
   // adds a header to tell the PHP script to recognize the data as is sent via POST
@@ -185,8 +185,8 @@ foreach($videos as $video) {
   if ($title) {
   if ($n==0) echo '<TR>';
   if ($flash != "mp") {
-  $link = "tnaflix_link.php?file=".$link;
-  echo '<td class="mp" align="center" width="25%"><a href="'.$link.'&title='.$title.'" target="_blank"><img src="'.$image.'" width="180px" height="135px"><BR>'.$title.$dur.'</a></TD>';
+  $link = "adult_link.php?link=".urlencode($link);
+  echo '<td class="mp" align="center" width="25%"><a href="'.$link.'&title='.urlencode($title).'" target="_blank"><img src="'.$image.'" width="180px" height="135px"><BR>'.$title.$dur.'</a></TD>';
   } else {
   echo '<td class="mp" align="center" width="25%"><a onclick="ajaxrequest('."'".urlencode($title)."', '".urlencode($link)."')".'"'." style='cursor:pointer;'>".'<img src="'.$image.'" width="180px" height="135px"><BR>'.$title.$dur.'</a></TD>';
   }
