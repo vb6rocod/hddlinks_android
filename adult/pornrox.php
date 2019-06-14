@@ -178,7 +178,7 @@ $n=0;
 //$videos = explode('<div class="video">', $html);
 //$videos=explode('<span class="video-title">',$html);
 //$videos = explode('class="frame video', $html);
-$videos = explode('thumbindexes',$html);
+$videos = explode('article class="video-item',$html);
 
 unset($videos[0]);
 $videos = array_values($videos);
@@ -186,7 +186,7 @@ $videos = array_values($videos);
 foreach($videos as $video) {
     $t1=explode('href="',$video);
     $t2 = explode('"', $t1[1]);
-    $link = "https://www.pornrox.com".$t2[0];
+    $link = $t2[0];
     $t1=explode('alt="',$video);
     $t3=explode('"',$t1[1]);
     $title=$t3[0];
@@ -194,13 +194,13 @@ foreach($videos as $video) {
     $t2 = explode('"', $t1[1]);
     $image = $t2[0];
     if (!$image) {
-    $t1 = explode('src="', $video);
-    $t2 = explode('"', $t1[1]);
+    $t1 = explode('srcset="', $video);
+    $t2 = explode('"', $t1[2]);
     $image = $t2[0];
     }
     //$image = str_replace("https","http",$image);
     $image="../filme/r_m.php?file=".$image;
-    $t1=explode('<time',$video);
+    $t1=explode('video-duration"',$video);
     $t2=explode('>',$t1[1]);
     $t3=explode("<",$t2[1]);
     $data=" (".$t3[0].")";

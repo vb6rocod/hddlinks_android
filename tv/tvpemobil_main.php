@@ -40,6 +40,8 @@ $n=0;
 $host_old="tvpemobil.net";
 $host="televiziune.live";
 $l="http://".$host."/wap/logare.php?nume=".$user."&parola=".$pass;
+//echo $l;
+//die();
 $ua     =   $_SERVER['HTTP_USER_AGENT'];
 $cookie=$base_cookie."tvmobil.dat";
   $ch = curl_init();

@@ -55,7 +55,7 @@ $l="https://www.pornrox.com/category";
   curl_close($ch);
 
 //$html = str_between($html,'<ul id="footer','</ul>');
-$videos = explode('li class="category"', $html);
+$videos = explode('article class="small-thumb', $html);
 unset($videos[0]);
 $videos = array_values($videos);
 foreach($videos as $video) {
@@ -63,8 +63,8 @@ foreach($videos as $video) {
     $t1=explode('"',$t[1]);
     $link="https://www.pornrox.com".$t1[0];
 
-    $t2=explode('span>',$video);
-    $t3=explode('<',$t2[1]);
+    $t2=explode('alt="',$video);
+    $t3=explode('"',$t2[1]);
   	$title=trim($t3[0]);
     $link="pornrox.php?page=1,".$link.",".urlencode($title);
     if ((strpos($title,"Adultxxx") === false)) {

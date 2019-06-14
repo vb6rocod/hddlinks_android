@@ -438,10 +438,10 @@ if (preg_match("/4tube\.com/",$host)) {
   $out=str_replace("\\","",$out);
   if (strpos($out,"http") === false && $out) $out="https:".$out;
 } else if (preg_match("/pornrox\.com/",$host)) {
-  if (preg_match_all("/(1080|720|480|360|240)p\"\:\"(.*?)\"/ms",$h,$m)) {
-     $maxs = array_keys($m[1], max($m[1]));
-     $out=$m[2][$maxs[0]];
-     $out=str_replace("\\","",$out);
+  if (preg_match_all("/source src\=\"(.*?)\"\s+type\=\'video\/mp4\' label\=\'(1080|720|480|360|240)p\'/ms",$h,$m)) {
+     $maxs = array_keys($m[2], max($m[2]));
+     $out=$m[1][$maxs[0]];
+     $out=trim(str_replace("\\","",$out));
      if (strpos($out,"http") === false) $out="https://www.pornrox.com".$out;
       $ch = curl_init();
       curl_setopt($ch, CURLOPT_URL, $out);
@@ -458,7 +458,7 @@ if (preg_match("/4tube\.com/",$host)) {
       curl_close($ch);
       $t1=explode("Location:",$ret);
       $t2=explode("\n",$t1[1]);
-      $out=trim($t2[0]);
+      $out="https:".trim($t2[0]);
  }
 } else if (preg_match("/redtube\.com/",$host)) {
   if (preg_match_all("/videoUrl\"\:\"(.*?)\"/",$h,$m)) {
