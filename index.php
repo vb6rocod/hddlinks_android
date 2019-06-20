@@ -24,6 +24,30 @@ td {
     font-style: bold;
     font-size: 20px;
 }
+
+#overlay {
+    position: fixed;
+    display: none;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0,0,0,0.5);
+    z-index: 2;
+    cursor: pointer;
+}
+
+#text{
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    font-size: 50px;
+    color: white;
+    transform: translate(-50%,-50%);
+    -ms-transform: translate(-50%,-50%);
+}
 </style>
 <script type="text/javascript">
 // create the XMLHttpRequest object, according browser
@@ -42,7 +66,7 @@ function get_XmlHttp() {
 // sends data to a php file, via POST, and displays the received answer
 function ajaxrequest(url) {
   var request =  get_XmlHttp();		// call the function for the XMLHttpRequest instance
-
+  on();
   // create pairs index=value with data that must be sent to server
   //var the_data = {mod:add,title:title, link:link}; //Array
   var the_data = 'url='+url;
@@ -57,6 +81,7 @@ function ajaxrequest(url) {
   // If the response is received completely, will be transferred to the HTML tag with tagID
   request.onreadystatechange = function() {
     if (request.readyState == 4) {
+      off();
       alert (request.responseText);
       location.reload();
     }
@@ -98,6 +123,15 @@ if (typeof document.height !== 'undefined') {
     height = Math.max( B.scrollHeight, B.offsetHeight,H.clientHeight, H.scrollHeight, H.offsetHeight );
 }
 //ajaxrequest1(height);
+</script>
+<script>
+function on() {
+    document.getElementById("overlay").style.display = "block";
+}
+
+function off() {
+    document.getElementById("overlay").style.display = "none";
+}
 </script>
 <?php
 //error_reporting(0);
@@ -235,5 +269,9 @@ $list = glob($base_fav."*.list");
     unlink($l);
 }
 ?>
-<br></body>
+<br>
+<div id="overlay">
+  <div id="text">Wait....</div>
+</div>
+</body>
 </html>

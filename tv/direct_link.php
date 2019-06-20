@@ -714,6 +714,9 @@ if ($from=="digi24") {
 //http://s1.digi24.ro/onedb/transcode/5794a369682ccfd2588b4567.480p.mp4
 $out=str_replace("\\","",str_between($html,'480p.mp4":"','"'));
 $link=str_replace("https","http",$out);
+//$link=str_replace("v2.iw.ro","v1.iw.ro",$link);
+//$link=str_replace("v4.iw.ro","v1.iw.ro",$link);
+$link=preg_replace("/v\d+\.iw/","v1.iw",$link);
 }
 if ($from=="antenaplay") {
 $id1 = substr(strrchr($link, "/"), 1);
@@ -793,6 +796,7 @@ $r=json_decode($x,1);
 $out=$r["new-info"]["meta"]["source"];
 
 $link=str_replace("https","http",$out);
+$link=preg_replace("/v\d+\.iw/","v1.iw",$link);
 }
 if ($from=="cabinet") {
   $ch = curl_init();

@@ -227,6 +227,7 @@ $head=array(
   //print_r ($m);
   //die();
   //echo $html;
+/*
 $t1=explode('LoadPlayer("',$html);
 $t2=explode('"',$t1[1]);
 $id=$t2[0];
@@ -235,8 +236,16 @@ $t4=explode('"',$t3[1]);
 $data=$t4[0];
 $post="id=".$id."&data=".$data;
 //echo $post;
-$l="https://openloadmovies.net/wp-content/plugins/apiplayer/load.php";
-$l="https://".$host."/wp-content/plugins/apiplayer/load.php";
+*/
+$dt=str_between($html,"data-type='","'");
+$id=str_between($html,"data-post='","'");
+$name=str_between($html,"data-nume='","'");
+$name="1";
+$l="https://".$host."/wp-admin/admin-ajax.php";
+$post="action=doo_player_ajax&post=".$id."&nume=".$name."&type=".$dt;
+//echo $post;
+//$l="https://openloadmovies.net/wp-content/plugins/apiplayer/load.php";
+//$l="https://".$host."/wp-content/plugins/apiplayer/load.php";
 $head=array('X-Requested-With: XMLHttpRequest');
   $ch = curl_init($l);
   curl_setopt($ch, CURLOPT_USERAGENT, $ua);

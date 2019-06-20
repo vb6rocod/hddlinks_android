@@ -124,6 +124,7 @@ $head=array(
 }
 $r=parse_url($link);
 $host=$r["host"];
+/*
 $t1=explode('LoadPlayer("',$html);
 $t2=explode('"',$t1[1]);
 $id=$t2[0];
@@ -132,6 +133,14 @@ $t4=explode('"',$t3[1]);
 $data=$t4[0];
 $post="id=".$id."&data=".$data;
 $l="https://".$host."/wp-content/plugins/apiplayer/load.php";
+*/
+$dt=str_between($html,"data-type='","'");
+$id=str_between($html,"data-post='","'");
+$name=str_between($html,"data-nume='","'");
+$name="1";
+$l="https://".$host."/wp-admin/admin-ajax.php";
+$post="action=doo_player_ajax&post=".$id."&nume=".$name."&type=".$dt;
+
   $ch = curl_init($l);
   curl_setopt($ch, CURLOPT_USERAGENT, $ua);
   curl_setopt($ch,CURLOPT_REFERER,"https://openloadmovies.net");
@@ -208,7 +217,7 @@ die();
   $c="intent:".$movie."#Intent;package=com.mxtech.videoplayer.".$mx.";b.decode_mode=1;S.title=".urlencode($pg_tit).";end";
   header("Location: $c");
 } else {
-$type="mp4";
+$type="m3u8";
 echo '
 <!doctype html>
 <HTML>

@@ -2815,7 +2815,7 @@ require_once("JavaScriptUnpacker.php");
   if (preg_match('/([http|https][\.\d\w\-\.\/\\\:\?\&\#\%\_\,]*(\.(srt|vtt)))/', $h2, $m))
   $srt=$m[1];
   if (strpos($srt,"empty") !== false) $srt="";
-} elseif (strpos($filelink,"hqq.tv") !== false || strpos($filelink,"hqq.watch") !== false || strpos($filelink,"waaw.tv") !== false || strpos($filelink,"waaw1.tv") !== false) {
+} elseif (strpos($filelink,"hqq.tv") !== false || strpos($filelink,"hqq.watch") !== false || strpos($filelink,"waaw.tv") !== false || strpos($filelink,"waaw1.tv") !== false  || strpos($filelink,"hindipix.in") !== false) {
 //echo $filelink;
   //if (!file_exists($base_script."filme/result.txt")) die();
     function decodeUN($a) {
@@ -2998,7 +2998,7 @@ $ua=$user_agent;
 //$filelink="https://waaw.tv/watch_video.php?v=YS2pcOGtyneo";
 $ua="Mozilla/5.0 (iPhone; CPU iPhone OS 5_0_1 like Mac OS X)";
 $ua="Mozilla/5.0 (iPad; U; CPU OS 3_2 like Mac OS X; en-us) AppleWebKit/531.21.10 (KHTML, like Gecko) Version/4.0.4 Mobile/7B334b Safari/531.21.10', #'Mozilla/5.0 (X11; Ubuntu; Linux i686; rv:21.0) Gecko/20100101 Firefox/21.0";
-$pattern = "@(?:\/\/|\.)((?:waaw1?|netu|hqq)\.(?:tv|watch))\/(?:watch_video\.php\?v|.+?vid)=([a-zA-Z0-9]+)@";
+$pattern = "@(?:\/\/|\.)((?:waaw1?|netu|hqq|hindipix)\.(?:tv|watch|in))\/(?:watch_video\.php\?v|.+?vid)=([a-zA-Z0-9]+)@";
   if (preg_match($pattern,$filelink,$m))
     $vid=$m[2];
   elseif (preg_match("/(hqq|netu)(\.tv|\.watch)\/player\/hash\.php\?hash=\d+/",$filelink)) {
@@ -3828,6 +3828,7 @@ $link = $l[0];
 //echo $filelink;
 $t1=explode("/",$filelink);
 $filelink="https://openload.co/embed/".$t1[4];
+//$filelink="https://oload.stream/embed/".$t1[4];
 //$filelink="https://verystream.com/e/PsP9iGR9N3y";
 //echo $filelink;
 //die();
@@ -4623,8 +4624,8 @@ echo '
 "autostart": true,
 "fallback": false,
 "wmode": "direct",
-"title": "'.$pg.'",
-"abouttext": "'.$pg.'",
+"title": "'.preg_replace("/\n|\r/"," ",$pg).'",
+"abouttext": "'.preg_replace("/\n|\r/"," ",$pg).'",
 "stagevideo": true
 });
 player.addButton(

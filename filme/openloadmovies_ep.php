@@ -93,9 +93,10 @@ $head=array(
   $h = curl_exec($ch);
   curl_close ($ch);
 }
+//echo $h;
    echo '<table border="1px" width="100%">'."\n\r";
    $n=0;
- $videos = explode('class="se-t', $h);
+ $videos = explode("span class='se-t", $h);
 $sezoane=array();
 unset($videos[0]);
 $videos = array_values($videos);
@@ -119,7 +120,7 @@ foreach($videos as $video) {
   $season=trim($t2[0]);
   $sez = $season;
   $first=true;
-  $vids = explode('class="imagen">', $video);
+  $vids = explode("class='imagen'", $video);
 unset($vids[0]);
 $vids = array_values($vids);
 //$vids = array_reverse($vids);
@@ -132,19 +133,19 @@ foreach($vids as $vid) {
 
 
   }
-  $t1=explode('class="numerando">',$vid);
+  $t1=explode("class='numerando'>",$vid);
   $t2=explode("-",$t1[1]);
   $t3=explode('<',$t2[1]);
   $episod=trim($t3[0]);;
-  $t1=explode('src="',$vid);
-  $t2=explode('=',$t1[1]);
+  $t1=explode("src='",$vid);
+  $t2=explode("'",$t1[1]);
   $img_ep=$t2[0];
-  if (strpos($img_ep,"null") !== false) $img_ep="blank.jpg";
+  if (strpos($img_ep,"null") !== false || strpos($img_ep,".png") !== false) $img_ep="blank.jpg";
 
-  $t1=explode('href="',$vid);
-  $t2=explode('"',$t1[1]);
+  $t1=explode("href='",$vid);
+  $t2=explode("'",$t1[1]);
   $link=$t2[0];
-  $t3=explode('>',$t1[2]);
+  $t3=explode('>',$t1[1]);
   $t4=explode('<',$t3[1]);
   $ep_tit=$t4[0];
   $title=$season."x".$episod." - ".$ep_tit;

@@ -175,6 +175,7 @@ $var2=0;
 }
 return join('',$result);
 }
+/*
 $ua="Mozilla/5.0 (iPad; U; CPU OS 3_2 like Mac OS X; en-us) AppleWebKit/531.21.10 (KHTML, like Gecko) Version/4.0.4 Mobile/7B334b Safari/531.21.10', #'Mozilla/5.0 (X11; Ubuntu; Linux i686; rv:21.0) Gecko/20100101 Firefox/21.0";
   if (preg_match("/(hqq|netu)(\.tv|\.watch)\/player\/embed_player\.php\?vid=(?P<vid>[0-9A-Za-z]+)/",$filelink,$m))
     $vid=$m["vid"];
@@ -238,6 +239,7 @@ $iss=str_between($x,'ip":"','"');
 $vid=str_between($h,"videokeyorig='","'");
 $at=str_between($h,"attoken='","'");
 $http_referer=str_between($h,"server_referer='","'");
+*/
 ?>
 <html><head>
 <meta http-equiv="content-type" content="text/html; charset=UTF-8">
@@ -300,7 +302,7 @@ document.onreadystatechange = function () {
 <label id="server"><font size="6" color="lightblue">Rezolvati captcha, copiati adresa rezultata in campul de mai jos</font></label><BR>
 <BR>
 <BR>
-<a id="mytest1" href="http://hqq.watch/sec/player/embed_player_04416513754224205.php?iss=<?php echo $iss; ?>&vid=<?php echo $vid; ?>&at=<?php echo $at; ?>&autoplayed=yes&referer=on&http_referer=<?php echo $http_referer; ?>&pass=&embed_from=&need_captcha=0&secured=0" target="_blank"><font size="6" color="yellow">Rezolvati captcha</font></a>
+<a id="mytest1" href="http://hqq.watch/sec/player/embed_player.php?gtoken=03" target="_blank"><font size="6" color="yellow">Rezolvati captcha</font></a>
 <BR><input type="text" id="gt1" value="" size="70" onpaste="setTimeout(msg2,1000)">(paste)<BR>
 <textarea id="gt" rows="5" cols="50"></textarea>(1)
 <BR>
