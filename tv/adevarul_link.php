@@ -142,8 +142,10 @@ body {background-color:#000000;}
 <BODY>
 <div id="container"></div>
 <script type="text/javascript">
+var player = jwplayer("container");
 jwplayer("container").setup({
 "playlist": [{
+"title": "'.$title.'",
 "sources": [{"file": "'.$out.'", "type": "'.$type.'"}],
 }],
     captions: {
@@ -153,6 +155,8 @@ jwplayer("container").setup({
     },
 "height": $(document).height(),
 "width": $(document).width(),
+"title": "'.$title.'",
+"abouttext": "'.$title.'",
 "skin": '.$skin.',
 "androidhls": true,
 "startparam": "start",
@@ -161,6 +165,19 @@ jwplayer("container").setup({
 "wmode": "direct",
 "stagevideo": true
 });
+player.addButton(
+  //This portion is what designates the graphic used for the button
+  "https://developer.jwplayer.com/jw-player/demos/basic/add-download-button/assets/download.svg",
+  //This portion determines the text that appears as a tooltip
+  "Download Video",
+  //This portion designates the functionality of the button itself
+  function() {
+    //With the below code,
+    window.location.href = player.getPlaylistItem()["file"];
+  },
+  //And finally, here we set the unique ID of the button itself.
+  "download"
+);
 </script>
 </BODY>
 </HTML>

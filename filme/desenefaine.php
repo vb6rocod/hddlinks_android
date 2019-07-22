@@ -1,48 +1,82 @@
 <!DOCTYPE html>
 <?php
-include ("../common.php");
-$query = $_GET["page"];
-if($query) {
-   $queryArr = explode(',', $query);
-   $page = $queryArr[0];
-   $search = $queryArr[1];
-   $page_title=urldecode($queryArr[2]);
-   $search=str_replace("|","&",$search);
+function str_between($string, $start, $end){
+	$string = " ".$string; $ini = strpos($string,$start);
+	if ($ini == 0) return ""; $ini += strlen($start); $len = strpos($string,$end,$ini) - $ini;
+	return substr($string,$ini,$len);
 }
-//https://filmeseriale.online/seriale/
-//https://desenefaine.ro/filme-animate-online-
+include ("../common.php");
+$page = $_GET["page"];
+$tip= $_GET["tip"];
+$tit=$_GET["title"];
+$link=$_GET["link"];
+$width="200px";
+$height="150px";
+/* ==================================================== */
+$has_fav="no";
+$has_search="no";
+$has_add="no";
+$has_fs="no";
+$fav_target="";
+$add_target="";
+$add_file="";
+$fs_target="";
+$target="desenefaine.php";
+/* ==================================================== */
+$base=basename($_SERVER['SCRIPT_FILENAME']);
+$p=$_SERVER['QUERY_STRING'];
+parse_str($p, $output);
+
+if (isset($output['page'])) unset($output['page']);
+$p = http_build_query($output);
+if (!isset($_GET["page"]))
+  $page=1;
+else
+  $page=$_GET["page"];
+$next=$base."?page=".($page+1)."&".$p;
+$prev=$base."?page=".($page-1)."&".$p;
+/* ==================================================== */
+$tit=unfix_t(urldecode($tit));
+$link=unfix_t(urldecode($link));
+/* ==================================================== */
+if (file_exists($base_cookie."filme.dat"))
+  $val_search=file_get_contents($base_cookie."filme.dat");
+else
+  $val_search="";
+$form='<form action="'.$target.'" target="_blank">
+Cautare film:  <input type="text" id="title" name="title" value="'.$val_search.'">
+<input type="hidden" name="page" id="page" value="1">
+<input type="hidden" name="tip" id="tip" value="search">
+<input type="hidden" name="link" id="link" value="">
+<input type="submit" id="send" value="Cauta...">
+</form>';
+/* ==================================================== */
+if ($tip=="search") {
+  $page_title = "Cautare: ".$tit;
+  if ($page == 1) file_put_contents($base_cookie."filme.dat",$tit);
+} else
+  $page_title=$tit;
+/* ==================================================== */
+
 ?>
-<html><head>
+<html>
+<head>
 <meta http-equiv="content-type" content="text/html; charset=UTF-8">
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate"/>
 <meta http-equiv="Pragma" content="no-cache"/>
 <meta http-equiv="Expires" content="0"/>
-      <title><?php echo $page_title; ?></title>
-<script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+<title><?php echo $page_title; ?></title>
+<script type="text/javascript" src="//code.jquery.com/jquery-3.2.1.min.js"></script>
+<script src="../jquery.fancybox.min.js"></script>
+<link rel="stylesheet" type="text/css" href="../jquery.fancybox.min.css">
 <link rel="stylesheet" type="text/css" href="../custom.css" />
 
 <script type="text/javascript">
-// create the XMLHttpRequest object, according browser
-function get_XmlHttp() {
-  // create the variable that will contain the instance of the XMLHttpRequest object (initially with null value)
-  var xmlHttp = null;
-  if(window.XMLHttpRequest) {		// for Forefox, IE7+, Opera, Safari, ...
-    xmlHttp = new XMLHttpRequest();
-  }
-  else if(window.ActiveXObject) {	// for Internet Explorer 5 or 6
-    xmlHttp = new ActiveXObject("Microsoft.XMLHTTP");
-  }
-  return xmlHttp;
-}
-
-// sends data to a php file, via POST, and displays the received answer
-function ajaxrequest(title, link) {
-  var request =  get_XmlHttp();		// call the function for the XMLHttpRequest instance
-
-  // create pairs index=value with data that must be sent to server
-  //var the_data = {mod:add,title:title, link:link}; //Array
-  var the_data = 'mod=add&title='+ title +'&link='+link;
-  var php_file='filmeseriale_add.php';
+var id_link="";
+function ajaxrequest(link) {
+  var request =  new XMLHttpRequest();
+  var the_data = link;
+  var php_file='<?php echo $add_target; ?>';
   request.open("POST", php_file, true);			// set the request
 
   // adds a header to tell the PHP script to recognize the data as is sent via POST
@@ -57,80 +91,163 @@ function ajaxrequest(title, link) {
     }
   }
 }
+function isValid(evt) {
+    var charCode = (evt.which) ? evt.which : event.keyCode,
+    self = evt.target;
+    if (charCode == "49") {
+     id = "imdb_" + self.id;
+     id_link=self.id;
+     val_imdb=document.getElementById(id).value;
+     msg="imdb.php?" + val_imdb;
+     document.getElementById("fancy").href=msg;
+     document.getElementById("fancy").click();
+    } else if  (charCode == "51") {
+      id = "fav_" + self.id;
+      val_fav=document.getElementById(id).value;
+      ajaxrequest(val_fav);
+    }
+    return true;
+}
+   function zx(e){
+     var instance = $.fancybox.getInstance();
+     var charCode = (typeof e.which == "number") ? e.which : e.keyCode
+     if (charCode == "13"  && instance !== false) {
+       $.fancybox.close();
+       setTimeout(function(){ document.getElementById(id_link).focus(); }, 500);
+     } else if (charCode == "53" && e.target.type != "text") {
+      document.getElementById("send").click();
+     } else if (charCode == "50" && e.target.type != "text") {
+      document.getElementById("fav").click();
+    }
+   }
+function isKeyPressed(event) {
+  if (event.ctrlKey) {
+    id = "imdb_" + event.target.id;
+    val_imdb=document.getElementById(id).value;
+    msg="imdb.php?" + val_imdb;
+    document.getElementById("fancy").href=msg;
+    document.getElementById("fancy").click();
+  }
+}
+$(document).on('keyup', '.imdb', isValid);
+document.onkeypress =  zx;
 </script>
 </head>
-<body><div id="mainnav">
-<H2></H2>
+<body>
+<a id="fancy" data-fancybox data-type="iframe" href=""></a>
 <?php
-function str_between($string, $start, $end){
-	$string = " ".$string; $ini = strpos($string,$start);
-	if ($ini == 0) return ""; $ini += strlen($start); $len = strpos($string,$end,$ini) - $ini;
-	return substr($string,$ini,$len);
-}
+$w=0;
 $n=0;
-echo '<H2>'.$page_title.'</H2>';
-echo '<table border="1px" width="100%">'."\n\r";
-echo '<tr><TD colspan="4" align="right">';
-if ($page > 1)
-echo '<a class="nav" href="desenefaine.php?page='.($page-1).','.$search.','.urlencode($page_title).'">&nbsp;&lt;&lt;&nbsp;</a> | <a class="nav" href="desenefaine.php?page='.($page+1).','.$search.','.urlencode($page_title).'">&nbsp;&gt;&gt;&nbsp;</a></TD></TR>';
-else
-echo '<a class="nav" href="desenefaine.php?page='.($page+1).','.$search.','.urlencode($page_title).'">&nbsp;&gt;&gt;&nbsp;</a></TD></TR>';
-$l =$search."-".$page."-date.html";
-//https://filmeseriale.online/seriale/page/2/
-//https://drive.google.com/file/d/1uSKiFvNhewneYKrOMCR2cMCXXVK_ZXep/preview
-//https://lh5.googleusercontent.com/6U6mswDg_D_8eiK5T6dqFPHm6SUMaF7YUL8Ea1a-CQkQR3G0f0R0qgscgmBG_QLd7HnWApbJcpqMdkObXlOw=w640-h360-n-k
-//https://drive.google.com/get_video_info?docid=1uSKiFvNhewneYKrOMCR2cMCXXVK_ZXep
-//https://r4---sn-4g5e6nez.c.drive.google.com/videoplayback?id=9deda3fbf9ace69a&itag=22&source=webdrive&requiressl=yes&mm=30&mn=sn-4g5e6nez&ms=nxu&mv=u&pl=23&ttl=transient&ei=c6QSW7jQL9fSqQWF6JCwAQ&susc=dr&driveid=1uSKiFvNhewneYKrOMCR2cMCXXVK_ZXep&app=explorer&mime=video/mp4&lmt=1527889357510475&mt=1527947838&ip=82.210.178.129&ipbits=0&expire=1527952003&cp=QVNHWUpfUVBORFhOOlhhQ2Ewb1hyc29m&sparams=ip,ipbits,expire,id,itag,source,requiressl,mm,mn,ms,mv,pl,ttl,ei,susc,driveid,app,mime,lmt,cp&signature=870F14B3FD2408FF8FDA685E40A3D96EF4253058.22E27479F2B24839002EDFEB35A8119808729258&key=ck2&cpn=R3VRi6b03wLprVKI&c=WEB_EMBEDDED_PLAYER&cver=20180525
-//https://r4---sn-4g5e6nez.c.drive.google.com/videoplayback?id=9deda3fbf9ace69a&itag=18&source=webdrive&requiressl=yes&mm=30&mn=sn-4g5e6nez&ms=nxu&mv=u&pl=23&sc=yes&ttl=transient&ei=iecSW_f_JNLUqAWxopKYCA&susc=dr&driveid=1uSKiFvNhewneYKrOMCR2cMCXXVK_ZXep&app=texmex&mime=video/mp4&lmt=1527889333164027&mt=1527964983&ip=82.210.178.129&ipbits=0&expire=1527979977&cp=QVNHWUpfWFlVSFhOOmN1WmRiR09UZVhC&sparams=ip%2Cipbits%2Cexpire%2Cid%2Citag%2Csource%2Crequiressl%2Cmm%2Cmn%2Cms%2Cmv%2Cpl%2Csc%2Cttl%2Cei%2Csusc%2Cdriveid%2Capp%2Cmime%2Clmt%2Ccp&signature=3201FCB01E4982FBA98EE7C0B7DD5DEC026B0D51.0B2B27B8B5A2B5D815DB60D456475B91D89492B8&key=ck2&cpn=R3VRi6b03wLprVKI
-//https://r4---sn-4g5ednll.c.drive.google.com/videoplayback?id=9deda3fbf9ace69a&itag=18&source=webdrive&requiressl=yes&mm=30&mn=sn-4g5ednll&ms=nxu&mv=u&pl=23&ttl=transient&ei=wOMSW-_HOsGHqwWAxZO4Bw&susc=dr&driveid=1uSKiFvNhewneYKrOMCR2cMCXXVK_ZXep&app=explorer&mime=video/mp4&lmt=1527889333164027&mt=1527964278&ip=82.210.178.129&ipbits=0&expire=1527968208&cp=QVNHWUpfV1JOSVhOOkpTT05peWVyVWNQ&sparams=ip,ipbits,expire,id,itag,source,requiressl,mm,mn,ms,mv,pl,ttl,ei,susc,driveid,app,mime,lmt,cp&signature=0716716318BC86C1586FF281CBCE25F4F9C7794E.7C90C14BFBA918F924C0C3E8C7AF46A09075DF31&key=ck2
-//https://r4---sn-4g5e6nez.c.drive.google.com/videoplayback?id=9deda3fbf9ace69a&itag=22&source=webdrive&requiressl=yes&mm=30&mn=sn-4g5e6nez&ms=nxu&mv=u&pl=23&ttl=transient&ei=1OISW7OvJYr_qQW7oZuoCQ&susc=dr&driveid=1uSKiFvNhewneYKrOMCR2cMCXXVK_ZXep&app=explorer&mime=video/mp4&lmt=1527889357510475&mt=1527963597&ip=82.210.178.129&ipbits=0&expire=1527967972&cp=QVNHWUpfVllVQ1hOOlBWdzlrTllxV2tM&sparams=ip%2Cipbits%2Cexpire%2Cid%2Citag%2Csource%2Crequiressl%2Cmm%2Cmn%2Cms%2Cmv%2Cpl%2Cttl%2Cei%2Csusc%2Cdriveid%2Capp%2Cmime%2Clmt%2Ccp&signature=64F1E88C3D0296BA5FD8E8C7D3777D1743189855.12FA3AA97B08FA5CF04E93EE6288F9AC37B87B5C&key=ck2
+echo '<H2>'.$page_title.'</H2>'."\r\n";
 
+echo '<table border="1px" width="100%" style="table-layout:fixed;">'."\r\n";
+echo '<TR>'."\r\n";
+if ($page==1) {
+   if ($tip == "release") {
+   if ($has_fav=="yes" && $has_search=="yes") {
+     echo '<TD class="nav"><a id="fav" href="'.$fav_target.'" target="_blank">Favorite</a></TD>'."\r\n";
+     echo '<TD class="form" colspan="2">'.$form.'</TD>'."\r\n";
+     echo '<TD class="nav" align="right"><a href="'.$next.'">&nbsp;&gt;&gt;&nbsp;</a></TD>'."\r\n";
+   } else if ($has_fav=="no" && $has_search=="yes") {
+     echo '<TD class="nav"><a id="fav" href="">Reload...</a></TD>'."\r\n";
+     echo '<TD class="form" colspan="2">'.$form.'</TD>'."\r\n";
+     echo '<TD class="nav" align="right"><a href="'.$next.'">&nbsp;&gt;&gt;&nbsp;</a></TD>'."\r\n";
+   } else if ($has_fav=="yes" && $has_search=="no") {
+     echo '<TD class="nav"><a id="fav" href="'.$fav_target.'" target="_blank">Favorite</a></TD>'."\r\n";
+     echo '<TD class="nav" colspan="3" align="right"><a href="'.$next.'">&nbsp;&gt;&gt;&nbsp;</a></TD>'."\r\n";
+   } else if ($has_fav=="no" && $has_search=="no") {
+     echo '<TD class="nav" colspan="4" align="right"><a href="'.$next.'">&nbsp;&gt;&gt;&nbsp;</a></TD>'."\r\n";
+   }
+   } else {
+     echo '<TD class="nav" colspan="4" align="right"><a href="'.$next.'">&nbsp;&gt;&gt;&nbsp;</a></TD>'."\r\n";
+   }
+} else {
+   echo '<TD class="nav" colspan="4" align="right"><a href="'.$prev.'">&nbsp;&lt;&lt;&nbsp;</a> | <a href="'.$next.'">&nbsp;&gt;&gt;&nbsp;</a></TD>'."\r\n";
+}
+echo '</TR>'."\r\n";
+
+$l =$link."-".$page."-date.html";
+$ua = $_SERVER['HTTP_USER_AGENT'];
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $l);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-  curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows; U; Windows NT 6.1; en-US; rv:1.9.1.2) Gecko/20090729 Firefox/3.5.2 GTB5');
+  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
   curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
-  curl_setopt($ch, CURLOPT_REFERER, "https://desenefaine.ro");
   curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
   curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
   curl_setopt($ch, CURLOPT_TIMEOUT, 15);
   $html = curl_exec($ch);
   curl_close($ch);
+
 $videos = explode('div class="thumbnail"', $html);
 unset($videos[0]);
 $videos = array_values($videos);
 
 foreach($videos as $video) {
-    $t1 = explode('a href="', $video);
-    $t2 = explode('"', $t1[1]);
-    $link = $t2[0];
-	$link1 = $link;
-
-
-    $t3 = explode('title="',$video);
-    $t4 = explode('"',$t3[2]);
-    $title = trim($t4[0]);
-
-    $t1 = explode('data-echo="', $video);
-    $t2 = explode('"', $t1[1]);
-    $image=$t2[0];
-    //$link="fs.php?link=".$link1."&title=".urlencode($title)."&tip=movie";
-    $link = 'filme_link.php?file='.urlencode($link1).",".urlencode(fix_t($title));
-  if ($n==0) echo '<TR>';
-  echo '<td class="mp" align="center" width="25%"><a class="imdb" href="'.$link.'" target="_blank"><img src="'.$image.'" width="200px" height="150px"><BR>'.$title.'</a>
-  </TD>';
+   $t1 = explode('a href="', $video);
+   $t2 = explode('"', $t1[1]);
+   $link = $t2[0];
+   $t3 = explode('title="',$video);
+   $t4 = explode('"',$t3[2]);
+   $title = trim($t4[0]);
+  $title=prep_tit($title);
+  $year="";
+  $imdb="";
+  if (preg_match("/\(?((1|2)\d{3})\)?/",$title,$r)) {
+     $year=$r[1];
+  }
+  $t1=explode(" - ",$title);
+  $t=$t1[0];
+  $t=preg_replace("/\(?((1|2)\d{3})\)?/","",$t);
+  $tit_imdb=trim($t);
+  $t1=explode('data-echo="',$video);
+  $t2=explode('"',$t1[1]);
+  $image=$t2[0];
+  if (!preg_match("/\/seriale/",$link)) {
+  if ($has_fs == "no")
+    $link_f='filme_link.php?file='.urlencode($link).'&title='.urlencode(fix_t($title));
+  else
+    $link_f=$fs_target.'?tip=movie&link='.urlencode($link).'&title='.urlencode(fix_t($tit)).'&image='.$image."&sez=&ep=&ep_tit=&year=".$year;
+  if ($n==0) echo '<TR>'."\r\n";
+  $val_imdb="tip=movie&title=".urlencode(fix_t($tit_imdb))."&year=".$year."&imdb=".$imdb;
+  $fav_link="file=".$add_file."mod=add&title=".urlencode(fix_t($title))."&link=".urlencode($link)."&image=".urlencode($image)."&year=".$year;
+  if ($tast == "NU") {
+    echo '<td class="mp" width="25%"><a href="'.$link_f.'" id="myLink'.$w.'" target="_blank" onmousedown="isKeyPressed(event)">
+    <img id="myLink'.$w.'" src="'.$image.'" width="'.$width.'" height="'.$height.'"><BR>'.$title.'</a>
+    <input type="hidden" id="imdb_myLink'.$w.'" value="'.$val_imdb.'">'."\r\n";
+    if ($has_add=="yes")
+      echo '<a onclick="ajaxrequest('."'".$fav_link."'".')" style="cursor:pointer;">*</a>'."\r\n";
+    echo '</TD>'."\r\n";
+  } else {
+    echo '<td class="mp" width="25%"><a class ="imdb" id="myLink'.$w.'" href="'.$link_f.'" target="_blank">
+    <img src="'.$image.'" width="'.$width.'" height="'.$height.'"><BR>'.$title.'</a>
+    <input type="hidden" id="imdb_myLink'.$w.'" value="'.$val_imdb.'">'."\r\n";
+    if ($has_add == "yes")
+      echo '<input type="hidden" id="fav_myLink'.$w.'" value="'.$fav_link.'"></a>'."\r\n";
+    echo '</TD>'."\r\n";
+  }
+  $w++;
   $n++;
   if ($n == 4) {
-  echo '</tr>';
+  echo '</tr>'."\r\n";
   $n=0;
   }
+  }
 }
-echo '<tr><TD colspan="4" align="right">';
+  if ($n < 4 && $n > 0) {
+    for ($k=0;$k<4-$n;$k++) {
+      echo '<TD></TD>'."\r\n";
+    }
+    echo '</TR>'."\r\n";
+  }
+echo '<tr>
+<TD class="nav" colspan="4" align="right">'."\r\n";
 if ($page > 1)
-echo '<a class="nav" href="desenefaine.php?page='.($page-1).','.$search.','.urlencode($page_title).'">&nbsp;&lt;&lt;&nbsp;</a> | <a class="nav" href="desenefaine.php?page='.($page+1).','.$search.','.urlencode($page_title).'">&nbsp;&gt;&gt;&nbsp;</a></TD></TR>';
+  echo '<a href="'.$prev.'">&nbsp;&lt;&lt;&nbsp;</a> | <a href="'.$next.'">&nbsp;&gt;&gt;&nbsp;</a></TD>'."\r\n";
 else
-echo '<a class="nav" href="desenefaine.php?page='.($page+1).','.$search.','.urlencode($page_title).'">&nbsp;&gt;&gt;&nbsp;</a></TD></TR>';
-echo "</table>";
+  echo '<a href="'.$next.'">&nbsp;&gt;&gt;&nbsp;</a></TD>'."\r\n";
+echo '</TR>'."\r\n";
+echo "</table>"."\r\n";
 ?>
-<br></div></body>
+<br></body>
 </html>

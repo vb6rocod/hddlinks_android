@@ -439,6 +439,7 @@ $link_mp="";
 	$link="tvrplus_e_link.php?file=".urlencode($id)."&pg_id=".urlencode($pg_id)."&title=".urlencode($title)."&tit=".urlencode($tit);
 	$link_mp="file=".urlencode($id)."&pg_id=".urlencode($pg_id)."&title=".urlencode($title)."&tit=".urlencode($tit);
   }
+if ($title <> "RADIO") {
   if ($n==0) echo '<TR>';
 if (strpos($link,"remove") === false) {
   if (!$link_mp)
@@ -450,6 +451,7 @@ if (strpos($link,"remove") === false) {
     echo '<TD class="mp" colspan="1"><a onclick="ajaxrequest('."'".$link_mp."')".'"'." style='cursor:pointer;'>".'<img src="'.$image.'" width="'.$wi.'" height="'.$hi.'"><BR>'.$title.'</a></TD>';
   }
 $n++;
+}
 }
 if(($pg_id==22) || ($pg_id==5036)){
 if ($n==5) {

@@ -27,6 +27,8 @@ td {
       else
        echo 'window.open("filme/search_imdb.php");';
       ?>
+     } else if (charCode == "51" && e.target.type != "text") {
+      window.open("filme/filme_fav.php");
     }
    }
 document.onkeypress =  zx;
@@ -38,20 +40,25 @@ document.onkeypress =  zx;
 
 <table id="data" border="1px" align="center" width="90%">
 <TR>
-<th class="cat" colspan="4">Filme online</Th>
+<?php
+if ($tast=="NU")
+ echo '<th class="cat" colspan="4"><a href="filme/filme_fav.php" target="_blank">Filme online</a></Th>';
+else
+ echo '<th class="cat" colspan="4">Filme online</Th>';
+?>
 </TR>
 <TR>
 
 
 <TD width="25%"><a href="filme/voxfilmeonline_main.php" target="_blank">voxfilmeonline</a></TD>
 <TD width="25%"><a href="filme/topfilmeonline_main.php" target="_blank">topfilmeonline</a></TD>
-<TD width="25%"><a href="filme/tvhub_f.php?page=1&file=release&title=tvhub" target="_blank">tvhub</a></TD>
+<TD width="25%"><a href="filme/tvhub_f.php?page=1&tip=release&title=tvhub&link=" target="_blank">tvhub</a></TD>
 <TD width="25%"><a href="filme/filmehd_main.php" target="_blank">filmehd</a></TD>
 </TR>
 <TR>
-<TD width="25%"><a href="filme/filmeseriale_filme.php?page=1&file=release&title=filmeseriale" target="_blank">filmeseriale.online</a></TD>
+<TD width="25%"><a href="filme/filmeseriale_filme.php?page=1&tip=release&title=filmeseriale&link=" target="_blank">filmeseriale.online</a></TD>
 <TD width="25%"><a href="filme/filmeonline2016_main.php" target="_blank">filmeonline2016</a></TD>
-<TD width="25%"><a href="filme/filme-seriale_f.php?page=1&file=release&title=filme-seriale" target="_blank">filme-seriale</a></TD>
+<TD width="25%"><a href="filme/filme-seriale_f.php?page=1&tip=release&title=filme-seriale&link=" target="_blank">filme-seriale</a></TD>
 <TD width="25%"><a href="filme/filmenoihd_main.php" target="_blank">filmenoihd</a></TD>
 </TR>
 
@@ -59,41 +66,40 @@ document.onkeypress =  zx;
 <TD width="25%"><a href="filme/filmeonline_biz_main.php" target="_blank">filmeonline.biz</a></TD>
 <TD width="25%"><a href="filme/f-hd_main.php" target="_blank">f-hd</a></TD>
 <TD width="25%"><a href="filme/filmeonline2019_main.php" target="_blank">filmeonline2019</a></TD>
-<TD width="25%"><a href="filme/filmeto.php?page=1&tip=release&title=filme-online.to" target="_blank">filme-online.to</a></TD>
+<TD width="25%"><a href="filme/filme-bune.php?page=1&tip=release&title=filme-bune&link=" target="_blank">filme-bune</a></TD>
 </TR>
 <TR>
 <TD width="25%"><a href="filme/pefilme_main.php" target="_blank">pefilme</a></TD>
 <TD width="25%"><a href="filme/topfilmenoi_main.php" target="_blank">topfilmenoi</a></TD>
-<TD width="25%"><a href="filme/divxfilmeonline.php?page=1&file=release&title=divxfilmeonline" target="_blank">divxfilmeonline</a></TD>
-<TD width="25%"><a href="filme/filmeseriale_eu_f.php?page=1&tip=release&title=filmeseriale.eu" target="_blank">filmeseriale.eu</a></TD>
+<TD width="25%"><a href="filme/divxfilmeonline.php?page=1&tip=release&title=divxfilmeonline&link=" target="_blank">divxfilmeonline</a></TD>
+<TD width="25%"><a href="filme/filmeseriale_eu_f.php?page=1&tip=release&title=filmeseriale.eu&link=" target="_blank">filmeseriale.eu</a></TD>
 
 </TR>
 <!--- desene si filme...-->
 <TR>
 <TD width="25%"><a href="filme/vezionline_main.php" target="_blank">vezionline</a></TD>
-<TD width="25%"><a href="filme/deseneledublate.php?page=1,,desenedublate" target="_blank">deseneledublate</a></TD>
+<TD width="25%"><a href="filme/deseneledublate.php?page=1&tip=release&title=desenedublate&link=" target="_blank">deseneledublate</a></TD>
 <TD width="25%"><a href="filme/desenefaine_main.php" target="_blank">desenefaine.ro</a></TD>
-<TD width="25%"></TD>
+<TD width="25%"><a href="filme/gomovies_f.php?page=1&tip=release&title=gomovies&link=" target="_blank">gomovies</a></TD>
 </TR>
 <!-- straine -->
 <TR>
-<TD width="25%"><a href="filme/tvseries_f.php?page=1&file=release&title=tvseries" target="_blank">tvseries</a></TD>
-<TD width="25%"><a href="filme/putlockerfit_f.php?page=1&file=release&title=putlockerfit" target="_blank">putlockerfit</a></TD>
-<TD width="25%"><a href="filme/dwatchmovies_f.php?page=1&file=release&title=dwatchmovies" target="_blank">dwatchmovies</a></TD>
-<TD width="25%"><a href="filme/popcorn_f.php?page=1&file=release&title=filme+noi" target="_blank">Popcorn (torrent)</a></TD>
+<TD width="25%"><a href="filme/tvseries_f.php?page=1&tip=release&title=tvseries&link=" target="_blank">tvseries</a></TD>
+<TD width="25%"><a href="filme/putlockerfit_f.php?page=1&tip=release&title=putlockerfit&link=" target="_blank">putlockerfit</a></TD>
+<TD width="25%"><a href="filme/dwatchmovies_f.php?page=1&tip=release&title=dwatchmovies&link=" target="_blank">dwatchmovies</a></TD>
+<TD width="25%"><a href="filme/0123netflix_f.php?page=1&tip=release&title=0123netflix&link=" target="_blank">0123netflix</a></TD>
 </TR>
 <TR>
-<TD width="25%"><a href="filme/hdfull_f.php?page=1&file=release&title=hdfull" target="_blank">hdfull</a></TD>
-<TD width="25%"><a href="filme/subsmovies_f.php?page=1&file=release&title=subsmovies" target="_blank">subsmovies</a></TD>
+<TD width="25%"><a href="filme/hdfull_f.php?page=1&tip=release&title=hdfull&link=" target="_blank">hdfull</a></TD>
+<TD width="25%"><a href="filme/subsmovies_f.php?page=1&tip=release&title=subsmovies&link=" target="_blank">subsmovies</a></TD>
 <TD width="25%"><a href="filme/cineplex_f_main.php" target="_blank">cineplex (cont)</a></TD>
-<TD width="25%"><a href="filme/openloadmovies.php?page=1&file=release&title=openloadmovies" target="_blank">openloadmovies</a></TD>
+<TD width="25%"><a href="filme/openloadmovies.php?page=1&tip=release&title=openloadmovies&link=" target="_blank">openloadmovies</a></TD>
 </TR>
 <TR>
-<TD width="25%"><a href="filme/hdpopcorns.php?page=1&file=release&title=hdpopcorns" target="_blank">hdpopcorns</a></TD>
-<TD width="25%"><a href="filme/spacemov.php?page=1&file=release&title=spacemov" target="_blank">spacemov</a></TD>
-<TD width="25%"></TD>
-<TD width="25%"><a href="filme/moviesjoy_f.php?page=1&file=release&title=moviesjoy" target="_blank">moviesjoy</a></TD>
-
+<TD width="25%"><a href="filme/onmovies_f.php?page=1&tip=release&title=onmovies&link=" target="_blank">onmovies</a></TD>
+<TD width="25%"><a href="filme/spacemov.php?page=1&tip=release&title=spacemov&link=" target="_blank">spacemov</a></TD>
+<TD width="25%"><a href="filme/chillaxto_f.php?page=1&tip=release&title=chillax.to&link=" target="_blank">chillax.to</a></TD>
+<TD width="25%"><a href="filme/moviesjoy_f.php?page=1&tip=release&title=moviesjoy&link=" target="_blank">moviesjoy</a></TD>
 </TR>
 
 <?php
@@ -101,7 +107,7 @@ if (file_exists($base_pass."tvplay.txt")) {
 echo '
 <TR>
 <TD width="25%"><a href="filme/cineplex_f_main1.php" target="_blank">cineplex</a></TD>
-<TD width="25%"><a href="filme/chillax_f_main.php" target="_blank">chillax</a></TD>';
+<TD width="25%"></TD>';
 echo '<TD width="25%"></TD>
 <TD width="25%"></TD>';
 echo '</TR>';
@@ -129,6 +135,12 @@ echo '
 <TR><TD>* Folositi tasta 3 pentru a adauga/sterge la favorite (daca exista).<TD></TR>
 <TR><TD>* Folositi tasta 2 pentru a accesa direct pagina de "Favorite".<TD></TR>
 <TR><TD>* Folositi tasta 5 pentru a simula butonul de cautare.<TD></TR>
+<TR><TD>* In aceasta pagina folositi tasta 2 pentru cautare, 3 pentru favorite.<TD></TR>
+</TABLE>';
+} else {
+echo '
+<table id="data" border="0" align="center" width="90%">
+<TR><TD>* Folositi ctrl+click pentru informatii despre film/serial. Apasati "OK" pentru a inchide info.<TD></TR>
 </TABLE>';
 }
 if (!file_exists($base_pass."tmdb.txt") && !file_exists($base_pass."omdb.txt")) {

@@ -80,58 +80,39 @@ $(document).on('keyup', '.imdb', isValid);
 </TR>
 <TR>
 <TD width="25%"><a href="tv/digi.php" target="_blank">digi-online</a></TD>
-<TD width="25%"><a href="tv/playlist.php?title=TVR.m3u" target="_blank">TVR</a></TD>
-<TD width="25%"><a href="tv/tvpemobil_main.php" target="_blank">TVPeMobil</TD>
+<TD width="25%"><a href="tv/playlist.php?title=TVR.m3u" target="_blank">TVR Live</a></TD>
 <TD width="25%"><a href="tv/tvrplus_e.php?page=1,http://www.seenow.ro/freezone,TV+(FreeZone)" target="_blank">Seenow TV (FreeZone)</a></TD>
-
+<TD width="25%"><a href="tv/tvrstiri.php?page=1,,TVR+Stiri" target="_blank">TVR - Stiri</a></TD>
 
 </TR>
 <TR>
 <TD width="25%"><a href="tv/digi24.php" target="_blank">Digi24 - Stiri</a></TD>
 <TD width="25%"><a href="tv/digi24_main.php" target="_blank">Digi24 - Emisiuni</a></TD>
-<TD width="25%"><a href="tv/tvrstiri.php?page=1,,TVR+Stiri" target="_blank">TVR - Stiri</a></TD>
-<!--<TD width="25%"><a href="tv/tvonlinepro.php" target="_blank">TvOnlinePro</a></TD>-->
-<TD width="25%"></TD>
-
+<TD width="25%"><a href="tv/digisport.php?page=1,https://www.digisport.ro/video,DigiSport" target="_blank">DigiSport</a></TD>
+<TD width="25%"><a href="tv/protv_stiri.php?page=1,,PROTV" target="_blank">PROTV</a></TD>
 </TR>
 <TR>
-<TD width="25%"><a href="tv/digisport.php?page=1,https://www.digisport.ro/video,DigiSport" target="_blank">DigiSport</a></TD>
 <TD width="25%"><a href="tv/privesc.php?page=1&link=https://www.privesc.eu/arhiva/categorii/Romania&title=Romania" target="_blank">privesc.eu</a></TD>
-<TD width="25%"><a href="tv/adevarul.php?page=1&link=https://adevarul.ro/arhiva-live/&title=Toate" target="_blank">Adevarul.ro</a></TD>
 <TD width="25%"><a href="tv/epochtimes.php?page=1&link=&title=epochtimes-romania" target="_blank">epochtimes-romania</a></TD>
+<TD width="25%"><a href="tv/adevarul.php?page=1&link=https://adevarul.ro/video-center/&title=Toate" target="_blank">Adevarul.ro</a></TD>
+<TD width="25%"><a href="tv/tvrplus_main.php" target="_blank">TVR+ (Emisiuni)</a></TD>
 </TR>
 <TR>
 <TD width="25%"><a href="tv/protvmd.php?page=1,,ProTV Moldova" target="_blank">PROTV Moldova</a></TD>
 <TD width="25%"><a href="tv/moldova-in-direct.php" target="_blank">Moldova in Direct</a></TD>
 <TD width="25%"><a href="tv/inprofunzime.php?page=1,,IN+PROfunzime" target="_blank">IN PROfunzime</a></TD>
-<!--<TD width="25%"><a href="filme/youtube_search.php?search=inprofunzime&token=" target="_blank">IN PROfunzime (yt)</a></TD>-->
 <TD width="25%"><a href="tv/cabinet.php" target="_blank">Cabinetul din umbra</TD>
-<!--<TD width="25%"></TD>-->
 </TR>
 <TR>
 <TD width="25%"><a href="filme/youtube_fav.php" target="_blank">youtube</a></TD>
 <TD width="25%"><a href="filme/yt_playlist.php?token=&id=UCANDAWMJQsxMlaDMGlCdKpg&kind=channel&title=DanceTelevision&image=https://yt3.ggpht.com/-K4rbFp56pRQ/AAAAAAAAAAI/AAAAAAAAAAA/UKcWkGWWeOU/s88-c-k-no-mo-rj-c0xffffff/photo.jpg" target="_blank">Dance Television</a></TD>
 <TD width="25%"><a href="filme/youtube_live.php?token=&search=" target="_blank">youtube live</a></TD>
-<TD width="25%"><a href="filme/starea_natiei.php" target="_blank">Starea Natiei</a></TD>
-</TR>
-<TR>
 <TD width="25%"><a href="filme/facebook_fav.php" target="_blank">facebook</a></TD>
-<TD width="25%"><a href="tv/mywebtv_main.php" target="_blank">MyWebTV</a></TD>
-<TD width="25%"><a href="tv/tvron.php" target="_blank">tvron</a></TD>
-<TD width="25%"><a href="filme/traznitii.php" target="_blank">traznitii</a></TD>
-</TR>
-<TR>
-<TD width="25%"><a href="tv/bzi.php?page=1,,bzi" target="_blank">bzi</a></TD>
-<TD width="25%"><a href="filme/yt_playlist.php?token=&id=UC6Sn1XzRBCBl8UMyAb8_5PA&kind=channel&title=%28channel%29+PrimaTV+Romania&image=https://yt3.ggpht.com/-hMQUv-XEccM/AAAAAAAAAAI/AAAAAAAAAAA/Tek8sw-tzhU/s88-c-k-no-mo-rj-c0xffffff/photo.jpg" target="_blank">PrimaTV</a></TD>
-<TD width="25%"><a href="tv/protv_stiri.php?page=1,,PROTV" target="_blank">PROTV</a></TD>
-<TD width="25%"><a href="tv/adevarul.php?page=1&link=https://adevarul.ro/video-center/&title=Toate" target="_blank">Adevarul.ro (toate)</a></TD>
-
-<!--<TD width="25%"></TD>-->
 </TR>
 <TR>
 <TD width="25%"><a href="tv/tvrplus_youtube.php?page=1,,TVR+" target="_blank">TVR+ (youtube)</a></TD>
-<TD width="25%"><a href="tv/tvrplus_main.php" target="_blank">TVR+ (Emisiuni)</a></TD>
-<TD width="25%"><a href="filme/rovideo.php?page=1&tip=release&link=&title=rovideo" target="_blank">rovideo</a></TD>
+<TD width="25%"><a href="filme/starea_natiei.php" target="_blank">Starea Natiei</a></TD>
+<TD width="25%"><a href="filme/yt_playlist.php?token=&id=UC6Sn1XzRBCBl8UMyAb8_5PA&kind=channel&title=%28channel%29+PrimaTV+Romania&image=https://yt3.ggpht.com/-hMQUv-XEccM/AAAAAAAAAAI/AAAAAAAAAAA/Tek8sw-tzhU/s88-c-k-no-mo-rj-c0xffffff/photo.jpg" target="_blank">PrimaTV</a></TD>
 <TD width="25%"><a href="tv/qello_main.php" target="_blank">qello TV</a></TD>
 </TR>
 <?php
@@ -162,7 +143,11 @@ if (file_exists($base_fav."flc_c.txt")) {
 </TR>
 <TR>
 <?php
-
+$list = glob($base_sub."*.srt");
+   foreach ($list as $l) {
+    str_replace(" ","%20",$l);
+    unlink($l);
+}
 $n=0;
 $w=0;
 if (file_exists($base_pass."tastatura.txt")) {

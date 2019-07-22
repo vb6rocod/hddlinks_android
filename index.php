@@ -1,5 +1,10 @@
 <!DOCTYPE html>
 <?php
+function str_between($string, $start, $end){
+	$string = " ".$string; $ini = strpos($string,$start);
+	if ($ini == 0) return ""; $ini += strlen($start); $len = strpos($string,$end,$ini) - $ini;
+	return substr($string,$ini,$len);
+}
 include ("common.php");
 $f=$base_pass."adult.txt";
 if (!file_exists($f)) {
@@ -87,43 +92,10 @@ function ajaxrequest(url) {
     }
   }
 }
-function ajaxrequest1(link) {
-  var request =  get_XmlHttp();		// call the function for the XMLHttpRequest instance
-
-  // create pairs index=value with data that must be sent to server
-  //var the_data = {mod:add,title:title, link:link}; //Array
-  var the_data = "h=" + link;
-  var php_file='height.php';
-  request.open("POST", php_file, true);			// set the request
-
-  // adds a header to tell the PHP script to recognize the data as is sent via POST
-  request.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-  request.send(the_data);		// calls the send() method with datas as parameter
-
-  // Check request status
-  // If the response is received completely, will be transferred to the HTML tag with tagID
-  request.onreadystatechange = function() {
-    if (request.readyState == 4) {
-      //alert (request.responseText);
-    }
-  }
-}
 </script>
 
 </head>
 <body>
-<script>
-var B = document.body,
-    H = document.documentElement,
-    height
-
-if (typeof document.height !== 'undefined') {
-    height = document.height // For webkit browsers
-} else {
-    height = Math.max( B.scrollHeight, B.offsetHeight,H.clientHeight, H.scrollHeight, H.offsetHeight );
-}
-//ajaxrequest1(height);
-</script>
 <script>
 function on() {
     document.getElementById("overlay").style.display = "block";
@@ -135,11 +107,6 @@ function off() {
 </script>
 <?php
 //error_reporting(0);
-function str_between($string, $start, $end){
-	$string = " ".$string; $ini = strpos($string,$start);
-	if ($ini == 0) return ""; $ini += strlen($start); $len = strpos($string,$end,$ini) - $ini;
-	return substr($string,$ini,$len);
-}
 function is_valid_date($value, $format = 'dd.mm.yyyy'){
     if(strlen($value) >= 6 && strlen($format) == 10){
 

@@ -4,7 +4,7 @@ error_reporting(0);
 include ("../common.php");
 $tit=unfix_t(urldecode($_GET["title"]));
 $image=$_GET["image"];
-$link=$_GET["file"];
+$link=urldecode($_GET["link"]);
 $tip=$_GET["tip"];
 $l="http://www.tvseries.net".$link;
   $ch = curl_init();
@@ -26,7 +26,7 @@ $image="http://img.tvseries.net".str_between($html,'src="http://img.tvseries.net
 <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.0/jquery.min.js"></script>
 
 </head>
-<body><div id="mainnav">
+<body>
 <?php
 error_reporting(0);
 function str_between($string, $start, $end){
@@ -36,10 +36,9 @@ function str_between($string, $start, $end){
 }
 echo '<h2>'.$tit.'</h2><br>';
 echo '<table border="1" width="100%">'."\n\r";
-///flixanity_s_ep.php?tip=serie&file=http://flixanity.watch/the-walking-dead&title=The Walking Dead&image=http://flixanity.watch/thumbs/show_85a60e7d66f57fb9d75de9eefe36c42c.jpg
 
 $html=str_between($html,"Season</h4>",'<div class="row">');
- $videos = explode('div class="column"', $html);
+$videos = explode('div class="column"', $html);
 $n=0;
 unset($videos[0]);
 //$videos = array_values($videos);
@@ -47,22 +46,30 @@ $videos = array_reverse($videos);
 foreach($videos as $video) {
   $t1 = explode('href="', $video);
   $t2 = explode('"',$t1[1]);
-  $link1 = $t2[0];
-  //echo $link1;
-  $t1 = explode('/i>', $video);
-  $t2 = explode('<', $t1[1]);
-  $title11 = trim($t2[0]);
-  $title11=str_between($video,"<small>","</small");
-
+  $link = $t2[0];
+  $title=str_between($video,"<small>","</small");
+  $title=prep_tit($title);
+  preg_match("/season\s+(\d+)/i",$title,$m);
+  $sez=$m[1];
+  $ep="";
+  $year="";
+  
   if ($n==0) echo '<TR>';
-  echo '<td class="sez" align="center" width="25%"><a href="tvseries_ep.php?tip=serie&file='.$link1.'&title='.urlencode(fix_t($tit)).'&image='.$image.'&sez='.urlencode(fix_t($title11)).'" target="_blank">'.$title11.'</a></TD>';
+  $link_f='tvseries_ep.php?tip=series&link='.urlencode($link).'&title='.urlencode(fix_t($tit)).'&image='.$image."&sez=".$sez."&ep=&ep_tit=&year=".$year;
+  echo '<td class="sez" align="center"><a href="'.$link_f.'" target="_blank">'.$title.'</a></TD>';
   $n++;
   if ($n == 4) {
   echo '</tr>';
   $n=0;
   }
-}  
+}
+  if ($n < 4 && $n > 0) {
+    for ($k=0;$k<4-$n;$k++) {
+      echo '<TD></TD>'."\r\n";
+    }
+    echo '</TR>'."\r\n";
+  }
 echo '</table>';
 ?>
-<br></div></body>
+</body>
 </html>

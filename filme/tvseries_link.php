@@ -119,6 +119,7 @@ $t1=explode("?",$movie);
    $srt_name= $movie_file.".srt";
 
   $movie=str_replace("https","http",$movie);
+  if (strpos($movie,"http") === false) $movie="";
 ////////////////////////////////////////////////////////////////////////////////////////////////
 if (!file_exists($base_sub."sub_extern.srt")) {
 $list = glob($base_sub."*.srt");
@@ -150,13 +151,11 @@ header('Content-type: application/vnd.apple.mpegURL');
 header('Content-Disposition: attachment; filename="'.$movie_name.'"');
 header("Location: $movie");
 } elseif ($flash == "mp") {
-$c="intent:".$movie."#Intent;package=com.mxtech.videoplayer.".$mx.";S.title=".urlencode($pg_tit).";end";
+$c="intent:".$movie."#Intent;type=video/mp4;package=com.mxtech.videoplayer.".$mx.";S.title=".urlencode($pg_tit).";end";
 echo $c;
 die();
 } elseif ($flash == "chrome") {
-  //$movie=str_replace("?",urlencode("?"),$movie);
-  //$movie=str_replace("&","&amp;",$movie);
-  $c="intent:".$movie."#Intent;package=com.mxtech.videoplayer.".$mx.";S.title=".urlencode($pg_tit).";end";
+  $c="intent:".$movie."#Intent;type=video/mp4;package=com.mxtech.videoplayer.".$mx.";S.title=".urlencode($pg_tit).";end";
   header("Location: $c");
 } else {
 $type="mp4";
@@ -181,8 +180,10 @@ body {background-color:#000000;}
 <body><div id="mainnav">
 <div id="container"></div>
 <script type="text/javascript">
+var player = jwplayer("container");
 jwplayer("container").setup({
 "playlist": [{
+"title": "'.preg_replace("/\n|\r/"," ",$pg_tit).'",
 "image": "'.$image.'",
 "sources": [{"file": "'.$movie.'","type": "'.$type.'"}],
 "tracks": [{"file": "../subs/'.$srt_name.'", "default": true}]
@@ -196,17 +197,32 @@ jwplayer("container").setup({
 "height": $(document).height(),
 "width": $(document).width(),
 "skin": {
-    "name": "beelden",
     "active": "#00bfff",
     "inactive": "#b6b6b6",
     "background": "#282828"
 },
+"title": "'.preg_replace("/\n|\r/"," ",$pg_tit).'",
+"abouttext": "'.preg_replace("/\n|\r/"," ",$pg_tit).'",
+"autostart": true,
 "androidhls": true,
 "startparam": "start",
 "fallback": false,
 "wmode": "direct",
 "stagevideo": true
 });
+player.addButton(
+  //This portion is what designates the graphic used for the button
+  "https://developer.jwplayer.com/jw-player/demos/basic/add-download-button/assets/download.svg",
+  //This portion determines the text that appears as a tooltip
+  "Download Video",
+  //This portion designates the functionality of the button itself
+  function() {
+    //With the below code,
+    window.location.href = player.getPlaylistItem()["file"];
+  },
+  //And finally, here we set the unique ID of the button itself.
+  "download"
+);
 </script>
 </div></body>
 </HTML>

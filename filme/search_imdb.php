@@ -91,6 +91,15 @@ function isValid(evt) {
       document.getElementById("fav").click();
     }
    }
+function isKeyPressed(event) {
+  if (event.ctrlKey) {
+    id = "imdb_" + event.target.id;
+    val_imdb=document.getElementById(id).value;
+    msg="imdb.php?tip=movie&" + val_imdb;
+    document.getElementById("fancy").href=msg;
+    document.getElementById("fancy").click();
+  }
+}
 $(document).on('keyup', '.imdb', isValid);
 document.onkeypress =  zx;
 </script>
@@ -144,7 +153,7 @@ for ($k=0;$k<count($r);$k++) {
   $val_imdb="title=".urlencode(fix_t($tit))."&year=".$year."&imdb=".$id;
   $val_add="title=".urlencode(fix_t($tit));
   if ($id[0] == 't') //movie/series/video
-   echo '<td class="mp" align="center"><a class="imdb" id="myLink'.($w*1).'" onclick="ajaxrequest('."'".$val_add."'".')" style="cursor:pointer;"><img src="'.$image.'" width="200px" height="280px"><BR>'.$tit.'<input type="hidden" id="imdb_myLink'.($w*1).'" value="'.$val_imdb.'"></a></TD>';
+   echo '<td class="mp" align="center"><a class="imdb" id="myLink'.($w*1).'" onclick="ajaxrequest('."'".$val_add."'".')" style="cursor:pointer;" onmousedown="isKeyPressed(event)"><img id="myLink'.($w*1).'" src="'.$image.'" width="200px" height="280px"><BR>'.$tit.'<input type="hidden" id="imdb_myLink'.($w*1).'" value="'.$val_imdb.'"></a></TD>';
   else
    echo '<td class="mp" align="center"><a class="imdb" href="search_imdb_ref.php?p='.$id.'&title='.urlencode(fix_t($tit)).'" target="_blank"><img src="'.$image.'" width="200px" height="280px"><BR>'.$tit.'</a></TD>';
   echo '<TD valign="top" style="padding-left: 10px;">';

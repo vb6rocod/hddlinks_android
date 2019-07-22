@@ -94,10 +94,14 @@ function isValid(evt) {
 }
 $(document).on('keyup', '.imdb', isValid);
 document.onkeypress =  zx;
-function mouseOver(n) {
-    zz="myLink" + n;
-    //alert (zz);
-    document.getElementById(zz).focus();
+function isKeyPressed(event) {
+  if (event.ctrlKey) {
+    id = "imdb_" + event.target.id;
+    val_imdb=document.getElementById(id).value;
+    msg="imdb.php?tip=series&" + val_imdb;
+    document.getElementById("fancy").href=msg;
+    document.getElementById("fancy").click();
+  }
 }
 </script>
 
@@ -209,7 +213,7 @@ if ($tip=="search") {
   if ($n==0) echo '<TR>';
   if (strpos($link_fs,"/series") !== false) {
   if ($tast == "NU") {
-  echo '<td class="mp" align="center" width="25%"><a class="imdb" id="myLink'.($p*1).'" onmouseover="mouseOver('.($p*1).')" href="'.$link_fs.'" target="_blank"><img src="'.$image.'" width="200px" height="280px"><BR>'.$title1.' ('.$year.')<input type="hidden" id="imdb_myLink'.($p*1).'" value="'.$val_imdb.'"></a> <a onclick="ajaxrequest('."'".$fav_link."'".')" style="cursor:pointer;">*</a></TD>';
+  echo '<td class="mp" align="center" width="25%"><a class="imdb" id="myLink'.($p*1).'" href="'.$link_fs.'" target="_blank" onmousedown="isKeyPressed(event)"><img id="myLink'.($p*1).'" src="'.$image.'" width="200px" height="280px"><BR>'.$title1.' ('.$year.')<input type="hidden" id="imdb_myLink'.($p*1).'" value="'.$val_imdb.'"></a> <a onclick="ajaxrequest('."'".$fav_link."'".')" style="cursor:pointer;">*</a></TD>';
   } else {
 
   echo '<td class="mp" align="center" width="25%"><a class="imdb" id="myLink'.($p*1).'" href="'.$link_fs.'" target="_blank"><img src="'.$image.'" width="200px" height="280px"><BR>'.unfix_t(urldecode($title1)).' ('.$year.')<input type="hidden" id="imdb_myLink'.($p*1).'" value="'.$val_imdb.'"><input type="hidden" id="fav_myLink'.($p*1).'" value="'.$fav_link.'"></a></TD>';
@@ -246,7 +250,7 @@ if ($tip=="search") {
   $fav_link="mod=add&title=".urlencode(fix_t($title1))."&imdb=".$imdb."&year=".$year."&image=".$image;
   $val_imdb="title=".unfix_t(urldecode($title1))."&year=".$year."&imdb=";
   if ($tast == "NU") {
-  echo '<td class="mp" align="center" width="25%"><a class="imdb" id="myLink'.($p*1).'" onmouseover="mouseOver('.($p*1).')" href="'.$link_fs.'" target="_blank"><img src="'.$image.'" width="200px" height="280px"><BR>'.$title1.' ('.$year.')<input type="hidden" id="imdb_myLink'.($p*1).'" value="'.$val_imdb.'"></a> <a onclick="ajaxrequest('."'".$fav_link."'".')" style="cursor:pointer;">*</a></TD>';
+  echo '<td class="mp" align="center" width="25%"><a class="imdb" id="myLink'.($p*1).'" href="'.$link_fs.'" target="_blank" onmousedown="isKeyPressed(event)"><img id="myLink'.($p*1).'" src="'.$image.'" width="200px" height="280px"><BR>'.$title1.' ('.$year.')<input type="hidden" id="imdb_myLink'.($p*1).'" value="'.$val_imdb.'"></a> <a onclick="ajaxrequest('."'".$fav_link."'".')" style="cursor:pointer;">*</a></TD>';
   } else {
 
   echo '<td class="mp" align="center" width="25%"><a class="imdb" id="myLink'.($p*1).'" href="'.$link_fs.'" target="_blank"><img src="'.$image.'" width="200px" height="280px"><BR>'.unfix_t(urldecode($title1)).' ('.$year.')<input type="hidden" id="imdb_myLink'.($p*1).'" value="'.$val_imdb.'"><input type="hidden" id="fav_myLink'.($p*1).'" value="'.$fav_link.'"></a></TD>';

@@ -1,50 +1,49 @@
 <!DOCTYPE html>
 <?php
+error_reporting(0);
 include ("../common.php");
 $tit=unfix_t(urldecode($_GET["title"]));
 $image=$_GET["image"];
-$link=$_GET["file"];
+$link=urldecode($_GET["link"]);
 $tip=$_GET["tip"];
+$year=$_GET['year'];
+/* ======================================= */
+$width="200px";
+$height="100px";
+$fs_target="filme_link.php";
+$has_img="no";
 ?>
-<html><head>
+<html>
+<head>
 <meta http-equiv="content-type" content="text/html; charset=UTF-8">
 <link rel="stylesheet" type="text/css" href="../custom.css" />
-      <meta charset="utf-8">
-      <title><?php echo $tit; ?></title>
+<title><?php echo $tit; ?></title>
 <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.0/jquery.min.js"></script>
 
 </head>
-<body><div id="mainnav">
+<body>
 <?php
-error_reporting(0);
+
 function str_between($string, $start, $end){
 	$string = " ".$string; $ini = strpos($string,$start);
 	if ($ini == 0) return ""; $ini += strlen($start); $len = strpos($string,$end,$ini) - $ini;
 	return substr($string,$ini,$len);
 }
 echo '<h2>'.$tit.'</h2>';
-echo '<table border="1" width="100%">'."\n\r";
-//echo '<TR><td style="color:#000000;background-color:deepskyblue;text-align:center" colspan="3" align="center">'.$tit.'</TD></TR>';
-///flixanity_s_ep.php?tip=serie&file=http://flixanity.watch/the-walking-dead&title=The Walking Dead&image=http://flixanity.watch/thumbs/show_85a60e7d66f57fb9d75de9eefe36c42c.jpg
-
-$requestLink=$link;
-//$cookie="/tmp/vumoo.txt";
-//$cookie="D:/";
-
+$ua = $_SERVER['HTTP_USER_AGENT'];
   $ch = curl_init();
-  curl_setopt($ch, CURLOPT_URL, $requestLink);
+  curl_setopt($ch, CURLOPT_URL, $link);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-  curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 5.1; rv:31.0) Gecko/20100101 Firefox/31.0');
+  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
   curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
   curl_setopt ($ch, CURLOPT_REFERER, "https://divxfilmeonline.org");
   curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
   curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
   curl_setopt($ch, CURLOPT_TIMEOUT, 15);
-  //curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
   $html = curl_exec($ch);
   curl_close($ch);
 
-
+$n=0;
 $videos = explode('li class="border-', $html);
 
 unset($videos[0]);
@@ -56,45 +55,52 @@ $videos = array_reverse($videos);
 $s="ep";
 }
 $sezoane=array();
-$last_sez="";
-//unset($videos[0]);
-//$videos = array_values($videos);
+
 //$videos = array_reverse($videos);
+$last_sez="";
 foreach($videos as $video) {
-  //$t1=explode('class="title">Season',$video);
-    $t1=explode('href="',$video);
-    //$t2=explode('sezonul-',$t1[1]);
-    //$t3=explode('/',$t2[1]);
-    preg_match("/sezonul\-(\d+)/",$t1[1],$m);
-    //print_r ($m);
-    if ($m[1] <> $last_sez) {
-      $sezoane[]=trim($m[1]);
-      $last_sez=$m[1];
-    }
+  $t1=explode('href="',$video);
+  preg_match("/sezonul\-(\d+)/",$t1[1],$m);
+  if ($m[1] <> $last_sez) {
+   $sezoane[]=trim($m[1]);
+   $last_sez = trim($m[1]);
+  }
 }
-//print_r ($sezoane);
 echo '<table border="1" width="100%">'."\n\r";
-echo '<TR>';
+
+$p=0;
 $c=count($sezoane);
 for ($k=0;$k<$c;$k++) {
+if ($p==0) echo '<TR>';
 echo '<td class="sez" style="color:black;text-align:center"><a href="#sez'.($sezoane[$k]).'">Sezonul '.($sezoane[$k]).'</a></TD>';
+$p++;
+if ($p == 10) {
+ echo '</tr>';
+ $p=0;
+ }
 }
-echo '</TR></TABLE>';
+if ($p < 10 && $p > 0 && $k > 9) {
+ for ($x=0;$x<10-$p;$x++) {
+   echo '<TD></TD>'."\r\n";
+ }
+ echo '</TR>'."\r\n";
+}
+echo '</TABLE>';
 $last_sez="";
 foreach($videos as $video) {
-    $t1=explode('href="',$video);
-    preg_match("/sezonul\-(\d+)/",$t1[1],$m);
-    if ($m[1] <> $last_sez) {
-       $n=0;
-       $sez=$m[1];
-       echo '<table border="1" width="100%">'."\n\r";
-       echo '<TR><td class="sez" style="color:black;background-color:#0a6996;color:#64c8ff;text-align:center" colspan=3">Sezonul '.($sez).'</TD></TR>';
-       $last_sez=$sez;
-    }
-    $t1=explode('href="',$video);
-    $t2=explode('"',$t1[1]);
-    $l=$t2[0];
-    if (!preg_match("/sezonul\-\d+\-episodul-\d+/",$l)) {
+  $t1=explode('href="',$video);
+  $t2=explode('"',$t1[1]);
+  $l=$t2[0];
+  preg_match("/sezonul\-(\d+)/",$t1[1],$m);
+  if ($m[1] <> $last_sez) {
+  $season=trim($m[1]);
+  $sez = $season;
+  echo '<table border="1" width="100%">'."\n\r";
+  echo '<TR><td class="sez" style="color:black;background-color:#0a6996;color:#64c8ff;text-align:center" colspan="3">Sezonul '.($sez).'</TD></TR>';
+  $n=0;
+  $last_sez = trim($m[1]);
+  //}
+  if (!preg_match("/sezonul\-\d+\-episodul-\d+/",$l)) {
     $ch = curl_init();
     curl_setopt($ch, CURLOPT_URL, $l);
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
@@ -106,47 +112,58 @@ foreach($videos as $video) {
     curl_setopt($ch, CURLOPT_TIMEOUT, 15);
     $h1 = curl_exec($ch);
     curl_close($ch);
-    $vids = explode('li class="border-', $h1);
-    unset($vids[0]);
-    //$videos = array_values($videos);
-    $vids = array_reverse($vids);
-    foreach($vids as $vid) {
-    $t1=explode('href="',$vid);
-    $t2=explode('"',$t1[1]);
-    $link1 = $t2[0];
-    //$link1="";
-    $ep_tit = trim(str_between($vid,'title="','"'));
-    $link="filme_link.php?file=".$link1.",".urlencode(fix_t($ep_tit));
-      if ($n == 0) echo "<TR>"."\n\r";
-		echo '<TD class="mp" width="33%" align="center">'.'<a id="sez'.$sez.'" href="'.$link.'" target="_blank"><img width="200px" height="100px" src="r_m.php?file='.$image.'"><BR>'.$ep_tit.'</a>';
-		echo '</TD>'."\n\r";
-        $n++;
-        if ($n > 2) {
-         echo '</TR>'."\n\r";
-         $n=0;
-        }
-    }
-    } else {
-    $link1 = $l;
-    //$link1="";
-    $ep_tit = trim(str_between($video,'title="','"'));
-
-
-
-  //$link='watchfree_fs.php?tip=serie&file='.$link1.'&title='.$season.'|'.$episod.'|'.$tit.'|'.$ep_tit.'&image='.$image;
-  $link="filme_link.php?file=".$link1.",".urlencode(fix_t($ep_tit));
-      if ($n == 0) echo "<TR>"."\n\r";
-		echo '<TD class="mp" width="33%" align="center">'.'<a id="sez'.$sez.'" href="'.$link.'" target="_blank"><img width="200px" height="100px" src="r_m.php?file='.$image.'"><BR>'.$ep_tit.'</a>';
-		echo '</TD>'."\n\r";
-        $n++;
-        if ($n > 2) {
-         echo '</TR>'."\n\r";
-         $n=0;
-        }
+  } else {
+    $h1 = $html;
   }
-}  
+    //echo $h1;
+    $n=0;
+  $vids = explode('li class="border-', $h1);
+  unset($vids[0]);
+  //$vids = array_values($vids);
+  $vids = array_reverse($vids);
+  foreach($vids as $vid) {
+  $img_ep="";
+  $episod="";
+  $ep_tit="";
+  $t1=explode('href="',$vid);
+  $t2=explode('"',$t1[1]);
+  $link=$t2[0];
+  $t3=explode('title="',$vid);
+  $t4=explode('"',$t3[1]);
+  $title=trim($t4[0]);
+  preg_match("/Sezonul\s+(\d+)\s+Episodul\s+(\d+)/i",$title,$p);
+  $episod=$p[2];
+  $title=str_replace("&nbsp;"," ",$title);
+  $ep_tit="";
+  if ($ep_tit)
+   $ep_tit_d=$season."x".$episod." ".$ep_tit;
+  else
+   $ep_tit_d=$season."x".$episod;
+  $tit_link = $tit." ".$ep_tit_d;
+  if ($episod) {
+  $link_f=$fs_target.'?file='.urlencode($link).'&title='.urlencode(fix_t($tit_link));
+   if ($n == 0) echo "<TR>"."\n\r";
+   if ($has_img == "yes")
+    echo '<TD class="mp" width="33%">'.'<a id="sez'.$sez.'" href="'.$link_f.'" target="_blank"><img width="'.$width.'" height="'.$height.'" src="'.$img_ep.'"><BR>'.$ep_tit_d.'</a></TD>'."\r\n";
+   else
+    echo '<TD class="mp" width="33%">'.'<a id="sez'.$sez.'" href="'.$link_f.'" target="_blank">'.$ep_tit_d.'</a></TD>'."\r\n";
+   $n++;
+   if ($n == 3) {
+    echo '</TR>'."\n\r";
+    $n=0;
+   }
+   }
+} // end vids
 
+  if ($n < 3 && $n > 0) {
+    for ($k=0;$k<3-$n;$k++) {
+      echo '<TD></TD>'."\r\n";
+    }
+    echo '</TR>'."\r\n";
+  }
 echo '</table>';
+}
+}
 ?>
-<br></div></body>
+</body>
 </html>

@@ -58,11 +58,11 @@ if ($flash != "mp") {
 if (isset($_POST["link"])) {
   $l = urldecode($_POST["link"]);
   $l=str_replace(" ","%20",$l);
-  $title = urldecode($_POST["title"]);
+  $title = unfix_t(urldecode($_POST["title"]));
 } else {
   $l = urldecode($_GET["link"]);
   $l=str_replace(" ","%20",$l);
-  $title = urldecode($_GET["title"]);
+  $title = unfix_t(urldecode($_GET["title"]));
 }
 $l=trim($l);
 $ua="Mozilla/5.0 (Windows NT 10.0; WOW64; rv:46.0) Gecko/20100101 Firefox/46.0";
@@ -70,7 +70,7 @@ $host=parse_url($l)["host"];
 $out="";
 $type="mp4";
 $cookie=$base_cookie."adultc.dat";
-if (preg_match("/jizzbunker\.com/",$host)) {
+if (preg_match("/jizzbunker\.com|familyporn\.tv|zbporn\.com/",$host)) {
   $h=@file_get_contents($l);
 } else {
   $ch = curl_init();
@@ -296,6 +296,26 @@ if (preg_match("/4tube\.com/",$host)) {
       break;
    }
   }
+} else if (preg_match("/familyporn\.tv/",$host)) {
+  //echo $h;
+  if (preg_match("/license_code:\s+\'(.*?)\'/ms",$h,$m)) {
+   if (preg_match_all("/(video_url|video_alt_url|video_alt_url2|video_alt_url3)\:\s+\'function\/0\/(.*?)\/\'/ms",$h,$u)) {
+    $movie=$u[2][count($u[2])-1];
+    $lic=$m[1];
+    $out=kt($lic,$movie);
+   } else if (preg_match_all("/(video_url|video_alt_url|video_alt_url2|video_alt_url3)\:\s+\'(.*?)\'/ms",$h,$u)) {
+     $out=$u[2][count($u[2])-1];
+   }
+   //$out=$movie;
+   //echo "\n\r".$out."\r\n";
+   //$r = get_headers($out);
+   //print_r ($r);
+   //die();
+   //$t1=explode('Location:',$r[6]);
+   //$out=trim($t1[1]);
+   //$r = get_headers($out);
+   //print_r ($r);
+  }
 } else if (preg_match("/fapbox\.com/",$host)) {
   $out=str_between($h,'file:"','"');
 } else if (preg_match("/handjobhub\.com/",$host)) {
@@ -323,10 +343,58 @@ if (preg_match("/4tube\.com/",$host)) {
   $t2=explode('href="',$t1[1]);
   $t3=explode('"',$t2[1]);
   $out=$t3[0];
+} else if (preg_match("/mangovideo\.pw/",$host)) {
+  if (strpos($h,"license_code:") !== false) {
+   $t1 = explode("license_code: '", $h);
+   $t2 = explode("'", $t1[1]);
+   $d = $t2[0];
+   $t1 = explode("function/0/", $h);
+   $t2 = explode("'", $t1[count($t1)-1]);
+   $orig = $t2[0];
+   $c = 16;
+
+   for ($f = "", $g = 1; $g < strlen($d); $g++)
+	{
+	$f.= preg_match("/[1-9]/", $d[$g]) ? $d[$g] : 1;
+	}
+
+  for ($j = intval(strlen($f) / 2) , $k = substr($f, 0, $j + 1) , $l = substr($f, $j) , $g = $l - $k, $g < 0 && ($g = - $g) , $f = $g, $g = $k - $l, $g < 0 && ($g = - $g) , $f+= $g, $f = $f * 2, $f = "" . $f, $i = $c / 2 + 2, $m = "", $g = 0; $g < $j + 1; $g++)
+	{
+	for ($h = 1; $h <= 4; $h++)
+		{
+		$n = $d[$g + $h] + $f[$g];
+		$n >= $i && ($n-= $i);
+		$m.= $n;
+		}
+	}
+
+ $t1 = explode("/", $orig);
+ $j = $t1[5];
+ $h = substr($j, 0, 32);
+ $i = $m;
+
+ for ($j = $h, $k = strlen($h) - 1; $k >= 0; $k--)
+	{
+	for ($l = $k, $m = $k; $m < strlen($i); $m++) $l+= $i[$m];
+	for (; $l >= strlen($h);) $l-= strlen($h);
+	for ($n = "", $o = 0; $o < strlen($h); $o++)
+		{
+		$n.= $o == $k ? $h[$l] : ($o == $l ? $h[$k] : $h[$o]);
+		}
+
+	$h = $n;
+	}
+
+ $out = str_replace($j, $h, $orig);
+ } else {
+ $out="";
+ }
 } else if (preg_match("/milfzr\.com/",$host)) {
-  $t1=explode('href="/videos-up',$h);
+  $h=str_replace("&quot;",'"',$h);
+  $h=str_replace("\/","/",$h);
+  $t1=explode('sources":[{"src":"',$h);
   $t2=explode('"',$t1[1]);
-  $out="http://milfzr.com/videos-up".$t2[0];
+  $out=$t2[0];
 } else if (preg_match("/mofosex\.com/",$host)) {
   $t1=explode('quality_720p":"',$h);
   $t2=explode('"',$t1[1]);
@@ -510,17 +578,19 @@ if (preg_match("/4tube\.com/",$host)) {
   curl_setopt($ch, CURLOPT_TIMEOUT, 15);
   $x = curl_exec($ch);
   curl_close($ch);
+
   $r=json_decode($x,1);
+  //print_r ($r);
   if (isset($r["stream_url_1080p"]) && $r["stream_url_1080p"] !="")
-    $out=$r["stream_url_1080p"];
+    $out=$r["stream_url_1080p"][0];
   elseif (isset($r["stream_url_720p"]) && $r["stream_url_720p"] !="")
-    $out=$r["stream_url_720p"];
+    $out=$r["stream_url_720p"][0];
   elseif (isset($r["stream_url_480p"]) && $r["stream_url_480p"] !="")
-    $out=$r["stream_url_480p"];
+    $out=$r["stream_url_480p"][0];
   elseif (isset($r["stream_url_360p"]) && $r["stream_url_360p"] !="")
-    $out=$r["stream_url_360p"];
+    $out=$r["stream_url_360p"][0];
   elseif (isset($r["stream_url_240p"]) && $r["stream_url_240p"] !="")
-    $out=$r["stream_url_240p"];
+    $out=$r["stream_url_240p"][0];
   else
     $out="";
 } else if (preg_match("/thumbzilla\.com/",$host)) {
@@ -641,14 +711,15 @@ body {background-color:#000000;}
 <body><div id="mainnav">
 <div id="container"></div>
 <script type="text/javascript">
+var player = jwplayer("container");
 jwplayer("container").setup({
 "playlist": [{
+"title": "'.preg_replace("/\n|\r/"," ",$title).'",
 "sources": [{"file": "'.$out.'", "type": "'.$type.'"}]
 }],
 "height": $(document).height(),
 "width": $(document).width(),
 "skin": {
-    "name": "beelden",
     "active": "#00bfff",
     "inactive": "#b6b6b6",
     "background": "#282828"
@@ -657,10 +728,23 @@ jwplayer("container").setup({
 "startparam": "start",
 "fallback": false,
 "wmode": "direct",
-"title": "'.$title.'",
-"abouttext": "'.$title.'",
+"title": "'.preg_replace("/\n|\r/"," ",$title).'",
+"abouttext": "'.preg_replace("/\n|\r/"," ",$title).'",
 "stagevideo": true
 });
+player.addButton(
+  //This portion is what designates the graphic used for the button
+  "https://developer.jwplayer.com/jw-player/demos/basic/add-download-button/assets/download.svg",
+  //This portion determines the text that appears as a tooltip
+  "Download Video",
+  //This portion designates the functionality of the button itself
+  function() {
+    //With the below code,
+    window.location.href = player.getPlaylistItem()["file"];
+  },
+  //And finally, here we set the unique ID of the button itself.
+  "download"
+);
 </script>
 </div></body>
 </HTML>

@@ -1,68 +1,82 @@
 <!DOCTYPE html>
 <?php
 error_reporting(0);
+function str_between($string, $start, $end){
+	$string = " ".$string; $ini = strpos($string,$start);
+	if ($ini == 0) return ""; $ini += strlen($start); $len = strpos($string,$end,$ini) - $ini;
+	return substr($string,$ini,$len);
+}
 include ("../common.php");
-$page1="";
-$page1=$_GET["page1"];
-if (!$page1) {
-$query = $_GET["page"];
-if($query) {
-   $queryArr = explode(',', $query);
-   $page = $queryArr[0];
-   $search = $queryArr[1];
-   $page_title=urldecode($queryArr[2]);
-   $search=str_replace("|","&",$search);
-}
-} else {
- $search1=$_GET["src"];
-file_put_contents($base_cookie."adult.dat",urldecode($search1));
- $search1=str_replace(" ","+",$search1);
- $page_title="Cautare: ".str_replace("+"," ",$search1);
- if ($page1 > 1)
- $search="https://www.ashemaletube.com/search/".str_replace("+","_",$search1)."/".$page1."/?sort=re";
- else
- $search="https://www.ashemaletube.com/search/".str_replace("+","_",$search1)."?sort=re";
-}
+$page = $_GET["page"];
+$tip= $_GET["tip"];
+$tit=$_GET["title"];
+$link=$_GET["link"];
+$width="200px";
+$height=intval(200*(240/320))."px";
+/* ==================================================== */
+$has_main="yes";
+$has_fav="no";
+$has_search="yes";
+$has_add="yes";
+$has_fs="no";
+$fav_target="adult_fav.php";
+$add_target="adult_add.php";
+$add_file="";
+$fs_target="filme_link.php";
+$target="astube.php";
+/* ==================================================== */
+$base=basename($_SERVER['SCRIPT_FILENAME']);
+$p=$_SERVER['QUERY_STRING'];
+parse_str($p, $output);
+
+if (isset($output['page'])) unset($output['page']);
+$p = http_build_query($output);
+if (!isset($_GET["page"]))
+  $page=1;
+else
+  $page=$_GET["page"];
+$next=$base."?page=".($page+1)."&".$p;
+$prev=$base."?page=".($page-1)."&".$p;
+/* ==================================================== */
+$tit=unfix_t(urldecode($tit));
+$link=unfix_t(urldecode($link));
+/* ==================================================== */
+if (file_exists($base_cookie."adult.dat"))
+  $val_search=file_get_contents($base_cookie."adult.dat");
+else
+  $val_search="";
+$form='<form action="'.$target.'" target="_blank">
+Cautare film:  <input type="text" id="title" name="title" value="'.$val_search.'">
+<input type="hidden" name="page" id="page" value="1">
+<input type="hidden" name="tip" id="tip" value="search">
+<input type="hidden" name="link" id="link" value="">
+<input type="submit" id="send" value="Cauta...">
+</form>';
+/* ==================================================== */
+if ($tip=="search") {
+  $page_title = "Cautare: ".$tit;
+  if ($page == 1) file_put_contents($base_cookie."adult.dat",$tit);
+} else
+  $page_title=$tit;
+/* ==================================================== */
+
 ?>
-<html><head>
+<html>
+<head>
 <meta http-equiv="content-type" content="text/html; charset=UTF-8">
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate"/>
-<meta name="viewport" content="width=device-width, initial-scale=1">
 <meta http-equiv="Pragma" content="no-cache"/>
 <meta http-equiv="Expires" content="0"/>
-      <title><?php echo $page_title; ?></title>
-<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.0/jquery.min.js"></script>
-<html><head>
-<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+<title><?php echo $page_title; ?></title>
+<script type="text/javascript" src="//code.jquery.com/jquery-3.2.1.min.js"></script>
+<link rel="stylesheet" type="text/css" href="../custom.css" />
 
-      <meta charset="utf-8">
-      <title><?php echo $page_title; ?></title>
-   	  <link rel="stylesheet" type="text/css" href="../custom.css" />
-     <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.0/jquery.min.js"></script>
-      <script type="text/javascript" src="../jquery.fancybox.js?v=2.1.5"></script>
-      <link rel="stylesheet" type="text/css" href="../jquery.fancybox.css?v=2.1.5" media="screen" />
 <script type="text/javascript">
-// create the XMLHttpRequest object, according browser
-function get_XmlHttp() {
-  // create the variable that will contain the instance of the XMLHttpRequest object (initially with null value)
-  var xmlHttp = null;
-  if(window.XMLHttpRequest) {		// for Forefox, IE7+, Opera, Safari, ...
-    xmlHttp = new XMLHttpRequest();
-  }
-  else if(window.ActiveXObject) {	// for Internet Explorer 5 or 6
-    xmlHttp = new ActiveXObject("Microsoft.XMLHTTP");
-  }
-  return xmlHttp;
-}
-
-// sends data to a php file, via POST, and displays the received answer
-function ajaxrequest(title, link) {
-  var request =  get_XmlHttp();		// call the function for the XMLHttpRequest instance
-
-  // create pairs index=value with data that must be sent to server
-  //var the_data = {mod:add,title:title, link:link}; //Array
+var id_link="";
+function ajaxrequest(link) {
+  var request =  new XMLHttpRequest();
   on();
-  var the_data = "mod=add&title="+ title +"&link="+link;
+  var the_data = link;
   var php_file="adult_link.php";
   request.open("POST", php_file, true);			// set the request
 
@@ -80,33 +94,46 @@ function ajaxrequest(title, link) {
     }
   }
 }
-</script>
-<link rel="stylesheet" type="text/css" href="../custom.css" />
-<style>
-#overlay {
-    position: fixed;
-    display: none;
-    width: 100%;
-    height: 100%;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-color: rgba(0,0,0,0.5);
-    z-index: 2;
-    cursor: pointer;
-}
+function add_fav(link) {
+  var request =  new XMLHttpRequest();
+  var the_data = link;
+  var php_file='adult_add.php';
+  request.open("POST", php_file, true);			// set the request
 
-#text{
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    font-size: 50px;
-    color: white;
-    transform: translate(-50%,-50%);
-    -ms-transform: translate(-50%,-50%);
+  // adds a header to tell the PHP script to recognize the data as is sent via POST
+  request.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+  request.send(the_data);		// calls the send() method with datas as parameter
+
+  // Check request status
+  // If the response is received completely, will be transferred to the HTML tag with tagID
+  request.onreadystatechange = function() {
+    if (request.readyState == 4) {
+      alert (request.responseText);
+    }
+  }
 }
-</style>
+function isValid(evt) {
+    var charCode = (evt.which) ? evt.which : evt.keyCode,
+    self = evt.target;
+    if  (charCode == "51" && evt.target.type != "text") {   // add to fav
+      id_link=self.id;
+      id = "fav_" + self.id;
+      val_fav=document.getElementById(id).value;
+      add_fav(val_fav);
+    }
+    return true;
+}
+   function zx(e){
+     var charCode = (typeof e.which == "number") ? e.which : e.keyCode
+     if (charCode == "53" && e.target.type != "text") {
+      document.getElementById("send").click();
+     } else if (charCode == "50" && e.target.type != "text") {
+      document.getElementById("fav").click();
+     }
+   }
+$(document).on('keyup', '.imdb', isValid);
+document.onkeypress =  zx;
+</script>
 </head>
 <body>
 <script>
@@ -119,13 +146,8 @@ function off() {
 }
 </script>
 <?php
-function str_between($string, $start, $end){
-	$string = " ".$string; $ini = strpos($string,$start);
-	if ($ini == 0) return ""; $ini += strlen($start); $len = strpos($string,$end,$ini) - $ini;
-	return substr($string,$ini,$len);
-}
-//intent:#Intent;package=com.mxtech.videoplayer.pro;S.title=PornPros+-+Samantha+Rone+and+Preston+get+off+with+dual+masturbation;end
-//intent:https://ep3.t8cdn.com/videos/201610/25/94086031/480P_600K_94086031.mp4?validfrom=1533467996&validto=1533475196&rate=121k&burst=1200k&ip=82.210.178.241&hash=uRnDnoRHUoHJzdNh04Fym7zhhF0%3D#Intent;package=com.mxtech.videoplayer.pro;S.title=TEAMSKEET+-+Hot+Teen+Fucked+During+Gym+Workout;end
+$c="";
+echo "<a href='".$c."' id='mytest1'></a>";
 if (file_exists($base_pass."player.txt")) {
 $flash=trim(file_get_contents($base_pass."player.txt"));
 } else {
@@ -140,103 +162,180 @@ $user_agent     =   $_SERVER['HTTP_USER_AGENT'];
 if ($flash != "mp") {
 if (preg_match("/android|ipad/i",$user_agent) && preg_match("/chrome|firefox|mobile/i",$user_agent)) $flash="chrome";
 }
-//http://www.hdfilm.ro/index.php?p=filme&gen=Actiune&page=1
-//$out1="http://127.0.0.1:8080/scripts/subs/out.m3u8";
-//$title="play...";
-//$c="intent:".$out1."#Intent;package=com.mxtech.videoplayer.".$mx.";S.title=".urlencode($title).";end";
-$c="";
-  echo "<a href='".$c."' id='mytest1'></a>".'<div id="mainnav">';
-echo '<H2>'.$page_title.'</H2>';
-echo '<table border="1px" width="100%">'."\n\r";
-echo '<tr><TD colspan="4" align="right">';
-if ($page1) {
-if ($page1 > 1)
-echo '<a href="astube.php?page1='.($page1-1).'&src='.$search1.'">&nbsp;&lt;&lt;&nbsp;</a> | <a href="astube.php?page1='.($page1+1).'&src='.$search1.'">&nbsp;&gt;&gt;&nbsp;</a></TD></TR>';
-else
-echo '<a href="astube.php?page1='.($page1+1).'&src='.$search1.'">&nbsp;&gt;&gt;&nbsp;</a></TD></TR>';
-} else {
-if ($page > 1)
-echo '<a href="astube.php?page='.($page-1).','.$search.','.urlencode($page_title).'">&nbsp;&lt;&lt;&nbsp;</a> | <a href="astube.php?page='.($page+1).','.$search.','.urlencode($page_title).'">&nbsp;&gt;&gt;&nbsp;</a></TD></TR>';
-else
-echo '<a href="astube.php?page='.($page+1).','.$search.','.urlencode($page_title).'">&nbsp;&gt;&gt;&nbsp;</a></TD></TR>';
-}
-if (!$page1) {
-  if ($page>1)
-  $l = $search.$page."/";
-  else
-  $l = $search;
-} else {
-//echo $search;
-$l = $search;
-}
-//echo $l;
-//$l="https://www.ashemaletube.com/videos/best-recent/3/";
-       $ch = curl_init();
-      curl_setopt($ch, CURLOPT_URL, $l);
-      curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-      curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
-      curl_setopt($ch, CURLOPT_USERAGENT, "Mozilla/5.0 (Windows NT 10.0; WOW64; rv:46.0) Gecko/20100101 Firefox/46.0");
-      curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-      curl_setopt($ch, CURLOPT_REFERER, "https://www.ashemaletube.com");
-      curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
-      curl_setopt($ch, CURLOPT_TIMEOUT, 15);
-      $html = curl_exec($ch);
-      curl_close($ch);
-      //echo $html;
+if ($flash=="chrome") $flash="mp";
+$w=0;
 $n=0;
-//$videos = explode('<div class="video">', $html);
-//echo $html;
+if ($tast=="NU")
+echo '<H2><a href="adult_fav.php" target="_blank">'.$page_title.'</a></H2>'."\r\n";
+else
+echo '<H2>'.$page_title.'</H2>'."\r\n";
+
+echo '<table border="1px" width="100%" style="table-layout:fixed;">'."\r\n";
+echo '<TR>'."\r\n";
+if ($has_main == "no") {
+if ($page==1) {
+   if ($tip == "release") {
+   if ($has_fav=="yes" && $has_search=="yes") {
+     echo '<TD class="nav"><a id="fav" href="'.$fav_target.'" target="_blank">Favorite</a></TD>'."\r\n";
+     echo '<TD class="form" colspan="2">'.$form.'</TD>'."\r\n";
+     echo '<TD class="nav" align="right"><a href="'.$next.'">&nbsp;&gt;&gt;&nbsp;</a></TD>'."\r\n";
+   } else if ($has_fav=="no" && $has_search=="yes") {
+     echo '<TD class="nav"><a id="fav" href="">Reload...</a></TD>'."\r\n";
+     echo '<TD class="form" colspan="2">'.$form.'</TD>'."\r\n";
+     echo '<TD class="nav" align="right"><a href="'.$next.'">&nbsp;&gt;&gt;&nbsp;</a></TD>'."\r\n";
+   } else if ($has_fav=="yes" && $has_search=="no") {
+     echo '<TD class="nav"><a id="fav" href="'.$fav_target.'" target="_blank">Favorite</a></TD>'."\r\n";
+     echo '<TD class="nav" colspan="3" align="right"><a href="'.$next.'">&nbsp;&gt;&gt;&nbsp;</a></TD>'."\r\n";
+   } else if ($has_fav=="no" && $has_search=="no") {
+     echo '<TD class="nav" colspan="4" align="right"><a href="'.$next.'">&nbsp;&gt;&gt;&nbsp;</a></TD>'."\r\n";
+   }
+   } else {
+     echo '<TD class="nav" colspan="4" align="right"><a href="'.$next.'">&nbsp;&gt;&gt;&nbsp;</a></TD>'."\r\n";
+   }
+} else {
+   echo '<TD class="nav" colspan="4" align="right"><a href="'.$prev.'">&nbsp;&lt;&lt;&nbsp;</a> | <a href="'.$next.'">&nbsp;&gt;&gt;&nbsp;</a></TD>'."\r\n";
+}
+} else {
+if ($page == 1)
+  echo '<TD class="nav" colspan="4" align="right"><a href="'.$next.'">&nbsp;&gt;&gt;&nbsp;</a></TD>'."\r\n";
+else
+  echo '<TD class="nav" colspan="4" align="right"><a href="'.$prev.'">&nbsp;&lt;&lt;&nbsp;</a> | <a href="'.$next.'">&nbsp;&gt;&gt;&nbsp;</a></TD>'."\r\n";
+}
+echo '</TR>'."\r\n";
+
+if($tip=="release") {
+  if ($page>1)
+    $l = $link.$page."/";
+  else
+    $l = $link;
+} else {
+  $search=str_replace(" ","_",$tit);
+  if ($page > 1)
+    $l="https://www.ashemaletube.com/search/".$search."/".$page."/?sort=re";
+  else
+    $l="https://www.ashemaletube.com/search/".$search."?sort=re";
+}
+$host=parse_url($l)['host'];
+  $ch = curl_init();
+  curl_setopt($ch, CURLOPT_URL, $l);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+  curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 10.0; rv:55.0) Gecko/20100101 Firefox/55.0');
+  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+  $html = curl_exec($ch);
+  curl_close($ch);
+
+$r=array();
 $videos = explode('data-video-id="', $html);
 unset($videos[0]);
 $videos = array_values($videos);
-
 foreach($videos as $video) {
-    $t1 = explode('href="', $video);
-    $t2 = explode('"', $t1[1]);
-    $link = "https://www.ashemaletube.com".$t2[0];
-
-    //http://img02.redtubefiles.com/_thumbs/0000350/0350855/0350855_009m.jpg
-    $t1 = explode('src="', $video);
-    $t2 = explode('"', $t1[1]);
-    $image = $t2[0];
-    //}
-
-    $t1=explode('title="',$video);
-    $t2=explode('"',$t1[1]);
-    $title=$t2[0];
-    $t1=explode('time-label-wrapper">',$video);
-    $t2=explode('</div',$t1[1]);
-    $durata=trim(strip_tags($t2[0]));
-    $data = " (".trim($durata).")";
-  if ($n==0) echo '<TR>';
-   if ($flash != "mp") {
-   $link = "adult_link.php?link=".urlencode($link)."&title=".urlencode($title);;
-  echo '<td class="mp" align="center" width="25%"><a href="'.$link.'" target="_blank"><img src="'.$image.'" width="200px" height="150px"><BR>'.$title.$data.'</a></TD>';
-  } else {
-
-  echo '<td class="mp" align="center" width="25%"><a onclick="ajaxrequest('."'".urlencode($title)."', '".urlencode($link)."')".'"'." style='cursor:pointer;'>".'<img src="'.$image.'" width="200px" height="150px"><BR>'.$title.$data.'</a></TD>';
+  $t1=explode('href="',$video);
+  $t2 = explode('"', $t1[1]);
+  $link = "https://www.ashemaletube.com".$t2[0];
+  $t1=explode('title="',$video);
+  $t3=explode('"',$t1[1]);
+  $title=$t3[0];
+  $title = trim(strip_tags($title));
+  $title = prep_tit($title);
+  $t1 = explode('src="', $video);
+  $t2 = explode('"', $t1[1]);
+  $image = $t2[0];
+  if (strpos($image,"http") === false) $image="https:".$image;
+  $t1=explode('time-label-wrapper">',$video);
+  $t3=explode("</div",$t1[1]);
+  $durata=trim($t3[0]);
+  $durata = strip_tags($durata);
+  $durata = preg_replace("/\n|\r/"," ",strip_tags($durata));
+  if ($durata) $title=$title." (".$durata.')';
+  if ($title && strpos($link,"out.php") === false) array_push($r ,array($title,$link, $image));
+}
+$c=count($r);
+for ($k=0;$k<$c;$k++) {
+  $title=$r[$k][0];
+  $link=$r[$k][1];
+  $image=$r[$k][2];
+  if ($has_fs =="no")
+  $fav_link="mod=add&title=".urlencode(fix_t($title))."&link=".urlencode($link)."&image=".urlencode($image)."&width=".$width."&height=".$height."&file=adult_link.php";
+  else
+  $fav_link="mod=add&title=".urlencode(fix_t($title))."&link=".urlencode($link)."&image=".urlencode($image)."&width=".$width."&height=".$height."&file=filme_link.php";
+  if (true) {
+  if ($n==0) echo '<TR>'."\r\n";
+  if ($tast == "NU" && $flash !="mp") {
+   if ($has_fs=="no")
+    $link_f='adult_link.php?link='.urlencode($link).'&title='.urlencode(fix_t($title)).'&image='.$image;
+   else
+    $link_f='../filme/filme_link.php?file='.urlencode($link).'&title='.urlencode(fix_t($title)).'&image='.$image;
+    echo '<td class="mp" width="25%"><a class="imdb" href="'.$link_f.'" id="myLink'.$w.'" target="_blank" onmousedown="isKeyPressed(event)">
+    <img id="myLink'.$w.'" src="'.$image.'" width="'.$width.'" height="'.$height.'"><BR>'.$title.'</a>'."\r\n";
+    echo '<a onclick="add_fav('."'".$fav_link."'".')" style="cursor:pointer;">*</a>'."\r\n";
+    echo '</TD>'."\r\n";
+  } else if ($tast == "NU" && $flash == "mp") {
+   if ($has_fs=="yes") {
+    $link_f='../filme/filme_link.php?file='.urlencode($link).'&title='.urlencode(fix_t($title)).'&image='.$image;
+    echo '<td class="mp" width="25%"><a class="imdb" href="'.$link_f.'" id="myLink'.$w.'" target="_blank">
+    <img id="myLink'.$w.'" src="'.$image.'" width="'.$width.'" height="'.$height.'"><BR>'.$title.'</a>'."\r\n";
+    echo '<a onclick="add_fav('."'".$fav_link."'".')" style="cursor:pointer;">*</a>'."\r\n";
+    echo '</TD>'."\r\n";
+   } else {
+    $link_f='link='.urlencode($link).'&title='.urlencode(fix_t($title)).'&image='.$image;
+    echo '<td class="mp" width="25%"><a class="imdb" id="myLink'.$w.'" onclick="ajaxrequest('."'".$link_f."'".')" style="cursor:pointer;">
+    <img id="myLink'.$w.'" src="'.$image.'" width="'.$width.'" height="'.$height.'"><BR>'.$title.'</a>'."\r\n";
+    echo '<a onclick="add_fav('."'".$fav_link."'".')" style="cursor:pointer;">*</a>'."\r\n";
+    echo '</TD>'."\r\n";
+   }
+  } else if ($tast == "DA" && $flash !="mp") {
+   if ($has_fs=="no")
+    $link_f='adult_link.php?link='.urlencode($link).'&title='.urlencode(fix_t($title)).'&image='.$image;
+   else
+    $link_f='../filme/filme_link.php?file='.urlencode($link).'&title='.urlencode(fix_t($title)).'&image='.$image;
+    echo '<td class="mp" width="25%"><a class="imdb" href="'.$link_f.'" id="myLink'.$w.'" target="_blank">
+    <img id="myLink'.$w.'" src="'.$image.'" width="'.$width.'" height="'.$height.'"><BR>'.$title.'</a>'."\r\n";
+    echo '<input type="hidden" id="fav_myLink'.$w.'" value="'.$fav_link.'">'."\r\n";
+    echo '</TD>'."\r\n";
+  } else { // tast="DA" && flash=="mp"
+   if ($has_fs=="yes") {
+    $link_f='../filme/filme_link.php?file='.urlencode($link).'&title='.urlencode(fix_t($title)).'&image='.$image;
+    echo '<td class="mp" width="25%"><a class="imdb" href="'.$link_f.'" id="myLink'.$w.'" target="_blank">
+    <img id="myLink'.$w.'" src="'.$image.'" width="'.$width.'" height="'.$height.'"><BR>'.$title.'</a>'."\r\n";
+    echo '<input type="hidden" id="fav_myLink'.$w.'" value="'.$fav_link.'">'."\r\n";
+    echo '</TD>'."\r\n";
+   } else {
+    $link_f='link='.urlencode($link).'&title='.urlencode(fix_t($title)).'&image='.$image;
+    echo '<td class="mp" width="25%"><a class="imdb" id="myLink'.$w.'" onclick="ajaxrequest('."'".$link_f."'".')" style="cursor:pointer;">
+    <img id="myLink'.$w.'" src="'.$image.'" width="'.$width.'" height="'.$height.'"><BR>'.$title.'</a>'."\r\n";
+    echo '<input type="hidden" id="fav_myLink'.$w.'" value="'.$fav_link.'">'."\r\n";
+    echo '</TD>'."\r\n";
+   }
   }
+  $w++;
   $n++;
   if ($n == 4) {
-  echo '</tr>';
+  echo '</tr>'."\r\n";
   $n=0;
   }
-}
-echo '<tr><TD colspan="4" align="right">';
-if ($page1) {
-if ($page1 > 1)
-echo '<a href="astube.php?page1='.($page1-1).'&src='.$search1.'">&nbsp;&lt;&lt;&nbsp;</a> | <a href="astube.php?page1='.($page1+1).'&src='.$search1.'">&nbsp;&gt;&gt;&nbsp;</a></TD></TR>';
-else
-echo '<a href="astube.php?page1='.($page1+1).'&src='.$search1.'">&nbsp;&gt;&gt;&nbsp;</a></TD></TR>';
-} else {
+  } // end preg_match title
+ }
+
+/* bottom */
+  if ($n < 4 && $n > 0) {
+    for ($k=0;$k<4-$n;$k++) {
+      echo '<TD></TD>'."\r\n";
+    }
+    echo '</TR>'."\r\n";
+  }
+echo '<tr>
+<TD class="nav" colspan="4" align="right">'."\r\n";
 if ($page > 1)
-echo '<a href="astube.php?page='.($page-1).','.$search.','.urlencode($page_title).'">&nbsp;&lt;&lt;&nbsp;</a> | <a href="astube.php?page='.($page+1).','.$search.','.urlencode($page_title).'">&nbsp;&gt;&gt;&nbsp;</a></TD></TR>';
+  echo '<a href="'.$prev.'">&nbsp;&lt;&lt;&nbsp;</a> | <a href="'.$next.'">&nbsp;&gt;&gt;&nbsp;</a></TD>'."\r\n";
 else
-echo '<a href="astube.php?page='.($page+1).','.$search.','.urlencode($page_title).'">&nbsp;&gt;&gt;&nbsp;</a></TD></TR>';
-}
+  echo '<a href="'.$next.'">&nbsp;&gt;&gt;&nbsp;</a></TD>'."\r\n";
+echo '</TR>'."\r\n";
+echo "</table>"."\r\n";
 echo "</table>";
 ?>
-<br></div>
 <div id="overlay"">
   <div id="text">Wait....</div>
 </div>

@@ -9,7 +9,7 @@
 
 <link rel="stylesheet" type="text/css" href="../custom.css" />
 </head>
-<body><div id="mainnav">
+<body>
 <H2></H2>
 <?php
 function str_between($string, $start, $end){
@@ -24,19 +24,19 @@ $n=0;
 if ($n == 0) echo "<TR>"."\n\r";
 
 $title="Desene animate";
-$link="desenefaine.php?page=1,https://desenefaine.ro/desene-animate-online,desene+animate";
+$link="desenefaine.php?tip=release&page=1&link=https://desenefaine.ro/desene-animate-online&title=desene+animate";
 echo '<TD style="text-align:center"><font size="4">'.'<a href="'.$link.'" target="_blank">'.$title.'</a></font></TD>';
 
 $title="Seriale in romana";
-$link="desenefaine.php?page=1,https://desenefaine.ro/seriale-in-romana,seriale+in+romana";
+$link="desenefaine.php?tip=release&page=1&link=https://desenefaine.ro/seriale-in-romana&title=seriale+in+romana";
 echo '<TD style="text-align:center"><font size="4">'.'<a href="'.$link.'" target="_blank">'.$title.'</a></font></TD>';
 
 $title="Filme animate";
-$link="desenefaine.php?page=1,https://desenefaine.ro/filme-animate-online,filme+animate";
+$link="desenefaine.php?tip=release&page=1&link=https://desenefaine.ro/filme-animate-online&title=filme+animate";
 echo '<TD style="text-align:center"><font size="4">'.'<a href="'.$link.'" target="_blank">'.$title.'</a></font></TD>';
 
  echo "</TR>"."\n\r";
  echo '</table>';
 ?>
-<body><div id="mainnav">
+</body>
 </HTML>

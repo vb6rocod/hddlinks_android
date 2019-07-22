@@ -85,6 +85,15 @@ function isValid(evt) {
        setTimeout(function(){ document.getElementById(id_link).focus(); }, 500);
      }
    }
+function isKeyPressed(event) {
+  if (event.ctrlKey) {
+    id = "imdb_" + event.target.id;
+    val_imdb=document.getElementById(id).value;
+    msg="imdb.php?tip=movie&" + val_imdb;
+    document.getElementById("fancy").href=msg;
+    document.getElementById("fancy").click();
+  }
+}
 $(document).on('keyup', '.imdb', isValid);
 document.onkeypress =  zx;
 </script>
@@ -164,13 +173,13 @@ foreach($arr as $key => $value) {
 
   if ($n==0) echo '<TR>';
   $link='cineplex_fs.php?tip=movie&imdb='.$link1.'&title='.urlencode(fix_t($title11)).'&image='.$image."&year=".$year."&token=".$token;
-
+  $val_imdb="title=".unfix_t(urldecode($title11))."&year=".$year."&imdb=";
   $fav_link="mod=del&title=".urlencode(fix_t($title11))."&imdb=".$link1."&year=".$year."&image=".$image;
   if ($tast == "NU") {
-  echo '<td class="mp" align="center" width="25%"><a class="imdb" id="myLink'.($p*1).'" href="'.$link.'" target="_blank"><img src="'.$image.'" width="200px" height="280px"><BR>'.unfix_t(urldecode($title11)).' ('.$year.')</a>';
+  echo '<td class="mp" align="center" width="25%"><a class="imdb" id="myLink'.($p*1).'" href="'.$link.'" target="_blank" onmousedown="isKeyPressed(event)"><img id="myLink'.($p*1).'" src="'.$image.'" width="200px" height="280px"><BR>'.unfix_t(urldecode($title11)).' ('.$year.')<input type="hidden" id="imdb_myLink'.($p*1).'" value="'.$val_imdb.'"></a>';
   echo '<a onclick="ajaxrequest('."'".$fav_link."'".')" style="cursor:pointer;">*</a></TD>';
   } else {
-  $val_imdb="title=".unfix_t(urldecode($title11))."&year=".$year."&imdb=";
+
   echo '<td class="mp" align="center" width="25%"><a class="imdb" id="myLink'.($p*1).'" href="'.$link.'" target="_blank"><img src="'.$image.'" width="200px" height="280px"><BR>'.unfix_t(urldecode($title11)).' ('.$year.')<input type="hidden" id="imdb_myLink'.($p*1).'" value="'.$val_imdb.'"><input type="hidden" id="fav_myLink'.($p*1).'" value="'.$fav_link.'"></a></TD>';
 
   }

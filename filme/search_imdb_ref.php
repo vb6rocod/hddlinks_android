@@ -87,6 +87,15 @@ function isValid(evt) {
       document.getElementById("fav").click();
     }
    }
+function isKeyPressed(event) {
+  if (event.ctrlKey) {
+    id = "imdb_" + event.target.id;
+    val_imdb=document.getElementById(id).value;
+    msg="imdb.php?" + val_imdb;
+    document.getElementById("fancy").href=msg;
+    document.getElementById("fancy").click();
+  }
+}
 $(document).on('keyup', '.imdb', isValid);
 document.onkeypress =  zx;
 </script>
@@ -119,7 +128,7 @@ $w=0;
    $val_imdb="tip=".$tip."&title=".urlencode(fix_t($m[1][$k]));
    $val_add="title=".urlencode(fix_t($m[1][$k]));
    echo '<TR>';
-   echo '<td class="cat"><a class="imdb" id="myLink'.($w*1).'" onclick="ajaxrequest('."'".$val_add."'".')" style="cursor:pointer;">'.$m[1][$k].'<input type="hidden" id="imdb_myLink'.($w*1).'" value="'.$val_imdb.'"></a></TD>';
+   echo '<td class="cat"><a class="imdb" id="myLink'.($w*1).'" onclick="ajaxrequest('."'".$val_add."'".')" style="cursor:pointer;" onmousedown="isKeyPressed(event)">'.$m[1][$k].'<input type="hidden" id="imdb_myLink'.($w*1).'" value="'.$val_imdb.'"></a></TD>';
    $w++;
    echo '<TD>'.trim(strip_tags($m[2][$k])).'</TD>';
    echo '<TD>'.trim(strip_tags($m[3][$k])).'</TD>';

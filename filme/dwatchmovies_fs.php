@@ -21,22 +21,25 @@ $user_agent     =   $_SERVER['HTTP_USER_AGENT'];
 if ($flash != "mp") {
 if (preg_match("/android|ipad/i",$user_agent) && preg_match("/chrome|firefox|mobile/i",$user_agent)) $flash="chrome";
 }
-//query=8612&tv=0&title=The+Intervention+(2016)&serv=30&hd=NU
-//////////////////////////////////////////////////////////////
 $tit=unfix_t(urldecode($_GET["title"]));
+$tit=prep_tit($tit);
 $image=$_GET["image"];
 $link=urldecode($_GET["link"]);
 $tip=$_GET["tip"];
 $sez=$_GET["sez"];
 $ep=$_GET["ep"];
 $ep_title=unfix_t(urldecode($_GET["ep_tit"]));
+$ep_title=prep_tit($ep_title);
+$year=$_GET["year"];
 if ($tip=="movie") {
 $tit2="";
 } else {
-$tit2=$sez."x".$ep." - ".$ep_title;
+if ($ep_title)
+   $tit2=" - ".$sez."x".$ep." ".$ep_title;
+else
+   $tit2=" - ".$sez."x".$ep;
 $tip="series";
 }
-$year="";
 $imdbid="";
 
 function str_between($string, $start, $end){
@@ -44,63 +47,24 @@ function str_between($string, $start, $end){
 	if ($ini == 0) return ""; $ini += strlen($start); $len = strpos($string,$end,$ini) - $ini;
 	return substr($string,$ini,$len);
 }
-function get_value($q, $string) {
-   $t1=explode($q,$string);
-   return str_between($t1[1],"<string>","</string>");
-}
-   function generateResponse($request)
-    {
-        $context  = stream_context_create(
-            array(
-                'http' => array(
-                    'method'  => "POST",
-                    'header'  => "Content-Type: text/xml",
-                    'content' => $request
-                )
-            )
-        );
-        $response     = file_get_contents("http://api.opensubtitles.org/xml-rpc", false, $context);
-        return $response;
-    }
-//echo $link;
-$ua="Mozilla/5.0 (Windows NT 10.0; rv:55.0) Gecko/20100101 Firefox/55.0";
 ?>
 <html>
-
-
-
-   <head>
-
-      <meta charset="utf-8">
-      <title><?php echo $tit." ".$tit2; ?></title>
-	  <link rel="stylesheet" type="text/css" href="../custom.css" />
-     <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.0/jquery.min.js"></script>
+<head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+<title><?php echo $tit.$tit2; ?></title>
+<link rel="stylesheet" type="text/css" href="../custom.css" />
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.0/jquery.min.js"></script>
 <script type="text/javascript">
-function get_XmlHttp() {
-  // create the variable that will contain the instance of the XMLHttpRequest object (initially with null value)
-  var xmlHttp = null;
-  if(window.XMLHttpRequest) {		// for Forefox, IE7+, Opera, Safari, ...
-    xmlHttp = new XMLHttpRequest();
-  }
-  else if(window.ActiveXObject) {	// for Internet Explorer 5 or 6
-    xmlHttp = new ActiveXObject("Microsoft.XMLHTTP");
-  }
-  return xmlHttp;
-}
 function openlink1(link) {
-  link1=document.getElementById('server').innerHTML;
+  link1=document.getElementById('file').value;
   msg="link1.php?file=" + link1 + "&title=" + link;
   window.open(msg);
 }
 function openlink(link) {
-  var request =  get_XmlHttp();		// call the function for the XMLHttpRequest instance
-  document.getElementById("wait").innerHTML = '<font size="4" color="#ebf442"><b>ASTEPTATI...............</b></font>';
-
-  // create pairs index=value with data that must be sent to server
-  //var the_data = {mod:add,title:title, link:link}; //Array
-  link1=document.getElementById('server').innerHTML;
+  on();
+  var request =  new XMLHttpRequest();
+  link1=document.getElementById('file').value;
   var the_data = "link=" + link1 + "&title=" + link;
-  //alert(the_data);
   var php_file="link1.php";
   request.open("POST", php_file, true);			// set the request
 
@@ -112,20 +76,16 @@ function openlink(link) {
   // If the response is received completely, will be transferred to the HTML tag with tagID
   request.onreadystatechange = function() {
     if (request.readyState == 4) {
-       //alert (request.responseText);
-       document.getElementById("wait").innerHTML = '';
-       document.getElementById("mytest1").href=request.responseText;
+      off();
+      document.getElementById("mytest1").href=request.responseText;
       document.getElementById("mytest1").click();
     }
   }
 }
-function changeserver(s) {
+function changeserver(s,t) {
   document.getElementById('server').innerHTML = s;
-  //alert (document.getElementById('server').innerHTML);
-  //history.back();
+  document.getElementById('file').value=t;
 }
-</script>
-<script type="text/javascript">
    function zx(e){
      var charCode = (typeof e.which == "number") ? e.which : e.keyCode
      //alert (charCode);
@@ -143,15 +103,23 @@ function changeserver(s) {
    }
 document.onkeypress =  zx;
 </script>
-  </head>
-   <body><div id="mainnav">
-  <a href='' id='mytest1'></a>
+<script>
+function on() {
+    document.getElementById("overlay").style.display = "block";
+}
+
+function off() {
+    document.getElementById("overlay").style.display = "none";
+}
+</script>
+</head>
+<body>
+<a href='' id='mytest1'></a>
 <?php
-echo '<h2>'.$tit.' '.$tit2.'</H2>';
+echo '<h2>'.$tit.$tit2.'</H2>';
 echo '<BR>';
+$ua = $_SERVER['HTTP_USER_AGENT'];
 $l=$link;
-//$l="https://dwatchmovies.com/movies/slender-man-2018-online-free-streaming-dwatchmovies";
-//$l="https://topeuropix.net/movies/slender-man-2018-online-free-hd-with-subtitles-europix";
 $base=str_replace(substr(strrchr($l, "/"), 1),"",$l);
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $l);
@@ -163,7 +131,6 @@ $base=str_replace(substr(strrchr($l, "/"), 1),"",$l);
   curl_setopt($ch, CURLOPT_TIMEOUT, 15);
   $h = curl_exec($ch);
   curl_close($ch);
-
   $r=array();
   if ($tip=="series") {
   $videos = explode('id="chserv', $h);
@@ -265,63 +232,83 @@ foreach($videos as $video) {
   }
 }
 }
-//https://vev.io/embed/78r81xm7ym34  ==> https://thevideo.me/embed-afdtxrbc8wrg.html
 echo '<table border="1" width="100%">';
-echo '<TR><TD align="center" colspan="'.count($r).'"><font size="4"><b>Alegeti un server: Server curent:<label id="server">'.$r[0].'</label></b></font></td></TR>';
-
+echo '<TR><TD class="mp">Alegeti un server: Server curent:<label id="server">'.parse_url($r[0])['host'].'</label>
+<input type="hidden" id="file" value="'.urlencode($r[0]).'"></td></TR></TABLE>';
+echo '<table border="1" width="100%"><TR>';
 $k=count($r);
-echo '<TR>';
+$x=0;
 for ($i=0;$i<$k;$i++) {
-  //print_r ($value);
-  $openload=$r[$i];
-  $siteParts = parse_url($openload);
-  $server =$siteParts['host'];
-  echo '<TD align="center"><font size="4"><b><a id="myLink" href="#" onclick="changeserver('."'".$openload."'".');return false;">'.$server.'</a></b></font></td>';
+  if ($x==0) echo '<TR>';
+  $c_link=$r[$i];
+  $openload=parse_url($r[$i])['host'];
+  if (preg_match($indirect,$openload)) {
+  echo '<TD class="mp"><a href="filme_link.php?file='.urlencode($c_link).'&title='.urlencode(unfix_t($tit.$tit2)).'" target="_blank">'.$openload.'</a></td>';
+  } else
+  echo '<TD class="mp"><a id="myLink" href="#" onclick="changeserver('."'".$openload."','".urlencode($c_link)."'".');return false;">'.$openload.'</a></td>';
+  $x++;
+  if ($x==6) {
+    echo '</TR>';
+    $x=0;
+  }
 }
-//echo '<font size="5"><b>Server curent: <label id="server22">'.$r[0].'</label></b></font>';
+if ($x < 6 && $x > 0 && $k>6) {
+ for ($k=0;$k<6-$x;$k++) {
+   echo '<TD></TD>'."\r\n";
+ }
+ echo '</TR>'."\r\n";
+}
+echo '</TABLE>';
 if ($tip=="movie") {
-  $tit3=trim(preg_replace("/\(\s*(\d+)\s*\)/","",$tit));
+  $rest = substr($tit, -6);
+  if (preg_match("/\((\d+)\)/",$rest,$m)) {
+   $year=$m[1];
+   $tit3=trim(str_replace($m[0],"",$tit));
+  } else {
+   $year="";
+   $tit3=$tit;
+  }
+  $tit2="";
   $sez="";
   $ep="";
   $imdbid="";
-  $from="pix";
-  $link_page=urlencode($link);
+  $from="";
+  $link_page="";
 } else {
-  $tit3=trim(preg_replace("/\(\s*(\d+)\s*\)/","",$tit));
+  $tit3=$tit;
   $sez=$sez;
   $ep=$ep;
   $imdbid="";
-  $from="pix";
-  $link_page=urlencode($link);
+  $from="";
+  $link_page="";
 }
-$sub_link ="from=".$from."&tip=".$tip."&sez=".$sez."&ep=".$ep."&imdb=".$imdbid."&title=".urlencode(fix_t($tit3))."&link=".$link_page."&ep_tit=".urlencode(fix_t($tit2));
+$sub_link ="from=".$from."&tip=".$tip."&sez=".$sez."&ep=".$ep."&imdb=".$imdbid."&title=".urlencode(fix_t($tit3))."&link=".$link_page."&ep_tit=".urlencode(fix_t($tit2))."&year=".$year;
 echo '<br>';
-echo '<h2>Alegeti o subtitrare</h2>';
 echo '<table border="1" width="100%">';
-//echo '<TR><TD style="background-color: lightskyblue;color:black" align="center" colspan="4"><font size="4"><b>Alegeti o subtitrare</b></font></td></TR>';
+echo '<TR><TD style="background-color:#0a6996;color:#64c8ff;font-weight: bold;font-size: 1.5em" align="center" colspan="4">Alegeti o subtitrare</td></TR>';
 echo '<TR>';
-echo '<TD align="center"><font size="4"><b><a id="opensub" href="opensubtitles.php?'.$sub_link.'">opensubtitles</b</font></a></td>';
-echo '<TD align="center"><font size="4"><b><a id="titrari" href="titrari_main.php?page=1&'.$sub_link.'&page=1">titrari.ro</b</font></a></td>';
-echo '<TD align="center"><font size="4"><b><a id="subs" href="subs_main.php?'.$sub_link.'">subs.ro</b</font></a></td>';
-echo '<TD align="center"><font size="4"><b><a id="subtitrari" href="subtitrari_main.php?'.$sub_link.'">subtitrari_noi.ro</b</font></a></td>';
-echo '</TR><TR>';
-$openlink=urlencode(fix_t($tit." ".$ep_title))."&image=".$image;
-//echo unfix_t(urldecode($openlink));
-//tip=series&
-//link=https://topeuropix.net/tvseries2/madam-secretary-online/madam-secretary-season-1-online-free-hd-streaming-europix&
-//title=Madam Secretary&sez=1&ep=1&ep_title=Episode 1 - "Pilot"&image=https://hdeuropix.io/images/madam-secretary.jp
-
+echo '<TD class="mp"><a id="opensub" href="opensubtitles.php?'.$sub_link.'">opensubtitles</a></td>';
+echo '<TD class="mp"><a id="titrari" href="titrari_main.php?page=1&'.$sub_link.'&page=1">titrari.ro</a></td>';
+echo '<TD class="mp"><a id="subs" href="subs_main.php?'.$sub_link.'">subs.ro</a></td>';
+echo '<TD class="mp"><a id="subtitrari" href="subtitrari_main.php?'.$sub_link.'">subtitrari_noi.ro</a></td>';
+echo '</TR></TABLE>';
+echo '<table border="1" width="100%"><TR>';
+if ($tip=="movie")
+  $openlink=urlencode(fix_t($tit3));
+else
+  $openlink=urlencode(fix_t($tit.$tit2));
  if ($flash != "mp")
-   echo '<TD align="center" colspan="4"><font size="4"><b><a id="viz" onclick="'."openlink1('".$openlink."')".'"'." style='cursor:pointer;'>".'<font size="4">VIZIONEAZA !</b></font></a></td>';
+   echo '<TD align="center" colspan="4"><a id="viz" onclick="'."openlink1('".$openlink."')".'"'." style='cursor:pointer;'>".'VIZIONEAZA !</a></td>';
  else
-   echo '<TD align="center" colspan="4"><font size="4"><b><a id="viz" onclick="'."openlink('".$openlink."')".'"'." style='cursor:pointer;'>".'<font size="4">VIZIONEAZA !</b></font></a></td>';
+   echo '<TD align="center" colspan="4"><a id="viz" onclick="'."openlink('".$openlink."')".'"'." style='cursor:pointer;'>".'VIZIONEAZA !</a></td>';
 echo '</tr>';
 echo '</table>';
-echo '<BR><table border="0px" width="100%"><TR>'."\n\r";
-echo '<TD align="center"><label id="wait"></label></TR></TABLE>';
-echo '<br></div>
+echo '<br>
 <table border="0px" width="100%">
 <TR>
 <TD><font size="4"><b>Scurtaturi: 1=opensubtitles, 2=titrari, 3=subs, 4=subtitrari, 5=vizioneaza</b></font></TD></TR></TABLE>
+<div id="overlay">
+  <div id="text">Wait....</div>
+</div>
 </body>
 </html>';

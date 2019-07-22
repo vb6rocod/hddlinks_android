@@ -13,6 +13,7 @@ if (isset($_GET["imdb"]))
   $imdb=$_GET["imdb"];
 else
   $imdb="";
+$ttxml="";
 ?>
 <html><head>
 <meta http-equiv="content-type" content="text/html; charset=UTF-8">
@@ -27,18 +28,13 @@ else
 </head>
 <body>
 <?php
-function str_between($string, $start, $end){
-	$string = " ".$string; $ini = strpos($string,$start);
-	if ($ini == 0) return ""; $ini += strlen($start); $len = strpos($string,$end,$ini) - $ini;
-	return substr($string,$ini,$len);
-}
 $f=$base_pass."tmdb.txt";
 if (file_exists($f)) {
    $key = file_get_contents($f);
    $useIMDB=false;
 } else
    $useIMDB=true;
-$f=$base_pass."omdb.txt";  // use omdb over tmdb
+$f=$base_pass."omdb.txt22";  // use omdb over tmdb
 if (file_exists($f)) $useIMDB=true;
   $title=htmlspecialchars_decode($title,ENT_QUOTES);
   $title=html_entity_decode($title,ENT_QUOTES);

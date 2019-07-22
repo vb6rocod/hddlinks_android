@@ -1,7 +1,13 @@
 <!DOCTYPE html>
 <?php
 include ("../common.php");
+$host=$_GET['host'];
 $page_title="Seriale favorite";
+$width="200px";
+$height="278px";
+$add_target="swatchseries_s_add.php";
+$fs_target="swatchseries_s_ep.php";
+$file=$base_fav."swatchseries_s.dat";
 ?>
 <html><head>
 <meta http-equiv="content-type" content="text/html; charset=UTF-8">
@@ -15,27 +21,11 @@ $page_title="Seriale favorite";
 <link rel="stylesheet" type="text/css" href="../custom.css" />
 
 <script type="text/javascript">
-// create the XMLHttpRequest object, according browser
-function get_XmlHttp() {
-  // create the variable that will contain the instance of the XMLHttpRequest object (initially with null value)
-  var xmlHttp = null;
-  if(window.XMLHttpRequest) {		// for Forefox, IE7+, Opera, Safari, ...
-    xmlHttp = new XMLHttpRequest();
-  }
-  else if(window.ActiveXObject) {	// for Internet Explorer 5 or 6
-    xmlHttp = new ActiveXObject("Microsoft.XMLHTTP");
-  }
-  return xmlHttp;
-}
-
-// sends data to a php file, via POST, and displays the received answer
+var id_link="";
 function ajaxrequest(link) {
-  var request =  get_XmlHttp();		// call the function for the XMLHttpRequest instance
-
-  // create pairs index=value with data that must be sent to server
-  //var the_data = {mod:add,title:title, link:link}; //Array
+  var request =  new XMLHttpRequest();
   var the_data = link;
-  var php_file='swatchseries_s_add.php';
+  var php_file='<?php echo $add_target; ?>';
   request.open("POST", php_file, true);			// set the request
 
   // adds a header to tell the PHP script to recognize the data as is sent via POST
@@ -51,8 +41,23 @@ function ajaxrequest(link) {
     }
   }
 }
-</script>
-<script type="text/javascript">
+function isValid(evt) {
+    var charCode = (evt.which) ? evt.which : event.keyCode,
+    self = evt.target;
+    if (charCode == "49") {
+     id = "imdb_" + self.id;
+     id_link=self.id;
+     val_imdb=document.getElementById(id).value;
+     msg="imdb.php?" + val_imdb;
+     document.getElementById("fancy").href=msg;
+     document.getElementById("fancy").click();
+    } else if  (charCode == "51") {
+      id = "fav_" + self.id;
+      val_fav=document.getElementById(id).value;
+      ajaxrequest(val_fav);
+    }
+    return true;
+}
    function zx(e){
      var instance = $.fancybox.getInstance();
      var charCode = (typeof e.which == "number") ? e.which : e.keyCode
@@ -65,23 +70,14 @@ function ajaxrequest(link) {
       document.getElementById("fav").click();
     }
    }
-var id_link="";
-function isValid(evt) {
-    var charCode = (evt.which) ? evt.which : event.keyCode,
-    self = evt.target;
-    if (charCode == "49") {
-     id = "imdb_" + self.id;
-     id_link=self.id;
-     val_imdb=document.getElementById(id).value;
-     msg="imdb.php?tip=series&" + val_imdb;
-     document.getElementById("fancy").href=msg;
-     document.getElementById("fancy").click();
-    } else if  (charCode == "51") {
-      id = "fav_" + self.id;
-      val_fav=document.getElementById(id).value;
-      ajaxrequest(val_fav);
-    }
-    return true;
+function isKeyPressed(event) {
+  if (event.ctrlKey) {
+    id = "imdb_" + event.target.id;
+    val_imdb=document.getElementById(id).value;
+    msg="imdb.php?" + val_imdb;
+    document.getElementById("fancy").href=msg;
+    document.getElementById("fancy").click();
+  }
 }
 $(document).on('keyup', '.imdb', isValid);
 document.onkeypress =  zx;
@@ -89,25 +85,15 @@ document.onkeypress =  zx;
 </head>
 <body>
 <a id="fancy" data-fancybox data-type="iframe" href=""></a>
-<H2></H2>
-<div id="mainnav">
 <?php
 function str_between($string, $start, $end){
 	$string = " ".$string; $ini = strpos($string,$start);
 	if ($ini == 0) return ""; $ini += strlen($start); $len = strpos($string,$end,$ini) - $ini;
 	return substr($string,$ini,$len);
 }
-if (file_exists($base_pass."tastatura.txt")) {
-$tast=trim(file_get_contents($base_pass."tastatura.txt"));
-} else {
-$tast="NU";
-}
 $w=0;
 $n=0;
-$w=0;
 echo '<H2>'.$page_title.'</H2>';
-
-$file=$base_fav."swatchseries_s.dat";
 $arr=array();
 $h="";
 if (file_exists($file)) {
@@ -125,49 +111,56 @@ if (file_exists($file)) {
   }
 }
 if ($arr) {
-//print_r ($arr);
 $n=0;
+$w=0;
 $nn=count($arr);
-//echo "nn=".$nn;
 $k=intval($nn/10) + 1;
 echo '<table border="1px" width="100%"><tr>'."\n\r";
 for ($m=1;$m<$k;$m++) {
-   echo '<TD class="salt" align="center"><a href="#myLink'.($m*10).'">Salt:'.($m*10).'</a></td>';
+   echo '<TD align="center"><a href="#myLink'.($m*10).'">Salt:'.($m*10).'</a></td>';
 }
 echo '</TR></table>';
-$p=0;
 echo '<table border="1px" width="100%">'."\n\r";
 foreach($arr as $key => $value) {
-
-	$link = $arr[$key]["link"];
-    $link1=$link;
-    $title11 = $key;
-    $image=$arr[$key]["image"];
-    //$link='putlockerfit_s_ep.php?tip=serie&file='.$link1.'&title='.urlencode(fix_t($title11)).'&image='.urlencode($image);
-
-    $link="swatchseries_s_ep.php?tip=tv&title=".urlencode(fix_t($title11))."&link=".urlencode($link1)."&image=".$image."&sez=&ep=%ep_tit=";
-
-  if ($n==0) echo '<TR>';
-  $fav_link="mod=del&title=".urlencode(fix_t($title11))."&link=".$link1."&image=".urlencode($image);
+    $imdb="";
+	$link = urldecode($arr[$key]["link"]);
+    $title = unfix_t(urldecode($key));
+    $image=urldecode($arr[$key]["image"]);
+    $image=$host.parse_url($image)['path'];
+    $year="";
+    $link=$host.parse_url($link)['path'];
+    $link_f=$fs_target.'?tip=series&link='.urlencode($link).'&title='.urlencode(fix_t($title)).'&image='.$image."&sez=&ep=&ep_tit=&year=".$year;
+  if ($n==0) echo '<TR>'."\r\n";
+  $val_imdb="tip=series&title=".urlencode(fix_t($title))."&year=".$year."&imdb=".$imdb;
+  $fav_link="file=&mod=del&title=".urlencode(fix_t($title))."&link=".urlencode($link)."&image=".urlencode($image)."&year=".$year;
   if ($tast == "NU") {
-  echo '<td class="mp" align="center" width="25%"><a class="imdb" id="myLink'.($p*1).'" href="'.$link.'" target="_blank"><img src="'.$image.'" width="200px" height="278px"><BR>'.unfix_t(urldecode($title11)).'</a>';
-  echo '<a onclick="ajaxrequest('."'".$fav_link."'".')" style="cursor:pointer;">*</a></TD>';
+    echo '<td class="mp" width="25%"><a href="'.$link_f.'" id="myLink'.$w.'" target="_blank" onmousedown="isKeyPressed(event)">
+    <img id="myLink'.$w.'" src="'.$image.'" width="'.$width.'" height="'.$height.'"><BR>'.$title.'</a>
+    <input type="hidden" id="imdb_myLink'.$w.'" value="'.$val_imdb.'">'."\r\n";
+    echo '<a onclick="ajaxrequest('."'".$fav_link."'".')" style="cursor:pointer;">*</a>'."\r\n";
+    echo '</TD>'."\r\n";
   } else {
-   $year="";
-  $val_imdb="title=".urlencode(fix_t($title11))."&year=".$year."&imdb=";
-  echo '<td class="mp" align="center" width="25%"><a class="imdb" id="myLink'.($p*1).'" href="'.$link.'" target="_blank"><img src="'.$image.'" width="200px" height="278px"><BR>'.unfix_t(urldecode($title11)).'<input type="hidden" id="imdb_myLink'.($w*1).'" value="'.$val_imdb.'"><input type="hidden" id="fav_myLink'.($w*1).'" value="'.$fav_link.'"></a></TD>';
-  $w++;
+    echo '<td class="mp" width="25%"><a class ="imdb" id="myLink'.$w.'" href="'.$link_f.'" target="_blank">
+    <img src="'.$image.'" width="'.$width.'" height="'.$height.'"><BR>'.$title.'</a>
+    <input type="hidden" id="imdb_myLink'.$w.'" value="'.$val_imdb.'">'."\r\n";
+    echo '<input type="hidden" id="fav_myLink'.$w.'" value="'.$fav_link.'"></a>'."\r\n";
+    echo '</TD>'."\r\n";
   }
-  $p++;
+  $w++;
   $n++;
   if ($n == 4) {
-  echo '</tr>';
+  echo '</tr>'."\r\n";
   $n=0;
   }
 }
-echo '</TABLR>';
+  if ($n < 4 && $n > 0) {
+    for ($k=0;$k<4-$n;$k++) {
+      echo '<TD></TD>'."\r\n";
+    }
+    echo '</TR>'."\r\n";
+  }
+echo '</TABLE>';
 }
 ?>
-</div>
-<br></body>
+</body>
 </html>

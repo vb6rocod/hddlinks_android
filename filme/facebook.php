@@ -6,6 +6,7 @@ $search=$_GET["search"];
 $next="";
 $prev="";
 $page_title=$search;
+//https://developers.facebook.com/tools/explorer/
 $f=$base_cookie."facebook.dat";
 if (file_exists($f))
   $key=trim(file_get_contents($f));

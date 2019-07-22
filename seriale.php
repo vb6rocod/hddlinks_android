@@ -50,49 +50,50 @@ document.onkeypress =  zx;
 <th class="cat" colspan="4">Seriale online</Th>
 </TR>
 <TR>
-
-<?php
-if ($tast=="DA1" && $flash=="mp")
-echo '<TD width="25%"><a href="filme/filmeseriale2_main.php?page=1&file=release&title=filmeseriale.online" target="_blank">filmeseriale.online (toate)</a></TD>';
-else
-echo '<TD width="25%"><a href="filme/filmeseriale_main.php?page=1&file=release&title=filmeseriale.online" target="_blank">filmeseriale.online (toate)</a></TD>';
-?>
-<TD width="25%"><a href="filme/filmeseriale1_main.php?page=1&file=release&title=filmeseriale.online" target="_blank">filmeseriale.online</a></TD>
-<TD width="25%"><a href="filme/tvhub_s.php?page=1&file=release&title=tvhub" target="_blank">tvhub</a></TD>
-<TD width="25%"><a href="filme/gold_s.php?page=1&file=release&title=filme-seriale.gold" target="_blank">filme-seriale.gold</a></TD>
+<TD width="25%"><a href="filme/filmeseriale_main.php?page=1&tip=release&title=filmeseriale.online&link=" target="_blank">filmeseriale.online</a></TD>
+<TD width="25%"><a href="filme/tvhub_s.php?page=1&tip=release&title=tvhub&link=" target="_blank">tvhub</a></TD>
+<TD width="25%"><a href="filme/gold_s.php?page=1&tip=release&title=filme-seriale.gold&link=" target="_blank">filme-seriale.gold</a></TD>
+<TD width="25%"><a href="filme/filmeseriale_eu.php?page=1&tip=release&title=filmeseriale.eu&link=" target="_blank">filmeseriale.eu</a></TD>
 </TR>
 <TR>
-<TD width="25%"><a href="filme/veziseriale_s_fav.php" target="_blank">veziseriale.info</a></TD>
-<TD width="25%"><a href="filme/filmeto_s.php?page=1&tip=release&title=filme-online.to" target="_blank">filme-online.to</a></TD>
-<TD width="25%"><a href="filme/divxfilmeonline_s_fav.php" target="_blank">divxfilmeonline</a></TD>
-<TD width="25%"><a href="filme/filmeseriale-hd.php?page=1&tip=release&title=filmeseriale-hd" target="_blank">filmeseriale-hd</a></TD>
+<TD width="25%"><a href="filme/veziseriale_s.php?page=1&tip=release&title=veziseriale.info&link=" target="_blank">veziseriale.info</a></TD>
+<TD width="25%"><a href="filme/filme--online.php?page=1&tip=release&title=filme--online&link=" target="_blank">filme--online</a></TD>
+<TD width="25%"><a href="filme/divxfilmeonline_s.php?page=1&tip=release&title=divxfilmeonline&link=" target="_blank">divxfilmeonline</a></TD>
+<TD width="25%"><a href="filme/filmeseriale-hd.php?page=1&tip=release&title=filmeseriale-hd&link=" target="_blank">filmeseriale-hd</a></TD>
 </TR>
 <TR>
-<TD width="25%"><a href="filme/filmetop.php?page=1&tip=release&title=filmetop" target="_blank">filmetop</a></TD>
-<TD width="25%"><a href="filme/filme--online.php?page=1&tip=release&title=filme--online" target="_blank">filme--online</a></TD>
-<TD width="25%"><a href="filme/filmeseriale_eu.php?page=1&tip=release&title=filmeseriale.eu" target="_blank">filmeseriale.eu</a></TD>
+<TD width="25%"><a href="filme/filmetop.php?page=1&tip=release&title=filmetop&link=" target="_blank">filmetop</a></TD>
 <TD width="25%"></TD>
+<TD width="25%"></TD>
+<TD width="25%"><a href="filme/rovideo.php?page=1&tip=release&title=rovideo&link=" target="_blank">rovideo</a></TD>
 </TR>
 <!-- straine -->
 <TR>
-<TD width="25%"><a href="filme/tvseries_s.php?page=1&file=release&title=tvseries" target="_blank">tvseries</a></TD>
-<TD width="25%"><a href="filme/putlockerfit_s.php?page=1&file=release&title=putlockerfit" target="_blank">putlockerfit</a></TD>
-<TD width="25%"><a href="filme/popcorn_s.php?page=1&file=release&title=seriale+noi" target="_blank">Popcorn (torrent)</a></TD>
-<TD width="25%"><a href="filme/hdfull_s.php?page=1&file=release&title=hdfull" target="_blank">hdfull</a></TD>
+<TD width="25%"><a href="filme/tvseries_s.php?page=1&tip=release&title=tvseries&link=" target="_blank">tvseries</a></TD>
+<TD width="25%"><a href="filme/putlockerfit_s.php?page=1&tip=release&title=putlockerfit&link=" target="_blank">putlockerfit</a></TD>
+<TD width="25%"><a href="filme/gomovies_s.php?page=1&tip=release&title=gomovies&link=" target="_blank">gomovies</a></TD>
+<TD width="25%"><a href="filme/hdfull_s.php?page=1&tip=release&title=hdfull&link=" target="_blank">hdfull</a></TD>
 </TR>
 <TR>
-<TD width="25%"><a href="filme/seriestop_s.php?page=1&tip=release&title=seriestop" target="_blank">seriestop</a></TD>
-<TD width="25%"><a href="filme/swatchseries_s.php?page=1&tip=release&title=swatchseries" target="_blank">swatchseries</a></TD>
-<TD width="25%"><a href="filme/subsmovies_s.php?page=1&file=release&title=subsmovies" target="_blank">subsmovies</a></TD>
+<TD width="25%"><a href="filme/seriestop_s.php?page=1&tip=release&title=seriestop&link=" target="_blank">seriestop</a></TD>
+<TD width="25%"><a href="filme/swatchseries_s.php?page=1&tip=release&title=swatchseries&link=" target="_blank">swatchseries</a></TD>
+<TD width="25%"><a href="filme/subsmovies_s.php?page=1&tip=release&title=subsmovies&link=" target="_blank">subsmovies</a></TD>
 <TD width="25%"><a href="filme/cineplex_s_main.php" target="_blank">cineplex (cont)</a></TD>
 </TR>
 <TR>
-<TD width="25%"><a href="filme/openloadmovies_s.php?page=1&file=release&title=openloadmovies" target="_blank">openloadmovies</a></TD>
-<TD width="25%"><a href="filme/seriesfreetv_s.php?page=1&tip=release&title=seriesfreetv" target="_blank">seriesfreetv</a></TD>
-<TD width="25%"><a href="filme/moviesjoy_s.php?page=1&tip=release&title=moviesjoy" target="_blank">moviesjoy</a></TD>
+<TD width="25%"><a href="filme/openloadmovies_s.php?page=1&tip=release&title=openloadmovies&link=" target="_blank">openloadmovies</a></TD>
+<TD width="25%"><a href="filme/seriesfreetv_s.php?page=1&tip=release&title=seriesfreetv&link=" target="_blank">seriesfreetv</a></TD>
+<TD width="25%"><a href="filme/moviesjoy_s.php?page=1&tip=release&title=moviesjoy&link=" target="_blank">moviesjoy</a></TD>
+<TD width="25%"><a href="filme/chillaxto_s.php?page=1&tip=release&title=chillax.to&link=" target="_blank">chillax.to</a></TD>
+</TR>
 
+<TR>
+<TD width="25%"><a href="filme/0123netflix_s.php?page=1&tip=release&title=0123netflix&link=" target="_blank">0123netflix</a></TD>
+<TD width="25%"><a href="filme/onmovies_s.php?page=1&tip=release&title=onmovies&link=" target="_blank">onmovies</a></TD>
+<TD width="25%"></TD>
 <TD width="25%"></TD>
 </TR>
+
 <?php
 if (file_exists($base_pass."tvplay.txt")) {
 echo '<TR>';
@@ -121,6 +122,11 @@ echo '
 <TR><TD>* Folositi tasta 3 pentru a adauga/sterge la favorite (daca exista).<TD></TR>
 <TR><TD>* Folositi tasta 2 pentru a accesa direct pagina de "Favorite".<TD></TR>
 <TR><TD>* Folositi tasta 5 pentru a simula butonul de cautare.<TD></TR>
+</TABLE>';
+} else {
+echo '
+<table id="data" border="0" align="center" width="90%">
+<TR><TD>* Folositi ctrl+click pentru informatii despre film/serial. Apasati "OK" pentru a inchide info.<TD></TR>
 </TABLE>';
 }
 if (!file_exists($base_pass."tmdb.txt") && !file_exists($base_pass."omdb.txt")) {

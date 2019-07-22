@@ -810,7 +810,10 @@ if ($from=="cabinet") {
   $html = curl_exec($ch);
   curl_close($ch);
   //echo $html;
-  $link=str_between($html,'source src="','"');
+  if (preg_match('/([http|https][\.\d\w\-\.\/\\\:\?\&\#\%\_\,]*(\.(mp4|m3u8)))/', $html, $m))
+   $link=$m[1];
+  else
+   $link="";
 }
 if ($from=="privesceu") {
   $ch = curl_init();
@@ -1092,6 +1095,7 @@ body {background-color:#000000;}
 var player = jwplayer("container");
 jwplayer("container").setup({
 "playlist": [{
+"title": "'.$title.'",
 "sources": [{"file": "'.$out.'", "type": "'.$type.'"
 }]
 }],
@@ -1100,11 +1104,12 @@ jwplayer("container").setup({
 "aspectratio": "16:9",
 "stretching": "exactfit",
 "skin": {
-    "name": "beelden",
     "active": "#00bfff",
     "inactive": "#b6b6b6",
     "background": "#282828"
 },
+"title": "'.$title.'",
+"abouttext": "'.$title.'",
 "autostart": true,
 "fallback": false,
 "wmode": "direct",
@@ -1112,7 +1117,7 @@ jwplayer("container").setup({
 });
 player.addButton(
   //This portion is what designates the graphic used for the button
-  "//icons.jwplayer.com/icons/white/download.svg",
+  "https://developer.jwplayer.com/jw-player/demos/basic/add-download-button/assets/download.svg",
   //This portion determines the text that appears as a tooltip
   "Download Video",
   //This portion designates the functionality of the button itself

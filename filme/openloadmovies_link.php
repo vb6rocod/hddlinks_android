@@ -26,7 +26,6 @@ function get_value($q, $string) {
 
 include ("../common.php");
 include ("../util.php");
-$ua="Mozilla/5.0 (Windows NT 10.0; rv:55.0) Gecko/20100101 Firefox/55.0";
 if (file_exists($base_pass."player.txt")) {
 $flash=trim(file_get_contents($base_pass."player.txt"));
 } else {
@@ -41,12 +40,6 @@ $user_agent     =   $_SERVER['HTTP_USER_AGENT'];
 if ($flash != "mp") {
 if (preg_match("/android|ipad/i",$user_agent) && preg_match("/chrome|firefox|mobile/i",$user_agent)) $flash="chrome";
 }
-//moviesplanet_link.php?file=planet&page=https%253A%252F%252Fwww.moviesplanet.tv%252Fmovie%252Favengers-infinity-war-online-free
-//&image=r_m.php%3Ffile%3Dhttps%3A%2F%2Fwww.moviesplanet.tv%2Fthumbs%2Fmovie_8e22366d932d7f0c90ac219d7468797e.jpg,Avengers%3A+Infinity+War
-//title=Eat%23virgula+Pray%23virgula+Love
-//&link=planet
-//&page=https%253A%252F%252Fwww.moviesplanet.tv%252Fmovie%252Feat-pray-love-online-free
-//&image=r_m.php%3Ffile%3Dhttps%3A%2F%2Fwww.moviesplanet.tv%2Fthumbs%2Fmovie_8b821edea1d49d29c0af4d71cd4cd2ac.jpg
 
 if (isset($_POST["q"])) {
 $q=$_POST["q"];
@@ -118,25 +111,14 @@ $head=array(
   curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie);
   curl_setopt($ch, CURLOPT_HEADER,1);
   curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
-  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 25);
   $html = curl_exec($ch);
   curl_close ($ch);
 }
 $r=parse_url($link);
 $host=$r["host"];
-/*
-$t1=explode('LoadPlayer("',$html);
-$t2=explode('"',$t1[1]);
-$id=$t2[0];
-$t3=explode(',"',$t1[1]);
-$t4=explode('"',$t3[1]);
-$data=$t4[0];
-$post="id=".$id."&data=".$data;
-$l="https://".$host."/wp-content/plugins/apiplayer/load.php";
-*/
 $dt=str_between($html,"data-type='","'");
 $id=str_between($html,"data-post='","'");
-$name=str_between($html,"data-nume='","'");
 $name="1";
 $l="https://".$host."/wp-admin/admin-ajax.php";
 $post="action=doo_player_ajax&post=".$id."&nume=".$name."&type=".$dt;
@@ -151,10 +133,9 @@ $post="action=doo_player_ajax&post=".$id."&nume=".$name."&type=".$dt;
   curl_setopt ($ch, CURLOPT_POST, 1);
   curl_setopt ($ch, CURLOPT_POSTFIELDS, $post);
   curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
-  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 25);
   $html = curl_exec($ch);
   curl_close ($ch);
-//echo $html;
 $t1=explode('sources: [',$html);
 $t2=explode('],',$t1[1]);
 $s=json_decode("[".$t2[0]."]",1);
@@ -166,8 +147,6 @@ for ($k=0;$k<count($s);$k++) {
    break;
   }
 }
-//http://ng1.tvseries.net:82/1536822447/f280d51278edfb37acbff2f804a41b77/LzAxLzEzNS8xMzUuMDA5LkRlc3RpbmF0aW9uLldlZGRpbmcuZmYyWkpnM1QubXA0.mp4
-//http://ng1.tvseries.net:82/1536864873/c8f2e2c05dba3c7c2ff3f085c262c2af/LzAxLzEzNS8xMzUuMDA5LkRlc3RpbmF0aW9uLldlZGRpbmcuZmYyWkpnM1QubXA0.mp4
 
 $t1=explode("?",$movie);
    $movie_file=substr(strrchr($t1[0], "/"), 1);
@@ -175,8 +154,8 @@ $t1=explode("?",$movie);
    $srt_name = substr($movie_file, 0, -3)."srt";
    else
    $srt_name= $movie_file.".srt";
-
-  $movie=str_replace("https","http",$movie);
+$movie_name = $movie_file.".mp4";
+  //$movie=str_replace("https","http",$movie);
 ////////////////////////////////////////////////////////////////////////////////////////////////
 if (!file_exists($base_sub."sub_extern.srt")) {
 $list = glob($base_sub."*.srt");
@@ -208,16 +187,19 @@ header('Content-type: application/vnd.apple.mpegURL');
 header('Content-Disposition: attachment; filename="'.$movie_name.'"');
 header("Location: $movie");
 } elseif ($flash == "mp") {
-$c="intent:".$movie."#Intent;package=com.mxtech.videoplayer.".$mx.";b.decode_mode=1;S.title=".urlencode($pg_tit).";end";
+$c="intent:".$movie."#Intent;type=video/mp4;package=com.mxtech.videoplayer.".$mx.";b.decode_mode=1;S.title=".urlencode($pg_tit).";end";
 echo $c;
 die();
 } elseif ($flash == "chrome") {
   //$movie=str_replace("?",urlencode("?"),$movie);
   //$movie=str_replace("&","&amp;",$movie);
-  $c="intent:".$movie."#Intent;package=com.mxtech.videoplayer.".$mx.";b.decode_mode=1;S.title=".urlencode($pg_tit).";end";
+  $c="intent:".$movie."#Intent;type=video/mp4;package=com.mxtech.videoplayer.".$mx.";b.decode_mode=1;S.title=".urlencode($pg_tit).";end";
   header("Location: $c");
 } else {
-$type="m3u8";
+if (strpos($movie,"m3u8") !== false)
+   $type="m3u8";
+else
+   $type="mp4";
 echo '
 <!doctype html>
 <HTML>
@@ -239,8 +221,10 @@ body {background-color:#000000;}
 <body><div id="mainnav">
 <div id="container"></div>
 <script type="text/javascript">
+var player = jwplayer("container");
 jwplayer("container").setup({
 "playlist": [{
+"title": "'.preg_replace("/\n|\r/"," ",$pg_tit).'",
 "image": "'.$image.'",
 "sources": [{"file": "'.$movie.'","type": "'.$type.'"}],
 "tracks": [{"file": "../subs/'.$srt_name.'", "default": true}]
@@ -254,17 +238,32 @@ jwplayer("container").setup({
 "height": $(document).height(),
 "width": $(document).width(),
 "skin": {
-    "name": "beelden",
     "active": "#00bfff",
     "inactive": "#b6b6b6",
     "background": "#282828"
 },
+"title": "'.preg_replace("/\n|\r/"," ",$pg_tit).'",
+"abouttext": "'.preg_replace("/\n|\r/"," ",$pg_tit).'",
+"autostart": true,
 "androidhls": true,
 "startparam": "start",
 "fallback": false,
 "wmode": "direct",
 "stagevideo": true
 });
+player.addButton(
+  //This portion is what designates the graphic used for the button
+  "https://developer.jwplayer.com/jw-player/demos/basic/add-download-button/assets/download.svg",
+  //This portion determines the text that appears as a tooltip
+  "Download Video",
+  //This portion designates the functionality of the button itself
+  function() {
+    //With the below code,
+    window.location.href = player.getPlaylistItem()["file"];
+  },
+  //And finally, here we set the unique ID of the button itself.
+  "download"
+);
 </script>
 </div></body>
 </HTML>

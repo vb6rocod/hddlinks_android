@@ -440,6 +440,7 @@ body {background-color:#000000;}
 <script type="text/javascript">
 jwplayer("container").setup({
 "playlist": [{
+"title": "'.$title.'",
 "sources": [{"file": "'.$out.'", "type": "mp4"}], 
 '.$subtracks.'
 }],
@@ -448,6 +449,8 @@ jwplayer("container").setup({
         fontSize: 20,
         backgroundOpacity: 0
     },
+"title": "'.$title.'",
+"abouttext": "'.$title.'",
 "height": $(document).height(),
 "width": $(document).width(),
 "skin": '.$skin.',
@@ -536,11 +539,14 @@ body {background-color:#000000;}
 <script type="text/javascript">
 jwplayer("container").setup({
 "playlist": [{
+"title": "'.$title.'",
 "image": "'.$img.'",
 "sources": [{"file": "'.$out.'", "type": "m3u8"}],
 }],
 "height": $(document).height(),
 "width": $(document).width(),
+"title": "'.$title.'",
+"abouttext": "'.$title.'",
 "skin": '.$skin.',
 "stretching":"'.$strech.'",
 "androidhls": "true",

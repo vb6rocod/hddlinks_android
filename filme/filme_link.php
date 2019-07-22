@@ -23,41 +23,110 @@ if (sizeof($t1)>1) $pg = urldecode($t1[1]);
 }
 if (!$pg) $pg = "play now...";
 $pg=unfix_t($pg);
+
 //echo $filelink;
 function str_between($string, $start, $end){
 	$string = " ".$string; $ini = strpos($string,$start);
 	if ($ini == 0) return ""; $ini += strlen($start); $len = strpos($string,$end,$ini) - $ini;
 	return substr($string,$ini,$len);
 }
-if (preg_match("/(.*?)\s+\-\s+(\d+)x(\d+)/i",$pg,$m)) {
-  $tit=$m[1];
-  $sez=$m[2];
-  $ep=$m[3];
-  $ep_tit=$sez."x".$ep;
+if (preg_match("/(.*?)\s+\(?((1|2)\d{3})\)?\s+(\d+)x(\d+)/",$pg,$m)) { // series and year
   $tip="series";
-} else if (preg_match("/(.*?)\s+Sezonul\s+(\d+)\s+Episodul\s+(\d+)/i",$pg,$m)) {
   $tit=$m[1];
+  $year=$m[2];
+  $sez=$m[4];
+  $ep=$m[5];
+  $ep_tit=$sez."x".$ep;
+} else if (preg_match("/(.*?)\s+(\d+)x(\d+)/",$pg,$m)) { //series no year
+  $tip="series";
+  $tit=$m[1];
+  $year="";
   $sez=$m[2];
   $ep=$m[3];
   $ep_tit=$sez."x".$ep;
-  $tip="tv";
-} else {
-  $tit=$pg;
+} else if (preg_match("/(.*?)\s+\(?((1|2)\d{3})\)?/",$pg,$m)) { // movie and year
+  $tip="movie";
+  $tit=$m[1];
+  $year=$m[2];
   $sez="";
   $ep="";
   $ep_tit="";
+} else { // movie no year
   $tip="movie";
+  $tit=$pg;
+  $year="";
+  $sez="";
+  $ep="";
+  $ep_tit="";
 }
 $from="";
 $imdbid="";
-$tit_serial=$tit;
+$tit=urldecode(str_replace("%E2%80%99",urlencode("'"),urlencode($tit)));
+$tit_serial=$tit; // ?????????   %3F
 $link_page="";
-$sub_link ="from=".$from."&tip=".$tip."&sez=".$sez."&ep=".$ep."&imdb=".$imdbid."&title=".urlencode(fix_t($tit_serial))."&link=".$link_page."&ep_tit=".urlencode(fix_t($ep_tit));
-
+$sub_link ="from=".$from."&tip=".$tip."&sez=".$sez."&ep=".$ep."&imdb=".$imdbid."&title=".urlencode(fix_t($tit_serial))."&link=".$link_page."&ep_tit=".$ep_tit."&year=".$year;
+//echo $sub_link;
 /**####################################**/
 /** Here we start.......**/
 $last_link = "";
-if (strpos($filelink,"desenefaine.ro") !== false) {
+  if (strpos($filelink,"filmeonlinegratis.org") !== false) {
+  //$l=trim("https:".$links[$i]);
+  //echo $l;
+  $ch = curl_init();
+  curl_setopt($ch, CURLOPT_URL, $filelink);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+  curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 5.1; rv:22.0) Gecko/20100101 Firefox/22.0');
+  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+  curl_setopt($ch, CURLOPT_HEADER,0);
+  curl_setopt($ch, CURLOPT_NOBODY,0);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+  $html = curl_exec($ch);
+  curl_close($ch);
+  $html = urldecode(str_replace("@","%",$html));
+  if (preg_match_all("/\"(https\:\/\/filmeonlinegratis\.org\/.*?\/player\.php\?id\=.*?)\"/",$html,$m)) {
+   for($k=0;$k<count($m[1]);$k++) {
+     $ch = curl_init();
+     curl_setopt($ch, CURLOPT_URL, $m[1][$k]);
+     curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+     curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 5.1; rv:22.0) Gecko/20100101 Firefox/22.0');
+     curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+     curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+     curl_setopt($ch, CURLOPT_HEADER,1);
+     curl_setopt($ch, CURLOPT_NOBODY,1);
+     curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+     curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+     $h = curl_exec($ch);
+     $t1=explode('Location:',$h);
+     $t2=explode('\n',$t1[1]);
+     $html=str_replace($m[1][$k],trim($t2[0]),$html);
+   }
+  }
+  //$cur_link=$t2[0];
+} elseif (strpos($filelink,"filme-bune.info") !== false) {
+  $ch = curl_init();
+  curl_setopt($ch, CURLOPT_URL, $filelink);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+  curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 5.1; rv:22.0) Gecko/20100101 Firefox/22.0');
+  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+  curl_setopt($ch, CURLOPT_HEADER,0);
+  curl_setopt($ch, CURLOPT_NOBODY,0);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+  $h = curl_exec($ch);
+  curl_close($ch);
+  $html="";
+  //echo $h;
+  $videos = explode('player_preload.php?v=',$h);
+  unset($videos[0]);
+  $videos = array_values($videos);
+  foreach($videos as $video) {
+    $t1=explode("&",$video);
+    $html .='"'.base64_decode($t1[0]).'" ';
+  }
+} elseif (strpos($filelink,"desenefaine.ro") !== false) {
 //echo $filelink;
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $filelink);
@@ -1058,7 +1127,7 @@ $s=$s."cloudyvideos\.com|allmyvideos\.net|goo\.gl|cloudy\.ec|rapidvideo\.com|meg
 $s=$s."vidlox|flashservice\.xvideos\.com|xhamster\.com|entervideo\.net|vcstream\.to|vev\.io|vidcloud\.icu|";
 $s=$s."powvideo|povvideo|cloudvideo|vidtodo|vidcloud\.co|flashx\.";
 $s=$s."|putload\.|event\.2target\.net|fembed\.com|streamcherry\.com|hideiframe\.com|";
-$s=$s."filmeonlinehd\.tv\/sharemovie|rovideo\.net|flix555\.com|gamovideo\.com|playhd\.fun|idtbox\.com|";
+$s=$s."filmeonlinehd\.tv\/sharemovie|rovideo\.net\/video|flix555\.com|gamovideo\.com|playhd\.fun|idtbox\.com|";
 $s=$s."bitporno\.com|thevideobee\.to|mangovideo\.|smartshare\.tv|datoporn\.co|xstreamcdn\.com/i";
 for ($i=0;$i<count($links);$i++) {
   if (strpos($links[$i],"http") !== false) {
@@ -1070,6 +1139,7 @@ for ($i=0;$i<count($links);$i++) {
   } else {
   $cur_link="http:".$links[$i];
   }
+
   if (strpos($links[$i],"openloads.tk") !== false) {
   $l=trim("https:".$links[$i]);
   //echo $l;
@@ -1179,7 +1249,10 @@ curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
 curl_setopt($ch, CURLOPT_TIMEOUT, 15);
 curl_setopt($ch, CURLOPT_HEADER, 1);
 $h1 = curl_exec($ch);
-
+    $t1 = explode('class="timer">',$h1);
+    $t2 = explode('<',$t1[1]);
+    $sec = $t2[0];
+    if (!$sec) $sec=2;
   $t1=explode('<form method="post',$h1);
   $t2=explode("</form",$t1[1]);
   $xx='<form method="post'.$t2[0]."</form>";
@@ -1212,6 +1285,7 @@ $data = array('_method' => 'POST',
 '_Token[unlocked]' => $token2
 );
 $post =  http_build_query ($data);
+
 $l2="https://event.2target.net/links/go";
 $head=array('Accept: application/json, text/javascript, */*; q=0.01',
 'Accept-Language: en-US,en;q=0.5',
@@ -1222,7 +1296,7 @@ $head=array('Accept: application/json, text/javascript, */*; q=0.01',
 'X-Requested-With: XMLHttpRequest',
 'Content-Length: '.strlen($post).''
 );
-//sleep (1);
+sleep ($sec);
   curl_setopt($ch, CURLOPT_URL, $l2);
   curl_setopt ($ch, CURLOPT_POST, 1);
   curl_setopt ($ch, CURLOPT_POSTFIELDS, $post);
@@ -1233,6 +1307,7 @@ $head=array('Accept: application/json, text/javascript, */*; q=0.01',
   //curl_setopt($ch, CURLOPT_NOBODY,1);
   $x = curl_exec($ch);
   curl_close($ch);
+  //echo $x;
   $r=json_decode($x,1);
   if (isset($r['url']))
     $cur_link = $r['url'];
@@ -1289,7 +1364,7 @@ $head=array('Accept: application/json, text/javascript, */*; q=0.01',
    $pat="/xopenload\.me|hqq\.tv\/player\/script\.php|top\.mail\.ru|facebook|twitter|player\.swf";
    $pat .="|img\.youtube|youtube\.com\/user|radioarad|\.jpg|\.png|\.gif|jq\/(js|css)";
    $pat .="|fsplay\.net\?s|changejplayer\.js|validateemb\.php|restore_google\.php|";
-   $pat .="ExoLoader.addZone|js\/api\/share\.js/i";
+   $pat .="ExoLoader.addZone|js\/api\/share\.js|hindipix\.in\/(js|style)/i";
       if (!preg_match($pat,$cur_link)) {
         $t1=explode("proxy.link=",$cur_link); //filmeonline.org
       if (sizeof ($t1) > 1 ) {

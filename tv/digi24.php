@@ -167,9 +167,9 @@ foreach($videos as $video) {
   if ($link) {
   if ($n == 0) echo "<TR>"."\n\r";
   if ($flash != "mp")
-  echo '<td class="mp" align="center" width="25%"><a href="'.$link1.'" target="_blank"><img src="'.$image.'" width="180px" height="144px"><BR>'.$title.'</a></TD>';
+  echo '<td class="mp" align="center" width="25%"><a href="'.$link1.'" target="_blank"><img src="'.$image.'" width="200px" height="144px"><BR>'.$title.'</a></TD>';
   else
-  echo '<TD class="mp" width="25%">'.'<a onclick="ajaxrequest('."'".$l."', '"."')".'"'." style='cursor:pointer;'>".'<img src="'.$image.'" width="180px" height="144px"><BR>'.$title.'</a></TD>';
+  echo '<TD class="mp" width="25%">'.'<a onclick="ajaxrequest('."'".$l."', '"."')".'"'." style='cursor:pointer;'>".'<img src="'.$image.'" width="200px" height="144px"><BR>'.$title.'</a></TD>';
     $n++;
     if ($n > 3) {
      echo '</TR>'."\n\r";

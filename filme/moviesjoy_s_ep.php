@@ -2,19 +2,30 @@
 <?php
 include ("../common.php");
 $tit=unfix_t(urldecode($_GET["title"]));
+$tit=prep_tit($tit);
 $image=$_GET["image"];
-$link=$_GET["link"];
+$link=urldecode($_GET["link"]);
 $tip=$_GET["tip"];
+$sez=$_GET["sez"];
+$ep=$_GET["ep"];
+$ep_title=unfix_t(urldecode($_GET["ep_tit"]));
+$ep_title=prep_tit($ep_title);
+$year=$_GET["year"];
+/* ====================== */
+$fs_target = "moviesjoy_fs.php";
+$width="200px";
+$height="100px";
+$has_img="no";
 ?>
 <html><head>
 <meta http-equiv="content-type" content="text/html; charset=UTF-8">
 <link rel="stylesheet" type="text/css" href="../custom.css" />
-      <meta charset="utf-8">
-      <title><?php echo $tit; ?></title>
+<meta charset="utf-8">
+<title><?php echo $tit; ?></title>
 <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.0/jquery.min.js"></script>
 
 </head>
-<body><div id="mainnav">
+<body>
 <?php
 error_reporting(0);
 function str_between($string, $start, $end){
@@ -88,22 +99,32 @@ foreach($videos1 as $video1) {
   $t1=explode('title="',$video);
   $t2=explode(">",$t1[1]);
   $t3=explode('<',$t2[1]);
-  $ep_tit1=$t3[0];
+  $ep_tit=$t3[0];
   preg_match("/Episode\s+(\d+)/",$video,$e);
   $epNr=$e[1];
-  
-  $link="moviesjoy_fs.php?tip=series&link=".urlencode($l)."&title=".urlencode(fix_t($tit))."&ep_tit=".urlencode(fix_t($ep_tit1))."&ep=".$epNr."&sez=".$sez."&image=".$image;
-      if ($n == 0) echo "<TR>"."\n\r";
-		echo '<TD class="mp">'.'<a href="'.$link.'" target="_blank">'.$ep_tit1.'</a>';
-		echo '</TD>'."\n\r";
-        $n++;
-        if ($n > 2) {
-         echo '</TR>'."\n\r";
-         $n=0;
-        }
-}  
+  $ep_tit_d = $ep_tit;
+  //$link="moviesjoy_fs.php?tip=series&link=".urlencode($l)."&title=".urlencode(fix_t($tit))."&ep_tit=".urlencode(fix_t($ep_tit1))."&ep=".$epNr."&sez=".$sez."&image=".$image;
+  $link_f=$fs_target.'?tip=series&link='.urlencode($l).'&title='.urlencode(fix_t($tit)).'&image='.$image."&sez=".$sez."&ep=".$epNr."&ep_tit=".urlencode(fix_t($ep_tit))."&year=".$year;
+   if ($n == 0) echo "<TR>"."\n\r";
+   if ($has_img == "yes")
+    echo '<TD class="mp" width="33%">'.'<a id="sez'.$sez.'" href="'.$link_f.'" target="_blank"><img width="'.$width.'" height="'.$height.'" src="'.$img_ep.'"><BR>'.$ep_tit_d.'</a></TD>'."\r\n";
+   else
+    echo '<TD class="mp" width="33%">'.'<a id="sez'.$sez.'" href="'.$link_f.'" target="_blank">'.$ep_tit_d.'</a></TD>'."\r\n";
+   $n++;
+   if ($n == 3) {
+    echo '</TR>'."\n\r";
+    $n=0;
+   }
 }
+  if ($n < 3 && $n > 0) {
+    for ($k=0;$k<3-$n;$k++) {
+      echo '<TD></TD>'."\r\n";
+    }
+    echo '</TR>'."\r\n";
+  }
+}  
+//}
 echo '</table>';
 ?>
-<br></div></body>
+</body>
 </html>
