@@ -646,66 +646,34 @@ $id=$m[1];
   //$AgetHeaders = @get_headers($filelink);
   //echo $AgetHeaders;
 } elseif (strpos($filelink,"filmehd.se") !== false) {
-  //require_once("JavaScriptUnpacker.php");
-
-   $ch = curl_init();
-   curl_setopt($ch, CURLOPT_URL, $filelink);
-   //curl_setopt ($ch, CURLOPT_POST, 1);
-   //curl_setopt ($ch, CURLOPT_POSTFIELDS, $post);
-   //curl_setopt($ch, CURLOPT_HTTPHEADER, $head);
+  $ua = $_SERVER['HTTP_USER_AGENT'];
+  $html="";
+  $ch = curl_init();
+  curl_setopt($ch, CURLOPT_URL, $filelink);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-  curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 10.0; rv:55.0) Gecko/20100101 Firefox/55.0');
+  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
+  curl_setopt($ch,CURLOPT_REFERER,$filelink);
   curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
   curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-  //curl_setopt($ch, CURLOPT_REFERER, $l2);
   curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
   curl_setopt($ch, CURLOPT_TIMEOUT, 15);
-   $x = curl_exec($ch);
-   curl_close($ch);
-//echo $x;
-//die();
+  $html = curl_exec($ch);
+  curl_close($ch);
 
-$videos = explode('data-src="', $x);
-unset($videos[0]);
-$videos = array_values($videos);
-//print_r ($videos);
-//captcha-hf=77cbb937bb268f877d01db67ba4786520921cbe142f51385&captcha-idhf=0: undefined
-//http://filmehd.net/?modal&post_id=26504&field=embed&index=1&index2=0
-//http://filmehd.net/?modal&post_id=26504&field=embed&index=2&index2=0
-//Cookie: __cfduid=d2289684b572eadefa78139c0b32c2ae21517319933; PHPSESSID=5h1e85itr5dk90jst0mp6p5207
-//Cookie: __cfduid=d2289684b572eadefa78139c0b32c2ae21517319933; PHPSESSID=5h1e85itr5dk90jst0mp6p5207
-//intent:https://m.ok.ru/dk?st.cmd=moviePlaybackRedirect&st.sig=12f38127a3ebfcb21697f73a19aca133d406507a&st.mq=2&st.mvid=734562487003&st.ip=82.210.178.241&st.dla=on&st.exp=1533649548210&st.hls=off&_prevCmd=movieLayer&tkn=5332#Intent;package=com.mxtech.videoplayer.pro;S.title=Viceroy%26%238217%3Bs+House+%282017%29;end
-$out="";
-foreach($videos as $video) {
-   //$t1=explode('"',$video);
-   //print_r ($t1);
-   //$l2="http://filmehd.net/?modal&post_id=".str_replace("&amp;","&",$t1[0]);
-   //echo $l2."\n";
-   //$l2="http://filmehd.net/?modal&post_id=26504&field=embed&index=3&index2=0";
-   //$l2="http://filmehd.net/?modal&post_id=26504&field=embed&index=3&index2=0";
-   //$head=array('Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8','Accept-Language: ro-ro,ro;q=0.8,en-us;q=0.6,en-gb;q=0.4,en;q=0.2','Accept-Encoding: deflate','Content-Type: application/x-www-form-urlencoded','Content-Length: '.strlen($post));
-   $t1=explode('"',$video);
-   $l2="https://filmehd.net".$t1[0];
-   $ch = curl_init();
-   curl_setopt($ch, CURLOPT_URL, $l2);
-   //curl_setopt ($ch, CURLOPT_POST, 1);
-   //curl_setopt ($ch, CURLOPT_POSTFIELDS, $post);
-   //curl_setopt($ch, CURLOPT_HTTPHEADER, $head);
-  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-  curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 5.1; rv:22.0) Gecko/20100101 Firefox/22.0');
-  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
-  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-  //curl_setopt($ch, CURLOPT_REFERER, $l2);
-  //curl_setopt($ch, CURLOPT_COOKIEJAR, $cookie);
-  //curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie);
-  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
-  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
-   $y = curl_exec($ch);
-   curl_close($ch);
-
-   $out .=$y;
-}
-$html=$out;
+  if (preg_match_all("/data\-src\=\"(.*?)\"/ms",$html,$m)) {
+   foreach ($m[1] as $key => $value) {
+    $ch = curl_init("https://filmehd.se".$value);
+    curl_setopt($ch, CURLOPT_USERAGENT,$ua);
+    curl_setopt($ch,CURLOPT_REFERER,"http://filmehd.se/");
+    curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER  ,1);  // RETURN THE CONTENTS OF THE CALL
+    curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+    curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+    $h = curl_exec($ch);
+    curl_close ($ch);
+    $html .=$h;
+   }
+ }
 } elseif (strpos($filelink,"fsplay.net") !== false) {
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $filelink);
