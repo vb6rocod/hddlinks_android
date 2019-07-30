@@ -1,14 +1,9 @@
 <!DOCTYPE html>
 <?php
 include ("../common.php");
-$query = $_GET["page"];
-if($query) {
-   $queryArr = explode(',', $query);
-   $page = $queryArr[0];
-   $search = $queryArr[1];
-   $page_title=urldecode($queryArr[2]);
-   $search=str_replace("|","&",$search);
-}
+$page_title = "TVR Stiri";
+$width="200px";
+$height=intval(200*(360/640))."px";
 ?>
 <html><head>
 <meta http-equiv="content-type" content="text/html; charset=UTF-8">
@@ -17,26 +12,11 @@ if($query) {
 <meta http-equiv="Expires" content="0"/>
       <title><?php echo $page_title; ?></title>
 <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.0/jquery.min.js"></script>
+<link rel="stylesheet" type="text/css" href="../custom.css" />
 <script type="text/javascript">
-// create the XMLHttpRequest object, according browser
-function get_XmlHttp() {
-  // create the variable that will contain the instance of the XMLHttpRequest object (initially with null value)
-  var xmlHttp = null;
-  if(window.XMLHttpRequest) {		// for Forefox, IE7+, Opera, Safari, ...
-    xmlHttp = new XMLHttpRequest();
-  }
-  else if(window.ActiveXObject) {	// for Internet Explorer 5 or 6
-    xmlHttp = new ActiveXObject("Microsoft.XMLHTTP");
-  }
-  return xmlHttp;
-}
-
-// sends data to a php file, via POST, and displays the received answer
 function ajaxrequest(link) {
-  var request =  get_XmlHttp();		// call the function for the XMLHttpRequest instance
+  var request =  new XMLHttpRequest();
   on();
-  // create pairs index=value with data that must be sent to server
-  //var the_data = {mod:add,title:title, link:link}; //Array
   var the_data = link;
   var php_file='direct_link.php';
   request.open('POST', php_file, true);			// set the request
@@ -49,61 +29,13 @@ function ajaxrequest(link) {
   // If the response is received completely, will be transferred to the HTML tag with tagID
   request.onreadystatechange = function() {
     if (request.readyState == 4) {
-    off();
-    //alert (request.responseText);
+      off();
       document.getElementById("mytest1").href=request.responseText;
       document.getElementById("mytest1").click();
     }
   }
 }
-function prog(link) {
-  var request =  get_XmlHttp();		// call the function for the XMLHttpRequest instance
-
-  // create pairs index=value with data that must be sent to server
-  //var the_data = {mod:add,title:title, link:link}; //Array
-  var the_data = link;
-  var php_file='prog.php';
-  request.open('POST', php_file, true);			// set the request
-
-  // adds a header to tell the PHP script to recognize the data as is sent via POST
-  request.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-  request.send(the_data);		// calls the send() method with datas as parameter
-
-  // Check request status
-  // If the response is received completely, will be transferred to the HTML tag with tagID
-  request.onreadystatechange = function() {
-    if (request.readyState == 4) {
-      alert (request.responseText);
-    }
-  }
-}
 </script>
-<link rel="stylesheet" type="text/css" href="../custom.css" />
-<style>
-#overlay {
-    position: fixed;
-    display: none;
-    width: 100%;
-    height: 100%;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-color: rgba(0,0,0,0.5);
-    z-index: 2;
-    cursor: pointer;
-}
-
-#text{
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    font-size: 50px;
-    color: white;
-    transform: translate(-50%,-50%);
-    -ms-transform: translate(-50%,-50%);
-}
-</style>
 </head>
 <body>
 <script>
@@ -116,8 +48,6 @@ function off() {
 }
 </script>
    <a href='' id='mytest1'></a>
-   <div id="mainnav">
-<H2></H2>
 <?php
 function str_between($string, $start, $end){
 	$string = " ".$string; $ini = strpos($string,$start);
@@ -176,9 +106,9 @@ foreach($videos as $video) {
   if ($link <> "") {
   if ($n==0) echo '<TR>';
   if ($flash != "mp")
-  echo '<td class="mp" align="center" width="25%"><a href="'.$link1.'" target="_blank"><img src="'.$image.'" width="200px" height="106px"><BR>'.$title.'</a></TD>';
+  echo '<td class="mp" align="center" width="25%"><a href="'.$link1.'" target="_blank"><img src="'.$image.'" width="'.$width.'" height="'.$height.'"><BR>'.$title.'</a></TD>';
     else
-  echo '<td class="mp" align="center" width="25%">'.'<a onclick="ajaxrequest('."'".$l."', '"."')".'"'." style='cursor:pointer;'>".'<img src="'.$image.'" width="200px" height="106px"><BR>'.$title.'</a></TD>';
+  echo '<td class="mp" align="center" width="25%">'.'<a onclick="ajaxrequest('."'".$l."')".'"'." style='cursor:pointer;'>".'<img src="'.$image.'" width="'.$width.'" height="'.$height.'"><BR>'.$title.'</a></TD>';
 
   $n++;
   if ($n == 4) {
@@ -189,7 +119,6 @@ foreach($videos as $video) {
 }
 echo "</table>";
 ?>
-<br></div>
 <div id="overlay"">
   <div id="text">Wait....</div>
 </div>

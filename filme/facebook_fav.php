@@ -7,32 +7,68 @@ $list = glob($base_sub."*.srt");
     str_replace(" ","%20",$l);
     unlink($l);
 }
+$f=$base_cookie."facebook.dat";
+if (file_exists($f))
+  $key=trim(file_get_contents($f));
+else {
+  $key="";
+}
+if (isset($_GET["renew"]) && $key) {
+ $file=$base_fav."facebook.dat";
+ $h="";
+ if (file_exists($file)) {
+  $h=trim(file_get_contents($file));
+  $t1=explode("\r\n",$h);
+  $out="";
+  for ($k=0;$k<count($t1);$k++) {
+    $image="";
+    $title="";
+    $a=explode("#separator",$t1[$k]);
+    if ($a) {
+      $title=trim($a[0]);
+      $image=trim($a[1]);
+      if (strpos(@get_headers($image)[0],"403 Forbidden") !== false) {
+       $l4="https://graph.facebook.com/v3.1/".$title."?cover&access_token=".$key;
+       $ch = curl_init();
+       curl_setopt($ch, CURLOPT_URL, $l4);
+       curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+       curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows; U; Windows NT 6.1; en-US; rv:1.9.1.2) Gecko/20090729 Firefox/3.5.2 GTB5');
+       curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+       curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+       curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+       curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+       $h4 = curl_exec($ch);
+       curl_close($ch);
+       $y=json_decode($h4,1);
+       $cover="";
+       if (isset($y["id"])) {
+        $id=$y["id"];
+        $cover ="https://graph.facebook.com/v3.1/".$id."/picture?access_token=".$key;
+        $out .= $title."#separator".$cover."\r\n";
+       } else {
+         $out .= $title."#separator".$image."\r\n";
+       }
+      } else {
+         $out .= $title."#separator".$image."\r\n";
+      }
+    }
+  }
+ file_put_contents($file,$out);
+ }
+}
 ?>
-<html><head>
+<html>
+<head>
 <meta http-equiv="content-type" content="text/html; charset=UTF-8">
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate"/>
 <meta http-equiv="Pragma" content="no-cache"/>
 <meta http-equiv="Expires" content="0"/>
-      <title><?php echo $page_title; ?></title>
+<title><?php echo $page_title; ?></title>
 <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
 <link rel="stylesheet" type="text/css" href="../custom.css" />
 <script type="text/javascript">
-// create the XMLHttpRequest object, according browser
-function get_XmlHttp() {
-  // create the variable that will contain the instance of the XMLHttpRequest object (initially with null value)
-  var xmlHttp = null;
-  if(window.XMLHttpRequest) {		// for Forefox, IE7+, Opera, Safari, ...
-    xmlHttp = new XMLHttpRequest();
-  }
-  else if(window.ActiveXObject) {	// for Internet Explorer 5 or 6
-    xmlHttp = new ActiveXObject("Microsoft.XMLHTTP");
-  }
-  return xmlHttp;
-}
-
-// sends data to a php file, via POST, and displays the received answer
 function ajaxrequest2(link) {
-  var request =  get_XmlHttp();		// call the function for the XMLHttpRequest instance
+  var request =  new XMLHttpRequest();
 
   // create pairs index=value with data that must be sent to server
   //var the_data = {mod:del,title:title, link:link}; //Array
@@ -58,10 +94,7 @@ function ajaxrequest1(link) {
   window.open(msg);
 }
 function ajaxrequest(link) {
-  var request =  get_XmlHttp();		// call the function for the XMLHttpRequest instance
-
-  // create pairs index=value with data that must be sent to server
-  //var the_data = {mod:add,title:title, link:link}; //Array
+  var request =  new XMLHttpRequest();
   var the_data = "link=" + link;
   var php_file="link1.php";
   request.open("POST", php_file, true);			// set the request
@@ -74,22 +107,16 @@ function ajaxrequest(link) {
   // If the response is received completely, will be transferred to the HTML tag with tagID
   request.onreadystatechange = function() {
     if (request.readyState == 4) {
-       //alert (request.responseText);
-       document.getElementById("mytest1").href=request.responseText;
+      document.getElementById("mytest1").href=request.responseText;
       document.getElementById("mytest1").click();
     }
   }
 }
-</script>
-<script type="text/javascript">
+
 function isValid(evt) {
-    var charCode = (evt.which) ? evt.which : event.keyCode,
-        self = evt.target;
-        //self = document.activeElement;
-        //self = evt.currentTarget;
-    //console.log(self.value);
-       //alert (charCode);
-if  (charCode == "51"  && evt.target.type != "text") {
+    var charCode = (evt.which) ? evt.which : evt.keyCode,
+    self = evt.target;
+    if  (charCode == "51"  && evt.target.type != "text") {
       id = "fav_" + self.id;
       val_fav=document.getElementById(id).value;
       ajaxrequest2(val_fav);
@@ -97,7 +124,6 @@ if  (charCode == "51"  && evt.target.type != "text") {
     return true;
 }
 $(document).on('keyup', '.imdb', isValid);
-//$(document).on('keydown', '.imdb', isValid);
 </script>
 </head>
 <body>
@@ -134,11 +160,10 @@ echo "<a href='".$c."' id='mytest1'></a>".'<div id="mainnav">';
 echo '<table border="1px" width="100%"><TR><TD class="form">'."\n\r";
 echo '<form action="facebook.php" target="_blank">Cautare (user video): ';
 echo '<input type="text" id="search" name="search"><input type="hidden" id="token" name="token" value=""><input type="submit" value="Cauta !"></form></TD>';
-echo '<TD align="right"><a href="#">?</a></TD></TR></TABLE>';
+echo '<TD class="nav" align="right"><a href="?renew">renew</a></TD></TR></TABLE>';
 
 
 $file=$base_fav."facebook.dat";
-
 $h="";
 if (file_exists($file)) {
 echo '<table border="1px" width="100%">'."\n\r";
@@ -159,9 +184,9 @@ echo '<table border="1px" width="100%">'."\n\r";
   if ($n==0) echo '<TR>';
 
   if ($tast == "NU")
-  echo '<td class="mp" align="center" width="20%"><a href="'.$playlist.'" target="_blank"><img src="'.$image.'" width="160px" height="90px"><BR>'.$title.'</a> <a onclick="ajaxrequest2('."'".$add_fav."'".')" style="cursor:pointer;">*</a></TD>';
+  echo '<td class="mp" align="center" width="20%"><a href="'.$playlist.'" target="_blank"><img src="'.$image.'" width="160px" height="160px"><BR>'.$title.'</a> <a onclick="ajaxrequest2('."'".$add_fav."'".')" style="cursor:pointer;">*</a></TD>';
   else {
-  echo '<td class="mp" align="center" width="20%"><a class ="imdb" id="myLink'.($w*1).'" href="'.$playlist.'" target="_blank"><img src="'.$image.'" width="160px" height="90px"><BR>'.$title.'<input type="hidden" id="fav_myLink'.($w*1).'" value="'.$add_fav.'"></a></TD>';
+  echo '<td class="mp" align="center" width="20%"><a class ="imdb" id="myLink'.($w*1).'" href="'.$playlist.'" target="_blank"><img src="'.$image.'" width="160px" height="160px"><BR>'.$title.'<input type="hidden" id="fav_myLink'.($w*1).'" value="'.$add_fav.'"></a></TD>';
   $w++;
   }
   $n++;
@@ -178,6 +203,5 @@ echo '<table border="1px" width="100%"><TR><TD>Apasti tasta 3 pentru a adauga/st
 }
 
 ?>
-</div>
-<br></body>
+</body>
 </html>

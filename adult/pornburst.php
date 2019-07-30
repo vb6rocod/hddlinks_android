@@ -241,7 +241,7 @@ foreach($videos as $video) {
   $t1=explode('href="',$video);
   $t2 = explode('"', $t1[1]);
   $link = "https://www.pornburst.xxx".$t2[0];
-  $t1 = explode('src="', $video);
+  $t1 = explode('data-src="', $video);
   $t2 = explode('"', $t1[1]);
   $image = $t2[0];
   $title=str_between($video,'data-stats-video-name="','"');

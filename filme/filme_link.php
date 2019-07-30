@@ -233,17 +233,28 @@ $last_link = "";
   curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
   curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
   curl_setopt($ch, CURLOPT_TIMEOUT, 15);
-  $h = curl_exec($ch);
+  $html = curl_exec($ch);
   curl_close($ch);
-  //echo $h;
-  $html=$h." ";
-  $videos = explode('atob("', $h);
+  if (preg_match("/defer src\=\"(.*?)\"/ms",$html,$m)) {
+  $ch = curl_init($m[1]);
+  curl_setopt($ch, CURLOPT_USERAGENT,$ua);
+  curl_setopt($ch,CURLOPT_REFERER,"http://filmenoihd.biz/");
+  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER  ,1);  // RETURN THE CONTENTS OF THE CALL
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+  $h2 = curl_exec($ch);
+  curl_close ($ch);
+  $videos = explode('atob("', $h2);
   unset($videos[0]);
   $videos = array_values($videos);
   foreach($videos as $video) {
-    $t1=explode('"',$video);
-    $html .=base64_decode($t1[0]).'" ';
+   $t1=explode('"',$video);
+   //echo base64_decode($t1[0]);
+   $h='"'.base64_decode($t1[0]).'" ';
+   $html .=$h;
   }
+ }
 } elseif (strpos($filelink,"divxfilmeonline.") !== false) {
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $filelink);
@@ -634,7 +645,7 @@ $id=$m[1];
   //Link: <http://www.filmeonlinesubtitrate.tv/?p=5382>; rel=shortlink
   //$AgetHeaders = @get_headers($filelink);
   //echo $AgetHeaders;
-} elseif (strpos($filelink,"filmehd.net") !== false) {
+} elseif (strpos($filelink,"filmehd.se") !== false) {
   //require_once("JavaScriptUnpacker.php");
 
    $ch = curl_init();
@@ -913,6 +924,8 @@ foreach($videos as $video) {
 } elseif (strpos($filelink,"filmeonline2016.biz") !== false || strpos($filelink,"filmeonline.st") !== false) {
   $ua=$_SERVER['HTTP_USER_AGENT'];
   $ch = curl_init($filelink);
+  //echo $filelink;
+  //https://filmeonline.st/spider-man-far-from-home-2019/
   curl_setopt($ch, CURLOPT_USERAGENT,$ua);
   curl_setopt($ch,CURLOPT_REFERER,"http://www.filmeonline2016.biz/");
   //curl_setopt ($ch, CURLOPT_POST, 1);
@@ -927,15 +940,26 @@ foreach($videos as $video) {
   $html = curl_exec($ch);
   curl_close ($ch);
   //echo $html;
-$videos = explode('atob("', $html);
-unset($videos[0]);
-$videos = array_values($videos);
-foreach($videos as $video) {
-  $t1=explode('"',$video);
-  //echo base64_decode($t1[0]);
-  $h='"'.base64_decode($t1[0]).'" ';
- $html .=$h;
-}
+  if (preg_match("/script src\=\"(.*?)\" data\-minify/ms",$html,$m)) {
+  $ch = curl_init($m[1]);
+  curl_setopt($ch, CURLOPT_USERAGENT,$ua);
+  curl_setopt($ch,CURLOPT_REFERER,"http://www.filmeonline2016.biz/");
+  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER  ,1);  // RETURN THE CONTENTS OF THE CALL
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+  $h2 = curl_exec($ch);
+  curl_close ($ch);
+  $videos = explode('atob("', $h2);
+  unset($videos[0]);
+  $videos = array_values($videos);
+  foreach($videos as $video) {
+   $t1=explode('"',$video);
+   //echo base64_decode($t1[0]);
+   $h='"'.base64_decode($t1[0]).'" ';
+   $html .=$h;
+  }
+ }
 //echo $html;
 } elseif (strpos($filelink,"topfilmeonline.net") !== false) {
   $ch = curl_init($filelink);

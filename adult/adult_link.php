@@ -390,11 +390,9 @@ if (preg_match("/4tube\.com/",$host)) {
  $out="";
  }
 } else if (preg_match("/milfzr\.com/",$host)) {
-  $h=str_replace("&quot;",'"',$h);
-  $h=str_replace("\/","/",$h);
-  $t1=explode('sources":[{"src":"',$h);
-  $t2=explode('"',$t1[1]);
-  $out=$t2[0];
+   $h = str_replace("\/","/",$h);
+   if (preg_match('/((http|https)[\.\d\w\-\.\/\\\:\?\&\#\%\_\,]*(\.mp4))/', $h, $m))
+    $out=$m[1];
 } else if (preg_match("/mofosex\.com/",$host)) {
   $t1=explode('quality_720p":"',$h);
   $t2=explode('"',$t1[1]);

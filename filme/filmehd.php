@@ -170,9 +170,9 @@ if($tip=="release") {
 } else {
   $search=str_replace(" ","+",$tit);
   if ($page > 1)
-     $l="https://filmehd.net/?s=".$search."/page/".$page;
+     $l="https://filmehd.se/?s=".$search."/page/".$page;
   else
-     $l="https://filmehd.net/?s=".$search;
+     $l="https://filmehd.se/?s=".$search;
 }
 $ua = $_SERVER['HTTP_USER_AGENT'];
   $ch = curl_init();

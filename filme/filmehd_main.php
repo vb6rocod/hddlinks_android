@@ -8,7 +8,7 @@ function str_between($string, $start, $end){
 $main_title="filmehd";
 $target="filmehd.php";
 $fav_target="";
-$recente="https://filmehd.net";
+$recente="https://filmehd.se";
 ?>
 <html>
 <head>
@@ -54,7 +54,7 @@ echo '<TR><TD class="cat">'.'<a class ="nav" href="'.$target.'?page=1&tip=releas
 echo $form;
 echo '</TR>';
 $n=0;
-$l="https://filmehd.net";
+$l="https://filmehd.se";
 $ua = $_SERVER['HTTP_USER_AGENT'];
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $l);

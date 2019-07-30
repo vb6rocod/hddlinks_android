@@ -2,34 +2,24 @@
 <?php
 include ("../common.php");
 $page_title="Folclor TV";
+$width="200px";
+$height=intval(200*(394/700))."px";
 ?>
 <html><head>
 <meta http-equiv="content-type" content="text/html; charset=UTF-8">
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate"/>
 <meta http-equiv="Pragma" content="no-cache"/>
 <meta http-equiv="Expires" content="0"/>
-      <title><?php echo $page_title; ?></title>
-<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.0/jquery.min.js"></script>
+<title><?php echo $page_title; ?></title>
+<script type="text/javascript" src="//code.jquery.com/jquery-3.2.1.min.js"></script>
+<script src="../jquery.fancybox.min.js"></script>
+<link rel="stylesheet" type="text/css" href="../jquery.fancybox.min.css">
+<link rel="stylesheet" type="text/css" href="../custom.css" />
 <script type="text/javascript">
-// create the XMLHttpRequest object, according browser
-function get_XmlHttp() {
-  // create the variable that will contain the instance of the XMLHttpRequest object (initially with null value)
-  var xmlHttp = null;
-  if(window.XMLHttpRequest) {		// for Forefox, IE7+, Opera, Safari, ...
-    xmlHttp = new XMLHttpRequest();
-  }
-  else if(window.ActiveXObject) {	// for Internet Explorer 5 or 6
-    xmlHttp = new ActiveXObject("Microsoft.XMLHTTP");
-  }
-  return xmlHttp;
-}
-
-// sends data to a php file, via POST, and displays the received answer
+var id_link="";
 function ajaxrequest(link) {
-  var request =  get_XmlHttp();		// call the function for the XMLHttpRequest instance
-   on();
-  // create pairs index=value with data that must be sent to server
-  //var the_data = {mod:add,title:title, link:link}; //Array
+  var request =  new XMLHttpRequest();
+  on();
   var the_data = link;
   var php_file='direct_link.php';
   request.open('POST', php_file, true);			// set the request
@@ -42,80 +32,51 @@ function ajaxrequest(link) {
   // If the response is received completely, will be transferred to the HTML tag with tagID
   request.onreadystatechange = function() {
     if (request.readyState == 4) {
-    off();
-    //alert (request.responseText);
+      off();
       document.getElementById("mytest1").href=request.responseText;
       document.getElementById("mytest1").click();
     }
   }
 }
-function prog(link) {
-  var request =  get_XmlHttp();		// call the function for the XMLHttpRequest instance
 
-  // create pairs index=value with data that must be sent to server
-  //var the_data = {mod:add,title:title, link:link}; //Array
-  var the_data = link;
-  var php_file='prog.php';
-  request.open('POST', php_file, true);			// set the request
-
-  // adds a header to tell the PHP script to recognize the data as is sent via POST
-  request.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-  request.send(the_data);		// calls the send() method with datas as parameter
-
-  // Check request status
-  // If the response is received completely, will be transferred to the HTML tag with tagID
-  request.onreadystatechange = function() {
-    if (request.readyState == 4) {
-      alert (request.responseText);
-    }
-  }
-}
-</script>
-<script type="text/javascript">
 function isValid(evt) {
-    var charCode = (evt.which) ? evt.which : event.keyCode,
-        self = evt.target;
-        //self = document.activeElement;
-        //self = evt.currentTarget;
-    //console.log(self.value);
-       //alert (charCode);
-    if (charCode == "97" || charCode == "49") {
-     //alert (self.id);
+    var charCode = (evt.which) ? evt.which : evt.keyCode,
+    self = evt.target;
+    if (charCode == "49") {
      id = "imdb_" + self.id;
+     id_link=self.id;
      val_imdb=document.getElementById(id).value;
-     prog(val_imdb);
+     msg="prog.php?" + val_imdb;
+     document.getElementById("fancy").href=msg;
+     document.getElementById("fancy").click();
     }
     return true;
 }
+   function zx(e){
+     var instance = $.fancybox.getInstance();
+     var charCode = (typeof e.which == "number") ? e.which : e.keyCode
+     if (charCode == "13"  && instance !== false) {
+       $.fancybox.close();
+       setTimeout(function(){ document.getElementById(id_link).focus(); }, 500);
+     }
+   }
+function isKeyPressed(event) {
+  if (event.ctrlKey) {
+    id = "imdb_" + event.target.id;
+    val_imdb=document.getElementById(id).value;
+    msg="prog.php?" + val_imdb;
+    document.getElementById("fancy").href=msg;
+    document.getElementById("fancy").click();
+  }
+}
+function prog(link) {
+    msg="prog.php?" + link;
+    document.getElementById("fancy").href=msg;
+    document.getElementById("fancy").click();
+}
 $(document).on('keyup', '.imdb', isValid);
-//$(document).on('keydown', '.imdb', isValid);
+document.onkeypress =  zx;
 </script>
-<link rel="stylesheet" type="text/css" href="../custom.css" />
-<style>
-#overlay {
-    position: fixed;
-    display: none;
-    width: 100%;
-    height: 100%;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-color: rgba(0,0,0,0.5);
-    z-index: 2;
-    cursor: pointer;
-}
-
-#text{
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    font-size: 50px;
-    color: white;
-    transform: translate(-50%,-50%);
-    -ms-transform: translate(-50%,-50%);
-}
-</style>
 </head>
 <body>
 <script>
@@ -127,9 +88,8 @@ function off() {
     document.getElementById("overlay").style.display = "none";
 }
 </script>
-   <a href='' id='mytest1'></a>
-   <div id="mainnav">
-<H2></H2>
+<a href='' id='mytest1'></a>
+<a id="fancy" data-fancybox data-type="iframe" href=""></a>
 <?php
 function str_between($string, $start, $end){
 	$string = " ".$string; $ini = strpos($string,$start);
@@ -174,10 +134,13 @@ $videos = array_values($videos);
     $l="link=".urlencode(fix_t($link))."&title=".urlencode(fix_t($title))."&from=flc&mod=direct";
   if ($link <> "") {
   if ($n==0) echo '<TR>';
-  if ($flash != "mp")
-  echo '<td class="cat"  width="25%"><a class ="imdb" id="myLink'.($w*1).'" href="'.$link1.'" target="_blank">'.$title.'<input type="hidden" id="imdb_myLink'.($w*1).'" value="'.$val_prog.'"></a></TD>';
-    else
-  echo '<td class="cat"  width="25%">'.'<a class ="imdb" id="myLink'.($w*1).'" onclick="ajaxrequest('."'".$l."', '"."')".'"'." style='cursor:pointer;'>".''.$title.'<input type="hidden" id="imdb_myLink'.($w*1).'" value="'.$val_prog.'"></a></a></TD>';
+  if ($flash != "mp") {
+  echo '<td class="mp" align="center" width="25%"><a class ="imdb" id="myLink'.($w*1).'" href="'.$link1.'" target="_blank" onmousedown="isKeyPressed(event)">
+  '.$title.'<input type="hidden" id="imdb_myLink'.($w*1).'" value="'.$val_prog.'"></a>
+  <a onclick="prog('."'".$val_prog."')".'"'." style='cursor:pointer;'>"." *".'</a>
+  </TD>';
+  }  else
+  echo '<td class="mp" align="center" width="25%">'.'<a class ="imdb" id="myLink'.($w*1).'" onclick="ajaxrequest('."'".$l."')".'"'." style='cursor:pointer;'>".$title.'<input type="hidden" id="imdb_myLink'.($w*1).'" value="'.$val_prog.'"></a></TD>';
   $w++;
   $n++;
   if ($n == 4) {
@@ -188,7 +151,6 @@ $videos = array_values($videos);
 }
 echo "</table>";
 ?>
-<br></div>
 <div id="overlay"">
   <div id="text">Wait....</div>
 </div>

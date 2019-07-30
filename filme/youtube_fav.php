@@ -16,51 +16,9 @@ $list = glob($base_sub."*.srt");
       <title><?php echo $page_title; ?></title>
 <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
 <link rel="stylesheet" type="text/css" href="../custom.css" />
-<style>
-#overlay {
-    position: fixed;
-    display: none;
-    width: 100%;
-    height: 100%;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-color: rgba(0,0,0,0.5);
-    z-index: 2;
-    cursor: pointer;
-}
-
-#text{
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    font-size: 50px;
-    color: white;
-    transform: translate(-50%,-50%);
-    -ms-transform: translate(-50%,-50%);
-}
-</style>
 <script type="text/javascript">
-// create the XMLHttpRequest object, according browser
-function get_XmlHttp() {
-  // create the variable that will contain the instance of the XMLHttpRequest object (initially with null value)
-  var xmlHttp = null;
-  if(window.XMLHttpRequest) {		// for Forefox, IE7+, Opera, Safari, ...
-    xmlHttp = new XMLHttpRequest();
-  }
-  else if(window.ActiveXObject) {	// for Internet Explorer 5 or 6
-    xmlHttp = new ActiveXObject("Microsoft.XMLHTTP");
-  }
-  return xmlHttp;
-}
-
-// sends data to a php file, via POST, and displays the received answer
 function ajaxrequest2(link) {
-  var request =  get_XmlHttp();		// call the function for the XMLHttpRequest instance
-
-  // create pairs index=value with data that must be sent to server
-  //var the_data = {mod:del,title:title, link:link}; //Array
+  var request =  new XMLHttpRequest();
   var the_data = link;
   var php_file='youtube_add.php';
   request.open("POST", php_file, true);			// set the request
@@ -83,10 +41,7 @@ function ajaxrequest1(link) {
   window.open(msg);
 }
 function ajaxrequest(link) {
-  var request =  get_XmlHttp();		// call the function for the XMLHttpRequest instance
-
-  // create pairs index=value with data that must be sent to server
-  //var the_data = {mod:add,title:title, link:link}; //Array
+  var request =  new XMLHttpRequest();
   on();
   var the_data = "link=" + link;
   var php_file="link1.php";
@@ -101,21 +56,16 @@ function ajaxrequest(link) {
   request.onreadystatechange = function() {
     if (request.readyState == 4) {
        off();
-       //alert (request.responseText);
        document.getElementById("mytest1").href=request.responseText;
-      document.getElementById("mytest1").click();
+       document.getElementById("mytest1").click();
     }
   }
 }
 </script>
 <script type="text/javascript">
 function isValid(evt) {
-    var charCode = (evt.which) ? evt.which : event.keyCode,
-        self = evt.target;
-        //self = document.activeElement;
-        //self = evt.currentTarget;
-    //console.log(self.value);
-       //alert (charCode);
+    var charCode = (evt.which) ? evt.which : evt.keyCode,
+    self = evt.target;
 if  (charCode == "51"  && evt.target.type != "text") {
       id = "fav_" + self.id;
       val_fav=document.getElementById(id).value;
@@ -124,7 +74,6 @@ if  (charCode == "51"  && evt.target.type != "text") {
     return true;
 }
 $(document).on('keyup', '.imdb', isValid);
-//$(document).on('keydown', '.imdb', isValid);
 </script>
 </head>
 <body>
@@ -235,8 +184,6 @@ echo '<table border="1px" width="100%"><TR><TD>Apasti tasta 3 pentru a adauga/st
 }
 
 ?>
-</div>
-<br>
 <div id="overlay"">
   <div id="text">Wait....</div>
 </div>

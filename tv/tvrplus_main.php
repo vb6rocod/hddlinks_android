@@ -9,7 +9,7 @@
 
 <link rel="stylesheet" type="text/css" href="../custom.css" />
 </head>
-<body><div id="mainnav">
+<body>
 <?php
 function str_between($string, $start, $end){
 	$string = " ".$string; $ini = strpos($string,$start);
@@ -87,5 +87,5 @@ foreach($videos as $video) {
  if ($n<3) echo "</TR>"."\n\r";
  echo '</table>';
 ?>
-</div><BODY>
+</BODY>
 </HTML>

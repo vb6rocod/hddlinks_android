@@ -11,26 +11,11 @@ include ("../common.php");
 <meta http-equiv="Expires" content="0"/>
       <title>Qello TV</title>
 <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.0/jquery.min.js"></script>
+<link rel="stylesheet" type="text/css" href="../custom.css" />
 <script type="text/javascript">
-// create the XMLHttpRequest object, according browser
-function get_XmlHttp() {
-  // create the variable that will contain the instance of the XMLHttpRequest object (initially with null value)
-  var xmlHttp = null;
-  if(window.XMLHttpRequest) {		// for Forefox, IE7+, Opera, Safari, ...
-    xmlHttp = new XMLHttpRequest();
-  }
-  else if(window.ActiveXObject) {	// for Internet Explorer 5 or 6
-    xmlHttp = new ActiveXObject("Microsoft.XMLHTTP");
-  }
-  return xmlHttp;
-}
-
-// sends data to a php file, via POST, and displays the received answer
 function ajaxrequest(link) {
-  var request =  get_XmlHttp();		// call the function for the XMLHttpRequest instance
+  var request =  new XMLHttpRequest();
   on();
-  // create pairs index=value with data that must be sent to server
-  //var the_data = {mod:add,title:title, link:link}; //Array
   var the_data = link;
   var php_file='qello.php';
   request.open('POST', php_file, true);			// set the request
@@ -45,38 +30,13 @@ function ajaxrequest(link) {
     if (request.readyState == 4) {
     off();
     //alert (request.responseText);
-      document.getElementById("mytest1").href=request.responseText;
-      document.getElementById("mytest1").click();
+    document.getElementById("mytest1").href=request.responseText;
+    document.getElementById("mytest1").click();
     }
   }
 }
 </script>
-<link rel="stylesheet" type="text/css" href="../custom.css" />
-<style>
-#overlay {
-    position: fixed;
-    display: none;
-    width: 100%;
-    height: 100%;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-color: rgba(0,0,0,0.5);
-    z-index: 2;
-    cursor: pointer;
-}
 
-#text{
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    font-size: 50px;
-    color: white;
-    transform: translate(-50%,-50%);
-    -ms-transform: translate(-50%,-50%);
-}
-</style>
 </head>
 <body>
 <script>
@@ -89,8 +49,6 @@ function off() {
 }
 </script>
    <a href='' id='mytest1'></a>
-   <div id="mainnav">
-<H2></H2>
 <?php
 function str_between($string, $start, $end){
 	$string = " ".$string; $ini = strpos($string,$start);
@@ -164,8 +122,6 @@ foreach($videos as $video) {
 }
 echo "</table>";
 ?>
-<br>
-</div>
 <div id="overlay"">
   <div id="text">Wait....</div>
 </div>

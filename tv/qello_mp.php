@@ -14,31 +14,6 @@ $page_title=urldecode($link);
 <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.0/jquery.min.js"></script>
 
 <link rel="stylesheet" type="text/css" href="../custom.css" />
-<style>
-#overlay {
-    position: fixed;
-    display: none;
-    width: 100%;
-    height: 100%;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-color: rgba(0,0,0,0.5);
-    z-index: 2;
-    cursor: pointer;
-}
-
-#text{
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    font-size: 50px;
-    color: white;
-    transform: translate(-50%,-50%);
-    -ms-transform: translate(-50%,-50%);
-}
-</style>
 </head>
 <body>
 <script>
@@ -51,8 +26,6 @@ function off() {
 }
 </script>
    <a href='' id='mytest1'></a>
-   <div id="mainnav">
-<H2></H2>
 <?php
 function str_between($string, $start, $end){
 	$string = " ".$string; $ini = strpos($string,$start);
@@ -116,8 +89,6 @@ for ($k=0;$k<count($r);$k++) {
 }
 echo "</table>";
 ?>
-</div>
-<br>
 <div id="overlay"">
   <div id="text">Wait....</div>
 </div>

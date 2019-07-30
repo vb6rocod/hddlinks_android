@@ -44,6 +44,7 @@ function prep_tit($s) {
   $ret=str_replace("&#8211;","-",$ret);
   $ret=str_replace("&#8217;","'",$ret);
   $ret=str_replace("&#8211","",$ret);
+  $ret=urldecode(str_replace("%E2%80%93","-",urlencode($ret)));
   $ret=trim(preg_replace("/(dublat|in romana|cu sub|gratis|subtitrat|onlin|film|sbtitrat|\shd)(.*)/i","",$ret));
   return $ret;
 }

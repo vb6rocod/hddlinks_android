@@ -232,7 +232,6 @@ $host=parse_url($l)['host'];
   $html = curl_exec($ch);
   curl_close($ch);
   
-
 $r=array();
 $t1=explode('<div class="contenido">',$html);
 $p=count($t1);
@@ -246,7 +245,7 @@ foreach($videos as $video) {
   $t1=explode('href="',$video);
   $t2 = explode('"', $t1[1]);
   $link = "https://www.pornjam.com".$t2[0];
-  $t1 = explode('src="', $video);
+  $t1 = explode('data-src="', $video);
   $t2 = explode('"', $t1[1]);
   $image = $t2[0];
   $title=str_between($video,'stats-video-name="','"');

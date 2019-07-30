@@ -74,11 +74,11 @@ header('Content-type: application/vnd.apple.mpegURL');
 header('Content-Disposition: attachment; filename="'.$title.'"');
 header("Location: $movie");
 } elseif ($flash == "mp") {
-$c="intent:".$movie."#Intent;package=com.mxtech.videoplayer.".$mx.";S.title=".urlencode($title).";end";
+$c="intent:".$movie."#Intent;type=video/mp4;package=com.mxtech.videoplayer.".$mx.";S.title=".urlencode($title).";end";
 echo $c;
 die();
 } elseif ($flash == "chrome") {
-  $c="intent:".$movie."#Intent;package=com.mxtech.videoplayer.".$mx.";S.title=".urlencode($title).";end";
+  $c="intent:".$movie."#Intent;type=video/mp4;package=com.mxtech.videoplayer.".$mx.";S.title=".urlencode($title).";end";
   header("Location: $c");
 } else {
 echo '
@@ -113,7 +113,6 @@ jwplayer("container").setup({
 "height": $(document).height(),
 "width": $(document).width(),
 "skin": {
-    "name": "beelden",
     "active": "#00bfff",
     "inactive": "#b6b6b6",
     "background": "#282828"

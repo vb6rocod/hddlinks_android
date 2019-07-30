@@ -221,7 +221,7 @@ function getIMDBDetail($tt_imdb)
     if (isset($m[1]))
         $arr["poster"] = $m[1];
     else
-        $arr["poster"] = "";
+        $arr["poster"] = "blank.jpg";
     preg_match('/<title>.*?\(.*?(\d{4}).*?\).*?<\/title>/ms', $h, $m);
     if (isset($m[1]))
         $arr["Year"] = trim($m[1]);

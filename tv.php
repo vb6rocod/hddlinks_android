@@ -15,26 +15,9 @@ td {
 </style>
 <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.0/jquery.min.js"></script>
 <script type="text/javascript">
-function get_XmlHttp() {
-  // create the variable that will contain the instance of the XMLHttpRequest object (initially with null value)
-  var xmlHttp = null;
-  if(window.XMLHttpRequest) {		// for Forefox, IE7+, Opera, Safari, ...
-    xmlHttp = new XMLHttpRequest();
-  }
-  else if(window.ActiveXObject) {	// for Internet Explorer 5 or 6
-    xmlHttp = new ActiveXObject("Microsoft.XMLHTTP");
-  }
-  return xmlHttp;
-}
-
 function ajaxrequest(link) {
-  var request =  get_XmlHttp();		// call the function for the XMLHttpRequest instance
-
-  // create pairs index=value with data that must be sent to server
-  //var the_data = {mod:add,title:title, link:link}; //Array
-  //link=document.getElementById('server').innerHTML;
+  var request =  new XMLHttpRequest();
   var the_data = "file=" + link;
-  //alert(the_data);
   var php_file="tv/playlist_del.php";
   request.open("POST", php_file, true);			// set the request
 
@@ -51,25 +34,17 @@ function ajaxrequest(link) {
     }
   }
 }
-</script>
-<script type="text/javascript">
 function isValid(evt) {
-    var charCode = (evt.which) ? evt.which : event.keyCode,
-        self = evt.target;
-        //self = document.activeElement;
-        //self = evt.currentTarget;
-    //console.log(self.value);
-       //alert (charCode);
+    var charCode = (evt.which) ? evt.which : evt.keyCode,
+    self = evt.target;
     if  (charCode == "49") {
       id = "fav_" + self.id;
-      //alert (id);
       val_fav=document.getElementById(id).value;
       ajaxrequest(val_fav);
     }
     return true;
 }
 $(document).on('keyup', '.imdb', isValid);
-//$(document).on('keydown', '.imdb', isValid);
 </script>
 </head>
 <BODY>
@@ -81,8 +56,8 @@ $(document).on('keyup', '.imdb', isValid);
 <TR>
 <TD width="25%"><a href="tv/digi.php" target="_blank">digi-online</a></TD>
 <TD width="25%"><a href="tv/playlist.php?title=TVR.m3u" target="_blank">TVR Live</a></TD>
-<TD width="25%"><a href="tv/tvrplus_e.php?page=1,http://www.seenow.ro/freezone,TV+(FreeZone)" target="_blank">Seenow TV (FreeZone)</a></TD>
-<TD width="25%"><a href="tv/tvrstiri.php?page=1,,TVR+Stiri" target="_blank">TVR - Stiri</a></TD>
+<TD width="25%"><a href="tv/seenow.php" target="_blank">Seenow TV</a></TD>
+<TD width="25%"><a href="tv/tvrstiri.php" target="_blank">TVR - Stiri</a></TD>
 
 </TR>
 <TR>

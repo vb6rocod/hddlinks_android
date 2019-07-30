@@ -4768,7 +4768,7 @@ header("Location: $movie");
 $hed = "headers="."{'Cookie: approve=1'}";
 if (!preg_match("/hqq\.|putload\.|thevideobee\.|flixtor\.|0123netflix|mangovideo/",$filelink)) // HW=1;SW=2;HW+=4
 $c="intent:".$movie."#Intent;type=video/mp4;package=com.mxtech.videoplayer.".$mx.";S.title=".urlencode($pg).";b.decode_mode=1;end";
-//elseif (preg_match("/putload\./",$filelink))
+//$c="intent:".$movie."#Intent;type=video/mp4;package=com.mxtech.videoplayer.".$mx.";S.title=".urlencode($pg).";end";
 //$c="intent:".$movie."#Intent;type=video/mp4;S.title=".urlencode($pg).";end";
 else
 $c="intent:".$movie."#Intent;type=video/mp4;package=com.mxtech.videoplayer.".$mx.";S.title=".urlencode($pg).";end";

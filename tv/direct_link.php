@@ -252,6 +252,40 @@ if (strpos($link,"jurnaltv.md/JurnalTV") !== false) {
     curl_close($ch);
     $link=str_between($h,'source src="','"');
 }
+if ($from=="seenow") {
+$id=$link;
+$l="http://www.seenow.ro:1937/service3/play/index/id/".$id."/platform_id/12";
+  $ch = curl_init();
+  curl_setopt($ch, CURLOPT_URL, $l);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+  curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 5.1; rv:14.0) Gecko/20100101 Firefox/14.0.1');
+  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+  curl_setopt($ch, CURLOPT_REFERER,"http://www.seenow.ro/");
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+  $h = curl_exec($ch);
+  curl_close($ch);
+  $r=json_decode($h,1);
+
+$l_serv=$r["indexUrl"];
+  $ch = curl_init();
+  curl_setopt($ch, CURLOPT_URL, $l_serv);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+  curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 5.1; rv:14.0) Gecko/20100101 Firefox/14.0.1');
+  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+  curl_setopt($ch, CURLOPT_REFERER,"http://www.seenow.ro/");
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+  $h1 = curl_exec($ch);
+  curl_close($ch);
+$t1=explode('server=',$h1);
+$t2=explode('&',$t1[1]);
+$serv=$t2[0];
+$link_f=$r['streamUrl'];
+$t1=explode("|",$link_f);
+$link_f=$t1[0];
+$link=str_replace('[%server_name%]',$serv,$link_f);
+}
 if ($from=="profunzime") {
     $ch = curl_init();
     curl_setopt($ch, CURLOPT_URL, $link);
@@ -360,7 +394,7 @@ if ($from=="moldova") {
 if ($from=="flc") {
   $token=file_get_contents($base_fav."flc.txt");
   $l="http://api.folclor.platform24.tv/v2/channels/".$link."/stream?access_token=".$token."&format=json";
-  $l="http://api.folclor.platform24.tv/v2/channels/".$link."/stream?access_token=".$token."&format=json&type=http";
+  //$l="http://api.folclor.platform24.tv/v2/channels/".$link."/stream?access_token=".$token."&format=json&type=http";
     $ch = curl_init();
     curl_setopt($ch, CURLOPT_URL, $l);
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
@@ -377,8 +411,8 @@ if ($from=="flc") {
     curl_close($ch);
     $r=json_decode($h,1);
     //print_r ($r);
-    //$link=$r["hls"];
-    $link=$r["http"];
+    $link=$r["hls"];
+    //$link=$r["http"];
 }
 if ($from=="digifree") {
   $l="http://balancer.digi24.ro/?scope=".$link."&type=hls&quality=hq&outputFormat=jsonp&callback=jsonp_callback_1";
@@ -1101,8 +1135,6 @@ jwplayer("container").setup({
 }],
 "height": $(document).height(),
 "width": $(document).width(),
-"aspectratio": "16:9",
-"stretching": "exactfit",
 "skin": {
     "active": "#00bfff",
     "inactive": "#b6b6b6",

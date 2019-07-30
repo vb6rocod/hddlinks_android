@@ -1,11 +1,12 @@
 <!DOCTYPE html>
 <?php
 include ("../common.php");
-$page_title="Digi Online";
+$page_title="Seenow TV";
 $width="200px";
-$height=intval(200*(394/700))."px";
+$height=intval(200*(153/190))."px";
 ?>
-<html><head>
+<html>
+<head>
 <meta http-equiv="content-type" content="text/html; charset=UTF-8">
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate"/>
 <meta http-equiv="Pragma" content="no-cache"/>
@@ -77,7 +78,6 @@ function prog(link) {
 $(document).on('keyup', '.imdb', isValid);
 document.onkeypress =  zx;
 </script>
-
 </head>
 <body>
 <script>
@@ -115,38 +115,27 @@ $n=0;
 $w=0;
 echo '<h2>'.$page_title.'</H2>';
 echo '<table border="1px" width="100%">'."\n\r";
-$l="https://digiapis.rcs-rds.ro/digionline/api/v11/playprograms.php?action=getAllCategoriesAndPrograms&platform=Android";
-
+$link="http://www.seenow.ro/freezone";
   $ch = curl_init();
-  curl_setopt($ch, CURLOPT_URL, $l);
+  curl_setopt($ch, CURLOPT_URL, $link);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-  curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 10.0; rv:55.0) Gecko/20100101 Firefox/55.0');
+  curl_setopt($ch,CURLOPT_REFERER,$link);
+  curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows; U; Windows NT 6.1; en-US; rv:1.9.1.2) Gecko/20090729 Firefox/3.5.2 GTB5');
   curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
-  curl_setopt($ch, CURLOPT_ENCODING, "");
   curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
   curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
   curl_setopt($ch, CURLOPT_TIMEOUT, 15);
-  //curl_setopt($ch,CURLOPT_HTTPHEADER,$head);
   $html = curl_exec($ch);
-  curl_close($ch);
-$videos = explode('id_stream', $html);
-unset($videos[0]);
-$n=0;
-$videos = array_values($videos);
-  foreach($videos as $video) {
-  $t1=explode('"stream_desc":"',$video);
-  $t2=explode('"',$t1[1]);
-  $title=$t2[0];
-  $t1=explode('"stream_name":"',$video);
-  $t2=explode('"',$t1[1]);
-  $link=$t2[0];
-  $t1=explode('"ios_logo":"',$video);
-  $t2=explode('"',$t1[1]);
-  $image="http://do-static-03.cdn.rcs-rds.ro/digionline/mobile-content/v11/images/droid/".$t2[0];
+  $h=str_between($html,'list: ',']}],').']}]';
+  $r = json_decode($h,1);
+for ($k=0;$k<count($r);$k++) {
+    $title=$r[$k]['item_title'];
+    $image=$r[$k]['thumbnail_path'];
+    $link=$r[$k]['id'];
+    $link1="direct_link.php?link=".$link."&title=".urlencode($title)."&from=seenow&mod=direct";
+    $l="link=".urlencode(fix_t($link))."&title=".urlencode(fix_t($title))."&from=seenow&mod=direct";
     $val_prog="link=".urlencode(fix_t($title));
-    $link1="direct_link.php?link=".$link."&title=".urlencode($title)."&from=digifree&mod=direct";
-    $l="link=".urlencode(fix_t($link))."&title=".urlencode(fix_t($title))."&from=digifree&mod=direct";
-  if ($link <> "") {
+  if ($r[$k]['item_type'] == "tvstation") {
   if ($n==0) echo '<TR>';
   if ($flash != "mp") {
   echo '<td class="mp" align="center" width="25%"><a class ="imdb" id="myLink'.($w*1).'" href="'.$link1.'" target="_blank" onmousedown="isKeyPressed(event)">

@@ -55,6 +55,7 @@ td.mp {
     text-overflow: initial;
     white-space: wrap;
     word-wrap: break-word;
+    vertical-align:bottom;
 }
 td.nav {
     font-style: bold;
