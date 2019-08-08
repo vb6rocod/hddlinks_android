@@ -96,7 +96,10 @@ die();
   $c="intent:".$movie."#Intent;type=video/mp4;package=com.mxtech.videoplayer.".$mx.";b.decode_mode=1;S.title=".urlencode($pg_tit).";end";
   header("Location: $c");
 } else {
-$type="mp4";
+if (strpos($movie,".m3u8") === false)
+ $type="mp4";
+else
+ $type="m3u8";
 echo '
 <!doctype html>
 <HTML>

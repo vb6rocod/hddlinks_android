@@ -92,7 +92,7 @@ function ajaxrequest(link) {
   }
 }
 function isValid(evt) {
-    var charCode = (evt.which) ? evt.which : event.keyCode,
+    var charCode = (evt.which) ? evt.which : evt.keyCode,
     self = evt.target;
     if (charCode == "49") {
      id = "imdb_" + self.id;
@@ -101,6 +101,10 @@ function isValid(evt) {
      msg="imdb.php?" + val_imdb;
      document.getElementById("fancy").href=msg;
      document.getElementById("fancy").click();
+    } else if  (charCode == "51") {
+      id = "fav_" + self.id;
+      val_fav=document.getElementById(id).value;
+      ajaxrequest(val_fav);
     }
     return true;
 }

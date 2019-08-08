@@ -46,6 +46,14 @@ function isValid(evt) {
      msg="prog.php?" + val_imdb;
      document.getElementById("fancy").href=msg;
      document.getElementById("fancy").click();
+    } else if (charCode == "51") {
+     id = "imdb_" + self.id;
+     id_link=self.id;
+     val_imdb=document.getElementById(id).value;
+     val_imdb = val_imdb.replace("link=","title=");
+     msg="../filme/imdb.php?" + val_imdb;
+     document.getElementById("fancy").href=msg;
+     document.getElementById("fancy").click();
     }
     return true;
 }
@@ -122,8 +130,12 @@ $m3uFile="pl/".$pg_tit;
 $m3uFile = file($m3uFile);
 foreach($m3uFile as $key => $line) {
   if(strtoupper(substr($line, 0, 7)) === "#EXTINF") {
+    if (preg_match("/tvg\-name\=\"(.*?)\"/i",$line,$m)) {
+      $title=$m[1];
+    } else {
     $t1=explode(",",$line);
     $title=trim($t1[1]);
+    }
     $file = trim($m3uFile[$key + 1]);
     if ($file[0]=="#")  $file = trim($m3uFile[$key + 2]);
     if ($pg_tit=="alltvn.m3u")
@@ -184,13 +196,13 @@ foreach($m3uFile as $key => $line) {
     $l_prog="link=".urlencode(fix_t($title));
     if ($tast == "NU") {
    	echo '<a onclick="prog('."'".$l_prog."')".'"'." style='cursor:pointer;'>"." *".'</a></TD>';
-    if ($n > 4) {
+    if ($n > 3) {
      echo '</TR>'."\n\r";
      $n=0;
     }
     } else {
     echo '</TD>';
-    if ($n > 4) {
+    if ($n > 3) {
      echo '</TR>'."\n\r";
      $n=0;
     }

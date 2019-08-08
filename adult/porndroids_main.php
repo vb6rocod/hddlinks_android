@@ -75,7 +75,7 @@ foreach($videos as $video) {
     //$t=explode('href="',$video);
     $t1=explode('"',$video);
     $link="https://www.porndroids.com/category".$t1[0];
-    $t2=explode('title="',$video);
+    $t2=explode('gtmname="',$video);
     $t3=explode('"',$t2[1]);
   	$title=$t3[0];
   	$title=prep_tit($title);

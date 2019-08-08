@@ -886,6 +886,32 @@ $link = str_replace($j, $h, $orig);
   } else {
     $link="";
   }
+} elseif (strpos($filelink,"onlystream.tv") !== false) {
+  //https://onlystream.tv/e/rgcv3v545biu
+  require_once("JavaScriptUnpacker.php");
+  $ch = curl_init();
+  curl_setopt($ch, CURLOPT_URL, $filelink);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+  curl_setopt($ch, CURLOPT_USERAGENT, "Mozilla/5.0 (Windows NT 10.0; rv:65.0) Gecko/20100101 Firefox/65.0");
+  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+  //curl_setopt($ch,CURLOPT_REFERER,"http://gamovideo.com/");
+  curl_setopt($ch, CURLOPT_ENCODING, "");
+  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+  $h3 = curl_exec($ch);
+  curl_close($ch);
+  //echo $h3;
+  $jsu = new JavaScriptUnpacker();
+  $out = $jsu->Unpack($h3);
+  //echo $out;
+  if (preg_match('/((http|https)[\.\d\w\-\.\/\\\:\?\&\#\%\_\,]*(\.mp4))/', $out, $m)) {
+  $link=$m[1];
+  if (preg_match('/([http|https][\.\d\w\-\.\/\\\:\?\&\#\%\_\,]*(\.(srt|vtt)))/', $out, $s))
+  $srt=$s[1];
+  } else {
+    $link="";
+  }
 } elseif (strpos($filelink,"datoporn.co") !== false) {
   //https://datoporn.co/embed-24ynitvgmfow-658x400.html
   $pattern = '@(?:\/\/|\.)(datoporn\.(co|com))\/(?:embed-)?([a-zA-Z0-9]+)@';
@@ -1650,6 +1676,7 @@ $h3 = @file_get_contents($url, false, $context);
   }
  }
 } elseif (strpos($filelink,"vidtodo") !== false) {
+  require_once("JavaScriptUnpacker.php");
 //echo $filelink;
   //https://vidtodo.com/f6whqkvtnhj9
       $ua="Mozilla/5.0 (Windows NT 10.0; WOW64; rv:46.0) Gecko/20100101 Firefox/46.0";
@@ -1665,7 +1692,9 @@ $h3 = @file_get_contents($url, false, $context);
       $h1 = curl_exec($ch);
       curl_close($ch);
       //echo $h1;
-  if (preg_match('/[{file:"]((http|https)[\.\d\w\-\.\/\\\:\?\&\#\%\_\,]*(\.mp4))/', $h1, $m))
+      $jsu = new JavaScriptUnpacker();
+      $out = $jsu->Unpack($h1);
+  if (preg_match('/[{file:"]((http|https)[\.\d\w\-\.\/\\\:\?\&\#\%\_\,]*(\.mp4))/', $out, $m))
    $link=$m[1];
   else
    $link="";
@@ -1854,7 +1883,7 @@ $filelink="https://www.facebook.com/video/embed?video_id=".$m[2];
 } elseif (strpos($filelink,"vidzi.tv") !== false) {
   //http://vidzi.tv/otefvw9e1jcl.html
   require_once("JavaScriptUnpacker.php");
-
+  //echo $filelink;
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $filelink);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
@@ -1934,7 +1963,7 @@ function abc($a52, $a10)
     $head     = array(
         'Cookie: ref_url=' . urlencode($filelink) . '; BJS0=1; BJS1=1; e_' . $id . '=123456789'
     );
-    $l        = "https://povvideo.net/iframe-" . $id . "-954x562.html";
+    $l        = "https://powvideo.net/iframe-" . $id . "-954x562.html";
     $ch       = curl_init();
     curl_setopt($ch, CURLOPT_URL, $l);
     curl_setopt($ch, CURLOPT_REFERER, "https://povvideo.net/preview-" . $id . "-732x695.html");
@@ -1966,7 +1995,7 @@ function abc($a52, $a10)
     if (preg_match('/([\.\d\w\-\.\/\\\:\?\&\#\%\_]*(\.(srt|vtt)))/', $out, $xx)) {
         $srt = $xx[1];
     if (strpos("http", $srt) === false && $srt)
-        $srt = "https://povvideo.net" . $srt;
+        $srt = "https://powvideo.net" . $srt;
     }
     /*
     $c0 fisrt array
@@ -3190,6 +3219,40 @@ $var2=0;
 }
 return join('',$result);
 }
+function decode_wise($x) {
+
+preg_match_all("/;}\('(\w+)','(\w*)','(\w*)','(\w*)'\)\)/",$x,$m);
+
+$h2= decode3($m[1][0],$m[2][0],$m[3][0],$m[4][0]);
+
+preg_match_all("/;}\('(\w+)','(\w*)','(\w*)','(\w*)'\)\)/",$h2,$m);
+$h2= decode3($m[1][0],$m[2][0],$m[3][0],$m[4][0]);
+
+$t1=explode(";;",$h2);
+$h2=$t1[1];
+preg_match_all("/;}\('(\w+)','(\w*)','(\w*)','(\w*)'\)\)/",$h2,$m);
+$h2= decode3($m[1][0],$m[2][0],$m[3][0],$m[4][0]);
+//echo $h2;
+//die();
+$y=$x." ".$h2;
+//echo $h;
+//echo $h;
+preg_match_all("/;}\('(\w+)','(\w*)','(\w*)','(\w*)'\)\)/",$y,$m);
+//print_r ($m);
+
+$h2= decode3($m[1][0],$m[2][0],$m[3][0],$m[4][0]);
+//echo $h2;
+//die();
+preg_match_all("/;}\('(\w+)','(\w*)','(\w*)','(\w*)'\)\)/",$h2,$m);
+$h2= decode3($m[1][0],$m[2][0],$m[3][0],$m[4][0]);
+
+$t1=explode(";;",$h2);
+$h2=$t1[1];
+preg_match_all("/;}\('(\w+)','(\w*)','(\w*)','(\w*)'\)\)/",$h2,$m);
+$h2= decode3($m[1][0],$m[2][0],$m[3][0],$m[4][0]);
+return $h2;
+}
+
   if ($flash=="flash")
   $user_agent     =   $_SERVER['HTTP_USER_AGENT'];
   else {
@@ -3231,9 +3294,6 @@ $l="http://hqq.tv/player/embed_player.php?vid=".$vid."&autoplay=no";
 //$l="http://hqq.watch/player/embed_player.php?vid=UXZUYWRacWFnTmZ2RUswa2M3bkh6Zz09&autoplay=no";
 
 $cookie=$base_cookie."hqq.txt";
-$head=array('Cookie: gt=9608159b3d3d54bc27df0ae9ac530d6c');
-//echo  date('Y-m-d h:i:s', 1552082450);
-//die();
       $ch = curl_init();
       curl_setopt($ch, CURLOPT_URL, $l);
       curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
@@ -3291,76 +3351,50 @@ $l_ref=$l;
       curl_close($ch);
 
 $h=urldecode($h);
+//preg_match("/var link_m3u8 \= \"(.*?)\"/",$h,$m);
+//file_put_contents("result.txt",$h);
 //echo $h;
+//die();
+
+//$t1=explode('</head>',$h);
+//$h=$t1[1];
 //$h=file_get_contents("result.txt");
+//echo $h;
 if (preg_match("/get_md5/",$h)){
   if (preg_match('/([http|https][\.\d\w\-\.\/\\\:\?\&\#\%\_\,]*(\.(srt|vtt)))/', $h, $m)) {
   $srt=$m[1];
   $srt=urldecode(str_replace("https","http",$srt));
   }
-  //echo $srt;
-  //die();
-//die();
-preg_match_all("/;}\('(\w+)','(\w*)','(\w*)','(\w*)'\)\)/",$h,$m);
-//print_r ($m);
-
-$h2= decode3($m[1][0],$m[2][0],$m[3][0],$m[4][0]);
-//echo $h2;
-//die();
-preg_match_all("/;}\('(\w+)','(\w*)','(\w*)','(\w*)'\)\)/",$h2,$m);
-$h2= decode3($m[1][0],$m[2][0],$m[3][0],$m[4][0]);
-$t1=explode(";;",$h2);
-$h2=$t1[1];
-preg_match_all("/;}\('(\w+)','(\w*)','(\w*)','(\w*)'\)\)/",$h2,$m);
-$h2= decode3($m[1][0],$m[2][0],$m[3][0],$m[4][0]);
-$h=$h." ".$h2;
-//echo $h;
-//echo $h;
-preg_match_all("/;}\('(\w+)','(\w*)','(\w*)','(\w*)'\)\)/",$h,$m);
-//print_r ($m);
-
-$h2= decode3($m[1][0],$m[2][0],$m[3][0],$m[4][0]);
-//echo $h2;
-//die();
-preg_match_all("/;}\('(\w+)','(\w*)','(\w*)','(\w*)'\)\)/",$h2,$m);
-$h2= decode3($m[1][0],$m[2][0],$m[3][0],$m[4][0]);
-$t1=explode(";;",$h2);
-$h2=$t1[1];
-preg_match_all("/;}\('(\w+)','(\w*)','(\w*)','(\w*)'\)\)/",$h2,$m);
-$h2= decode3($m[1][0],$m[2][0],$m[3][0],$m[4][0]);
-$h=$h." ".$h2;
-//echo $h;
-//die();
-
-//echo $h;
-//die();
-$t1=explode('"#',$h2);
-$t2=explode('"',$t1[1]);
-$file="#".$t2[0];
-//echo $file;
-$t1=explode("get_md5.php",$h);
-$vid=str_between($t1[1],'vid: "','"');
 $vid=str_between($h,'videokey = "','"');
-//$vid='07b02207602203a02203203205706305007906a03006206a03605602207d';
-//server_2="+encodeURIComponent(kbseeBF)
-preg_match("/server_2=\"\s*\+*encodeURIComponent\(([^\)]+)/",$t1[1],$m);
-//print_r ($m[1]);
-$pat='/var\s*'.$m[1].'\s*=\s*"([^"]*?)"/';
-preg_match($pat,$h,$m);
+preg_match_all("/eval\(function\(w\,i\,s\,e\)(.*?)\<\/script/ms",$h,$r);
+//print_r ($r);
+//die();
+////////////////////////////////////////////////////////////////////////////////
+
+$e=decode_wise($r[1][0]);
+preg_match('/at\s*=\s*"([^"]*?)"/ms',$e,$m);
+$at=$m[1];
+/////////////////////////////////////////////////////////////////////////////////
+$e=decode_wise($r[1][1]);
+preg_match("/server_2=\"\s*\+*encodeURIComponent\(([^\)]+)/",$h,$m);
+$pat='/'.$m[1].'\s*=\s*"([^"]*?)"/ms';
+//echo $pat;
+preg_match($pat,$e,$m);
 $vid_server=$m[1];
 //$vid_server=trim(str_between($h,'server_1:',','));
-preg_match("/link_1=\"\s*\+*encodeURIComponent\(([^\)]+)/",$t1[1],$m);
-$pat='/var\s*'.$m[1].'\s*=\s*"([^"]*?)"/';
-preg_match($pat,$h,$m);
+//link_1="+encodeURIComponent(
+preg_match("/link_1=\"\s*\+*encodeURIComponent\(([^\)]+)/ms",$h,$m);
+$pat='/'.$m[1].'\s*=\s*"([^"]*?)"/ms';
+preg_match($pat,$e,$m);
 $vid_link=$m[1];
 //$vid_link=trim(str_between($h,'link_1:',','));
 //echo $vid_link;
-preg_match('/var\s*at\s*=\s*"([^"]*?)"/',$h,$m);
-$at=$m[1];
+
 //echo $r;
 //echo urldecode(urldecode($h));
 $l="https://hqq.tv/player/get_md5.php?at=".$at."&adb=0%2F&b=1&link_1=".$vid_link."&server_2=".$vid_server."&vid=".$vid;
 $l="http://hqq.tv/player/get_md5.php?at=".$at."&adb=0%2F&b=1&link_1=".$vid_link."&server_2=".$vid_server."&vid=".$vid;
+//echo $l;
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $l);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);

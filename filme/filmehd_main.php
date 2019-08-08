@@ -79,7 +79,7 @@ foreach($videos as $video) {
     $t3 = explode('<', $t2[1]);
     $title = $t3[0];
     $link=$target."?page=1&tip=release&link=".urlencode(fix_t($link))."&title=".urlencode(fix_t($title));
-    if (!preg_match("/IN CURAND|FILME SERIALE/",$title)) {
+    if (!preg_match("/IN CURAND|FILME SERIALE|seriale/i",$title)) {
 	if ($n == 0) echo "<TR>"."\r\n";
 	echo '<TD class="cat">'.'<a class ="cat" href="'.$link.'" target="_blank">'.$title.'</a></TD>';
     $n++;

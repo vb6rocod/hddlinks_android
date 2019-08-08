@@ -18,11 +18,11 @@ $has_fav="yes";
 $has_search="yes";
 $has_add="yes";
 $has_fs="yes";
-$fav_target="filmeseriale_eu_s_fav.php?host=https://www.filmeseriale.eu";
-$add_target="filmeseriale_eu_s_add.php";
+$fav_target="serialeonline_fav.php?host=https://serialeonline.to";
+$add_target="serialeonline_add.php";
 $add_file="";
-$fs_target="filmeseriale_eu_s_ep.php";
-$target="filmeseriale_eu.php";
+$fs_target="serialeonline_ep.php";
+$target="serialeonline.php";
 /* ==================================================== */
 $base=basename($_SERVER['SCRIPT_FILENAME']);
 $p=$_SERVER['QUERY_STRING'];
@@ -93,7 +93,7 @@ function ajaxrequest(link) {
   }
 }
 function isValid(evt) {
-    var charCode = (evt.which) ? evt.which : evt.keyCode,
+    var charCode = (evt.which) ? evt.which : event.keyCode,
     self = evt.target;
     if (charCode == "49") {
      id = "imdb_" + self.id;
@@ -167,17 +167,19 @@ if ($page==1) {
 }
 echo '</TR>'."\r\n";
 if ($tip == "release")
-  $l="https://www.filmeseriale.eu/seriale-tv/page/".$page."/";
+   if ($page > 1)
+    $l="https://serialeonline.to/seriale/page/".$page."/";
+   else
+    $l="https://serialeonline.to/seriale/";
 else {
   $search=str_replace(" ","+",$tit);
   if ($page == 1)
-    $l="https://www.filmeseriale.eu/?s=".$search;
+    $l="https://serialeonline.to/?s=".$search;
   else
-    $l="https://www.filmeseriale.eu/page/".$page."/?s=".$search;
+    $l="https://serialeonline.to/page/".$page."/?s=".$search;
 }
 $r=array();
 $ua = $_SERVER['HTTP_USER_AGENT'];
-$host=parse_url($l)['host'];
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $l);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
@@ -190,48 +192,48 @@ $host=parse_url($l)['host'];
   $html = curl_exec($ch);
   curl_close($ch);
   if ($tip=="release") {
-  $videos = explode('article id="post-', $html);
+  $videos = explode('article id="post', $html);
   unset($videos[0]);
   $videos = array_values($videos);
   foreach($videos as $video) {
     $t1=explode('href="',$video);
     $t2=explode('"',$t1[1]);
     $link=$t2[0];
-    if (strpos($link,"http") === false) $link="https://".$host.$link;
-    $t3 = explode('>', $t1[2]);
-    $t4 = explode('<', $t3[1]);
-    $t5=explode(', serial',$t4[0]);
-    $title=trim($t5[0]);
-    $t1=explode('src="',$video);
+    $t1=explode('alt="',$video);
+    $t2=explode('"',$t1[1]);
+    $title=trim($t2[0]);
+    $t1=explode('data-lazy-src="',$video);
     $t2=explode('"',$t1[1]);
     $image=$t2[0];
-    if (strpos($link,"seriale-tv") !== false && $title <> "DMCA") array_push($r ,array($title,$link, $image));
+    if (strpos($link,"/serial") !== false) array_push($r ,array($title,$link, $image));
   }
   } else {
-  $videos = explode('<article', $html);
+  $videos = explode('div class="result-item', $html);
   unset($videos[0]);
   $videos = array_values($videos);
   foreach($videos as $video) {
     $t1=explode('href="',$video);
     $t2=explode('"',$t1[1]);
     $link=$t2[0];
-    if (strpos($link,"http") === false) $link="https://".$host.$link;
-    $t3 = explode('alt="', $video);
-    $t4 = explode('"', $t3[1]);
-    $t5=explode(', serial',$t4[0]);
-    $title=trim($t5[0]);
-    $t1=explode('src="',$video);
+    $t1=explode('alt="',$video);
+    $t2=explode('"',$t1[1]);
+    $title=trim($t2[0]);
+    $t1=explode('data-lazy-src="',$video);
     $t2=explode('"',$t1[1]);
     $image=$t2[0];
-    if (strpos($link,"seriale-tv") !== false && $title && $title <> "DMCA") array_push($r ,array($title,$link, $image));
+    if (strpos($link,"/serial") !== false) array_push($r ,array($title,$link, $image));
   }
   }
 $c=count($r);
 for ($k=0;$k<$c;$k++) {
   $title=$r[$k][0];
+  $title=str_replace("&#8211;","-",$title);
   $title=prep_tit($title);
   $link=$r[$k][1];
   $image=$r[$k][2];
+  $rest = substr($title, -2);
+  //echo urlencode($rest);
+  if ($rest == " -") $title = substr($title, 0, -2);
   $rest = substr($title, -6);
   if (preg_match("/\((\d+)\)/",$rest,$m)) {
    $year=$m[1];

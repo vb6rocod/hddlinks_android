@@ -32,6 +32,12 @@ if ($tip=="cineplex") {
  $fh = fopen($new_file, 'w');
  fwrite($fh, $txt);
  fclose($fh);
+} elseif ($tip=="weather") {
+ $txt=$user;
+ $new_file = $base_pass."weather.txt";
+ $fh = fopen($new_file, 'w');
+ fwrite($fh, $txt);
+ fclose($fh);
 } elseif ($tip=="player") {
  $txt=$user;
  $new_file = $base_pass."player.txt";
@@ -562,7 +568,29 @@ Pass:<input type="password" name="pass" value="'.$pass.'"></BR>
 </form>
 <hr>
 ';
+$user="";
+$pass="";
+$f=$base_pass."weather.txt";
+if (file_exists($f)) {
+$h=file_get_contents($f);
+$t1=explode("|",$h);
+$user=$t1[0];
+if (sizeof ($t1) > 1 )
+	$pass=$t1[1];
+} else {
+$user="";
+$pass="";
+}
 
+echo '
+<h4>Cod Localitate (https://weather.codes/romania/)</h4>
+<form action="settings.php">
+cod:<input type="text" name="user" value="'.$user.'" size="40"></BR>
+<input type="hidden" name="tip" value="weather">
+<input type="submit" value="Memoreaza">
+</form>
+<hr>
+';
 $user="";
 $pass="";
 $f=$base_pass."adult.txt";

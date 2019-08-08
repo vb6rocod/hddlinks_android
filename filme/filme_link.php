@@ -1120,7 +1120,8 @@ $s=$s."vidlox|flashservice\.xvideos\.com|xhamster\.com|entervideo\.net|vcstream\
 $s=$s."powvideo|povvideo|cloudvideo|vidtodo|vidcloud\.co|flashx\.";
 $s=$s."|putload\.|event\.2target\.net|fembed\.com|streamcherry\.com|hideiframe\.com|";
 $s=$s."filmeonlinehd\.tv\/sharemovie|rovideo\.net\/video|flix555\.com|gamovideo\.com|playhd\.fun|idtbox\.com|";
-$s=$s."bitporno\.com|thevideobee\.to|mangovideo\.|smartshare\.tv|datoporn\.co|xstreamcdn\.com/i";
+$s=$s."bitporno\.com|thevideobee\.to|mangovideo\.|smartshare\.tv|datoporn\.co|xstreamcdn\.com|onlystream\.tv|";
+$s=$s."database\.serialeonline\.to/i";
 for ($i=0;$i<count($links);$i++) {
   if (strpos($links[$i],"http") !== false) {
     $t1=explode("http:",$links[$i]);
@@ -1169,6 +1170,27 @@ for ($i=0;$i<count($links);$i++) {
   //echo $h2;
   $t1=explode("Location:",$h2);
   $t2=explode("\n",$t1[1]);
+  $cur_link=trim($t2[0]);
+  //echo $cur_link;
+  }
+  if (strpos($links[$i],"database.serialeonline.to") !== false) {
+  $l=trim("https:".$links[$i]);
+  //echo $l;
+  $ch = curl_init();
+  curl_setopt($ch, CURLOPT_URL, $l);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+  curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 5.1; rv:22.0) Gecko/20100101 Firefox/22.0');
+  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+  curl_setopt($ch, CURLOPT_HEADER,1);
+  curl_setopt($ch, CURLOPT_NOBODY,1);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+  $h2 = curl_exec($ch);
+  curl_close($ch);
+  //echo $h2;
+  $t1=explode("Location:",$h2);
+  $t2=explode("\n",$t1[count($t1)-1]);
   $cur_link=trim($t2[0]);
   //echo $cur_link;
   }
@@ -1734,10 +1756,10 @@ echo '</TABLE>';
 
 echo '<BR><table border="1" width="100%">';
 echo '<TR>';
-echo '<TD align="center"><font size="4"><b><a id="opensub" href="opensubtitles.php?'.$sub_link.'">opensubtitles</b</font></a></td>';
-echo '<TD align="center"><font size="4"><b><a id="titrari" href="titrari_main.php?page=1&'.$sub_link.'">titrari.ro</b</font></a></td>';
-echo '<TD align="center"><font size="4"><b><a id="subs" href="subs_main.php?'.$sub_link.'">subs.ro</b</font></a></td>';
-echo '<TD align="center"><font size="4"><b><a id="subtitrari" href="subtitrari_main.php?'.$sub_link.'">subtitrari_noi.ro</b</font></a></td>';
+echo '<TD class="mp"><a id="opensub" href="opensubtitles.php?'.$sub_link.'">opensubtitles</a></td>';
+echo '<TD class="mp"><a id="titrari" href="titrari_main.php?page=1&'.$sub_link.'&page=1">titrari.ro</a></td>';
+echo '<TD class="mp"><a id="subs" href="subs_main.php?'.$sub_link.'">subs.ro</a></td>';
+echo '<TD class="mp"><a id="subtitrari" href="subtitrari_main.php?'.$sub_link.'">subtitrari_noi.ro</a></td>';
 echo '</TR></TABLE>';
 echo '<BR><table border="0px" width="100%">
 <TR>

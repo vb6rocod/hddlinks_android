@@ -441,6 +441,11 @@ if (preg_match("/4tube\.com/",$host)) {
   $t1=explode('source src="',$h);
   $t2=explode('"',$t1[1]);
   $out=$t2[0];
+} else if (preg_match("/porndoe\.com/",$host)) {
+  $t1=explode('video id="',$h);
+  $t2=explode('src="',$t1[1]);
+  $t3=explode('"',$t2[1]);
+  $out=$t3[0];
 } else if (preg_match("/porndroids\.com/",$host)) {
   $t1=explode('data-video="',$h);
   $t2=explode('"',$t1[1]);
@@ -643,6 +648,10 @@ if (preg_match("/4tube\.com/",$host)) {
   if (preg_match_all("/(144|240|360|480|720|1080)p\"\:\"(.*?)\"/",$h,$m)) {
     $out=$m[2][0];
   }
+} else if (preg_match("/xozilla\.com/",$host)) {
+  $t1=explode("video_url: '",$h);
+  $t2=explode("'",$t1[1]);
+  $out=$t2[0];
 } else if (preg_match("/xnxx\.com|xvideos\.com/",$host)) {
   if (preg_match_all("/html5player\.setVideoUrl(Low|High)\(\'(.*?)\'/ims",$h,$m)) {
      $out=$m[2][count($m[2])-1];

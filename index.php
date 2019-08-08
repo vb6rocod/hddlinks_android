@@ -22,58 +22,20 @@ $adult=$t1[0];
 <meta http-equiv="Pragma" content="no-cache"/>
 <meta http-equiv="Expires" content="0"/>
       <title>HD4ALL</title>
-<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.0/jquery.min.js"></script>
+<script type="text/javascript" src="//code.jquery.com/jquery-3.2.1.min.js"></script>
+<script src="jquery.fancybox.min.js"></script>
+<link rel="stylesheet" type="text/css" href="jquery.fancybox.min.css">
 <link rel="stylesheet" type="text/css" href="custom.css" />
 <style>
 td {
     font-style: bold;
     font-size: 20px;
 }
-
-#overlay {
-    position: fixed;
-    display: none;
-    width: 100%;
-    height: 100%;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-color: rgba(0,0,0,0.5);
-    z-index: 2;
-    cursor: pointer;
-}
-
-#text{
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    font-size: 50px;
-    color: white;
-    transform: translate(-50%,-50%);
-    -ms-transform: translate(-50%,-50%);
-}
 </style>
 <script type="text/javascript">
-// create the XMLHttpRequest object, according browser
-function get_XmlHttp() {
-  // create the variable that will contain the instance of the XMLHttpRequest object (initially with null value)
-  var xmlHttp = null;
-  if(window.XMLHttpRequest) {		// for Forefox, IE7+, Opera, Safari, ...
-    xmlHttp = new XMLHttpRequest();
-  }
-  else if(window.ActiveXObject) {	// for Internet Explorer 5 or 6
-    xmlHttp = new ActiveXObject("Microsoft.XMLHTTP");
-  }
-  return xmlHttp;
-}
-
-// sends data to a php file, via POST, and displays the received answer
 function ajaxrequest(url) {
-  var request =  get_XmlHttp();		// call the function for the XMLHttpRequest instance
+  var request =  new XMLHttpRequest();
   on();
-  // create pairs index=value with data that must be sent to server
-  //var the_data = {mod:add,title:title, link:link}; //Array
   var the_data = 'url='+url;
   var php_file='update.php';
   request.open("POST", php_file, true);			// set the request
@@ -92,10 +54,24 @@ function ajaxrequest(url) {
     }
   }
 }
+   function zx(e){
+     var instance = $.fancybox.getInstance();
+     var charCode = (typeof e.which == "number") ? e.which : e.keyCode
+     if (charCode == "13"  && instance !== false) {
+       $.fancybox.close();
+       setTimeout(function(){ document.getElementById(id_link).focus(); }, 500);
+     } else if (charCode == "49" && e.target.type != "text") {
+       msg="tv/w.php";
+       document.getElementById("fancy").href=msg;
+       document.getElementById("fancy").click();
+    }
+   }
+document.onkeypress =  zx;
 </script>
 
 </head>
 <body>
+<a id="fancy" data-fancybox data-type="iframe" href=""></a>
 <script>
 function on() {
     document.getElementById("overlay").style.display = "block";

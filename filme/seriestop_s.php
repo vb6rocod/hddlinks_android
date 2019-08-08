@@ -215,7 +215,7 @@ if ($tip=="release") {
   curl_setopt($ch, CURLOPT_TIMEOUT, 15);
   $html = curl_exec($ch);
   curl_close($ch);
-
+//echo $html;
 } else {
   $l="https://".$host."/ajax/search.php";
   $search=str_replace(" ","+",$tit);
@@ -283,10 +283,12 @@ for ($k=0;$k<$c;$k++) {
 
   $imdb="";
   $link_f=$fs_target.'?tip=series&link='.urlencode($link).'&title='.urlencode(fix_t($title)).'&image='.$image."&sez=&ep=&ep_tit=&year=".$year;
+
   if ($title && strpos($link,"/show") !== false) {
   if ($n==0) echo '<TR>'."\r\n";
   $val_imdb="tip=series&title=".urlencode(fix_t($tit_imdb))."&year=".$year."&imdb=".$imdb;
   $fav_link="mod=add&title=".urlencode(fix_t($title))."&link=".urlencode($link)."&image=".urlencode($image)."&year=".$year;
+  $image="r_m.php?file=https://".$host."/templates/tvstream/timthumb.php?src=".$image."&w=200&h=278&zc=1";
   if ($tast == "NU") {
     echo '<td class="mp" width="25%"><a href="'.$link_f.'" id="myLink'.$w.'" target="_blank" onmousedown="isKeyPressed(event)">
     <img id="myLink'.$w.'" src="'.$image.'" width="'.$width.'" height="'.$height.'"><BR>'.$title.'</a>

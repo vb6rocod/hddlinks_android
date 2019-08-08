@@ -12,7 +12,7 @@ $tip= $_GET["tip"];
 $tit=$_GET["title"];
 $link=$_GET["link"];
 $width="200px";
-$height=intval(200*(150/175))."px";
+$height=intval(200*(169/300))."px";
 /* ==================================================== */
 $has_main="yes";
 $has_fav="no";
@@ -23,7 +23,7 @@ $fav_target="adult_fav.php";
 $add_target="adult_add.php";
 $add_file="";
 $fs_target="filme_link.php";
-$target="porndroids.php";
+$target="xozilla.php";
 /* ==================================================== */
 $base=basename($_SERVER['SCRIPT_FILENAME']);
 $p=$_SERVER['QUERY_STRING'];
@@ -204,16 +204,17 @@ else
 echo '</TR>'."\r\n";
 
 if($tip=="release") {
-  if ($page>1)
-    $l = $link."?page=".$page;
-  else
-    $l = $link."?page=".$page;
+ if (strpos($link,"latest-updates") !== false)
+  $l = $link."?mode=async&function=get_block&block_id=list_videos_latest_videos_list&sort_by=post_date&from=".$page."&_=";
+ else
+  $l = $link."?mode=async&function=get_block&block_id=list_videos_common_videos_list&sort_by=post_date&from=".$page."&_=";
+
 } else {
-  $search=str_replace(" ","%20",$tit);
+  $search=str_replace(" ","+",$tit);
   if ($page > 1)
-    $l="https://www.porndroids.com/search/?page=".$page."&q=".$search;
+    $l="https://www.xozilla.com/search/".str_replace(" ","-",$tit)."/?mode=async&function=get_block&block_id=list_videos_videos_list_search_result&q=".str_replace(" ","+",$tit)."&category_ids=&sort_by=&from_videos=".$page."&from_albums=".$page."&_=";
   else
-    $l="https://www.porndroids.com/search/?page=".$page."&q=".$search;
+    $l="https://www.xozilla.com/search/".str_replace(" ","-",$tit)."/?mode=async&function=get_block&block_id=list_videos_videos_list_search_result&q=".str_replace(" ","+",$tit)."&category_ids=&sort_by=&from_videos=".$page."&from_albums=".$page."&_=";
 }
 $host=parse_url($l)['host'];
   $ch = curl_init();
@@ -228,26 +229,27 @@ $host=parse_url($l)['host'];
   curl_close($ch);
 
 $r=array();
-$videos = explode('a itemprop="url',$html);
+$videos = explode('href="https://www.xozilla.com/videos',$html);
 unset($videos[0]);
 $videos = array_values($videos);
 foreach($videos as $video) {
-  $t1=explode('href="',$video);
-  $t2 = explode('"', $t1[1]);
-  $link = "https://www.porndroids.com".$t2[0];
-  $t1=explode('itemprop="name">',$video);
+  $t2 = explode('"', $video);
+  $link = "https://www.xozilla.com/videos".$t2[0];
+  $t1=explode('class="title">',$video);
   $t3=explode('<',$t1[1]);
   $title=$t3[0];
   $title = trim(strip_tags($title));
   $title = prep_tit($title);
-  $t1 = explode('data-src="', $video);
+  $t1 = explode('data-original="', $video);
   $t2 = explode('"', $t1[1]);
   $image = $t2[0];
   if (strpos($image,"http") === false) $image="https:".$image;
-  $t1=explode('</svg',$video);
+  $image="r_m.php?file=".$image;
+  $t1=explode('class="duration"',$video);
   $t2=explode('>',$t1[1]);
-  $t3=explode("<",$t2[1]);
+  $t3=explode(">",$t2[1]);
   $durata=trim($t3[0]);
+  $durata = strip_tags($durata);
   $durata = preg_replace("/\n|\r/"," ",strip_tags($durata));
   if ($durata) $title=$title." (".$durata.')';
   if ($title) array_push($r ,array($title,$link, $image));

@@ -12,7 +12,7 @@ $tip= $_GET["tip"];
 $tit=$_GET["title"];
 $link=$_GET["link"];
 $width="200px";
-$height=intval(200*(150/175))."px";
+$height=intval(200*(219/390))."px";
 /* ==================================================== */
 $has_main="yes";
 $has_fav="no";
@@ -23,7 +23,7 @@ $fav_target="adult_fav.php";
 $add_target="adult_add.php";
 $add_file="";
 $fs_target="filme_link.php";
-$target="porndroids.php";
+$target="porndoe.php";
 /* ==================================================== */
 $base=basename($_SERVER['SCRIPT_FILENAME']);
 $p=$_SERVER['QUERY_STRING'];
@@ -207,13 +207,13 @@ if($tip=="release") {
   if ($page>1)
     $l = $link."?page=".$page;
   else
-    $l = $link."?page=".$page;
+    $l = $link;
 } else {
-  $search=str_replace(" ","%20",$tit);
+  $search=str_replace(" ","+",$tit);
   if ($page > 1)
-    $l="https://www.porndroids.com/search/?page=".$page."&q=".$search;
+    $l="https://porndoe.com/search?keywords=".$search."&page=".$page;
   else
-    $l="https://www.porndroids.com/search/?page=".$page."&q=".$search;
+    $l="https://porndoe.com/search?keywords=".$search;
 }
 $host=parse_url($l)['host'];
   $ch = curl_init();
@@ -226,17 +226,17 @@ $host=parse_url($l)['host'];
   curl_setopt($ch, CURLOPT_TIMEOUT, 15);
   $html = curl_exec($ch);
   curl_close($ch);
-
+  
 $r=array();
-$videos = explode('a itemprop="url',$html);
+$videos = explode('data-title="',$html);
 unset($videos[0]);
 $videos = array_values($videos);
 foreach($videos as $video) {
   $t1=explode('href="',$video);
   $t2 = explode('"', $t1[1]);
-  $link = "https://www.porndroids.com".$t2[0];
-  $t1=explode('itemprop="name">',$video);
-  $t3=explode('<',$t1[1]);
+  $link = "https://porndoe.com".$t2[0];
+  //$t1=explode('title="',$video);
+  $t3=explode('"',$video);
   $title=$t3[0];
   $title = trim(strip_tags($title));
   $title = prep_tit($title);
@@ -244,7 +244,7 @@ foreach($videos as $video) {
   $t2 = explode('"', $t1[1]);
   $image = $t2[0];
   if (strpos($image,"http") === false) $image="https:".$image;
-  $t1=explode('</svg',$video);
+  $t1=explode('class="txt"',$video);
   $t2=explode('>',$t1[1]);
   $t3=explode("<",$t2[1]);
   $durata=trim($t3[0]);

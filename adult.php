@@ -152,8 +152,8 @@ echo '
 <TR>
 <TD width="25%"><a href="adult/mangovideo_main.php" target="_blank">mangovideo</a></TD>
 <TD width="25%"><a href="adult/familyporn_main.php" target="_blank">familyporn</a></TD>
-<TD width="25%"></TD>
-<TD width="25%"></TD>
+<TD width="25%"><a href="adult/porndoe_main.php" target="_blank">porndoe</a></TD>
+<TD width="25%"><a href="adult/xozilla_main.php" target="_blank">xozilla</a></TD>
 </TR>
 ';
 

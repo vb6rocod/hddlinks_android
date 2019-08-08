@@ -116,7 +116,7 @@ for ($k=0;$k<count($r);$k++) {
     //$link="http://video.protv.md/assets/articles/files/".$link.".mp4";
     $link1="direct_link.php?link=".$link."&title=".urlencode($title)."&from=profunzime&mod=direct";
     $l="link=".urlencode(fix_t($link))."&title=".urlencode(fix_t($title))."&from=profunzime&mod=direct";
-  if ($r[$k]["site"]["link_desktop"] == "http://inpro.protv.md" || $r[$k]["site"]["link_desktop"] == "http://inprofunzime.md") {
+  if (preg_match("/inpro\.protv\.md|inprofunzime\.md/",$r[$k]["site"]["link_desktop"])) {
   if ($n==0) echo '<TR>';
   if ($flash != "mp")
   echo '<td class="mp" align="center" width="25%"><a href="'.$link1.'" target="_blank"><img src="'.$image.'" width="'.$width.'" height="'.$height.'"><BR>'.$title.'</a></TD>';
