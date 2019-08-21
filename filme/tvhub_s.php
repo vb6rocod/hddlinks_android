@@ -18,7 +18,7 @@ $has_fav="yes";
 $has_search="yes";
 $has_add="yes";
 $has_fs="yes";
-$fav_target="tvhub_s_fav.php?host=https://tvhub.org";
+$fav_target="tvhub_s_fav.php?host=https://tvhub.ro";
 $add_target="tvhub_s_add.php";
 $add_file="";
 $fs_target="tvhub_s_ep.php";
@@ -169,6 +169,7 @@ echo '</TR>'."\r\n";
 $ua = $_SERVER['HTTP_USER_AGENT'];
 $cookie=$base_cookie."hdpopcorns.dat";
 $requestLink="https://tvhub.org/";
+$requestLink="https://tvhub.ro/";
 if ($page==1 && $tip !="search") {
 if (file_exists($cookie)) unlink ($cookie);
 $head=array(
@@ -206,9 +207,9 @@ $head=array(
 }
 if ($tip=="search") {
   if ($page == 1)
-    $requestLink = "https://tvhub.org/?s=".str_replace(" ","+",$tit);
+    $requestLink = "https://tvhub.ro/?s=".str_replace(" ","+",$tit);
   else
-    $requestLink  = "https://tvhub.org/page/".$page."/?s=".str_replace(" ","+",$tit);
+    $requestLink  = "https://tvhub.ro/page/".$page."/?s=".str_replace(" ","+",$tit);
   $ch = curl_init($requestLink);
   curl_setopt($ch, CURLOPT_USERAGENT, $ua);
   curl_setopt($ch,CURLOPT_REFERER,"https://tvhub.org/");
@@ -221,7 +222,7 @@ if ($tip=="search") {
   $html = curl_exec($ch);
   curl_close ($ch);
 } else {
-  $requestLink="https://tvhub.org/wp-admin/admin-ajax.php";
+  $requestLink="https://tvhub.ro/wp-admin/admin-ajax.php";
   $post="action=load_more&page=".($page-1)."&template=cactus-channel%2Fcontent-listing&vars%5Bpost_type%5D=ct_channel&vars%5Bposts_per_page%5D=20&vars%5Bpost_status%5D=publish&vars%5Bignore_sticky_posts%5D=1&vars%5Bpaged%5D=1&id_playlist=";
 
   $ch = curl_init($requestLink);
@@ -258,7 +259,7 @@ $r=array();
   }
   } else {
   //echo $html;
-  $videos = explode('<div id="mt-', $html);
+  $videos = explode('div id="post', $html);
   unset($videos[0]);
   $videos = array_values($videos);
   //print_r ($videos);
@@ -267,7 +268,7 @@ $r=array();
     $t2 = explode('"', $t1[1]);
     $link = $t2[0];
 
-    $t1 = explode('alt="', $video);
+    $t1 = explode('title="', $video);
     $t2 = explode('"', $t1[1]);
     $title=$t2[0];
     $t1=explode('src="',$video);

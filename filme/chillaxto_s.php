@@ -18,7 +18,7 @@ $has_fav="yes";
 $has_search="yes";
 $has_add="yes";
 $has_fs="yes";
-$fav_target="chillaxto_s_fav.php?host=https://chillax.to";
+$fav_target="chillaxto_s_fav.php?host=https://ww.chillax.to";
 $add_target="chillaxto_s_add.php";
 $add_file="";
 $fs_target="chillaxto_ep.php";
@@ -40,8 +40,8 @@ $prev=$base."?page=".($page-1)."&".$p;
 $tit=unfix_t(urldecode($tit));
 $link=unfix_t(urldecode($link));
 /* ==================================================== */
-if (file_exists($base_cookie."series.dat"))
-  $val_search=file_get_contents($base_cookie."series.dat");
+if (file_exists($base_cookie."seriale.dat"))
+  $val_search=file_get_contents($base_cookie."seriale.dat");
 else
   $val_search="";
 $form='<form action="'.$target.'" target="_blank">
@@ -54,7 +54,7 @@ Cautare serial:  <input type="text" id="title" name="title" value="'.$val_search
 /* ==================================================== */
 if ($tip=="search") {
   $page_title = "Cautare: ".$tit;
-  if ($page == 1) file_put_contents($base_cookie."series.dat",$tit);
+  if ($page == 1) file_put_contents($base_cookie."seriale.dat",$tit);
 } else
   $page_title=$tit;
 /* ==================================================== */
@@ -169,7 +169,7 @@ echo '</TR>'."\r\n";
 
 $cookie=$base_cookie."hdpopcorns.dat";
 $ua = $_SERVER['HTTP_USER_AGENT'];
-$requestLink="https://chillax.to/";
+$requestLink="https://ww.chillax.to/";
 $host=parse_url($requestLink)['host'];
 if ($page==1 && $tip !="search") {
 if (file_exists($cookie)) unlink ($cookie);

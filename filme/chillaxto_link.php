@@ -59,7 +59,9 @@ if (preg_match("/mp4|flv/",$movie_file))
 else
    $srt_name= $movie_file.".srt";
 $movie_name = $movie_file.".mp4";
-
+//$r=get_headers($movie);
+//print_r ($r);
+//die();
 ////////////////////////////////////////////////////////////////////////////////////////////////
 if (!file_exists($base_sub."sub_extern.srt")) {
 $list = glob($base_sub."*.srt");

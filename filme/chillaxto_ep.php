@@ -33,7 +33,7 @@ function str_between($string, $start, $end){
 echo '<h2>'.$tit.'</h2>';
 $ua = $_SERVER['HTTP_USER_AGENT'];
 $cookie=$base_cookie."hdpopcorns.dat";
-$requestLink="https://chillax.to/ajax/movie_episodes/".$link;
+$requestLink="https://ww.chillax.to/ajax/movie_episodes/".$link;
 
 
   $ch = curl_init($requestLink);

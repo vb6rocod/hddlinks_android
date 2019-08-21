@@ -170,6 +170,7 @@ echo '</TR>'."\r\n";
 $ua = $_SERVER['HTTP_USER_AGENT'];
 $cookie=$base_cookie."hdpopcorns.dat";
 $requestLink="https://tvhub.org/";
+$requestLink="https://tvhub.ro";
 if ($page==1 && $tip !="search") {
 if (file_exists($cookie)) unlink ($cookie);
 $head=array(
@@ -210,9 +211,9 @@ $head=array(
 }
 if ($tip=="search") {
   if ($page == 1)
-   $requestLink = "https://tvhub.org/?s=".str_replace(" ","+",$tit);
+   $requestLink = "https://tvhub.ro/?s=".str_replace(" ","+",$tit);
   else
-   $requestLink = "https://tvhub.org/page/".$page."/?s=".str_replace(" ","+",$tit);
+   $requestLink = "https://tvhub.ro/page/".$page."/?s=".str_replace(" ","+",$tit);
   $ch = curl_init($requestLink);
   curl_setopt($ch, CURLOPT_USERAGENT, $ua);
   curl_setopt($ch,CURLOPT_REFERER,"https://tvhub.org");
@@ -225,7 +226,8 @@ if ($tip=="search") {
   $html = curl_exec($ch);
   curl_close ($ch);
 } else {
-  $requestLink="https://tvhub.org/lista-filme/page/".$page."/";
+  //https://tvhub.ro/category/film/page/2/
+  $requestLink="https://tvhub.ro/category/film/page/".$page."/";
   $ch = curl_init($requestLink);
   curl_setopt($ch, CURLOPT_USERAGENT, $ua);
   curl_setopt($ch,CURLOPT_REFERER,"https://tvhub.org");
@@ -238,7 +240,7 @@ if ($tip=="search") {
   $html = curl_exec($ch);
   curl_close ($ch);
 }
-$videos = explode('div id="mt-', $html);
+$videos = explode('div id="post', $html);
 
 unset($videos[0]);
 $videos = array_values($videos);
@@ -248,7 +250,7 @@ foreach($videos as $video) {
   $t2 = explode('"', $t1[1]);
   $link = $t2[0];
 
-  $t1=explode('alt="',$video);
+  $t1=explode('title="',$video);
   $t2_0=explode('"',$t1[1]);
   $t3=str_replace("Vizioneaza Film Online","",$t2_0[0]);
   $t4=explode("&#8211;",$t3);

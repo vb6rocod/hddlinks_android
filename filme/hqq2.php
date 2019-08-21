@@ -37,6 +37,12 @@ else {
   $t1=explode("expires",$h);
   $t2=explode("path",$t1[1]);
   echo "expires".$t2[0];
+  $t1=explode("=",$t2[0]);
+  $t2=explode(";",$t1[1]);
+  $t3=explode(";",$t1[2]);
+  $time1 = strtotime($t2[0]);
+  $time2 = time() + $t3[0];
+  file_put_contents($base_cookie."max_time_hqq.txt",$time2);
   $y=file_get_contents($cookie);
   $y=str_replace("hqq.watch","hqq.tv",$y);
   file_put_contents($cookie,$y);

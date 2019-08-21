@@ -20,3 +20,19 @@ https://www.trm.md/live/MoldovaUnu1/playlist.m3u8
 https://www.trm.md/live/MoldovaDoi2/playlist.m3u8
 #EXTINF:-1, Publika
 https://livebeta.publika.md/LIVE/P/6810.m3u8
+#EXTINF:-1,PRO TV HD
+https://vid.hls.protv.ro/protvhdn/protvhd_high/index.m3u8?1
+#EXTINF:-1,PRO X HD
+https://vid.hls.protv.ro/proxhdn/proxhd_high/index.m3u8?1
+#EXTINF:-1,PRO 2 HD
+https://vid.hls.protv.ro/pro2n/pro2_high/index.m3u8?1
+#EXTINF:-1,Pro Cinema
+https://vid.hls.protv.ro/procineman/procinema_high/index.m3u8?1
+#EXTINF:-1,PRO Gold
+https://vid.hls.protv.ro/progoldn/progold_high/index.m3u8?1
+#EXTINF:-1,PRO TV NEWS
+http://vid.hls.protv.ro/protvnews/protvnews.m3u8?1
+#EXTINF:-1,Cinemaraton
+https://cmn.digitalcable.ro/free/cm/playlist.m3u8
+#EXTINF:-1,Comedy Est
+https://cmn.digitalcable.ro/free/comedyest/playlist.m3u8

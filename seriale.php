@@ -59,7 +59,7 @@ document.onkeypress =  zx;
 <TD width="25%"><a href="filme/veziseriale_s.php?page=1&tip=release&title=veziseriale.info&link=" target="_blank">veziseriale.info</a></TD>
 <TD width="25%"><a href="filme/filme--online.php?page=1&tip=release&title=filme--online&link=" target="_blank">filme--online</a></TD>
 <TD width="25%"><a href="filme/divxfilmeonline_s.php?page=1&tip=release&title=divxfilmeonline&link=" target="_blank">divxfilmeonline</a></TD>
-<TD width="25%"><a href="filme/filmeseriale-hd.php?page=1&tip=release&title=filmeseriale-hd&link=" target="_blank">filmeseriale-hd</a></TD>
+<TD width="25%"></TD>
 </TR>
 <TR>
 <TD width="25%"><a href="filme/filmetop.php?page=1&tip=release&title=filmetop&link=" target="_blank">filmetop</a></TD>

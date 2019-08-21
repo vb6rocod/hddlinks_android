@@ -7,6 +7,16 @@ $list = glob($base_sub."*.srt");
     str_replace(" ","%20",$l);
     unlink($l);
 }
+if (file_exists($base_cookie."max_time_hqq.txt")) {
+   $time_exp=file_get_contents($base_cookie."max_time_hqq.txt");
+   $time_now=time();
+   if ($time_exp > $time_now)
+     $msg_captcha=" | Expira in ".intval(($time_exp-$time_now)/60)." min.";
+   else
+     $msg_captcha="";
+} else {
+   $msg_captcha="";
+}
   $filelink = $_GET["file"];
   $link_f =  array();
   $type = "mp4";
@@ -700,10 +710,11 @@ $id=$m[1];
   curl_close($ch);
   $html= decode_entities($html);
   //echo $html;
-} elseif (strpos($filelink,"tvhub.org") !== false) {
+} elseif (strpos($filelink,"tvhub.") !== false) {
 //echo $filelink;
 require_once("JavaScriptUnpacker.php");
 $cookie=$base_cookie."hdpopcorns.dat";
+$host=parse_url($filelink)['host'];
 $ua     =   $_SERVER['HTTP_USER_AGENT'];
   $ch = curl_init($filelink);
   curl_setopt($ch, CURLOPT_USERAGENT, $ua);
@@ -736,7 +747,7 @@ $l="https://tvhub.org/wp-content/themes/grifus/loop/field2-ajax.php";
 $post="post_id=".$id;
 $t1=explode('url:"',$out);
 $t2=explode('"',$t1[1]);
-$l="https://tvhub.org".$t2[0];
+$l="https://".$host."".$t2[0];
 //echo $l;
 //echo $post;
   $ch = curl_init($l);
@@ -1053,8 +1064,9 @@ foreach($videos as $video) {
   $html = curl_exec($ch);
   curl_close ($ch);
   $html .=urldecode(str_replace("@","%",$html));
-} elseif (strpos($filelink,"streamplay1") !== false) {
+} elseif (strpos($filelink,"hindipix.in") !== false) {
    //echo $filelink;
+   $filelink = str_replace("hindipix.in","hqq.tv",$filelink);
    $html='"'.$filelink.'"';
 } elseif (strpos($filelink,"thevideo.me") !== false || strpos($filelink,"vev.io") !== false) {
   $html='"'.$filelink.'"';
@@ -1558,7 +1570,7 @@ if (strpos($filelink,"blogspot.ro") !== false && (strpos($filelink,"sezonul") !=
          $link_f[$k]="http://hqq.watch/player/embed_player.php?vid=".$vid."&autoplay=no";
       }
     echo '<TR><td class="link"><a href="link1.php?file='.urlencode($link_f[$k]).','.urlencode($pg).'" target="_blank">'.$server.'</a>
-    <a href="hqq_captcha.php?file='.urlencode($link_f[$k]).'" target="_blank"><font color="lightblue"> | Rezolva captcha</font></a>
+    <a href="hqq_captcha.php?file='.urlencode($link_f[$k]).'" target="_blank"><font color="lightblue"> | Rezolva captcha</font></a> <a href="hqq3.php"><font color="lightblue"> | Rezolva captcha (v2)</font></a>'.$msg_captcha.'
     </TD></TR>';
    echo '
    <script>
@@ -1658,9 +1670,11 @@ echo '<TR><td class="link"><a href="link1.php?file='.urlencode($link_f[$k]).','.
          $link_f[$k]="http://hqq.watch/player/embed_player.php?vid=".$vid."&autoplay=no";
       }
    echo '<TR><td class="link"><a onclick="ajaxrequest('."'".urlencode($pg)."', '".urlencode($link_f[$k])."')".'"'." style='cursor:pointer;'>".$server.'</a>
+   <a href="hqq3.php"><font color="lightblue"> | Captcha (v2)</font></a>
    <a href="hqq_captcha.php?file='.urlencode($link_f[$k]).'" target="_blank"><font color="lightblue"> | Captcha</font></a>
    <a href="intent:http://127.0.0.1:8080/scripts/filme/hqq_captcha.php?file='.urlencode($link_f[$k]).'#Intent;package=org.mozilla.firefox;S.title=Captcha;end" target="_blank"><font color="lightblue"> | Captcha (firefox)</font></a>
    <a href="intent:http://127.0.0.1:8080/scripts/filme/hqq_captcha.php?file='.urlencode($link_f[$k]).'#Intent;package=com.android.chrome;S.title=Captcha;end" target="_blank"><font color="lightblue"> | Captcha (chrome)</font></a>
+   '.$msg_captcha.'
    ';
    echo '
    <script>

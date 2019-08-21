@@ -1,0 +1,63 @@
+#EXTM3U cache=1000 nocache=1 url-tvg="http://www.teleguide.info/download/new3/jtv.zip,http://epg.zuram.net/xmltv.xml.gz,http://epg.in.ua/epg/tvprogram_ua_ru.gz,http://programtv.ru/xmltv.xml.gz" tvg-shift="TZ-3" audio-track=ru m3uautoload=1
+#EXTINF:0 ,MD| MOLDOVA 1
+http://live.trm.md:1935/live/MoldovaUnu1/playlist.m3u8
+#EXTINF:0 ,MD| MOLDOVA 2
+http://live.trm.md:1935/live/MoldovaDoi2/playlist.m3u8
+#EXTINF:-1,ProTV
+http://hls.protv.md/hls/protv.m3u8
+#EXTINF:0 ,MD| Publika TV
+http://livebeta.publika.md/LIVE/P/6810.m3u8
+#EXTINF:0 ,MD| NTV 
+http://93.115.137.166/hls/ntvm.m3u8
+#EXTINF:0 ,MD| TV8 
+http://live.cdn.tv8.md/TV7/video1.m3u8?token=1
+#EXTINF:0 ,MD| ELITA REZINA
+http://46.55.111.242:8080/Rezina.m3u8
+#EXTINF:0 ,MD| ACCENT TV 
+http://video.a-tv.md/hls/accent.m3u8
+#EXTINF:0 ,MD| RU Moldova
+http://217.12.116.122/hls/rutv_direct.m3u8
+#EXTINF:0 ,Drochia
+https://hls.drochia.tv/tv/web.m3u8
+#EXTINF:0 ,MD| Bălti TV
+http://77.89.199.174:81/hls/live2.m3u8
+#EXTINF:0 ,MD| TV Nord
+https://hls.tvn.md/hls/tvn_balti.m3u8
+#EXTINF:0 ,MD| Agro TV Moldova
+http://web.sats.gstv.tech/cpl11/540d63d5-8910-4a20-ac15-a7bfcca9dbd3/agrotvweb.m3u8
+#EXTINF:-1,TV1000 Action
+http://ott-cdn.ucom.am/s91/index.m3u8
+#EXTINF:-1,TV1000 Русское кино
+http://ott-cdn.ucom.am/s95/index.m3u8
+#EXTINF:-1,TV8
+http://live.cdn.tv8.md/TV7/tracks-v2a1/mono.m3u8?token=1
+#EXTINF:0,НТВ Молдова
+http://93.115.137.166/hls/ntvm.m3u8
+#EXTINF:0,Prime
+http://91.230.214.75/LIVE/1/2000.m3u8
+#EXTINF:0,Canal 2
+http://91.230.214.75/LIVE/2/index.m3u8
+#EXTINF:0,Canal 3
+http://91.230.214.75/LIVE/3/2000.m3u8
+#EXTINF:0,Moldova 1
+http://live.trm.md:1935/live/_definst_/MoldovaUnu1/chunklist_w866294327.m3u8
+#EXTINF:0,Moldova 2
+http://live.trm.md:1935/live/_definst_/MoldovaDoi2/chunklist_w1306778223.m3u8
+#EXTINF:0,Moldova 1
+http://212.0.209.209:1935/live/_definst_/MoldovaUnu1/chunklist_w1859633638.m3u8
+#EXTINF:0,Publika TV
+https://livebeta.publika.md/LIVE/P/1500.m3u8  
+#EXTINF:0,Accent tv
+http://video.a-tv.md/hls/accent.m3u8
+#EXTINF:0, TV Nord
+https://hls.tvn.md/hls/tvn_balti.m3u8
+#EXTINF:-1,Canal Regional 
+http://canalregional.md/tv/live/canalregional.m3u8
+#EXTINF:0,Vocea Basarabiei TV
+http://hls.voceabasarabiei.md/hls/vocea_basarabiei.m3u8
+#EXTINF:-0,Drochia
+https://hls.drochia.tv/tv/web.m3u8
+#EXTINF:0, Agro TV 
+http://web.sats.gstv.tech/cpl11/540d63d5-8910-4a20-ac15-a7bfcca9dbd3/agrotvweb.m3u8
+#EXTINF:-0,Pro Tv md
+http://hls.protv.md/hls/protv.m3u8

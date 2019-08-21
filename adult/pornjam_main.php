@@ -68,6 +68,7 @@ $ua="Mozilla/5.0 (Windows NT 10.0; rv:68.0) Gecko/20100101 Firefox/68.0";
   curl_setopt($ch, CURLOPT_TIMEOUT, 15);
   $html = curl_exec($ch);
   curl_close($ch);
+  //echo $html;
 $html=str_between($html,'<ul class="ordenar','</ul');
 $videos = explode('<li', $html);
 unset($videos[0]);
@@ -77,7 +78,9 @@ foreach($videos as $video) {
     $t=explode("href='",$video);
     $t1=explode("'",$t[1]);
     $link="https://www.pornjam.com".$t1[0];
-  	$title=str_between($video,"title='","'");
+    $t2=explode('>',$t[1]);
+    $t3=explode('<',$t2[1]);
+  	$title=$t3[0];
   	$title=prep_tit($title);
     $link=$target."?page=1&tip=release&link=".urlencode(fix_t($link))."&title=".urlencode(fix_t($title));
     if ($title) {

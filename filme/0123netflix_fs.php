@@ -119,6 +119,7 @@ function off() {
 echo '<h2>'.$tit.$tit2.'</H2>';
 echo '<BR>';
 $ua = $_SERVER['HTTP_USER_AGENT'];
+//echo $link;
 $ch = curl_init();
 curl_setopt($ch, CURLOPT_URL, $link);
 curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
@@ -132,12 +133,15 @@ $t1=explode('data-id="',$h);
 $t2=explode('"',$t1[1]);
 $film=$t2[0];
 if ($tip=="movie") {
-$t3=explode('"',$t1[2]);
+$t1=explode('ul class="episodes',$h);
+$t2=explode('data-id="',$t1[1]);
+$t3=explode('"',$t2[1]);
 $id=$t3[0];
 } else {
   $id=substr(strrchr($link, "/"), 1);
 }
 $l="https://0123netflix.site/ajax/episode/info?_token=&id=".$id."&update=0&film=".$film;
+//echo $l;
 $r=array();
 $r[]=urlencode($l);
 echo '<table border="1" width="100%">';

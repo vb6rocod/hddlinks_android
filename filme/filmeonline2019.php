@@ -164,15 +164,15 @@ echo '</TR>'."\r\n";
 
 if($tip=="release") {
  if ($page>1)
-  $l=$link."/".$page;
+  $l=$link."page/".$page."/";
  else
   $l=$link;
 } else {
   $search=str_replace(" ","-",$tit);
   if ($page > 1)
-     $l="https://filmeonline2019.us/cauta/".$search."/".$page;
+     $l="https://filmeonline2019.biz/page/".$page."/?s=".$search;
   else
-     $l="https://filmeonline2019.us/cauta/".$search;
+     $l="https://filmeonline2019.biz/?s=".$search;
 }
 $ua = $_SERVER['HTTP_USER_AGENT'];
   $ch = curl_init();
@@ -186,19 +186,19 @@ $ua = $_SERVER['HTTP_USER_AGENT'];
   $html = curl_exec($ch);
   curl_close($ch);
 
-  $videos = explode('<a', $html);
+  $videos = explode('article id="post-', $html);
   unset($videos[0]);
   $videos = array_values($videos);
   foreach($videos as $video) {
-   if (preg_match("/class=\"playthumb/",$video)) {
+   if (!preg_match("/class=\"playthumb/",$video)) {
     $t1=explode('href="',$video);
     $t2=explode('"',$t1[1]);
     $link=$t2[0];
-    $t1=explode('title="',$video);
-    $t2=explode('"',$t1[1]);
+    $t1=explode('class="Title">',$video);
+    $t2=explode('<',$t1[1]);
     $title=$t2[0];
-    $t1=explode('url(',$video);
-    $t2=explode(')',$t1[1]);
+    $t1=explode('src="',$video);
+    $t2=explode('"',$t1[1]);
     $image=$t2[0];
     $title=prep_tit($title);
     $year="";

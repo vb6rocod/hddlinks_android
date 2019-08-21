@@ -11,7 +11,7 @@ function get_value($q, $string) {
    $t1=explode($q,$string);
    return str_between($t1[1],"<string>","</string>");
 }
-   function generateResponse($request)
+   function generateResponse1($request)
     {
         $context  = stream_context_create(
             array(
@@ -25,6 +25,25 @@ function get_value($q, $string) {
         $response     = file_get_contents("http://api.opensubtitles.org/xml-rpc", false, $context);
         return $response;
     }
+function generateResponse($request) {
+$ua = $_SERVER['HTTP_USER_AGENT'];
+$head = array(
+'Content-Type: text/xml',
+);
+$ch = curl_init();
+curl_setopt($ch, CURLOPT_URL, "http://api.opensubtitles.org/xml-rpc");
+curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+curl_setopt($ch, CURLOPT_USERAGENT, $ua);
+curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 0);
+curl_setopt($ch, CURLOPT_HTTPHEADER, $head);
+curl_setopt ($ch, CURLOPT_POST, 1);
+curl_setopt ($ch, CURLOPT_POSTFIELDS, $request);
+$response = curl_exec($ch);
+curl_close($ch);
+return $response;
+}
 if ($sub) {
   $token=file_get_contents($base_cookie."opensub.dat");
 $request="<?xml version=\"1.0\" encoding=\"iso-8859-1\"?>

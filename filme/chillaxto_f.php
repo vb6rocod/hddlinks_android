@@ -18,7 +18,7 @@ $has_fav="yes";
 $has_search="yes";
 $has_add="yes";
 $has_fs="yes";
-$fav_target="chillaxto_f_fav.php?host=https://chillax.to";
+$fav_target="chillaxto_f_fav.php?host=https://ww.chillax.to";
 $add_target="chillaxto_f_add.php";
 $add_file="";
 $fs_target="chillaxto_fs.php";
@@ -169,7 +169,7 @@ echo '</TR>'."\r\n";
 
 $cookie=$base_cookie."hdpopcorns.dat";
 $ua = $_SERVER['HTTP_USER_AGENT'];
-$requestLink="https://chillax.to/";
+$requestLink="https://ww.chillax.to/";
 $host=parse_url($requestLink)['host'];
 if ($page==1 && $tip !="search") {
 if (file_exists($cookie)) unlink ($cookie);

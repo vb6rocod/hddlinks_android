@@ -76,7 +76,9 @@ foreach($videos as $video) {
     $t=explode('href="',$video);
     $t1=explode('"',$t[1]);
     $link="http://www.pornburst.xxx".$t1[0];
-  	$title=str_between($video,'title="','"');
+    $t2=explode('span>',$video);
+    $t3=explode('<',$t2[1]);
+  	$title=trim($t3[0]);
   	$title=prep_tit($title);
     $link=$target."?page=1&tip=release&link=".urlencode(fix_t($link))."&title=".urlencode(fix_t($title));
     if ($title) {
