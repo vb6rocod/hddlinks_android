@@ -148,7 +148,9 @@ $r=array();
   curl_setopt($ch, CURLOPT_TIMEOUT, 15);
   $h = curl_exec($ch);
   curl_close ($ch);
-
+//https://onlinefree.xyz/ajax/episode/info?id=8xeOn&film=680de8d13d7986d848dffc2d74fb8cd4
+//https://onlinefree.xyz/ajax/episode/embed?id=6872344b42716e6e&film=680de8d13d7986d848dffc2d74fb8cd4
+//https://vidcloud.icu/load.php?id=6872344b42716e6e
 $videos = explode('data-video="', $h);
 unset($videos[0]);
 $videos = array_values($videos);

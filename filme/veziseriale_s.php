@@ -167,6 +167,7 @@ if ($page==1) {
 }
 echo '</TR></TABLE>'."\r\n";
 $l = "http://www.veziseriale.online/tv-shows";
+$l="http://www.veziserialeonline.info/tv-shows";
 $r=array();
 $ua = $_SERVER['HTTP_USER_AGENT'];
   $ch = curl_init();

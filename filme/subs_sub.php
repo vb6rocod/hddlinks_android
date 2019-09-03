@@ -342,7 +342,8 @@ rar_close($rar_arch);
 $nn=count($arrsub);
 $k=intval($nn/10) + 1;
 $n=0;
-echo '<table border="1" width="100%"><tr><td style="color:#000000;background-color:deepskyblue;text-align:center" colspan="'.($k-0).'" align="center">Alegeti o subtitrare</font></TD></TR><TR>';
+echo '<H2>'.$page_tit.'</H2>';
+echo '<table border="1" width="100%">';
 echo '<TR>';
 for ($m=1;$m<$k;$m++) {
    echo '<TD align="center"><font size="4"><a href="#myLink'.($m*10).'">Salt:'.($m*10).'</a></font></td>';

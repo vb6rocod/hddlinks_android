@@ -118,6 +118,7 @@ function off() {
 <?php
 echo '<h2>'.$tit.$tit2.'</H2>';
 echo '<BR>';
+//echo $link;
 $ua = $_SERVER['HTTP_USER_AGENT'];
   $ch = curl_init($link);
   curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows; U; Windows NT 6.1; en-US; rv:1.9.1.2) Gecko/20090729 Firefox/3.5.2 GTB5');
@@ -136,7 +137,8 @@ unset($videos[0]);
 $videos = array_values($videos);
 foreach($videos as $video) {
    $t1=explode('"',$video);
-   $r[]=base64_decode($t1[0]);
+   $l1 = base64_decode($t1[0]);
+   if (strpos($l1,"http") !== false) $r[]=$l1;
 }
 echo '<table border="1" width="100%">';
 echo '<TR><TD class="mp">Alegeti un server: Server curent:<label id="server">'.parse_url($r[0])['host'].'</label>

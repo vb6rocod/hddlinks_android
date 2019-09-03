@@ -59,7 +59,7 @@ $n=0;
 foreach($videos as $video) {
   $t1 = explode('href="', $video);
   $t2 = explode('"',$t1[1]);
-  $link = "https://onmovies.se".$t2[0];
+  $link = "https://yifymovies.fun".$t2[0];
   $t1 = explode('title="', $video);
   $t2 = explode('"', $t1[1]);
   $title = trim($t2[0]);

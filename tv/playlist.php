@@ -1,6 +1,9 @@
 <!DOCTYPE html>
 <?php
 error_reporting(0);
+if (isset($_GET['link'])) {
+  $link= $_GET['link'];
+}
 $pg_tit=urldecode($_GET["title"]);
 ?>
 <html>
@@ -127,11 +130,29 @@ if (preg_match("/android|ipad/i",$user_agent) && preg_match("/chrome|firefox|mob
 $n=0;
 $w=0;
 $m3uFile="pl/".$pg_tit;
+if (isset($_GET['link'])) {
+  $ch = curl_init();
+  curl_setopt($ch, CURLOPT_URL, $link);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+  curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 10.0; rv:64.0) Gecko/20100101 Firefox/64.0');
+  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+  $html = curl_exec($ch);
+  curl_close($ch);
+  $m3uFile=explode("\n",$html);
+} else {
 $m3uFile = file($m3uFile);
+}
 foreach($m3uFile as $key => $line) {
   if(strtoupper(substr($line, 0, 7)) === "#EXTINF") {
     if (preg_match("/tvg\-name\=\"(.*?)\"/i",$line,$m)) {
       $title=$m[1];
+      if (!$title) {
+        $t1=explode(",",$line);
+        $title=trim($t1[1]);
+      }
     } else {
     $t1=explode(",",$line);
     $title=trim($t1[1]);

@@ -17,7 +17,7 @@ $has_fav="yes";
 $has_search="yes";
 $has_add="yes";
 $has_fs="yes";
-$fav_target="onmovies_s_fav.php?host=https://onmovies.se";
+$fav_target="onmovies_s_fav.php?host=https://yifymovies.fun";
 $add_target="onmovies_s_add.php";
 $add_file="";
 $fs_target="onmovies_ep.php";
@@ -167,10 +167,10 @@ if ($page==1) {
 echo '</TR>'."\r\n";
 
 if($tip=="release") {
-  $l ="https://onmovies.se/movie/filter/series/all/all/all/all/latest/?page=".$page;
+  $l ="https://yifymovies.fun/movie/filter/series/all/all/all/all/latest/?page=".$page;
 } else {
   $search=str_replace(" ","-",$tit);
-  $l="https://api.ocloud.stream/cmovieshd//movie/search/".str_replace(" ","-",$tit)."?page=".$page."&link_web=https%3A%2F%2Fonmovies.se";
+  $l="https://api.ocloud.stream/cmovieshd//movie/search/".str_replace(" ","-",$tit)."?page=".$page."&link_web=https%3A%2F%2Fyifymovies.fun";
 }
 $host=parse_url($l)['host'];
   $ch = curl_init();

@@ -14,6 +14,7 @@ $head=array('Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q
 'Content-Length: '.strlen($post).'',
 'Connection: keep-alive'
 );
+//6LfCmh4TAAAAAKog9f8wTyEOc0U8Ms2RTuDFyYP_
 $l="https://www.google.com/recaptcha/api/fallback?k=6LfCmh4TAAAAAKog9f8wTyEOc0U8Ms2RTuDFyYP_";
 $ch = curl_init();
 curl_setopt($ch, CURLOPT_URL, $l);

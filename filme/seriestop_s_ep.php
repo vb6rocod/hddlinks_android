@@ -8,8 +8,8 @@ $link=urldecode($_GET["link"]);
 $tip=$_GET["tip"];
 $year=$_GET['year'];
 /* ======================================= */
-$width="200px";
-$height="100px";
+$width="170px";
+$height="115px";
 $fs_target="seriestop_fs.php";
 $has_img="yes";
 ?>
@@ -121,7 +121,7 @@ foreach($videos as $video) {
    $ep_tit_d=$season."x".$episod;
 
   $link_f=$fs_target.'?tip=series&link='.urlencode($link).'&title='.urlencode(fix_t($tit)).'&image='.$img_ep."&sez=".$season."&ep=".$episod."&ep_tit=".urlencode(fix_t($ep_tit))."&year=".$year;
-  $img_ep="r_m.php?file=https://".$host."/templates/tvstream/timthumb.php?src=".$img_ep."&w=200&h=100&zc=1";
+  $img_ep="r_m.php?file=https://".$host."/templates/tvstream/timthumb.php?src=".$img_ep."&w=170&h=115&zc=1";
    if ($n == 0) echo "<TR>"."\n\r";
    if ($has_img == "yes")
     echo '<TD class="mp" width="33%">'.'<a id="sez'.$sez.'" href="'.$link_f.'" target="_blank"><img width="'.$width.'" height="'.$height.'" src="'.$img_ep.'"><BR>'.$ep_tit_d.'</a></TD>'."\r\n";

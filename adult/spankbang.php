@@ -245,7 +245,7 @@ foreach($videos as $video) {
     $t2 = explode('"', $t1[1]);
     $image = $t2[0];
   }
-  if (strpos($image,"http:") === false) $image="http:".$image;
+  if (strpos($image,"http") === false) $image="https:".$image;
   $durata="";
   $durata = preg_replace("/\n|\r/"," ",strip_tags($durata));
   if ($durata) $title=$title." (".$durata.')';

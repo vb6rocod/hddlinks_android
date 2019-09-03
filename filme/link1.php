@@ -972,6 +972,7 @@ $head=array('Accept: application/json, text/javascript, */*; q=0.01',
   }
 } elseif (strpos($filelink,"onlystream.tv") !== false) {
   //https://onlystream.tv/e/rgcv3v545biu
+  //echo $filelink;
   require_once("JavaScriptUnpacker.php");
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $filelink);
@@ -989,6 +990,7 @@ $head=array('Accept: application/json, text/javascript, */*; q=0.01',
   $jsu = new JavaScriptUnpacker();
   $out = $jsu->Unpack($h3);
   //echo $out;
+  $out .=$h3;
   if (preg_match('/((http|https)[\.\d\w\-\.\/\\\:\?\&\#\%\_\,]*(\.mp4))/', $out, $m)) {
   $link=$m[1];
   if (preg_match('/([http|https][\.\d\w\-\.\/\\\:\?\&\#\%\_\,]*(\.(srt|vtt)))/', $out, $s))
@@ -1022,6 +1024,34 @@ $head=array('Accept: application/json, text/javascript, */*; q=0.01',
   if (preg_match('/((http|https)[\.\d\w\-\.\/\\\:\?\&\#\%\_\,]*(\.mp4))/', $out, $m)) {
   $link=$m[1];
   } else $link="";
+} elseif (strpos($filelink,"okayload.com") !== false) {
+  //https://okayload.com/emb.html?w9kls6it0hj7=s1.okayload.com/i/03/00000/w9kls6it0hj7
+  //https://okayload.com/embed-w9kls6it0hj7.html?auto=1
+  $pattern = '@(?:\/\/|\.)(okayload\.com)\/(embed-|emb\.html\?)?([a-zA-Z0-9]+)@';
+  preg_match($pattern,$filelink,$r);
+  //print_r ($r);
+  $l="https://okayload.com/embed-".$r[3].".html?auto=1";
+  $ch = curl_init();
+  curl_setopt($ch, CURLOPT_URL, $l);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+  curl_setopt($ch, CURLOPT_USERAGENT, "Mozilla/5.0 (Windows NT 10.0; rv:65.0) Gecko/20100101 Firefox/65.0");
+  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+  //curl_setopt($ch,CURLOPT_REFERER,"http://gamovideo.com/");
+  curl_setopt($ch, CURLOPT_ENCODING, "");
+  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+  $h3 = curl_exec($ch);
+  curl_close($ch);
+  $out = $h3;
+  if (preg_match('/((http|https)[\.\d\w\-\.\/\\\:\?\&\#\%\_\,]*(\.mp4))/', $out, $m)) {
+  $link=$m[1];
+  //print_r ($m);
+  if (preg_match('/([http|https][\.\d\w\-\.\/\\\:\?\&\#\%\_\,]*(\.(srt|vtt)))/', $out, $s))
+  $srt=$s[1];
+  } else {
+    $link="";
+  }
 } elseif (strpos($filelink,"gamovideo.") !== false) {
   //http://gamovideo.com/gd82bzc3i6eq
   //http://gamovideo.com/embed-gd82bzc3i6eq-640x360.html
@@ -1056,6 +1086,7 @@ $head=array('Accept: application/json, text/javascript, */*; q=0.01',
   }
 } elseif (strpos($filelink,"flix555.com") !== false) {
 //echo $filelink;
+  //https://flix555.com/embed-u6kgm3ho6mbi.html
   $pattern = '@(?:\/\/|\.)(flix555\.com)\/(?:embed-)?([a-zA-Z0-9]+)@';
   preg_match($pattern,$filelink,$r);
   //print_r ($r);
@@ -3376,23 +3407,69 @@ curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
 curl_setopt($ch, CURLOPT_TIMEOUT, 15);
 $h = curl_exec($ch);
 curl_close($ch);
-
+$h=urldecode($h);
+/*
 $iss=base64_encode($_SERVER['REMOTE_ADDR']);
 $vid="";
+$vid=str_between($h,"videokeyorig='","'");
 $at="";
 $http_referer="";
 if (preg_match_all("/eval\(function\(w\,i\,s\,e\)(.*?)\<\/script/ms",$h,$r)) {
-  $h=decode_wise($r[1][0]);
+  //$h .=decode_wise($r[1][0]);
+  //$h .=decode_wise($r[1][1]);
   $vid=str_between($h,"videokeyorig='","'");
   $at=str_between($h,"attoken='","'");
   $http_referer=str_between($h,"server_referer='","'");
 }
+*/
+//echo $h;
+$y="";
+if (preg_match("/get_md5/",$h)){
+  if (preg_match('/([http|https][\.\d\w\-\.\/\\\:\?\&\#\%\_\,]*(\.(srt|vtt)))/', $h, $m)) {
+  $srt=$m[1];
+  $srt=urldecode(str_replace("https","http",$srt));
+  //echo $srt;
+  }    $l="http://hqq.tv/player/get_md5.php?ver=3&secure=0&adb=0%2F&v=".$vid."&token=";
+    $ch = curl_init();
+    curl_setopt($ch, CURLOPT_URL, $l);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+    curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+     'Accept: */*',
+     'Accept-Language: en-US,en;q=0.5',
+     'Accept-Encoding: deflate',
+     'X-Requested-With: XMLHttpRequest'
+    ));
+    curl_setopt($ch, CURLOPT_USERAGENT, $ua);
+    curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+    curl_setopt($ch, CURLOPT_REFERER, $l_ref);
+    curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie);
+    curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+    curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+    curl_setopt($ch, CURLOPT_HEADER,1);
+    $h = curl_exec($ch);
+    curl_close($ch);
+    //echo $h;
+    $file=str_between($h,'obf_link":"','"');
+    $y=decodeUN($file);
+    if (strpos($y,"http") === false && $y) $y="https:".$y;
+    if ($y)
+      $link=$y.".mp4.m3u8";
+    else
+     $link="";
+} else {
+ $link="";
+}
+
+/*
 $h="";
 $l_ref="";
-if ($vid && $at && $http_referer) {
+if ($vid && $at) {
       $l="http://hqq.tv/sec/player/embed_player_9331445831509874.php?vid=".$vid."&need_captcha=1&iss=".$iss."&vid=".$vid."&at=".$at."&autoplayed=yes&referer=on&http_referer=".$http_referer."&pass=&embed_from=&need_captcha=0&hash_from=&secured=0&token=03";
       $l_ref=$l;
       //echo $l;
+      //$l="https://hqq.tv/player/embed_player.php?secure=1&vid=Rk5LeUN2VkVHMmcvN256WlE1LytVUT09";
+      //$l="https://hqq.tv/sec/player/embed_player_7988862232204833.php?vid=eHhqYTk3aFlVbkoxaFdsbTIvNWpLQT09&need_captcha=1&iss=OTUuNzYuMTkuNDM%3D&vid=eHhqYTk3aFlVbkoxaFdsbTIvNWpLQT09&at=7b0b612c8b69967673ea4b401b64e1fd&autoplayed=yes&referer=on&http_referer=aHR0cHM6Ly92ZXppb25saW5lLm5ldC9mYWxsaW5nLWlubi1sb3ZlLWhhbnVsLWN1LW5vcm9jLTIwMTkuaHRtbA%3D%3D&pass=&embed_from=&need_captcha=1&secure=0&gtoken=&lpo=1&g-recaptcha-response=03";
       $head=array('Cookie: gt=536606632dec68aa2bd81d153ce3f4a7');
       $ch = curl_init();
       curl_setopt($ch, CURLOPT_URL, $l);
@@ -3411,7 +3488,7 @@ if ($vid && $at && $http_referer) {
       curl_close($ch);
 }
 $h=urldecode($h);
-
+//echo $h;
 if (preg_match("/get_md5/",$h)){
   if (preg_match('/([http|https][\.\d\w\-\.\/\\\:\?\&\#\%\_\,]*(\.(srt|vtt)))/', $h, $m)) {
   $srt=$m[1];
@@ -3430,6 +3507,7 @@ if (preg_match("/get_md5/",$h)){
   }
   if (isset($r[1][1])) {
    $e=decode_wise($r[1][1]);
+   //echo $h;
    preg_match("/server_2=\"\s*\+*encodeURIComponent\(([^\)]+)/",$h,$m);
    $pat='/'.$m[1].'\s*=\s*"([^"]*?)"/ms';
    preg_match($pat,$e,$m);
@@ -3440,29 +3518,32 @@ if (preg_match("/get_md5/",$h)){
    $vid_link=$m[1];
   }
   $y="";
-  if ($vid && $at && $vid_server && $vid_link) {
-    $l="http://hqq.tv/player/get_md5.php?at=".$at."&adb=0%2F&b=1&link_1=".$vid_link."&server_2=".$vid_server."&vid=".$vid;
+  if ($vid && $vid_server && $vid_link) {
+    $l="http://hqq.tv/player/get_md5.php?&ver=2&need_captcha=1&at=".$at."&adb=0%2F&b=1&link_1=".$vid_link."&server_2=".$vid_server."&vid=".$vid;
     $ch = curl_init();
     curl_setopt($ch, CURLOPT_URL, $l);
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-    curl_setopt($ch, CURLOPT_HTTPHEADER, array(
-     'Accept: */*',
-     'Accept-Language: en-US,en;q=0.5',
-     'Accept-Encoding: deflate',
-     'X-Requested-With: XMLHttpRequest'
-    ));
     curl_setopt($ch, CURLOPT_USERAGENT, $ua);
     curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
     curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
     curl_setopt($ch, CURLOPT_REFERER, $l_ref);
+    curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie);
     curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
     curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+    curl_setopt($ch, CURLOPT_HEADER,1);
     $h = curl_exec($ch);
     curl_close($ch);
-    $x=json_decode($h,1);
-    $file=str_between($h,'file":"','"');
-    $file= $x["obf_link"];
-    $y=decodeUN($file);
+    //echo $h;
+    $y="";
+    if (preg_match("/Location:\s*(\S+)/",$h,$m)) {
+    //print_r ($m);
+    $y=$m[1];
+    }
+    //$x=json_decode($h,1);
+    //$file=str_between($h,'file":"','"');
+    //$file= $x["obf_link"];
+    //$file=str_between($h,'obf_link":"','"');
+    //$y=decodeUN($file);
     if (strpos($y,"http") === false && $y) $y="https:".$y;
   }
   if ($y)
@@ -3472,6 +3553,7 @@ if (preg_match("/get_md5/",$h)){
 } else {
  $link="";
 }
+*/
 } elseif (strpos($filelink,"thevideo.me") !== false || strpos($filelink,"vev.io") !== false) {
   //http://thevideo.me/embed-0eqr3o05491w.html
   //https://vev.io/embed/78r81xm7ym34  ==> https://thevideo.me/embed-afdtxrbc8wrg.html

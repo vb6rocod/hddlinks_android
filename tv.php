@@ -90,6 +90,13 @@ $(document).on('keyup', '.imdb', isValid);
 <TD width="25%"><a href="filme/yt_playlist.php?token=&id=UC6Sn1XzRBCBl8UMyAb8_5PA&kind=channel&title=%28channel%29+PrimaTV+Romania&image=https://yt3.ggpht.com/-hMQUv-XEccM/AAAAAAAAAAI/AAAAAAAAAAA/Tek8sw-tzhU/s88-c-k-no-mo-rj-c0xffffff/photo.jpg" target="_blank">PrimaTV</a></TD>
 <TD width="25%"><a href="tv/qello_main.php" target="_blank">qello TV</a></TD>
 </TR>
+
+<TR>
+<TD width="25%"><a href="tv/iptv.php" target="_blank">IPTV International</a></TD>
+<TD width="25%"><a href="tv/playlist.php?title=Sport+IPTV&link=https://raw.githubusercontent.com/freearhey/iptv/master/index.sport.m3u" target="_blank">Sport IPTV</a></TD>
+<TD width="25%"></TD>
+<TD width="25%"></TD>
+</TR>
 <?php
 include ("common.php");
 if (file_exists($base_fav."flc_c.txt")) {

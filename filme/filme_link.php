@@ -7,12 +7,16 @@ $list = glob($base_sub."*.srt");
     str_replace(" ","%20",$l);
     unlink($l);
 }
-if (file_exists($base_cookie."max_time_hqq.txt")) {
-   $time_exp=file_get_contents($base_cookie."max_time_hqq.txt");
+if (file_exists("../../cookie/max_time_hqq.txt")) {
+   //$time_exp=file_get_contents($base_cookie."max_time_hqq.txt");
+   $time_exp=file_get_contents("../../cookie/max_time_hqq.txt");
    $time_now=time();
-   if ($time_exp > $time_now)
-     $msg_captcha=" | Expira in ".intval(($time_exp-$time_now)/60)." min.";
-   else
+   if ($time_exp > $time_now) {
+     $minutes = intval(($time_exp-$time_now)/60);
+     $seconds= ($time_exp-$time_now) - $minutes*60;
+     if ($seconds < 10) $seconds = "0".$seconds;
+     $msg_captcha=" | Expira in ".$minutes.":".$seconds." min.";
+   } else
      $msg_captcha="";
 } else {
    $msg_captcha="";
@@ -440,7 +444,7 @@ $ua     =   $_SERVER['HTTP_USER_AGENT'];
   }
   $html .=$h;
   //echo $html;
-} elseif (strpos($filelink,"veziseriale.online") !== false) {
+} elseif (strpos($filelink,"veziseriale.online") !== false || strpos($filelink,"veziserialeonline.info") !== false) {
   $headers = array('Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
    'Accept-Encoding: deflate',
    'Accept-Language: en-US,en;q=0.5',
@@ -1439,6 +1443,7 @@ if (preg_match("/android|ipad/i",$user_agent) && preg_match("/chrome|firefox|mob
 $link_f=array_unique($link_f);
 //print_r ($link_f);
 //$n= count($link_f);
+$find_hqq = false;
 if (count ($link_f) > 0) {
 echo '
 <html><head>
@@ -1569,8 +1574,9 @@ if (strpos($filelink,"blogspot.ro") !== false && (strpos($filelink,"sezonul") !=
          $vid=$m[2];
          $link_f[$k]="http://hqq.watch/player/embed_player.php?vid=".$vid."&autoplay=no";
       }
+    $find_hqq=true;
     echo '<TR><td class="link"><a href="link1.php?file='.urlencode($link_f[$k]).','.urlencode($pg).'" target="_blank">'.$server.'</a>
-    <a href="hqq_captcha.php?file='.urlencode($link_f[$k]).'" target="_blank"><font color="lightblue"> | Rezolva captcha</font></a> <a href="hqq3.php"><font color="lightblue"> | Rezolva captcha (v2)</font></a>'.$msg_captcha.'
+    <a href="hqq_captcha.php?file='.urlencode($link_f[$k]).'" target="_blank"><font color="lightblue"> | Rezolva captcha</font></a> <a href="hqq3.php"><font color="lightblue"> | Rezolva captcha (v2)</font></a><span id="span">'.$msg_captcha.'</span>
     </TD></TR>';
    echo '
    <script>
@@ -1585,83 +1591,8 @@ if (strpos($filelink,"blogspot.ro") !== false && (strpos($filelink,"sezonul") !=
     echo '<TR><td class="link"><a href="link1.php?file='.urlencode($link_f[$k]).','.urlencode($pg).'" target="_blank">'.$server.'</a> <a href="https://vev.io/pair" target="_blank"><font color="lightblue"> | Pair IP (4 ore)</font></a></TD></TR>';
    elseif (strpos($link_f[$k],"vidup.io") !== false)
     echo '<TR><td class="link"><a href="link1.php?file='.urlencode($link_f[$k]).','.urlencode($pg).'" target="_blank">'.$server.'</a> <a href="https://vidup.io/pair" target="_blank"><font color="lightblue"> | Pair IP (4 ore)</font></a></TD></TR>';
-   elseif (strpos($link_f[$k],"1target.net") !== false) {
-     echo '<TR><td class="link"><a href="'.$link_f[$k].'" target="_blank">Open video and get link ...    </a><input type="text" id="target'.$k.'" value="" size="40" onpaste="setTimeout(msg'.$k.',1000)">  </TD></TR>';
-   echo '
-   <script>
-   function msg'.$k.'() {
-     val_l=document.getElementById("target'.$k.'").value;
-     msg="link1.php?file=" + val_l + "," + "'.urlencode($pg).'";
-     window.open(msg);
-   }
-   </script>
-   ';
-   } elseif (strpos($link_f[$k],"rovideo1.net") !== false || strpos($link_f[$k],"playhd1.fun") !== false) {
-  //echo $link_f[$k];
-  $ua=$_SERVER['HTTP_USER_AGENT'];
-  $ch = curl_init();
-  curl_setopt($ch, CURLOPT_URL, $link_f[$k]);
-  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
-  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
-  curl_setopt($ch, CURLOPT_ENCODING, "");
-  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
-  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
-  curl_setopt($ch, CURLOPT_HEADER,1);
-  //curl_setopt($ch,CURLOPT_HTTPHEADER,$head);
-  $html = curl_exec($ch);
-  curl_close($ch);
-  //$html=str_replace("https://www.rovideo.net/player/kt_player.js","kt.js",$html);
-  //$html= preg_replace('/([http|https][\.\d\w\-\.\/\\\:\?\&\#\%\_\,]*(kt_player\.js))/', "kt.js", $html);
-  //if (file_exists("kt.html")) unlink ("kt.ktml");
-  //if (file_exists("kt.txt")) unlink ("kt.txt");
-$t1=explode('var flashvars',$html);
-$t2=explode('</script',$t1[1]);
-$html='<div id="kt_player"></div><script type="text/javascript" src="kt.js?v=4.0.4"></script>';
-$html .='<script type="text/javascript">'.' ';
-$html .="var flashvars".$t2[0]."</script>";
-$html=str_replace("https","http",$html);
-  file_put_contents("kt.html",$html);
-//echo $html;
-//die();
-echo '<iframe src="kt.html" style="display: none;"></iframe>';
-echo '<TR><td class="link"><a href="link1.php?file='.urlencode($link_f[$k]).','.urlencode($pg).'" target="_blank">'.$server.'</a></TD></TR>';
-} elseif (strpos($link_f[$k],"streamplay1.") !== false) {
-  preg_match('/(?:\/\/|\.)(streamplay\.(?:to|club|top|me))\/(?:embed-|player-)?([0-9a-zA-Z]+)/',$link_f[$k],$m);
-  $filelink="https://streamplay.me/player-".$m[2]."-920x360.html";
-  if (file_exists($base_script."/filme/streamplay.txt")) unlink ($base_script."/filme/streamplay.txt");
-  $ua=$_SERVER["HTTP_USER_AGENT"];
-  $head=array('Cookie: __cfduid=d48f1e8e1e5ae6884e29bbb7a61ba14cf1537565473; lang=1; ref_yrp=http%3A%2F%2Fcecileplanche-psychologue-lyon.com%2Fshow%2Fthe-good-cop%2Fseason-1%2Fepisode-2; _ga=GA1.2.1094333956.1537565367; _gid=GA1.2.1392157958.1537565367; ref_kun=1; _gat=1');
-  //$filelink="https://streamplay.me/player-3q1lxhws3g77-920x360.html";
-  $ch = curl_init($filelink);
-  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
-  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
-  curl_setopt($ch, CURLOPT_RETURNTRANSFER  ,1);  // RETURN THE CONTENTS OF THE CALL
-  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
-  curl_setopt($ch, CURLOPT_ENCODING, "");
-  curl_setopt($ch,CURLOPT_HTTPHEADER,$head);
-  curl_setopt($ch, CURLOPT_REFERER, $filelink);
-  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
-  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
-  $h = curl_exec($ch);
-  curl_close($ch);
-  $t1=explode("return r[",$h);
-  preg_match_all("/return (_0x[a-z0-9]+)/",$t1[1],$x);
-  $replace="var request = new XMLHttpRequest();
-  var the_data = '';
-  var php_file='streamplay.php?link=' + encodeURIComponent(".$x[1][1].");
-  request.open('GET', php_file, true);
-  request.send(the_data);
-  ";
-  $h=str_replace($x[0][1],$replace,$h);
-  $h=str_replace('src="/','src="https://streamplay.to/',$h);
-  file_put_contents("streamplay.html",$h);
-  echo '<iframe src="streamplay.html" style="display: none;"></iframe>';
-  echo '<TR><td class="link"><a href="link1.php?file='.urlencode($link_f[$k]).','.urlencode($pg).'" target="_blank">'.$server.'</a></TD></TR>';
-} else
-   echo '<TR><td class="link"><a href="link1.php?file='.urlencode($link_f[$k]).','.urlencode($pg).'" target="_blank">'.$server.'</a></TD></TR>';
+   else
+    echo '<TR><td class="link"><a href="link1.php?file='.urlencode($link_f[$k]).','.urlencode($pg).'" target="_blank">'.$server.'</a></TD></TR>';
   } else {  //== "mp"
    if (strpos($link_f[$k],"hqq.") !== false  || strpos($link_f[$k],"waaw") !== false) {
       $pattern = "@(?:\/\/|\.)((?:waaw1?|netu|hqq)\.(?:tv|watch))\/(?:watch_video\.php\?v|.+?vid)=([a-zA-Z0-9]+)@";
@@ -1669,98 +1600,16 @@ echo '<TR><td class="link"><a href="link1.php?file='.urlencode($link_f[$k]).','.
          $vid=$m[2];
          $link_f[$k]="http://hqq.watch/player/embed_player.php?vid=".$vid."&autoplay=no";
       }
+      $find_hqq=true;
    echo '<TR><td class="link"><a onclick="ajaxrequest('."'".urlencode($pg)."', '".urlencode($link_f[$k])."')".'"'." style='cursor:pointer;'>".$server.'</a>
    <a href="hqq3.php"><font color="lightblue"> | Captcha (v2)</font></a>
-   <a href="hqq_captcha.php?file='.urlencode($link_f[$k]).'" target="_blank"><font color="lightblue"> | Captcha</font></a>
-   <a href="intent:http://127.0.0.1:8080/scripts/filme/hqq_captcha.php?file='.urlencode($link_f[$k]).'#Intent;package=org.mozilla.firefox;S.title=Captcha;end" target="_blank"><font color="lightblue"> | Captcha (firefox)</font></a>
-   <a href="intent:http://127.0.0.1:8080/scripts/filme/hqq_captcha.php?file='.urlencode($link_f[$k]).'#Intent;package=com.android.chrome;S.title=Captcha;end" target="_blank"><font color="lightblue"> | Captcha (chrome)</font></a>
-   '.$msg_captcha.'
-   ';
-   echo '
-   <script>
-   function msg1'.$k.'() {
-     val_l=document.getElementById("target'.$k.'").value;
-     msg="file" + encodeURIComponent(val_l);
-     ajaxrequest1(msg);
-     }
-     </script>
+   <span id="span">'.$msg_captcha.'</span>
    ';
    } elseif (strpos($link_f[$k],"thevideo.") !== false || strpos($link_f[$k],"vev.") !== false)
    echo '<TR><td class="link"><a onclick="ajaxrequest('."'".urlencode($pg)."', '".urlencode($link_f[$k])."')".'"'." style='cursor:pointer;'>".''.$server.'</a> <a href="https://vev.io/pair" target="_blank"><font color="lightblue"> | Pair IP (4 ore)</font></a></TD></TR>';
     elseif (strpos($link_f[$k],"vidup.io") !== false )
    echo '<TR><td class="link"><a onclick="ajaxrequest('."'".urlencode($pg)."', '".urlencode($link_f[$k])."')".'"'." style='cursor:pointer;'>".''.$server.'</a> <a href="https://vidup.io/pair" target="_blank"><font color="lightblue"> | Pair IP (4 ore)</font></a></TD></TR>';
-
-    elseif (strpos($link_f[$k],"1target.net") !== false) {
-     echo '<TR><td class="link"><a href="'.$link_f[$k].'" target="_blank">Open video and get link ...    </a><input type="text" id="target'.$k.'" value="" size="40" onpaste="setTimeout(msg'.$k.',1000)">  </TD></TR>';
-   echo '
-   <script>
-   function msg'.$k.'() {
-     val_l=document.getElementById("target'.$k.'").value;
-     msg="'.urlencode($pg).'" + "," + val_l;
-     ajaxrequest("'.urlencode($pg).'",val_l);
-   }
-   </script>
-   ';
-} elseif (strpos($link_f[$k],"rovideo1.net") !== false  || strpos($link_f[$k],"playhd1.fun") !== false) {
-  /*
-  $ua=$_SERVER['HTTP_USER_AGENT'];
-  $ch = curl_init();
-  curl_setopt($ch, CURLOPT_URL, $link_f[$k]);
-  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
-  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
-  curl_setopt($ch, CURLOPT_ENCODING, "");
-  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-  //curl_setopt($ch,CURLOPT_HTTPHEADER,$head);
-  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
-  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
-  $html = curl_exec($ch);
-  curl_close($ch);
-  */
-  $html=file_get_contents($link_f[$k]);
-  //$html=str_replace("https://www.rovideo.net/player/kt_player.js","kt.js",$html);
-  $html= preg_replace('/([http|https][\.\d\w\-\.\/\\\:\?\&\#\%\_\,]*(kt_player\.js))/', "kt.js", $html);
-  //if (file_exists("kt.html")) unlink ("kt.ktml");
-  //if (file_exists("kt.txt")) unlink ("kt.txt");
-  file_put_contents("kt.html",$html);
-
-echo '<iframe src="kt.html" style="display: none;"></iframe>';
-echo '<TR><td class="link"><a onclick="ajaxrequest('."'".urlencode($pg)."', '".urlencode($link_f[$k])."')".'"'." style='cursor:pointer;'>".$server.'</a></TD></TR>';
-} elseif (strpos($link_f[$k],"streamplay1.to") !== false || strpos($link_f[$k],"streamplay1.me") !== false) {
-  preg_match('/(?:\/\/|\.)(streamplay\.(?:to|club|top|me))\/(?:embed-|player-)?([0-9a-zA-Z]+)/',$link_f[$k],$m);
-  $filelink="https://streamplay.me/player-".$m[2]."-920x360.html";
-  $ua=$_SERVER["HTTP_USER_AGENT"];
-  $head=array('Cookie: __cfduid=d48f1e8e1e5ae6884e29bbb7a61ba14cf1537565473; lang=1; ref_yrp=http%3A%2F%2Fcecileplanche-psychologue-lyon.com%2Fshow%2Fthe-good-cop%2Fseason-1%2Fepisode-2; _ga=GA1.2.1094333956.1537565367; _gid=GA1.2.1392157958.1537565367; ref_kun=1; _gat=1');
-  //$filelink="https://streamplay.me/player-3q1lxhws3g77-920x360.html";
-  if (file_exists($base_script."/filme/streamplay.txt")) unlink ($base_script."/filme/streamplay.txt");
-  $ch = curl_init($filelink);
-  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
-  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
-  curl_setopt($ch, CURLOPT_RETURNTRANSFER  ,1);  // RETURN THE CONTENTS OF THE CALL
-  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
-  curl_setopt($ch, CURLOPT_ENCODING, "");
-  curl_setopt($ch,CURLOPT_HTTPHEADER,$head);
-  curl_setopt($ch, CURLOPT_REFERER, $filelink);
-  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
-  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
-  $h = curl_exec($ch);
-  curl_close($ch);
-  $t1=explode("return r[",$h);
-  preg_match_all("/return (_0x[a-z0-9]+)/",$t1[1],$x);
-  $replace="var request = new XMLHttpRequest();
-  var the_data = '';
-  var php_file='streamplay.php?link=' + encodeURIComponent(".$x[1][1].");
-  request.open('GET', php_file, true);
-  request.send(the_data);
-  ";
-  $h=str_replace($x[0][1],$replace,$h);
-  $h=str_replace('src="/','src="https://streamplay.to/',$h);
-  file_put_contents("streamplay.html",$h);
-  echo '<iframe src="streamplay.html" style="display: none;"></iframe>';
-  echo '<TR><td class="link"><a onclick="ajaxrequest('."'".urlencode($pg)."', '".urlencode($link_f[$k])."')".'"'." style='cursor:pointer;'>".$server.'</a></TD></TR>';
-
-   } else
+   else
      echo '<TR><td class="link"><a onclick="ajaxrequest('."'".urlencode($pg)."', '".urlencode($link_f[$k])."')".'"'." style='cursor:pointer;'>".$server.'</a></TD></TR>';
    }
 }
@@ -1778,7 +1627,26 @@ echo '</TR></TABLE>';
 echo '<BR><table border="0px" width="100%">
 <TR>
 <TD><font size="4"><b>Scurtaturi: 1=opensubtitles, 2=titrari, 3=subs, 4=subtitrari</b></font></TD></TR></TABLE>';
+if ($find_hqq) {
+echo '
+<script type="text/javascript">
+var span = document.getElementById("span");
+var request =  new XMLHttpRequest();
+function time() {
 
+  var php_file = "hqq_max.php";
+  request.open("GET", php_file, true);
+  request.send();
+  request.onreadystatechange = function() {
+    if (request.readyState == 4) {
+     span.textContent = request.responseText;
+    }
+  }
+}
+setInterval(time, 1000);
+</script>
+';
+}
 echo '<br></div></body>';
 echo '</html>';
 } else {

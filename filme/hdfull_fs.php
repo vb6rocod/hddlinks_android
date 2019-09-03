@@ -1,7 +1,7 @@
 <!doctype html>
 <?php
 include ("../common.php");
-//error_reporting(0);
+error_reporting(0);
 $list = glob($base_sub."*.srt");
    foreach ($list as $l) {
     str_replace(" ","%20",$l);
@@ -124,6 +124,7 @@ if ($tip=="series")
 $l1=$link."/season-".$sez."/episode-".$ep;
 else
 $l1=$link;
+//echo $l1;
   $ch = curl_init($l1);
   curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows; U; Windows NT 6.1; en-US; rv:1.9.1.2) Gecko/20090729 Firefox/3.5.2 GTB5');
   curl_setopt($ch,CURLOPT_REFERER,"https://hdfull.me/");
@@ -164,6 +165,7 @@ for ($k=0;$k<count($prov);$k++) {
   if ($pp==41) $r[]="https://vidzi.tv/".$code;
   if ($pp==31) $r[]="https://vidoza.net/".$code;
   if ($pp==20) $r[]="https://flix555.com/embed-".$code.".html";
+  if ($pp==23) $r[]="https://verystream.com/e/".$code."/";
 }
 echo '<table border="1" width="100%">';
 echo '<TR><TD class="mp">Alegeti un server: Server curent:<label id="server">'.parse_url($r[0])['host'].'</label>
