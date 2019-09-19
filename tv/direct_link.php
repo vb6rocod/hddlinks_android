@@ -375,12 +375,15 @@ $head=array('Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
     $link="";
 }
 if ($from=="moldova") {
+    $ua = $_SERVER['HTTP_USER_AGENT'];
+    $cookie=$base_cookie."hdpopcorns.dat";
     $ch = curl_init();
     curl_setopt($ch, CURLOPT_URL, $link);
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-    curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 10.0; rv:64.0) Gecko/20100101 Firefox/64.0');
+    curl_setopt($ch, CURLOPT_USERAGENT, $ua);
     curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
     curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+    curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie);
     //curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
     //curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
     curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
@@ -389,7 +392,8 @@ if ($from=="moldova") {
     curl_close($ch);
     $t1=explode("video.src = '",$h);
     $t2=explode("'",$t1[1]);
-    $link="http://www.trm.md".$t2[0];
+    $link="https://www.trm.md".$t2[0];
+    
 }
 if ($from=="flc") {
   $token=file_get_contents($base_fav."flc.txt");

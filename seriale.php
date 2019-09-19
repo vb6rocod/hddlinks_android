@@ -81,15 +81,15 @@ document.onkeypress =  zx;
 <TD width="25%"><a href="filme/cineplex_s_main.php" target="_blank">cineplex (cont)</a></TD>
 </TR>
 <TR>
-<TD width="25%"><a href="filme/openloadmovies_s.php?page=1&tip=release&title=openloadmovies&link=" target="_blank">openloadmovies</a></TD>
 <TD width="25%"><a href="filme/seriesfreetv_s.php?page=1&tip=release&title=seriesfreetv&link=" target="_blank">seriesfreetv</a></TD>
 <TD width="25%"><a href="filme/moviesjoy_s.php?page=1&tip=release&title=moviesjoy&link=" target="_blank">moviesjoy</a></TD>
-<TD width="25%"><a href="filme/chillaxto_s.php?page=1&tip=release&title=chillax.to&link=" target="_blank">chillax.to</a></TD>
+<TD width="25%"><a href="filme/onmovies_s.php?page=1&tip=release&title=onmovies&link=" target="_blank">onmovies</a></TD>
+<TD width="25%"><a href="filme/europix_s.php?page=1&tip=release&title=europix&link=" target="_blank">europix</a></TD>
 </TR>
 
 <TR>
 <TD width="25%"><a href="filme/0123netflix_s.php?page=1&tip=release&title=0123netflix&link=" target="_blank">0123netflix</a></TD>
-<TD width="25%"><a href="filme/onmovies_s.php?page=1&tip=release&title=onmovies&link=" target="_blank">onmovies</a></TD>
+<TD width="25%"></TD>
 <TD width="25%"></TD>
 <TD width="25%"></TD>
 </TR>

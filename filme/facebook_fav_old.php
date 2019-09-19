@@ -7,7 +7,13 @@ $list = glob($base_sub."*.srt");
     str_replace(" ","%20",$l);
     unlink($l);
 }
-if (isset($_GET["renew"])) {
+$f=$base_cookie."facebook.dat";
+if (file_exists($f))
+  $key=trim(file_get_contents($f));
+else {
+  $key="";
+}
+if (isset($_GET["renew"]) && $key) {
  $file=$base_fav."facebook.dat";
  $h="";
  if (file_exists($file)) {
@@ -22,9 +28,7 @@ if (isset($_GET["renew"])) {
       $title=trim($a[0]);
       $image=trim($a[1]);
       if (strpos(@get_headers($image)[0],"403 Forbidden") !== false) {
-       $l4="https://www.facebook.com/pg/".$search."/videos/?ref=page_internal";
-
-       $cover="";
+       $l4="https://graph.facebook.com/v3.1/".$title."?cover&access_token=".$key;
        $ch = curl_init();
        curl_setopt($ch, CURLOPT_URL, $l4);
        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
@@ -33,15 +37,13 @@ if (isset($_GET["renew"])) {
        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
        curl_setopt($ch, CURLOPT_TIMEOUT, 15);
-       $h = curl_exec($ch);
+       $h4 = curl_exec($ch);
        curl_close($ch);
-       $h=urldecode($h);
-       //echo $h;
-       $t1=explode('og:image" content="',$h);
-       $t2=explode('"',$t1[1]);
-       $cover=urldecode($t2[0]);
-       $cover=str_replace("&amp;","&",$cover);
-       if ($cover) {
+       $y=json_decode($h4,1);
+       $cover="";
+       if (isset($y["id"])) {
+        $id=$y["id"];
+        $cover ="https://graph.facebook.com/v3.1/".$id."/picture?access_token=".$key;
         $out .= $title."#separator".$cover."\r\n";
        } else {
          $out .= $title."#separator".$image."\r\n";
@@ -63,7 +65,6 @@ if (isset($_GET["renew"])) {
 <meta http-equiv="Expires" content="0"/>
 <title><?php echo $page_title; ?></title>
 <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
-<script async defer crossorigin="anonymous" src="https://connect.facebook.net/ro_RO/sdk.js#xfbml=1&version=v4.0&appId=133744210505475&autoLogAppEvents=1"></script>
 <link rel="stylesheet" type="text/css" href="../custom.css" />
 <script type="text/javascript">
 function ajaxrequest2(link) {
@@ -202,7 +203,5 @@ echo '<table border="1px" width="100%"><TR><TD>Apasti tasta 3 pentru a adauga/st
 }
 
 ?>
-<div class="fb-login-button" data-width="" data-size="medium" data-button-type="continue_with" data-auto-logout-link="false" data-use-continue-as="false"></div>
-
 </body>
 </html>

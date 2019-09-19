@@ -6,7 +6,8 @@ $tit=unfix_t(urldecode($_GET["title"]));
 $image=$_GET["image"];
 $link=urldecode($_GET["link"]);
 $tip=$_GET["tip"];
-$l="http://www.tvseries.net".$link;
+$l=$link;
+$base = dirname($l);
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $l);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
@@ -16,7 +17,6 @@ $l="http://www.tvseries.net".$link;
   curl_setopt($ch, CURLOPT_TIMEOUT, 15);
   $html = curl_exec($ch);
   curl_close($ch);
-$image="http://img.tvseries.net".str_between($html,'src="http://img.tvseries.net','"');
 ?>
 <html><head>
 <meta http-equiv="content-type" content="text/html; charset=UTF-8">
@@ -37,17 +37,18 @@ function str_between($string, $start, $end){
 echo '<h2>'.$tit.'</h2><br>';
 echo '<table border="1" width="100%">'."\n\r";
 
-$html=str_between($html,"Season</h4>",'<div class="row">');
-$videos = explode('div class="column"', $html);
+$html=str_between($html,'div id="szzz">','</div');
+$t1=explode("<!",$html);
+$html=$t1[0];
+$videos = explode('a href="', $html);
 $n=0;
 unset($videos[0]);
-//$videos = array_values($videos);
-$videos = array_reverse($videos);
+$videos = array_values($videos);
+//$videos = array_reverse($videos);
 foreach($videos as $video) {
-  $t1 = explode('href="', $video);
-  $t2 = explode('"',$t1[1]);
-  $link = $t2[0];
-  $title=str_between($video,"<small>","</small");
+  $t2 = explode('"',$video);
+  $link = $base."/".$t2[0];
+  $title=trim(str_between($video,"span>","</span"));
   $title=prep_tit($title);
   preg_match("/season\s+(\d+)/i",$title,$m);
   $sez=$m[1];
@@ -55,7 +56,7 @@ foreach($videos as $video) {
   $year="";
   
   if ($n==0) echo '<TR>';
-  $link_f='tvseries_ep.php?tip=series&link='.urlencode($link).'&title='.urlencode(fix_t($tit)).'&image='.$image."&sez=".$sez."&ep=&ep_tit=&year=".$year;
+  $link_f='europix_ep.php?tip=series&link='.urlencode($link).'&title='.urlencode(fix_t($tit)).'&image='.$image."&sez=".$sez."&ep=&ep_tit=&year=".$year;
   echo '<td class="sez" align="center"><a href="'.$link_f.'" target="_blank">'.$title.'</a></TD>';
   $n++;
   if ($n == 4) {
@@ -63,14 +64,14 @@ foreach($videos as $video) {
   $n=0;
   }
 }
-/*
+  /*
   if ($n < 4 && $n > 0) {
     for ($k=0;$k<4-$n;$k++) {
       echo '<TD></TD>'."\r\n";
     }
     echo '</TR>'."\r\n";
   }
-*/
+  */
 echo '</table>';
 ?>
 </body>

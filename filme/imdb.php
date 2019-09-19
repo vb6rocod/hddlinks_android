@@ -10,17 +10,18 @@ if (isset($_GET["year"]))
   $year=$_GET["year"];
 else
   $year="";
-if (isset($_GET["imdb"]))
+if (isset($_GET["imdb"])) {
   $imdb=$_GET["imdb"];
-  if ($imdb && $imdb[0] !="t") $imdb = "tt".$imdb;
-else
+  if ($imdb[0] !="t" && $imdb) $imdb = "tt".$imdb;
+} else
   $imdb="";
+
 $ttxml="";
 $tit="";
 $year="";
 $gen="";
 $durata="";
-$imdb="";
+//$imdb="";
 $cast="";
 $desc="";
 $img="";
@@ -62,6 +63,7 @@ if (preg_match("/\((\d+)\)/",$rest,$m)) {
 $title=preg_replace("/\s*(\:|\-)\s+(season|sezon|minis)+(.*?)/i","",$title);
 $t1=explode(" - ",$title);
 $title=trim($t1[0]);
+//echo $imdb;
 if (!$imdb) {
   if ($tip == "tv") {
     if (!$year)
@@ -216,6 +218,7 @@ if ($TMDB) {
 if ($TMDB) {
   $key = file_get_contents($f_TMDB);
   $api_url="http://api.themoviedb.org/3/find/".$imdb."?api_key=".$key."&language=en-US&external_source=imdb_id";
+  //echo $api_url;
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $api_url);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);

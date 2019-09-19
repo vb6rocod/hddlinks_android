@@ -165,12 +165,12 @@ if ($page==1) {
    echo '<TD class="nav" colspan="4" align="right"><a href="'.$prev.'">&nbsp;&lt;&lt;&nbsp;</a> | <a href="'.$next.'">&nbsp;&gt;&gt;&nbsp;</a></TD>'."\r\n";
 }
 echo '</TR>'."\r\n";
-
+//https://www.filmeseriale.eu/filme/page/2/
 if($tip=="release") {
  if ($page>1)
-  $l ="https://www.filmeseriale.eu/filme-online/page/".$page."/";
+  $l ="https://www.filmeseriale.eu/filme/page/".$page."/";
  else
-  $l="https://www.filmeseriale.eu/filme-online/";
+  $l="https://www.filmeseriale.eu/filme/";
 } else {
   $search=str_replace(" ","+",$tit);
   if ($page > 1)
@@ -221,7 +221,7 @@ foreach($videos as $video) {
   $t1=explode('src="',$video);
   $t2=explode('"',$t1[1]);
   $image=$t2[0];
-  if (strpos($link,"filme-online") !== false && $title <> "DMCA") {
+  if (strpos($link,"filme") !== false && $title <> "DMCA") {
   if ($has_fs == "no")
     $link_f='filme_link.php?file='.urlencode($link).'&title='.urlencode(fix_t($title));
   else

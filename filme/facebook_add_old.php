@@ -5,7 +5,7 @@ include ("../common.php");
 //$fav_link="mod=add&title=".urlencode(fix_t($title11))."&link=".$link1."&image=".$image;
 $mod=$_POST["mod"];
 $title=$_POST["title"];
-$image=unfix_t(urldecode($_POST["image"]));
+$image=urldecode($_POST["image"]);
 $file=$base_fav."facebook.dat";
 $ua="Mozilla/5.0 (Windows NT 10.0; rv:55.0) Gecko/20100101 Firefox/55.0";
 $arr=array();
@@ -33,15 +33,46 @@ if ($mod=="add") {
     }
   }
   if (!$found) {
-
-   $file_img=$image;
+   $file_img=$base_fav.$title.".jpg";
+   //echo $image;
+   //$fp = fopen($file_img, 'w');
+   $ch = curl_init();
+   curl_setopt($ch, CURLOPT_URL, $image);
+   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+   curl_setopt($ch, CURLOPT_USERAGENT, $ua);
+   curl_setopt($ch, CURLOPT_HEADER, 1);
+   curl_setopt($ch, CURLOPT_NOBODY,1);
+   curl_setopt($ch,CURLOPT_REFERER,"https://graph.facebook.com");
+   curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+   //curl_setopt($ch, CURLOPT_FILE, $fp);
+   $h1=curl_exec($ch);
+   curl_close($ch);
+   $t1=explode("Location:",$h1);
+   $t2=explode("\n",$t1[1]);
+   $file_img=trim($t2[0]);
    //fclose($fp);
     $arr[$title]["image"]=$file_img;
     echo "Am adaugat canalul ".unfix_t(urldecode($title));
   }
   ksort($arr);
   } else {
-   $file_img=$image;
+   $file_img=$base_fav.$title.".jpg";
+
+   //$fp = fopen($file_img, 'w');
+   $ch = curl_init();
+   curl_setopt($ch, CURLOPT_URL, $image);
+   curl_setopt($ch, CURLOPT_USERAGENT, $ua);
+   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+   curl_setopt($ch, CURLOPT_HEADER, 1);
+   curl_setopt($ch, CURLOPT_NOBODY,1);
+   curl_setopt($ch,CURLOPT_REFERER,"https://graph.facebook.com");
+   curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+   //curl_setopt($ch, CURLOPT_FILE, $fp);
+   $h1=curl_exec($ch);
+   curl_close($ch);
+   $t1=explode("Location:",$h1);
+   $t2=explode("\n",$t1[1]);
+   $file_img=trim($t2[0]);
    //fclose($fp);
     $arr[$title]["image"]=$file_img;
     echo "Am adaugat canalul ".unfix_t(urldecode($title));

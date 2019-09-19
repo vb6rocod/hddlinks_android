@@ -48,5 +48,5 @@ function prep_tit($s) {
   $ret=trim(preg_replace("/(dublat|in romana|cu sub|gratis|subtitrat|onlin|film|sbtitrat|\shd)(.*)/i","",$ret));
   return $ret;
 }
-$indirect="/streamplay1\.|thevideo\.|vev\.|vidup\.|hindipix\.in/";
+$indirect="/streamplay1\.|thevideo\.|vev\.|vidup\.|hindipix\.in|waaw|hqq\./";
 ?>

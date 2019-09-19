@@ -506,7 +506,7 @@ if(preg_match('/youtube\.com\/(v\/|watch\?v=|embed\/)([\w\-]+)/', $file, $match)
   $html="";
   $p=0;
   //echo $l;
-  /*
+
   while($html == "" && $p<10) {
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $l);
@@ -523,9 +523,9 @@ if(preg_match('/youtube\.com\/(v\/|watch\?v=|embed\/)([\w\-]+)/', $file, $match)
   curl_close($ch);
   $p++;
   }
-  */
+
   //echo $html;
-  $html=@file_get_contents($l);
+  //$html=@file_get_contents($l);
   $html = str_between($html,'ytplayer.config = ',';ytplayer.load');
   $parts = json_decode($html,1);
   //echo $l;
@@ -601,6 +601,7 @@ if(preg_match('/youtube\.com\/(v\/|watch\?v=|embed\/)([\w\-]+)/', $file, $match)
   $s=$output["s"];
   //echo $s;
   $tip=$output["sp"];
+  //echo $tip;
   $l = "https://s.ytimg.com".$parts['assets']['js'];
   //echo $l;
   $ch = curl_init();
@@ -688,7 +689,9 @@ return $r;
 //***************Here we start**************************************
 $filelink=str_prep($filelink);
 //echo $filelink;
-if (strpos($filelink,"daclips.") !== false || strpos($filelink,"movpod.") !== false) {
+if (strpos($filelink,"redirector.googlevideo.com") !== false) {
+  $link=$filelink;
+} elseif (strpos($filelink,"daclips.") !== false || strpos($filelink,"movpod.") !== false) {
   //https://movpod.in/9hhueiilr5kb
   //https://movpod.in/c2b3k9wa9ysj
   //http://daclips.in/ulmwt4acqp4n
@@ -4922,7 +4925,7 @@ header("Location: $movie");
   header("Location: $c");
 } elseif ($flash == "mp") {
 $hed = "headers="."{'Cookie: approve=1'}";
-if (!preg_match("/hqq\.|putload\.|thevideobee\.|flixtor\.|0123netflix|mangovideo/",$filelink)) // HW=1;SW=2;HW+=4
+if (!preg_match("/hqq\.|putload\.|thevideobee\.|flixtor\.|0123netflix|mangovideo|waaw1?/",$filelink)) // HW=1;SW=2;HW+=4
 $c="intent:".$movie."#Intent;type=video/mp4;package=com.mxtech.videoplayer.".$mx.";S.title=".urlencode($pg).";b.decode_mode=1;end";
 //$c="intent:".$movie."#Intent;type=video/mp4;package=com.mxtech.videoplayer.".$mx.";S.title=".urlencode($pg).";end";
 //$c="intent:".$movie."#Intent;type=video/mp4;S.title=".urlencode($pg).";end";

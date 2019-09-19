@@ -1,8 +1,7 @@
 <!DOCTYPE html>
 <?php
 include ("../common.php");
-error_reporting(0);
-$token = "";
+$token = $_GET["token"];
 $search=$_GET["search"];
 $next="";
 $prev="";
@@ -10,6 +9,34 @@ $page_title=$search;
 $width="200px";
 $height=intval(200*(128/227))."px";
 //https://developers.facebook.com/tools/explorer/
+$f=$base_cookie."facebook.dat";
+if (file_exists($f))
+  $key=trim(file_get_contents($f));
+else {
+//$key=file_get_contents("http://hdforall.000webhostapp.com/f_t.php");
+$key=trim(file_get_contents("f_t.php"));
+file_put_contents($f,$key);
+}
+if ($token)
+ $l2="https://graph.facebook.com/v3.1/".$search."/videos?access_token=".$key."&limit=25&after=".$token;
+else
+ $l2="https://graph.facebook.com/v3.1/".$search."/videos?access_token=".$key."&limit=25";
+//echo $l2;
+  $ch = curl_init();
+  curl_setopt($ch, CURLOPT_URL, $l2);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+  curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 10.0; rv:65.0) Gecko/20100101 Firefox/65.0');
+  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+  $html = curl_exec($ch);
+  curl_close($ch);
+  //echo $html;
+  $p=json_decode($html,1);
+  //print_r ($p);
+  if (isset($p["paging"]["cursors"]["after"])) $next=$p["paging"]["cursors"]["after"];
+  if (isset($p["paging"]["cursors"]["before"])) $prev=$p["paging"]["cursors"]["before"];
 ?>
 <html>
 <head>
@@ -114,8 +141,6 @@ if (preg_match("/android|ipad/i",$user_agent) && preg_match("/chrome|firefox|mob
 }
 $n=0;
 $w=0;
-$prev="";
-$next="";
 $nextpage="facebook.php?token=".$next."&search=".$search;
 $prevpage="facebook.php?token=".$prev."&search=".$search;
 echo '<h2>'.$page_title.'</H2>';
@@ -127,8 +152,8 @@ if ($prev)
 echo '<a href="'.$prevpage.'">&nbsp;&lt;&lt;&nbsp;</a> | <a href="'.$nextpage.'">&nbsp;&gt;&gt;&nbsp;</a></TD></TR>';
 else
 echo '<a href="'.$nextpage.'">&nbsp;&gt;&gt;&nbsp;</a></TD></TR>';
-
- $l4="https://www.facebook.com/pg/".$search."/videos/?ref=page_internal";
+if (!$token) {
+ $l4="https://graph.facebook.com/v3.1/".$search."?cover&access_token=".$key;
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $l4);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
@@ -137,28 +162,31 @@ echo '<a href="'.$nextpage.'">&nbsp;&gt;&gt;&nbsp;</a></TD></TR>';
   curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
   curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
   curl_setopt($ch, CURLOPT_TIMEOUT, 15);
-  $h = curl_exec($ch);
+  $h4 = curl_exec($ch);
   curl_close($ch);
-$h=urldecode($h);
-//$h=str_replace('script','ssss',$h);
-//echo $h;
-$t1=explode('og:image" content="',$h);
-$t2=explode('"',$t1[1]);
-$cover=urldecode($t2[0]);
-$cover=str_replace("&amp;","&",$cover);
-  $add_fav="mod=add&title=".urlencode(fix_t($search))."&image=".urlencode(fix_t($cover));
-
-if (preg_match_all("/\<td class\=\"\S+\"\>\<.*?href\=\"(\S+)\"\s+aria\-label\=\"(.*?)\".*?src\=\"(\S+)\"/ms",$h,$m)) {
-for ($k=0;$k<count($m[0]);$k++) {
+  $y=json_decode($h4,1);
+  $cover="";
+  if (isset($y["id"])) {
+    $id=$y["id"];
+    $cover ="https://graph.facebook.com/v3.1/".$id."/picture?access_token=".$key;
+  }
+  $add_fav="mod=add&title=".urlencode(fix_t($search))."&image=".$cover;
+}
+if (isset($p["data"])) {
+for ($k=0;$k<count($p["data"]);$k++) {
   $link = "";
   $id="";
   $title="";
-  $t1=explode('videos/',$m[1][$k]);
-  $t2=explode('/',$t1[1]);
-  $id=$t2[0];
-  $title=html_entity_decode($m[2][$k]);
-  $image=urldecode($m[3][$k]);
-
+    $id=$p["data"][$k]["id"];
+    if (isset($p["data"][$k]["description"]))
+	  $title = $p["data"][$k]["description"];
+	if (!$title) {
+	$title = $p["data"][$k]["updated_time"];
+	$data= $title;
+	preg_match("/(\d+)-(\d+)-(\d+)/",$title,$m);
+    $title=$m[3].".".$m[2].".".$m[1];
+    }
+	$image ="https://graph.facebook.com/v3.1/".$id."/picture?access_token=".$key;
 	
    $link1="".urlencode("https://www.facebook.com/video/embed?video_id=".$id)."&title=".urlencode($title);
   if ($id) {

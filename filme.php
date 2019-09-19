@@ -93,12 +93,12 @@ else
 <TD width="25%"><a href="filme/hdfull_f.php?page=1&tip=release&title=hdfull&link=" target="_blank">hdfull</a></TD>
 <TD width="25%"><a href="filme/subsmovies_f.php?page=1&tip=release&title=subsmovies&link=" target="_blank">subsmovies</a></TD>
 <TD width="25%"><a href="filme/cineplex_f_main.php" target="_blank">cineplex (cont)</a></TD>
-<TD width="25%"><a href="filme/openloadmovies.php?page=1&tip=release&title=openloadmovies&link=" target="_blank">openloadmovies</a></TD>
+<TD width="25%"><a href="filme/vikv.php?page=1&tip=release&title=vikv&link=" target="_blank">vikv</a></TD>
 </TR>
 <TR>
 <TD width="25%"><a href="filme/onmovies_f.php?page=1&tip=release&title=onmovies&link=" target="_blank">onmovies</a></TD>
 <TD width="25%"><a href="filme/spacemov.php?page=1&tip=release&title=spacemov&link=" target="_blank">spacemov</a></TD>
-<TD width="25%"><a href="filme/chillaxto_f.php?page=1&tip=release&title=chillax.to&link=" target="_blank">chillax.to</a></TD>
+<TD width="25%"><a href="filme/hdbest.php?page=1&tip=release&title=hdbest&link=" target="_blank">hdbest</a></TD>
 <TD width="25%"><a href="filme/moviesjoy_f.php?page=1&tip=release&title=moviesjoy&link=" target="_blank">moviesjoy</a></TD>
 </TR>
 

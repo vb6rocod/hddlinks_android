@@ -6,7 +6,6 @@ function str_between($string, $start, $end){
 	return substr($string,$ini,$len);
 }
 include ("../common.php");
-include ("../util.php");
 $page = $_GET["page"];
 $tip= $_GET["tip"];
 $tit=$_GET["title"];
@@ -18,11 +17,11 @@ $has_fav="yes";
 $has_search="yes";
 $has_add="yes";
 $has_fs="yes";
-$fav_target="chillaxto_s_fav.php?host=https://ww.chillax.to";
-$add_target="chillaxto_s_add.php";
+$fav_target="europix_s_fav.php?host=https://europixhd.net";
+$add_target="europix_s_add.php";
 $add_file="";
-$fs_target="chillaxto_ep.php";
-$target="chillaxto_s.php";
+$fs_target="europix_sez.php";
+$target="europix_s.php";
 /* ==================================================== */
 $base=basename($_SERVER['SCRIPT_FILENAME']);
 $p=$_SERVER['QUERY_STRING'];
@@ -167,148 +166,45 @@ if ($page==1) {
 }
 echo '</TR>'."\r\n";
 
-$cookie=$base_cookie."hdpopcorns.dat";
-$ua = $_SERVER['HTTP_USER_AGENT'];
-$requestLink="https://ww.chillax.to/";
-$host=parse_url($requestLink)['host'];
-if ($page==1 && $tip !="search") {
-if (file_exists($cookie)) unlink ($cookie);
-$head=array(
-'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
-'Accept-Language: en-US,en;q=0.5',
-'Accept-Encoding: deflate, br',
-'Connection: keep-alive',
-'Upgrade-Insecure-Requests: 1');
-  $ch = curl_init();
-  curl_setopt($ch, CURLOPT_URL, $requestLink);
-  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
-  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
-  curl_setopt($ch,CURLOPT_HTTPHEADER,$head);
-  curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie);
-  curl_setopt($ch, CURLOPT_COOKIEJAR, $cookie);
-  curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'GET');
-  curl_setopt($ch, CURLOPT_HTTPGET, true);
-  curl_setopt($ch, CURLINFO_HEADER_OUT, true);
-  curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
-  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
-  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
-  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
-  curl_setopt($ch, CURLOPT_HEADER,1);
-  $h = curl_exec($ch);
- if (strpos($h,"503 Service") !== false) {
-  if (strpos($h,'id="cf-dn') === false)
-   $q= getClearanceLink_old($h,$requestLink);
-  else
-   $q= getClearanceLink($h,$requestLink);
-
-  curl_setopt($ch, CURLOPT_URL, $q);
-  $h = curl_exec($ch);
-  curl_close($ch);
- } else {
-    curl_close($ch);
- }
+if($tip=="release") {
+  $l="https://europixhd.net/tvshow-filter/all-tv-shows-page-".$page;
+} else {
+  $search=str_replace(" ","+",$tit);
+  $l="https://europixhd.net/search?search=".$search;
 }
-if ($tip=="search")
- if ($page==1)
-  $requestLink="https://".$host."/movie/search?keyword=".str_replace(" ","+",$tit);
- else
-  $requestLink="https://".$host."/movie/search?keyword=".str_replace(" ","+",$tit)."&p=".$page;
-else
-  $requestLink="https://".$host."/latest/series?p=".$page;
-  $ch = curl_init($requestLink);
-  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
-  curl_setopt($ch,CURLOPT_REFERER,"https://chillax.to");
+
+  $ch = curl_init();
+  curl_setopt($ch, CURLOPT_URL, $l);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+  curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 10.0; rv:55.0) Gecko/20100101 Firefox/55.0');
   curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
-  curl_setopt($ch, CURLOPT_RETURNTRANSFER  ,1);  // RETURN THE CONTENTS OF THE CALL
-  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-  curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie);
-  curl_setopt($ch, CURLOPT_HEADER,1);
   curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
   curl_setopt($ch, CURLOPT_TIMEOUT, 15);
   $html = curl_exec($ch);
-  curl_close ($ch);
-if (strpos($html,"503 Service") !== false) {
-$head=array(
-'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
-'Accept-Language: en-US,en;q=0.5',
-'Accept-Encoding: deflate, br',
-'Connection: keep-alive',
-'Upgrade-Insecure-Requests: 1');
-  $ch = curl_init();
-  curl_setopt($ch, CURLOPT_URL, $requestLink);
-  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
-  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
-  curl_setopt($ch,CURLOPT_HTTPHEADER,$head);
-  curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie);
-  curl_setopt($ch, CURLOPT_COOKIEJAR, $cookie);
-  curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'GET');
-  curl_setopt($ch, CURLOPT_HTTPGET, true);
-  curl_setopt($ch, CURLINFO_HEADER_OUT, true);
-  curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
-  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
-  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
-  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
-  curl_setopt($ch, CURLOPT_HEADER,1);
-  $h = curl_exec($ch);
- if (strpos($h,"503 Service") !== false) {
-  if (strpos($h,'id="cf-dn') === false)
-   $q= getClearanceLink_old($h,$requestLink);
-  else
-   $q= getClearanceLink($h,$requestLink);
-
-  curl_setopt($ch, CURLOPT_URL, $q);
-  $h = curl_exec($ch);
   curl_close($ch);
- } else {
-    curl_close($ch);
- }
 
-  $ch = curl_init($requestLink);
-  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
-  curl_setopt($ch,CURLOPT_REFERER,"https://chillax.to");
-  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
-  curl_setopt($ch, CURLOPT_RETURNTRANSFER  ,1);  // RETURN THE CONTENTS OF THE CALL
-  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-  curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie);
-  curl_setopt($ch, CURLOPT_HEADER,1);
-  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
-  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
-  $html = curl_exec($ch);
-  curl_close ($ch);
-}
- $videos = explode('movie_load_info/', $html);
+
+ $videos = explode("figure class=", $html);
  unset($videos[0]);
  $videos = array_values($videos);
  foreach($videos as $video) {
-  $t2 = explode('"', $video);
+  $t1 = explode("href='", $video);
+  $t2 = explode("'",$t1[1]);
   $link = $t2[0];
-  $t3 = explode('class="name"', $video);
-  $t4 = explode('>', $t3[1]);
-  $t5 = explode('<',$t4[1]);
-  $title = $t5[0];
-  $title=prep_tit($title);
-  $t1 = explode('src="', $video);
-  $t2 = explode('"', $t1[1]);
+  $link="https://europixhd.net/".str_replace("../","",$link);
+  //echo $link1;
+  $t1 = explode('h3>', $video);
+  $t2 = explode('<', $t1[1]);
+  $title = trim($t2[0]);
+  $t1=explode("src='",$video);
+  $t2=explode("'",$t1[1]);
   $image = $t2[0];
-  if (strpos($image,".gif") !== false) {
-  $t2 = explode('"', $t1[2]);
-  $image = $t2[0];
-  }
-  $rest = substr($title, -6);
-  if (preg_match("/\((\d+)\)/",$rest,$m)) {
-   $year=$m[1];
-   $tit_imdb=trim(str_replace($m[0],"",$title));
-  } else {
-   $year="";
-   $tit_imdb=$title;
-  }
+  $year="";
   $imdb="";
   $link_f=$fs_target.'?tip=series&link='.urlencode($link).'&title='.urlencode(fix_t($title)).'&image='.$image."&sez=&ep=&ep_tit=&year=".$year;
-  if ($title && strpos($link,"/tvserie") === false) {
+  if ($title && strpos($link,"/tvs") !== false) {
   if ($n==0) echo '<TR>'."\r\n";
-  $val_imdb="tip=series&title=".urlencode(fix_t($tit_imdb))."&year=".$year."&imdb=".$imdb;
+  $val_imdb="tip=series&title=".urlencode(fix_t($title))."&year=".$year."&imdb=".$imdb;
   $fav_link="mod=add&title=".urlencode(fix_t($title))."&link=".urlencode($link)."&image=".urlencode($image)."&year=".$year;
   if ($tast == "NU") {
     echo '<td class="mp" width="25%"><a href="'.$link_f.'" id="myLink'.$w.'" target="_blank" onmousedown="isKeyPressed(event)">
@@ -333,7 +229,6 @@ $head=array(
   }
   }
  }
-
 /* bottom */
   if ($n < 4 && $n > 0) {
     for ($k=0;$k<4-$n;$k++) {

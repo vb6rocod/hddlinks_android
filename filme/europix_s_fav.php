@@ -2,12 +2,12 @@
 <?php
 include ("../common.php");
 $host=$_GET['host'];
-$page_title="Filme favorite";
+$page_title="Seriale favorite";
 $width="200px";
 $height="278px";
-$add_target="openloadmovies_add.php";
-$fs_target="openloadmovies_fs.php";
-$file=$base_fav."openloadmovies.dat";
+$add_target="europix_s_add.php";
+$fs_target="europix_sez.php";
+$file=$base_fav."europix_s.dat";
 ?>
 <html><head>
 <meta http-equiv="content-type" content="text/html; charset=UTF-8">
@@ -129,17 +129,9 @@ foreach($arr as $key => $value) {
     //$image=$host.parse_url($image)['path'];
     $year="";
     $link=$host.parse_url($link)['path'];
-    $rest = substr($title, -6);
-    if (preg_match("/\((\d+)\)/",$rest,$m)) {
-     $year=$m[1];
-     $tit_imdb=trim(str_replace($m[0],"",$title));
-    } else {
-     $year="";
-     $tit_imdb=$title;
-  }
-    $link_f=$fs_target.'?tip=movie&link='.urlencode($link).'&title='.urlencode(fix_t($title)).'&image='.$image."&sez=&ep=&ep_tit=&year=".$year;
+    $link_f=$fs_target.'?tip=series&link='.urlencode($link).'&title='.urlencode(fix_t($title)).'&image='.$image."&sez=&ep=&ep_tit=&year=".$year;
   if ($n==0) echo '<TR>'."\r\n";
-  $val_imdb="tip=movie&title=".urlencode(fix_t($tit_imdb))."&year=".$year."&imdb=".$imdb;
+  $val_imdb="tip=series&title=".urlencode(fix_t($title))."&year=".$year."&imdb=".$imdb;
   $fav_link="file=&mod=del&title=".urlencode(fix_t($title))."&link=".urlencode($link)."&image=".urlencode($image)."&year=".$year;
   if ($tast == "NU") {
     echo '<td class="mp" width="25%"><a href="'.$link_f.'" id="myLink'.$w.'" target="_blank" onmousedown="isKeyPressed(event)">

@@ -167,7 +167,7 @@ if ($page==1) {
 }
 echo '</TR>'."\r\n";
 if ($tip == "release")
-  $l="https://www.filmeseriale.eu/seriale-tv/page/".$page."/";
+  $l="https://www.filmeseriale.eu/seriale/page/".$page."/";
 else {
   $search=str_replace(" ","+",$tit);
   if ($page == 1)
@@ -205,7 +205,7 @@ $host=parse_url($l)['host'];
     $t1=explode('src="',$video);
     $t2=explode('"',$t1[1]);
     $image=$t2[0];
-    if (strpos($link,"seriale-tv") !== false && $title <> "DMCA") array_push($r ,array($title,$link, $image));
+    if (strpos($link,"seriale") !== false && $title <> "DMCA") array_push($r ,array($title,$link, $image));
   }
   } else {
   $videos = explode('<article', $html);
@@ -223,7 +223,7 @@ $host=parse_url($l)['host'];
     $t1=explode('src="',$video);
     $t2=explode('"',$t1[1]);
     $image=$t2[0];
-    if (strpos($link,"seriale-tv") !== false && $title && $title <> "DMCA") array_push($r ,array($title,$link, $image));
+    if (strpos($link,"seriale") !== false && $title && $title <> "DMCA") array_push($r ,array($title,$link, $image));
   }
   }
 $c=count($r);

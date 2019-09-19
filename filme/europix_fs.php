@@ -1,8 +1,7 @@
 <!doctype html>
 <?php
 include ("../common.php");
-include ("../util.php");
-//error_reporting(0);
+error_reporting(0);
 $list = glob($base_sub."*.srt");
    foreach ($list as $l) {
     str_replace(" ","%20",$l);
@@ -58,15 +57,15 @@ function str_between($string, $start, $end){
 <script type="text/javascript">
 function openlink1(link) {
   link1=document.getElementById('file').value;
-  msg="openloadmovies_link.php?q=" + link1 + "&link=" + link;
+  msg="link1.php?file=" + link1 + "&title=" + link;
   window.open(msg);
 }
 function openlink(link) {
   on();
   var request =  new XMLHttpRequest();
   link1=document.getElementById('file').value;
-  var the_data = "q=" + link1 + "&link=" + link;
-  var php_file="openloadmovies_link.php";
+  var the_data = "link=" + link1 + "&title=" + link;
+  var php_file="link1.php";
   request.open("POST", php_file, true);			// set the request
 
   // adds a header to tell the PHP script to recognize the data as is sent via POST
@@ -119,110 +118,105 @@ function off() {
 <?php
 echo '<h2>'.$tit.$tit2.'</H2>';
 echo '<BR>';
-$ua = $_SERVER['HTTP_USER_AGENT'];
-$cookie=$base_cookie."hdpopcorns.dat";
-$host=parse_url($link)["host"];
-$requestLink=$link;
-  $ch = curl_init($link);
-  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
-  curl_setopt($ch,CURLOPT_REFERER,"https://openloadmovies.net");
-  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
-  curl_setopt($ch, CURLOPT_RETURNTRANSFER  ,1);  // RETURN THE CONTENTS OF THE CALL
-  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-  curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie);
-  curl_setopt($ch, CURLOPT_HEADER,1);
-  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
-  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
-  $html = curl_exec($ch);
-  curl_close ($ch);
-if (strpos($html,"503 Service") !== false) {
-$head=array(
-'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
-'Accept-Language: en-US,en;q=0.5',
-'Accept-Encoding: deflate, br',
-'Connection: keep-alive',
-'Upgrade-Insecure-Requests: 1');
-  $ch = curl_init();
-  curl_setopt($ch, CURLOPT_URL, $requestLink);
-  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
-  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
-  curl_setopt($ch,CURLOPT_HTTPHEADER,$head);
-  curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie);
-  curl_setopt($ch, CURLOPT_COOKIEJAR, $cookie);
-  curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'GET');
-  curl_setopt($ch, CURLOPT_HTTPGET, true);
-  curl_setopt($ch, CURLINFO_HEADER_OUT, true);
-  curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
-  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
-  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
-  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
-  curl_setopt($ch, CURLOPT_HEADER,1);
-  $h = curl_exec($ch);
- if (strpos($h,"503 Service") !== false) {
-  if (strpos($h,'id="cf-dn') === false)
-   $q= getClearanceLink_old($h,$requestLink);
-  else
-   $q= getClearanceLink($h,$requestLink);
-
-  curl_setopt($ch, CURLOPT_URL, $q);
-  $h = curl_exec($ch);
-  curl_close($ch);
- } else {
-    curl_close($ch);
- }
-
-  $ch = curl_init($requestLink);
-  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
-  curl_setopt($ch,CURLOPT_REFERER,"https://openloadmovies.net");
-  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
-  curl_setopt($ch, CURLOPT_RETURNTRANSFER  ,1);  // RETURN THE CONTENTS OF THE CALL
-  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-  curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie);
-  curl_setopt($ch, CURLOPT_HEADER,1);
-  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
-  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
-  $html = curl_exec($ch);
-  curl_close ($ch);
-}
-$dt=str_between($html,"data-type='","'");
-$id=str_between($html,"data-post='","'");
-$name="1";
-$l="https://".$host."/wp-admin/admin-ajax.php";
-$post="action=doo_player_ajax&post=".$id."&nume=".$name."&type=".$dt;
-$head=array('X-Requested-With: XMLHttpRequest');
-  $ch = curl_init($l);
-  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
-  curl_setopt($ch,CURLOPT_REFERER,"https://openloadmovies.net");
-  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
-  curl_setopt($ch, CURLOPT_RETURNTRANSFER  ,1);  // RETURN THE CONTENTS OF THE CALL
-  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-  curl_setopt($ch,CURLOPT_HTTPHEADER,$head);
-  curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie);
-  curl_setopt ($ch, CURLOPT_POST, 1);
-  curl_setopt ($ch, CURLOPT_POSTFIELDS, $post);
-  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
-  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
-  $html = curl_exec($ch);
-  curl_close ($ch);
-$t1=explode('sources: [',$html);
-$t2=explode('],',$t1[1]);
-$s=json_decode("[".$t2[0]."]",1);
-
+//echo $link;
 $r=array();
-for ($k=0;$k<count($s);$k++) {
-  $r[]=$s[$k]["label"];
+$ua = $_SERVER['HTTP_USER_AGENT'];
+  $ch = curl_init($link);
+  curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows; U; Windows NT 6.1; en-US; rv:1.9.1.2) Gecko/20090729 Firefox/3.5.2 GTB5');
+  curl_setopt($ch, CURLOPT_REFERER, "https://europixhd.net");
+  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER  ,1);  // RETURN THE CONTENTS OF THE CALL
+  curl_setopt($ch, CURLOPT_ENCODING,"");
+  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+  $h = curl_exec($ch);
+  curl_close ($ch);
+$h=urldecode($h);
+$h= preg_replace('/\\\x([a-f0-9]+)/mei',"chr(0x\\1)",$h);
+$h=str_replace("\n","",$h);
+
+if (preg_match("/var\s+_0x[a-z0-9A-Z]+\s*\=\s*\[((\".*?\"\,?)+)\]/ms", $h, $m)) {
+$e="\$c0=array(".$m[1].");";
+eval ($e);
+if ($c0[0])
+  $ep_index=$ep-1;
+else
+  $ep_index=$ep;
+$link1 = $c0[$ep_index];
+if (strpos($link1,"europix") !== false && strpos($link1,"http") !== false) {
+$ch = curl_init();
+curl_setopt($ch, CURLOPT_URL, $link1);
+curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+curl_setopt($ch, CURLOPT_USERAGENT, $ua);
+curl_setopt($ch, CURLOPT_REFERER, "https://europixhd.net");
+curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
+$h = curl_exec($ch);
+curl_close($ch);
+//echo $h;
+$t1=explode("iframe src='",$h);
+$t2=explode("'",$t1[1]);
+$link1=$t2[0];
+$r[] = $link1;
+} else {
+if(strpos($link1,"http") !== false) $r[] = $link1;
+}
+}
+//////////////////////////////////////////////////////////
+  $ch = curl_init($link."-s2");
+  curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows; U; Windows NT 6.1; en-US; rv:1.9.1.2) Gecko/20090729 Firefox/3.5.2 GTB5');
+  curl_setopt($ch, CURLOPT_REFERER, "https://europixhd.net");
+  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER  ,1);  // RETURN THE CONTENTS OF THE CALL
+  curl_setopt($ch, CURLOPT_ENCODING,"");
+  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+  $h = curl_exec($ch);
+  curl_close ($ch);
+$h=urldecode($h);
+$h= preg_replace('/\\\x([a-f0-9]+)/mei',"chr(0x\\1)",$h);
+$h=str_replace("\n","",$h);
+
+if (preg_match("/var\s+_0x[a-z0-9A-Z]+\s*\=\s*\[((\".*?\"\,?)+)\]/ms", $h, $m)) {
+$e="\$c0=array(".$m[1].");";
+eval ($e);
+if ($c0[0])
+  $ep_index=$ep-1;
+else
+  $ep_index=$ep;
+$link1 = $c0[$ep_index];
+if (strpos($link1,"europix") !== false && strpos($link1,"http") !== false) {
+$ch = curl_init();
+curl_setopt($ch, CURLOPT_URL, $link1);
+curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+curl_setopt($ch, CURLOPT_USERAGENT, $ua);
+curl_setopt($ch, CURLOPT_REFERER, "https://europixhd.net");
+curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
+$h = curl_exec($ch);
+curl_close($ch);
+//echo $h;
+$t1=explode("iframe src='",$h);
+$t2=explode("'",$t1[1]);
+$link1=$t2[0];
+$r[] = $link1;
+} else {
+if (strpos($link1,"http") !== false) $r[] = $link1;
+}
 }
 echo '<table border="1" width="100%">';
-echo '<TR><TD class="mp">Alegeti calitate: Calitate aleasa:<label id="server">'.$r[0].'</label>
-<input type="hidden" id="file" value="'.$r[0].'"></td></TR></TABLE>';
+echo '<TR><TD class="mp">Alegeti un server: Server curent:<label id="server">'.parse_url($r[0])['host'].'</label>
+<input type="hidden" id="file" value="'.urlencode($r[0]).'"></td></TR></TABLE>';
 echo '<table border="1" width="100%"><TR>';
 $k=count($r);
 $x=0;
 for ($i=0;$i<$k;$i++) {
   if ($x==0) echo '<TR>';
   $c_link=$r[$i];
-  $openload=$r[$i];
+  $openload=parse_url($r[$i])['host'];
+  if (preg_match($indirect,$openload)) {
+  echo '<TD class="mp"><a href="filme_link.php?file='.urlencode($c_link).'&title='.urlencode(unfix_t($tit.$tit2)).'" target="_blank">'.$openload.'</a></td>';
+  } else
   echo '<TD class="mp"><a id="myLink" href="#" onclick="changeserver('."'".$openload."','".urlencode($c_link)."'".');return false;">'.$openload.'</a></td>';
   $x++;
   if ($x==6) {
@@ -253,13 +247,6 @@ if ($tip=="movie") {
   $from="";
   $link_page="";
 }
-  $rest = substr($tit3, -6);
-  if (preg_match("/\((\d+)\)/",$rest,$m)) {
-   $year=$m[1];
-   $tit3=trim(str_replace($m[0],"",$tit3));
-  } else {
-   $year="";
-  }
 $sub_link ="from=".$from."&tip=".$tip."&sez=".$sez."&ep=".$ep."&imdb=".$imdbid."&title=".urlencode(fix_t($tit3))."&link=".$link_page."&ep_tit=".urlencode(fix_t($tit2))."&year=".$year;
 echo '<br>';
 echo '<table border="1" width="100%">';
@@ -272,9 +259,9 @@ echo '<TD class="mp"><a id="subtitrari" href="subtitrari_main.php?'.$sub_link.'"
 echo '</TR></TABLE>';
 echo '<table border="1" width="100%"><TR>';
 if ($tip=="movie")
-  $openlink=$link."&title=".urlencode(fix_t($tit3));
+  $openlink=urlencode(fix_t($tit3));
 else
-  $openlink=$link."&title=".urlencode(fix_t($tit.$tit2));
+  $openlink=urlencode(fix_t($tit.$tit2));
  if ($flash != "mp")
    echo '<TD align="center" colspan="4"><a id="viz" onclick="'."openlink1('".$openlink."')".'"'." style='cursor:pointer;'>".'VIZIONEAZA !</a></td>';
  else

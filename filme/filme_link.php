@@ -444,7 +444,7 @@ $ua     =   $_SERVER['HTTP_USER_AGENT'];
   }
   $html .=$h;
   //echo $html;
-} elseif (strpos($filelink,"veziseriale.online") !== false || strpos($filelink,"veziserialeonline.info") !== false) {
+} elseif (strpos($filelink,"veziseriale.online") !== false || strpos($filelink,"veziserialeonline.") !== false) {
   $headers = array('Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
    'Accept-Encoding: deflate',
    'Accept-Language: en-US,en;q=0.5',
@@ -1068,6 +1068,8 @@ foreach($videos as $video) {
   $html = curl_exec($ch);
   curl_close ($ch);
   $html .=urldecode(str_replace("@","%",$html));
+} elseif (preg_match("/(waaw1?|netu|hqq)\./",$filelink)) {
+  $html='"'.$filelink.'"';
 } elseif (strpos($filelink,"hindipix.in") !== false) {
    //echo $filelink;
    $filelink = str_replace("hindipix.in","hqq.tv",$filelink);
@@ -1122,7 +1124,7 @@ $s=$s."fastplay\.cc|watchers\.to|fastplay\.to";
 $s=$s."|trilulilu|proplayer\/playlist-controller.php|viki\.com|modovideo\.com|roshare|rosharing|ishared\.eu|";
 $s=$s."stagevu\.com|vidup\.me|vidup\.io";
 $s=$s."|filebox\.com|glumbouploads\.com|uploadc\.com|sharefiles4u\.com|zixshare\.com|uploadboost\.com|";
-$s=$s."hqq\.tv|hqq\.watch|waaw\.|hindipix\.in|vidtodo\.com|vshare\.eu|bit\.ly";
+$s=$s."hqq\.tv|hqq\.watch|waaw1?\.|hindipix\.in|vidtodo\.com|vshare\.eu|bit\.ly";
 $s=$s."|nowvideo\.eu|nowvideo\.co|vreer\.com|180upload\.com|dailymotion\.com|nosvideo\.com|vidbull\.com|";
 $s=$s."purevid\.com|videobam\.com|streamcloud\.eu|donevideo\.com|upafile\.com|docs\.google|mail\.ru|";
 $s=$s."superweb|moviki\.ru|entervideos\.com";
@@ -1631,17 +1633,21 @@ if ($find_hqq) {
 echo '
 <script type="text/javascript">
 var span = document.getElementById("span");
-var request =  new XMLHttpRequest();
 function time() {
-
-  var php_file = "hqq_max.php";
-  request.open("GET", php_file, true);
-  request.send();
-  request.onreadystatechange = function() {
-    if (request.readyState == 4) {
-     span.textContent = request.responseText;
-    }
+var link="../../cookie/max_time_hqq.txt?rand=" + Math.random();
+$.get( link, function( data ) {
+  time_now=Math.floor(Date.now() / 1000);
+  time_max=data;
+  dif = time_max-time_now;
+  if (dif > 0) {
+  var minutes = Math.floor(dif / 60);
+  var seconds = dif - minutes * 60;
+  if (seconds < 10) seconds="0" + seconds;
+  span.textContent = " | Expira in " + minutes + ":" + seconds + " min.";
+  } else {
+    span.textContent = "";
   }
+});
 }
 setInterval(time, 1000);
 </script>
