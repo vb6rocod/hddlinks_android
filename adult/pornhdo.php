@@ -18,7 +18,7 @@ $has_main="yes";
 $has_fav="no";
 $has_search="yes";
 $has_add="yes";
-$has_fs="yes";
+$has_fs="no";
 $fav_target="adult_fav.php";
 $add_target="adult_add.php";
 $add_file="";
@@ -202,7 +202,7 @@ else
   echo '<TD class="nav" colspan="4" align="right"><a href="'.$prev.'">&nbsp;&lt;&lt;&nbsp;</a> | <a href="'.$next.'">&nbsp;&gt;&gt;&nbsp;</a></TD>'."\r\n";
 }
 echo '</TR>'."\r\n";
-
+//https://porndbs.com/page/
 if($tip=="release") {
   if ($page>1)
     $l = $link."page/".$page."/";
@@ -211,9 +211,9 @@ if($tip=="release") {
 } else {
   $search=str_replace(" ","+",$tit);
   if ($page > 1)
-    $l="https://pornhdo.com/page/".$page1."/?s=".$search;
+    $l="https://porndbs.com/page/".$page."/?s=".$search;
   else
-    $l="https://pornhdo.com/page/".$page1."/?s=".$search;
+    $l="https://porndbs.com/page/".$page."/?s=".$search;
 }
 $host=parse_url($l)['host'];
   $ch = curl_init();
@@ -240,7 +240,7 @@ foreach($videos as $video) {
   $title=$t3[0];
   $title = trim(strip_tags($title));
   $title = prep_tit($title);
-  $t1 = explode('src="', $video);
+  $t1 = explode('loop poster="', $video);
   $t2 = explode('"', $t1[1]);
   $image = $t2[0];
   if (strpos($image,"http") === false) $image="https:".$image;

@@ -132,8 +132,10 @@ for ($k=0;$k<count($r);$k++) {
     $title=$r[$k]['item_title'];
     $image=$r[$k]['thumbnail_path'];
     $link=$r[$k]['id'];
-    $link1="direct_link.php?link=".$link."&title=".urlencode($title)."&from=seenow&mod=direct";
-    $l="link=".urlencode(fix_t($link))."&title=".urlencode(fix_t($title))."&from=seenow&mod=direct";
+    $link=str_between($image,"thumb-",".png");
+    $link="http://fms72.mediadirect.ro:1937/live3/_definst_/".$link."/playlist.m3u8";
+    $link1="direct_link.php?link=".$link."&title=".urlencode($title)."&from=&mod=direct";
+    $l="link=".urlencode(fix_t($link))."&title=".urlencode(fix_t($title))."&from=&mod=direct";
     $val_prog="link=".urlencode(fix_t($title));
   if ($r[$k]['item_type'] == "tvstation") {
   if ($n==0) echo '<TR>';

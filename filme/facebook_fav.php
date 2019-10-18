@@ -158,7 +158,7 @@ $c="";
 echo "<a href='".$c."' id='mytest1'></a>".'<div id="mainnav">';
 echo '<table border="1px" width="100%"><TR><TD class="form">'."\n\r";
 echo '<form action="facebook.php" target="_blank">Cautare (user video): ';
-echo '<input type="text" id="search" name="search"><input type="hidden" id="token" name="token" value=""><input type="submit" value="Cauta !"></form></TD>';
+echo '<input type="text" id="search" name="search"><input type="hidden" id="page" name="page" value="1"><input type="submit" value="Cauta !"></form></TD>';
 echo '<TD class="nav" align="right"><a href="?renew">renew</a></TD></TR></TABLE>';
 
 
@@ -178,7 +178,7 @@ echo '<table border="1px" width="100%">'."\n\r";
     }
 
   $add_fav="mod=del&title=".urlencode(fix_t($title))."&image=".$image;
-  $playlist="facebook.php?token=&search=".$title;
+  $playlist="facebook.php?page=1&search=".$title;
 
   if ($n==0) echo '<TR>';
 

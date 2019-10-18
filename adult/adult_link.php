@@ -87,6 +87,27 @@ if (preg_match("/jizzbunker\.com|familyporn\.tv|zbporn\.com/",$host)) {
   $h = curl_exec($ch);
   curl_close($ch);
 }
+//echo $h;
+if (strpos($l,"porndbs.com") !== false) {
+//echo $h;
+  $l=str_between($h,'iframe src="','"');
+  //echo $l;
+  $ch = curl_init();
+  curl_setopt($ch, CURLOPT_URL, $l);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
+  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+  curl_setopt($ch, CURLOPT_REFERER, $l);
+  curl_setopt($ch, CURLOPT_COOKIEJAR, $cookie);
+  curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+  $h = curl_exec($ch);
+  curl_close($ch);
+  $host=parse_url($l)["host"];
+  echo $host;
+}
 if (!$h) $host="";
 /* serveres */
 if (preg_match("/4tube\.com/",$host)) {
@@ -488,14 +509,20 @@ if (preg_match("/4tube\.com/",$host)) {
   $out=str_replace("\\","",$out);
   if (strpos($out,"http") === false && $out) $out="https:".$out;
 } else if (preg_match("/pornhub\.com/",$host)) {
-  if (preg_match_all("/quality\"\:\"(1080|720|480|360|240)\"\,\"videoUrl\"\:\"(.*?)\"/ms",$h,$m)) {
-     $maxs = array_keys($m[1], max($m[1]));
-     foreach ($m[1] as $key => $value) {
-      $out=$m[2][$key];
-      if ($out) break;
-     }
-     $out=str_replace('\\',"",$out);
+  //https://www.pornhub.com/embed/ph5d4b0d9dbca84
+  preg_match_all("/flashvars\.mediaDefinitions\.(.*?)\.videoUrl/msi",$h,$q);
+  $s=$q[1][0];
+  preg_match_all("/var ra[a-zA-Z0-9]+.*?\;/msi",$h,$m);
+  $find="/var ".$s."=.*?\;/";
+  preg_match($find,$h,$n);
+  $x=preg_replace("/\/\*.*?\*\//","",$n[0]);
+  $x=str_replace("var ".$s."=ra","\$out=\$ra",$x);
+  $o="";
+  for ($k=0;$k<count($m[0]);$k++) {
+   $o .=str_replace("+",".",str_replace("var ra","\$ra",$m[0][$k]))."\n";
   }
+  $o .=str_replace("+",".",str_replace(" ra","\$ra",$x))."\n";
+  eval ($o);
 } else if (preg_match("/pornmaki\.com/",$host)) {
   $t1=explode('file:"',$h);
   $t2=explode('"',$t1[1]);

@@ -102,6 +102,12 @@ else
 <TD width="25%"><a href="filme/moviesjoy_f.php?page=1&tip=release&title=moviesjoy&link=" target="_blank">moviesjoy</a></TD>
 </TR>
 
+<TR>
+<TD width="25%"><a href="filme/vipmovies_f.php?page=1&tip=release&title=vipmovies&link=" target="_blank">vipmovies</a></TD>
+<TD width="25%"><a href="filme/ffmovies_f.php">ffmovies</a></TD>
+<TD width="25%"></TD>
+<TD width="25%"></TD>
+</TR>
 <?php
 if (file_exists($base_pass."tvplay.txt")) {
 echo '

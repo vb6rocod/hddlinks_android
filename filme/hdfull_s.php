@@ -165,13 +165,13 @@ if ($page==1) {
    echo '<TD class="nav" colspan="4" align="right"><a href="'.$prev.'">&nbsp;&lt;&lt;&nbsp;</a> | <a href="'.$next.'">&nbsp;&gt;&gt;&nbsp;</a></TD>'."\r\n";
 }
 echo '</TR></TABLE>'."\r\n";
-
+$ua     =   $_SERVER['HTTP_USER_AGENT'];
 if ($tip=="release") {
   $requestLink="https://hdfull.me/tv-shows/list";
   $r=parse_url($requestLink);
   $host=$r["host"];
   $ch = curl_init($requestLink);
-  curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows; U; Windows NT 6.1; en-US; rv:1.9.1.2) Gecko/20090729 Firefox/3.5.2 GTB5');
+  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
   curl_setopt($ch,CURLOPT_REFERER,"https://hdfull.me/tv-shows/list");
   curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER  ,1);  // RETURN THE CONTENTS OF THE CALL
@@ -184,7 +184,7 @@ if ($tip=="release") {
  $l="https://hdfull.me/ajax/search.php";
  $post="q=".str_replace(" ","+",$tit)."&limit=500&timestamp=1234567890&verifiedCheck=";
   $ch = curl_init($l);
-  curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows; U; Windows NT 6.1; en-US; rv:1.9.1.2) Gecko/20090729 Firefox/3.5.2 GTB5');
+  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
   curl_setopt($ch,CURLOPT_REFERER,"https://hdfull.me/tv-shows/list");
   curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER  ,1);  // RETURN THE CONTENTS OF THE CALL
@@ -249,6 +249,7 @@ echo '<table border="1px" width="100%" style="table-layout:fixed;">'."\r\n";
 $image="";
 $year="";
 $imdb="";
+//echo $html;
 echo '<table border="1px" width="100%"><TR>'."\n\r";
 $h1=str_between($html,'class="left filter-title myfilter">','</div');
 $videos = explode('href="', $h1);

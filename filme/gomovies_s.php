@@ -17,7 +17,7 @@ $has_fav="yes";
 $has_search="yes";
 $has_add="yes";
 $has_fs="yes";
-$fav_target="gomovies_s_fav.php?host=https://gomovies.tube";
+$fav_target="gomovies_s_fav.php?host=https://ww1.gomovies.digital";
 $add_target="gomovies_s_add.php";
 $add_file="gomovies_s.dat";
 $fs_target="gomovies_ep.php";
@@ -167,10 +167,10 @@ if ($page==1) {
 echo '</TR>'."\r\n";
 
 if($tip=="release") {
-  $l = "https://gomovies.tube/all-tv-series/".$page;
+  $l = "https://ww1.gomovies.digital/all-tv-series/".$page;
 } else {
   $search=str_replace(" ","+",$tit);
-  $l = "https://gomovies.tube/search/".$search."/series/".$page;
+  $l = "https://ww1.gomovies.digital/search/".$search."/series/".$page;
 }
 $r=parse_url($l);
 $host=$r["host"];

@@ -168,15 +168,15 @@ echo '</TR>'."\r\n";
 //https://www.filmeseriale.eu/filme/page/2/
 if($tip=="release") {
  if ($page>1)
-  $l ="https://www.filmeseriale.eu/filme/page/".$page."/";
+  $l ="https://vezi-online.eu/filme-online/page/".$page."/";
  else
-  $l="https://www.filmeseriale.eu/filme/";
+  $l="https://vezi-online.eu/filme-online/";
 } else {
   $search=str_replace(" ","+",$tit);
   if ($page > 1)
-     $l="https://www.filmeseriale.eu/page/".$page."/?s=".$search;
+     $l="https://vezi-online.eu/page/".$page."/?s=".$search;
   else
-     $l="https://www.filmeseriale.eu/?s=".$search;
+     $l="https://vezi-online.eu/?s=".$search;
 }
 $ua = $_SERVER['HTTP_USER_AGENT'];
   $ch = curl_init();
@@ -200,7 +200,7 @@ foreach($videos as $video) {
   $t1 = explode('href="', $video);
   $t2 = explode('"', $t1[1]);
   $link = $t2[0];
-  if (strpos($link,"http") === false) $link1="https://www.filmeseriale.eu".$link;
+  if (strpos($link,"http") === false) $link1="https://vezi-online.eu".$link;
   if (isset($t1[2])) {
    $t3 = explode('>', $t1[2]);
    $t4 = explode('<', $t3[1]);

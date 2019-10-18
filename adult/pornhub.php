@@ -234,7 +234,7 @@ foreach($videos as $video) {
   $t1 = explode('_vkey="', $video);
   $t2 = explode('"', $t1[1]);
   $id = $t2[0];
-  $link="https://www.pornhub.com/view_video.php?viewkey=".$id;
+  $link="https://www.pornhub.com/embed/".$id;
   $t1 = explode('data-mediumthumb="', $video);
   $t2 = explode('"', $t1[1]);
   $image = $t2[0];

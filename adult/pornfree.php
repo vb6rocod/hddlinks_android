@@ -215,6 +215,7 @@ if($tip=="release") {
   else
     $l="https://pornfree.tv/?s=".$search."&order_post=latest";
 }
+//echo $l;
 $host=parse_url($l)['host'];
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $l);

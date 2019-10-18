@@ -20,7 +20,8 @@ echo '<h2>IPTV channels from all over the world.</h2>';
 echo '<table border="1px" width="100%">'."\n\r";
 //http://adevarul.ro/video-center/
 $n=0;
-$l="https://raw.githubusercontent.com/freearhey/iptv/master/index.m3u";
+$l="https://iptv-org.github.io/iptv/index.m3u";
+//$l="https://raw.githubusercontent.com/freearhey/iptv/master/index.m3u";
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $l);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
@@ -40,7 +41,8 @@ foreach($m3uFile as $key => $line) {
     $t1=explode(",",$line);
     $title=trim($t1[1]);
     $file = trim($m3uFile[$key + 1]);
-    $file = "https://raw.githubusercontent.com/freearhey/iptv/master/".$file;
+    //$file = "https://raw.githubusercontent.com/freearhey/iptv/master/".$file;
+    $file="https://iptv-org.github.io/iptv/".$file;
     $link="playlist.php?title=".urlencode($title)."&link=".$file;
     if ($title) {
 	if ($n == 0) echo "<TR>"."\n\r";

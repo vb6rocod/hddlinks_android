@@ -29,11 +29,12 @@ function str_between($string, $start, $end){
 	if ($ini == 0) return ""; $ini += strlen($start); $len = strpos($string,$end,$ini) - $ini;
 	return substr($string,$ini,$len);
 }
+$ua     =   $_SERVER['HTTP_USER_AGENT'];
 echo '<h2>'.$tit.'</h2>';
 $link=str_replace("/serie","/show",$link);
 $requestLink=$link;
 $ch = curl_init($requestLink);
-curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows; U; Windows NT 6.1; en-US; rv:1.9.1.2) Gecko/20090729 Firefox/3.5.2 GTB5');
+curl_setopt($ch, CURLOPT_USERAGENT, $ua);
 curl_setopt($ch,CURLOPT_REFERER,"https://hdfull.me");
 curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
 curl_setopt($ch, CURLOPT_RETURNTRANSFER  ,1);  // RETURN THE CONTENTS OF THE CALL
@@ -95,7 +96,7 @@ foreach($videos as $video) {
   $post="action=season&start=0&limit=0&show=".$id_serial."&season=".$sez;
   //echo $post;
   $ch = curl_init($l);
-  curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows; U; Windows NT 6.1; en-US; rv:1.9.1.2) Gecko/20090729 Firefox/3.5.2 GTB5');
+  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
   curl_setopt($ch,CURLOPT_REFERER,"http://cecileplanche-psychologue-lyon.com");
   curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER  ,1);  // RETURN THE CONTENTS OF THE CALL

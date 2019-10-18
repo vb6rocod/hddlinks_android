@@ -232,6 +232,11 @@ $title = unfix_t(urldecode($_GET["title"]));
 $mod=$_GET["mod"];
 $from=$_GET["from"];
 }
+if (file_exists($base_pass."player.txt")) {
+$flash=trim(file_get_contents($base_pass."player.txt"));
+} else {
+$flash="direct";
+}
 //$link="https://cdn.drm.protv.ro/avod/2019/01/08/man:a121b208f4d2ceb191be29119e3a23b4:ef955898665ba80da15610d4c7b04804-7d017cb346b477351d97fe79378b111c.ism/man:a121b208f4d2ceb191be29119e3a23b4:ef955898665ba80da15610d4c7b04804-7d017cb346b477351d97fe79378b111c.m3u8";
 //$link="http://89.136.209.30:1935/liveedge/TVRMOLDOVA.stream/playlist.m3u8";
 //$link=urldecode("https%3A%2F%2Fwww.youtube.com%2Fwatch%3Fv%3Dr_d4ryn9UsA&title=Gaming%20Music%20Radio%20%E2%9A%A1%2024/7%20NCS%20Live%20Stream%20%E2%9A%A1%20Trap,%20Chill,%20Electro,%20Dubstep,%20Future%20Bass,%20EDM");
@@ -255,6 +260,9 @@ if (strpos($link,"jurnaltv.md/JurnalTV") !== false) {
 if ($from=="seenow") {
 $id=$link;
 $l="http://www.seenow.ro:1937/service3/play/index/id/".$id."/platform_id/12";
+//echo urldecode("http%3A%2F%2Fwww.seenow.ro%2F'+platformUrl+'%2Fplaceholder%2Flist%2Fid%2F9");
+// http://www.seenow.ro/12/placeholder/list/id/9
+//http://fms72.mediadirect.ro:1937/live3/_definst_/realitatea-tv/playlist.m3u8
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $l);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
@@ -376,6 +384,13 @@ $head=array('Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
 }
 if ($from=="moldova") {
     $ua = $_SERVER['HTTP_USER_AGENT'];
+  if ($flash=="flash")
+  $user_agent     =   $_SERVER['HTTP_USER_AGENT'];
+  else {
+  $user_agent = 'Mozilla/5.0(Linux;Android 7.1.2;ro;RO;MXQ-4K Build/MXQ-4K) MXPlayer/1.8.10';
+  $user_agent = 'Mozilla/5.0(Linux;Android 10.1.2) MXPlayer';
+  }
+  $ua = $_SERVER['HTTP_USER_AGENT'];
     $cookie=$base_cookie."hdpopcorns.dat";
     $ch = curl_init();
     curl_setopt($ch, CURLOPT_URL, $link);
@@ -393,7 +408,32 @@ if ($from=="moldova") {
     $t1=explode("video.src = '",$h);
     $t2=explode("'",$t1[1]);
     $link="https://www.trm.md".$t2[0];
-    
+    $h=file_get_contents($cookie);
+    preg_match("/cf_clearance\s+(\S+)/",$h,$m);
+    //print_r ($m);
+    //die();
+    if ($link && $flash != "flash")
+    $link=$link."|Cookie=".urlencode("cf_clearance=").urlencode($m[1])."&User-Agent=".urlencode($ua);
+    $head=array("Cookie: cf_clearance=".$m[1]);
+    //echo $link;
+    /*
+    $ch = curl_init();
+    curl_setopt($ch, CURLOPT_URL, $link);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+    //curl_setopt($ch, CURLOPT_USERAGENT, $ua);
+    curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+    //curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie);
+    curl_setopt($ch,CURLOPT_HTTPHEADER,$head);
+    //curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
+    //curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
+    curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+    curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+    $h = curl_exec($ch);
+    curl_close($ch);
+    //echo $h;
+    //die();
+    */
 }
 if ($from=="flc") {
   $token=file_get_contents($base_fav."flc.txt");
@@ -886,6 +926,8 @@ if ($from=="privesceu") {
   curl_close($ch);
 //echo $h;
 $link=trim(str_between($h,'hls":"','"'));
+   if ($link && $flash != "flash")
+     $link=$link."|Referer=".urlencode("https://www.privesc.eu");
 }
 if ($from=="epoch") {
   $ch = curl_init();

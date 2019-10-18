@@ -222,9 +222,9 @@ if ($tip=="search") {
   $html = curl_exec($ch);
   curl_close ($ch);
 } else {
-  $requestLink="https://tvhub.ro/wp-admin/admin-ajax.php";
+  $requestLink="https://www1.tvhub.ro/wp-admin/admin-ajax.php";
   $post="action=load_more&page=".($page-1)."&template=cactus-channel%2Fcontent-listing&vars%5Bpost_type%5D=ct_channel&vars%5Bposts_per_page%5D=20&vars%5Bpost_status%5D=publish&vars%5Bignore_sticky_posts%5D=1&vars%5Bpaged%5D=1&id_playlist=";
-
+  //$post="action=load_more&page=1&template=cactus-channel/content-listing&vars[post_type]=ct_channel&vars[posts_per_page]=20&vars[post_status]=publish&vars[ignore_sticky_posts]=1&vars[paged]=1&id_playlist=";
   $ch = curl_init($requestLink);
   curl_setopt($ch, CURLOPT_USERAGENT, $ua);
   curl_setopt($ch,CURLOPT_REFERER,"https://tvhub.org/");
@@ -239,6 +239,7 @@ if ($tip=="search") {
   $html = curl_exec($ch);
   curl_close ($ch);
 }
+//echo $html;
 $r=array();
   if ($tip=="release") {
   $videos = explode('div class="entry-content"', $html);

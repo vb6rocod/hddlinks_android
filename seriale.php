@@ -59,12 +59,12 @@ document.onkeypress =  zx;
 <TD width="25%"><a href="filme/veziseriale_s.php?page=1&tip=release&title=veziseriale.info&link=" target="_blank">veziseriale.info</a></TD>
 <TD width="25%"><a href="filme/filme--online.php?page=1&tip=release&title=filme--online&link=" target="_blank">filme--online</a></TD>
 <TD width="25%"><a href="filme/divxfilmeonline_s.php?page=1&tip=release&title=divxfilmeonline&link=" target="_blank">divxfilmeonline</a></TD>
-<TD width="25%"></TD>
+<TD width="25%"><a href="filme/serialeonlinesubtitrate_s.php?page=1&tip=release&title=serialeonlinesubtitrate&link=" target="_blank">serialeonlinesubtitrate</a></TD>
 </TR>
 <TR>
 <TD width="25%"><a href="filme/filmetop.php?page=1&tip=release&title=filmetop&link=" target="_blank">filmetop</a></TD>
 <TD width="25%"><a href="filme/serialeonline.php?page=1&tip=release&title=serialeonline&link=" target="_blank">serialeonline</a></TD>
-<TD width="25%"></TD>
+<TD width="25%"><a href="filme/filmeserialeonline.php?page=1&tip=release&title=filmeserialeonline&link=" target="_blank">filmeserialeonline</a></TD>
 <TD width="25%"><a href="filme/rovideo.php?page=1&tip=release&title=rovideo&link=" target="_blank">rovideo</a></TD>
 </TR>
 <!-- straine -->
@@ -89,8 +89,8 @@ document.onkeypress =  zx;
 
 <TR>
 <TD width="25%"><a href="filme/0123netflix_s.php?page=1&tip=release&title=0123netflix&link=" target="_blank">0123netflix</a></TD>
-<TD width="25%"></TD>
-<TD width="25%"></TD>
+<TD width="25%"><a href="filme/vipmovies_s.php?page=1&tip=release&title=vipmovies&link=" target="_blank">vipmovies</a></TD>
+<TD width="25%"><a href="filme/ffmovies_s.php">ffmovies</a></TD>
 <TD width="25%"></TD>
 </TR>
 

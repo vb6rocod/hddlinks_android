@@ -135,7 +135,7 @@ $head=array(
 'Accept-Encoding: deflate',
 'X-Requested-With: XMLHttpRequest'
 );
-$l="https://gomovies.tube/user/servers/".$id1."?ep=".$id2;
+$l="https://ww1.gomovies.digital/user/servers/".$id1."?ep=".$id2;
 $ch = curl_init();
 curl_setopt($ch, CURLOPT_URL, $l);
 curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);

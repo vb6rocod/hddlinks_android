@@ -18,7 +18,7 @@ $has_fav="yes";
 $has_search="yes";
 $has_add="yes";
 $has_fs="yes";
-$fav_target="filmeseriale_eu_s_fav.php?host=https://www.filmeseriale.eu";
+$fav_target="filmeseriale_eu_s_fav.php?host=https://vezi-online.eu";
 $add_target="filmeseriale_eu_s_add.php";
 $add_file="";
 $fs_target="filmeseriale_eu_s_ep.php";
@@ -167,13 +167,13 @@ if ($page==1) {
 }
 echo '</TR>'."\r\n";
 if ($tip == "release")
-  $l="https://www.filmeseriale.eu/seriale/page/".$page."/";
+  $l="https://vezi-online.eu/seriale/page/".$page."/";
 else {
   $search=str_replace(" ","+",$tit);
   if ($page == 1)
-    $l="https://www.filmeseriale.eu/?s=".$search;
+    $l="https://vezi-online.eu/?s=".$search;
   else
-    $l="https://www.filmeseriale.eu/page/".$page."/?s=".$search;
+    $l="https://vezi-online.eu/page/".$page."/?s=".$search;
 }
 $r=array();
 $ua = $_SERVER['HTTP_USER_AGENT'];

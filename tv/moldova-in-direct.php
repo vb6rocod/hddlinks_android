@@ -72,6 +72,13 @@ if (preg_match("/android|ipad/i",$user_agent) && preg_match("/chrome|firefox|mob
 $n=0;
 /////////////////////////////////////////////////////////////////////////
 $ua = $_SERVER['HTTP_USER_AGENT'];
+  if ($flash=="flash")
+  $user_agent     =   $_SERVER['HTTP_USER_AGENT'];
+  else {
+  $user_agent = 'Mozilla/5.0(Linux;Android 7.1.2;ro;RO;MXQ-4K Build/MXQ-4K) MXPlayer/1.8.10';
+  $user_agent = 'Mozilla/5.0(Linux;Android 10.1.2) MXPlayer';
+  }
+$user_agent     =   $_SERVER['HTTP_USER_AGENT'];
 $cookie=$base_cookie."hdpopcorns.dat";
 $requestLink="https://www.trm.md";
 if (file_exists($cookie)) unlink ($cookie);
@@ -137,7 +144,7 @@ foreach($videos as $video) {
     $t1=explode('src="',$video);
     //$t2=explode('value="',$t1[1]);
     $t3=explode('"',$t1[1]);
-    $image="http://www.trm.md".$t3[0];
+    $image="../filme/r_m.php?file=http://www.trm.md".$t3[0];
     $t1=explode('href="',$video);
     $t2=explode('"',$t1[1]);
     $link="https://www.trm.md".$t2[0];
@@ -183,7 +190,7 @@ foreach($videos as $video) {
     $t1=explode('src="',$video);
     //$t2=explode('value="',$t1[1]);
     $t3=explode('"',$t1[1]);
-    $image="https://www.trm.md".$t3[0];
+    $image="../filme/r_m.php?file=https://www.trm.md".$t3[0];
     $t1=explode('href="',$video);
     $t2=explode('"',$t1[1]);
     $link="https://www.trm.md".$t2[0];

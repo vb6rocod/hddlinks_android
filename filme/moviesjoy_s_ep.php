@@ -71,38 +71,23 @@ echo '<table border="1" width="100%">'."\n\r";
   $r=json_decode($h,1);
   //print_r ($r);
   //die();
-
-$videos1 = explode('class="dp-s-line', $r["html"]);
-//><a title=
-unset($videos1[0]);
-$videos1 = array_values($videos1);
-
-foreach($videos1 as $video1) {
-  $t1=explode('class="name">',$video1);
-  $t2=explode('<',$t1[1]);
-  $num_serv=$t2[0];
-  //echo "=========================".$num_serv."============================"."\n";
-  echo '<TR><td class="sez" style="color:black;background-color:#0a6996;color:#64c8ff;text-align:center" colspan="3">SERVER: '.$num_serv.'</td></TR>';
-  $n=0;
-  $videos = explode('<li',$video1);
-  unset($videos[0]);
-  //$videos = array_values($videos);
-  $videos = array_reverse($videos);
-  foreach($videos as $video) {
-    preg_match("/change_episode\((\d+)\,\s+(\d+)\,\s+\'(embed|direct)\'\)/",$video,$m);
-    $id=$m[1]."-".$m[2];
-    if ($m[3] == "embed")
-      $l="https://www.moviesjoy.net/ajax/movie_embed/".$id;
-    else
-      $l="https://www.moviesjoy.net/ajax/movie_sources/".$id;
-
+$s=array();
+$videos=explode("<li",$r["html"]);
+unset($videos[0]);
+foreach($videos as $video) {
   $t1=explode('title="',$video);
-  $t2=explode(">",$t1[1]);
-  $t3=explode('<',$t2[1]);
-  $ep_tit=$t3[0];
-  preg_match("/Episode\s+(\d+)/",$video,$e);
+  $t2=explode('"',$t1[1]);
+  $s[]=$t2[0];
+}
+//print_r ($s);
+$s=array_unique($s);
+asort($s);
+//print_r ($s);
+foreach($s as $key=>$value) {
+  preg_match("/Episode\s+(\d+)/",$value,$e);
   $epNr=$e[1];
-  $ep_tit_d = $ep_tit;
+  $ep_tit_d = $value;
+  $ep_tit = $value;
   //$link="moviesjoy_fs.php?tip=series&link=".urlencode($l)."&title=".urlencode(fix_t($tit))."&ep_tit=".urlencode(fix_t($ep_tit1))."&ep=".$epNr."&sez=".$sez."&image=".$image;
   $link_f=$fs_target.'?tip=series&link='.urlencode($l).'&title='.urlencode(fix_t($tit)).'&image='.$image."&sez=".$sez."&ep=".$epNr."&ep_tit=".urlencode(fix_t($ep_tit))."&year=".$year;
    if ($n == 0) echo "<TR>"."\n\r";
@@ -122,7 +107,7 @@ foreach($videos1 as $video1) {
     }
     echo '</TR>'."\r\n";
   }
-}  
+
 //}
 echo '</table>';
 ?>

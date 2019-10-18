@@ -16,6 +16,12 @@ $l="https://sub1.hdv.fun/vtt1/".$sub.".vtt";
       $h = curl_exec($ch);
       curl_close($ch);
 
-
+$h=json_encode($h);
+$h=str_replace("\u00e3","\u0103",$h); //mar
+$h=str_replace("\u00ba","\u0219",$h);  // si
+$h=str_replace("\u00fe","\u021B",$h); //ratiune
+$h=str_replace("\u00aa","\u015E",$h); //Si
+$h=str_replace("\u00de","\u021A",$h); //NOPTI   (cu virgula)
+$h=json_decode($h);
 file_put_contents($base_sub."sub_extern.srt",$h);
 ?>

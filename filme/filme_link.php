@@ -176,7 +176,7 @@ $last_link = "";
   //echo $html;
   //https://www.rovideo.net/get_file/1/07efb813ad617039eaf239afb6cd93364002a2b255/2000/2011/2011.mp4/?embed=true&rnd=1550392933101
   //https://www.rovideo.net/get_file/1/837300ba6f936f33dd1c1eeb29f9a67a4002a2b255/2000/2011/2011.mp4/?embed=true&rnd=1550317566
-} elseif (strpos($filelink,"pornhdo.com") !== false) {
+} elseif (strpos($filelink,"pornhdo.com") !== false || strpos($filelink,"porndbs.com") !== false) {
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $filelink);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
@@ -714,7 +714,7 @@ $id=$m[1];
   curl_close($ch);
   $html= decode_entities($html);
   //echo $html;
-} elseif (strpos($filelink,"tvhub.") !== false) {
+} elseif (strpos($filelink,"tvhub.") !== false || strpos($filelink,"serialeonlinesubtitrate.") !== false) {
 //echo $filelink;
 require_once("JavaScriptUnpacker.php");
 $cookie=$base_cookie."hdpopcorns.dat";
@@ -885,6 +885,54 @@ foreach($videos as $video) {
  $t2=explode("'",$t1[1]);
  $tip=$t2[0];
  $l="https://filmeseriale-hd.com/wp-admin/admin-ajax.php";
+ $post="action=doo_player_ajax&post=".$id."&nume=".$nume."&type=".$tip;
+ //echo $post;
+  $ch = curl_init($l);
+  curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows; U; Windows NT 6.1; en-US; rv:1.9.1.2) Gecko/20090729 Firefox/3.5.2 GTB5');
+  curl_setopt($ch,CURLOPT_REFERER,"https://filmeseriale-hd.com");
+  curl_setopt ($ch, CURLOPT_POST, 1);
+  curl_setopt ($ch, CURLOPT_POSTFIELDS, $post);
+  //curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER  ,1);  // RETURN THE CONTENTS OF THE CALL
+  //curl_setopt($ch, CURLOPT_HEADER, true);
+  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+  $h = curl_exec($ch);
+  curl_close ($ch);
+ $html .=$h;
+}
+//echo $html;
+} elseif (strpos($filelink,"filmeserialeonline.biz") !== false) {
+  $ch = curl_init($filelink);
+  curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows; U; Windows NT 6.1; en-US; rv:1.9.1.2) Gecko/20090729 Firefox/3.5.2 GTB5');
+  curl_setopt($ch,CURLOPT_REFERER,"filmeserialeonline.biz");
+  //curl_setopt ($ch, CURLOPT_POST, 1);
+  //curl_setopt ($ch, CURLOPT_POSTFIELDS, $post);
+  //curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER  ,1);  // RETURN THE CONTENTS OF THE CALL
+  //curl_setopt($ch, CURLOPT_HEADER, true);
+  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+  $html = curl_exec($ch);
+  curl_close ($ch);
+$videos = explode("dooplay_player_option", $html);
+unset($videos[0]);
+$videos = array_values($videos);
+foreach($videos as $video) {
+ $t1=explode("data-post=",$video);
+ $t2=explode(" ",$t1[1]);
+ $id=$t2[0];
+ $t1=explode("data-nume=",$video);
+ $t2=explode(">",$t1[1]);
+ $nume=$t2[0];
+ $t1=explode("data-type=",$video);
+ $t2=explode(" ",$t1[1]);
+ $tip=$t2[0];
+ $l="https://filmeserialeonline.biz/wp-admin/admin-ajax.php";
  $post="action=doo_player_ajax&post=".$id."&nume=".$nume."&type=".$tip;
  //echo $post;
   $ch = curl_init($l);

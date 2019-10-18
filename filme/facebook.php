@@ -3,12 +3,25 @@
 include ("../common.php");
 error_reporting(0);
 $token = "";
+$page=$_GET['page'];
 $search=$_GET["search"];
 $next="";
 $prev="";
 $page_title=$search;
 $width="200px";
 $height=intval(200*(128/227))."px";
+$base=basename($_SERVER['SCRIPT_FILENAME']);
+$p=$_SERVER['QUERY_STRING'];
+parse_str($p, $output);
+
+if (isset($output['page'])) unset($output['page']);
+$p = http_build_query($output);
+if (!isset($_GET["page"]))
+  $page=1;
+else
+  $page=$_GET["page"];
+$next=$base."?page=".($page+1)."&".$p;
+$prev=$base."?page=".($page-1)."&".$p;
 //https://developers.facebook.com/tools/explorer/
 ?>
 <html>
@@ -114,21 +127,21 @@ if (preg_match("/android|ipad/i",$user_agent) && preg_match("/chrome|firefox|mob
 }
 $n=0;
 $w=0;
-$prev="";
-$next="";
-$nextpage="facebook.php?token=".$next."&search=".$search;
-$prevpage="facebook.php?token=".$prev."&search=".$search;
+$nextpage=$next;
+$prevpage=$prev;
 echo '<h2>'.$page_title.'</H2>';
 $c="";
 echo "<a href='".$c."' id='mytest1'></a>".'<div id="mainnav">';
 echo '<table border="1px" width="100%">'."\n\r";
 echo '<tr><TD colspan="3" align="right">';
-if ($prev)
+if ($page>1)
 echo '<a href="'.$prevpage.'">&nbsp;&lt;&lt;&nbsp;</a> | <a href="'.$nextpage.'">&nbsp;&gt;&gt;&nbsp;</a></TD></TR>';
 else
 echo '<a href="'.$nextpage.'">&nbsp;&gt;&gt;&nbsp;</a></TD></TR>';
-
+//https://www.facebook.com/VoceaBasarabiei/videos/?page=2
  $l4="https://www.facebook.com/pg/".$search."/videos/?ref=page_internal";
+ $l4="https://www.facebook.com/pg/".$search."/videos/?page=".$page;
+ //$l4="https://www.facebook.com/pg/EMCpress/live_videos/?ref=page_internal";
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $l4);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
@@ -139,16 +152,22 @@ echo '<a href="'.$nextpage.'">&nbsp;&gt;&gt;&nbsp;</a></TD></TR>';
   curl_setopt($ch, CURLOPT_TIMEOUT, 15);
   $h = curl_exec($ch);
   curl_close($ch);
-$h=urldecode($h);
-//$h=str_replace('script','ssss',$h);
+  $h=html_entity_decode($h);
+//$h=urldecode($h);
+//$h=str_replace('href','ssss',$h);
 //echo $h;
+//preg_match_all("/\<td class\=\".*?\"\>\<td class\=\".*?\".*?href\=\"(\S+)\"\s+aria\-label\=\"(.*?)\".*?src\=\"(.*?)\".*?title\=\"(.*?)\"(.*?)\<\/td\>/ms",$h,$m);
+//print_r ($m);
+//die();
 $t1=explode('og:image" content="',$h);
 $t2=explode('"',$t1[1]);
 $cover=urldecode($t2[0]);
 $cover=str_replace("&amp;","&",$cover);
   $add_fav="mod=add&title=".urlencode(fix_t($search))."&image=".urlencode(fix_t($cover));
 
-if (preg_match_all("/\<td class\=\"\S+\"\>\<.*?href\=\"(\S+)\"\s+aria\-label\=\"(.*?)\".*?src\=\"(\S+)\"/ms",$h,$m)) {
+//if (preg_match_all("/\<td class\=\"\S+\"\>\<.*?href\=\"(\S+)\"\s+aria\-label\=\"(.*?)\".*?src\=\"(\S+)\"/ms",$h,$m)) {
+if (preg_match_all("/\<td class\=\".*?\"\>\<td class\=\".*?\".*?href\=\"(\S+)\"\s+aria\-label\=\"(.*?)\".*?src\=\"(.*?)\".*?\>\<div class\=\".*?\"\>\<\/div\>\<div.*?\>(.*?)\<.*?\<\/td\>/ms",$h,$m)) {
+//print_r ($m);
 for ($k=0;$k<count($m[0]);$k++) {
   $link = "";
   $id="";
@@ -156,10 +175,16 @@ for ($k=0;$k<count($m[0]);$k++) {
   $t1=explode('videos/',$m[1][$k]);
   $t2=explode('/',$t1[1]);
   $id=$t2[0];
-  $title=html_entity_decode($m[2][$k]);
+  $title="";
+  $t1=explode('title="',$m[0][$k]);
+  $t2=explode('"',$t1[1]);
+  $title=$t2[0];
   $image=urldecode($m[3][$k]);
-
-	
+  $durata=$m[4][$k];
+  if ($title)
+    $title=$title." (".$durata.")";
+  else
+    $title=$durata;
    $link1="".urlencode("https://www.facebook.com/video/embed?video_id=".$id)."&title=".urlencode($title);
   if ($id) {
   if ($n==0) echo '<TR>';
@@ -186,7 +211,7 @@ for ($k=0;$k<count($m[0]);$k++) {
 }
 }
 echo '<tr><TD colspan="3" align="right">';
-if ($prev)
+if ($page>1)
 echo '<a href="'.$prevpage.'">&nbsp;&lt;&lt;&nbsp;</a> | <a href="'.$nextpage.'">&nbsp;&gt;&gt;&nbsp;</a></TD></TR>';
 else
 echo '<a href="'.$nextpage.'">&nbsp;&gt;&gt;&nbsp;</a></TD></TR>';

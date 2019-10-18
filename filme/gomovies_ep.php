@@ -55,7 +55,7 @@ $n=0;
 foreach($videos as $video) {
   $t1 = explode('href="', $video);
   $t2 = explode('"',$t1[1]);
-  $link = "https://gomovies.tube".$t2[0];
+  $link = "https://ww1.gomovies.digital".$t2[0];
   $t1 = explode('episodeCount">', $video);
   $t2 = explode('<', $t1[1]);
   $title = trim($t2[0]);

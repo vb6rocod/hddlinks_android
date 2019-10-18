@@ -155,6 +155,7 @@ if ($tip=="movie") {
   $x=json_decode($h,1);
   $h=$x['html'];
   $r=array();
+  $s=array();
   $videos=explode('class="dp-s-line"',$h);
   unset($videos[0]);
   $videos = array_values($videos);
@@ -177,20 +178,53 @@ if ($tip=="movie") {
       curl_close($ch);
       $y=json_decode($h,1);
       //print_r ($y);
-      if (strpos($y['src'],"http") !== false) $r[]=$y['src'];
+      if (strpos($y['src'],"http") !== false) {
+       $r[]=$y['src'];
+       $s[]=$svr_name;
+      }
     } else {
       $l="https://www.moviesjoy.net/ajax/movie_sources/".$id;
       $r[]=$l;
+      $s[]=$svr_name;
     }
   }
 } else {
   $r=array();
-  if (strpos($link,"movie_sources") !== false) {
-    $r[]=$link;
-  } else {
-      $ch = curl_init($link);
+  $s=array();
+  $ch = curl_init($link);
+  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+  curl_setopt($ch, CURLOPT_REFERER, $link);
+  curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 10.0; rv:55.0) Gecko/20100101 Firefox/55.0');
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER  ,1);  // RETURN THE CONTENTS OF THE CALL
+  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+  $h = curl_exec($ch);
+  curl_close($ch);
+
+  $x=json_decode($h,1);
+  $h=$x['html'];
+  $videos=explode('class="dp-s-line"',$h);
+  unset($videos[0]);
+  $videos = array_values($videos);
+  foreach($videos as $video) {
+    $t1=explode('class="name">',$video);
+    $t2=explode('<',$t1[1]);
+    $svr_name=$t2[0];
+    $vids=explode("<li",$video);
+    unset($vids[0]);
+    foreach($vids as $vid) {
+    $t1=explode('title="',$vid);
+    $t2=explode('"',$t1[1]);
+    $e=prep_tit($t2[0]);
+    //echo $e."\n".$ep_title."\n";
+    if ($e == $ep_title) {
+    preg_match("/change_episode\((\d+)\,\s+(\d+)\,\s+\'(embed|direct)\'\)/",$vid,$m);
+    //print_r ($m);
+    $id=$m[1]."-".$m[2];
+    if ($m[3] == "embed") {
+      $l="https://www.moviesjoy.net/ajax/movie_embed/".$id;
+      $ch = curl_init($l);
       curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
-      curl_setopt($ch, CURLOPT_REFERER, $link);
+      curl_setopt($ch, CURLOPT_REFERER, $l);
       curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 10.0; rv:55.0) Gecko/20100101 Firefox/55.0');
       curl_setopt($ch, CURLOPT_RETURNTRANSFER  ,1);  // RETURN THE CONTENTS OF THE CALL
       curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
@@ -198,11 +232,21 @@ if ($tip=="movie") {
       curl_close($ch);
       $y=json_decode($h,1);
       //print_r ($y);
-      if (strpos($y['src'],"http") !== false) $r[]=$y['src'];
+      if (strpos($y['src'],"http") !== false) {
+       $r[]=$y['src'];
+       $s[]=$svr_name;
+      }
+    } else {
+      $l="https://www.moviesjoy.net/ajax/movie_sources/".$id;
+      $r[]=$l;
+      $s[]=$svr_name;
+    }
+  }
+  }
   }
 }
 echo '<table border="1" width="100%">';
-echo '<TR><TD class="mp">Alegeti un server: Server curent:<label id="server">'.parse_url($r[0])['host'].'</label>
+echo '<TR><TD class="mp">Alegeti un server: Server curent:<label id="server">'.$s[0].'</label>
 <input type="hidden" id="file" value="'.urlencode($r[0]).'"></td></TR></TABLE>';
 echo '<table border="1" width="100%"><TR>';
 $k=count($r);
@@ -212,9 +256,9 @@ for ($i=0;$i<$k;$i++) {
   $c_link=$r[$i];
   $openload=parse_url($r[$i])['host'];
   if (preg_match($indirect,$openload)) {
-  echo '<TD class="mp"><a href="filme_link.php?file='.urlencode($c_link).'&title='.urlencode(unfix_t($tit.$tit2)).'" target="_blank">'.$openload.'</a></td>';
+  echo '<TD class="mp"><a href="filme_link.php?file='.urlencode($c_link).'&title='.urlencode(unfix_t($tit.$tit2)).'" target="_blank">'.$s[$i].'</a></td>';
   } else
-  echo '<TD class="mp"><a id="myLink" href="#" onclick="changeserver('."'".$openload."','".urlencode($c_link)."'".');return false;">'.$openload.'</a></td>';
+  echo '<TD class="mp"><a id="myLink" href="#" onclick="changeserver('."'".$s[$i]."','".urlencode($c_link)."'".');return false;">'.$s[$i].'</a></td>';
   $x++;
   if ($x==6) {
     echo '</TR>';

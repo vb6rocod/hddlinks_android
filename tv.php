@@ -67,7 +67,7 @@ $(document).on('keyup', '.imdb', isValid);
 <TD width="25%"><a href="tv/protv_stiri.php?page=1,,PROTV" target="_blank">PROTV</a></TD>
 </TR>
 <TR>
-<TD width="25%"><a href="tv/privesc.php?page=1&link=https://www.privesc.eu/arhiva/categorii/Romania&title=Romania" target="_blank">privesc.eu</a></TD>
+<TD width="25%"><a href="tv/privesc.php?page=1&link=https://www.privesc.eu/arhiva/categorii/Toate&title=privesc.eu" target="_blank">privesc.eu</a></TD>
 <TD width="25%"><a href="tv/epochtimes.php?page=1&link=&title=epochtimes-romania" target="_blank">epochtimes-romania</a></TD>
 <TD width="25%"><a href="tv/adevarul.php?page=1&link=https://adevarul.ro/video-center/&title=Toate" target="_blank">Adevarul.ro</a></TD>
 <TD width="25%"><a href="tv/tvrplus_main.php" target="_blank">TVR+ (Emisiuni)</a></TD>
@@ -93,7 +93,7 @@ $(document).on('keyup', '.imdb', isValid);
 
 <TR>
 <TD width="25%"><a href="tv/iptv.php" target="_blank">IPTV International</a></TD>
-<TD width="25%"><a href="tv/playlist.php?title=Sport+IPTV&link=https://raw.githubusercontent.com/freearhey/iptv/master/index.sport.m3u" target="_blank">Sport IPTV</a></TD>
+<TD width="25%"><a href="tv/playlist.php?title=Sport+IPTV&link=https://iptv-org.github.io/iptv/categories/sport.m3u" target="_blank">Sport IPTV</a></TD>
 <TD width="25%"></TD>
 <TD width="25%"></TD>
 </TR>

@@ -68,6 +68,7 @@ $ua="Mozilla/5.0 (Windows NT 10.0; rv:68.0) Gecko/20100101 Firefox/68.0";
   curl_setopt($ch, CURLOPT_TIMEOUT, 15);
   $html = curl_exec($ch);
   curl_close($ch);
+  //echo $html;
 $videos = explode('id="menu-item-', $html);
 unset($videos[0]);
 $videos = array_values($videos);
@@ -75,7 +76,7 @@ foreach($videos as $video) {
     $t0=explode('href="',$video);
     $t1=explode('"',$t0[1]);
     $link=$t1[0];
-    $t2=explode('image-title">',$video);
+    $t2=explode('>',$t0[1]);
     $t4=explode('<',$t2[1]);
   	$title=$t4[0];
   	$title=prep_tit($title);
