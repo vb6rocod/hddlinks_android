@@ -9,7 +9,7 @@ function str_between($string, $start, $end){
 $main_title="pornfree";
 $target="pornfree.php";
 $fav_target="";
-$recente="https://pornfree.tv/";
+$recente="https://pornkino.cc/category/porn-movies/";
 ?>
 <html>
 <head>
@@ -56,6 +56,7 @@ echo $form;
 echo '</TR>';
 $n=0;
 $l="https://pornfree.tv/";
+$l="https://pornkino.cc/";
 $ua = $_SERVER['HTTP_USER_AGENT'];
 $ua="Mozilla/5.0 (Windows NT 10.0; rv:68.0) Gecko/20100101 Firefox/68.0";
   $ch = curl_init();
@@ -68,17 +69,17 @@ $ua="Mozilla/5.0 (Windows NT 10.0; rv:68.0) Gecko/20100101 Firefox/68.0";
   curl_setopt($ch, CURLOPT_TIMEOUT, 15);
   $html = curl_exec($ch);
   curl_close($ch);
-$html = str_between($html,'Categories','</ul');
-$videos = explode('href="', $html);
+//$html = str_between($html,'Categories','</ul');
+$videos = explode('li id="menu-item', $html);
 unset($videos[0]);
 $videos = array_values($videos);
 foreach($videos as $video) {
-    $t1=explode('"',$video);
-    $link=$t1[0];
-    $t2=explode('class="ubermenu',$video);
-    $t3=explode(">",$t2[1]);
-    $t4=explode("<",$t3[1]);
-  	$title=$t4[0];
+    $t1=explode('href="',$video);
+    $t2=explode('"',$t1[1]);
+    $link=$t2[0];
+    $t2=explode('>',$t1[1]);
+    $t3=explode('<',$t2[1]);
+  	$title=$t3[0];
   	$title=prep_tit($title);
     $link=$target."?page=1&tip=release&link=".urlencode(fix_t($link))."&title=".urlencode(fix_t($title));
     if ($title) {

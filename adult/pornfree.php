@@ -12,7 +12,7 @@ $tip= $_GET["tip"];
 $tit=$_GET["title"];
 $link=$_GET["link"];
 $width="200px";
-$height=intval(200*(278/185))."px";
+$height=intval(200*(360/254))."px";
 /* ==================================================== */
 $has_main="yes";
 $has_fav="no";
@@ -205,17 +205,16 @@ echo '</TR>'."\r\n";
 
 if($tip=="release") {
   if ($page>1)
-    $l=$link."page".$page."/?order_post=latest";
+    $l=$link."page".$page."/?filter=latest";
   else
-    $l=$link."page".$page."/?order_post=latest";
+    $l=$link."page".$page."/?filter=latest";
 } else {
   $search=str_replace(" ","+",$tit);
   if ($page > 1)
-    $l="https://pornfree.tv/page/".$page."/?s=".$search."&order_post=latest";
+    $l="https://pornkino.cc/search/".$search."/page/".$page."/";
   else
-    $l="https://pornfree.tv/?s=".$search."&order_post=latest";
+    $l="https://pornkino.cc/search/".$search;
 }
-//echo $l;
 $host=parse_url($l)['host'];
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $l);
@@ -228,23 +227,23 @@ $host=parse_url($l)['host'];
   $html = curl_exec($ch);
   curl_close($ch);
 $r=array();
-$videos=explode('div class="item-img">',$html);
+$videos=explode('article id="post-',$html);
 unset($videos[0]);
 $videos = array_values($videos);
 foreach($videos as $video) {
   $t1=explode('href="',$video);
   $t2 = explode('"', $t1[1]);
   $link = $t2[0];
-  $t1=explode("<h3>",$video);
-  $t2=explode("</h3",$t1[1]);
+  $t1=explode('title="',$video);
+  $t2=explode('"',$t1[1]);
   $title=$t2[0];
   $title = trim(strip_tags($title));
   $title = prep_tit($title);
-  $t1 = explode('src="', $video);
+  $t1 = explode('data-src="', $video);
   $t2 = explode('"', $t1[1]);
   $image = $t2[0];
   if (strpos($image,"http") === false) $image="https:".$image;
-  $image="r.php?file=".$image;
+  //$image="r.php?file=".$image;
   $durata="";
   $durata = preg_replace("/\n|\r/"," ",strip_tags($durata));
   if ($durata) $title=$title." (".$durata.')';

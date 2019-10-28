@@ -118,39 +118,59 @@ function off() {
 <?php
 echo '<h2>'.$tit.$tit2.'</H2>';
 echo '<BR>';
-$ua = $_SERVER['HTTP_USER_AGENT'];
-$head=array('Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
-'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2');
-$l="https://isubsmovies.com/dbquery.php?action=loadPlayer";
-$head=array('Accept: */*',
-'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
-'Accept-Encoding: deflate',
-'X-Requested-With: XMLHttpRequest',
-'Origin: https://isubsmovies.com',
-'Connection: keep-alive',
-'Referer: '.$link.'');
+//echo $link;
 $r=array();
-  $ch = curl_init();
-  curl_setopt($ch, CURLOPT_URL, $l);
-  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-  curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 10.0; rv:63.0) Gecko/20100101 Firefox/63.0');
-  //curl_setopt($ch,CURLOPT_REFERER,"https://isubsmovies.com");
+$ua = $_SERVER['HTTP_USER_AGENT'];
+  $ch = curl_init($link);
+  curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows; U; Windows NT 6.1; en-US; rv:1.9.1.2) Gecko/20090729 Firefox/3.5.2 GTB5');
+  curl_setopt($ch, CURLOPT_REFERER, "http://go2watch.net");
   curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
-  curl_setopt($ch, CURLOPT_ENCODING, "");
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER  ,1);  // RETURN THE CONTENTS OF THE CALL
+  curl_setopt($ch, CURLOPT_ENCODING,"");
   curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-  curl_setopt($ch,CURLOPT_HTTPHEADER,$head);
   curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
   curl_setopt($ch, CURLOPT_TIMEOUT, 15);
-  $h2 = curl_exec($ch);
-  curl_close($ch);
-  //echo $h2;
-  //$z=json_decode($h2,1);
+  $h3 = curl_exec($ch);
+  curl_close ($ch);
+  $t1=explode('movie_id =',$h3);
+  $t2=explode(';',$t1[1]);
+  $id=trim($t2[0]);
+
+$l1="http://free2watch.net/UI/GetEmbeds";
+$post="id=".$id."&episode=true";
+  $ch = curl_init($l1);
+  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
+  curl_setopt($ch,CURLOPT_REFERER,"http://go2watch.net");
+  curl_setopt ($ch, CURLOPT_POST, 1);
+  curl_setopt ($ch, CURLOPT_POSTFIELDS, $post);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER  ,1);  // RETURN THE CONTENTS OF THE CALL
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+  $h1 = curl_exec($ch);
+  curl_close ($ch);
+//echo $h1;
+$x=json_decode($h1,1);
+//print_r ($x);
+for ($k=0; $k<count($x['content']);$k++) {
+  $l2="http://free2watch.net/ajax/get_sources.php?hash=".$x['content'][$k]['hash'];
+  $ch = curl_init($l2);
+  curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows; U; Windows NT 6.1; en-US; rv:1.9.1.2) Gecko/20090729 Firefox/3.5.2 GTB5');
+  curl_setopt($ch, CURLOPT_REFERER, "http://go2watch.net");
+  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER  ,1);  // RETURN THE CONTENTS OF THE CALL
+  curl_setopt($ch, CURLOPT_ENCODING,"");
+  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+  $h4 = curl_exec($ch);
+  curl_close ($ch);
+  $z=json_decode($h4,1);
   //print_r ($z);
-  $k=json_decode($h2,1)['Data']['Player'];
-  //print_r ($k);
-  $t1=explode('data-src="',$k);
-  $t2=explode('"',$t1[1]);
-  if ($t2[0]) $r[]=$t2[0];
+  $l5 = $z['response']['sources'];
+  if ($l5 && strpos($l5,"http") === false) $l5="http:".$l5;
+  if ($l5) $r[]=$l5;
+}
+
 echo '<table border="1" width="100%">';
 echo '<TR><TD class="mp">Alegeti un server: Server curent:<label id="server">'.parse_url($r[0])['host'].'</label>
 <input type="hidden" id="file" value="'.urlencode($r[0]).'"></td></TR></TABLE>';
@@ -194,10 +214,6 @@ if ($tip=="movie") {
   $from="";
   $link_page="";
 }
-  $rest = substr($tit3, -6);
-  if (preg_match("/\((\d+)\)/",$rest,$m)) {
-   $tit3=trim(str_replace($m[0],"",$tit3));
-  }
 $sub_link ="from=".$from."&tip=".$tip."&sez=".$sez."&ep=".$ep."&imdb=".$imdbid."&title=".urlencode(fix_t($tit3))."&link=".$link_page."&ep_tit=".urlencode(fix_t($tit2))."&year=".$year;
 echo '<br>';
 echo '<table border="1" width="100%">';

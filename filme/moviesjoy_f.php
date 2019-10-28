@@ -182,7 +182,7 @@ $host=parse_url($l)['host'];
   curl_setopt($ch, CURLOPT_TIMEOUT, 15);
   $html = curl_exec($ch);
   curl_close($ch);
-
+//echo $html;
 $videos = explode('class="flw-item">', $html);
 unset($videos[0]);
 $videos = array_values($videos);

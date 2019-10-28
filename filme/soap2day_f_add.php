@@ -7,7 +7,7 @@ $mod=$_POST["mod"];
 $link=$_POST["link"];
 $title=$_POST["title"];
 $image=urldecode($_POST["image"]);
-$file=$base_fav."subsmovies_f_new.dat";
+$file=$base_fav."soap2day_f.dat";
 $arr=array();
 $h="";
 if (file_exists($file)) {

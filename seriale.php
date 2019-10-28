@@ -62,7 +62,7 @@ document.onkeypress =  zx;
 <TD width="25%"><a href="filme/serialeonlinesubtitrate_s.php?page=1&tip=release&title=serialeonlinesubtitrate&link=" target="_blank">serialeonlinesubtitrate</a></TD>
 </TR>
 <TR>
-<TD width="25%"><a href="filme/filmetop.php?page=1&tip=release&title=filmetop&link=" target="_blank">filmetop</a></TD>
+<TD width="25%"><a href="filme/filmserialonline_s.php?page=1&tip=release&title=filmserialonline&link=" target="_blank">filmserialonline</a></TD>
 <TD width="25%"><a href="filme/serialeonline.php?page=1&tip=release&title=serialeonline&link=" target="_blank">serialeonline</a></TD>
 <TD width="25%"><a href="filme/filmeserialeonline.php?page=1&tip=release&title=filmeserialeonline&link=" target="_blank">filmeserialeonline</a></TD>
 <TD width="25%"><a href="filme/rovideo.php?page=1&tip=release&title=rovideo&link=" target="_blank">rovideo</a></TD>
@@ -77,7 +77,7 @@ document.onkeypress =  zx;
 <TR>
 <TD width="25%"><a href="filme/seriestop_s.php?page=1&tip=release&title=seriestop&link=" target="_blank">seriestop</a></TD>
 <TD width="25%"><a href="filme/swatchseries_s.php?page=1&tip=release&title=swatchseries&link=" target="_blank">swatchseries</a></TD>
-<TD width="25%"><a href="filme/subsmovies_s.php?page=1&tip=release&title=subsmovies&link=" target="_blank">subsmovies</a></TD>
+<TD width="25%"><a href="filme/soap2day_s.php?page=1&tip=release&title=soap2day&link=" target="_blank">soap2day</a></TD>
 <TD width="25%"><a href="filme/cineplex_s_main.php" target="_blank">cineplex (cont)</a></TD>
 </TR>
 <TR>
@@ -91,6 +91,13 @@ document.onkeypress =  zx;
 <TD width="25%"><a href="filme/0123netflix_s.php?page=1&tip=release&title=0123netflix&link=" target="_blank">0123netflix</a></TD>
 <TD width="25%"><a href="filme/vipmovies_s.php?page=1&tip=release&title=vipmovies&link=" target="_blank">vipmovies</a></TD>
 <TD width="25%"><a href="filme/ffmovies_s.php">ffmovies</a></TD>
+<TD width="25%"><a href="filme/go2watch_s.php?page=1&tip=release&title=go2watch&link=" target="_blank">go2watch</a></TD>
+</TR>
+
+<TR>
+<TD width="25%"><a href="filme/subsmovies_s.php?page=1&tip=release&title=subsmovie&link=" target="_blank">subsmovies</a></TD>
+<TD width="25%"></TD>
+<TD width="25%"></TD>
 <TD width="25%"></TD>
 </TR>
 

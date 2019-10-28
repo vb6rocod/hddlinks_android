@@ -78,9 +78,9 @@ else
 <!--- desene si filme...-->
 <TR>
 <TD width="25%"><a href="filme/vezionline_main.php" target="_blank">vezionline</a></TD>
+<TD width="25%"><a href="filme/filmeserialehd_f.php?page=1&tip=release&title=filmeserialehd&link=" target="_blank">filmeserialehd</a></TD>
 <TD width="25%"><a href="filme/deseneledublate.php?page=1&tip=release&title=desenedublate&link=" target="_blank">deseneledublate</a></TD>
 <TD width="25%"><a href="filme/desenefaine_main.php" target="_blank">desenefaine.ro</a></TD>
-<TD width="25%"><a href="filme/gomovies_f.php?page=1&tip=release&title=gomovies&link=" target="_blank">gomovies</a></TD>
 </TR>
 <!-- straine -->
 <TR>
@@ -91,9 +91,9 @@ else
 </TR>
 <TR>
 <TD width="25%"><a href="filme/hdfull_f.php?page=1&tip=release&title=hdfull&link=" target="_blank">hdfull</a></TD>
-<TD width="25%"><a href="filme/subsmovies_f.php?page=1&tip=release&title=subsmovies&link=" target="_blank">subsmovies</a></TD>
 <TD width="25%"><a href="filme/cineplex_f_main.php" target="_blank">cineplex (cont)</a></TD>
 <TD width="25%"><a href="filme/vikv.php?page=1&tip=release&title=vikv&link=" target="_blank">vikv</a></TD>
+<TD width="25%"><a href="filme/lookmovie_f.php?page=1&tip=release&title=lookmovie&link=" target="_blank">lookmovie</a></TD>
 </TR>
 <TR>
 <TD width="25%"><a href="filme/onmovies_f.php?page=1&tip=release&title=onmovies&link=" target="_blank">onmovies</a></TD>
@@ -105,6 +105,13 @@ else
 <TR>
 <TD width="25%"><a href="filme/vipmovies_f.php?page=1&tip=release&title=vipmovies&link=" target="_blank">vipmovies</a></TD>
 <TD width="25%"><a href="filme/ffmovies_f.php">ffmovies</a></TD>
+<TD width="25%"><a href="filme/gomovies_f.php?page=1&tip=release&title=gomovies&link=" target="_blank">gomovies</a></TD>
+<TD width="25%"><a href="filme/soap2day_f.php?page=1&tip=release&title=soap2day&link=" target="_blank">soap2day</a></TD>
+</TR>
+
+<TR>
+<TD width="25%"><a href="filme/subsmovies_f.php?page=1&tip=release&title=subsmovie&link=" target="_blank">subsmovies</a></TD>
+<TD width="25%"></TD>
 <TD width="25%"></TD>
 <TD width="25%"></TD>
 </TR>

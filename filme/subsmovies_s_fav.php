@@ -7,7 +7,7 @@ $width="200px";
 $height="278px";
 $add_target="subsmovies_s_add.php";
 $fs_target="subsmovies_ep.php";
-$file=$base_fav."subsmovies_s.dat";
+$file=$base_fav."subsmovies_s_new.dat";
 ?>
 <html><head>
 <meta http-equiv="content-type" content="text/html; charset=UTF-8">

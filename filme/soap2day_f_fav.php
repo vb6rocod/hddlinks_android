@@ -5,9 +5,9 @@ $host=$_GET['host'];
 $page_title="Filme favorite";
 $width="200px";
 $height="278px";
-$add_target="subsmovies_f_add.php";
-$fs_target="subsmovies_fs.php";
-$file=$base_fav."subsmovies_f_new.dat";
+$add_target="soap2day_f_add.php";
+$fs_target="soap2day_fs.php";
+$file=$base_fav."soap2day_f.dat";
 ?>
 <html><head>
 <meta http-equiv="content-type" content="text/html; charset=UTF-8">

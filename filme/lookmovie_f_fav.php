@@ -5,9 +5,9 @@ $host=$_GET['host'];
 $page_title="Filme favorite";
 $width="200px";
 $height="278px";
-$add_target="subsmovies_f_add.php";
-$fs_target="subsmovies_fs.php";
-$file=$base_fav."subsmovies_f_new.dat";
+$add_target="lookmovie_f_add.php";
+$fs_target="lookmovie_fs.php";
+$file=$base_fav."lookmovie_f.dat";
 ?>
 <html><head>
 <meta http-equiv="content-type" content="text/html; charset=UTF-8">
@@ -125,7 +125,7 @@ foreach($arr as $key => $value) {
 	$link = urldecode($arr[$key]["link"]);
     $title = unfix_t(urldecode($key));
     $image=urldecode($arr[$key]["image"]);
-    $image=$host.parse_url($image)['path'];
+    //$image=$host.parse_url($image)['path'];
   $rest = substr($title, -6);
   if (preg_match("/\((\d+)\)/",$rest,$m)) {
    $year=$m[1];

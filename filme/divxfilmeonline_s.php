@@ -168,7 +168,7 @@ echo '</TR>'."\r\n";
 
 if($tip=="release") {
  if ($page>1)
-  $l ="https://divxfilmeonline.org/seriale-online/page/".$page."/";
+  $l ="https://divxfilmeonline.org/seriale-online/?page=".$page."";
  else
   $l="https://divxfilmeonline.org/seriale-online/";
 } else {

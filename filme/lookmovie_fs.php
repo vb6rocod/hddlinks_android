@@ -121,36 +121,10 @@ echo '<BR>';
 $ua = $_SERVER['HTTP_USER_AGENT'];
 $head=array('Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
 'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2');
-$l="https://isubsmovies.com/dbquery.php?action=loadPlayer";
-$head=array('Accept: */*',
-'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
-'Accept-Encoding: deflate',
-'X-Requested-With: XMLHttpRequest',
-'Origin: https://isubsmovies.com',
-'Connection: keep-alive',
-'Referer: '.$link.'');
+
+$l=$link;
 $r=array();
-  $ch = curl_init();
-  curl_setopt($ch, CURLOPT_URL, $l);
-  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-  curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 10.0; rv:63.0) Gecko/20100101 Firefox/63.0');
-  //curl_setopt($ch,CURLOPT_REFERER,"https://isubsmovies.com");
-  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
-  curl_setopt($ch, CURLOPT_ENCODING, "");
-  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-  curl_setopt($ch,CURLOPT_HTTPHEADER,$head);
-  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
-  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
-  $h2 = curl_exec($ch);
-  curl_close($ch);
-  //echo $h2;
-  //$z=json_decode($h2,1);
-  //print_r ($z);
-  $k=json_decode($h2,1)['Data']['Player'];
-  //print_r ($k);
-  $t1=explode('data-src="',$k);
-  $t2=explode('"',$t1[1]);
-  if ($t2[0]) $r[]=$t2[0];
+$r[]=$l;
 echo '<table border="1" width="100%">';
 echo '<TR><TD class="mp">Alegeti un server: Server curent:<label id="server">'.parse_url($r[0])['host'].'</label>
 <input type="hidden" id="file" value="'.urlencode($r[0]).'"></td></TR></TABLE>';

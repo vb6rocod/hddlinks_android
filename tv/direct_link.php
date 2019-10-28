@@ -458,6 +458,13 @@ if ($from=="flc") {
     $link=$r["hls"];
     //$link=$r["http"];
 }
+if ($from=="flc1") {
+  $token=file_get_contents($base_pass."tvplay.txt");
+  $l="http://hd4all.ml/d/flc.php?file=".$link."&s=".$token;
+  //echo $l;
+    $h=file_get_contents($l);
+    $link=trim($h);
+}
 if ($from=="digifree") {
   $l="http://balancer.digi24.ro/?scope=".$link."&type=hls&quality=hq&outputFormat=jsonp&callback=jsonp_callback_1";
     $ch = curl_init();

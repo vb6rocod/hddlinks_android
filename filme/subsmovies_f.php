@@ -17,7 +17,7 @@ $has_fav="yes";
 $has_search="yes";
 $has_add="yes";
 $has_fs="yes";
-$fav_target="subsmovies_f_fav.php?host=https://www1.subsmovies.nz";
+$fav_target="subsmovies_f_fav.php?host=https://isubsmovies.com";
 $add_target="subsmovies_f_add.php";
 $add_file="";
 $fs_target="subsmovies_fs.php";
@@ -165,12 +165,12 @@ if ($page==1) {
    echo '<TD class="nav" colspan="4" align="right"><a href="'.$prev.'">&nbsp;&lt;&lt;&nbsp;</a> | <a href="'.$next.'">&nbsp;&gt;&gt;&nbsp;</a></TD>'."\r\n";
 }
 echo '</TR>'."\r\n";
-
+//https://isubsmovies.com/movies/page/2
 if($tip=="release") {
-  $l="https://www1.subsmovies.nz/featured?page=".$page;
+  $l="https://isubsmovies.com/movies/page/".$page;
 } else {
-  $search=str_replace(" ","+",$tit);
-  $l="https://www1.subsmovies.nz/search/".$search;
+  $search=str_replace(" ","%20",$tit);
+  $l="https://isubsmovies.com/search/".$search;
 }
 $host=parse_url($l)['host'];
 $head=array('Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
@@ -178,7 +178,7 @@ $head=array('Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $l);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-  curl_setopt($ch,CURLOPT_REFERER,"https://www1.subsmovies.nz");
+  curl_setopt($ch,CURLOPT_REFERER,"https://isubsmovies.com");
   curl_setopt($ch,CURLOPT_HTTPHEADER,$head);
   curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 10.0; rv:55.0) Gecko/20100101 Firefox/55.0');
   curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
@@ -187,20 +187,21 @@ $head=array('Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q
   $html = curl_exec($ch);
   curl_close($ch);
 //echo $html;
-$videos = explode('watch?movie=', $html);
+$videos = explode('<div class="col-md-2 col', $html);
 unset($videos[0]);
 $videos = array_values($videos);
 foreach($videos as $video) {
-  $t1 = explode('"',$video);
-  $link = $t1[0];
-  if (strpos($link,"http") === false) $link="https://www1.subsmovies.nz/watch?movie=".$link;
-  $t1 = explode('album_holder_title">', $video);
+  $t1 = explode('href="',$video);
+  $t2 = explode('"',$t1[1]);
+  $link = $t2[0];
+  if (strpos($link,"http") === false) $link="https://isubsmovies.com".$link;
+  $t1 = explode('h2>', $video);
   $t2 = explode('<', $t1[1]);
   $title = $t2[0];
   $title=prep_tit($title);
   $t1 = explode('src="', $video);
   $t2 = explode('"', $t1[1]);
-  $image = "https://www1.subsmovies.nz/".$t2[0];
+  $image = "https://isubsmovies.com".$t2[0];
   $rest = substr($title, -6);
   if (preg_match("/\((\d+)\)/",$rest,$m)) {
    $year=$m[1];
@@ -209,7 +210,9 @@ foreach($videos as $video) {
    $year="";
    $tit_imdb=$title;
   }
-
+  $t1=explode('class="year">',$video);
+  $t2=explode('<',$t1[1]);
+  $year=$t2[0];
   $imdb="";
   $link_f=$fs_target.'?tip=movie&link='.urlencode($link).'&title='.urlencode(fix_t($title)).'&image='.$image."&sez=&ep=&ep_tit=&year=".$year;
   if ($title && strpos($link,"tv_serie") === false) {

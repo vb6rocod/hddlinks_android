@@ -748,6 +748,7 @@ $l="https://tvhub.org/wp-content/themes/grifus/loop/field-ajax.php";
 //$l="https://tvhub.org/wp-content/themes/grifus/includes/single/field-ajax.php";
 $l="https://tvhub.org/wp-content/themes/grifus/includes/single/field-ajax.php";
 $l="https://tvhub.org/wp-content/themes/grifus/loop/field2-ajax.php";
+$l="https://".$host."/wp-content/themes/grifus/loop/field2-ajax.php";
 $post="post_id=".$id;
 $t1=explode('url:"',$out);
 $t2=explode('"',$t1[1]);
@@ -951,7 +952,7 @@ foreach($videos as $video) {
   curl_close ($ch);
  $html .=$h;
 }
-//echo $html;
+//echo $h;
 } elseif (strpos($filelink,"filmeonline2016.biz") !== false || strpos($filelink,"filmeonline.st") !== false) {
   $ua=$_SERVER['HTTP_USER_AGENT'];
   $ch = curl_init($filelink);
@@ -1116,6 +1117,65 @@ foreach($videos as $video) {
   $html = curl_exec($ch);
   curl_close ($ch);
   $html .=urldecode(str_replace("@","%",$html));
+} elseif (strpos($filelink,"filmeserialehd.ro") !== false) {
+  $ua = $_SERVER['HTTP_USER_AGENT'];
+  $ch = curl_init($filelink);
+  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
+  curl_setopt($ch,CURLOPT_REFERER,"https://filmeserialehd.ro");
+  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER  ,1);  // RETURN THE CONTENTS OF THE CALL
+  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+  $html = curl_exec($ch);
+  curl_close ($ch);
+  $t1=explode('data-id="',$html);
+  $t2=explode('"',$t1[1]);
+  $id=$t2[0];
+  $l="https://filmeserialehd.ro/wp-content/themes/serialenoi/field-ajax.php";
+  $post="post_id=".$id;
+  $ch = curl_init($l);
+  curl_setopt($ch, CURLOPT_USERAGENT,  $ua);
+  curl_setopt($ch,CURLOPT_REFERER,"https://filmeserialehd.ro");
+  curl_setopt ($ch, CURLOPT_POST, 1);
+  curl_setopt ($ch, CURLOPT_POSTFIELDS, $post);
+  //curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER  ,1);  // RETURN THE CONTENTS OF THE CALL
+  //curl_setopt($ch, CURLOPT_HEADER, true);
+  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+  $h = curl_exec($ch);
+  curl_close ($ch);
+ $html .=$h;
+} elseif (strpos($filelink,"filmserialonline.org") !== false) {
+  $ua = $_SERVER['HTTP_USER_AGENT'];
+  $ch = curl_init();
+  curl_setopt($ch, CURLOPT_URL, $filelink);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+  curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 10.0; rv:55.0) Gecko/20100101 Firefox/55.0');
+  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+  curl_setopt($ch, CURLOPT_ENCODING, "");
+  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+  $h = curl_exec($ch);
+  curl_close($ch);
+  $t1=explode('iframe src="',$h);
+  $t2=explode('"',$t1[1]);
+  $l="https:".$t2[0];
+  $ch = curl_init();
+  curl_setopt($ch, CURLOPT_URL, $l);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+  curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 10.0; rv:55.0) Gecko/20100101 Firefox/55.0');
+  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+  curl_setopt($ch, CURLOPT_ENCODING, "");
+  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+  $html = curl_exec($ch);
+  curl_close($ch);
 } elseif (preg_match("/(waaw1?|netu|hqq)\./",$filelink)) {
   $html='"'.$filelink.'"';
 } elseif (strpos($filelink,"hindipix.in") !== false) {
@@ -1172,7 +1232,7 @@ $s=$s."fastplay\.cc|watchers\.to|fastplay\.to";
 $s=$s."|trilulilu|proplayer\/playlist-controller.php|viki\.com|modovideo\.com|roshare|rosharing|ishared\.eu|";
 $s=$s."stagevu\.com|vidup\.me|vidup\.io";
 $s=$s."|filebox\.com|glumbouploads\.com|uploadc\.com|sharefiles4u\.com|zixshare\.com|uploadboost\.com|";
-$s=$s."hqq\.tv|hqq\.watch|waaw1?\.|hindipix\.in|vidtodo\.com|vshare\.eu|bit\.ly";
+$s=$s."hqq\.tv|hqq\.watch|waaw1?\.|hindipix\.in|pajalusta\.club|vidtodo\.com|vshare\.eu|bit\.ly";
 $s=$s."|nowvideo\.eu|nowvideo\.co|vreer\.com|180upload\.com|dailymotion\.com|nosvideo\.com|vidbull\.com|";
 $s=$s."purevid\.com|videobam\.com|streamcloud\.eu|donevideo\.com|upafile\.com|docs\.google|mail\.ru|";
 $s=$s."superweb|moviki\.ru|entervideos\.com";
@@ -1618,8 +1678,8 @@ $server = parse_url($link_f[$k])["host"];
 if (strpos($filelink,"blogspot.ro") !== false && (strpos($filelink,"sezonul") !== false) && $n>5) $server=$server." - Episodul ".($k+1);
  if ($flash != "mp")  {
    //echo $link_f[$k];
-   if (strpos($link_f[$k],"hqq.") !== false || strpos($link_f[$k],"waaw") !== false) {
-      $pattern = "@(?:\/\/|\.)((?:waaw1?|netu|hqq)\.(?:tv|watch))\/(?:watch_video\.php\?v|.+?vid)=([a-zA-Z0-9]+)@";
+   if (strpos($link_f[$k],"hqq.") !== false || strpos($link_f[$k],"waaw") !== false || strpos($link_f[$k],"pajalusta") !== false) {
+      $pattern = "@(?:\/\/|\.)((?:waaw1?|netu|hqq|pajalusta)\.(?:tv|watch|club))\/(?:watch_video\.php\?v|.+?vid)=([a-zA-Z0-9]+)@";
       if (preg_match($pattern,$link_f[$k],$m)) {
          $vid=$m[2];
          $link_f[$k]="http://hqq.watch/player/embed_player.php?vid=".$vid."&autoplay=no";
@@ -1644,8 +1704,8 @@ if (strpos($filelink,"blogspot.ro") !== false && (strpos($filelink,"sezonul") !=
    else
     echo '<TR><td class="link"><a href="link1.php?file='.urlencode($link_f[$k]).','.urlencode($pg).'" target="_blank">'.$server.'</a></TD></TR>';
   } else {  //== "mp"
-   if (strpos($link_f[$k],"hqq.") !== false  || strpos($link_f[$k],"waaw") !== false) {
-      $pattern = "@(?:\/\/|\.)((?:waaw1?|netu|hqq)\.(?:tv|watch))\/(?:watch_video\.php\?v|.+?vid)=([a-zA-Z0-9]+)@";
+   if (strpos($link_f[$k],"hqq.") !== false  || strpos($link_f[$k],"waaw") !== false  || strpos($link_f[$k],"pajalusta") !== false) {
+      $pattern = "@(?:\/\/|\.)((?:waaw1?|netu|hqq|pajalusta)\.(?:tv|watch|club))\/(?:watch_video\.php\?v|.+?vid)=([a-zA-Z0-9]+)@";
       if (preg_match($pattern,$link_f[$k],$m)) {
          $vid=$m[2];
          $link_f[$k]="http://hqq.watch/player/embed_player.php?vid=".$vid."&autoplay=no";

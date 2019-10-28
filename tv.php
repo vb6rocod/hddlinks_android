@@ -102,7 +102,7 @@ include ("common.php");
 if (file_exists($base_fav."flc_c.txt")) {
   echo '<TR>';
   echo '<TD width="25%"><a href="tv/flc.php" target="_blank">Folclor TV</a></TD>';
-  echo '<TD width="25%"></TD>';
+  echo '<TD width="25%"><a href="tv/flc1.php" target="_blank">Folclor TV (1)</a></TD>';
   echo '<TD width="25%"></TD>';
   echo '<TD width="25%"></TD>';
   echo '</TR>';

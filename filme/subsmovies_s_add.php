@@ -13,7 +13,7 @@ $link=$_POST["link"];
 $title=$_POST["title"];
 $image=urldecode($_POST["image"]);
 
-$file=$base_fav."subsmovies_s.dat";
+$file=$base_fav."subsmovies_s_new.dat";
 $arr=array();
 $h="";
 if (file_exists($file)) {

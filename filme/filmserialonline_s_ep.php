@@ -10,7 +10,7 @@ $year=$_GET['year'];
 /* ======================================= */
 $width="200px";
 $height="100px";
-$fs_target="subsmovies_fs.php";
+$fs_target="filme_link.php";
 $has_img="no";
 ?>
 <html>
@@ -30,32 +30,30 @@ function str_between($string, $start, $end){
 	return substr($string,$ini,$len);
 }
 echo '<h2>'.$tit.'</h2>';
-$head=array('Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
-'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2');
-$requestLink=$link;
-
-  $ch = curl_init($requestLink);
-  curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows; U; Windows NT 6.1; en-US; rv:1.9.1.2) Gecko/20090729 Firefox/3.5.2 GTB5');
-  curl_setopt($ch,CURLOPT_REFERER,"https://isubsmovies.com");
-  curl_setopt($ch,CURLOPT_HTTPHEADER,$head);
+$ua = $_SERVER['HTTP_USER_AGENT'];
+  $ch = curl_init();
+  curl_setopt($ch, CURLOPT_URL, $link);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
   curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
-  curl_setopt($ch, CURLOPT_RETURNTRANSFER  ,1);  // RETURN THE CONTENTS OF THE CALL
+  curl_setopt($ch,CURLOPT_REFERER,"https://www.filmserialonline.org");
   curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
   curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
   curl_setopt($ch, CURLOPT_TIMEOUT, 15);
   $h = curl_exec($ch);
-  curl_close ($ch);
-
+  curl_close($ch);
 
 $n=0;
-$videos = explode("th>Season", $h);
+$videos = explode('span class="se-t', $h);
 $sezoane=array();
 unset($videos[0]);
-//$videos = array_values($videos);
-$videos = array_reverse($videos);
+$videos = array_values($videos);
+//$videos = array_reverse($videos);
 foreach($videos as $video) {
-  preg_match("/\d+/",$video,$m);
-  $sezoane[]=$m[0];
+  $t1=explode('>',$video);
+  $t2=explode("<",$t1[1]);
+  if (is_numeric($t2[0]))
+  $sezoane[]=trim($t2[0]);
 }
 echo '<table border="1" width="100%">'."\n\r";
 
@@ -79,37 +77,40 @@ if ($p < 10 && $p > 0 && $k > 9) {
 echo '</TABLE>';
 
 foreach($videos as $video) {
-  preg_match("/\d+/",$video,$m);
-  $season=trim($m[0]);
+  $t1=explode('>',$video);
+  $t2=explode("<",$t1[1]);
+  $season=trim($t2[0]);
   $sez = $season;
+  if (is_numeric($sez))  {
   echo '<table border="1" width="100%">'."\n\r";
   echo '<TR><td class="sez" style="color:black;background-color:#0a6996;color:#64c8ff;text-align:center" colspan="3">Sezonul '.($sez).'</TD></TR>';
-
-$vids = explode('href="/episode', $video);
-unset($vids[0]);
-$vids = array_values($vids);
-//$vids = array_reverse($vids);
-$n=0;
-foreach($vids as $vid) {
-  $t1=explode('"',$vid);
-  $link="https://isubsmovies.com/episode".$t1[0];
-  $t0=explode('>',$vid);
-  $t1=explode('<',$t0[1]);
-  $title=trim($t1[0]);
-  $title=str_replace("&nbsp;"," ",$title);
-  $title=prep_tit($title);
-  $img_ep=$image;
+  $n=0;
+  $vids = explode('<li', $video);
+  unset($vids[0]);
+  $vids = array_values($vids);
+  //$vids = array_reverse($vids);
+  foreach($vids as $vid) {
+  $img_ep="";
   $episod="";
-  $ep_title="";
-  if (preg_match("/E(\d+)/",$title,$m)) {    //Brother E1
+  $ep_tit="";
+  $t1=explode('href="',$vid);
+  $t2=explode('"',$t1[1]);
+  $link=$t2[0];
+  preg_match("/sezonul\-\d+\-episodul\-(\d+)/",$link,$m);
   $episod=$m[1];
-  $ep_tit=trim(preg_replace("/E(\d+)/","",$title));
+  $img_ep="";
+  $t2=explode('>',$t1[1]);
+  $t3=explode('<',$t2[1]);
+  $title=$t3[0];
+  $title=str_replace("&nbsp;"," ",$title);
+  $ep_tit=prep_tit($title);
   if ($ep_tit)
    $ep_tit_d=$season."x".$episod." ".$ep_tit;
   else
    $ep_tit_d=$season."x".$episod;
-  }
-  $link_f=$fs_target.'?tip=series&link='.urlencode($link).'&title='.urlencode(fix_t($tit)).'&image='.$img_ep."&sez=".$season."&ep=".$episod."&ep_tit=".urlencode(fix_t($ep_tit))."&year=".$year;
+  $tit_link = $tit." ".$ep_tit_d;
+  if ($episod) {
+  $link_f=$fs_target.'?file='.urlencode($link).'&title='.urlencode(fix_t($tit_link));
    if ($n == 0) echo "<TR>"."\n\r";
    if ($has_img == "yes")
     echo '<TD class="mp" width="33%">'.'<a id="sez'.$sez.'" href="'.$link_f.'" target="_blank"><img width="'.$width.'" height="'.$height.'" src="'.$img_ep.'"><BR>'.$ep_tit_d.'</a></TD>'."\r\n";
@@ -120,6 +121,7 @@ foreach($vids as $vid) {
     echo '</TR>'."\n\r";
     $n=0;
    }
+   }
 }  
   if ($n < 3 && $n > 0) {
     for ($k=0;$k<3-$n;$k++) {
@@ -128,6 +130,7 @@ foreach($vids as $vid) {
     echo '</TR>'."\r\n";
   }
 echo '</table>';
+}
 }
 ?>
 </body>

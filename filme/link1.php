@@ -1668,6 +1668,99 @@ $head=array('Accept: video/webm,video/ogg,video/*;q=0.9,application/ogg;q=0.7,au
   //die();
  if (preg_match_all ("/track kind\=\'captions\' src\=\'(https\:\/\/cdn\.flixtor\.ac\/embed\/subs\?id=\d+\&lang\=English)\'/ms",$h3,$s))
   $srt=$s[1][0];
+} elseif (strpos($filelink,"soap2day.") !== false) {
+//$filelink="https://soap2day.com/movie_aTo2MzIzOw.html";
+  preg_match("/(movie\_|episode\_)(.*?)\.html/",$filelink,$m);
+  //print_r ($m);
+  $id=$m[2];
+  if (preg_match("/movie\_/",$filelink))
+   $l="https://soap2day.com/home/index/GetMInfoAjax";
+  else
+   $l="https://soap2day.com/home/index/GetEInfoAjax";
+  $post="pass=".$id;
+  $head=array('Accept: application/json, text/javascript, */*; q=0.01',
+  'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
+  'Accept-Encoding: deflate',
+  'Content-Type: application/x-www-form-urlencoded; charset=UTF-8',
+  'X-Requested-With: XMLHttpRequest',
+  'Content-Length: '.strlen($post).'',
+  'Connection: keep-alive',
+  'Referer: https://soap2day.com/movie_aTo2MzIzOw.html');
+  $ua = $_SERVER['HTTP_USER_AGENT'];
+  $ch = curl_init();
+  curl_setopt($ch, CURLOPT_URL, $l);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
+  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+  curl_setopt($ch, CURLOPT_HTTPHEADER, $head);
+  curl_setopt ($ch, CURLOPT_POST, 1);
+  curl_setopt ($ch, CURLOPT_POSTFIELDS, $post);
+  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+  $h = curl_exec($ch);
+  curl_close($ch);
+  $r=json_decode(json_decode($h,1),1);
+  //print_r ($r);
+  $link=$r['val'];
+  if ($r['subs'][0]['path'])
+    $srt = "https://soap2day.com".$r['subs'][0]['path'];
+  //die();
+} elseif (strpos($filelink,"lookmovie.ag") !== false) {
+  $ua = $_SERVER['HTTP_USER_AGENT'];
+  $ch = curl_init();
+  curl_setopt($ch, CURLOPT_URL, $filelink);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+  curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
+  $h = curl_exec($ch);
+  curl_close($ch);
+  if (preg_match_all("/track src=\"(\S+)\" kind=\"subtitles\" label=\"(.*?)\"/mei",$h,$m)) {
+   foreach ($m[2] as $key => $value)
+    if ($value == "English") {
+     $srt=$m[1][$key];
+     break;
+    }
+ }
+  $t1=explode("id_movie='",$h);
+  $t2=explode("'",$t1[1]);
+  $id=$t2[0];
+  $l="https://lookmovie.ag/api/v1/movies/storage/?id_movie=".$id."&token=&sk=null&step=2";
+  $ch = curl_init();
+  curl_setopt($ch, CURLOPT_URL, $l);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
+  curl_setopt($ch, CURLOPT_REFERER, "https://lookmovie.ag");
+  curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+  $h = curl_exec($ch);
+  curl_close($ch);
+  $r=json_decode($h,1);
+  $time=$r['data']['expires'];
+  $token=$r['data']['accessToken'];
+  $l="https://lookmovie.ag/manifests/movies/json/".$id."/".$time."/".$token."/master.m3u8?extClient=true";
+  $ch = curl_init();
+  curl_setopt($ch, CURLOPT_URL, $l);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
+  curl_setopt($ch, CURLOPT_REFERER, "https://lookmovie.ag");
+  curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+  $h = curl_exec($ch);
+  curl_close($ch);
+  $r=json_decode($h,1);
+  if (isset($r['720p']))
+   $link=$r['720p'];
+  elseif (isset($r['480p']))
+   $link=$r['480p'];
+  elseif (isset($r['360p']))
+   $link=$r['360p'];
+  else
+   $link="";
 } elseif (strpos($filelink,"flowyourvideo") !== false) {
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $filelink);
@@ -3420,7 +3513,7 @@ require_once("JavaScriptUnpacker.php");
   if (strpos($srt,"http") === false) $srt="https:".$srt;
   }
   if (strpos($srt,"empty") !== false) $srt="";
-} elseif (strpos($filelink,"hqq.tv") !== false || strpos($filelink,"hqq.watch") !== false || strpos($filelink,"waaw.tv") !== false || strpos($filelink,"waaw1.tv") !== false  || strpos($filelink,"hindipix.in") !== false) {
+} elseif (strpos($filelink,"hqq.tv") !== false || strpos($filelink,"hqq.watch") !== false || strpos($filelink,"waaw.tv") !== false || strpos($filelink,"waaw1.tv") !== false  || strpos($filelink,"hindipix.in") !== false  || strpos($filelink,"pajalusta.") !== false) {
 //echo $filelink;
   //if (!file_exists($base_script."filme/result.txt")) die();
     function decodeUN($a) {
@@ -5201,7 +5294,7 @@ header("Location: $movie");
   header("Location: $c");
 } elseif ($flash == "mp") {
 $hed = "headers="."{'Cookie: approve=1'}";
-if (!preg_match("/hqq\.|lavacdn\.xyz|mcloud\.to|putload\.|thevideobee\.|flixtor\.|0123netflix|mangovideo|waaw1?/",$filelink)) // HW=1;SW=2;HW+=4
+if (!preg_match("/hqq\.|lavacdn\.xyz|mcloud\.to|putload\.|thevideobee\.|flixtor\.|0123netflix|mangovideo|waaw1?|lookmovie\.ag/",$filelink)) // HW=1;SW=2;HW+=4
 $c="intent:".$movie."#Intent;type=video/mp4;package=com.mxtech.videoplayer.".$mx.";S.title=".urlencode($pg).";b.decode_mode=1;end";
 //$c="intent:".$movie."#Intent;type=video/mp4;package=com.mxtech.videoplayer.".$mx.";S.title=".urlencode($pg).";end";
 //$c="intent:".$movie."#Intent;type=video/mp4;S.title=".urlencode($pg).";end";

@@ -5,9 +5,9 @@ $host=$_GET['host'];
 $page_title="Seriale favorite";
 $width="200px";
 $height="278px";
-$add_target="filmetop_add.php";
-$fs_target="filmetop_ep.php";
-$file=$base_fav."filmetop.dat";
+$add_target="go2watch_s_add.php";
+$fs_target="go2watch_s_ep.php";
+$file=$base_fav."go2watch_s.dat";
 ?>
 <html><head>
 <meta http-equiv="content-type" content="text/html; charset=UTF-8">
@@ -126,7 +126,7 @@ foreach($arr as $key => $value) {
 	$link = urldecode($arr[$key]["link"]);
     $title = unfix_t(urldecode($key));
     $image=urldecode($arr[$key]["image"]);
-    //$image=$host.parse_url($image)['path'];
+    $image=$host.parse_url($image)['path'];
     $year="";
     $link=$host.parse_url($link)['path'];
     $link_f=$fs_target.'?tip=series&link='.urlencode($link).'&title='.urlencode(fix_t($title)).'&image='.$image."&sez=&ep=&ep_tit=&year=".$year;
