@@ -103,7 +103,7 @@ function openlink(link) {
   }
 }
 function changeserver(s,t) {
-  document.getElementById('server').innerHTML = s;
+  document.getElementById('server').innerHTML = decodeURIComponent(s.replace(/\+/g, ' '));;
   document.getElementById('file').value=t;
 }
    function zx(e){
@@ -194,7 +194,7 @@ for ($i=0;$i<$k;$i++) {
   if (preg_match($indirect,$openload)) {
   echo '<TD class="mp"><a href="filme_link.php?file='.urlencode($c_link).'&title='.urlencode(unfix_t($tit.$tit2)).'" target="_blank">'.$openload.'</a></td>';
   } else
-  echo '<TD class="mp"><a id="myLink" href="#" onclick="changeserver('."'".$openload."','".urlencode($c_link)."'".');return false;">'.$openload.'</a></td>';
+  echo '<TD class="mp"><a id="myLink" href="#" onclick="changeserver('."'".urlencode($openload)."','".urlencode($c_link)."'".');return false;">'.$openload.'</a></td>';
   $x++;
   if ($x==2) {
     echo '</TR>';

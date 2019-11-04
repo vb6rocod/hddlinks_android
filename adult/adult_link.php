@@ -106,7 +106,7 @@ if (strpos($l,"porndbs.com") !== false) {
   $h = curl_exec($ch);
   curl_close($ch);
   $host=parse_url($l)["host"];
-  echo $host;
+  //echo $host;
 }
 if (!$h) $host="";
 /* serveres */

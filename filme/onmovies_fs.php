@@ -175,6 +175,7 @@ echo '<TR><TD class="mp">Alegeti un server: Server curent:<label id="server">'.p
 echo '<table border="1" width="100%"><TR>';
 $k=count($r);
 $x=0;
+//print_r ($r);
 for ($i=0;$i<$k;$i++) {
   if ($x==0) echo '<TR>';
   $c_link=$r[$i];

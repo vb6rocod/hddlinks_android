@@ -44,11 +44,11 @@ $ua = $_SERVER['HTTP_USER_AGENT'];
   curl_close($ch);
 
 $n=0;
-$videos = explode('span class="se-t', $h);
+$videos = explode("<span class='se-t", $h);
 $sezoane=array();
 unset($videos[0]);
-$videos = array_values($videos);
-//$videos = array_reverse($videos);
+//$videos = array_values($videos);
+$videos = array_reverse($videos);
 foreach($videos as $video) {
   $t1=explode('>',$video);
   $t2=explode('<',$t1[1]);
@@ -83,28 +83,28 @@ foreach($videos as $video) {
   echo '<table border="1" width="100%">'."\n\r";
   echo '<TR><td class="sez" style="color:black;background-color:#0a6996;color:#64c8ff;text-align:center" colspan="3">Sezonul '.($sez).'</TD></TR>';
   $n=0;
-  $vids = explode('class="imagen">', $video);
+  $vids = explode("div class='imagen", $video);
   unset($vids[0]);
-  $vids = array_values($vids);
-  //$vids = array_reverse($vids);
+  //$vids = array_values($vids);
+  $vids = array_reverse($vids);
   foreach($vids as $vid) {
   $img_ep="";
   $episod="";
   $ep_tit="";
   $vid=str_replace('&quot;','"',$vid);
-  $t1=explode('class="numerando">',$vid);
+  $t1=explode("class='numerando'>",$vid);
   $t2=explode('<',$t1[1]);
   preg_match("/\d+\s+\-\s+(\d+)/",$t2[0],$m);
 
   $episod=$m[1];;
-  $t1=explode('src="',$vid);
-  $t2=explode('"',$t1[1]);
+  $t1=explode("src='",$vid);
+  $t2=explode("'",$t1[1]);
   $img_ep=$t2[0];
 
-  $t1=explode('href="',$vid);
-  $t2=explode('"',$t1[1]);
+  $t1=explode("href='",$vid);
+  $t2=explode("'",$t1[1]);
   $link=$t2[0];
-  $t3=explode(">",$t1[2]);
+  $t3=explode(">",$t1[1]);
   $t4=explode('<',$t3[1]);
   $title=$t4[0];
   $title=str_replace("&nbsp;"," ",$title);

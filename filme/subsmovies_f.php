@@ -5,6 +5,7 @@ function str_between($string, $start, $end){
 	if ($ini == 0) return ""; $ini += strlen($start); $len = strpos($string,$end,$ini) - $ini;
 	return substr($string,$ini,$len);
 }
+//echo dirname($_SERVER['HTTP_REFERER']);
 include ("../common.php");
 $page = $_GET["page"];
 $tip= $_GET["tip"];
