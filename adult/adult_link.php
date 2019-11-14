@@ -65,6 +65,7 @@ if (isset($_POST["link"])) {
   $title = unfix_t(urldecode($_GET["title"]));
 }
 $l=trim($l);
+//echo $l;
 $ua="Mozilla/5.0 (Windows NT 10.0; WOW64; rv:46.0) Gecko/20100101 Firefox/46.0";
 $host=parse_url($l)["host"];
 $out="";
@@ -224,6 +225,10 @@ if (preg_match("/4tube\.com/",$host)) {
   $t2=explode('"',$t1[1]);
   $out=$t2[0];
 } else if (preg_match("/befuck\.com/",$host)) {
+  $t1=explode('source src="',$h);
+  $t2=explode('"',$t1[1]);
+  $out=$t2[0];
+} else if (preg_match("/bitporno\.com/",$host)) {
   $t1=explode('source src="',$h);
   $t2=explode('"',$t1[1]);
   $out=$t2[0];
@@ -540,6 +545,7 @@ if (preg_match("/4tube\.com/",$host)) {
      $maxs = array_keys($m[2], max($m[2]));
      $out=$m[1][$maxs[0]];
      $out=trim(str_replace("\\","",$out));
+     //echo $out;
      if (strpos($out,"http") === false) $out="https://www.pornrox.com".$out;
       $ch = curl_init();
       curl_setopt($ch, CURLOPT_URL, $out);
@@ -556,7 +562,8 @@ if (preg_match("/4tube\.com/",$host)) {
       curl_close($ch);
       $t1=explode("Location:",$ret);
       $t2=explode("\n",$t1[1]);
-      $out="https:".trim($t2[0]);
+      $out=trim($t2[0]);
+      if (strpos($out,"http") === false && $out) $out="https:".trim($t2[0]);
  }
 } else if (preg_match("/redtube\.com/",$host)) {
   if (preg_match_all("/videoUrl\"\:\"(.*?)\"/",$h,$m)) {
@@ -768,7 +775,7 @@ jwplayer("container").setup({
 });
 player.addButton(
   //This portion is what designates the graphic used for the button
-  "https://developer.jwplayer.com/jw-player/demos/basic/add-download-button/assets/download.svg",
+  "../download.svg",
   //This portion determines the text that appears as a tooltip
   "Download Video",
   //This portion designates the functionality of the button itself

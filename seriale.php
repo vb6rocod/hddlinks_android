@@ -90,7 +90,7 @@ document.onkeypress =  zx;
 <TR>
 <TD width="25%"><a href="filme/0123netflix_s.php?page=1&tip=release&title=0123netflix&link=" target="_blank">0123netflix</a></TD>
 <TD width="25%"><a href="filme/vipmovies_s.php?page=1&tip=release&title=vipmovies&link=" target="_blank">vipmovies</a></TD>
-<TD width="25%"><a href="filme/ffmovies_s.php">ffmovies</a></TD>
+<TD width="25%"><a href="filme/ffmovies_ss.php?page=1&tip=release&title=ffmoviess&link=" target="_blank">ffmovies</a></TD>
 <TD width="25%"><a href="filme/go2watch_s.php?page=1&tip=release&title=go2watch&link=" target="_blank">go2watch</a></TD>
 </TR>
 
@@ -105,6 +105,14 @@ document.onkeypress =  zx;
 if (file_exists($base_pass."tvplay.txt")) {
 echo '<TR>';
 echo '<TD width="25%"><a href="filme/cineplex_s_main1.php" target="_blank">cineplex</a></TD>';
+echo '<TD width="25%"></TD>';
+echo '<TD width="25%"></TD>';
+echo '<TD width="25%"></TD>';
+echo '</TR>';
+}
+if (file_exists($base_pass."debug.txt")) {
+echo '<TR>';
+echo '<TD width="25%"><a href="filme/archive_ep.php?title='.urlencode("Planet of the Apes").'&link=https://archive.org/embed/PlanetOfTheApesTVSeries&sezon=1&imdb=tt0071033" target="_blank">Planet of the Apes</a></TD>';
 echo '<TD width="25%"></TD>';
 echo '<TD width="25%"></TD>';
 echo '<TD width="25%"></TD>';

@@ -525,7 +525,7 @@ jwplayer("container").setup({
 });
 player.addButton(
   //This portion is what designates the graphic used for the button
-  "https://developer.jwplayer.com/jw-player/demos/basic/add-download-button/assets/download.svg",
+  "../download.svg",
   //This portion determines the text that appears as a tooltip
   "Download Video",
   //This portion designates the functionality of the button itself

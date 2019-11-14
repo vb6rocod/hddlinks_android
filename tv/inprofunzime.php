@@ -82,7 +82,7 @@ $link="http://inprofunzime.md/emisiuni/shows/in-profunzime-cu-lorena-bogza/";
 $link="http://inprofunzime.protv.md/emisiuni/shows/in-profunzime-cu-lorena-bogza/";
 //http://inpro.protv.md/emisiuni
 $link="http://inpro.protv.md/api/category-page";
-$link="http://inprofunzime.protv.md/api/category-page";
+$link="https://inprofunzime.protv.md/api/category-page";
 $post="link=emisiuni&page=1";
 $head=array('Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
 'Accept-Encoding: deflate',

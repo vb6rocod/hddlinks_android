@@ -119,6 +119,7 @@ function off() {
 echo '<h2>'.$tit.$tit2.'</H2>';
 echo '<BR>';
 //echo $link;
+//$link="https://europixhd.io/svop/srv2?search=dwm-angel-s01e04";
 $r=array();
 $ua = $_SERVER['HTTP_USER_AGENT'];
   $ch = curl_init($link);
@@ -135,7 +136,7 @@ $ua = $_SERVER['HTTP_USER_AGENT'];
 $h=urldecode($h);
 $h= preg_replace('/\\\x([a-f0-9]+)/mei',"chr(0x\\1)",$h);
 $h=str_replace("\n","",$h);
-
+//echo $h;
 if (preg_match("/var\s+_0x[a-z0-9A-Z]+\s*\=\s*\[((\".*?\"\,?)+)\]/ms", $h, $m)) {
 $e="\$c0=array(".$m[1].");";
 eval ($e);
@@ -144,6 +145,10 @@ if ($c0[0])
 else
   $ep_index=$ep;
 $link1 = $c0[$ep_index];
+//echo $link1;
+if (strpos($link1,"http") === false) {
+  $link1="https://europixhd.io".str_replace("../../","/",$link1);
+}
 if (strpos($link1,"europix") !== false && strpos($link1,"http") !== false) {
 $ch = curl_init();
 curl_setopt($ch, CURLOPT_URL, $link1);
@@ -186,6 +191,10 @@ if ($c0[0])
 else
   $ep_index=$ep;
 $link1 = $c0[$ep_index];
+//echo $link1;
+if (strpos($link1,"http") === false) {
+  $link1="https://europixhd.io".str_replace("../../","/",$link1);
+}
 if (strpos($link1,"europix") !== false && strpos($link1,"http") !== false) {
 $ch = curl_init();
 curl_setopt($ch, CURLOPT_URL, $link1);

@@ -157,7 +157,7 @@ $head=array('Accept: application/json, text/javascript, */*; q=0.01',
   curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
   //curl_setopt($ch, CURLOPT_HEADER,1);
   curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie);
-  //curl_setopt($ch, CURLOPT_COOKIEJAR, $cookie);
+  curl_setopt($ch, CURLOPT_COOKIEJAR, $cookie);
   curl_setopt($ch, CURLOPT_HTTPHEADER, $head);
   curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
   curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
@@ -304,10 +304,6 @@ else
  else
    echo '<TD align="center" colspan="4"><a id="viz" onclick="'."openlink('".$openlink."')".'"'." style='cursor:pointer;'>".'VIZIONEAZA !</a></td>';
 echo '</tr>';
-echo '<TR><TD class="mp" align="center" colspan="2"><span id="span">'.$msg_captcha.'</span></TD>
-<TD class="mp" align="center" colspan="1"><a href="ffmovies_f1.php">Renew token...</a></TD>
-<TD class="mp" align="center" colspan="1"><a href="javascript:window.location.reload(true)">Reload</a></TD>
-</TR>';
 echo '</table>';
 echo '<br>
 <table border="0px" width="100%">
@@ -317,26 +313,5 @@ echo '<br>
   <div id="text">Wait....</div>
 </div>
 <BR>
-
-<script type="text/javascript">
-var span = document.getElementById("span");
-function time() {
-var link="../../cookie/max_time_ffmovies.txt?rand=" + Math.random();
-$.get( link, function( data ) {
-  time_now=Math.floor(Date.now() / 1000);
-  time_max=data;
-  dif = time_max-time_now;
-  if (dif > 0) {
-  var minutes = Math.floor(dif / 60);
-  var seconds = dif - minutes * 60;
-  if (seconds < 10) seconds="0" + seconds;
-  span.textContent = "Token expira in " + minutes + ":" + seconds + " min.";
-  } else {
-    span.textContent = "Token Expirat";
-  }
-});
-}
-setInterval(time, 1000);
-</script>
 </body>
 </html>';

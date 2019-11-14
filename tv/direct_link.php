@@ -332,8 +332,8 @@ if ($from=="profunzime") {
     $link="";
 }
 if ($from=="protvmd") {
-$l="http://protv.md/api/article-page";
-$post="article_id=-".$link;
+$l="https://protv.md/api/article-page";
+$post="article_id=".$link;
 $head=array('Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
 'Accept-Encoding: deflate',
 'Referer: http://inpro.protv.md/emisiuni',
@@ -1202,7 +1202,7 @@ jwplayer("container").setup({
 });
 player.addButton(
   //This portion is what designates the graphic used for the button
-  "https://developer.jwplayer.com/jw-player/demos/basic/add-download-button/assets/download.svg",
+  "../download.svg",
   //This portion determines the text that appears as a tooltip
   "Download Video",
   //This portion designates the functionality of the button itself

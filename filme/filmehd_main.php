@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <?php
+error_reporting(0);
 function str_between($string, $start, $end){
 	$string = " ".$string; $ini = strpos($string,$start);
 	if ($ini == 0) return ""; $ini += strlen($start); $len = strpos($string,$end,$ini) - $ini;
@@ -66,7 +67,7 @@ $ua = $_SERVER['HTTP_USER_AGENT'];
   curl_setopt($ch, CURLOPT_TIMEOUT, 15);
   $html = curl_exec($ch);
   curl_close($ch);
-$html=str_between($html,'menu-seria-categorys-container','</div>');
+//$html=str_between($html,'menu-seria-categorys-container','</div>');
 $videos = explode('li id="menu-item', $html);
 unset($videos[0]);
 $videos = array_values($videos);
@@ -75,11 +76,15 @@ foreach($videos as $video) {
     $t0 = explode('href="',$video);
     $t1 = explode('"', $t0[1]);
     $link = $t1[0];
+    if ($link) {
     $t2 = explode('>', $t0[1]);
     $t3 = explode('<', $t2[1]);
     $title = $t3[0];
+    } else {
+    $title="";
+    }
     $link=$target."?page=1&tip=release&link=".urlencode(fix_t($link))."&title=".urlencode(fix_t($title));
-    if (!preg_match("/IN CURAND|FILME SERIALE|seriale/i",$title)) {
+    if ($title && !preg_match("/IN CURAND|FILME SERIALE|seriale/i",$title)) {
 	if ($n == 0) echo "<TR>"."\r\n";
 	echo '<TD class="cat">'.'<a class ="cat" href="'.$link.'" target="_blank">'.$title.'</a></TD>';
     $n++;

@@ -135,10 +135,6 @@ for ($m=1;$m<$k;$m++) {
 }
 echo '</TR></table>';
 echo '<table border="1px" width="100%">'."\n\r";
-echo '<TR><TD class="mp" align="center" colspan="2"><span id="span">'.$msg_captcha.'</span></TD>
-<TD class="mp" align="center" colspan="1"><a href="ffmovies_f1.php">Renew token...</a></TD>
-<TD class="mp" align="center" colspan="1"><a href="javascript:window.location.reload(true)">Reload</a></TD>
-</TR>';
 foreach($arr as $key => $value) {
     $imdb="";
 	$link = urldecode($arr[$key]["link"]);
@@ -179,28 +175,6 @@ foreach($arr as $key => $value) {
   }
 echo '</TABLE>';
 }
-echo '
-<script type="text/javascript">
-var span = document.getElementById("span");
-function time() {
-var link="../../cookie/max_time_ffmovies.txt?rand=" + Math.random();
-$.get( link, function( data ) {
-  time_now=Math.floor(Date.now() / 1000);
-  time_max=data;
-  dif = time_max-time_now;
-  if (dif > 0) {
-  var minutes = Math.floor(dif / 60);
-  var seconds = dif - minutes * 60;
-  if (seconds < 10) seconds="0" + seconds;
-  span.textContent = "Token expira in " + minutes + ":" + seconds + " min.";
-  } else {
-    span.textContent = "Token Expirat";
-  }
-});
-}
-setInterval(time, 1000);
-</script>
-';
 ?>
 </body>
 </html>

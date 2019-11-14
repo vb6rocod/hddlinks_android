@@ -2,27 +2,12 @@
 <?php
 include ("../common.php");
 $host=$_GET['host'];
-$page_title="Seriale favorite";
+$page_title="Filme favorite";
 $width="200px";
 $height="278px";
-$add_target="ffmovies_s_add.php";
-$fs_target="ffmovies_ep.php";
-$file=$base_fav."ffmovies_s.dat";
-$target="ffmovies_ss.php";
-if (file_exists("../../cookie/max_time_ffmovies.txt")) {
-   //$time_exp=file_get_contents($base_cookie."max_time_hqq.txt");
-   $time_exp=file_get_contents("../../cookie/max_time_ffmovies.txt");
-   $time_now=time();
-   if ($time_exp > $time_now) {
-     $minutes = intval(($time_exp-$time_now)/60);
-     $seconds= ($time_exp-$time_now) - $minutes*60;
-     if ($seconds < 10) $seconds = "0".$seconds;
-     $msg_captcha="Token expira in ".$minutes.":".$seconds." min.";
-   } else
-     $msg_captcha="Token Expirat";
-} else {
-   $msg_captcha="Token Expirat";
-}
+$add_target="avistaz_f_add.php";
+$fs_target="avistaz_fs.php";
+$file=$base_fav."avistaz_f.dat";
 ?>
 <html><head>
 <meta http-equiv="content-type" content="text/html; charset=UTF-8">
@@ -109,7 +94,6 @@ function str_between($string, $start, $end){
 $w=0;
 $n=0;
 echo '<H2>'.$page_title.'</H2>';
-$arr=array();
 $h="";
 if (file_exists($file)) {
   $h=file_get_contents($file);
@@ -142,11 +126,18 @@ foreach($arr as $key => $value) {
     $title = unfix_t(urldecode($key));
     $image=urldecode($arr[$key]["image"]);
     //$image=$host.parse_url($image)['path'];
-    $year="";
+  $rest = substr($title, -6);
+  if (preg_match("/\((\d+)\)/",$rest,$m)) {
+   $year=$m[1];
+   $tit_imdb=trim(str_replace($m[0],"",$title));
+  } else {
+   $year="";
+   $tit_imdb=$title;
+  }
     //$link=$host.parse_url($link)['path'];
-    $link_f=$fs_target.'?tip=series&link='.urlencode($link).'&title='.urlencode(fix_t($title)).'&image='.$image."&sez=&ep=&ep_tit=&year=".$year;
+    $link_f=$fs_target.'?tip=movie&link='.urlencode($link).'&title='.urlencode(fix_t($title)).'&image='.$image."&sez=&ep=&ep_tit=&year=".$year;
   if ($n==0) echo '<TR>'."\r\n";
-  $val_imdb="tip=series&title=".urlencode(fix_t($title))."&year=".$year."&imdb=".$imdb;
+  $val_imdb="tip=movie&title=".urlencode(fix_t($tit_imdb))."&year=".$year."&imdb=".$imdb;
   $fav_link="file=&mod=del&title=".urlencode(fix_t($title))."&link=".urlencode($link)."&image=".urlencode($image)."&year=".$year;
   if ($tast == "NU") {
     echo '<td class="mp" width="25%"><a href="'.$link_f.'" id="myLink'.$w.'" target="_blank" onmousedown="isKeyPressed(event)">

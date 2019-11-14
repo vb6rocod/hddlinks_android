@@ -104,14 +104,14 @@ else
 
 <TR>
 <TD width="25%"><a href="filme/vipmovies_f.php?page=1&tip=release&title=vipmovies&link=" target="_blank">vipmovies</a></TD>
-<TD width="25%"><a href="filme/ffmovies_f.php">ffmovies</a></TD>
+<TD width="25%"><a href="filme/ffmovies_ff.php?page=1&tip=release&title=ffmovies&link=" target="_blank">ffmovies</a></TD>
 <TD width="25%"><a href="filme/gomovies_f.php?page=1&tip=release&title=gomovies&link=" target="_blank">gomovies</a></TD>
 <TD width="25%"><a href="filme/soap2day_f.php?page=1&tip=release&title=soap2day&link=" target="_blank">soap2day</a></TD>
 </TR>
 
 <TR>
 <TD width="25%"><a href="filme/subsmovies_f.php?page=1&tip=release&title=subsmovie&link=" target="_blank">subsmovies</a></TD>
-<TD width="25%"></TD>
+<TD width="25%"><a href="filme/avistaz_f.php?page=1&tip=release&title=avistaz&link=" target="_blank">avistaz</a></TD>
 <TD width="25%"></TD>
 <TD width="25%"></TD>
 </TR>

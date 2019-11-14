@@ -179,10 +179,6 @@ if ($page==1) {
    echo '<TD class="nav" colspan="4" align="right"><a href="'.$prev.'">&nbsp;&lt;&lt;&nbsp;</a> | <a href="'.$next.'">&nbsp;&gt;&gt;&nbsp;</a></TD>'."\r\n";
 }
 echo '</TR>'."\r\n";
-echo '<TR><TD class="mp" align="center" colspan="2"><span id="span">'.$msg_captcha.'</span></TD>
-<TD class="mp" align="center" colspan="1"><a href="ffmovies_f1.php">Renew token...</a></TD>
-<TD class="mp" align="center" colspan="1"><a href="javascript:window.location.reload(true)">Reload</a></TD>
-</TR>';
 $ua     =   $_SERVER['HTTP_USER_AGENT'];
 $cookie=$base_cookie."ffmovies.dat";
 $r=array();
@@ -290,27 +286,5 @@ else
 echo '</TR>'."\r\n";
 echo "</table>"."\r\n";
 echo "</table>";
-echo '
-<script type="text/javascript">
-var span = document.getElementById("span");
-function time() {
-var link="../../cookie/max_time_ffmovies.txt?rand=" + Math.random();
-$.get( link, function( data ) {
-  time_now=Math.floor(Date.now() / 1000);
-  time_max=data;
-  dif = time_max-time_now;
-  if (dif > 0) {
-  var minutes = Math.floor(dif / 60);
-  var seconds = dif - minutes * 60;
-  if (seconds < 10) seconds="0" + seconds;
-  span.textContent = "Token expira in " + minutes + ":" + seconds + " min.";
-  } else {
-    span.textContent = "Token Expirat";
-  }
-});
-}
-setInterval(time, 1000);
-</script>
-';
 ?></body>
 </html>

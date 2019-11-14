@@ -131,13 +131,16 @@ $r=array();
   curl_setopt($ch, CURLOPT_TIMEOUT, 15);
   $html = curl_exec($ch);
   curl_close ($ch);
-  $t1=explode('player-data="',$html);
-  $t2=explode('&',$t1[1]);
-  $l=$t2[0];
+  //echo $html;
+  $t1=explode('data-video="',$html);
+  $t2=explode('&id=',$t1[1]);
+  $t3=explode("&",$t2[1]);
+  $id=$t3[0];
+  $l="https://vidnode.net/streaming.php?id=".$id;
+  //$l=$t3[0];
+  $l=str_replace(" ","%20",$l);
   if (strpos($l,"http") === false) $l="https:".$l;
-  $t1=explode("id=",$l);
-  $id=$t1[1];
-
+//die();
   $ch = curl_init($l);
   curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows; U; Windows NT 6.1; en-US; rv:1.9.1.2) Gecko/20090729 Firefox/3.5.2 GTB5');
   curl_setopt($ch,CURLOPT_REFERER,"https://onmovies.se");
@@ -148,6 +151,7 @@ $r=array();
   curl_setopt($ch, CURLOPT_TIMEOUT, 15);
   $h = curl_exec($ch);
   curl_close ($ch);
+  //echo $h;
 //https://onlinefree.xyz/ajax/episode/info?id=8xeOn&film=680de8d13d7986d848dffc2d74fb8cd4
 //https://onlinefree.xyz/ajax/episode/embed?id=6872344b42716e6e&film=680de8d13d7986d848dffc2d74fb8cd4
 //https://vidcloud.icu/load.php?id=6872344b42716e6e
@@ -157,18 +161,12 @@ $videos = array_values($videos);
 foreach($videos as $video) {
   $t2=explode('"',$video);
   $openload=trim($t2[0]);
-  if ($openload =="")
-    $r[]="https://vidcloud.icu/load.php?id=".$id;
-  else {
+  if ($openload !="") {
     if (strpos($openload,"http") === false) $openload="https:".$openload;
    if (strpos($openload,"error.com") === false) $r[]=$openload;
   }
 
 }
-$t1=explode("load link backup",$h);
-$t2=explode("file: '",$t1[1]);
-$t3=explode("'",$t2[1]);
-if (strpos($t3[0],"error.com") === false) $r[]=$t3[0];
 echo '<table border="1" width="100%">';
 echo '<TR><TD class="mp">Alegeti un server: Server curent:<label id="server">'.parse_url($r[0])['host'].'</label>
 <input type="hidden" id="file" value="'.urlencode($r[0]).'"></td></TR></TABLE>';

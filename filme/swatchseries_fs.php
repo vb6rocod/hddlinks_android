@@ -1,7 +1,7 @@
 <!doctype html>
 <?php
 include ("../common.php");
-//error_reporting(0);
+error_reporting(0);
 $list = glob($base_sub."*.srt");
    foreach ($list as $l) {
     str_replace(" ","%20",$l);
@@ -131,13 +131,18 @@ $ua = $_SERVER['HTTP_USER_AGENT'];
   curl_setopt($ch, CURLOPT_TIMEOUT, 15);
   $h3 = curl_exec($ch);
   curl_close ($ch);
+  //echo $h3;
 $r=array();
 $videos = explode("?r=", $h3);
 unset($videos[0]);
 $videos = array_values($videos);
 foreach($videos as $video) {
-   $t1=explode('"',$video);
-   $l1 = base64_decode($t1[0]);
+   $t1=explode('Delete link',$video);
+   $t2=explode("'",$t1[1]);
+   //$t1=explode('"',$video);
+   //$l1 = base64_decode($t1[0]);
+   $l1=trim($t2[0]);
+   //echo $l1;
    if (strpos($l1,"http") !== false) $r[]=$l1;
 }
 echo '<table border="1" width="100%">';

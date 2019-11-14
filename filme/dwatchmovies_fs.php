@@ -184,6 +184,7 @@ foreach($videos as $video) {
     if (strpos($h1,"404 Not Found") === false) {
     $link_ep="";
     $link_ep=str_between($h1,"iframe src='","'");
+    if (!$link_ep) $link_ep=str_between($h1,'iframe src="','"');
     if ($link_ep && strpos($link_ep,"http") !== false) $r[]=$link_ep;
     }
   } else {
@@ -209,6 +210,7 @@ foreach($videos as $video) {
   $link_ep=str_replace('"',"",$m[0][$k]);
   $link_ep=str_replace("'","",$link_ep);
   //}
+  //echo $link_ep."\n";
   if (strpos($link_ep,"dwatchmovies") !== false) {
     $ch = curl_init();
     curl_setopt($ch, CURLOPT_URL, $link_ep);
@@ -221,9 +223,11 @@ foreach($videos as $video) {
     curl_setopt($ch, CURLOPT_TIMEOUT, 15);
     $h1 = curl_exec($ch);
     curl_close($ch);
+    //echo $h1."\n";
     if (strpos($h1,"404 Not Found") === false) {
     $link_ep="";
     $link_ep=str_between($h1,"iframe src='","'");
+    if (!$link_ep) $link_ep=str_between($h1,'iframe src="','"');
     if ($link_ep && strpos($link_ep,"http") !== false) $r[]=$link_ep;
     }
   } else {
