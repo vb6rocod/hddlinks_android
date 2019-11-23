@@ -33,6 +33,7 @@ $ua     =   $_SERVER['HTTP_USER_AGENT'];
 echo '<h2>'.$tit.'</h2>';
 $link=str_replace("/serie","/show",$link);
 $requestLink=$link;
+$host=parse_url($link)['host'];
 $ch = curl_init($requestLink);
 curl_setopt($ch, CURLOPT_USERAGENT, $ua);
 curl_setopt($ch,CURLOPT_REFERER,"https://hdfull.me");
@@ -92,7 +93,7 @@ foreach($videos as $video) {
   echo '<table border="1" width="100%">'."\n\r";
   echo '<TR><td class="sez" style="color:black;background-color:#0a6996;color:#64c8ff;text-align:center" colspan="3">Sezonul '.($sez).'</TD></TR>';
 
-  $l="https://hdfull.me/a/episodes";
+  $l="https://".$host."/a/episodes";
   $post="action=season&start=0&limit=0&show=".$id_serial."&season=".$sez;
   //echo $post;
   $ch = curl_init($l);

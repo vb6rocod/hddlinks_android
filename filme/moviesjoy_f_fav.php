@@ -7,7 +7,7 @@ $width="200px";
 $height="278px";
 $add_target="moviesjoy_f_add.php";
 $fs_target="moviesjoy_fs.php";
-$file=$base_fav."moviesjoy_f.dat";
+$file=$base_fav."moviesjoy_f1.dat";
 ?>
 <html><head>
 <meta http-equiv="content-type" content="text/html; charset=UTF-8">

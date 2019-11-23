@@ -17,7 +17,7 @@ $has_fav="yes";
 $has_search="yes";
 $has_add="yes";
 $has_fs="yes";
-$fav_target="moviesjoy_f_fav.php?host=https://www.moviesjoy.net";
+$fav_target="moviesjoy_f_fav.php?host=https://www1.moviesjoy.net";
 $add_target="moviesjoy_f_add.php";
 $add_file="";
 $fs_target="moviesjoy_fs.php";
@@ -167,10 +167,11 @@ if ($page==1) {
 echo '</TR>'."\r\n";
 
 if($tip=="release") {
-  $l="https://www.moviesjoy.net/movie/filter/movie/all/all/all/all/all/all/page-".$page.".html";
+  $l="https://www1.moviesjoy.net/movie/filter/movie/all/all/all/all/all/all/page-".$page.".html";
+  $l="https://www1.moviesjoy.net/movie?page=".$page;
 } else {
   $search=str_replace(" ","+",$tit);
-  $l="https://www.moviesjoy.net/search/".str_replace(" ","+",$tit)."/page-".$page.".html";
+  $l="https://www1.moviesjoy.net/search/".str_replace(" ","+",$tit)."/page-".$page.".html";
 }
 $host=parse_url($l)['host'];
   $ch = curl_init();
@@ -183,21 +184,32 @@ $host=parse_url($l)['host'];
   $html = curl_exec($ch);
   curl_close($ch);
 //echo $html;
-$videos = explode('class="flw-item">', $html);
+//https://www1.moviesjoy.net/movie/christmas-a-la-mode-58758
+//https://www1.moviesjoy.net/watch-movie/christmas-a-la-mode-58758.812876
+$videos = explode('class=flw-item>', $html);
 unset($videos[0]);
 $videos = array_values($videos);
 foreach($videos as $video) {
-  $t1 = explode('href="',$video);
-  $t2 = explode('"', $t1[1]);
-  $link = str_replace(".html","/watching.html",$t2[0]);
-  if (strpos($link,"http") === false) $link="https://".$host.$link;
-  $t1 = explode('title="', $video);
-  $t2 = explode('"', $t1[1]);
-  $title = $t2[0];
+  $t1 = explode('href=',$video);
+  $t2 = explode(' ', $t1[1]);
+  $link = substr(strrchr($t2[0], "-"), 1);
+  //$link = str_replace("/movie/","/watch-movie/",$t2[0]);
+  //if (strpos($link,"http") === false) $link="https://".$host.$link;
+  //$t1 = explode('title="', $video);
+  //$t2 = explode('"', $t1[1]);
+  //$title = $t2[0];
+  //if (!$title) {
+  $t1=explode('class=film-name>',$video);
+  $t2=explode('href',$t1[1]);
+  $t3=explode('>',$t2[1]);
+  $t4=explode('<',$t3[1]);
+  $title=$t4[0];
+  //}
   $title = prep_tit($title);
-  $t1 = explode('data-original="', $video);
-  $t2 = explode('"', $t1[1]);
+  $t1 = explode('data-src=', $video);
+  $t2 = explode(' ', $t1[1]);
   $image = $t2[0];
+  if (strpos($image,"http") === false) $image="blank.jpg";
   $rest = substr($title, -6);
   if (preg_match("/\((\d+)\)/",$rest,$m)) {
    $year=$m[1];

@@ -1,7 +1,7 @@
 <!doctype html>
 <?php
 include ("../common.php");
-//error_reporting(0);
+error_reporting(0);
 $list = glob($base_sub."*.srt");
    foreach ($list as $l) {
     str_replace(" ","%20",$l);
@@ -119,6 +119,7 @@ function off() {
 echo '<h2>'.$tit.$tit2.'</H2>';
 echo '<BR>';
 $ua = $_SERVER['HTTP_USER_AGENT'];
+//echo $link;
 $host=parse_url($link)['host'];
   $ch = curl_init($link);
   curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows; U; Windows NT 6.1; en-US; rv:1.9.1.2) Gecko/20090729 Firefox/3.5.2 GTB5');
@@ -130,6 +131,7 @@ $host=parse_url($link)['host'];
   curl_setopt($ch, CURLOPT_TIMEOUT, 15);
   $html = curl_exec($ch);
   curl_close ($ch);
+  //echo $html;
   $t1=explode("shortlink",$html);
   $t2=explode("p=",$t1[1]);
   $t3=explode("'",$t2[1]);
@@ -139,6 +141,8 @@ $host=parse_url($link)['host'];
    //echo $post;
   $head=array('Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8','Accept-Language: ro-ro,ro;q=0.8,en-us;q=0.6,en-gb;q=0.4,en;q=0.2','Accept-Encoding: deflate','Content-Type: application/x-www-form-urlencoded','Content-Length: '.strlen($post));
   $l="https://".$host."/embed-src/".$id_post;
+  $l="https://".$host."/embed-src-v2/".base64_encode($id_post);
+  //$l="https://www3.putlocker.fyi/embed-src-v2/NjIwNTc2NA==";
   $ch = curl_init($l);
   curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
   curl_setopt($ch, CURLOPT_REFERER, "https://putlockerfit.net/show/lois-clark-the-new-adventures-of-superman/season-4/episode-22/");
@@ -149,6 +153,7 @@ $host=parse_url($link)['host'];
   curl_setopt($ch, CURLOPT_TIMEOUT, 15);
   $h = curl_exec($ch);
   curl_close($ch);
+  //echo $h;
   $r=array();
 $videos = explode('src="', $h);
 unset($videos[0]);
@@ -160,12 +165,14 @@ foreach($videos as $video) {
    $r[]=$openload;
   else {
     include ("multilink.php");
+    //$r[]=$openload;
     $x=multilink($openload,$base_cookie."multilink.dat");
     foreach ($x as $key => $value) {
       $r[]=$value;
     }
   }
 }
+//print_r ($r);
 echo '<table border="1" width="100%">';
 echo '<TR><TD class="mp">Alegeti un server: Server curent:<label id="server">'.parse_url($r[0])['host'].'</label>
 <input type="hidden" id="file" value="'.urlencode($r[0]).'"></td></TR></TABLE>';

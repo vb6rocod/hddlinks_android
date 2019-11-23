@@ -156,10 +156,10 @@ $w=0;
 echo '<h2>'.$page_title.'</H2>';
 $c="";
 echo "<a href='".$c."' id='mytest1'></a>".'<div id="mainnav">';
-echo '<table border="1px" width="100%"><TR><TD class="form">'."\n\r";
+echo '<table border="1px" width="100%"><TR><TD class="form" >'."\n\r";
 echo '<form action="facebook.php" target="_blank">Cautare (user video): ';
 echo '<input type="text" id="search" name="search"><input type="hidden" id="page" name="page" value="1"><input type="submit" value="Cauta !"></form></TD>';
-echo '<TD class="nav" align="right"><a href="?renew">renew</a></TD></TR></TABLE>';
+echo '<TD class="nav" align="right"></TD></TR></TABLE>';
 
 
 $file=$base_fav."facebook.dat";
@@ -183,9 +183,9 @@ echo '<table border="1px" width="100%">'."\n\r";
   if ($n==0) echo '<TR>';
 
   if ($tast == "NU")
-  echo '<td class="mp" align="center" width="20%"><a href="'.$playlist.'" target="_blank"><img src="'.$image.'" width="160px" height="160px"><BR>'.$title.'</a> <a onclick="ajaxrequest2('."'".$add_fav."'".')" style="cursor:pointer;">*</a></TD>';
+  echo '<td class="mp" align="center" width="20%"><a href="'.$playlist.'" target="_blank">'.$title.'</a> <a onclick="ajaxrequest2('."'".$add_fav."'".')" style="cursor:pointer;">*</a></TD>';
   else {
-  echo '<td class="mp" align="center" width="20%"><a class ="imdb" id="myLink'.($w*1).'" href="'.$playlist.'" target="_blank"><img src="'.$image.'" width="160px" height="160px"><BR>'.$title.'<input type="hidden" id="fav_myLink'.($w*1).'" value="'.$add_fav.'"></a></TD>';
+  echo '<td class="mp" align="center" width="20%"><a class ="imdb" id="myLink'.($w*1).'" href="'.$playlist.'" target="_blank">'.$title.'<input type="hidden" id="fav_myLink'.($w*1).'" value="'.$add_fav.'"></a></TD>';
   $w++;
   }
   $n++;

@@ -112,8 +112,8 @@ else
 <TR>
 <TD width="25%"><a href="filme/subsmovies_f.php?page=1&tip=release&title=subsmovie&link=" target="_blank">subsmovies</a></TD>
 <TD width="25%"><a href="filme/avistaz_f.php?page=1&tip=release&title=avistaz&link=" target="_blank">avistaz</a></TD>
-<TD width="25%"></TD>
-<TD width="25%"></TD>
+<TD width="25%"><a href="filme/azm_f.php?page=1&tip=release&title=azmoviesz&link=" target="_blank">azm</a></TD>
+<TD width="25%"><a href="filme/x8_f.php" target="_blank">xmovies8</a></TD>
 </TR>
 <?php
 if (file_exists($base_pass."tvplay.txt")) {

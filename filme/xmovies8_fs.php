@@ -1,6 +1,7 @@
 <!doctype html>
 <?php
 include ("../common.php");
+include ("../util.php");
 //error_reporting(0);
 $list = glob($base_sub."*.srt");
    foreach ($list as $l) {
@@ -34,8 +35,6 @@ $year=$_GET["year"];
 if ($tip=="movie") {
 $tit2="";
 } else {
-$t1=explode("- Season",$tit);
-$tit=trim($t1[0]);
 if ($ep_title)
    $tit2=" - ".$sez."x".$ep." ".$ep_title;
 else
@@ -120,108 +119,87 @@ function off() {
 <?php
 echo '<h2>'.$tit.$tit2.'</H2>';
 echo '<BR>';
+$r=array();
+$s=array();
 $ua = $_SERVER['HTTP_USER_AGENT'];
-//$host=parse_url($link)['host'];
+$ua="Mozilla/5.0 (Windows NT 10.0; rv:70.0) Gecko/20100101 Firefox/70.0";
+$cookie=$base_cookie."xmovies8.txt";
 if ($tip=="movie") {
-  /*
-  $ch = curl_init($link);
-  curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows; U; Windows NT 6.1; en-US; rv:1.9.1.2) Gecko/20090729 Firefox/3.5.2 GTB5');
-  curl_setopt($ch,CURLOPT_REFERER,"https://www.moviesjoy.net");
+$l="https://xmovies8.tv/ajax/movie_load_info/".$link;
+  $ch = curl_init($l);
+  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
+  curl_setopt($ch,CURLOPT_REFERER,"https://xmovies8.tv");
   curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER  ,1);  // RETURN THE CONTENTS OF THE CALL
+  curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie);
+  //curl_setopt($ch, CURLOPT_HTTPHEADER, $head);
+  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+  $html = curl_exec($ch);
+  curl_close ($ch);
+  $t1=explode('class="jtip-bottom">',$html);
+  $t2=explode('href="',$t1[1]);
+  $t3=explode('"',$t2[1]);
+  $l=$t3[0];
+  $ch = curl_init($l);
+  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
+  curl_setopt($ch,CURLOPT_REFERER,"https://xmovies8.tv");
+  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER  ,1);  // RETURN THE CONTENTS OF THE CALL
+  curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie);
+  //curl_setopt($ch, CURLOPT_HTTPHEADER, $head);
   curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
   curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
   curl_setopt($ch, CURLOPT_TIMEOUT, 15);
   $h = curl_exec($ch);
   curl_close ($ch);
-  $t1=explode("movie = {",$h);
-  $t2=explode('id: "',$t1[1]);
-  $t3=explode('"',$t2[1]);
-  $id=$t3[0];
-
-  $t2=explode('movie_id: "',$t1[1]);
-  $t3=explode('"',$t2[1]);
-  $movie_id=$t3[0];
-  //https://www1.moviesjoy.net/ajax/movie/episodes/58758
-  $l="https://www1.moviesjoy.net/ajax/v4_movie_episodes/".$id."/".$movie_id;
-  */
-  $l="https://www1.moviesjoy.net/ajax/movie/episodes/".$link;
-  $ch = curl_init($l);
-  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
-  curl_setopt($ch, CURLOPT_REFERER, $l);
-  curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 10.0; rv:55.0) Gecko/20100101 Firefox/55.0');
-  curl_setopt($ch, CURLOPT_RETURNTRANSFER  ,1);  // RETURN THE CONTENTS OF THE CALL
-  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-  $h = curl_exec($ch);
-  curl_close($ch);
-
-  //$x=json_decode($h,1);
-  //$h=$x['html'];
-  $r=array();
-  $s=array();
-  $videos=explode('data-linkid="',$h);
-  unset($videos[0]);
-  $videos = array_values($videos);
-  foreach($videos as $video) {
-    $t1=explode('</i>',$video);
-    $t2=explode('<',$t1[1]);
-    $svr_name=trim($t2[0]);
-    $t3=explode('"',$video);
-    $l="https://www1.moviesjoy.net/movie/".$t3[0];
-    $r[]=$l;
-    $s[]=$svr_name;
-  }
-} else {
-  $r=array();
-  $s=array();
-  $svr_name=array();
-  $l="https://www1.moviesjoy.net/ajax/season/episodes/".$link;
-  $ch = curl_init($l);
-  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
-  curl_setopt($ch, CURLOPT_REFERER, $link);
-  curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 10.0; rv:55.0) Gecko/20100101 Firefox/55.0');
-  curl_setopt($ch, CURLOPT_RETURNTRANSFER  ,1);  // RETURN THE CONTENTS OF THE CALL
-  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-  $h = curl_exec($ch);
-  curl_close($ch);
   //echo $h;
-  $videos=explode('href="#',$h);
-  unset($videos[0]);
-  $videos = array_values($videos);
-  foreach($videos as $video) {
-    $t1=explode('"',$video);
-    $t2=explode('aria-selected',$video);
-    $t3=explode('>',$t2[1]);
-    $t4=explode('<',$t3[1]);
-    $svr_name[$t1[0]]=$t4[0];
-  }
-  //print_r ($svr_name);
-  $videos=explode('div class="tab-pane',$h);
-  unset($videos[0]);
-  $videos = array_values($videos);
-  foreach($videos as $video) {
-    $t1=explode('id="',$video);
-    $t2=explode('"',$t1[1]);
-    $id_serv=$t2[0];
-    $vids=explode('data-linkid="',$video);
-    //$vids = explode('data-linkid="', $h);
-    unset($vids[0]);
-    $vids = array_values($vids);
-    foreach($vids as $vid) {
-      $t1=explode('"',$vid);
-      $id_link=$t1[0];
-      $t1=explode('strong>',$vid);
-      $t2=explode(':',$t1[1]);
-      preg_match("/\d+/",$t2[0],$p);
-      $episod=$p[0];
-      if ($episod == $ep) {
-        $l="https://www1.moviesjoy.net/movie/".$id_link;
-        $r[]=$l;
-        $s[]=$svr_name[$id_serv];
-      }
-    }
-  }
+$videos = explode('option value="', $h);
+unset($videos[0]);
+$videos = array_values($videos);
+foreach($videos as $video) {
+ $t1=explode('"',$video);
+ $l1="https://xmovies8.tv".$t1[0];
+ $r[]=$l1;
+ $t2=explode(">",$video);
+ $t3=explode("<",$t2[1]);
+ $s[]=$t3[0];
 }
+} else {
+  $ch = curl_init($link);
+  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
+  curl_setopt($ch,CURLOPT_REFERER,"https://xmovies8.tv");
+  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER  ,1);  // RETURN THE CONTENTS OF THE CALL
+  curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie);
+  //curl_setopt($ch, CURLOPT_HTTPHEADER, $head);
+  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+  $h = curl_exec($ch);
+  curl_close ($ch);
+  //echo $h;
+$videos = explode('option value="', $h);
+unset($videos[0]);
+$videos = array_values($videos);
+foreach($videos as $video) {
+ $t1=explode('"',$video);
+ $l1="https://xmovies8.tv".$t1[0];
+ $r[]=$l1;
+ $t2=explode(">",$video);
+ $t3=explode("<",$t2[1]);
+ $s[]=$t3[0];
+}
+}
+/*
+$r[]="https://xmovies8.tv?id=".$link."&server=hserver";
+$s[]="Hserver";
+$r[]="https://xmovies8.tv?id=".$link."&server=vserver";
+$s[]="Vserver";
+$r[]="https://xmovies8.tv?id=".$link."&server=oserver";
+$s[]="Oserver";
+*/
 echo '<table border="1" width="100%">';
 echo '<TR><TD class="mp">Alegeti un server: Server curent:<label id="server">'.$s[0].'</label>
 <input type="hidden" id="file" value="'.urlencode($r[0]).'"></td></TR></TABLE>';
@@ -231,11 +209,11 @@ $x=0;
 for ($i=0;$i<$k;$i++) {
   if ($x==0) echo '<TR>';
   $c_link=$r[$i];
-  $openload=parse_url($r[$i])['host'];
+  $openload=$s[$i];
   if (preg_match($indirect,$openload)) {
-  echo '<TD class="mp"><a href="filme_link.php?file='.urlencode($c_link).'&title='.urlencode(unfix_t($tit.$tit2)).'" target="_blank">'.$s[$i].'</a></td>';
+  echo '<TD class="mp"><a href="filme_link.php?file='.urlencode($c_link).'&title='.urlencode(unfix_t($tit.$tit2)).'" target="_blank">'.$openload.'</a></td>';
   } else
-  echo '<TD class="mp"><a id="myLink" href="#" onclick="changeserver('."'".$s[$i]."','".urlencode($c_link)."'".');return false;">'.$s[$i].'</a></td>';
+  echo '<TD class="mp"><a id="myLink" href="#" onclick="changeserver('."'".$openload."','".urlencode($c_link)."'".');return false;">'.$openload.'</a></td>';
   $x++;
   if ($x==6) {
     echo '</TR>';
@@ -265,6 +243,10 @@ if ($tip=="movie") {
   $from="";
   $link_page="";
 }
+  $rest = substr($tit3, -6);
+  if (preg_match("/\((\d+)\)/",$rest,$m)) {
+   $tit3=trim(str_replace($m[0],"",$tit3));
+  }
 $sub_link ="from=".$from."&tip=".$tip."&sez=".$sez."&ep=".$ep."&imdb=".$imdbid."&title=".urlencode(fix_t($tit3))."&link=".$link_page."&ep_tit=".urlencode(fix_t($tit2))."&year=".$year;
 echo '<br>';
 echo '<table border="1" width="100%">';
