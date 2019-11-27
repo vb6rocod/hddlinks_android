@@ -4200,9 +4200,9 @@ function decode_code($code){
   $link=$m[1];
   } elseif (preg_match($pat1, $h1)) {
    $h1=decode_code($h1);
-   $t1=explode("atob('",$h1);
-   $t2=explode("'",$t1[1]);
-   $encoded=$t2[0];
+   $pat1="/setAttribute\(\'src\',\s*vv\(key,\s*atob\(\'(\S+)\'/";
+   preg_match($pat1, $h1,$q);
+   $encoded=$q[1];
    if (preg_match("/(var\s+(_0x[a-z0-9]+))\=\[(\'[a-zA-Z0-9\=\+\/]+\'\,?)+\]/ms", $h1, $m)) {
         $php_code = str_replace($m[1], "\$c0", $m[0]) . ";";
         eval($php_code);
@@ -4221,7 +4221,8 @@ function decode_code($code){
    $t1=explode('<script>',$h1);
    $t2=explode('</script',$t1[1]);
    $z=trim($t2[0]);
-   $z = jjdecode($z);
+   $z1 = jjdecode($z);
+   if (strpos($z1,"atob") !== false) $z=$z1;
    $t1=explode("atob('",$z);
    $t2=explode("'",$t1[1]);
    $dec=base64_decode($t2[0]);   // 1147|window.bqtk0='r9u1d9g3q7m4z8y7s8o7p3e7';|1903
@@ -4595,11 +4596,50 @@ $head=array('Accept: application/json, text/javascript, */*; q=0.01',
     $link=$t2[0];
   }
   } else {
-     //echo $l;
+  $ch = curl_init($l);
+  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
+  curl_setopt($ch,CURLOPT_REFERER,"https://xmovies8.tv");
+  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER  ,1);  // RETURN THE CONTENTS OF THE CALL
+  curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie);
+  //curl_setopt($ch, CURLOPT_HTTPHEADER, $head);
+  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+  //curl_setopt($ch, CURLOPT_NOBODY,1);
+  //curl_setopt($ch, CURLOPT_HEADER,1);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+  $html = curl_exec($ch);
+  curl_close ($ch);
+  $h=str_replace("\\","",$html);
+  $host=parse_url($l)['host'];
+  $scheme=parse_url($l)['scheme'];
+  $origin=$scheme."://".$host;
+  //echo $origin;
+  $t1=explode('key":"',$h);
+  $t2=explode('"',$t1[1]);
+  $key=$t2[0];
+  $t1=explode('slug","value":"',$h);
+  $t2=explode('"',$t1[1]);
+  $slug=$t2[0];
+  include ("hydrax.php");
+  $a1=$_SERVER['HTTP_REFERER'];
+  $a2=explode("?",$a1);
+  $p = dirname($a2[0]);
+  $out=hydrax($key,$slug,$origin,$flash,$p);
+  if ($out) {
+    file_put_contents("lava.m3u8",$out);
+    if ($flash == "flash") {
+      $link = $p."/lava.m3u8";
+    } else
+      $link="http://127.0.0.1:8080/scripts/filme/lava.m3u8";
+  } else {
     $link="";
+  }
   }
    if ($link && $flash != "flash" && $serv == "vserver")
      $link=$link."|Referer=".urlencode("https://xmovies8.tv");
+   if ($link && $flash != "flash" && $serv == "hserver")
+     $link=$link."|Referer=".urlencode($origin)."&Origin=".urlencode($origin);
   //$link="https://v.bighost.be/hls/082c3b889ee603c4825b99c2bfd162af/082c3b889ee603c4825b99c2bfd162af.playlist.m3u8";
 }
 

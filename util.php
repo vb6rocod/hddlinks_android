@@ -16,18 +16,18 @@ return $js_code;
 
 function getClearanceLink($content, $url) {
   sleep (4);
-  preg_match_all('/name="\w+" value="(.+?)"/', $content, $matches);
+  preg_match_all('/name="\w+" value="(.*?)"/', $content, $matches);
         $params = array();
-        list($params['s'],$params['jschl_vc'], $params['pass']) = $matches[1];
+        list($params['r'],$params['jschl_vc'], $params['pass']) = $matches[1];
 $uri = parse_url($url);
-
+//print_r ($params);
 $host=$uri["host"];
 $result="";
 $t1=explode('id="cf-dn',$content);
 $t2=explode(">",$t1[1]);
 $t3=explode("<",$t2[1]);
 $cf=$t3[0];
-
+//$cf="";
 preg_match("/f\,\s?([a-zA-z0-9]+)\=\{\"([a-zA-Z0-9]+)\"\:\s?([\/!\[\]+()]+|[-*+\/]?=[\/!\[\]+()]+)/",$content,$m);
 
 eval("\$result=".rr($m[3]).";");

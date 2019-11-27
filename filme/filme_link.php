@@ -365,7 +365,7 @@ if (strpos($filelink,"filmeonlinegratis.org") !== false) {
    'X-Requested-With: XMLHttpRequest',
    'Cookie: _popfired=1; _gat=1; GoogleCaptcha='.$captcha.'; _gat=1;'
   );
-   //echo $post;
+   //echo $l;
   //$post="id=74337";
   $ch = curl_init($l);
   curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows; U; Windows NT 6.1; en-US; rv:1.9.1.2) Gecko/20090729 Firefox/3.5.2 GTB5');
@@ -381,6 +381,30 @@ if (strpos($filelink,"filmeonlinegratis.org") !== false) {
   $html = curl_exec($ch);
   curl_close ($ch);
   //echo $html;
+  if (strpos($html,"second_id.php") !== false) {
+    $videos=explode('url: "',$html);
+    unset($videos[0]);
+    $videos = array_values($videos);
+    foreach($videos as $video) {
+      $t1=explode('"',$video);
+      $l="http://www.filmeserialeonline.org/".$t1[0];
+      //echo $l;
+      $ch = curl_init($l);
+      curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows; U; Windows NT 6.1; en-US; rv:1.9.1.2) Gecko/20090729 Firefox/3.5.2 GTB5');
+      curl_setopt($ch,CURLOPT_REFERER,$filelink);
+      //curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+      //curl_setopt ($ch, CURLOPT_POST, 1);
+      //curl_setopt ($ch, CURLOPT_POSTFIELDS, $post);
+      curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+      curl_setopt($ch, CURLOPT_RETURNTRANSFER  ,1);  // RETURN THE CONTENTS OF THE CALL
+      //curl_setopt($ch, CURLOPT_HEADER, true);
+      curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+      curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+      $h3 = curl_exec($ch);
+      curl_close ($ch);
+      $html .=$h3;
+    }
+  }
 } elseif (strpos($filelink,"filmehd.se") !== false) {
   $ua = $_SERVER['HTTP_USER_AGENT'];
   $html="";

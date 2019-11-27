@@ -111,6 +111,11 @@ echo '<TD width="25%"></TD>';
 echo '</TR>';
 }
 if (file_exists($base_pass."debug.txt")) {
+if (file_exists($base_pass."mx.txt")) {
+$mx=trim(file_get_contents($base_pass."mx.txt"));
+} else {
+$mx="ad";
+}
 echo '<TR>';
 echo '<TD width="25%"><a href="filme/archive_ep.php?title='.urlencode("Planet of the Apes").'&link=https://archive.org/embed/PlanetOfTheApesTVSeries&sezon=1&imdb=tt0071033" target="_blank">Planet of the Apes</a></TD>';
 echo '<TD width="25%"></TD>';

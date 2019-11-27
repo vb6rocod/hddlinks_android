@@ -68,6 +68,7 @@ $l="https://xmovies8.tv/ajax/movie_load_info/".$link;
   $t2=explode('href="',$t1[1]);
   $t3=explode('"',$t2[1]);
   $l=$t3[0];
+  //echo $l;
   $ch = curl_init($l);
   curl_setopt($ch, CURLOPT_USERAGENT, $ua);
   curl_setopt($ch,CURLOPT_REFERER,"https://xmovies8.tv");
@@ -80,7 +81,7 @@ $l="https://xmovies8.tv/ajax/movie_load_info/".$link;
   curl_setopt($ch, CURLOPT_TIMEOUT, 15);
   $h = curl_exec($ch);
   curl_close ($ch);
-
+  //echo $h;
   $t1=explode('<div class="les-content"',$h);
   $h=$t1[1];
   //echo $h;

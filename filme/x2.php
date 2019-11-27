@@ -1,11 +1,16 @@
 <?php
 include ("../common.php");
+//include ("../util.php");
 $ua = $_SERVER['HTTP_USER_AGENT'];
+$ua="Mozilla/5.0 (Windows NT 10.0; rv:70.0) Gecko/20100101 Firefox/70.0";
 $cookie=$base_cookie."xmovies8.txt";
 if (file_exists($cookie)) unlink ($cookie);
 if (isset($_GET['response'])) {
 $q = $_SERVER["QUERY_STRING"];
 $post=$q;
+////////////////////////////////////////////////////////////
+
+////////////////////////////////////////////////////////////
 $head=array('Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
 'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
 'Accept-Encoding: deflate',
@@ -22,6 +27,7 @@ curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
 curl_setopt($ch, CURLOPT_USERAGENT, $ua);
 curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
 curl_setopt($ch, CURLOPT_HTTPHEADER, $head);
+curl_setopt($ch,CURLOPT_REFERER,"https://xmovies8.tv");
 //curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie);
 //curl_setopt($ch, CURLOPT_COOKIEJAR, $cookie);
 //curl_setopt($ch, CURLOPT_HEADER, 1);
@@ -34,7 +40,11 @@ curl_close($ch);
 $pat='/\<textarea dir\=\"ltr\" readonly\>(.+?)\</';
 if (preg_match_all($pat,$h,$m)) {
 $token=$m[1][0];
+//////////////////////////////////////////////////////////////
+
+//////////////////////////////////////////////////////////////
 $l1="https://xmovies8.tv/watch-earthquake-bird-2019-1080p-hd-online-free/watching.html";
+//$l1="https://xmovies8.tv/";
 $head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:70.0) Gecko/20100101 Firefox/70.0',
 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
 'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
@@ -43,49 +53,96 @@ $head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:70.0) Gecko/20100101 F
 'Upgrade-Insecure-Requests: 1');
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $l1);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
   curl_setopt($ch, CURLOPT_USERAGENT, $ua);
-  //curl_setopt($ch,CURLOPT_REFERER,$l);
   curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
-  curl_setopt($ch, CURLOPT_RETURNTRANSFER  ,1);  // RETURN THE CONTENTS OF THE CALL
+  curl_setopt($ch,CURLOPT_HTTPHEADER,$head);
   curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie);
   curl_setopt($ch, CURLOPT_COOKIEJAR, $cookie);
-  curl_setopt($ch, CURLOPT_HTTPHEADER, $head);
   curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'GET');
   curl_setopt($ch, CURLOPT_HTTPGET, true);
   curl_setopt($ch, CURLINFO_HEADER_OUT, true);
   curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
   curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
-  curl_setopt($ch, CURLOPT_HEADER,1);
-  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
   curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
   curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+  curl_setopt($ch, CURLOPT_HEADER,1);
   $html = curl_exec($ch);
+  //$html=str_replace("script", "sxxxxcript",$html);
+  //echo $html;
+  $t1=explode('action="',$html);
+  $t2=explode('"',$t1[1]);
+  $requestLink="https://xmovies8.tv".$t2[0];
+
+  //if (strpos($html,'id="cf-dn') === false)
+   //$q1= getClearanceLink_old($html,$requestLink);
+  //else
+ $t1=explode('r" value="',$html);
+ $t2=explode('"',$t1[1]);
+ $rr=$t2[0];
+ $t1=explode('data-ray="',$html);
+ $t2=explode('"',$t1[1]);
+ $id=$t2[0];
+ $post="r=".$rr."&id=".$id."&g-recaptcha-response=".$token;
+
+//}
+//die();
+//////////////////////////////////////////////////////////////////////
+  //die();
   //curl_close ($ch);
+  /*
   $t1=explode('name="s" value="',$html);
   $t2=explode('"',$t1[1]);
   $s=$t2[0];
-$l="https://xmovies8.tv/cdn-cgi/l/chk_captcha?s=".urlencode($s)."&g-recaptcha-response=".$token;
+  */
+  /*
+  $t1=explode('action="',$html);
+  $t2=explode('"',$t1[1]);
+  $l="https://xmovies8.tv".$t2[0];
+  $t1=explode('data-ray="',$html);
+  $t2=explode('"',$t1[1]);
+  $id=$t2[0];
+  //$id="53bf24890c70293";
+//$l="https://xmovies8.tv/cdn-cgi/l/chk_captcha?s=".urlencode($s)."&g-recaptcha-response=".$token;
   //$ch = curl_init();
-  curl_setopt($ch, CURLOPT_URL, $l);
+  echo $l;
+  */
+  //sleep (5);
+$head=array('Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
+'Accept-Encoding: gzip, deflate, br',
+'Content-Type: application/x-www-form-urlencoded',
+'Content-Length: '.strlen($post).'',
+'Referer: https://xmovies8.tv/watch-earthquake-bird-2019-1080p-hd-online-free/watching.html',
+'Origin: https://xmovies8.tv',
+'Connection: keep-alive',
+'Upgrade-Insecure-Requests: 1');
+//$post="r=&id=".$id."&g-recaptcha-response=".$token;
+//echo "<BR>".$post;
+//$ch = curl_init();
+  curl_setopt($ch, CURLOPT_URL, $requestLink);
   curl_setopt($ch, CURLOPT_USERAGENT, $ua);
-  curl_setopt($ch,CURLOPT_REFERER,$l1);
-  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+  //curl_setopt($ch,CURLOPT_REFERER,$l1);
+  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,0);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER  ,1);  // RETURN THE CONTENTS OF THE CALL
   curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie);
   curl_setopt($ch, CURLOPT_COOKIEJAR, $cookie);
   curl_setopt($ch, CURLOPT_HTTPHEADER, $head);
   curl_setopt($ch, CURLOPT_HEADER,1);
-  curl_setopt($ch, CURLOPT_NOBODY,1);
-  curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'GET');
-  curl_setopt($ch, CURLOPT_HTTPGET, true);
+  curl_setopt($ch, CURLOPT_NOBODY,0);
+  curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'POST');
+  curl_setopt($ch, CURLOPT_HTTPGET, false);
   //curl_setopt($ch, CURLINFO_HEADER_OUT, true);
+  curl_setopt ($ch, CURLOPT_POST, 1);
+  curl_setopt ($ch, CURLOPT_POSTFIELDS, $post);
   curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
   curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
-  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
-  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 25);
   $h = curl_exec($ch);
   curl_close ($ch);
-
+  //echo $h;
+  //die();
 //die();
 if (!preg_match("/cf_clearance=/",$h)) {
   echo "Video not found! or bad script";
@@ -111,9 +168,11 @@ if (!preg_match("/cf_clearance=/",$h)) {
   echo '<script>setTimeout(function(){ history.go(-2); }, 2000);</script>';
 }
 } else {
+////////////////////////////////////////////////
 
+////////////////////////////////////////////////
 //$cookie = __DIR__ . "\v3.txt";
-$key="6LfCmh4TAAAAAKog9f8wTyEOc0U8Ms2RTuDFyYP_";
+$key="6LfBixYUAAAAABhdHynFUIMA_sa4s-XsJvnjtgB0";
 
 $l="https://www.google.com/recaptcha/api/fallback?k=6LfBixYUAAAAABhdHynFUIMA_sa4s-XsJvnjtgB0";
 $head = array(

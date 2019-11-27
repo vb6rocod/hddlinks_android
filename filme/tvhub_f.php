@@ -171,6 +171,8 @@ $ua = $_SERVER['HTTP_USER_AGENT'];
 $cookie=$base_cookie."hdpopcorns.dat";
 $requestLink="https://tvhub.org/";
 $requestLink="https://tvhub.ro";
+$requestLink="https://www1.tvhub.ro/";
+//$requestLink="https://xmovies8.tv/";
 if ($page==1 && $tip !="search") {
 if (file_exists($cookie)) unlink ($cookie);
 $head=array(
@@ -198,22 +200,62 @@ $head=array(
   $h = curl_exec($ch);
  if (strpos($h,"503 Service") !== false) {
   if (strpos($h,'id="cf-dn') === false)
-   $q= getClearanceLink_old($h,$requestLink);
+   $q1= getClearanceLink_old($h,$requestLink);
   else
-   $q= getClearanceLink($h,$requestLink);
-
-  curl_setopt($ch, CURLOPT_URL, $q);
+   $q1= getClearanceLink($h,$requestLink);
+  $t1=explode('action="',$h);
+  $t2=explode('"',$t1[1]);
+  $requestLink="https://www1.tvhub.ro".$t2[0];
+  //$requestLink="https://xmovies8.tv".$t2[0];
+  $t1=explode("?",$q1);
+  $post=$t1[1];
+$head=array('Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
+'Accept-Encoding: gzip, deflate, br',
+'Content-Type: application/x-www-form-urlencoded',
+'Content-Length: '.strlen($post).'',
+'Referer: https://www1.tvhub.ro',
+'Origin: https://www1.tvhub.ro',
+'Connection: keep-alive',
+'Upgrade-Insecure-Requests: 1');
+//$post="r=&id=".$id."&g-recaptcha-response=".$token;
+//echo "<BR>".$post;
+//$ch = curl_init();
+  curl_setopt($ch, CURLOPT_URL, $requestLink);
+  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
+  //curl_setopt($ch,CURLOPT_REFERER,$l1);
+  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,0);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER  ,1);  // RETURN THE CONTENTS OF THE CALL
+  curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie);
+  curl_setopt($ch, CURLOPT_COOKIEJAR, $cookie);
+  curl_setopt($ch, CURLOPT_HTTPHEADER, $head);
+  curl_setopt($ch, CURLOPT_HEADER,1);
+  curl_setopt($ch, CURLOPT_NOBODY,1);
+  curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'POST');
+  curl_setopt($ch, CURLOPT_HTTPGET, false);
+  //curl_setopt($ch, CURLINFO_HEADER_OUT, true);
+  curl_setopt ($ch, CURLOPT_POST, 1);
+  curl_setopt ($ch, CURLOPT_POSTFIELDS, $post);
+  curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
+  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 25);
   $h = curl_exec($ch);
-  curl_close($ch);
+  curl_close ($ch);
+  //echo $h;
+///////////////////////////////////
+  //curl_setopt($ch, CURLOPT_URL, $q);
+  //$h = curl_exec($ch);
+  //curl_close($ch);
  } else {
     curl_close($ch);
  }
 }
 if ($tip=="search") {
   if ($page == 1)
-   $requestLink = "https://tvhub.ro/?s=".str_replace(" ","+",$tit);
+   $requestLink = "https://www1.tvhub.ro/?s=".str_replace(" ","+",$tit);
   else
-   $requestLink = "https://tvhub.ro/page/".$page."/?s=".str_replace(" ","+",$tit);
+   $requestLink = "https://www1.tvhub.ro/page/".$page."/?s=".str_replace(" ","+",$tit);
   $ch = curl_init($requestLink);
   curl_setopt($ch, CURLOPT_USERAGENT, $ua);
   curl_setopt($ch,CURLOPT_REFERER,"https://tvhub.org");
@@ -227,7 +269,7 @@ if ($tip=="search") {
   curl_close ($ch);
 } else {
   //https://tvhub.ro/category/film/page/2/
-  $requestLink="https://tvhub.ro/category/film/page/".$page."/";
+  $requestLink="https://www1.tvhub.ro/category/film/page/".$page."/";
   $ch = curl_init($requestLink);
   curl_setopt($ch, CURLOPT_USERAGENT, $ua);
   curl_setopt($ch,CURLOPT_REFERER,"https://tvhub.org");

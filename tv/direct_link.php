@@ -1172,7 +1172,9 @@ overflow:hidden;
 }
 body {background-color:#000000;}
 </style>
-<script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
+<link rel="stylesheet" href="../player.min.css">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
 <script src="../jwplayer.js"></script>
 
 </HEAD>
