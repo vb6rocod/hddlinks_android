@@ -294,6 +294,81 @@ $t1=explode("|",$link_f);
 $link_f=$t1[0];
 $link=str_replace('[%server_name%]',$serv,$link_f);
 }
+if ($from=="protvplus") {
+  $ua = $_SERVER['HTTP_USER_AGENT'];
+  $head = array('Accept: */*',
+   'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
+   'Accept-Encoding: deflate',
+   'Origin: http://protvplus.ro'
+  );
+  $ch = curl_init();
+  curl_setopt($ch, CURLOPT_URL, $link);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
+  curl_setopt($ch,CURLOPT_HTTPHEADER,$head);
+  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+  $h = curl_exec($ch);
+  curl_close($ch);
+  $t1=explode("/embed",$h);
+  $t2=explode('"',$t1[1]);
+  $l="https://media.cms.protvplus.ro/embed".$t2[0];
+  $ch = curl_init();
+  curl_setopt($ch, CURLOPT_URL, $l);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
+  curl_setopt($ch,CURLOPT_HTTPHEADER,$head);
+  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+  $h = curl_exec($ch);
+  curl_close($ch);
+  $t1=explode('hls": "',$h);
+  $t2=explode('"',$t1[1]);
+  $l=$t2[0];
+  $ch = curl_init();
+  curl_setopt($ch, CURLOPT_URL, $l);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
+  curl_setopt($ch,CURLOPT_HTTPHEADER,$head);
+  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+  curl_setopt($ch, CURLOPT_ENCODING, "");
+  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+  $h = curl_exec($ch);
+  curl_close($ch);
+  //echo $h;
+$base1=str_replace(strrchr($l, "/"),"/",$l);
+$base2=getSiteHost($l);
+if (preg_match("/\.m3u8/",$h)) {
+$a1=explode("\n",$h);
+for ($k=0;$k<count($a1);$k++) {
+  if ($a1[$k][0] !="#" && $a1[$k]) $pl[]=trim($a1[$k]);
+}
+if ($pl[0][0] == "/")
+  $base=$base2;
+elseif (preg_match("/http(s)?:/",$pl[0]))
+  $base="";
+else
+  $base=$base1;
+if (count($pl) > 1) {
+  if (preg_match_all("/RESOLUTION\=(\d+)/i",$h))
+    preg_match_all("/RESOLUTION\=(\d+)/i",$h,$m);
+  else
+    preg_match_all("/BANDWIDTH\=(\d+)/i",$h,$m);
+  $max_res=max($m[1]);
+  $arr_max=array_keys($m[1], $max_res);
+  $key_max=$arr_max[0];
+  $link=$base.$pl[$key_max];
+}
+} else {
+  $link=$l;
+}
+}
 if ($from=="profunzime") {
     $ch = curl_init();
     curl_setopt($ch, CURLOPT_URL, $link);
@@ -687,6 +762,7 @@ require_once("../filme/JavaScriptUnpacker.php");
   $user_agent = 'Mozilla/5.0(Linux;Android 7.1.2;ro;RO;MXQ-4K Build/MXQ-4K) MXPlayer/1.8.10';
   $user_agent = 'Mozilla/5.0(Linux;Android 10.1.2) MXPlayer';
   }
+  $user_agent     =   $_SERVER['HTTP_USER_AGENT'];
 //$ua="Mozilla/5.0 (Windows NT 10.0; WOW64; rv:46.0) Gecko/20100101 Firefox/46.0";
 $ua=$user_agent;
 //$link="https://www.arconaitv.us/stream.php?id=168";
@@ -706,6 +782,7 @@ $ua=$user_agent;
   //echo $out;
   preg_match('/([http|https][\.\d\w\-\.\/\\\:\?\&\#\%\_\,]*(\.m3u8))/', $out, $m);
   $link=$m[1];
+  //$link="https://videoserver1.org/live/Wg6C1lCuC5yHa7SzCIihbQ/1575117837/974006f79db4e097ce136f1b66b9770d.m3u8";
   //$link="https://videoserver2.org/live/NIqqJisElXJ2p-wIp8aEBA/1542023953/65f3a12d1dc82d6cd205f62101ee521c.m3u8";
   //echo $link;
   //$link=str_replace("videoserver1.org","videoserver2.org",$link);
@@ -716,6 +793,9 @@ $head=array('Accept: */*',
 'Referer: https://www.arconaitv.us/stream.php?id=168',
 'X-CustomHeader: videojs',
 'Connection: keep-alive');
+$origin="https://www.arconaitv.us";
+   if ($link && $flash != "flash")
+     $link=$link."|X-CustomHeader=videojs&Referer=".urlencode("https://www.arconaitv.us/stream.php?id=191")."&Origin=".urlencode($origin);
 /*
       $ch = curl_init();
       curl_setopt($ch, CURLOPT_URL, $link);

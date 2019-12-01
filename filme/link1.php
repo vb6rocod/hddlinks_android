@@ -110,7 +110,7 @@ $head=array('Accept: application/json, text/javascript, */*; q=0.01',
 'Upgrade-Insecure-Requests: 1');
   $l="https://ffmovies.to/ajax/episode/info?id=".$id_bun."&server=".$server_bun;
   //$l="https://ffmovies.to/ajax/episode/info?ts=1573545600&_=694&id=5c6a3d606b92fd4c03c0efd4d46d3d0000082fcfb564f79fdcc61c331307edb3&server=36";
-
+ //echo $l;
   curl_setopt($ch, CURLOPT_URL, $l);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
   curl_setopt($ch, CURLOPT_USERAGENT, $ua);
@@ -124,11 +124,13 @@ $head=array('Accept: application/json, text/javascript, */*; q=0.01',
    $h = curl_exec($ch);
    if (strpos($h,"200 OK") !== false) break;
   }
+
   curl_close($ch);
   $t1=explode("{",$h);
   $h="{".$t1[1];
+  //echo $h;
   $x=json_decode($h,1);
-
+  //print_r ($x);
  $filelink=urldecode($x['target']);
  //echo $filelink;
  $srt=$x['subtitle'];
@@ -941,7 +943,11 @@ if (strpos($filelink,"redirector.googlevideo.com") !== false) {
    curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
    curl_setopt($ch, CURLOPT_TIMEOUT, 15);
    $h = curl_exec($ch);
-   if (preg_match("/drive.*?\.m3u8/",$h,$m)) {
+   if (preg_match("/drive.*?\.m3u8/",$h,$m) && $flash <> "flash") {
+    $origin="https://".$new_host;
+    $link="https://".$new_host."/".$m[0]."|Referer=".urlencode($origin)."&Origin=".urlencode($origin);
+   }
+   if (preg_match("/drive.*?\.m3u8/",$h,$m) && $flash == "flash") {
     $l="https://".$new_host."/".$m[0];
     curl_setopt($ch, CURLOPT_URL, $l);
     $h = curl_exec($ch);
@@ -981,12 +987,14 @@ if (strpos($filelink,"redirector.googlevideo.com") !== false) {
    }
   }
   curl_close($ch);
-  file_put_contents("lava.m3u8",$out);
+
   if ($flash == "flash") {
+  file_put_contents("lava.m3u8",$out);
   $p = dirname($_SERVER['HTTP_REFERER']);
   $link = $p."/lava.m3u8";
-  } else
-  $link = "http://127.0.0.1:8080/scripts/filme/lava.m3u8";
+  } else {
+  $link1 = "http://127.0.0.1:8080/scripts/filme/lava.m3u8";
+  }
 } elseif (strpos($filelink,"hdv.fun") !== false) {
   $link=$filelink;
 } elseif (strpos($filelink,"prettyfast.to") !== false) {
@@ -1014,7 +1022,7 @@ $head=array('Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q
   $h = curl_exec($ch);
   curl_close($ch);
   //echo $h;
-  $t1=explode("file: '",$h);
+  $t1=explode("hlsUrl = '",$h);
   $t2=explode("'",$t1[1]);
   $link=$t2[0];
   $t1=explode("sub=",$filelink);
@@ -1103,6 +1111,7 @@ $head=array('Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q
   //echo $filelink;
   //echo $filelink;
   $ua = $_SERVER['HTTP_USER_AGENT'];
+  $ua="Mozilla/5.0 (Windows NT 10.0; rv:70.0) Gecko/20100101 Firefox/70.0";
   $ch = curl_init($filelink);
   curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
   curl_setopt($ch, CURLOPT_REFERER, "https://vipmovies.to");
@@ -1123,10 +1132,9 @@ $head=array('Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q
    $link=$m[1];
   else
    $link="";
-      //if ($link && $flash != "flash")
-     //$link=$link."|Referer=".urlencode("https://watch.lavacdn.xyz");
-  //$x=file_get_contents($link);
-  //echo $x;
+
+
+
   if ($flash <> "flash") {
   set_time_limit(30);
   $ch = curl_init($link);
@@ -1192,6 +1200,7 @@ $head=array('Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q
   //die();
   $link="http://127.0.0.1:8080/scripts/filme/lava.m3u8";
   }
+
 } elseif (strpos($filelink,"daclips.") !== false || strpos($filelink,"movpod.") !== false) {
   //https://movpod.in/9hhueiilr5kb
   //https://movpod.in/c2b3k9wa9ysj
@@ -4596,6 +4605,7 @@ $head=array('Accept: application/json, text/javascript, */*; q=0.01',
     $link=$t2[0];
   }
   } else {
+  set_time_limit(360);
   $ch = curl_init($l);
   curl_setopt($ch, CURLOPT_USERAGENT, $ua);
   curl_setopt($ch,CURLOPT_REFERER,"https://xmovies8.tv");
@@ -4621,6 +4631,7 @@ $head=array('Accept: application/json, text/javascript, */*; q=0.01',
   $t1=explode('slug","value":"',$h);
   $t2=explode('"',$t1[1]);
   $slug=$t2[0];
+  /*
   include ("hydrax.php");
   $a1=$_SERVER['HTTP_REFERER'];
   $a2=explode("?",$a1);
@@ -4635,12 +4646,283 @@ $head=array('Accept: application/json, text/javascript, */*; q=0.01',
   } else {
     $link="";
   }
+  */
+  $a1=$_SERVER['HTTP_REFERER'];
+  $a2=explode("?",$a1);
+  $hash_path = dirname($a2[0]);
+///////////////////////////////////////////////////////////////////////////////////////
+  $l="https://multi.idocdn.com/vip";
+  $post="key=".$key."&type=slug&value=".$slug;
+  $head=array('Accept: */*',
+  'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
+  'Accept-Encoding: deflate',
+  'Content-Type: application/x-www-form-urlencoded',
+  'Origin: '.$origin.'',
+  'Content-Length: '.strlen($post).'',
+  'Connection: keep-alive');
+  $ch = curl_init($l);
+  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
+  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER  ,1);
+  curl_setopt($ch, CURLOPT_HTTPHEADER, $head);
+  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+  curl_setopt ($ch, CURLOPT_POST, 1);
+  curl_setopt ($ch, CURLOPT_POSTFIELDS, $post);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+  $html = curl_exec($ch);
+  curl_close ($ch);
+  $x=json_decode($html,1);
+  //print_r ($x);
+  if (isset($x['servers'])) {
+  $server=$x['servers']['redirect'][0];
+  if (isset($x['fullhd']))
+    $r=$x['fullhd'];
+  else if (isset($x['hd']))
+    $r=$x['hd'];
+  else if (isset($x['sd']))
+    $r=$x['sd'];
+  else
+    $r=array();
+  if ($flash == "flash") {
+    if (isset($x['sd']))
+     $r=$x['sd'];
+  }
+  $sig=$r['sig'];
+  $id=$r['id'];
+  $duration=$r['duration'];
+  $hash=$r['hash'];
+  $iv=$r['iv'];
+  file_put_contents("hash.key",base64_decode($hash));
+  $out ="#EXTM3U"."\r\n";
+  $out .="#EXT-X-VERSION:4"."\r\n";
+  $out .="#EXT-X-PLAYLIST-TYPE:VOD"."\r\n";
+  $out .="#EXT-X-TARGETDURATION:".$duration."\r\n";
+  $out .="#EXT-X-MEDIA-SEQUENCE:0"."\r\n";
+  //$out .="#EXT-X-HASH:".$hash."\r\n";
+  $out .='#EXT-X-KEY:METHOD=AES-128,URI="'.$hash_path."/hash.key".'",IV='.$iv."\r\n";
+  if ($flash == "flash") {
+     $head=array('Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+     'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
+     'Accept-Encoding: deflate',
+     'Referer: '.$origin.'',
+     'Origin: '.$origin.'',
+     'Connection: keep-alive',
+     'Upgrade-Insecure-Requests: 1');
+     $ch = curl_init();
+     curl_setopt($ch, CURLOPT_USERAGENT, $ua);
+     curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,0);
+     curl_setopt($ch, CURLOPT_RETURNTRANSFER  ,1);  // RETURN THE CONTENTS OF THE CALL
+     curl_setopt($ch, CURLOPT_HTTPHEADER, $head);
+     curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+     curl_setopt($ch, CURLOPT_NOBODY,0);
+     curl_setopt($ch, CURLOPT_HEADER,0);
+     curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 10);
+     curl_setopt($ch, CURLOPT_TIMEOUT, 25);
+  }
+  $tot_dur=0;
+  $tot_dur1=0;
+  for ($k=0;$k<count($r['extinfs']);$k++) {
+    $tot_dur += $r['extinfs'][$k];
+  }
+  $z=0;
+  for ($k=0;$k<count($r['ranges']);$k++) {
+   $dur=0;
+
+   if ($flash == "flash") {
+     $l="https://".$server."/html/".$sig."/".$id."/".$r['ids'][$k]."/".$r['ids'][$k].".html?domain=".parse_url($origin)['host'];
+     curl_setopt($ch, CURLOPT_URL,$l);
+     $h = curl_exec($ch);
+     $l_redirect=base64_decode(json_decode($h,1)['url']);
+   }
+    for ($p=0;$p<count($r['ranges'][$k]);$p++) {
+      if ($flash == "flash") {
+       $dur += $r['extinfs'][$z];
+       $out .="#EXTINF:".$r['extinfs'][$z].","."\r\n";
+       if (count($r['ranges'][$k]) > 1)
+         $out .="#EXT-X-BYTERANGE:".$r['ranges'][$k][$p]."\r\n";
+       $out .=$l_redirect."\r\n";
+      } else {
+      $dur += $r['extinfs'][$z];
+      }
+      $z++;
+    }
+    $tot_dur1 += $dur;
+    if ($flash <> "flash") {
+     $out .="#EXTINF:".$dur.","."\r\n";
+     $l="https://".$server."/redirect/".$sig."/".$id."/".$r['ids'][$k]."/".$r['ids'][$k];
+     $out .=$l."\r\n";
+    }
+ }
+    $out .="#EXT-X-ENDLIST";
+ if ($flash == "flash") curl_close ($ch);
+
+  if ($out) {
+    file_put_contents("lava.m3u8",$out);
+    if ($flash == "flash") {
+      $link = $hash_path."/lava.m3u8";
+    } else
+      $link = $hash_path."/lava.m3u8"; //$link="http://127.0.0.1:8080/scripts/filme/lava.m3u8";
+  } else {
+    $link="";
+  }
+  } else {
+    $link="";
+  }
   }
    if ($link && $flash != "flash" && $serv == "vserver")
      $link=$link."|Referer=".urlencode("https://xmovies8.tv");
    if ($link && $flash != "flash" && $serv == "hserver")
      $link=$link."|Referer=".urlencode($origin)."&Origin=".urlencode($origin);
   //$link="https://v.bighost.be/hls/082c3b889ee603c4825b99c2bfd162af/082c3b889ee603c4825b99c2bfd162af.playlist.m3u8";
+} elseif (strpos($filelink,"streamloverx.com") !==false) {
+//echo $filelink;
+//die();
+//$filelink="https://streamloverx.com/?id=Vm9vN2gvVjdKTERtMFNlNFRwS3d0ZE1BSnJibUZISjNzQTk1RzNmckFZUGpnclFjYzJxQXRFa0hTUkV2cXkzZA==";
+  set_time_limit(360);
+  $ch = curl_init($filelink);
+  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
+  curl_setopt($ch,CURLOPT_REFERER,"https://streamloverx.com");
+  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER  ,1);  // RETURN THE CONTENTS OF THE CALL
+  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+  //curl_setopt($ch, CURLOPT_NOBODY,1);
+  curl_setopt($ch, CURLOPT_HEADER,1);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+  $html = curl_exec($ch);
+  curl_close ($ch);
+  //echo $html;
+  preg_match("/\#slug\=(\S+)/",$html,$m);
+  $slug=$m[1];
+  $t1=explode('key":"',$html);
+  $t2=explode('"',$t1[1]);
+  $key=$t2[0];
+  //echo $slug."\n".$key;
+  $origin="https://streamloverx.com";
+  $a1=$_SERVER['HTTP_REFERER'];
+  $a2=explode("?",$a1);
+  $hash_path = dirname($a2[0]);
+///////////////////////////////////////////////////////////////////////////////////////
+  $l="https://multi.idocdn.com/vip";
+  $post="key=".$key."&type=slug&value=".$slug;
+  $head=array('Accept: */*',
+  'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
+  'Accept-Encoding: deflate',
+  'Content-Type: application/x-www-form-urlencoded',
+  'Origin: '.$origin.'',
+  'Content-Length: '.strlen($post).'',
+  'Connection: keep-alive');
+  $ch = curl_init($l);
+  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
+  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER  ,1);
+  curl_setopt($ch, CURLOPT_HTTPHEADER, $head);
+  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+  curl_setopt ($ch, CURLOPT_POST, 1);
+  curl_setopt ($ch, CURLOPT_POSTFIELDS, $post);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+  $html = curl_exec($ch);
+  curl_close ($ch);
+  $x=json_decode($html,1);
+  if (isset($x['servers'])) {
+  $server=$x['servers']['redirect'][0];
+  if (isset($x['fullhd']))
+    $r=$x['fullhd'];
+  else if (isset($x['hd']))
+    $r=$x['hd'];
+  else if (isset($x['sd']))
+    $r=$x['sd'];
+  else
+    $r=array();
+  if ($flash == "flash") {
+    if (isset($x['sd']))
+     $r=$x['sd'];
+  }
+  $sig=$r['sig'];
+  $id=$r['id'];
+  $duration=$r['duration'];
+  $hash=$r['hash'];
+  $iv=$r['iv'];
+  file_put_contents("hash.key",base64_decode($hash));
+  $out ="#EXTM3U"."\r\n";
+  $out .="#EXT-X-VERSION:4"."\r\n";
+  $out .="#EXT-X-PLAYLIST-TYPE:VOD"."\r\n";
+  $out .="#EXT-X-TARGETDURATION:".$duration."\r\n";
+  $out .="#EXT-X-MEDIA-SEQUENCE:0"."\r\n";
+  //$out .="#EXT-X-HASH:".$hash."\r\n";
+  $out .='#EXT-X-KEY:METHOD=AES-128,URI="'.$hash_path."/hash.key".'",IV='.$iv."\r\n";
+  if ($flash == "flash") {
+     $head=array('Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+     'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
+     'Accept-Encoding: deflate',
+     'Referer: '.$origin.'',
+     'Origin: '.$origin.'',
+     'Connection: keep-alive',
+     'Upgrade-Insecure-Requests: 1');
+     $ch = curl_init();
+     curl_setopt($ch, CURLOPT_USERAGENT, $ua);
+     curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,0);
+     curl_setopt($ch, CURLOPT_RETURNTRANSFER  ,1);  // RETURN THE CONTENTS OF THE CALL
+     curl_setopt($ch, CURLOPT_HTTPHEADER, $head);
+     curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+     curl_setopt($ch, CURLOPT_NOBODY,0);
+     curl_setopt($ch, CURLOPT_HEADER,0);
+     curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 10);
+     curl_setopt($ch, CURLOPT_TIMEOUT, 25);
+  }
+  $tot_dur=0;
+  $tot_dur1=0;
+  for ($k=0;$k<count($r['extinfs']);$k++) {
+    $tot_dur += $r['extinfs'][$k];
+  }
+  $z=0;
+  for ($k=0;$k<count($r['ranges']);$k++) {
+   $dur=0;
+
+   if ($flash == "flash") {
+     $l="https://".$server."/html/".$sig."/".$id."/".$r['ids'][$k]."/".$r['ids'][$k].".html?domain=".parse_url($origin)['host'];
+     curl_setopt($ch, CURLOPT_URL,$l);
+     $h = curl_exec($ch);
+     $l_redirect=base64_decode(json_decode($h,1)['url']);
+   }
+    for ($p=0;$p<count($r['ranges'][$k]);$p++) {
+      if ($flash == "flash") {
+       $dur += $r['extinfs'][$z];
+       $out .="#EXTINF:".$r['extinfs'][$z].","."\r\n";
+       if (count($r['ranges'][$k]) > 1)
+         $out .="#EXT-X-BYTERANGE:".$r['ranges'][$k][$p]."\r\n";
+       $out .=$l_redirect."\r\n";
+      } else {
+      $dur += $r['extinfs'][$z];
+      }
+      $z++;
+    }
+    $tot_dur1 += $dur;
+    if ($flash <> "flash") {
+     $out .="#EXTINF:".$dur.","."\r\n";
+     $l="https://".$server."/redirect/".$sig."/".$id."/".$r['ids'][$k]."/".$r['ids'][$k];
+     $out .=$l."\r\n";
+    }
+ }
+    $out .="#EXT-X-ENDLIST";
+ if ($flash == "flash") curl_close ($ch);
+
+  if ($out) {
+    file_put_contents("lava.m3u8",$out);
+    if ($flash == "flash") {
+      $link = $hash_path."/lava.m3u8";
+    } else
+      $link = $hash_path."/lava.m3u8"; //$link="http://127.0.0.1:8080/scripts/filme/lava.m3u8";
+  } else {
+    $link="";
+  }
+  } else {
+    $link="";
+  }
+   if ($link && $flash != "flash")
+     $link=$link."|Referer=".urlencode($origin)."&Origin=".urlencode($origin);
 }
 
 //////////////////////////////////////////////////////////////////

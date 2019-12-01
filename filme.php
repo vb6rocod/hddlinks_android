@@ -115,6 +115,13 @@ else
 <TD width="25%"><a href="filme/azm_f.php?page=1&tip=release&title=azmoviesz&link=" target="_blank">azm</a></TD>
 <TD width="25%"><a href="filme/x8_f.php" target="_blank">xmovies8</a></TD>
 </TR>
+
+<TR>
+<TD width="25%"><a href="filme/solarmoviesonline_f.php?page=1&tip=release&title=solarmoviesonline&link=" target="_blank">solarmoviesonline</a></TD>
+<TD width="25%"></TD>
+<TD width="25%"></TD>
+<TD width="25%"></TD>
+</TR>
 <?php
 if (file_exists($base_pass."tvplay.txt")) {
 echo '

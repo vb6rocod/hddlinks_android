@@ -5,8 +5,10 @@ function hydrax($key,$slug,$origin,$tip,$hash_path) {
   $b_error=false;
   $out="";
   $l="https://multi.idocdn.com/vip";
+  //$l="https://multi.hydrax.net/guest";
   $post="key=".$key."&type=slug&value=".$slug;
-
+  //$post="slug=Vm9vN2gvVjdKTERtMFNlNFRwS3d0ZE1BSnJibUZISjNzQTk1RzNmckFZUGpnclFjYzJxQXRFa0hTUkV2cXkzZA==";
+  //$origin1="http://hydrax.net";
   $head=array('Accept: */*',
   'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
   'Accept-Encoding: deflate',
@@ -27,7 +29,7 @@ function hydrax($key,$slug,$origin,$tip,$hash_path) {
   $html = curl_exec($ch);
   curl_close ($ch);
   $x=json_decode($html,1);
-
+  //print_r ($x);
   $server=$x['servers']['redirect'][0];
   if (isset($x['fullhd']))
     $r=$x['fullhd'];
@@ -37,7 +39,7 @@ function hydrax($key,$slug,$origin,$tip,$hash_path) {
     $r=$x['sd'];
   else
     $r=array();
-
+  //print_r ($r);
   $sig=$r['sig'];
   $id=$r['id'];
   $duration=$r['duration'];
@@ -48,7 +50,7 @@ function hydrax($key,$slug,$origin,$tip,$hash_path) {
   for ($k=0;$k<count($r['ranges']);$k++) {
     for ($p=0;$p<count($r['ranges'][$k]);$p++) {
       $next=$k+$p+1;
-      if ($next > count($r['ranges'])-1 ) $next=$next-$k;       //16 -> 14 17 -> 15
+      if ($next > count($r['ids'])-1 ) $next=$next-$k;       //16 -> 14 17 -> 15
       if (count($r['ranges'][$k]) == 1) {
         $links[$k][$next]="https://".$server."/redirect/".$sig."/".$id."/".$r['ids'][$k]."/".$r['ids'][$next];
       } else {
@@ -56,6 +58,7 @@ function hydrax($key,$slug,$origin,$tip,$hash_path) {
       }
     }
   }
+  print_r ($links);
   $head=array('Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
   'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
   'Accept-Encoding: deflate',
@@ -63,7 +66,7 @@ function hydrax($key,$slug,$origin,$tip,$hash_path) {
   'Origin: '.$origin.'',
   'Connection: keep-alive',
   'Upgrade-Insecure-Requests: 1');
-  if ($tip =="flash") {
+  if ($tip =="flash1") {
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_USERAGENT, $ua);
   curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,0);
@@ -103,7 +106,7 @@ function hydrax($key,$slug,$origin,$tip,$hash_path) {
       $out .="#EXTINF:".$r['extinfs'][$z].","."\r\n";
       $z++;
       $next=$k+$p+1;
-      if ($next > count($r['ranges'])-1 ) $next=$next-$k;
+      if ($next > count($r['ids'])-1 ) $next=$next-$k;
       if (count($r['ranges'][$k]) == 1) {
         $out .=$links[$k][$next]."\r\n";
       } else {
@@ -113,6 +116,7 @@ function hydrax($key,$slug,$origin,$tip,$hash_path) {
     }
   }
   $out .="#EXT-X-ENDLIST";
+  echo $out;
   }
   return ($out);
 }

@@ -1,4 +1,9 @@
 # hddlinks_android
+<h2>NOU: INSTALARE ANDROID</h2>
+Descarcati <a href="https://www.mediafire.com/file/6mnyumjp0e9xhqj/Server_for_PHP_HD4ALL_nou.apk/file">Server_for_PHP_HD4ALL_nou.apk</a>
+Deoarece aplicatia originala nu mai ofera suport, nu mai puteti descarca versiunea 5.6.35 pentru serverul php.
+In versiunea facuta de mine aveti pus php 5.6.35 si toate fisierele pentru script.
+
 Versiunea HDD4ALL (hddlinks) pentru PC/android, optimizata in special pentru media playere cu android.
 Aplicatia este de tip web browser, scrisa in PHP.
 Prin intermediul aplicatiei puteti viziona filme si seriale online, posturi TV sau emisiuni inregistrate, clipuri video sau continut pentru adult.

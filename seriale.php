@@ -97,7 +97,7 @@ document.onkeypress =  zx;
 <TR>
 <TD width="25%"><a href="filme/subsmovies_s.php?page=1&tip=release&title=subsmovie&link=" target="_blank">subsmovies</a></TD>
 <TD width="25%"><a href="filme/x8_s.php" target="_blank">xmovies8</a></TD>
-<TD width="25%"></TD>
+<TD width="25%"><a href="filme/solarmoviesonline_s.php?page=1&tip=release&title=solarmoviesonline&link=" target="_blank">solarmoviesonline</a></TD>
 <TD width="25%"></TD>
 </TR>
 

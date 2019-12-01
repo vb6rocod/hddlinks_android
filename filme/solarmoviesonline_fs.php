@@ -31,7 +31,6 @@ $ep=$_GET["ep"];
 $ep_title=unfix_t(urldecode($_GET["ep_tit"]));
 $ep_title=prep_tit($ep_title);
 $year=$_GET["year"];
-$hash=$_GET['hash'];
 if ($tip=="movie") {
 $tit2="";
 } else {
@@ -119,85 +118,102 @@ function off() {
 <?php
 echo '<h2>'.$tit.$tit2.'</H2>';
 echo '<BR>';
-//echo $link;
 $r=array();
-$ua = $_SERVER['HTTP_USER_AGENT'];
-$ua="Mozilla/5.0 (Windows NT 10.0; rv:70.0) Gecko/20100101 Firefox/70.0";
-if ($tip=="series")
-$link="https://vipmovies.to/api/episodes/list/".$link;
-else
-$link="https://vipmovies.to/api/episodes/list/".$link;
-//echo $link;
-if ($tip == "series") {
-  $ch = curl_init($link);
+  $ua = $_SERVER['HTTP_USER_AGENT'];
+  $ch = curl_init();
+  curl_setopt($ch, CURLOPT_URL, $link);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
   curl_setopt($ch, CURLOPT_USERAGENT, $ua);
-  curl_setopt($ch, CURLOPT_REFERER, "https://vipmovies.to");
+  curl_setopt($ch,CURLOPT_REFERER,"http://solarmoviesonline.net");
   curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
-  curl_setopt($ch, CURLOPT_RETURNTRANSFER  ,1);  // RETURN THE CONTENTS OF THE CALL
   curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
   curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
   curl_setopt($ch, CURLOPT_TIMEOUT, 15);
   $h = curl_exec($ch);
-  curl_close ($ch);
-
-  $x=json_decode($h,1)['data'];
-  for ($k=0; $k<count($x);$k++) {
-    $e=$x[$k]['name'];
-    if ($e==$ep) {
-    $l1=$x[$k]['hash'];
-    $l1="https://vipmovies.to/api/episode/".$l1;
-
-    $ch = curl_init($l1);
-    curl_setopt($ch, CURLOPT_USERAGENT, $ua);
-    curl_setopt($ch, CURLOPT_REFERER, "https://vipmovies.to");
-    curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
-    curl_setopt($ch, CURLOPT_RETURNTRANSFER  ,1);  // RETURN THE CONTENTS OF THE CALL
-    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-    curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
-    curl_setopt($ch, CURLOPT_TIMEOUT, 15);
-    $h = curl_exec($ch);
-    curl_close ($ch);
-
-    $y=json_decode($h,1);
-    if ($y['status'] <> "error") $r[] = $y['data']['source'];
+  curl_close($ch);
+  //echo $h;
+  //echo $link;
+  if ($tip == "series") {
+   $t1=explode("p=",$link);
+   $t2=explode("&",$t1[1]);
+   $epp=$t2[0];
   }
-  }
-} else {
-  $ch = curl_init($link);
-  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
-  curl_setopt($ch, CURLOPT_REFERER, "https://vipmovies.to");
-  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
-  curl_setopt($ch, CURLOPT_RETURNTRANSFER  ,1);  // RETURN THE CONTENTS OF THE CALL
-  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
-  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
-  $h = curl_exec($ch);
-  curl_close ($ch);
+  $videos=explode('a class="server',$h);
+  unset($videos[0]);
+  $videos = array_values($videos);
+  foreach($videos as $video) {
+    $t1=explode('data-film="',$video);
+    $t2=explode('"',$t1[1]);
+    $film=$t2[0];
+    $t1=explode('data-name="',$video);
+    $t2=explode('"',$t1[1]);
+    $name=$t2[0];
+    $t1=explode('data-server="',$video);
+    $t2=explode('"',$t1[1]);
+    $s=$t2[0];
+    $l="http://solarmoviesonline.net/ip.file/swf/plugins/ipplugins.php";
+    if ($tip == "series")
+     $post="ipplugins=1&ip_film=".$film."&ip_server=".$s."&ip_name=".$epp;
+    else
+     $post="ipplugins=1&ip_film=".$film."&ip_server=".$s."&ip_name=".$name."&fix=0";
+    //echo $post;
+    $head=array('Accept: */*',
+     'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
+     'Accept-Encoding: deflate',
+     'Content-Type: application/x-www-form-urlencoded; charset=UTF-8',
+     'X-Requested-With: XMLHttpRequest',
+     'Content-Length: '.strlen($post).'',
+     'Origin: http://solarmoviesonline.net',
+     'Connection: keep-alive');
+   $ch = curl_init();
+   curl_setopt($ch, CURLOPT_URL, $l);
+   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+   curl_setopt($ch, CURLOPT_USERAGENT, $ua);
+   curl_setopt($ch,CURLOPT_REFERER,"http://solarmoviesonline.net");
+   curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+   curl_setopt($ch, CURLOPT_HTTPHEADER, $head);
+   curl_setopt ($ch, CURLOPT_POST, 1);
+   curl_setopt ($ch, CURLOPT_POSTFIELDS, $post);
+   curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+   curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+   curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+   $h = curl_exec($ch);
+   curl_close($ch);
+   $a=json_decode($h,1);
+   $token=$a['s'];
+   $l="http://solarmoviesonline.net/ip.file/swf/ipplayer/ipplayer.php?u=".$token."&w=100%&h=500&s=".$s."&n=0";
+    $head=array('Accept: application/json, text/javascript, */*; q=0.01',
+     'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
+     'Accept-Encoding: deflate',
+     'Content-Type: application/x-www-form-urlencoded; charset=UTF-8',
+     'X-Requested-With: XMLHttpRequest',
+     'Origin: http://solarmoviesonline.net',
+     'Connection: keep-alive');
+   $ch = curl_init();
+   curl_setopt($ch, CURLOPT_URL, $l);
+   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+   curl_setopt($ch, CURLOPT_USERAGENT, $ua);
+   curl_setopt($ch,CURLOPT_REFERER,"http://solarmoviesonline.net");
+   curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+   curl_setopt($ch, CURLOPT_HTTPHEADER, $head);
+   curl_setopt ($ch, CURLOPT_POST, 1);
+   curl_setopt ($ch, CURLOPT_POSTFIELDS, $post);
+   curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+   curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+   curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+   $h = curl_exec($ch);
+   curl_close($ch);
+   $a2=json_decode($h,1);
+   //print_r ($a2);
+   $l=$a2['data'];
+   //echo $l;
+   if (strpos($l,"http") === false && $l) $l="https:".$l;
+   $r[]=urlencode($l);
+ }
 
-  $x=json_decode($h,1)['data'];
-  for ($k=0; $k<count($x);$k++) {
-    $l1=$x[$k]['hash'];
-    $l1="https://vipmovies.to/api/episode/".$l1;
-
-    $ch = curl_init($l1);
-    curl_setopt($ch, CURLOPT_USERAGENT, $ua);
-    curl_setopt($ch, CURLOPT_REFERER, "https://vipmovies.to");
-    curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
-    curl_setopt($ch, CURLOPT_RETURNTRANSFER  ,1);  // RETURN THE CONTENTS OF THE CALL
-    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-    curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
-    curl_setopt($ch, CURLOPT_TIMEOUT, 15);
-    $h = curl_exec($ch);
-    curl_close ($ch);
-
-    $y=json_decode($h,1);
-    //print_r ($y);
-    if ($y['status'] <> "error") $r[] = $y['data']['source'];
-  }
-}
 
 echo '<table border="1" width="100%">';
-echo '<TR><TD class="mp">Alegeti un server: Server curent:<label id="server">'.parse_url($r[0])['host'].'</label>
+echo '<TR><TD class="mp">Alegeti un server: Server curent:<label id="server">'.parse_url(urldecode($r[0]))['host'].'</label>
 <input type="hidden" id="file" value="'.urlencode($r[0]).'"></td></TR></TABLE>';
 echo '<table border="1" width="100%"><TR>';
 $k=count($r);
@@ -205,9 +221,9 @@ $x=0;
 for ($i=0;$i<$k;$i++) {
   if ($x==0) echo '<TR>';
   $c_link=$r[$i];
-  $openload=parse_url($r[$i])['host'];
+  $openload=parse_url(urldecode($r[$i]))['host'];
   if (preg_match($indirect,$openload)) {
-  echo '<TD class="mp"><a href="filme_link.php?file='.urlencode($c_link).'&title='.urlencode(unfix_t($tit.$tit2)).'" target="_blank">'.$openload.'</a></td>';
+  echo '<TD class="mp"><a href="filme_link.php?file='.$c_link.'&title='.urlencode(unfix_t($tit.$tit2)).'" target="_blank">'.$openload.'</a></td>';
   } else
   echo '<TD class="mp"><a id="myLink" href="#" onclick="changeserver('."'".$openload."','".urlencode($c_link)."'".');return false;">'.$openload.'</a></td>';
   $x++;
@@ -239,6 +255,10 @@ if ($tip=="movie") {
   $from="";
   $link_page="";
 }
+  $rest = substr($tit3, -6);
+  if (preg_match("/\((\d+)\)/",$rest,$m)) {
+   $tit3=trim(str_replace($m[0],"",$tit3));
+  }
 $sub_link ="from=".$from."&tip=".$tip."&sez=".$sez."&ep=".$ep."&imdb=".$imdbid."&title=".urlencode(fix_t($tit3))."&link=".$link_page."&ep_tit=".urlencode(fix_t($tit2))."&year=".$year;
 echo '<br>';
 echo '<table border="1" width="100%">';
