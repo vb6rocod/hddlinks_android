@@ -185,7 +185,7 @@ $ua = $_SERVER['HTTP_USER_AGENT'];
   $html = curl_exec($ch);
   curl_close($ch);
   */
-  $html=file_get_contents($l);
+  $html=@file_get_contents($l);
 //echo $html;
 $videos = explode('class="item"', $html);
 unset($videos[0]);

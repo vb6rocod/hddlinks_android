@@ -168,10 +168,11 @@ if ($page==1) {
 echo '</TR>'."\r\n";
 
 $ua = $_SERVER['HTTP_USER_AGENT'];
+//$ua="Mozilla/5.0 (Windows NT 10.0; rv:71.0) Gecko/20100101 Firefox/71.0";
 $cookie=$base_cookie."hdpopcorns.dat";
 $requestLink="https://tvhub.org/";
 $requestLink="https://tvhub.ro";
-$requestLink="https://www1.tvhub.ro/";
+$requestLink="https://www1.tvhub.ro/";  // ? de ce android trebuie cu https ???????????
 //$requestLink="https://xmovies8.tv/";
 if ($page==1 && $tip !="search") {
 if (file_exists($cookie)) unlink ($cookie);
@@ -205,17 +206,19 @@ $head=array(
    $q1= getClearanceLink($h,$requestLink);
   $t1=explode('action="',$h);
   $t2=explode('"',$t1[1]);
-  $requestLink="https://www1.tvhub.ro".$t2[0];
+  $requestLink="http://www1.tvhub.ro".$t2[0];
+  //echo $requestLink."<BR>";
   //$requestLink="https://xmovies8.tv".$t2[0];
   $t1=explode("?",$q1);
   $post=$t1[1];
+  //echo $post;
 $head=array('Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
 'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
 'Accept-Encoding: gzip, deflate, br',
 'Content-Type: application/x-www-form-urlencoded',
 'Content-Length: '.strlen($post).'',
-'Referer: https://www1.tvhub.ro',
-'Origin: https://www1.tvhub.ro',
+'Referer: http://www1.tvhub.ro',
+'Origin: http://www1.tvhub.ro',
 'Connection: keep-alive',
 'Upgrade-Insecure-Requests: 1');
 //$post="r=&id=".$id."&g-recaptcha-response=".$token;
@@ -253,9 +256,9 @@ $head=array('Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q
 }
 if ($tip=="search") {
   if ($page == 1)
-   $requestLink = "https://www1.tvhub.ro/?s=".str_replace(" ","+",$tit);
+   $requestLink = "http://www1.tvhub.ro/?s=".str_replace(" ","+",$tit);
   else
-   $requestLink = "https://www1.tvhub.ro/page/".$page."/?s=".str_replace(" ","+",$tit);
+   $requestLink = "http://www1.tvhub.ro/page/".$page."/?s=".str_replace(" ","+",$tit);
   $ch = curl_init($requestLink);
   curl_setopt($ch, CURLOPT_USERAGENT, $ua);
   curl_setopt($ch,CURLOPT_REFERER,"https://tvhub.org");
@@ -269,7 +272,7 @@ if ($tip=="search") {
   curl_close ($ch);
 } else {
   //https://tvhub.ro/category/film/page/2/
-  $requestLink="https://www1.tvhub.ro/category/film/page/".$page."/";
+  $requestLink="http://www1.tvhub.ro/category/film/page/".$page."/";
   $ch = curl_init($requestLink);
   curl_setopt($ch, CURLOPT_USERAGENT, $ua);
   curl_setopt($ch,CURLOPT_REFERER,"https://tvhub.org");

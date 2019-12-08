@@ -180,6 +180,8 @@ if ($tip=="movie") {
   $from="";
   $link_page="";
 }
+//imdb=&title=Once+Upon+a+Time%E2%80%A6+in+Hollywood
+$tit3=urldecode(str_replace("%E2%80%A6","...",urlencode($tit3)));
   $rest = substr($tit3, -6);
   if (preg_match("/\((\d+)\)/",$rest,$m)) {
    $tit3=trim(str_replace($m[0],"",$tit3));

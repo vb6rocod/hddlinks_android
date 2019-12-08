@@ -18,7 +18,7 @@ $has_fav="yes";
 $has_search="yes";
 $has_add="yes";
 $has_fs="yes";
-$fav_target="tvhub_s_fav.php?host=https://www1.tvhub.ro";
+$fav_target="tvhub_s_fav.php?host=http://www1.tvhub.ro";
 $add_target="tvhub_s_add.php";
 $add_file="";
 $fs_target="tvhub_s_ep.php";
@@ -202,7 +202,7 @@ $head=array(
    $q1= getClearanceLink($h,$requestLink);
   $t1=explode('action="',$h);
   $t2=explode('"',$t1[1]);
-  $requestLink="https://www1.tvhub.ro".$t2[0];
+  $requestLink="http://www1.tvhub.ro".$t2[0];
   //$requestLink="https://xmovies8.tv".$t2[0];
   $t1=explode("?",$q1);
   $post=$t1[1];
@@ -250,9 +250,9 @@ $head=array('Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q
 }
 if ($tip=="search") {
   if ($page == 1)
-    $requestLink = "https://www1.tvhub.ro/?s=".str_replace(" ","+",$tit);
+    $requestLink = "http://www1.tvhub.ro/?s=".str_replace(" ","+",$tit);
   else
-    $requestLink  = "https://www1.tvhub.ro/page/".$page."/?s=".str_replace(" ","+",$tit);
+    $requestLink  = "http://www1.tvhub.ro/page/".$page."/?s=".str_replace(" ","+",$tit);
   $ch = curl_init($requestLink);
   curl_setopt($ch, CURLOPT_USERAGENT, $ua);
   curl_setopt($ch,CURLOPT_REFERER,"https://tvhub.org/");
@@ -265,7 +265,7 @@ if ($tip=="search") {
   $html = curl_exec($ch);
   curl_close ($ch);
 } else {
-  $requestLink="https://www1.tvhub.ro/wp-admin/admin-ajax.php";
+  $requestLink="http://www1.tvhub.ro/wp-admin/admin-ajax.php"; // e o problema la ei
   $post="action=load_more&page=".($page-1)."&template=cactus-channel%2Fcontent-listing&vars%5Bpost_type%5D=ct_channel&vars%5Bposts_per_page%5D=20&vars%5Bpost_status%5D=publish&vars%5Bignore_sticky_posts%5D=1&vars%5Bpaged%5D=1&id_playlist=";
   //$post="action=load_more&page=1&template=cactus-channel/content-listing&vars[post_type]=ct_channel&vars[posts_per_page]=20&vars[post_status]=publish&vars[ignore_sticky_posts]=1&vars[paged]=1&id_playlist=";
   $ch = curl_init($requestLink);

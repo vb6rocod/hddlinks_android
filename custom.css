@@ -35,6 +35,7 @@ td.cat {
     font-style: bold;
     font-size: 20px;
     text-align: left;
+    vertical-align:top;
 }
 td.form {
     font-style: bold;
@@ -55,7 +56,8 @@ td.mp {
     text-overflow: initial;
     white-space: wrap;
     word-wrap: break-word;
-    vertical-align:bottom;
+    /* vertical-align:bottom; */
+    vertical-align:top;
 }
 td.nav {
     font-style: bold;

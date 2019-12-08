@@ -165,9 +165,12 @@ if ($page==1) {
    echo '<TD class="nav" colspan="4" align="right"><a href="'.$prev.'">&nbsp;&lt;&lt;&nbsp;</a> | <a href="'.$next.'">&nbsp;&gt;&gt;&nbsp;</a></TD>'."\r\n";
 }
 echo '</TR>'."\r\n";
-
+$ad="";
+if ($page<10) $ad="0";
 if($tip=="release") {
-  $l="https://europixhd.io/tvshow-filter/all-tv-shows-page-".$page;
+  //$l="https://europixhd.io/tvshow-filter/all-tv-shows-page-"
+  //https://europixhd.io/tvshow-filter/all-tv-shows-page-02?search=
+  $l="https://europixhd.io/tvshow-filter/all-tv-shows-page-".$ad.$page."?search=";
 } else {
   $search=str_replace(" ","+",$tit);
   $l="https://europixhd.io/search?search=".$search;
@@ -183,22 +186,20 @@ $host=parse_url($l)['host'];
   $html = curl_exec($ch);
   curl_close($ch);
 
-
+ //echo $html;
  $videos = explode("figure class=", $html);
  unset($videos[0]);
  $videos = array_values($videos);
  foreach($videos as $video) {
-  $t1 = explode("href='", $video);
-  $t2 = explode("'",$t1[1]);
-  $link = $t2[0];
+  preg_match("/href\=(\'|\")(.*?)(\'|\")/mei",$video,$m);
+  $link=$m[2];
   $link="https://".$host."/".str_replace("../","",$link);
   //echo $link1;
   $t1 = explode('h3>', $video);
   $t2 = explode('<', $t1[1]);
   $title = trim($t2[0]);
-  $t1=explode("src='",$video);
-  $t2=explode("'",$t1[1]);
-  $image = $t2[0];
+  preg_match("/src\=(\'|\")(.*?)(\'|\")/mei",$video,$m);
+  $image = $m[2];
   $year="";
   $imdb="";
   $link_f=$fs_target.'?tip=series&link='.urlencode($link).'&title='.urlencode(fix_t($title)).'&image='.$image."&sez=&ep=&ep_tit=&year=".$year;

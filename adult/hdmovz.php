@@ -243,7 +243,8 @@ foreach($videos as $video) {
   $t1 = explode('data-original="', $video);
   $t2 = explode('"', $t1[1]);
   $image = $t2[0];
-  if (strpos($image,"http") === false) $image="https:".$image;
+  $image=str_replace("https","http",$image);
+  if (strpos($image,"http") === false) $image="http:".$image;
   $t1=explode('class="item_duration">',$video);
   $t2=explode('>',$t1[1]);
   $t3=explode("<",$t1[1]);

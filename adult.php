@@ -49,6 +49,13 @@ echo '<th class="cat" colspan="4">Adult</Th>';
 echo '
 </TR>
 <TR>
+<TR>
+<TD width="25%"><a href="tv/playlist.php?title=playlist+xxx.m3u8" target="_blank">playlist xxx</a></TD>
+<TD width="25%"></TD>
+<TD width="25%"></TD>
+<TD width="25%"></TD>
+</TR>
+
 <TD width="25%"><a href="adult/tube8_main.php" target="_blank">tube8</a></TD>
 <TD width="25%"><a href="adult/youporn.php?tip=release&page=1&title=youporn&link=" target="_blank">youporn</a></TD>
 <TD width="25%"><a href="adult/redtube_main.php" target="_blank">redtube</a></TD>

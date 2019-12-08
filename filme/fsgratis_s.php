@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <?php
-error_reporting(0);
 function str_between($string, $start, $end){
 	$string = " ".$string; $ini = strpos($string,$start);
 	if ($ini == 0) return ""; $ini += strlen($start); $len = strpos($string,$end,$ini) - $ini;
@@ -13,17 +12,17 @@ $tip= $_GET["tip"];
 $tit=$_GET["title"];
 $link=$_GET["link"];
 $width="200px";
-$height="107px";
+$height="278px";
 /* ==================================================== */
 $has_fav="yes";
 $has_search="yes";
 $has_add="yes";
 $has_fs="yes";
-$fav_target="filme--online_fav.php?host=https://filme--online.ro";
-$add_target="filme--online_add.php";
+$fav_target="fsgratis_fav.php?host=https://fsgratis.com";
+$add_target="fsgratis_add.php";
 $add_file="";
-$fs_target="filme--online_ep.php";
-$target="filme--online.php";
+$fs_target="fsgratis_ep.php";
+$target="fsgratis_s.php";
 /* ==================================================== */
 $base=basename($_SERVER['SCRIPT_FILENAME']);
 $p=$_SERVER['QUERY_STRING'];
@@ -167,169 +166,64 @@ if ($page==1) {
    echo '<TD class="nav" colspan="4" align="right"><a href="'.$prev.'">&nbsp;&lt;&lt;&nbsp;</a> | <a href="'.$next.'">&nbsp;&gt;&gt;&nbsp;</a></TD>'."\r\n";
 }
 echo '</TR>'."\r\n";
-$ua = $_SERVER['HTTP_USER_AGENT'];
-$cookie=$base_cookie."hdpopcorns.dat";
-$requestLink="http://filme--online.ro/";
-//http://filme--online.ro/film/windstorm-4-aris-arrival-2019/
-if ($page==1 && $tip !="search") {
-if (file_exists($cookie)) unlink ($cookie);
-$head=array(
-'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
-'Accept-Language: en-US,en;q=0.5',
-'Accept-Encoding: deflate, br',
-'Connection: keep-alive',
-'Upgrade-Insecure-Requests: 1');
-  $ch = curl_init();
-  curl_setopt($ch, CURLOPT_URL, $requestLink);
-  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
-  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
-  curl_setopt($ch,CURLOPT_HTTPHEADER,$head);
-  curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie);
-  curl_setopt($ch, CURLOPT_COOKIEJAR, $cookie);
-  curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'GET');
-  curl_setopt($ch, CURLOPT_HTTPGET, true);
-  curl_setopt($ch, CURLINFO_HEADER_OUT, true);
-  curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
-  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
-  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
-  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
-  curl_setopt($ch, CURLOPT_HEADER,1);
-  $h = curl_exec($ch);
- if (strpos($h,"503 Service") !== false) {
-  if (strpos($h,'id="cf-dn') === false)
-   $q1= getClearanceLink_old($h,$requestLink);
-  else
-   $q1= getClearanceLink($h,$requestLink);
-  $t1=explode('action="',$h);
-  $t2=explode('"',$t1[1]);
-  $requestLink="http://filme--online.ro".$t2[0];
-  //$requestLink="https://xmovies8.tv".$t2[0];
-  $t1=explode("?",$q1);
-  $post=$t1[1];
-$head=array('Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
-'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
-'Accept-Encoding: gzip, deflate, br',
-'Content-Type: application/x-www-form-urlencoded',
-'Content-Length: '.strlen($post).'',
-'Referer: http://filme--online.ro',
-'Origin: http://filme--online.ro',
-'Connection: keep-alive',
-'Upgrade-Insecure-Requests: 1');
-//$post="r=&id=".$id."&g-recaptcha-response=".$token;
-//echo "<BR>".$post;
-//$ch = curl_init();
-  curl_setopt($ch, CURLOPT_URL, $requestLink);
-  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
-  //curl_setopt($ch,CURLOPT_REFERER,$l1);
-  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,0);
-  curl_setopt($ch, CURLOPT_RETURNTRANSFER  ,1);  // RETURN THE CONTENTS OF THE CALL
-  curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie);
-  curl_setopt($ch, CURLOPT_COOKIEJAR, $cookie);
-  curl_setopt($ch, CURLOPT_HTTPHEADER, $head);
-  curl_setopt($ch, CURLOPT_HEADER,1);
-  curl_setopt($ch, CURLOPT_NOBODY,1);
-  curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'POST');
-  curl_setopt($ch, CURLOPT_HTTPGET, false);
-  //curl_setopt($ch, CURLINFO_HEADER_OUT, true);
-  curl_setopt ($ch, CURLOPT_POST, 1);
-  curl_setopt ($ch, CURLOPT_POSTFIELDS, $post);
-  curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
-  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
-  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
-  curl_setopt($ch, CURLOPT_TIMEOUT, 25);
-  $h = curl_exec($ch);
-  curl_close ($ch);
-  //echo $h;
-///////////////////////////////////
-  //curl_setopt($ch, CURLOPT_URL, $q);
-  //$h = curl_exec($ch);
-  //curl_close($ch);
- } else {
-    curl_close($ch);
- }
-}
-$r=array();
-if ($tip=="release") {
-  $l="http://filme--online.ro/lista-seriale-online/page/".$page."/";
-  $ch = curl_init();
-  curl_setopt($ch, CURLOPT_URL, $l);
-  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
-  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
-  curl_setopt($ch, CURLOPT_ENCODING, "");
-  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-  curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie);
-  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
-  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
-  $html = curl_exec($ch);
-  curl_close($ch);
-
-} else {
+if ($tip == "release")
+   if ($page > 1)
+    $l="https://fsgratis.com/seriale/page/".$page."/";
+   else
+    $l="https://fsgratis.com/seriale/";
+else {
   $search=str_replace(" ","+",$tit);
   if ($page == 1)
-   $l="http://filme--online.ro/?s=".$search;
+    $l="https://fsgratis.com/?s=".$search;
   else
-   $l="http://filme--online.ro/page/".$page."/?s=".$search;
+    $l="https://fsgratis.com/page/".$page."/?s=".$search;
+}
+$r=array();
+$ua = $_SERVER['HTTP_USER_AGENT'];
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $l);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
+  curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 10.0; rv:55.0) Gecko/20100101 Firefox/55.0');
   curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
   curl_setopt($ch, CURLOPT_ENCODING, "");
   curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-  curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie);
   curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
   curl_setopt($ch, CURLOPT_TIMEOUT, 15);
-  //curl_setopt($ch,CURLOPT_HTTPHEADER,$head);
   $html = curl_exec($ch);
   curl_close($ch);
 
-}
-  //echo $html;
-  if ($tip=="release") {
-  $videos = explode('class="item category-item', $html);
-  unset($videos[0]);
-  $videos = array_values($videos);
-  foreach($videos as $video) {
-    $t1=explode('href="',$video);
-    $t2=explode('"',$t1[1]);
-    $link=$t2[0];
-    $t1=explode('class="title">',$video);
-    $t2=explode('<',$t1[1]);
-    $title = trim($t2[0]);
-    $t1=explode('data-original="',$video);
-    $t2=explode('"',$t1[1]);
-    $image=$t2[0];
-    if (strpos($link,"/seriale") !== false) array_push($r ,array($title,$link, $image));
-  }
-  } else {
-  $t1=explode('div class="row movies-list">',$html);
-  $t2=explode('<div class="row mini"',$t1[1]);
-  $html=$t2[0];
-  $videos = explode('a href="', $html);
-  unset($videos[0]);
-  $videos = array_values($videos);
-  foreach($videos as $video) {
-    //$t1=explode('href="',$video);
-    $t2=explode('"',$video);
-    $link=$t2[0];
-    $t1=explode('class="title">',$video);
-    $t2=explode('<',$t1[1]);
-    //$t3=explode("&#8211;",$t2[0]);
-    $title=trim($t2[0]);
-    $t1=explode('data-original="',$video);
-    $t2=explode('"',$t1[1]);
-    $image=$t2[0];
-    if (strpos($link,"/seriale") !== false) array_push($r ,array($title,$link, $image));
-  }
+$videos = explode('<article', $html);
+
+unset($videos[0]);
+$videos = array_values($videos);
+
+foreach($videos as $video) {
+  $t1 = explode('href="', $video);
+  $t2 = explode('"', $t1[1]);
+  $link = $t2[0];
+
+  $t1=explode('class="Title">',$video);
+  //$t2=explode('>',$t1[1]);
+  $t2_0=explode('<',$t1[1]);
+  $t3=str_replace("Vizioneaza Film Online","",$t2_0[0]);
+  $t4=explode("&#8211;",$t3);
+  $title=trim($t4[0]);
+  $title=prep_tit($title);
+  $t1=explode('src="',$video);
+  $t2=explode('"',$t1[1]);
+  $image=$t2[0];
+    if ($link && $title) array_push($r ,array($title,$link, $image));
   }
 $c=count($r);
 for ($k=0;$k<$c;$k++) {
   $title=$r[$k][0];
+  $title=str_replace("&#8211;","-",$title);
   $title=prep_tit($title);
   $link=$r[$k][1];
   $image=$r[$k][2];
+  $rest = substr($title, -2);
+  //echo urlencode($rest);
+  if ($rest == " -") $title = substr($title, 0, -2);
   $rest = substr($title, -6);
   if (preg_match("/\((\d+)\)/",$rest,$m)) {
    $year=$m[1];
@@ -341,7 +235,7 @@ for ($k=0;$k<$c;$k++) {
 
   $imdb="";
   $link_f=$fs_target.'?tip=series&link='.urlencode($link).'&title='.urlencode(fix_t($title)).'&image='.$image."&sez=&ep=&ep_tit=&year=".$year;
-  if ($title && strpos($link,"/serial") !== false) {
+  if ($title) {
   if ($n==0) echo '<TR>'."\r\n";
   $val_imdb="tip=series&title=".urlencode(fix_t($tit_imdb))."&year=".$year."&imdb=".$imdb;
   $fav_link="mod=add&title=".urlencode(fix_t($title))."&link=".urlencode($link)."&image=".urlencode($image)."&year=".$year;

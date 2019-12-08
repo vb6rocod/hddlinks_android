@@ -173,6 +173,7 @@ if($tip=="release") {
   $l = "https://0123netflix.site/search-movies?keyword=".str_replace(" ","%20",$tit)."&page=".$page;
 }
 $host=parse_url($l)['host'];
+  /*
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $l);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
@@ -182,7 +183,8 @@ $host=parse_url($l)['host'];
   curl_setopt($ch, CURLOPT_TIMEOUT, 15);
   $html = curl_exec($ch);
   curl_close($ch);
-
+  */
+  $html=@file_get_contents($l);  // Android ???????
 $videos = explode('class="item"', $html);
 unset($videos[0]);
 $videos = array_values($videos);

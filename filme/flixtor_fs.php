@@ -1,6 +1,7 @@
 <!doctype html>
 <?php
 include ("../common.php");
+include ("../util.php");
 //error_reporting(0);
 $list = glob($base_sub."*.srt");
    foreach ($list as $l) {
@@ -82,10 +83,6 @@ function openlink(link) {
     }
   }
 }
-function changeserver(s,t) {
-  document.getElementById('server').innerHTML = s;
-  document.getElementById('file').value=t;
-}
    function zx(e){
      var charCode = (typeof e.which == "number") ? e.which : e.keyCode
      //alert (charCode);
@@ -119,63 +116,144 @@ function off() {
 echo '<h2>'.$tit.$tit2.'</H2>';
 echo '<BR>';
 $ua = $_SERVER['HTTP_USER_AGENT'];
-$host=parse_url($link)['host'];
-  $ch = curl_init($link);
-  curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows; U; Windows NT 6.1; en-US; rv:1.9.1.2) Gecko/20090729 Firefox/3.5.2 GTB5');
-  curl_setopt($ch,CURLOPT_REFERER,"https://www.seriestop.net");
+$cookie=$base_cookie."flixtor.dat";
+$requestLink=$link;
+$head=array(
+'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+'Accept-Language: en-US,en;q=0.5',
+'Accept-Encoding: deflate, br',
+'Connection: keep-alive',
+'Upgrade-Insecure-Requests: 1');
+  $ch = curl_init();
+  curl_setopt($ch, CURLOPT_URL, $requestLink);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
   curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+  curl_setopt($ch,CURLOPT_HTTPHEADER,$head);
+  curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie);
+  curl_setopt($ch, CURLOPT_COOKIEJAR, $cookie);
+  curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'GET');
+  curl_setopt($ch, CURLOPT_HTTPGET, true);
+  curl_setopt($ch, CURLINFO_HEADER_OUT, true);
+  curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
+  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+  curl_setopt($ch, CURLOPT_HEADER,1);
+  $h = curl_exec($ch);
+ if (strpos($h,"503 Service") !== false) {
+  if (strpos($h,'id="cf-dn') === false)
+   $q1= getClearanceLink_old($h,$requestLink);
+  else
+   $q1= getClearanceLink($h,$requestLink);
+  $t1=explode('action="',$h);
+  $t2=explode('"',$t1[1]);
+  $requestLink="https://flixtor.to".$t2[0];
+  $t1=explode("?",$q1);
+  $post=$t1[1];
+$head=array('Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
+'Accept-Encoding: gzip, deflate, br',
+'Content-Type: application/x-www-form-urlencoded',
+'Content-Length: '.strlen($post).'',
+'Referer: https://flixtor.to',
+'Origin: https://flixtor.to',
+'Connection: keep-alive',
+'Upgrade-Insecure-Requests: 1');
+  curl_setopt($ch, CURLOPT_URL, $requestLink);
+  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
+  //curl_setopt($ch,CURLOPT_REFERER,$l1);
+  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,0);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER  ,1);  // RETURN THE CONTENTS OF THE CALL
-  curl_setopt($ch, CURLOPT_ENCODING,"");
+  curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie);
+  curl_setopt($ch, CURLOPT_COOKIEJAR, $cookie);
+  curl_setopt($ch, CURLOPT_HTTPHEADER, $head);
+  curl_setopt($ch, CURLOPT_HEADER,1);
+  curl_setopt($ch, CURLOPT_NOBODY,1);
+  curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'POST');
+  curl_setopt($ch, CURLOPT_HTTPGET, false);
+  //curl_setopt($ch, CURLINFO_HEADER_OUT, true);
+  curl_setopt ($ch, CURLOPT_POST, 1);
+  curl_setopt ($ch, CURLOPT_POSTFIELDS, $post);
+  curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
+  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 25);
+  $h = curl_exec($ch);
+  curl_close ($ch);
+ } else {
+    curl_close($ch);
+ }
+if ($tip=="movie") {
+ preg_match("/watch\/movie\/(\d+)/",$link,$m);
+ $l="https://flixtor.to/ajax/v4/m/".$m[1];
+} else {
+ preg_match("/watch\/tv\/(\d+)\/.+\/season\/(\d+)\/episode\/(\d+)/",$link,$m);
+ $l="https://flixtor.to/ajax/v4/e/".$m[1]."/".$m[2]."/".$m[3];
+}
+////////////////////////////////////////////////////////////////////////////
+$head=array('Accept: text/plain, */*; q=0.01',
+'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
+'Accept-Encoding: deflate',
+'Referer: https://flixtor.to/watch/tv/4467058/watchmen/season/1/episode/7',
+'X-Requested-With: XMLHttpRequest',
+'Connection: keep-alive');
+  $ch = curl_init();
+  curl_setopt($ch, CURLOPT_URL, $l);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
+  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+  curl_setopt($ch, CURLOPT_HEADER,0);
+  curl_setopt($ch, CURLOPT_HTTPHEADER, $head);
+  curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie);
   curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
   curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
   curl_setopt($ch, CURLOPT_TIMEOUT, 15);
-  $h3 = curl_exec($ch);
-  curl_close ($ch);
-  //echo $h3;
-  preg_match("/var\s+\w+=(0x[0-9a-f]{7,});/",$h3,$m);
-  $ac=$m[1];
+  $h = curl_exec($ch);
+  curl_close($ch);
+  //echo $h;
+  $x=base64_decode(str_rot13($h));
+  $out="";
+  for ($k=0;$k<strlen($x);$k++) {
+    $k1 = ord($x[$k]);
+    if (($k1>=33)&&($k1<=126))
+    $t = chr(33 + ($k1 + 14) % 94);
+    else
+    $t =chr($k1);
+    $out .=$t;
+  }
+  $y=json_decode($out,1);
+  //print_r ($y);
+  //$link=$y['file'];
+  $srt="";
+  for ($k=0;$k<count($y['tracks']);$k++) {
+    if ($y['tracks'][$k]['kind'] == "captions") {
+      if ($y['tracks'][$k]['label'] == "Romanian") $srt= "Cu subtitrare in romana.";
+    }
+  }
+  if (!$srt) {
+  for ($k=0;$k<count($y['tracks']);$k++) {
+    if ($y['tracks'][$k]['kind'] == "captions") {
+      if ($y['tracks'][$k]['label'] == "English") $srt= "Cu subtitrare in engleza.";
+    }
+  }
+  }
+  if (!isset($y['file'])) $srt="VIP Only!";
+////////////////////////////////////////////////////////////////////////////
+//echo $l;
 $r=array();
-$videos = explode("dbneg('", $h3);
-unset($videos[0]);
-$videos = array_values($videos);
-foreach($videos as $video) {
-   $t1=explode("'",$video);
-   $y=$t1[0];
-   $ad=explode("-",$y);
-   $aa = '';
-   for ($i = 0; $i < count($ad); $i++) {
-    $xh =hexdec($ad[$i]) - $ac;
-    $a9 = chr($xh);
-    $aa = $aa.$a9;
-   }
-   $r[]=$aa;
-}
+$r[]=urlencode($l);
+
+echo '<input type="hidden" id="file" value="'.urlencode($r[0]).'">';
+
 echo '<table border="1" width="100%">';
-echo '<TR><TD class="mp">Alegeti un server: Server curent:<label id="server">'.parse_url($r[0])['host'].'</label>
-<input type="hidden" id="file" value="'.urlencode($r[0]).'"></td></TR></TABLE>';
-echo '<table border="1" width="100%"><TR>';
 $k=count($r);
 $x=0;
-for ($i=0;$i<$k;$i++) {
-  if ($x==0) echo '<TR>';
-  $c_link=$r[$i];
-  $openload=parse_url($r[$i])['host'];
-  if (preg_match($indirect,$openload)) {
-  echo '<TD class="mp"><a href="filme_link.php?file='.urlencode($c_link).'&title='.urlencode(unfix_t($tit.$tit2)).'" target="_blank">'.$openload.'</a></td>';
-  } else
-  echo '<TD class="mp"><a id="myLink" href="#" onclick="changeserver('."'".$openload."','".urlencode($c_link)."'".');return false;">'.$openload.'</a></td>';
-  $x++;
-  if ($x==6) {
-    echo '</TR>';
-    $x=0;
-  }
-}
-if ($x < 6 && $x > 0 & $k>6) {
- for ($k=0;$k<6-$x;$k++) {
-   echo '<TD></TD>'."\r\n";
- }
- echo '</TR>'."\r\n";
-}
+  $c_link=$r[0];
+  $openload=parse_url(urldecode($r[0]))['host'];
+
+if ($srt)
+echo '<TR><TD class="mp">'.$srt.'</TD></TR>';
 echo '</TABLE>';
 if ($tip=="movie") {
   $tit3=$tit;
@@ -193,6 +271,10 @@ if ($tip=="movie") {
   $from="";
   $link_page="";
 }
+  $rest = substr($tit3, -6);
+  if (preg_match("/\((\d+)\)/",$rest,$m)) {
+   $tit3=trim(str_replace($m[0],"",$tit3));
+  }
 $sub_link ="from=".$from."&tip=".$tip."&sez=".$sez."&ep=".$ep."&imdb=".$imdbid."&title=".urlencode(fix_t($tit3))."&link=".$link_page."&ep_tit=".urlencode(fix_t($tit2))."&year=".$year;
 echo '<br>';
 echo '<table border="1" width="100%">';
@@ -220,13 +302,10 @@ echo '<br>
 <TD><font size="4"><b>Scurtaturi: 1=opensubtitles, 2=titrari, 3=subs, 4=subtitrari, 5=vizioneaza</b></font></TD></TR></TABLE>
 <div id="overlay">
   <div id="text">Wait....</div>
-</div>';
-if (file_exists($base_pass."debug.txt")) {
-echo '<BR>';
-for($k=0; $k<count($r);$k++) {
-echo $r[$k]."<BR>";
-}
-}
-echo'
+</div>
+<BR>
+Free user:<BR>
+Filme: Doar cele publicate in ultimele 6 luni.<BR>
+Seriale: Doar episoadele publicate in ultimele 3 luni sau primele 3 episoade din sezonul 1.
 </body>
 </html>';

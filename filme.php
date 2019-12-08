@@ -82,6 +82,13 @@ else
 <TD width="25%"><a href="filme/deseneledublate.php?page=1&tip=release&title=desenedublate&link=" target="_blank">deseneledublate</a></TD>
 <TD width="25%"><a href="filme/desenefaine_main.php" target="_blank">desenefaine.ro</a></TD>
 </TR>
+
+<TR>
+<TD width="25%"><a href="filme/fsgratis_main.php" target="_blank">fsgratis</a></TD>
+<TD width="25%"></TD>
+<TD width="25%"></TD>
+<TD width="25%"></TD>
+</TR>
 <!-- straine -->
 <TR>
 <TD width="25%"><a href="filme/tvseries_f.php?page=1&tip=release&title=tvseries&link=" target="_blank">tvseries</a></TD>
@@ -118,8 +125,8 @@ else
 
 <TR>
 <TD width="25%"><a href="filme/solarmoviesonline_f.php?page=1&tip=release&title=solarmoviesonline&link=" target="_blank">solarmoviesonline</a></TD>
-<TD width="25%"></TD>
-<TD width="25%"></TD>
+<TD width="25%"><a href="filme/flixtor_f.php?page=1&tip=release&title=flixtor&link=" target="_blank">flixtor</a></TD>
+<TD width="25%"><a href="filme/movie4k_f.php?page=1&tip=release&title=movie4k&link=" target="_blank">movie4k</a></TD>
 <TD width="25%"></TD>
 </TR>
 <?php

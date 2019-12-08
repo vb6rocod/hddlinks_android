@@ -118,40 +118,67 @@ function off() {
 <?php
 echo '<h2>'.$tit.$tit2.'</H2>';
 echo '<BR>';
+$r=array();
+//echo $link;
+$t1=explode("stream-",$link);
+$t2=explode(".",$t1[1]);
+$id=$t2[0];
+
+//https://cdn.movie4k.ag/embed/update_links?id=1500219&lang=3
 $ua = $_SERVER['HTTP_USER_AGENT'];
-$host=parse_url($link)['host'];
-  $ch = curl_init($link);
-  curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows; U; Windows NT 6.1; en-US; rv:1.9.1.2) Gecko/20090729 Firefox/3.5.2 GTB5');
-  curl_setopt($ch,CURLOPT_REFERER,"https://www.seriestop.net");
+if ($tip=="movie")
+$l="https://cdn.movie4k.ag/embed/update_links?id=".$id."&lang=3";
+else
+$l="https://cdn.movie4k.ag/embed/update_links?id=".$id."&lang=3&e=".$ep;
+//echo $l;
+$post="";
+  $ch = curl_init($l);
   curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+  curl_setopt($ch, CURLOPT_REFERER, $l);
+  curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 10.0; rv:55.0) Gecko/20100101 Firefox/55.0');
   curl_setopt($ch, CURLOPT_RETURNTRANSFER  ,1);  // RETURN THE CONTENTS OF THE CALL
-  curl_setopt($ch, CURLOPT_ENCODING,"");
+  curl_setopt ($ch, CURLOPT_POST, 1);
+  curl_setopt ($ch, CURLOPT_POSTFIELDS, $post);
   curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+  $h = curl_exec($ch);
+  curl_close($ch);
+  //echo $h;
+$captcha="03";
+$head=array('Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
+'Accept-Encoding: deflate',
+'Connection: keep-alive',
+'X-Requested-With: XMLHttpRequest',
+'Referer: https://movie4k.ag/',
+'Cookie: MarketGidStorage=0 ; captcha='.$captcha.'; approve=1; _gat=1; approve_search=1',
+'Upgrade-Insecure-Requests: 1');
+  $ch = curl_init();
+  curl_setopt($ch, CURLOPT_URL, $link);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
+  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+  curl_setopt($ch,CURLOPT_HTTPHEADER,$head);
+  curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
+  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
   curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
   curl_setopt($ch, CURLOPT_TIMEOUT, 15);
-  $h3 = curl_exec($ch);
-  curl_close ($ch);
-  //echo $h3;
-  preg_match("/var\s+\w+=(0x[0-9a-f]{7,});/",$h3,$m);
-  $ac=$m[1];
-$r=array();
-$videos = explode("dbneg('", $h3);
+  $h = curl_exec($ch);
+//echo $h;
+$t1=explode('id="streams">',$h);
+$t2=explode("div id='showMore",$t1[1]);
+$h=$t2[0];
+//echo $h;
+$videos=explode("href='",$h);
 unset($videos[0]);
 $videos = array_values($videos);
 foreach($videos as $video) {
-   $t1=explode("'",$video);
-   $y=$t1[0];
-   $ad=explode("-",$y);
-   $aa = '';
-   for ($i = 0; $i < count($ad); $i++) {
-    $xh =hexdec($ad[$i]) - $ac;
-    $a9 = chr($xh);
-    $aa = $aa.$a9;
-   }
-   $r[]=$aa;
+ $t2=explode("'",$video);
+ $l=trim($t2[0]);
+ if (strpos($l,"http") === false && $l) $l="https:".$l;
+ if ($l) $r[]=urlencode($l);
 }
 echo '<table border="1" width="100%">';
-echo '<TR><TD class="mp">Alegeti un server: Server curent:<label id="server">'.parse_url($r[0])['host'].'</label>
+echo '<TR><TD class="mp">Alegeti un server: Server curent:<label id="server">'.parse_url(urldecode($r[0]))['host'].'</label>
 <input type="hidden" id="file" value="'.urlencode($r[0]).'"></td></TR></TABLE>';
 echo '<table border="1" width="100%"><TR>';
 $k=count($r);
@@ -159,7 +186,7 @@ $x=0;
 for ($i=0;$i<$k;$i++) {
   if ($x==0) echo '<TR>';
   $c_link=$r[$i];
-  $openload=parse_url($r[$i])['host'];
+  $openload=parse_url(urldecode($r[$i]))['host'];
   if (preg_match($indirect,$openload)) {
   echo '<TD class="mp"><a href="filme_link.php?file='.urlencode($c_link).'&title='.urlencode(unfix_t($tit.$tit2)).'" target="_blank">'.$openload.'</a></td>';
   } else
@@ -193,6 +220,10 @@ if ($tip=="movie") {
   $from="";
   $link_page="";
 }
+  $rest = substr($tit3, -6);
+  if (preg_match("/\((\d+)\)/",$rest,$m)) {
+   $tit3=trim(str_replace($m[0],"",$tit3));
+  }
 $sub_link ="from=".$from."&tip=".$tip."&sez=".$sez."&ep=".$ep."&imdb=".$imdbid."&title=".urlencode(fix_t($tit3))."&link=".$link_page."&ep_tit=".urlencode(fix_t($tit2))."&year=".$year;
 echo '<br>';
 echo '<table border="1" width="100%">';
@@ -220,13 +251,6 @@ echo '<br>
 <TD><font size="4"><b>Scurtaturi: 1=opensubtitles, 2=titrari, 3=subs, 4=subtitrari, 5=vizioneaza</b></font></TD></TR></TABLE>
 <div id="overlay">
   <div id="text">Wait....</div>
-</div>';
-if (file_exists($base_pass."debug.txt")) {
-echo '<BR>';
-for($k=0; $k<count($r);$k++) {
-echo $r[$k]."<BR>";
-}
-}
-echo'
+</div>
 </body>
 </html>';

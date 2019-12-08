@@ -17,7 +17,7 @@ $has_fav="yes";
 $has_search="yes";
 $has_add="yes";
 $has_fs="yes";
-$fav_target="seriestop_s_fav.php?host=https://srstop.in";
+$fav_target="seriestop_s_fav.php?host=https://srsone.top";
 $add_target="seriestop_s_add.php";
 $add_file="";
 $fs_target="seriestop_s_ep.php";
@@ -166,8 +166,8 @@ if ($page==1) {
 }
 echo '</TR>'."\r\n";
 $r=array();
-if (!file_exists($base_cookie."seriestop.dat")) {
-  $l="https://srstop.in/";
+if ($page==1 && $tip=="release") {
+  $l="https://srsone.top/";
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $l);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);

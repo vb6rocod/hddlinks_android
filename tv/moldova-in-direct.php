@@ -72,6 +72,7 @@ if (preg_match("/android|ipad/i",$user_agent) && preg_match("/chrome|firefox|mob
 $n=0;
 /////////////////////////////////////////////////////////////////////////
 $ua = $_SERVER['HTTP_USER_AGENT'];
+if (true == false) {
   if ($flash=="flash")
   $user_agent     =   $_SERVER['HTTP_USER_AGENT'];
   else {
@@ -117,19 +118,21 @@ $head=array(
  } else {
     curl_close($ch);
  }
+}
 //////////////////////////////////////////////////////////////////
 
 echo '<h2>Moldova in Direct</H2>';
 echo '<table border="1px" width="100%">'."\n\r";
 $link="https://www.trm.md/ro/moldova-in-direct/";
+$link="http://trm.md/ro/moldova-in-direct/";
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $link);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
   curl_setopt($ch, CURLOPT_USERAGENT, $ua);
   curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
   curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie);
-  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
-  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 10);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 25);
   $html = curl_exec($ch);
   curl_close($ch);
 //$html = file_get_contents($link);
@@ -144,10 +147,11 @@ foreach($videos as $video) {
     $t1=explode('src="',$video);
     //$t2=explode('value="',$t1[1]);
     $t3=explode('"',$t1[1]);
-    $image="../filme/r_m.php?file=http://www.trm.md".$t3[0];
+    $image="../filme/r_m.php?file=http://trm.md".$t3[0];
+    $image="http://trm.md".$t3[0];
     $t1=explode('href="',$video);
     $t2=explode('"',$t1[1]);
-    $link="https://www.trm.md".$t2[0];
+    $link="http://trm.md".$t2[0];
     //$link=str_replace("tiny-","",$image);
     //$link=str_replace("jpg","mp4",$link);
     $link1="direct_link.php?link=".$link."&title=".urlencode(fix_t($title))."&from=moldova&mod=direct";
@@ -167,7 +171,7 @@ foreach($videos as $video) {
   }
 }
 $n=0;
-$link="https://www.trm.md/ro/butonul-rosu";
+$link="http://trm.md/ro/butonul-rosu";
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $link);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
@@ -190,10 +194,10 @@ foreach($videos as $video) {
     $t1=explode('src="',$video);
     //$t2=explode('value="',$t1[1]);
     $t3=explode('"',$t1[1]);
-    $image="../filme/r_m.php?file=https://www.trm.md".$t3[0];
+    $image="http://trm.md".$t3[0];
     $t1=explode('href="',$video);
     $t2=explode('"',$t1[1]);
-    $link="https://www.trm.md".$t2[0];
+    $link="http://trm.md".$t2[0];
     //$link=str_replace("tiny-","",$image);
     //$link=str_replace("jpg","mp4",$link);
     $link1="direct_link.php?link=".$link."&title=".urlencode(fix_t($title))."&from=moldova&mod=direct";

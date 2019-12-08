@@ -83,6 +83,7 @@ $sub_link ="from=".$from."&tip=".$tip."&sez=".$sez."&ep=".$ep."&imdb=".$imdbid."
 //echo $sub_link;
 /**####################################**/
 /** Here we start.......**/
+
 if (strpos($filelink,"filmeonlinegratis.org") !== false) {
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $filelink);
@@ -97,6 +98,60 @@ if (strpos($filelink,"filmeonlinegratis.org") !== false) {
   $html = curl_exec($ch);
   curl_close($ch);
   $html = urldecode(str_replace("@","%",$html));
+} elseif (strpos($filelink,"fsgratis.com") !== false) {
+  //https://fsgratis.com/miss-me-this-christmas/
+  $ch = curl_init();
+  curl_setopt($ch, CURLOPT_URL, $filelink);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+  curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 5.1; rv:22.0) Gecko/20100101 Firefox/22.0');
+  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+  curl_setopt($ch, CURLOPT_HEADER,0);
+  curl_setopt($ch, CURLOPT_NOBODY,0);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+  $h = curl_exec($ch);
+  curl_close($ch);
+  $html=$h;
+  preg_match_all("/trembed(\S+)\"/mei",$h,$m);
+  for ($k=0;$k<count($m[0]);$k++) {
+    $l="https://fsgratis.com/?".prep_tit($m[0][$k]);
+    //echo $l;
+    $ch = curl_init();
+    curl_setopt($ch, CURLOPT_URL, $l);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+    curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 10.0; rv:70.0) Gecko/20100101 Firefox/70.0');
+    curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+    curl_setopt($ch, CURLOPT_HEADER,0);
+    curl_setopt($ch, CURLOPT_NOBODY,0);
+    curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+    curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+    $h1 = curl_exec($ch);
+    curl_close($ch);
+    //echo $h1;
+    $t1=explode("tid=",$h1);
+    $t2=explode('"',$t1[1]);
+    $id = substr($t2[0], 0, -1);
+    $id=strrev($id);
+    $l="https://fsgratis.com/?trhide=1&trhex=".$id;
+    $ch = curl_init();
+    curl_setopt($ch, CURLOPT_URL, $l);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+    curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 10.0; rv:70.0) Gecko/20100101 Firefox/70.0');
+    curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,0);
+    curl_setopt($ch, CURLOPT_REFERER, "https://fsgratis.com/?trhide=1&tid=".strrev($id));
+    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+    curl_setopt($ch, CURLOPT_HEADER,1);
+    curl_setopt($ch, CURLOPT_NOBODY,0);
+    curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+    curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+    $h2 = curl_exec($ch);
+    curl_close($ch);
+    //echo $h2;
+    if (preg_match("/Location:\s*(\S+)/",$h2,$p))
+      $html .='<iframe src="'.$p[1].'"> ';
+  }
 } elseif (strpos($filelink,"filme-bune.info") !== false) {
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $filelink);
@@ -121,6 +176,22 @@ if (strpos($filelink,"filmeonlinegratis.org") !== false) {
 } elseif (strpos($filelink,"desenefaine.ro") !== false) {
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $filelink);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+  curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows; U; Windows NT 6.1; en-US; rv:1.9.1.2) Gecko/20090729 Firefox/3.5.2 GTB5');
+  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+  curl_setopt($ch, CURLOPT_REFERER, "https://desenefaine.ro");
+  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+  $h = curl_exec($ch);
+  curl_close($ch);
+  $html = urldecode(str_replace("@","%",$h));
+  //echo $html;
+  $t1=explode('embed_url: "',$html);
+  $t2=explode('"',$t1[1]);
+  $l=$t2[0];
+  $ch = curl_init();
+  curl_setopt($ch, CURLOPT_URL, $l);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
   curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows; U; Windows NT 6.1; en-US; rv:1.9.1.2) Gecko/20090729 Firefox/3.5.2 GTB5');
   curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
@@ -468,10 +539,11 @@ if (strpos($filelink,"filmeonlinegratis.org") !== false) {
   $post="post_id=".$id;
   $t1=explode('url:"',$out);
   $t2=explode('"',$t1[1]);
-  $l="https://".$host."".$t2[0];
+  $l="http://".$host."".$t2[0];
   //echo $l;
   //echo $post;
-  $ch = curl_init($l);
+  $ch = curl_init();
+  curl_setopt($ch, CURLOPT_URL,$l);
   curl_setopt($ch, CURLOPT_USERAGENT, $ua);
   curl_setopt($ch,CURLOPT_REFERER,"https://tvhub.org");
   curl_setopt ($ch, CURLOPT_POST, 1);
@@ -485,51 +557,85 @@ if (strpos($filelink,"filmeonlinegratis.org") !== false) {
   curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
   curl_setopt($ch, CURLOPT_TIMEOUT, 15);
   $h = curl_exec($ch);
-  curl_close ($ch);
+  //curl_close ($ch);
   //echo $h;
-  //die();
+  $videos=explode('data-server="',$h);
+  unset($videos[0]);
+  $videos = array_values($videos);
+  foreach($videos as $video) {
+    $t1=explode('"',$video);
+    $id_s=$t1[0];
+    $post="post_id=".$id."&server_nr=".$id_s;
+    curl_setopt ($ch, CURLOPT_POST, 1);
+    curl_setopt ($ch, CURLOPT_POSTFIELDS, $post);
+    $h .= curl_exec($ch);
+  }
+  curl_close ($ch);
   $html=$h;
-
+  //echo $h;
 } elseif (strpos($filelink,"filme--online.") !== false) {
-  $ua = $_SERVER['HTTP_USER_AGENT'];
+  require_once("JavaScriptUnpacker.php");
   $cookie=$base_cookie."hdpopcorns.dat";
+  $host=parse_url($filelink)['host'];
+  $ua     =   $_SERVER['HTTP_USER_AGENT'];
   $ch = curl_init($filelink);
   curl_setopt($ch, CURLOPT_USERAGENT, $ua);
-  curl_setopt($ch,CURLOPT_REFERER,"https://filme--online.ro/");
+  curl_setopt($ch,CURLOPT_REFERER,"http://filme--online.ro");
   //curl_setopt ($ch, CURLOPT_POST, 1);
   //curl_setopt ($ch, CURLOPT_POSTFIELDS, $post);
   //curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
   curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER  ,1);  // RETURN THE CONTENTS OF THE CALL
   //curl_setopt($ch, CURLOPT_HEADER, true);
-  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
   curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie);
+  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
   curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
   curl_setopt($ch, CURLOPT_TIMEOUT, 15);
   $h1 = curl_exec($ch);
   curl_close ($ch);
   //echo $h1;
-
+  $id=str_between($h1,"post_ID' value='","'");
   $id=str_between($h1,'data-id="','"');
-
-  $l="https://filme--online.ro/wp-content/themes/vizer/inc/parts/single/field-ajax.php";
+  //$t1=explode('eval(function(p,a,c,k,e,d)',$h1);
+  //$h2="eval(function(p,a,c,k,e,d)".$t1[count($t1)-1];
+  //$jsu = new JavaScriptUnpacker();
+  //$out = $jsu->Unpack($h2);
   $post="post_id=".$id;
+  $t1=explode('url:"',$h1);
+  $t2=explode('"',$t1[1]);
+  $l="http://".$host."".$t2[0];
+  //echo $l;
   //echo $post;
-  $ch = curl_init($l);
+  $ch = curl_init();
+  curl_setopt($ch, CURLOPT_URL,$l);
   curl_setopt($ch, CURLOPT_USERAGENT, $ua);
-  curl_setopt($ch,CURLOPT_REFERER,"https://filme--online.ro/");
+  curl_setopt($ch,CURLOPT_REFERER,"https://tvhub.org");
   curl_setopt ($ch, CURLOPT_POST, 1);
   curl_setopt ($ch, CURLOPT_POSTFIELDS, $post);
   //curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
   curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER  ,1);  // RETURN THE CONTENTS OF THE CALL
   //curl_setopt($ch, CURLOPT_HEADER, true);
-  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
   curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie);
+  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
   curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
   curl_setopt($ch, CURLOPT_TIMEOUT, 15);
-  $html = curl_exec($ch);
+  $h = curl_exec($ch);
+  //curl_close ($ch);
+  //echo $h;
+  $videos=explode('data-server="',$h);
+  unset($videos[0]);
+  $videos = array_values($videos);
+  foreach($videos as $video) {
+    $t1=explode('"',$video);
+    $id_s=$t1[0];
+    $post="post_id=".$id."&server_nr=".$id_s;
+    curl_setopt ($ch, CURLOPT_POST, 1);
+    curl_setopt ($ch, CURLOPT_POSTFIELDS, $post);
+    $h .= curl_exec($ch);
+  }
   curl_close ($ch);
+  $html=$h;
 } elseif (strpos($filelink,"vezi-online.eu") !== false) {
   $ch = curl_init($filelink);
   curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows; U; Windows NT 6.1; en-US; rv:1.9.1.2) Gecko/20090729 Firefox/3.5.2 GTB5');
@@ -777,37 +883,69 @@ if (strpos($filelink,"filmeonlinegratis.org") !== false) {
    $html .=$h;
   }
 } elseif (strpos($filelink,"filmeserialehd.ro") !== false) {
-  $ua = $_SERVER['HTTP_USER_AGENT'];
+  require_once("JavaScriptUnpacker.php");
+  $cookie=$base_cookie."hdpopcorns.dat";
+  $host=parse_url($filelink)['host'];
+  $ua     =   $_SERVER['HTTP_USER_AGENT'];
   $ch = curl_init($filelink);
   curl_setopt($ch, CURLOPT_USERAGENT, $ua);
-  curl_setopt($ch,CURLOPT_REFERER,"https://filmeserialehd.ro");
+  curl_setopt($ch,CURLOPT_REFERER,"https://tvhub.org");
+  //curl_setopt ($ch, CURLOPT_POST, 1);
+  //curl_setopt ($ch, CURLOPT_POSTFIELDS, $post);
+  //curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
   curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER  ,1);  // RETURN THE CONTENTS OF THE CALL
+  //curl_setopt($ch, CURLOPT_HEADER, true);
+  curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie);
   curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
   curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
   curl_setopt($ch, CURLOPT_TIMEOUT, 15);
-  $html = curl_exec($ch);
+  $h1 = curl_exec($ch);
   curl_close ($ch);
-  $t1=explode('data-id="',$html);
-  $t2=explode('"',$t1[1]);
-  $id=$t2[0];
-  $l="https://filmeserialehd.ro/wp-content/themes/serialenoi/field-ajax.php";
+  //echo $h1;
+  $id=str_between($h1,"post_ID' value='","'");
+  $id=str_between($h1,'data-id="','"');
+  $t1=explode('eval(function(p,a,c,k,e,d)',$h1);
+  $h2="eval(function(p,a,c,k,e,d)".$t1[count($t1)-1];
+  $jsu = new JavaScriptUnpacker();
+  $out = $jsu->Unpack($h2);
   $post="post_id=".$id;
-  $ch = curl_init($l);
-  curl_setopt($ch, CURLOPT_USERAGENT,  $ua);
-  curl_setopt($ch,CURLOPT_REFERER,"https://filmeserialehd.ro");
+  $t1=explode('url:"',$out);
+  $t2=explode('"',$t1[1]);
+  $l="http://".$host."".$t2[0];
+  //echo $l;
+  //echo $post;
+  $ch = curl_init();
+  curl_setopt($ch, CURLOPT_URL,$l);
+  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
+  curl_setopt($ch,CURLOPT_REFERER,"https://tvhub.org");
   curl_setopt ($ch, CURLOPT_POST, 1);
   curl_setopt ($ch, CURLOPT_POSTFIELDS, $post);
   //curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
   curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER  ,1);  // RETURN THE CONTENTS OF THE CALL
   //curl_setopt($ch, CURLOPT_HEADER, true);
+  curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie);
   curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
   curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
   curl_setopt($ch, CURLOPT_TIMEOUT, 15);
   $h = curl_exec($ch);
+  //curl_close ($ch);
+  //echo $h;
+  $videos=explode('data-server="',$h);
+  unset($videos[0]);
+  $videos = array_values($videos);
+  foreach($videos as $video) {
+    $t1=explode('"',$video);
+    $id_s=$t1[0];
+    $post="post_id=".$id."&server_nr=".$id_s;
+    curl_setopt ($ch, CURLOPT_POST, 1);
+    curl_setopt ($ch, CURLOPT_POSTFIELDS, $post);
+    $h .= curl_exec($ch);
+  }
   curl_close ($ch);
-  $html .=$h;
+  $html=$h;
+  //echo $html;
 } elseif (strpos($filelink,"filmserialonline.org") !== false) {
   $ua = $_SERVER['HTTP_USER_AGENT'];
   $ch = curl_init();
@@ -890,7 +1028,7 @@ $s=$s."fastplay\.cc|watchers\.to|fastplay\.to";
 $s=$s."|trilulilu|proplayer\/playlist-controller.php|viki\.com|modovideo\.com|roshare|rosharing|ishared\.eu|";
 $s=$s."stagevu\.com|vidup\.me|vidup\.io";
 $s=$s."|filebox\.com|glumbouploads\.com|uploadc\.com|sharefiles4u\.com|zixshare\.com|uploadboost\.com|";
-$s=$s."hqq\.tv|hqq\.watch|waaw1?\.|hindipix\.in|pajalusta\.club|vidtodo\.com|vshare\.eu|bit\.ly";
+$s=$s."hqq\.tv|hqq\.watch|waaw1?\.|waaws|hindipix\.in|pajalusta\.club|vidtodo\.com|vshare\.eu|bit\.ly";
 $s=$s."|nowvideo\.eu|nowvideo\.co|vreer\.com|180upload\.com|dailymotion\.com|nosvideo\.com|vidbull\.com|";
 $s=$s."purevid\.com|videobam\.com|streamcloud\.eu|donevideo\.com|upafile\.com|docs\.google|mail\.ru|";
 $s=$s."superweb|moviki\.ru|entervideos\.com";
@@ -905,9 +1043,9 @@ $s=$s."powvideo|povvideo|cloudvideo|vidtodo|vidcloud\.co|flashx\.";
 $s=$s."|putload\.|event\.2target\.net|fembed\.com|streamcherry\.com|hideiframe\.com|";
 $s=$s."filmeonlinehd\.tv\/sharemovie|rovideo\.net\/video|flix555\.com|gamovideo\.com|playhd\.fun|idtbox\.com|";
 $s=$s."bitporno\.com|thevideobee\.to|mangovideo\.|smartshare\.tv|datoporn\.co|xstreamcdn\.com|onlystream\.tv|";
-$s=$s."database\.serialeonline\.to|drive\.google\.com|videomega\.|vidload\.co|mixdrop\.co|mystream\.to|mstream\.cloud";
-$s=$s."|hxload\.|bazavox\.com|cloud\.vidhubstr\.org|vidia\.tv|gomostream\.com|viduplayer\.com";
-$s=$s."|prostream\.to|videobin\.co|upstream\.to|playtvid\.com|jetload\.net/i";
+$s=$s."database\.serialeonline\.to|drive\.google\.com|videomega\.|vidload\.co|mixdrop\.|mystream\.to|mstream\.cloud";
+$s=$s."|hxload\.|bazavox\.com|cloud\.vidhubstr\.org|vidia\.tv|gomostream\.com|viduplayer\.com|leaked-celebrities\.";
+$s=$s."|prostream\.to|videobin\.co|upstream\.to|playtvid\.com|jetload\.net|vidfast\.co|clipwatching\./i";
 /////////////////////////////////////////////
 //$x=preg_grep($s,$links);
 //print_r ($x);
@@ -927,7 +1065,7 @@ for ($i=0;$i<count($links);$i++) {
     }
   }
   //echo $cur_link."\n";
-  if (preg_match("/bit\.ly|goo\.gl|hideiframe\.com/",$links[$i])) {
+  if (preg_match("/bit\.ly|goo\.gl|hideiframe\.com|leaked-celebrities\./",$links[$i])) {
    $l=trim("https:".$links[$i]);
    //echo $l;
    $ch = curl_init();

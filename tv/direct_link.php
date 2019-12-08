@@ -459,13 +459,6 @@ $head=array('Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
 }
 if ($from=="moldova") {
     $ua = $_SERVER['HTTP_USER_AGENT'];
-  if ($flash=="flash")
-  $user_agent     =   $_SERVER['HTTP_USER_AGENT'];
-  else {
-  $user_agent = 'Mozilla/5.0(Linux;Android 7.1.2;ro;RO;MXQ-4K Build/MXQ-4K) MXPlayer/1.8.10';
-  $user_agent = 'Mozilla/5.0(Linux;Android 10.1.2) MXPlayer';
-  }
-  $ua = $_SERVER['HTTP_USER_AGENT'];
     $cookie=$base_cookie."hdpopcorns.dat";
     $ch = curl_init();
     curl_setopt($ch, CURLOPT_URL, $link);
@@ -476,20 +469,20 @@ if ($from=="moldova") {
     curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie);
     //curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
     //curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
-    curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
-    curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+    curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 10);
+    curl_setopt($ch, CURLOPT_TIMEOUT, 25);
     $h = curl_exec($ch);
     curl_close($ch);
-    $t1=explode("video.src = '",$h);
+    $t1=explode("loadSource('",$h);
     $t2=explode("'",$t1[1]);
-    $link="https://www.trm.md".$t2[0];
-    $h=file_get_contents($cookie);
-    preg_match("/cf_clearance\s+(\S+)/",$h,$m);
+    $link="http://trm.md".$t2[0];
+    //$h=file_get_contents($cookie);
+    //preg_match("/cf_clearance\s+(\S+)/",$h,$m);
     //print_r ($m);
     //die();
-    if ($link && $flash != "flash")
-    $link=$link."|Cookie=".urlencode("cf_clearance=").urlencode($m[1])."&User-Agent=".urlencode($ua);
-    $head=array("Cookie: cf_clearance=".$m[1]);
+    //if ($link && $flash != "flash")
+    //$link=$link."|Cookie=".urlencode("cf_clearance=").urlencode($m[1])."&User-Agent=".urlencode($ua);
+    //$head=array("Cookie: cf_clearance=".$m[1]);
     //echo $link;
     /*
     $ch = curl_init();
@@ -762,7 +755,7 @@ require_once("../filme/JavaScriptUnpacker.php");
   $user_agent = 'Mozilla/5.0(Linux;Android 7.1.2;ro;RO;MXQ-4K Build/MXQ-4K) MXPlayer/1.8.10';
   $user_agent = 'Mozilla/5.0(Linux;Android 10.1.2) MXPlayer';
   }
-  $user_agent     =   $_SERVER['HTTP_USER_AGENT'];
+  //$user_agent     =   $_SERVER['HTTP_USER_AGENT'];
 //$ua="Mozilla/5.0 (Windows NT 10.0; WOW64; rv:46.0) Gecko/20100101 Firefox/46.0";
 $ua=$user_agent;
 //$link="https://www.arconaitv.us/stream.php?id=168";
@@ -777,6 +770,7 @@ $ua=$user_agent;
       curl_setopt($ch, CURLOPT_TIMEOUT, 15);
       $h = curl_exec($ch);
       curl_close($ch);
+      //$h=file_get_contents($link);
   $jsu = new JavaScriptUnpacker();
   $out = $jsu->Unpack($h);
   //echo $out;
@@ -794,15 +788,23 @@ $head=array('Accept: */*',
 'X-CustomHeader: videojs',
 'Connection: keep-alive');
 $origin="https://www.arconaitv.us";
+$ad="User-Agent=".urlencode("Mozilla/5.0 (Windows NT 10.0; rv:70.0) Gecko/20100101 Firefox/70.0");
+//$ad .="&Accept=".urlencode("*/*")."&Accept-Language=".urlencode("ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2");
+//$ad .="&Accept-Encoding=".urlencode("gzip, deflate, br");
+$ad .="&X-CustomHeader=videojs";
+$ad ."&Origin=".urlencode("https://www.arconaitv.us");
+//$ad .="&Connection=".urlencode("keep-alive");
+$ad .="&Referer=".urlencode("https://www.arconaitv.us");
+
    if ($link && $flash != "flash")
-     $link=$link."|X-CustomHeader=videojs&Referer=".urlencode("https://www.arconaitv.us/stream.php?id=191")."&Origin=".urlencode($origin);
-/*
+     $link=$link."|".$ad;
+      /*
       $ch = curl_init();
       curl_setopt($ch, CURLOPT_URL, $link);
       curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
       curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
       curl_setopt($ch, CURLOPT_USERAGENT, $ua);
-      curl_setopt($ch,CURLOPT_HTTPHEADER,$head);
+      //curl_setopt($ch,CURLOPT_HTTPHEADER,$head);
       curl_setopt($ch,CURLOPT_HEADER,1);
   curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'GET');
   curl_setopt($ch, CURLOPT_HTTPGET, true);
@@ -813,9 +815,9 @@ $origin="https://www.arconaitv.us";
       //curl_setopt($ch, CURLOPT_REFERER, "https://www.arconaitv.us/");
       $h = curl_exec($ch);
       curl_close($ch);
-      echo $h;
-      die();
-  */
+      //echo $h;
+      //die();
+      */
   //$link=str_replace("videoserver2.org","videoserver1.org",$link);
   //$flash="flash";
   //$link=str_replace("https","http",$link);
@@ -860,6 +862,7 @@ if ($l1) $link=$l1;
 */
 if ($from=="digi24") {
 //$cookie=$base_cookie."digi.dat";
+//echo $link;
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $link);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
@@ -875,13 +878,20 @@ if ($from=="digi24") {
   $html = curl_exec($ch);
   curl_close($ch);
   //echo $html;
+  $t1=explode('id="video-player-cfg">',$html);
+  $t2=explode('</script',$t1[1]);
+  $h=trim($t2[0]);
+  //echo $h;
+  $r=json_decode($h,1);
+  //print_r ($r);
+  $link = $r['new-info']['meta']['versions']['720p.mp4'];
   //die();
 //http://s1.digi24.ro/onedb/transcode/5794a369682ccfd2588b4567.480p.mp4
-$out=str_replace("\\","",str_between($html,'480p.mp4":"','"'));
-$link=str_replace("https","http",$out);
+//$out=str_replace("\\","",str_between($html,'480p.mp4":"','"'));
+//$link=str_replace("https","http",$out);
 //$link=str_replace("v2.iw.ro","v1.iw.ro",$link);
 //$link=str_replace("v4.iw.ro","v1.iw.ro",$link);
-$link=preg_replace("/v\d+\.iw/","v1.iw",$link);
+//$link=preg_replace("/v\d+\.iw/","v1.iw",$link);
 }
 if ($from=="antenaplay") {
 $id1 = substr(strrchr($link, "/"), 1);

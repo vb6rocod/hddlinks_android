@@ -352,8 +352,9 @@ if (preg_match("/4tube\.com/",$host)) {
   if (preg_match("/license_code:\s+\'(.*?)\'/ms",$h,$m)) {
    preg_match_all("/(video_url|video_alt_url|video_alt_url2|video_alt_url3)\:\s+\'(.*?)\/\'/ms",$h,$u);
    $movie=$u[2][count($u[2])-1];
+   //echo $movie."\n";
    $lic=$m[1];
-   //$out=kt($lic,$movie);
+   $out=kt($lic,$movie);
    $out=$movie;
  }
 } else if (preg_match("/hellmoms\.com/",$host)) {
@@ -578,9 +579,25 @@ if (preg_match("/4tube\.com/",$host)) {
 } else if (preg_match("/slutload\.com/",$host)) {
   if (preg_match("/license_code:\s+\'(.*?)\'/ms",$h,$m)) {
    preg_match_all("/(video_url|video_alt_url|video_alt_url2|video_alt_url3)\:\s+\'function\/0\/(.*?)\/\'/ms",$h,$u);
-   $movie=$u[2][count($u[2])-1];
+   $movie=$u[2][count($u[2])-1]."/";
+   //$movie="https://www.slutload.com/get_file/1/4c5011ca614281c4f0530e159e1fdbd7f38453f407/3333000/3333629/3333629.mp4/";
    $lic=$m[1];
+   //echo $movie."\n".$lic."\n";
    $out=kt($lic,$movie);
+   //echo $out."\n";
+   /*
+  $ch = curl_init();
+  curl_setopt($ch, CURLOPT_URL, $out);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
+  curl_setopt($ch, CURLOPT_REFERER, "https://slutload.com");
+  curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 0);
+  curl_setopt($ch, CURLOPT_NOBODY, 1);
+  curl_setopt($ch, CURLOPT_HEADER, 1);
+  $h = curl_exec($ch);
+  curl_close($ch);
+  echo $h;
+  */
  }
 } else if (preg_match("/spankbang\.com/",$host)) {
   $t1=explode('data-streamkey="',$h);

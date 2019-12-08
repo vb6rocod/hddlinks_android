@@ -1,4 +1,14 @@
 <?php
+$h=file_get_contents("test.srt1");
+//$h=htmlspecialchars($h);
+$h=str_replace("&lrm;","",$h);
+$h=preg_replace("/(\d+\:\d+\:\d+\.\d+ --> \d+\:\d+\:\d+\.\d+)(.+)/","$1",$h);
+$h=preg_replace("/\<c.*?\>/","",$h);
+$h=preg_replace("/\<\/c.*?\>/","",$h);
+//$h=str_replace("<c.bg_transparent>","",$h);
+//$h=str_replace("</c.bg_transparent>","",$h);
+echo $h;
+die();
 $list = glob("*.srt");
 $contents=file_get_contents($list[0]);
 $file_array=explode("\n",$contents);

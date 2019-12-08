@@ -140,6 +140,7 @@ $h=str_replace("\n","",$h);
 if (preg_match("/var\s+_0x[a-z0-9A-Z]+\s*\=\s*\[((\".*?\"\,?)+)\]/ms", $h, $m)) {
 $e="\$c0=array(".$m[1].");";
 eval ($e);
+//print_r ($c0);
 if ($c0[0])
   $ep_index=$ep-1;
 else
@@ -149,6 +150,7 @@ $link1 = $c0[$ep_index];
 if (strpos($link1,"http") === false) {
   $link1="https://europixhd.io".str_replace("../../","/",$link1);
 }
+//echo $link1;
 if (strpos($link1,"europix") !== false && strpos($link1,"http") !== false) {
 $ch = curl_init();
 curl_setopt($ch, CURLOPT_URL, $link1);
@@ -158,59 +160,29 @@ curl_setopt($ch, CURLOPT_REFERER, "https://europixhd.net");
 curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
 $h = curl_exec($ch);
 curl_close($ch);
+$h=urldecode($h);
 //echo $h;
-$t1=explode("iframe src='",$h);
-$t2=explode("'",$t1[1]);
-$link1=$t2[0];
-$r[] = $link1;
+preg_match_all("/(newsrv\S+)\'/",$h,$p);
+//print_r ($p);
+for ($k=0;$k<count($p[1]);$k++) {
+  $l="https://topeuropix.com/svop/".$p[1][$k];
+  $ch = curl_init();
+  curl_setopt($ch, CURLOPT_URL, $l);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
+  curl_setopt($ch, CURLOPT_REFERER, "https://europixhd.net");
+  curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
+  $h = curl_exec($ch);
+  curl_close($ch);
+  $h=urldecode($h);
+  $t1=explode("iframe src='",$h);
+  $t2=explode("'",$t1[1]);
+  $link1=$t2[0];
+  $r[] = $link1;
+}
+
 } else {
 if(strpos($link1,"http") !== false) $r[] = $link1;
-}
-}
-//////////////////////////////////////////////////////////
-  $ch = curl_init($link."-s2");
-  curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows; U; Windows NT 6.1; en-US; rv:1.9.1.2) Gecko/20090729 Firefox/3.5.2 GTB5');
-  curl_setopt($ch, CURLOPT_REFERER, "https://europixhd.net");
-  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
-  curl_setopt($ch, CURLOPT_RETURNTRANSFER  ,1);  // RETURN THE CONTENTS OF THE CALL
-  curl_setopt($ch, CURLOPT_ENCODING,"");
-  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
-  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
-  $h = curl_exec($ch);
-  curl_close ($ch);
-$h=urldecode($h);
-$h= preg_replace('/\\\x([a-f0-9]+)/mei',"chr(0x\\1)",$h);
-$h=str_replace("\n","",$h);
-
-if (preg_match("/var\s+_0x[a-z0-9A-Z]+\s*\=\s*\[((\".*?\"\,?)+)\]/ms", $h, $m)) {
-$e="\$c0=array(".$m[1].");";
-eval ($e);
-if ($c0[0])
-  $ep_index=$ep-1;
-else
-  $ep_index=$ep;
-$link1 = $c0[$ep_index];
-//echo $link1;
-if (strpos($link1,"http") === false) {
-  $link1="https://europixhd.io".str_replace("../../","/",$link1);
-}
-if (strpos($link1,"europix") !== false && strpos($link1,"http") !== false) {
-$ch = curl_init();
-curl_setopt($ch, CURLOPT_URL, $link1);
-curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-curl_setopt($ch, CURLOPT_USERAGENT, $ua);
-curl_setopt($ch, CURLOPT_REFERER, "https://europixhd.net");
-curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
-$h = curl_exec($ch);
-curl_close($ch);
-//echo $h;
-$t1=explode("iframe src='",$h);
-$t2=explode("'",$t1[1]);
-$link1=$t2[0];
-$r[] = $link1;
-} else {
-if (strpos($link1,"http") !== false) $r[] = $link1;
 }
 }
 echo '<table border="1" width="100%">';
