@@ -184,23 +184,26 @@ $host=parse_url($l)['host'];
   $html = curl_exec($ch);
   curl_close($ch);
 
-$videos = explode('class=flw-item>', $html);
+$videos = explode('class="flw-item', $html);
 unset($videos[0]);
 $videos = array_values($videos);
 foreach($videos as $video) {
-  $t1 = explode('href=',$video);
-  $t2 = explode(' ', $t1[1]);
+  $t1 = explode('href="',$video);
+  $t2 = explode('"', $t1[1]);
   $link = substr(strrchr($t2[0], "-"), 1);
-
-  $t1=explode('class=film-name>',$video);
-  $t2=explode('href',$t1[1]);
-  $t3=explode('>',$t2[1]);
-  $t4=explode('<',$t3[1]);
+  //$link = str_replace("/movie/","/watch-movie/",$t2[0]);
+  //if (strpos($link,"http") === false) $link="https://".$host.$link;
+  //$t1 = explode('title="', $video);
+  //$t2 = explode('"', $t1[1]);
+  //$title = $t2[0];
+  //if (!$title) {
+  $t1=explode('title="',$video);
+  $t4=explode('"',$t1[1]);
   $title=$t4[0];
   //}
   $title = prep_tit($title);
-  $t1 = explode('data-src=', $video);
-  $t2 = explode(' ', $t1[1]);
+  $t1 = explode('data-src="', $video);
+  $t2 = explode('"', $t1[1]);
   $image = $t2[0];
   if (strpos($image,"http") === false) $image="blank.jpg";
   $rest = substr($title, -6);

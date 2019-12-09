@@ -6,6 +6,7 @@ function str_between($string, $start, $end){
 	return substr($string,$ini,$len);
 }
 include ("../common.php");
+include ("../util.php");
 $page = $_GET["page"];
 $tip= $_GET["tip"];
 $tit=$_GET["title"];
@@ -17,11 +18,11 @@ $has_fav="yes";
 $has_search="yes";
 $has_add="yes";
 $has_fs="yes";
-$fav_target="moviesjoy_f_fav.php?host=https://www1.moviesjoy.net";
-$add_target="moviesjoy_f_add.php";
+$fav_target="yesmovies_s_fav.php?host=https://yesmovies.ag";
+$add_target="yesmovies_s_add.php";
 $add_file="";
-$fs_target="moviesjoy_fs.php";
-$target="moviesjoy_f.php";
+$fs_target="yesmovies_ep.php";
+$target="yesmovies_s.php";
 /* ==================================================== */
 $base=basename($_SERVER['SCRIPT_FILENAME']);
 $p=$_SERVER['QUERY_STRING'];
@@ -39,12 +40,12 @@ $prev=$base."?page=".($page-1)."&".$p;
 $tit=unfix_t(urldecode($tit));
 $link=unfix_t(urldecode($link));
 /* ==================================================== */
-if (file_exists($base_cookie."filme.dat"))
-  $val_search=file_get_contents($base_cookie."filme.dat");
+if (file_exists($base_cookie."seriale.dat"))
+  $val_search=file_get_contents($base_cookie."seriale.dat");
 else
   $val_search="";
 $form='<form action="'.$target.'" target="_blank">
-Cautare film:  <input type="text" id="title" name="title" value="'.$val_search.'">
+Cautare serial:  <input type="text" id="title" name="title" value="'.$val_search.'">
 <input type="hidden" name="page" id="page" value="1">
 <input type="hidden" name="tip" id="tip" value="search">
 <input type="hidden" name="link" id="link" value="">
@@ -53,7 +54,7 @@ Cautare film:  <input type="text" id="title" name="title" value="'.$val_search.'
 /* ==================================================== */
 if ($tip=="search") {
   $page_title = "Cautare: ".$tit;
-  if ($page == 1) file_put_contents($base_cookie."filme.dat",$tit);
+  if ($page == 1) file_put_contents($base_cookie."seriale.dat",$tit);
 } else
   $page_title=$tit;
 /* ==================================================== */
@@ -165,62 +166,141 @@ if ($page==1) {
    echo '<TD class="nav" colspan="4" align="right"><a href="'.$prev.'">&nbsp;&lt;&lt;&nbsp;</a> | <a href="'.$next.'">&nbsp;&gt;&gt;&nbsp;</a></TD>'."\r\n";
 }
 echo '</TR>'."\r\n";
-
 if($tip=="release") {
-  $l="https://www1.moviesjoy.net/movie/filter/movie/all/all/all/all/all/all/page-".$page.".html";
-  $l="https://www1.moviesjoy.net/movie?page=".$page;
+  $l="https://yesmovies.ag/movie/filter/series/page-".$page.".html";
 } else {
   $search=str_replace(" ","+",$tit);
-  $l="https://www1.moviesjoy.net/search/".str_replace(" ","+",$tit)."/page-".$page.".html";
+  $l = "https://yesmovies.ag/searching/".$search."/page-".$page.".html";
 }
-$host=parse_url($l)['host'];
+///////////////////////////////////////////////
+$ua = $_SERVER['HTTP_USER_AGENT'];
+//$ua="Mozilla/5.0 (Windows NT 10.0; rv:71.0) Gecko/20100101 Firefox/71.0";
+$cookie=$base_cookie."hdpopcorns.dat";
+if ($page==1 && $tip =="search") {
+$requestLink=$l;
+if (file_exists($cookie)) unlink ($cookie);
+$head=array(
+'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+'Accept-Language: en-US,en;q=0.5',
+'Accept-Encoding: deflate, br',
+'Connection: keep-alive',
+'Upgrade-Insecure-Requests: 1');
   $ch = curl_init();
-  curl_setopt($ch, CURLOPT_URL, $l);
+  curl_setopt($ch, CURLOPT_URL, $requestLink);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-  curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 10.0; rv:55.0) Gecko/20100101 Firefox/55.0');
+  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
   curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+  curl_setopt($ch,CURLOPT_HTTPHEADER,$head);
+  curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie);
+  curl_setopt($ch, CURLOPT_COOKIEJAR, $cookie);
+  curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'GET');
+  curl_setopt($ch, CURLOPT_HTTPGET, true);
+  curl_setopt($ch, CURLINFO_HEADER_OUT, true);
+  curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
+  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+  curl_setopt($ch, CURLOPT_HEADER,1);
+  $h = curl_exec($ch);
+ if (strpos($h,"503 Service") !== false) {
+  if (strpos($h,'id="cf-dn') === false)
+   $q1= getClearanceLink_old($h,$requestLink);
+  else
+   $q1= getClearanceLink($h,$requestLink);
+  $t1=explode('action="',$h);
+  $t2=explode('"',$t1[1]);
+  $requestLink="https://yesmovies.ag".$t2[0];
+  $t1=explode("?",$q1);
+  $post=$t1[1];;
+$head=array('Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
+'Accept-Encoding: gzip, deflate, br',
+'Content-Type: application/x-www-form-urlencoded',
+'Content-Length: '.strlen($post).'',
+'Referer: https://yesmovies.ag',
+'Origin: https://yesmovies.ag',
+'Connection: keep-alive',
+'Upgrade-Insecure-Requests: 1');
+
+  curl_setopt($ch, CURLOPT_URL, $requestLink);
+  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
+  //curl_setopt($ch,CURLOPT_REFERER,$l1);
+  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,0);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER  ,1);  // RETURN THE CONTENTS OF THE CALL
+  curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie);
+  curl_setopt($ch, CURLOPT_COOKIEJAR, $cookie);
+  curl_setopt($ch, CURLOPT_HTTPHEADER, $head);
+  curl_setopt($ch, CURLOPT_HEADER,1);
+  curl_setopt($ch, CURLOPT_NOBODY,1);
+  curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'POST');
+  curl_setopt($ch, CURLOPT_HTTPGET, false);
+  //curl_setopt($ch, CURLINFO_HEADER_OUT, true);
+  curl_setopt ($ch, CURLOPT_POST, 1);
+  curl_setopt ($ch, CURLOPT_POSTFIELDS, $post);
+  curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
+  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 25);
+  $h = curl_exec($ch);
+  curl_close ($ch);
+ } else {
+    curl_close($ch);
+ }
+}
+
+///////////////////////////////////////////////
+
+$host=parse_url($l)['host'];
+  $ch = curl_init($l);
+  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
+  curl_setopt($ch,CURLOPT_REFERER,"https://yesmovies.ag");
+  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER  ,1);  // RETURN THE CONTENTS OF THE CALL
+  curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie);
+  curl_setopt($ch, CURLOPT_COOKIEJAR, $cookie);
+  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
   curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
   curl_setopt($ch, CURLOPT_TIMEOUT, 15);
   $html = curl_exec($ch);
-  curl_close($ch);
-//echo $html;
-//https://www1.moviesjoy.net/movie/christmas-a-la-mode-58758
-//https://www1.moviesjoy.net/watch-movie/christmas-a-la-mode-58758.812876
-$videos = explode('class="flw-item', $html);
+  curl_close ($ch);
+  
+$videos = explode('div class="ml-item', $html);
 unset($videos[0]);
 $videos = array_values($videos);
 foreach($videos as $video) {
   $t1 = explode('href="',$video);
   $t2 = explode('"', $t1[1]);
-  $link = substr(strrchr($t2[0], "-"), 1);
-  //$link = str_replace("/movie/","/watch-movie/",$t2[0]);
-  //if (strpos($link,"http") === false) $link="https://".$host.$link;
-  //$t1 = explode('title="', $video);
-  //$t2 = explode('"', $t1[1]);
-  //$title = $t2[0];
-  //if (!$title) {
-  $t1=explode('title="',$video);
-  $t4=explode('"',$t1[1]);
-  $title=$t4[0];
-  //}
+  $link = $t2[0];
+  if (strpos($link,"http") === false) $link="https://".$host.$link;
+  $t1 = explode('title="', $video);
+  $t2 = explode('"', $t1[1]);
+  $title = $t2[0];
   $title = prep_tit($title);
-  $t1 = explode('data-src="', $video);
+  $t1 = explode('data-original="', $video);
   $t2 = explode('"', $t1[1]);
   $image = $t2[0];
-  if (strpos($image,"http") === false) $image="blank.jpg";
-  $rest = substr($title, -6);
+  if (strpos($image,"http") === false) $image="https:".$image;
+  $year="";
+  $imdb="";
+  $sez="";
+  if (preg_match("/(:|-)?\s+Season\s+(\d+)/i",$title,$m)) {
+  $tit_serial=trim(str_replace($m[0],"",$title));
+  $sez=$m[2];
+  $rest = substr($tit_serial, -6);
   if (preg_match("/\((\d+)\)/",$rest,$m)) {
    $year=$m[1];
    $tit_imdb=trim(str_replace($m[0],"",$title));
   } else {
    $year="";
-   $tit_imdb=$title;
+   $tit_imdb=$tit_serial;
   }
-  $imdb="";
-  $link_f=$fs_target.'?tip=movie&link='.urlencode($link).'&title='.urlencode(fix_t($title)).'&image='.$image."&sez=&ep=&ep_tit=&year=".$year;
-  if ($title && strpos($link,"-season") === false) {
+  } else {
+    $tit_imdb=$title;
+  }
+  $link_f=$fs_target.'?tip=series&link='.urlencode($link).'&title='.urlencode(fix_t($title)).'&image='.$image."&sez=".$sez."&ep=&ep_tit=&year=".$year;
+  if ($title && strpos($link,"/show") === false) {
   if ($n==0) echo '<TR>'."\r\n";
-  $val_imdb="tip=movie&title=".urlencode(fix_t($tit_imdb))."&year=".$year."&imdb=".$imdb;
+  $val_imdb="tip=series&title=".urlencode(fix_t($tit_imdb))."&year=".$year."&imdb=".$imdb;
   $fav_link="mod=add&title=".urlencode(fix_t($title))."&link=".urlencode($link)."&image=".urlencode($image)."&year=".$year;
   if ($tast == "NU") {
     echo '<td class="mp" width="25%"><a href="'.$link_f.'" id="myLink'.$w.'" target="_blank" onmousedown="isKeyPressed(event)">

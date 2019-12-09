@@ -1,7 +1,7 @@
 <!doctype html>
 <?php
 include ("../common.php");
-error_reporting(0);
+//error_reporting(0);
 $list = glob($base_sub."*.srt");
    foreach ($list as $l) {
     str_replace(" ","%20",$l);
@@ -34,6 +34,8 @@ $year=$_GET["year"];
 if ($tip=="movie") {
 $tit2="";
 } else {
+$t1=explode("- Season",$tit);
+$tit=trim($t1[0]);
 if ($ep_title)
    $tit2=" - ".$sez."x".$ep." ".$ep_title;
 else
@@ -118,80 +120,53 @@ function off() {
 <?php
 echo '<h2>'.$tit.$tit2.'</H2>';
 echo '<BR>';
-//echo $link;
-//$link="https://europixhd.io/svop/srv2?search=dwm-angel-s01e04";
-$r=array();
 $ua = $_SERVER['HTTP_USER_AGENT'];
-//$ua="Mozilla/5.0 (Windows NT 10.0; rv:71.0) Gecko/20100101 Firefox/71.0";
-$cookie=$base_cookie."hdpopcorns.dat";
-  $ch = curl_init($link);
+//$host=parse_url($link)['host'];
+if ($tip=="movie") {
+  preg_match("/(\d+)\.html/",$link,$m);
+  $id=$m[1];
+  $id_ep="1";
+  $l="https://yesmovies.ag/movie_episodes/".$id;
+  $ch = curl_init($l);
   curl_setopt($ch, CURLOPT_USERAGENT, $ua);
-  curl_setopt($ch, CURLOPT_REFERER, "https://europixhd.net");
   curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER  ,1);  // RETURN THE CONTENTS OF THE CALL
-  curl_setopt($ch, CURLOPT_ENCODING,"");
-  curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie);
+  //curl_setopt($ch, CURLOPT_HTTPHEADER, $head);
   curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
   curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
   curl_setopt($ch, CURLOPT_TIMEOUT, 15);
-  $h = curl_exec($ch);
+  $html = curl_exec($ch);
   curl_close ($ch);
-$h=urldecode($h);
-$h= preg_replace('/\\\x([a-f0-9]+)/mei',"chr(0x\\1)",$h);
-$h=str_replace("\n","",$h);
-//echo $h;
-if (preg_match("/var\s+_0x[a-z0-9A-Z]+\s*\=\s*\[((\".*?\"\,?)+)\]/ms", $h, $m)) {
-$e="\$c0=array(".$m[1].");";
-eval ($e);
-//print_r ($c0);
-if ($c0[0])
-  $ep_index=$ep-1;
-else
-  $ep_index=$ep;
-$link1 = $c0[$ep_index];
-//echo $link1;
-if (strpos($link1,"http") === false) {
-  $link1="https://europixhd.io".str_replace("../../","/",$link1);
-}
-//echo $link1;
-if (strpos($link1,"europix") !== false && strpos($link1,"http") !== false) {
-$ch = curl_init();
-curl_setopt($ch, CURLOPT_URL, $link1);
-curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-curl_setopt($ch, CURLOPT_USERAGENT, $ua);
-curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie);
-curl_setopt($ch, CURLOPT_REFERER, "https://europixhd.net");
-curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
-$h = curl_exec($ch);
-curl_close($ch);
-$h=urldecode($h);
-//echo $h;
-preg_match_all("/(newsrv\S+)\'/",$h,$p);
-//print_r ($p);
-for ($k=0;$k<count($p[1]);$k++) {
-  $l="https://topeuropix.com/svop/".$p[1][$k];
-  $ch = curl_init();
-  curl_setopt($ch, CURLOPT_URL, $l);
-  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
-  curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie);
-  curl_setopt($ch, CURLOPT_REFERER, "https://europixhd.net");
-  curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
-  $h = curl_exec($ch);
-  curl_close($ch);
-  $h=urldecode($h);
-  $t1=explode("iframe src='",$h);
-  $t2=explode("'",$t1[1]);
-  $link1=$t2[0];
-  $r[] = $link1;
-}
-
+  $x=json_decode($html,1);
+  //print_r ($x);
+  $h=$x['html'];
+  $r=array();
+  $s=array();
+  $videos=explode('li class="ep-item',$h);
+  unset($videos[0]);
+  $videos = array_values($videos);
+  foreach($videos as $video) {
+    $t1=explode('data-server="',$video);
+    $t2=explode('"',$t1[1]);
+    $id_serv=$t2[0];
+    $l="https://yesmovies.ag/movie_embed/".$id."/".$id_ep."/".$id_serv;
+    $t1=explode('</i>',$video);
+    $t2=explode('<',$t1[1]);
+    $svr_name="Server ".$id_serv." - ".trim($t2[0]);
+    $r[]=$l;
+    $s[]=$svr_name;
+  }
 } else {
-if(strpos($link1,"http") !== false) $r[] = $link1;
-}
+  $r=array();
+  $s=array();
+  $svr_name=array();
+  for ($k=1;$k<4;$k++) {
+    $r[]=$link.$k;
+    $s[]="Server ".$k;
+  }
 }
 echo '<table border="1" width="100%">';
-echo '<TR><TD class="mp">Alegeti un server: Server curent:<label id="server">'.parse_url($r[0])['host'].'</label>
+echo '<TR><TD class="mp">Alegeti un server: Server curent:<label id="server">'.$s[0].'</label>
 <input type="hidden" id="file" value="'.urlencode($r[0]).'"></td></TR></TABLE>';
 echo '<table border="1" width="100%"><TR>';
 $k=count($r);
@@ -201,9 +176,9 @@ for ($i=0;$i<$k;$i++) {
   $c_link=$r[$i];
   $openload=parse_url($r[$i])['host'];
   if (preg_match($indirect,$openload)) {
-  echo '<TD class="mp"><a href="filme_link.php?file='.urlencode($c_link).'&title='.urlencode(unfix_t($tit.$tit2)).'" target="_blank">'.$openload.'</a></td>';
+  echo '<TD class="mp"><a href="filme_link.php?file='.urlencode($c_link).'&title='.urlencode(unfix_t($tit.$tit2)).'" target="_blank">'.$s[$i].'</a></td>';
   } else
-  echo '<TD class="mp"><a id="myLink" href="#" onclick="changeserver('."'".$openload."','".urlencode($c_link)."'".');return false;">'.$openload.'</a></td>';
+  echo '<TD class="mp"><a id="myLink" href="#" onclick="changeserver('."'".$s[$i]."','".urlencode($c_link)."'".');return false;">'.$s[$i].'</a></td>';
   $x++;
   if ($x==6) {
     echo '</TR>';

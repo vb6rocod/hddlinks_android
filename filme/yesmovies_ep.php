@@ -11,7 +11,7 @@ $sez=$_GET['sez'];
 /* ======================================= */
 $width="200px";
 $height="100px";
-$fs_target="europix_fs.php";
+$fs_target="yesmovies_fs.php";
 $has_img="no";
 ?>
 <html>
@@ -30,51 +30,66 @@ function str_between($string, $start, $end){
 	if ($ini == 0) return ""; $ini += strlen($start); $len = strpos($string,$end,$ini) - $ini;
 	return substr($string,$ini,$len);
 }
+if (preg_match("/(:|-)?\s+Season\s+(\d+)/i",$tit,$m)) {
+  $tit=trim(str_replace($m[0],"",$tit));
+}
 echo '<h2>'.$tit.'</h2>';
-$ua = $_SERVER['HTTP_USER_AGENT'];
-//$ua="Mozilla/5.0 (Windows NT 10.0; rv:71.0) Gecko/20100101 Firefox/71.0";
-$cookie=$base_cookie."hdpopcorns.dat";
-$l=$link;
-$ch = curl_init($l);
-curl_setopt($ch, CURLOPT_USERAGENT, $ua);
-curl_setopt($ch,CURLOPT_REFERER,"https://europixhd.net");
-curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie);
-curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
-curl_setopt($ch, CURLOPT_RETURNTRANSFER  ,1);  // RETURN THE CONTENTS OF THE CALL
-curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
-curl_setopt($ch, CURLOPT_TIMEOUT, 15);
-$h = curl_exec($ch);
-curl_close ($ch);
-$h=urldecode($h);
-//echo $h;
-//$t1=explode('OPLO -->',$h);
-//echo $t1[1];
-//$t2=explode('<!--',$t1[2]);
-//$h=$t2[0];
-//$h=str_between($h,'<!-- OPLO -->','<!--');
+  preg_match("/(\d+)\.html/",$link,$m);
+  $id=$m[1];
+  $episod="1";
+  $season=$sez;
+  $l="https://yesmovies.ag/movie_episodes/".$id;
+  $ch = curl_init($l);
+  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
+  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER  ,1);  // RETURN THE CONTENTS OF THE CALL
+  //curl_setopt($ch, CURLOPT_HTTPHEADER, $head);
+  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+  $html = curl_exec($ch);
+  curl_close ($ch);
+  $x=json_decode($html,1);
+  //print_r ($x);
+  $html=$x['html'];
+  //echo $html;
+  //die();
 $n=0;
+
 echo '<table border="1" width="100%">'."\n\r";
 echo '<TR><td class="sez" style="color:black;background-color:#0a6996;color:#64c8ff;text-align:center" colspan="3">Sezonul '.($sez).'</TD></TR>';
-preg_match_all("/change\((\d+)\)(\"|\') \>\s*Episode\s+\d+\s+\-?\s*(\"|\')?(.*?)(\"|\')?\</ms",$h,$m);
-//change(2)" >  Episode 02 <
-//print_r ($m);
-$n=0;
-for($k=0;$k<count($m[0]);$k++) {
-  $t1 = explode('/i>', $video);
-  $t2 = explode('<', $t1[1]);
-  $title = trim($t2[0]);
-  $title=prep_tit($title);
+
+$t1=explode("- Season",$tit);
+$tit1=trim($t1[0]);
+$t1 = explode("- Miniseries",$tit1);
+$tit1=trim($t1[0]);
+$html=str_between($html,'<ul id="episodes','</ul');
+$videos = explode('data-id="', $html);
+unset($videos[0]);
+//$videos = array_values($videos);
+$videos = array_reverse($videos);
+foreach($videos as $video) {
+  $t2 = explode('"',$video);
+  $episod=$t2[0];
+  $link = "https://yesmovies.ag/movie_embed/".$id."/".$episod."/";
+  //echo $link1;
+  $t3 = explode('title="', $video);
+  $t4 = explode('"', $t3[1]);
+  $title = trim($t4[0]);
+  if (preg_match("/Episode\s+\d+\:?(.+)/i",$title,$m)) {
+  $ep_tit=$m[1];
+  } else {
+   $ep_tit=$title;
+  }
   $img_ep=$image;
   $season=$sez;
-  $episod=$m[1][$k];
-  $ep_tit=$m[4][$k];
+
+
   if ($ep_tit)
    $ep_tit_d=$season."x".$episod." ".$ep_tit;
   else
    $ep_tit_d=$season."x".$episod;
 
-  if ($episod) {
   $link_f=$fs_target.'?tip=series&link='.urlencode($link).'&title='.urlencode(fix_t($tit)).'&image='.$img_ep."&sez=".$season."&ep=".$episod."&ep_tit=".urlencode(fix_t($ep_tit))."&year=".$year;
    if ($n == 0) echo "<TR>"."\n\r";
    if ($has_img == "yes")
@@ -86,7 +101,6 @@ for($k=0;$k<count($m[0]);$k++) {
     echo '</TR>'."\n\r";
     $n=0;
    }
-  }
 }  
   if ($n < 3 && $n > 0) {
     for ($k=0;$k<3-$n;$k++) {
@@ -94,7 +108,6 @@ for($k=0;$k<count($m[0]);$k++) {
     }
     echo '</TR>'."\r\n";
   }
-
 echo '</table>';
 ?>
 </body>

@@ -61,6 +61,57 @@ if (strpos($filelink,"https://www.google.com/search") !== false) {
   else
     $filelink="";
 }
+if (strpos($filelink,"yesmovies.ag") !== false) {
+  $ch = curl_init($filelink);
+  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
+  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER  ,1);  // RETURN THE CONTENTS OF THE CALL
+  //curl_setopt($ch, CURLOPT_HTTPHEADER, $head);
+  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+  $html = curl_exec($ch);
+  curl_close ($ch);
+  $filelink=json_decode($html,1)['src'];
+  //echo $filelink;
+}
+if (strpos($filelink,"voxzer.org") !== false) {  // check for "slug" else redirect
+//echo $filelink;
+  $origin="https://".parse_url($filelink)['host'];
+  $ch = curl_init($filelink);
+  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
+  curl_setopt($ch,CURLOPT_REFERER,$origin);
+  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER  ,1);  // RETURN THE CONTENTS OF THE CALL
+  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+  //curl_setopt($ch, CURLOPT_NOBODY,1);
+  curl_setopt($ch, CURLOPT_HEADER,1);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+  $html = curl_exec($ch);
+  curl_close ($ch);
+  //echo $html;
+  $slug="";
+  if (preg_match("/\#slug\=(\S+)/",$html,$m))
+     $slug=$m[1];
+  else {
+    $t1=explode('slug","value":"',$html);
+    $t2=explode('"',$t1[1]);
+    $slug=$t2[0];
+  }
+  if (!$slug) {
+    $t1=explode('iframe src="',$html);
+    $t2=explode('"',$t1[1]);
+    $filelink=$t2[0];
+    if (!$filelink) {
+      $t1=explode('ff1e="',$html);
+      $t2=explode('"',$t1[1]);
+      $link=$origin.base64_decode($t2[0]);
+      if ($link && $flash != "flash")
+         $link=$link."|Referer=".urlencode($origin)."&Origin=".urlencode($origin);
+    }
+  }
+}
 if (strpos($filelink,"https://ffmovies.to") !== false) {
  $ua = $_SERVER['HTTP_USER_AGENT'];
  $cookie=$base_cookie."ffmovies.dat";
@@ -965,6 +1016,72 @@ if (strpos($filelink,"redirector.googlevideo.com") !== false) {
   $link=$filelink;
 } elseif (strpos($filelink,"archive.org") !== false) {
   $link=$filelink;
+} elseif (strpos($filelink,"hlsplay.com") !== false) {
+  //https://hlsplay.com/e/EIOyhiONJktv
+  $ua = $_SERVER['HTTP_USER_AGENT'];
+  $ch = curl_init($filelink);
+  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
+  curl_setopt($ch,CURLOPT_REFERER,"https://play.voxzer.org");
+  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER  ,1);  // RETURN THE CONTENTS OF THE CALL
+  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+  $h = curl_exec($ch);
+  curl_close ($ch);
+  if (preg_match('/((http|https)[\.\d\w\-\.\/\\\:\?\&\#\%\_\,]*(\.mp4|\.m3u8))/', $h, $m))
+  $link=$m[1];
+  else
+  $link="";
+  /* test */
+  if (true == false) {
+  $base=substr($link,0,strlen($link)-strlen(strrchr($link,"/")))."/";
+  $a1=$_SERVER['HTTP_REFERER'];   // if exist !!!!!!!!!!!
+  $a2=explode("?",$a1);
+  $hash_path = dirname($a2[0]);  // change this
+  $ch = curl_init($link);
+  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
+  curl_setopt($ch,CURLOPT_REFERER,"https://play.voxzer.org");
+  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER  ,1);  // RETURN THE CONTENTS OF THE CALL
+  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+  $h = curl_exec($ch);
+  curl_close ($ch);
+  $out="";
+  $a=explode("\n",$h);
+  for ($k=0;$k<count($a);$k++) {
+   if ($a[$k] <> "") {
+    if ($a[$k][0] =="#" && strpos($a[$k],"#EXT-X-MAP:URI") === false)
+      $out .=$a[$k]."\r\n";
+    elseif ($a[$k][0] =="#" && strpos($a[$k],"#EXT-X-MAP:URI") !== false)
+      $out .="#EXTINF:0,"."\r\n".$base."init.mp4"."\r\n";
+    elseif ($a[$k][0] <> "#")
+      $out .=$base.$a[$k]."\r\n";
+   }
+  }
+  if ($out) {
+    file_put_contents("lava.m3u8",$out);
+    if ($flash == "flash") {
+      $link = $hash_path."/lava.m3u8";
+    } else
+      $link = $hash_path."/lava.m3u8"; //$link="http://127.0.0.1:8080/scripts/filme/hydrax.m3u8";
+  } else {
+    $link="";
+  }
+  }
+  /* end test */
+   //$ad="User-Agent=".urlencode("Mozilla/5.0 (Windows NT 10.0; rv:70.0) Gecko/20100101 Firefox/70.0");
+//$ad .="&Accept=".urlencode("*/*")."&Accept-Language=".urlencode("ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2");
+//$ad .="&Accept-Encoding=".urlencode("gzip, deflate, br");
+//$ad .="&X-CustomHeader=videojs";
+//$ad ."&Origin=".urlencode("https://www.arconaitv.us");
+//$ad .="&Connection=".urlencode("keep-alive");
+//$ad .="&Referer=".urlencode("https://www.arconaitv.us");
+
+   //if ($link && $flash != "flash")
+     //$link=$link."|".$ad;
 } elseif (strpos($filelink,"vidfast.co") !== false) {
   //https://go.vidfast.co/embed-5chhcimx6whs.html
   //https://sp.vidfast.co/embed-5chhcimx6whs.html
@@ -1632,6 +1749,7 @@ $head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:70.0) Gecko/20100101 F
   //https://www.videomega.co/js/8c8717d31870ccc0
   //https://www.videomega.co/e/8c8717d31870ccc0
   //echo $filelink;
+  require_once("JavaScriptUnpacker.php");
   $cookie=$base_cookie."videomega.dat";
   $filelink=str_replace("/f/","/e/",$filelink);
   $ch = curl_init();
@@ -1644,17 +1762,76 @@ $head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:70.0) Gecko/20100101 F
   curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
   curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
   curl_setopt($ch, CURLOPT_TIMEOUT, 15);
-  curl_exec($ch);
-  //curl_close($ch);
-  //echo $h3;
-  $filelink=str_replace("/e/","/js/",$filelink);
-  //echo $filelink;
+  $h=curl_exec($ch);
+  curl_close($ch);
+  curl_close($ch);
 
-  require_once("JavaScriptUnpacker.php");
-  curl_setopt($ch, CURLOPT_URL, $filelink);
+  $t1=explode("xhr.send(",$h);
+  $t2=explode(")",$t1[1]);
+  $p=$t2[0];
+  $p=preg_replace("/\s*\+\s*/","",$p);
+  $p=str_replace('"',"",$p);
+  parse_str($p,$o);
+  $a=array();
+  foreach($o as $key => $value) {
+    $pat="/var ".$value." \= document\.getElementById\(\'(.*?)\'\)/";
+    preg_match($pat,$h,$v);
+    $pat="/href\=\"(.*?)\"\s+id\=\"".$v[1]."\"/";
+    preg_match($pat,$h,$w);
+    $a[$key]=$w[1];
+  }
+  $post=http_build_query($a);
+  $t1=explode("streamurl/'",$h);
+  $t2=explode("'",$t1[1]);
+  $id=trim(str_replace("+","",$t2[0]));
+  $pat="/var ".$id." \= document\.getElementById\(\'(.*?)\'\)/";
+  preg_match($pat,$h,$v);
+  $pat="/href\=\"(.*?)\"\s+id\=\"".$v[1]."\"/";
+  preg_match($pat,$h,$w);
+  $str_url=$w[1];
+  $l="https://www.videomega.co/streamurl/".$str_url."/";
+
+  $head=array('Accept: */*',
+  'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
+  'Accept-Encoding: deflate',
+  'Content-Type: application/x-www-form-urlencoded',
+  'Content-Length: '.strlen($post).'',
+  'Origin: https://www.videomega.co',
+  'Connection: keep-alive',
+  'Referer: '.$filelink.'');
+  $ch = curl_init();
+  curl_setopt($ch, CURLOPT_URL, $l);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
+  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,0);
+  curl_setopt($ch, CURLOPT_HTTPHEADER, $head);
+  curl_setopt ($ch, CURLOPT_POST, 1);
+  curl_setopt ($ch, CURLOPT_POSTFIELDS, $post);
+  curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie);
+  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+  $l = curl_exec($ch);
+  curl_close($ch);
+  $head=array('Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+  'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
+  'Accept-Encoding: deflate',
+  'Connection: keep-alive',
+  'Referer: '.$filelink.'',
+  'Upgrade-Insecure-Requests: 1');
+  $ch = curl_init();
+  curl_setopt($ch, CURLOPT_URL, trim($l));
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
+  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+  curl_setopt($ch, CURLOPT_HTTPHEADER, $head);
+  curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie);
+  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
   $h3 = curl_exec($ch);
   curl_close($ch);
-  //echo $h3;
+
   $jsu = new JavaScriptUnpacker();
   $out = $jsu->Unpack($h3);
   //echo $out."\n";
@@ -1730,7 +1907,7 @@ $head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:70.0) Gecko/20100101 F
   $jsu = new JavaScriptUnpacker();
   $out = $jsu->Unpack($h3);
   //echo $out;
-  if (preg_match("/vsrc\s*\=\s*\"(.*?)\"/",$out,$m)) {
+  if (preg_match("/vsrc?\s*\=\s*\"(.*?)\"/",$out,$m)) {
     $link=$m[1];
     if (strpos($link,"http") === false) $link="https:".$link;
       if (preg_match("/\.sub\s*\=\s*\"(.*?)\"/",$out,$s)) {
@@ -3500,8 +3677,11 @@ require_once("JavaScriptUnpacker.php");
 } elseif (strpos($filelink,"vidlox") !== false) {
 //echo $filelink;
 //die();
-$filelink=str_replace("https","http",$filelink);
-$filelink=str_replace("http","https",$filelink);
+//https://www.vidlox.me/qv18pvlx4e3s-769x433.html
+preg_match("/vidlox\.(me|tv)\/(?:embed-)?([0-9a-zA-Z]+)/",$filelink,$m);
+$id=$m[2];
+//$filelink="https://vidlox.me/5bji3c5f1jju"; //https://vidlox.me/qv18pvlx4e3s
+$filelink="https://vidlox.me/".$id;
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $filelink);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
@@ -3514,18 +3694,15 @@ $filelink=str_replace("http","https",$filelink);
   curl_setopt($ch, CURLOPT_TIMEOUT, 15);
   $h2 = curl_exec($ch);
   curl_close($ch);
-  //echo $h2;
-  //die();
-  preg_match('/[file:"]([http|https][\.\d\w\-\.\/\\\:\?\&\#\%\_\,]*(\.mp4))/', $h2, $m);
-  $link=$m[1];
+
+  preg_match_all('/[file:"]([http|https][\.\d\w\-\.\/\\\:\?\&\#\%\_\,]*(\.mp4))/mei', $h2, $m);
+
+  if (isset($m[1]))
+   $link=$m[1][0];
+  else
+   $link="";
   $link=str_replace("https","http",$link);
-  //echo $link;
-  //die();
-  //http://c15.vidlox.tv/oudvgagbkvtk2yixv62oedz6lifolllekf5cskapxzby5shmchek7hgzqqba/v.mp4
-  //http://c15.vidlox.tv/oudvgagbkvtk2yixv62oedz6lifolllekf5cskapxzby5qyw4qhvikfl5fda/v.mp4
-  //http://c23.vidlox.tv/oudvh2n7kvtk2yixv62oeabudx46hnwvzeo34uafy3nmt5boba24dyyc5x3a/v.mp4
-  //http://c19.vidlox.tv/oudvhawdkvtk2yixv6z6eadrl23qaxpjbsigre3gvplsmshmchek7hgzqqba/v.mp4
-  //http://c19.vidlox.tv/oudvhawdkvtk2yixv6z6eadrl23qaxpjbsigre3gvplsmjtskyk2gwi7suaa/v.mp4
+
   if (preg_match('/([http|https][\.\d\w\-\.\/\\\:\?\&\#\%\_\,]*(\.(srt|vtt)))/', $h2, $m))
   $srt=$m[1];
   //die();
@@ -4664,6 +4841,7 @@ var h=_0x2a75('0x2');
   }
 } elseif (strpos($filelink,"vidia.tv") !==false) {
   //https://vidia.tv/ekc59ths2ex4.htm
+  //echo $filelink;
   require_once("JavaScriptUnpacker.php");
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $filelink);
@@ -5126,14 +5304,15 @@ $head=array('Accept: application/json, text/javascript, */*; q=0.01',
    if ($link && $flash != "flash" && $serv == "hserver")
      $link=$link."|Referer=".urlencode($origin)."&Origin=".urlencode($origin);
   //$link="https://v.bighost.be/hls/082c3b889ee603c4825b99c2bfd162af/082c3b889ee603c4825b99c2bfd162af.playlist.m3u8";
-} elseif (strpos($filelink,"streamloverx.com") !==false) {
+} elseif (strpos($filelink,"streamloverx.com") !==false || strpos($filelink,"voxzer.org/watch") !==false) {
 //echo $filelink;
 //die();
 //$filelink="https://streamloverx.com/?id=Vm9vN2gvVjdKTERtMFNlNFRwS3d0ZE1BSnJibUZISjNzQTk1RzNmckFZUGpnclFjYzJxQXRFa0hTUkV2cXkzZA==";
+  $origin="https://".parse_url($filelink)['host'];
   set_time_limit(360);
   $ch = curl_init($filelink);
   curl_setopt($ch, CURLOPT_USERAGENT, $ua);
-  curl_setopt($ch,CURLOPT_REFERER,"https://streamloverx.com");
+  curl_setopt($ch,CURLOPT_REFERER,$origin);
   curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER  ,1);  // RETURN THE CONTENTS OF THE CALL
   curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
@@ -5144,13 +5323,18 @@ $head=array('Accept: application/json, text/javascript, */*; q=0.01',
   $html = curl_exec($ch);
   curl_close ($ch);
   //echo $html;
-  preg_match("/\#slug\=(\S+)/",$html,$m);
-  $slug=$m[1];
+  if (preg_match("/\#slug\=(\S+)/",$html,$m))
+     $slug=$m[1];
+  else {
+    $t1=explode('slug","value":"',$html);
+    $t2=explode('"',$t1[1]);
+    $slug=$t2[0];
+  }
   $t1=explode('key":"',$html);
   $t2=explode('"',$t1[1]);
   $key=$t2[0];
   //echo $slug."\n".$key;
-  $origin="https://streamloverx.com";
+  //$origin="https://streamloverx.com";
   $a1=$_SERVER['HTTP_REFERER'];
   $a2=explode("?",$a1);
   $hash_path = dirname($a2[0]);
@@ -5446,7 +5630,7 @@ if (strpos($movie,"http") === false) $movie="";
 // Set HW+ mod //
 $hw="/hqq\.|hindipix\.|pajalusta\.|lavacdn\.xyz|mcloud\.to|putload\.|thevideobee\.";
 $hw .="|flixtor\.|0123netflix|mangovideo|waaw1?|lookmovie\.ag|onlystream\.|archive\.org";
-$hw .="|hxload.|jetload\.net|azm\.to|movie4k\.ag/";
+$hw .="|hxload.|jetload\.net|azm\.to|movie4k\.ag|hlsplay\.com/";
 if ($flash== "mpc") {
   $mpc=trim(file_get_contents($base_pass."mpc.txt"));
   $c='"'.$mpc.'" /fullscreen "'.$movie.'"';

@@ -129,6 +129,7 @@ if ($tip=="movie") {
   $t2=explode("-",$t1[6]);
   $id2=$t2[0];
 }
+//echo $link;
 $head=array(
 'Accept: application/json, text/javascript, */*; q=0.01',
 'Accept-Language: en-US,en;q=0.5',
@@ -158,6 +159,7 @@ foreach($videos as $video) {
   $r[]=$openload;
   $c_link=$l1."?server=".$r[0];
 }
+//print_r ($r);
 echo '<table border="1" width="100%">';
 echo '<TR><TD class="mp">Alegeti un server: Server curent:<label id="server">'.$r[0].'</label>
 <input type="hidden" id="file" value="'.urlencode($c_link).'"></td></TR></TABLE>';
