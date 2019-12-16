@@ -138,7 +138,7 @@ document.onkeypress =  zx;
 <?php
 $w=0;
 $n=0;
-echo '<H2>'.$page_title.'</H2>'."\r\n";
+echo '<H2>'.$page_title.' Daca nu apar sursele apasa <a href="filmeseriale_captcha.php">aici.</a></H2>'."\r\n";
 
 echo '<table border="1px" width="100%" style="table-layout:fixed;">'."\r\n";
 echo '<TR>'."\r\n";

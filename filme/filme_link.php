@@ -11,6 +11,10 @@ $filelink = $_GET["file"];
 $link_f =  array();
 $type = "mp4";
 $pg="";
+if (file_exists($base_pass."debug.txt"))
+ $debug=true;
+else
+ $debug=false;
 if (isset($_GET["title"]))
   $pg=unfix_t(urldecode($_GET["title"]));
 else {
@@ -387,7 +391,6 @@ if (strpos($filelink,"filmeonlinegratis.org") !== false) {
   //echo $html;
 } elseif (strpos($filelink,"filmeserialeonline.org") !== false) {
 //echo $filelink;
-//GoogleCaptcha:"98715db6ecea80b068ccb92ffd578ad0"
   $ch = curl_init($filelink);
   curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows; U; Windows NT 6.1; en-US; rv:1.9.1.2) Gecko/20090729 Firefox/3.5.2 GTB5');
   curl_setopt($ch,CURLOPT_REFERER,$filelink);
@@ -408,45 +411,37 @@ if (strpos($filelink,"filmeonlinegratis.org") !== false) {
 //wp-content/themes/grifus/includes/single/second.php
   if (strpos($h2,"grifus/includes") !== false) {
     //$id=str_between($h2,'data: {id: ',')');
-    //$id=$m[1];
+    $tip=1;
+    $post="id=".$id."&logat=1";
     $l="http://www.filmeserialeonline.org/wp-content/themes/grifus/includes/single/second.php";
   } else {
     //$id=str_between($h2,'data: {id: ','}');
-    //$id=$m[1];
+    $tip=2;
+    $post="id=".$id;
     $l="http://www.filmeserialeonline.org/wp-content/themes/grifus/loop/second.php";
   }
-    //$l="http://www.filmeserialeonline.org/wp-content/themes/grifus/includes/single/second.php";
-  $post="id=".$id."&logat=1";
-  $cookie="Cookie: _ga=GA1.2.226532075.1472192307; _gat=1; GoogleCaptcha=c07edfad41d0f118e5d44ec9a725f017";
-  $headers = array('Accept: text/html, */*; q=0.01',
-   'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
-   'Accept-Encoding: deflate',
-   'Content-Type: application/x-www-form-urlencoded; charset=UTF-8',
-   'X-Requested-With: XMLHttpRequest',
-   'Cookie: _ga=GA1.2.226532075.1472192307; _gat=1; GoogleCaptcha=c07edfad41d0f118e5d44ec9a725f017'
-  );
-  if (file_exists($base_pass."filmeseriale.txt"))
-    $captcha=trim(file_get_contents($base_pass."filmeseriale.txt"));
-  else
-   $captcha="1c438a6f21f56c99d9bcfbf6a43bb5325";
-  $headers = array('Accept: text/html, */*; q=0.01',
-   'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
-   'Accept-Encoding: deflate',
-   'Content-Type: application/x-www-form-urlencoded; charset=UTF-8',
-   'X-Requested-With: XMLHttpRequest',
-   'Cookie: _popfired=1; _gat=1; GoogleCaptcha='.$captcha.'; _gat=1;'
-  );
-   //echo $l;
-  //$post="id=74337";
+  //$post="call=03";
+  //$post="id=".$id."&logat=1";
+  //echo $post;
+$headers=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:71.0) Gecko/20100101 Firefox/71.0',
+'Accept: text/html, */*; q=0.01',
+'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
+'Accept-Encoding: deflate',
+'Content-Type: application/x-www-form-urlencoded; charset=UTF-8',
+'X-Requested-With: XMLHttpRequest',
+'Content-Length: '.strlen($post).'',
+'Origin: http://www.filmeserialeonline.org',
+'Connection: keep-alive',
+'Referer: '.$filelink.''
+);
   $ch = curl_init($l);
   curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows; U; Windows NT 6.1; en-US; rv:1.9.1.2) Gecko/20090729 Firefox/3.5.2 GTB5');
-  curl_setopt($ch,CURLOPT_REFERER,$filelink);
   curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
   curl_setopt ($ch, CURLOPT_POST, 1);
   curl_setopt ($ch, CURLOPT_POSTFIELDS, $post);
   curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER  ,1);  // RETURN THE CONTENTS OF THE CALL
-  //curl_setopt($ch, CURLOPT_HEADER, true);
+  curl_setopt($ch, CURLOPT_HEADER, true);
   curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
   curl_setopt($ch, CURLOPT_TIMEOUT, 15);
   $html = curl_exec($ch);
@@ -1309,6 +1304,9 @@ function ajaxrequest(title, link) {
   request.onreadystatechange = function() {
     if (request.readyState == 4) {
        //alert (request.responseText);
+       ';
+      if ($debug) echo "document.getElementById('debug').innerHTML = request.responseText.match(/http.+#/g);"."\r\n";
+      echo '
        document.getElementById("server").innerHTML = '."'".'<font size="6" color="lightblue">Alegeti un server</font>'."'".';
        document.getElementById("mytest1").href=request.responseText;
       document.getElementById("mytest1").click();
@@ -1424,6 +1422,10 @@ echo '</TR></TABLE>';
 echo '<BR><table border="0px" width="100%">
 <TR>
 <TD><font size="4"><b>Scurtaturi: 1=opensubtitles, 2=titrari, 3=subs, 4=subtitrari</b></font></TD></TR></TABLE>';
+echo '
+<div id="debug" style="vertical-align:top;height:auto;width:100%;word-wrap: break-word;"></div>
+<BR>
+';
 if ($find_hqq) {
 echo '
 <script type="text/javascript">

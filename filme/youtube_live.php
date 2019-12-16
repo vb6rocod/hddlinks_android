@@ -7,6 +7,8 @@ $next="";
 $prev="";
 $page_title="Youtube Live";
 $key="AIzaSyDhpkA0op8Cyb_Yu1yQa1_aPSr7YtMacYU";
+if (file_exists($base_pass."youtube.txt"))
+  $key=trim(file_get_contents($base_pass."youtube.txt"));
 if ($token)
 $l2="https://www.googleapis.com/youtube/v3/search?part=snippet&eventType=live&maxResults=25&pageToken=".$token."&order=relevance&q=muzica%7Cmusic%7Cpop%7Cdance%7Crock%7Crelax%7Cdisco&regionCode=ro&relevanceLanguage=ro&type=video&key=".$key;
 else

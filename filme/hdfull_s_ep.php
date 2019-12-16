@@ -68,6 +68,7 @@ foreach($videos as $video) {
 echo '<table border="1" width="100%">'."\n\r";
 
 $p=0;
+$n=0;
 $c=count($sezoane);
 for ($k=0;$k<$c;$k++) {
 if ($p==0) echo '<TR>';
@@ -92,7 +93,7 @@ foreach($videos as $video) {
   $sez = $season;
   echo '<table border="1" width="100%">'."\n\r";
   echo '<TR><td class="sez" style="color:black;background-color:#0a6996;color:#64c8ff;text-align:center" colspan="3">Sezonul '.($sez).'</TD></TR>';
-
+  $n=0;
   $l="https://".$host."/a/episodes";
   $post="action=season&start=0&limit=0&show=".$id_serial."&season=".$sez;
   //echo $post;

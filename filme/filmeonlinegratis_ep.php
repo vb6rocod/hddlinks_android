@@ -36,7 +36,7 @@ $ua = $_SERVER['HTTP_USER_AGENT'];
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
   curl_setopt($ch, CURLOPT_USERAGENT, $ua);
   curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
-  curl_setopt($ch,CURLOPT_REFERER,"https://www.filmserialonline.org");
+  curl_setopt($ch,CURLOPT_REFERER,"https://filmeonlinegratis.org");
   curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
   curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
   curl_setopt($ch, CURLOPT_TIMEOUT, 15);
@@ -44,7 +44,7 @@ $ua = $_SERVER['HTTP_USER_AGENT'];
   curl_close($ch);
 
 $n=0;
-$videos = explode('span class="se-t', $h);
+$videos = explode('class="se-t', $h);
 $sezoane=array();
 unset($videos[0]);
 $videos = array_values($videos);
@@ -52,7 +52,6 @@ $videos = array_values($videos);
 foreach($videos as $video) {
   $t1=explode('>',$video);
   $t2=explode("<",$t1[1]);
-  if (is_numeric($t2[0]))
   $sezoane[]=trim($t2[0]);
 }
 echo '<table border="1" width="100%">'."\n\r";
@@ -81,7 +80,6 @@ foreach($videos as $video) {
   $t2=explode("<",$t1[1]);
   $season=trim($t2[0]);
   $sez = $season;
-  if (is_numeric($sez))  {
   echo '<table border="1" width="100%">'."\n\r";
   echo '<TR><td class="sez" style="color:black;background-color:#0a6996;color:#64c8ff;text-align:center" colspan="3">Sezonul '.($sez).'</TD></TR>';
   $n=0;
@@ -96,12 +94,12 @@ foreach($videos as $video) {
   $t1=explode('href="',$vid);
   $t2=explode('"',$t1[1]);
   $link=$t2[0];
+  $t3=explode(">",$t1[1]);
+  $t4=explode("<",$t3[1]);
+  $title=trim($t4[0]);
   preg_match("/sezonul\-\d+\-episodul\-(\d+)/",$link,$m);
   $episod=$m[1];
   $img_ep="";
-  $t2=explode('>',$t1[1]);
-  $t3=explode('<',$t2[1]);
-  $title=$t3[0];
   $title=str_replace("&nbsp;"," ",$title);
   $ep_tit=prep_tit($title);
   if ($ep_tit)
@@ -130,7 +128,6 @@ foreach($videos as $video) {
     echo '</TR>'."\r\n";
   }
 echo '</table>';
-}
 }
 ?>
 </body>

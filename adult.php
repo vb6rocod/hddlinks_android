@@ -51,7 +51,7 @@ echo '
 <TR>
 <TR>
 <TD width="25%"><a href="tv/playlist.php?title=playlist+xxx.m3u8" target="_blank">playlist xxx</a></TD>
-<TD width="25%"></TD>
+<TD width="25%"><a href="adult/portalultautv.php?tip=release&page=1&title=portalultautv&link=" target="_blank">portalultautv</a></TD>
 <TD width="25%"></TD>
 <TD width="25%"></TD>
 </TR>
@@ -66,7 +66,7 @@ echo '
 <TD width="25%"><a href="adult/xnxx_main.php" target="_blank">xnxx</a></TD>
 <TD width="25%"><a href="adult/xvideos_main.php" target="_blank">xvideos</a></TD>
 <TD width="25%"><a href="adult/4tube_main.php" target="_blank">4tube</a></TD>
-<TD width="25%"><a href="adult/milfzr.php?tip=release&page=1&title=milfzr&link=" target="_blank">milfzr</a></TD
+<TD width="25%"><a href="adult/milfzr.php?tip=release&page=1&title=milfzr&link=" target="_blank">milfzr</a></TD>
 </tr>
 <tr>
 

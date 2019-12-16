@@ -1,12 +1,16 @@
 <!doctype html>
 <?php
 include ("../common.php");
-//error_reporting(0);
+error_reporting(0);
 $list = glob($base_sub."*.srt");
    foreach ($list as $l) {
     str_replace(" ","%20",$l);
     unlink($l);
 }
+if (file_exists($base_pass."debug.txt"))
+ $debug=true;
+else
+ $debug=false;
 if (file_exists($base_pass."player.txt")) {
 $flash=trim(file_get_contents($base_pass."player.txt"));
 } else {
@@ -77,6 +81,9 @@ function openlink(link) {
   request.onreadystatechange = function() {
     if (request.readyState == 4) {
       off();
+      <?php
+      if ($debug) echo "document.getElementById('debug').innerHTML = request.responseText.match(/http.+#/g);"."\r\n";
+      ?>
       document.getElementById("mytest1").href=request.responseText;
       document.getElementById("mytest1").click();
     }
@@ -141,9 +148,73 @@ $id=$t3[0];
   $id=substr(strrchr($link, "/"), 1);
 }
 $l="https://0123netflix.site/ajax/episode/info?_token=&id=".$id."&update=0&film=".$film;
-//echo $l;
+/////////////////////////////////////////////////////////////////////////////////////////
+   $head=array(
+   'Accept: application/json, text/javascript, */*; q=0.01',
+   'Accept-Language: en-US,en;q=0.5',
+   'Accept-Encoding: deflate',
+   'X-Requested-With: XMLHttpRequest'
+   );
+   $ch = curl_init();
+   curl_setopt($ch, CURLOPT_URL, $l);
+   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+   curl_setopt($ch, CURLOPT_USERAGENT, $ua);
+   curl_setopt($ch, CURLOPT_REFERER, "https://0123netflix.site");
+   curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
+   curl_setopt($ch, CURLOPT_HTTPHEADER, $head);
+   $h = curl_exec($ch);
+   curl_close($ch);
+   $r=json_decode($h,1);
+   //echo $filelink;
+   //print_r ($r);
+   //https://0123netflix.site/ajax/episode/embed?id=6872344c41713376&film=1930cc83aec11387d3f54e274a3adea6
+   if (isset($r["target"])) {
+   $l=$r["target"];
+   $t1=explode("id=",$l);
+   $t2=explode("&",$t1[1]);
+   $id=$t2[0];
+   $l="https://0123netflix.site/v/?id=".$id;
+   $ch = curl_init();
+   curl_setopt($ch, CURLOPT_URL, $l);
+   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+   curl_setopt($ch, CURLOPT_USERAGENT, $ua);
+   curl_setopt($ch, CURLOPT_REFERER, "https://0123netflix.site/");
+   curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
+   curl_setopt($ch, CURLOPT_HTTPHEADER, $head);
+   $h = curl_exec($ch);
+   curl_close($ch);
+   $r=json_decode($h,1);
+   //print_r ($r);
+   $l="https:".$r[0];
+   $t1=explode("id=",$l);
+   $id=$t1[1];
+   if ($id) {
+   $l="https://proxy.123downloads.today/proxy.php?id=".$id;
+   $ch = curl_init();
+   curl_setopt($ch, CURLOPT_URL, $l);
+   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+   curl_setopt($ch, CURLOPT_USERAGENT, $ua);
+   curl_setopt($ch, CURLOPT_REFERER, "https://0123netflix.site/");
+   curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
+   curl_setopt($ch, CURLOPT_HTTPHEADER, $head);
+   $h = curl_exec($ch);
+   curl_close($ch);
+   $r=json_decode($h,1);
+   //print_r ($r);
+   if (isset($r["src"])) {
+   $l=$r["src"];
+   $t1=explode("id=",$l);
+   $id=$t1[1];
+   if ($id)
+     $l="https://stream.123downloads.today/hls/".$id."/playlist.m3u8";
+   }
+   }
+   } else {
+    $l="";
+   }
+/////////////////////////////////////////////////////////////////////////////////////////
 $r=array();
-$r[]=urlencode($l);
+if ($l) $r[]=urlencode($l);
 echo '<table border="1" width="100%">';
 echo '<TR><TD class="mp">Alegeti un server: Server curent:<label id="server">'.parse_url(urldecode($r[0]))['host'].'</label>
 <input type="hidden" id="file" value="'.urlencode($r[0]).'"></td></TR></TABLE>';
@@ -216,6 +287,9 @@ echo '<br>
 <table border="0px" width="100%">
 <TR>
 <TD><font size="4"><b>Scurtaturi: 1=opensubtitles, 2=titrari, 3=subs, 4=subtitrari, 5=vizioneaza</b></font></TD></TR></TABLE>
+';
+include("../debug.html");
+echo '
 <div id="overlay">
   <div id="text">Wait....</div>
 </div>

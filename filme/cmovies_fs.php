@@ -7,6 +7,10 @@ $list = glob($base_sub."*.srt");
     str_replace(" ","%20",$l);
     unlink($l);
 }
+if (file_exists($base_pass."debug.txt"))
+ $debug=true;
+else
+ $debug=false;
 if (file_exists($base_pass."player.txt")) {
 $flash=trim(file_get_contents($base_pass."player.txt"));
 } else {
@@ -77,6 +81,9 @@ function openlink(link) {
   request.onreadystatechange = function() {
     if (request.readyState == 4) {
       off();
+      <?php
+      if ($debug) echo "document.getElementById('debug').innerHTML = request.responseText.match(/http.+#/g);"."\r\n";
+      ?>
       document.getElementById("mytest1").href=request.responseText;
       document.getElementById("mytest1").click();
     }
@@ -116,23 +123,18 @@ function off() {
 <body>
 <a href='' id='mytest1'></a>
 <?php
-$cookie=$base_cookie."azm.dat";
-if (file_exists($cookie)) unlink($cookie);
-  $p = dirname($_SERVER['HTTP_REFERER']);
-  $p=str_replace("127.0.0.1","localhost",$p);
-  $captcha = $p."/azm3.html?".time();
-//echo '<iframe src="'.$captcha.'" style="display: none;"></iframe>';
 echo '<h2>'.$tit.$tit2.'</H2>';
 echo '<BR>';
-$ua = $_SERVER['HTTP_USER_AGENT'];
+$r=array();
+$host=parse_url($link)['host'];
 $head=array('Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
 'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2');
-
-$l=$link;
+if ($tip=="movie") {
+  $link=$link."/watching.html";
   $ch = curl_init();
-  curl_setopt($ch, CURLOPT_URL, $l);
+  curl_setopt($ch, CURLOPT_URL, $link);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-  curl_setopt($ch,CURLOPT_REFERER,"https://azm.to/all");
+  curl_setopt($ch,CURLOPT_REFERER,"https://cmovies.tv");
   curl_setopt($ch,CURLOPT_HTTPHEADER,$head);
   curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 10.0; rv:55.0) Gecko/20100101 Firefox/55.0');
   curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
@@ -140,21 +142,66 @@ $l=$link;
   curl_setopt($ch, CURLOPT_TIMEOUT, 15);
   $html = curl_exec($ch);
   curl_close($ch);
-  $t1=explode("ul id='serverul",$html);
-  $t2=explode("</ul",$t1[1]);
-  $html=$t2[0];
-$r=array();
-$videos = explode('a href="', $html);
-unset($videos[0]);
-$videos = array_values($videos);
-foreach($videos as $video) {
-  $t1=explode('"',$video);
-  $l1=$t1[0];
-  if (strpos($l1,"getlink.php") !== false) $l1= "https://azm.to".$l1;
-  $r[]=$l1;
+  //echo $html;
+  $t1=explode('div id="media-player',$html);
+  $t2=explode('iframe src="',$t1[1]);
+  $t3=explode('"',$t2[1]);
+  $l=$t3[0];
+  if ($l && strpos($l,"http")=== false) $l="https:".$l;
+  if (strpos($l,"vidnode.net/streaming.php") !== false) {
+    $ch = curl_init();
+    curl_setopt($ch, CURLOPT_URL, $l);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+    curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 5.1; rv:22.0) Gecko/20100101 Firefox/22.0');
+    curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+    curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+    curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+    $h = curl_exec($ch);
+    curl_close($ch);
+    $videos=explode('data-video="',$h);
+    unset($videos[0]);
+    $videos = array_values($videos);
+    foreach($videos as $video) {
+      $t1=explode('"',$video);
+      $l1=$t1[0];
+      if ($l1) {
+        if (strpos($l1,"http") === false) $l1="https:".$l1;
+        $r[]=urlencode($l1);
+      }
+    }
+  } else {
+   $r[]=urlencode($l);
+  }
+} else {
+  if (strpos($link,"vidnode.net/streaming.php") !== false) {
+    $ch = curl_init();
+    curl_setopt($ch, CURLOPT_URL, $link);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+    curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 5.1; rv:22.0) Gecko/20100101 Firefox/22.0');
+    curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+    curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+    curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+    $h = curl_exec($ch);
+    curl_close($ch);
+    $videos=explode('data-video="',$h);
+    unset($videos[0]);
+    $videos = array_values($videos);
+    foreach($videos as $video) {
+      $t1=explode('"',$video);
+      $l1=$t1[0];
+      if ($l1) {
+        if (strpos($l1,"http") === false) $l1="https:".$l1;
+        $r[]=urlencode($l1);
+      }
+    }
+  } else {
+   $r[]=urlencode($link);
+  }
 }
 echo '<table border="1" width="100%">';
-echo '<TR><TD class="mp">Alegeti un server: Server curent:<label id="server">'.parse_url($r[0])['host'].'</label>
+echo '<TR><TD class="mp">Alegeti un server: Server curent:<label id="server">'.parse_url(urldecode($r[0]))['host'].'</label>
 <input type="hidden" id="file" value="'.urlencode($r[0]).'"></td></TR></TABLE>';
 echo '<table border="1" width="100%"><TR>';
 $k=count($r);
@@ -162,7 +209,7 @@ $x=0;
 for ($i=0;$i<$k;$i++) {
   if ($x==0) echo '<TR>';
   $c_link=$r[$i];
-  $openload=parse_url($r[$i])['host'];
+  $openload=parse_url(urldecode($r[$i]))['host'];
   if (preg_match($indirect,$openload)) {
   echo '<TD class="mp"><a href="filme_link.php?file='.urlencode($c_link).'&title='.urlencode(unfix_t($tit.$tit2)).'" target="_blank">'.$openload.'</a></td>';
   } else
@@ -197,7 +244,7 @@ if ($tip=="movie") {
   $link_page="";
 }
   $rest = substr($tit3, -6);
-  if (preg_match("/\((\d+)\)/",$rest,$m)) {
+  if (preg_match("/\(?(\d+)\)?/",$rest,$m)) {
    $tit3=trim(str_replace($m[0],"",$tit3));
   }
 $sub_link ="from=".$from."&tip=".$tip."&sez=".$sez."&ep=".$ep."&imdb=".$imdbid."&title=".urlencode(fix_t($tit3))."&link=".$link_page."&ep_tit=".urlencode(fix_t($tit2))."&year=".$year;
@@ -225,11 +272,11 @@ echo '<br>
 <table border="0px" width="100%">
 <TR>
 <TD><font size="4"><b>Scurtaturi: 1=opensubtitles, 2=titrari, 3=subs, 4=subtitrari, 5=vizioneaza</b></font></TD></TR></TABLE>
+';
+include("../debug.html");
+echo '
 <div id="overlay">
   <div id="text">Wait....</div>
 </div>
-<BR>';
-echo '<iframe src="'.$captcha.'" height="200" width="300" style="border:none;"></iframe>';
-echo '
 </body>
 </html>';

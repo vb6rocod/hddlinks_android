@@ -125,40 +125,77 @@ function off() {
 <?php
 echo '<h2>'.$tit.$tit2.'</H2>';
 echo '<BR>';
-$ua = $_SERVER['HTTP_USER_AGENT'];
+$r=array();
 $host=parse_url($link)['host'];
-  $ch = curl_init($link);
-  curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows; U; Windows NT 6.1; en-US; rv:1.9.1.2) Gecko/20090729 Firefox/3.5.2 GTB5');
-  curl_setopt($ch,CURLOPT_REFERER,"https://www.seriestop.net");
+$head=array('Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2');
+if ($tip=="movie") {
+  $ch = curl_init();
+  curl_setopt($ch, CURLOPT_URL, $link);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+  curl_setopt($ch,CURLOPT_REFERER,"http://vumoo.to");
+  curl_setopt($ch,CURLOPT_HTTPHEADER,$head);
+  curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 10.0; rv:55.0) Gecko/20100101 Firefox/55.0');
   curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
-  curl_setopt($ch, CURLOPT_RETURNTRANSFER  ,1);  // RETURN THE CONTENTS OF THE CALL
-  curl_setopt($ch, CURLOPT_ENCODING,"");
-  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
   curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
   curl_setopt($ch, CURLOPT_TIMEOUT, 15);
-  $h3 = curl_exec($ch);
-  curl_close ($ch);
-  //echo $h3;
-  preg_match("/var\s+\w+=(0x[0-9a-f]{7,});/",$h3,$m);
-  $ac=$m[1];
-$r=array();
-$videos = explode("dbneg('", $h3);
-unset($videos[0]);
-$videos = array_values($videos);
-foreach($videos as $video) {
-   $t1=explode("'",$video);
-   $y=$t1[0];
-   $ad=explode("-",$y);
-   $aa = '';
-   for ($i = 0; $i < count($ad); $i++) {
-    $xh =hexdec($ad[$i]) - $ac;
-    $a9 = chr($xh);
-    $aa = $aa.$a9;
-   }
-   $r[]=$aa;
+  $html = curl_exec($ch);
+  curl_close($ch);
+  
+  require_once("CryptoJSAES.php");
+  $jsu = new CryptoJSAES();
+  $key="iso10126";
+  $ch = curl_init();
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+  curl_setopt($ch,CURLOPT_REFERER,"http://vumoo.to");
+  curl_setopt($ch,CURLOPT_HTTPHEADER,$head);
+  curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 10.0; rv:55.0) Gecko/20100101 Firefox/55.0');
+  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+  $videos=explode('embedUrl="',$html);
+  unset($videos[0]);
+  $videos = array_values($videos);
+  foreach($videos as $video) {
+    $t1=explode('"',$video);
+    curl_setopt($ch, CURLOPT_URL, $t1[0]);
+    $h = curl_exec($ch);
+    $t1=explode('embedVal="',$h);
+    $t2=explode('"',$t1[1]);
+    $data=$t2[0];
+    $out = $jsu->decrypt($data,$key);
+    $f=json_decode($out,1)['videos'];
+    for ($k=0;$k<count($f);$k++) {
+      $r[]=urlencode($f[$k]['url']);
+    }
+  }
+  curl_close($ch);
+} else {
+  require_once("CryptoJSAES.php");
+  $jsu = new CryptoJSAES();
+  $key="iso10126";
+  $ch = curl_init();
+  curl_setopt($ch, CURLOPT_URL, $link);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+  curl_setopt($ch,CURLOPT_REFERER,"http://vumoo.to");
+  curl_setopt($ch,CURLOPT_HTTPHEADER,$head);
+  curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 10.0; rv:55.0) Gecko/20100101 Firefox/55.0');
+  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+  $h = curl_exec($ch);
+  curl_close($ch);
+    $t1=explode('embedVal="',$h);
+    $t2=explode('"',$t1[1]);
+    $data=$t2[0];
+    $out = $jsu->decrypt($data,$key);
+    $f=json_decode($out,1)['videos'];
+    for ($k=0;$k<count($f);$k++) {
+      $r[]=urlencode($f[$k]['url']);
+    }
 }
 echo '<table border="1" width="100%">';
-echo '<TR><TD class="mp">Alegeti un server: Server curent:<label id="server">'.parse_url($r[0])['host'].'</label>
+echo '<TR><TD class="mp">Alegeti un server: Server curent:<label id="server">'.parse_url(urldecode($r[0]))['host'].'</label>
 <input type="hidden" id="file" value="'.urlencode($r[0]).'"></td></TR></TABLE>';
 echo '<table border="1" width="100%"><TR>';
 $k=count($r);
@@ -166,7 +203,7 @@ $x=0;
 for ($i=0;$i<$k;$i++) {
   if ($x==0) echo '<TR>';
   $c_link=$r[$i];
-  $openload=parse_url($r[$i])['host'];
+  $openload=parse_url(urldecode($r[$i]))['host'];
   if (preg_match($indirect,$openload)) {
   echo '<TD class="mp"><a href="filme_link.php?file='.urlencode($c_link).'&title='.urlencode(unfix_t($tit.$tit2)).'" target="_blank">'.$openload.'</a></td>';
   } else
@@ -200,6 +237,10 @@ if ($tip=="movie") {
   $from="";
   $link_page="";
 }
+  $rest = substr($tit3, -6);
+  if (preg_match("/\((\d+)\)/",$rest,$m)) {
+   $tit3=trim(str_replace($m[0],"",$tit3));
+  }
 $sub_link ="from=".$from."&tip=".$tip."&sez=".$sez."&ep=".$ep."&imdb=".$imdbid."&title=".urlencode(fix_t($tit3))."&link=".$link_page."&ep_tit=".urlencode(fix_t($tit2))."&year=".$year;
 echo '<br>';
 echo '<table border="1" width="100%">';
@@ -230,13 +271,6 @@ include("../debug.html");
 echo '
 <div id="overlay">
   <div id="text">Wait....</div>
-</div>';
-if (file_exists($base_pass."debug.txt")) {
-echo '<BR>';
-for($k=0; $k<count($r);$k++) {
-echo $r[$k]."<BR>";
-}
-}
-echo'
+</div>
 </body>
 </html>';

@@ -62,6 +62,12 @@ if ($tip=="cineplex") {
  $fh = fopen($new_file, 'w');
  fwrite($fh, $txt);
  fclose($fh);
+ } elseif ($tip=="youtube") {
+ $txt=$user;
+ $new_file = $base_pass."youtube.txt";
+ $fh = fopen($new_file, 'w');
+ fwrite($fh, $txt);
+ fclose($fh);
 } elseif ($tip=="mpc") {
  $txt=$user;
  $new_file = $base_pass."mpc.txt";
@@ -458,6 +464,27 @@ echo '
 <form action="settings.php">
 cod:<input type="text" name="user" value="'.$user.'" size="40"></BR>
 <input type="hidden" name="tip" value="omdb">
+<input type="submit" value="Memoreaza">
+</form>
+<hr>
+';
+$f=$base_pass."youtube.txt";
+if (file_exists($f)) {
+$h=file_get_contents($f);
+$t1=explode("|",$h);
+$user=$t1[0];
+if (sizeof ($t1) > 1 )
+	$pass=$t1[1];
+} else {
+$user="";
+$pass="";
+}
+
+echo '
+<h4>Youtube Api Key</h4>
+<form action="settings.php">
+cod:<input type="text" name="user" value="'.$user.'" size="40"></BR>
+<input type="hidden" name="tip" value="youtube">
 <input type="submit" value="Memoreaza">
 </form>
 <hr>

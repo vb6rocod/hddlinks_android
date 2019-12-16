@@ -17,11 +17,11 @@ $has_fav="yes";
 $has_search="yes";
 $has_add="yes";
 $has_fs="yes";
-$fav_target="hdfull_f_fav.php?host=https://hdfull.io";
-$add_target="hdfull_f_add.php";
+$fav_target="cmovies_f_fav.php?host=https://cmovies.tv";
+$add_target="cmovies_f_add.php";
 $add_file="";
-$fs_target="hdfull_fs.php";
-$target="hdfull_f.php";
+$fs_target="cmovies_fs.php";
+$target="cmovies_f.php";
 /* ==================================================== */
 $base=basename($_SERVER['SCRIPT_FILENAME']);
 $p=$_SERVER['QUERY_STRING'];
@@ -165,79 +165,66 @@ if ($page==1) {
    echo '<TD class="nav" colspan="4" align="right"><a href="'.$prev.'">&nbsp;&lt;&lt;&nbsp;</a> | <a href="'.$next.'">&nbsp;&gt;&gt;&nbsp;</a></TD>'."\r\n";
 }
 echo '</TR>'."\r\n";
-$ua     =   $_SERVER['HTTP_USER_AGENT'];
-if ($tip=="search") {
- $l="https://hdfull.io/ajax/search.php";
- $post="q=".str_replace(" ","+",$tit)."&limit=500&timestamp=1234567890&verifiedCheck=";
-  $ch = curl_init($l);
-  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
-  curl_setopt($ch,CURLOPT_REFERER,"https://hdfull.me/tv-shows/list");
-  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
-  curl_setopt($ch, CURLOPT_RETURNTRANSFER  ,1);  // RETURN THE CONTENTS OF THE CALL
-  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-  curl_setopt ($ch, CURLOPT_POST, 1);
-  curl_setopt ($ch, CURLOPT_POSTFIELDS, $post);
-  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
-  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
-  $html = curl_exec($ch);
-  curl_close ($ch);
+
+if($tip=="release") {
+  $l="https://cmovies.tv/movie/filter/movie/all/all/all/all/latest/?page=".$page;
 } else {
-$l="https://hdfull.io/movies/date/".$page;
+  $search=str_replace(" ","-",$tit);
+  $t="&img=%2F%2Fcdn.watch-series.co%2F&link_web=https%3A%2F%2Fcmovies.tv%2F";
+  $l="https://api.ocloud.stream/cmovieshd//movie/search/".$search."?page=".$page.$t;
+}
+$host=parse_url($l)['host'];
+$head=array('Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2');
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $l);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
+  curl_setopt($ch,CURLOPT_REFERER,"https://cmovies.tv");
+  curl_setopt($ch,CURLOPT_HTTPHEADER,$head);
+  curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 10.0; rv:55.0) Gecko/20100101 Firefox/55.0');
   curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
-  curl_setopt($ch,CURLOPT_REFERER,"https://hdfull.me/");
-  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
   curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
   curl_setopt($ch, CURLOPT_TIMEOUT, 15);
   $html = curl_exec($ch);
   curl_close($ch);
-}
-$host=parse_url($l)['host'];
-if ($tip=="search") {
-  $r=json_decode($html,1);
-for ($k=0;$k<count($r);$k++) {
+//echo $html;
+$r=array();
+  $videos = explode('div class="ml-item',$html);
+  unset($videos[0]);
+  $videos = array_values($videos);
+  foreach($videos as $video) {
+   $t1 = explode('href="',$video);
+   $t2=explode('"',$t1[1]);
+   $link = $t2[0];
+   if (strpos($link,"http") === false) $link="https://".$host.$link;
+   $t3 = explode('title="', $video);
+   $t4 = explode('"', $t3[1]);
+   $title = $t4[0];
+   $title=prep_tit($title);
+   $t1 = explode('data-original="', $video);
+   $t2 = explode('"', $t1[1]);
+   $image = $t2[0];
+   if (strpos($image,"http") === false) $image="https://".$image;
+   $r[]=array($link,$title,$image);
+  }
 
-  $link = $r[$k]["permalink"];
-
-  $title = $r[$k]["title"];
-  $image = $r[$k]["image"];
-  if ($title && strpos($r[$k]["meta"],"show") === false) $f[] = array($title,$link,$image);
-}
-} else {
-$videos = explode('div class="item', $html);
-unset($videos[0]);
-$videos = array_values($videos);
-foreach($videos as $video) {
-
-  $t1 = explode('href="', $video);
-  $t2 = explode('"',$t1[1]);
-  $link = $t2[0];
-  //echo $link1;
-  $t1 = explode('alt="', $video);
-  $t2 = explode('"', $t1[1]);
-  $title = trim($t2[0]);
-  //echo $title;
-  $t1 = explode('src="',$video);
-  $t2 = explode('"',$t1[1]);
-  $image = $t2[0];
-  if ($title && strpos($link,"/movie") !== false) $f[] = array($title,$link,$image);
-}
-}
-
-foreach($f as $key => $value) {
-  $title=$value[0];
-  $title=prep_tit($title);
-  $link=$value[1];
-  $image=$value[2];
-  $year="";
+for ($k=0; $k<count($r);$k++) {
+  $link=$r[$k][0];
+  $title=$r[$k][1];
+  $image=$r[$k][2];
+  $rest = substr($title, -6);
+  if (preg_match("/\(?(\d+)\)?/",$rest,$m)) {
+   $year=$m[1];
+   $tit_imdb=trim(str_replace($m[0],"",$title));
+  } else {
+   $year="";
+   $tit_imdb=$title;
+  }
   $imdb="";
   $link_f=$fs_target.'?tip=movie&link='.urlencode($link).'&title='.urlencode(fix_t($title)).'&image='.$image."&sez=&ep=&ep_tit=&year=".$year;
-  if ($title && strpos($link,"/show") === false) {
+  if ($title) {
   if ($n==0) echo '<TR>'."\r\n";
-  $val_imdb="tip=movie&title=".urlencode(fix_t($title))."&year=".$year."&imdb=".$imdb;
+  $val_imdb="tip=movie&title=".urlencode(fix_t($tit_imdb))."&year=".$year."&imdb=".$imdb;
   $fav_link="mod=add&title=".urlencode(fix_t($title))."&link=".urlencode($link)."&image=".urlencode($image)."&year=".$year;
   if ($tast == "NU") {
     echo '<td class="mp" width="25%"><a href="'.$link_f.'" id="myLink'.$w.'" target="_blank" onmousedown="isKeyPressed(event)">

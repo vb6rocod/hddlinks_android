@@ -11,17 +11,17 @@ $tip= $_GET["tip"];
 $tit=$_GET["title"];
 $link=$_GET["link"];
 $width="200px";
-$height="278px";
+$height="100px";
 /* ==================================================== */
-$has_fav="yes";
-$has_search="yes";
-$has_add="yes";
-$has_fs="yes";
-$fav_target="hdfull_f_fav.php?host=https://hdfull.io";
-$add_target="hdfull_f_add.php";
+$has_fav="no";
+$has_search="no";
+$has_add="no";
+$has_fs="no";
+$fav_target="";
+$add_target="";
 $add_file="";
-$fs_target="hdfull_fs.php";
-$target="hdfull_f.php";
+$fs_target="";
+$target="clicksud.php";
 /* ==================================================== */
 $base=basename($_SERVER['SCRIPT_FILENAME']);
 $p=$_SERVER['QUERY_STRING'];
@@ -38,26 +38,8 @@ $prev=$base."?page=".($page-1)."&".$p;
 /* ==================================================== */
 $tit=unfix_t(urldecode($tit));
 $link=unfix_t(urldecode($link));
-/* ==================================================== */
-if (file_exists($base_cookie."filme.dat"))
-  $val_search=file_get_contents($base_cookie."filme.dat");
-else
-  $val_search="";
-$form='<form action="'.$target.'" target="_blank">
-Cautare film:  <input type="text" id="title" name="title" value="'.$val_search.'">
-<input type="hidden" name="page" id="page" value="1">
-<input type="hidden" name="tip" id="tip" value="search">
-<input type="hidden" name="link" id="link" value="">
-<input type="submit" id="send" value="Cauta...">
-</form>';
-/* ==================================================== */
-if ($tip=="search") {
-  $page_title = "Cautare: ".$tit;
-  if ($page == 1) file_put_contents($base_cookie."filme.dat",$tit);
-} else
-  $page_title=$tit;
-/* ==================================================== */
 
+$page_title=$tit;
 ?>
 <html>
 <head>
@@ -141,114 +123,74 @@ $n=0;
 echo '<H2>'.$page_title.'</H2>'."\r\n";
 
 echo '<table border="1px" width="100%" style="table-layout:fixed;">'."\r\n";
-echo '<TR>'."\r\n";
-if ($page==1) {
-   if ($tip == "release") {
-   if ($has_fav=="yes" && $has_search=="yes") {
-     echo '<TD class="nav"><a id="fav" href="'.$fav_target.'" target="_blank">Favorite</a></TD>'."\r\n";
-     echo '<TD class="form" colspan="2">'.$form.'</TD>'."\r\n";
-     echo '<TD class="nav" align="right"><a href="'.$next.'">&nbsp;&gt;&gt;&nbsp;</a></TD>'."\r\n";
-   } else if ($has_fav=="no" && $has_search=="yes") {
-     echo '<TD class="nav"><a id="fav" href="">Reload...</a></TD>'."\r\n";
-     echo '<TD class="form" colspan="2">'.$form.'</TD>'."\r\n";
-     echo '<TD class="nav" align="right"><a href="'.$next.'">&nbsp;&gt;&gt;&nbsp;</a></TD>'."\r\n";
-   } else if ($has_fav=="yes" && $has_search=="no") {
-     echo '<TD class="nav"><a id="fav" href="'.$fav_target.'" target="_blank">Favorite</a></TD>'."\r\n";
-     echo '<TD class="nav" colspan="3" align="right"><a href="'.$next.'">&nbsp;&gt;&gt;&nbsp;</a></TD>'."\r\n";
-   } else if ($has_fav=="no" && $has_search=="no") {
-     echo '<TD class="nav" colspan="4" align="right"><a href="'.$next.'">&nbsp;&gt;&gt;&nbsp;</a></TD>'."\r\n";
-   }
-   } else {
-     echo '<TD class="nav" colspan="4" align="right"><a href="'.$next.'">&nbsp;&gt;&gt;&nbsp;</a></TD>'."\r\n";
-   }
-} else {
-   echo '<TD class="nav" colspan="4" align="right"><a href="'.$prev.'">&nbsp;&lt;&lt;&nbsp;</a> | <a href="'.$next.'">&nbsp;&gt;&gt;&nbsp;</a></TD>'."\r\n";
-}
-echo '</TR>'."\r\n";
-$ua     =   $_SERVER['HTTP_USER_AGENT'];
-if ($tip=="search") {
- $l="https://hdfull.io/ajax/search.php";
- $post="q=".str_replace(" ","+",$tit)."&limit=500&timestamp=1234567890&verifiedCheck=";
-  $ch = curl_init($l);
-  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
-  curl_setopt($ch,CURLOPT_REFERER,"https://hdfull.me/tv-shows/list");
-  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
-  curl_setopt($ch, CURLOPT_RETURNTRANSFER  ,1);  // RETURN THE CONTENTS OF THE CALL
-  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-  curl_setopt ($ch, CURLOPT_POST, 1);
-  curl_setopt ($ch, CURLOPT_POSTFIELDS, $post);
-  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
-  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
-  $html = curl_exec($ch);
-  curl_close ($ch);
-} else {
-$l="https://hdfull.io/movies/date/".$page;
+
+$ua = $_SERVER['HTTP_USER_AGENT'];
+//echo $link;
   $ch = curl_init();
-  curl_setopt($ch, CURLOPT_URL, $l);
+  curl_setopt($ch, CURLOPT_URL, $link);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
   curl_setopt($ch, CURLOPT_USERAGENT, $ua);
+  curl_setopt($ch,CURLOPT_REFERER,"https://www.clicksud.org");
   curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
-  curl_setopt($ch,CURLOPT_REFERER,"https://hdfull.me/");
   curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
   curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
   curl_setopt($ch, CURLOPT_TIMEOUT, 15);
   $html = curl_exec($ch);
   curl_close($ch);
-}
-$host=parse_url($l)['host'];
-if ($tip=="search") {
-  $r=json_decode($html,1);
-for ($k=0;$k<count($r);$k++) {
+//echo $html;
+if (preg_match("/content\=\'(.*?)\'\s+property\=\'og\:image/mei",$html,$m))
+ $image=$m[1];
+else
+ $image="blank.jpg";
+$n=0;
+$last_tit="aaaa";
+$videos = explode('href="', $html);
 
-  $link = $r[$k]["permalink"];
-
-  $title = $r[$k]["title"];
-  $image = $r[$k]["image"];
-  if ($title && strpos($r[$k]["meta"],"show") === false) $f[] = array($title,$link,$image);
-}
-} else {
-$videos = explode('div class="item', $html);
 unset($videos[0]);
 $videos = array_values($videos);
+
 foreach($videos as $video) {
-
-  $t1 = explode('href="', $video);
-  $t2 = explode('"',$t1[1]);
+  $t2 = explode('"', $video);
   $link = $t2[0];
-  //echo $link1;
-  $t1 = explode('alt="', $video);
-  $t2 = explode('"', $t1[1]);
-  $title = trim($t2[0]);
-  //echo $title;
-  $t1 = explode('src="',$video);
-  $t2 = explode('"',$t1[1]);
-  $image = $t2[0];
-  if ($title && strpos($link,"/movie") !== false) $f[] = array($title,$link,$image);
-}
-}
-
-foreach($f as $key => $value) {
-  $title=$value[0];
-  $title=prep_tit($title);
-  $link=$value[1];
-  $image=$value[2];
-  $year="";
-  $imdb="";
-  $link_f=$fs_target.'?tip=movie&link='.urlencode($link).'&title='.urlencode(fix_t($title)).'&image='.$image."&sez=&ep=&ep_tit=&year=".$year;
-  if ($title && strpos($link,"/show") === false) {
+  if (preg_match("/title\=\'(.*?)\'/mei",$video,$m)) {
+    //echo $m[1]."\n".$last_tit."\n";
+    //if ($m[1] != $last_tit)
+    //print_r ($m);
+    $pat="/".$last_tit."/";
+    if (!preg_match($pat,$m[1]))
+      $title=$m[1];
+    else
+      $title="";
+  } else {
+   $t1=explode(">",$video);
+   $t2=explode("<",$t1[1]);
+   $title=$t2[0];
+  }
+  $title=urldecode(str_replace("%0A","",urlencode($title)));
+  //$title=prep_tit($title);
+  if (preg_match("/data-img\=\'(.*?)\'/",$video,$m))
+    $image=$m[1];
+  if (($title && !preg_match("/mai multe|share|link|Seriale online/i",$title) && preg_match("/\-episodul\-\d+/",$link)) || ($title && !preg_match("/mai multe|share|link|Seriale online/i",$title) && preg_match("/sezonul\-\d+\-episodul(\-|\_)\d+/",$link)) || (preg_match("/episodul\-\d+\-online\-\d+/",$link) && !preg_match("/mai multe/",$title) && preg_match("/episod/i",$title))) {
+  $last_tit=$title;
+  if ($has_fs == "no")
+    $link_f='filme_link.php?file='.urlencode($link).'&title='.urlencode(fix_t($title));
+  else
+    $link_f=$fs_target.'?tip=movie&link='.urlencode($link).'&title='.urlencode(fix_t($tit)).'&image='.$image."&sez=&ep=&ep_tit=&year=".$year;
   if ($n==0) echo '<TR>'."\r\n";
-  $val_imdb="tip=movie&title=".urlencode(fix_t($title))."&year=".$year."&imdb=".$imdb;
-  $fav_link="mod=add&title=".urlencode(fix_t($title))."&link=".urlencode($link)."&image=".urlencode($image)."&year=".$year;
+  $imdb="";
+  $year="";
+  $val_imdb="tip=movie&title=".urlencode(fix_t($tit))."&year=".$year."&imdb=".$imdb;
+  $fav_link="file=".$add_file."&mod=add&title=".urlencode(fix_t($title))."&link=".urlencode($link)."&image=".urlencode($image)."&year=".$year;
   if ($tast == "NU") {
     echo '<td class="mp" width="25%"><a href="'.$link_f.'" id="myLink'.$w.'" target="_blank" onmousedown="isKeyPressed(event)">
-    <img id="myLink'.$w.'" src="'.$image.'" width="'.$width.'" height="'.$height.'"><BR>'.$title.'</a>
+    <img id="myLink'.$w.'" src="'.$image.'" width="'.$width.'" height="'.$height.'"><BR>'.prep_tit($title).'</a>
     <input type="hidden" id="imdb_myLink'.$w.'" value="'.$val_imdb.'">'."\r\n";
     if ($has_add=="yes")
       echo '<a onclick="ajaxrequest('."'".$fav_link."'".')" style="cursor:pointer;">*</a>'."\r\n";
     echo '</TD>'."\r\n";
   } else {
     echo '<td class="mp" width="25%"><a class ="imdb" id="myLink'.$w.'" href="'.$link_f.'" target="_blank">
-    <img src="'.$image.'" width="'.$width.'" height="'.$height.'"><BR>'.$title.'</a>
+    <img src="'.$image.'" width="'.$width.'" height="'.$height.'"><BR>'.prep_tit($title).'</a>
     <input type="hidden" id="imdb_myLink'.$w.'" value="'.$val_imdb.'">'."\r\n";
     if ($has_add == "yes")
       echo '<input type="hidden" id="fav_myLink'.$w.'" value="'.$fav_link.'"></a>'."\r\n";
@@ -260,24 +202,16 @@ foreach($f as $key => $value) {
   echo '</tr>'."\r\n";
   $n=0;
   }
-  }
  }
-
-/* bottom */
+ }
   if ($n < 4 && $n > 0) {
     for ($k=0;$k<4-$n;$k++) {
       echo '<TD></TD>'."\r\n";
     }
     echo '</TR>'."\r\n";
   }
-echo '<tr>
-<TD class="nav" colspan="4" align="right">'."\r\n";
-if ($page > 1)
-  echo '<a href="'.$prev.'">&nbsp;&lt;&lt;&nbsp;</a> | <a href="'.$next.'">&nbsp;&gt;&gt;&nbsp;</a></TD>'."\r\n";
-else
-  echo '<a href="'.$next.'">&nbsp;&gt;&gt;&nbsp;</a></TD>'."\r\n";
-echo '</TR>'."\r\n";
+
 echo "</table>"."\r\n";
-echo "</table>";
-?></body>
+?>
+<br></body>
 </html>

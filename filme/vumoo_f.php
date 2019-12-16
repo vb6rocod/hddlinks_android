@@ -17,11 +17,11 @@ $has_fav="yes";
 $has_search="yes";
 $has_add="yes";
 $has_fs="yes";
-$fav_target="azm_f_fav.php";
-$add_target="azm_f_add.php";
+$fav_target="vumoo_f_fav.php?host=http://vumoo.to";
+$add_target="vumoo_f_add.php";
 $add_file="";
-$fs_target="azm_fs.php";
-$target="azm_f.php";
+$fs_target="vumoo_fs.php";
+$target="vumoo_f.php";
 /* ==================================================== */
 $base=basename($_SERVER['SCRIPT_FILENAME']);
 $p=$_SERVER['QUERY_STRING'];
@@ -167,10 +167,12 @@ if ($page==1) {
 echo '</TR>'."\r\n";
 
 if($tip=="release") {
-  $l="https://azm.to/all";
+  $l="http://vumoo.to/movies/page/".$page;
 } else {
-  $search=str_replace(" ","%20",$tit);
-  $l="https://azm.to/search/".$search;
+  $search=str_replace(" ","+",$tit);
+  //http://vumoo.to/javascripts/vumoo-v1.0.0.min.js
+  $t="/search?t=2018BC65S4359XSMloz2HpQU2bXW4T_cTmTZFKx_zfeb1NAvH2OpqEK-aJloawZL-xo426IMAVLtpWZ3SK1d==";
+  $l="http://vumoo.to".$t."&q=".$search;
 }
 $host=parse_url($l)['host'];
 $head=array('Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
@@ -178,7 +180,7 @@ $head=array('Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $l);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-  curl_setopt($ch,CURLOPT_REFERER,"https://azm.to/all");
+  curl_setopt($ch,CURLOPT_REFERER,"http://vumoo.to");
   curl_setopt($ch,CURLOPT_HTTPHEADER,$head);
   curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 10.0; rv:55.0) Gecko/20100101 Firefox/55.0');
   curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
@@ -187,21 +189,41 @@ $head=array('Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q
   $html = curl_exec($ch);
   curl_close($ch);
 //echo $html;
-$videos = explode('div class="grid-image', $html);
-unset($videos[0]);
-$videos = array_values($videos);
-foreach($videos as $video) {
-  $t1 = explode('href="',$video);
-  $t2=explode('"',$t1[1]);
-  $link = $t2[0];
-  if (strpos($link,"http") === false) $link="https://".$host.$link;
-  $t3 = explode('span>', $video);
-  $t4 = explode('<', $t3[1]);
-  $title = $t4[0];
-  $title=prep_tit($title);
-  $t1 = explode('data-src="', $video);
-  $t2 = explode('"', $t1[1]);
-  $image = $t2[0];
+$r=array();
+if ($tip=="release") {
+  $videos = explode('div class="intro',$html);
+  unset($videos[0]);
+  $videos = array_values($videos);
+  foreach($videos as $video) {
+   $t1 = explode('href="',$video);
+   $t2=explode('"',$t1[1]);
+   $link = $t2[0];
+   if (strpos($link,"http") === false) $link="https://".$host.$link;
+   $t3 = explode('class="text-overlay">', $video);
+   $t4 = explode('<', $t3[1]);
+   $title = $t4[0];
+   $title=prep_tit($title);
+   $t1 = explode('src="', $video);
+   $t2 = explode('"', $t1[1]);
+   $image = $t2[0];
+   $r[]=array($link,$title,$image);
+  }
+} else {
+ $x=json_decode($html,1)['suggestions'];
+ for ($k=0;$k<count($x);$k++) {
+  if ($x[$k]['data']['type'] == "movies") {
+   $link=$x[$k]['data']['href'];
+   if (strpos($link,"http") === false) $link="https://".$host.$link;
+   $title=$x[$k]['value'];
+   $image=$x[$k]['data']['image'];
+   $r[]=array($link,$title,$image);
+  }
+ }
+}
+for ($k=0; $k<count($r);$k++) {
+  $link=$r[$k][0];
+  $title=$r[$k][1];
+  $image=$r[$k][2];
   $rest = substr($title, -6);
   if (preg_match("/\((\d+)\)/",$rest,$m)) {
    $year=$m[1];

@@ -219,6 +219,7 @@ foreach($videos as $video) {
   $t1=explode('src="',$video);
   $t2=explode('"',$t1[1]);
   $image=$t2[0];
+  $image=str_replace("https","http",$image);
   if (!preg_match("/\sezonul/",$link)) {
   if ($has_fs == "no")
     $link_f='filme_link.php?file='.urlencode($link).'&title='.urlencode(fix_t($title));

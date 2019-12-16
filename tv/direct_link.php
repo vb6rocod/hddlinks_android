@@ -23,198 +23,7 @@ function getSiteHost($siteLink) {
 		// extract full host components and return host
 		return $siteParts['scheme'].'://'.$siteParts['host'].$port;
 }
-function youtube($file) {
-function _splice($a,$b) {
-	return  array_slice($a,$b);
-}
-
-function _reverse($a,$b) {
-	return  array_reverse($a);
-}
-
-function _slice($a,$b) {
-	$tS = $a[0];
-	$a[0] = $a[$b % count($a)];
-	$a[$b] = $tS;
-	return  $a;
-}
-$a_itags=array(37,22,18);
-if(preg_match('/youtube\.com\/(v\/|watch\?v=|embed\/)([\w\-]+)/', $file, $match)) {
-  $id = $match[2];
-  //print_r ($match);
-  $l = "https://www.youtube.com/watch?v=".$id;
-  $html="";
-  $p=0;
-  //echo $l;
-  /*
-  while($html == "" && $p<10) {
-  $ch = curl_init();
-  curl_setopt($ch, CURLOPT_URL, $l);
-  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-  curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 10.0; rv:61.0) Gecko/20100101 Firefox/61.0');
-  //curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Linux; Android 4.4; Nexus 7 Build/KOT24) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/30.0.1599.105 Safari/537.36');
-  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
-  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-  //curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
-//curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
-  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
-  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
-  $html = curl_exec($ch);
-  curl_close($ch);
-  $p++;
-  }
-  */
-  //echo $html;
-  $html=@file_get_contents($l);
-  $html = str_between($html,'ytplayer.config = ',';ytplayer.load');
-  $parts = json_decode($html,1);
-  //preg_match('#config = {(?P<out>.*)};#im', $html, $out);
-  //$parts  = json_decode('{'.$out['out'].'}', true);
-  if ($parts['args']['livestream']== 1) {
-    $r=$parts['args']['hlsvp'];
-
-      $ua="Mozilla/5.0 (Windows NT 5.1; rv:22.0) Gecko/20100101 Firefox/22.0";
-      $ch = curl_init();
-      curl_setopt($ch, CURLOPT_URL, $r);
-      curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-      curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
-      curl_setopt($ch, CURLOPT_USERAGENT, $ua);
-      curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-      curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
-      curl_setopt($ch, CURLOPT_TIMEOUT, 15);
-      $h = curl_exec($ch);
-      curl_close($ch);
-      //echo $h;
-      $a1=explode("\n",$h);
-      //print_r ($a1);
-      if (preg_match("/\.m3u8/",$h)) {
-       preg_match_all("/RESOLUTION\=(\d+)/i",$h,$m);
-       $max_res=max($m[1]);
-       //echo $max_res."\n";
-       for ($k=0;$k<count($a1);$k++) {
-        if (strpos($a1[$k],$max_res) !== false) {
-         $r=trim($a1[$k+1]);
-         break;
-        }
-       }
-      }
-    return $r;
-  } else {
-  //include ("y.php");
-  $videos = explode(',', $parts['args']['url_encoded_fmt_stream_map']);
-  //parse_str($html,$parts);
-  //$videos = explode(',',$parts['url_encoded_fmt_stream_map']);
-foreach ($videos as $video) {
-		parse_str($video, $output);
-
-		if (in_array($output['itag'], $a_itags)) break;
-	}
-
-	//$path = $output['url'].'&';
-	//echo $path;
-//  unset($output['url']);
-
-	//if (isset($output['fexp']))          unset($output['fexp']);
-	if (isset($output['type']))          unset($output['type']);
-	if (isset($output['mv']))            unset($output['mv']);
-	if (isset($output['sver']))          unset($output['sver']);
-	if (isset($output['mt']))            unset($output['mt']);
-	if (isset($output['ms']))            unset($output['ms']);
-	if (isset($output['quality']))       unset($output['quality']);
-	if (isset($output['codecs']))        unset($output['codecs']);
-	if (isset($output['fallback_host'])) unset($output['fallback_host']);
-
-	//$r=urldecode($path.http_build_query($output));
-	if (!isset($output['s'])) {
-		//$signature=($output['sig']);
-        //print_r ($output);
-        $r=$output['url'];
-	} else {
-  $sA="";
-  $s=$output["s"];
-  //echo $s;
-  $tip=$output["sp"];
-  $l = "https://s.ytimg.com".$parts['assets']['js'];
-  //echo $l;
-  $ch = curl_init();
-  curl_setopt($ch, CURLOPT_URL, $l);
-  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-  curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 5.1; rv:52.0) Gecko/20100101 Firefox/52.0');
-  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
-  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
-  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
-  $html = curl_exec($ch);
-  curl_close($ch);
-  $html1=str_replace("\n","",$html);
-  //echo $html1;
-  //die();
-  //preg_match('/"*signature"*,\s?(?P<name>[a-zA-Z0-9$]+)\(/',$html1,$m);
-  preg_match('/([A-Za-z]{2})=function\(a\){a=a\.split\(\"\"\)/',$html1,$m);
-  //print_r ($m);  //UK
-  //$sig=$m["name"];
-  $sig=$m[1];
-  $find='/\s?'.$sig.'=function\((?P<parameter>[^)]+)\)\s?\{\s?(?P<body>[^}]+)\s?\}/';
-  preg_match($find,$html1,$m1);
-  //print_r ($m1);  //UK=function(a){a=a.split("")
-  //[parameter] = a
-  //[body] = a=a.split("");TK.z6(a,23);TK.p8(a,2);TK.d4(a,55);TK.z6(a,6);return a.join("")
-  //z6:function(a,b){var c=a[0];a[0]=a[b%a.length];  ----> _slice($sA,23)
-  //var TK={p8:function(a,b){a.splice(0,b)} splice($sA,2)
-  //d4:function(a){a.reverse()}}
-  //z6:function(a,b){var c=a[0];a[0]=a[b%a.length];  ---> _slice($sA,6);
-
-  // caut foate functiile de genul XY:function(a,b)
-  preg_match_all("/\w{2}\:function\(\w,\w\)\{[\w\s\=\[\]\=\%\.\;\(\)\,]*\}/",$html1,$m3);
-
-  $a=array(); // funtii gasite $a[XY]= splice etc
-  for ($k=0;$k<count($m3[0]);$k++) {
-    preg_match("/(\w{2})(\:function\(\w,\w\)\{)([\w\s\=\[\]\=\%\.\;\(\)\,]*)\}/",$m3[0][$k],$m4);
-    //print_r ($m4);
-    $a[$m4[1]]=$m4[3];
-  }
-
-  // caut toate functiile de genul XY:function(a)
-  preg_match_all("/\w{2}\:function\(\w\)\{[\;\.\s\w\,\"\:\(\)\{\{]*\}/",$html1,$m2);
-  //print_r ($m2);
-  for ($k=0;$k<count($m2[0]);$k++) {
-     preg_match("/(\w{2})(\:function\(\w\)\{)([\;\.\s\w\,\"\:\(\)\{\{]*)\}/",$m2[0][$k],$m5);
-     $a[$m5[1]]=$m5[3];
-  }
-  //print_r ($a);
-
-  //$x3 = preg_replace("/\w{2}\./","",$m1["body"][0]);
-  $x3 = preg_replace("/\w{2}\./","",$m1["body"]);
-  $f=explode(";",$x3);
-  //print_r ($f);
-  //b.Sl(a)
-  for ($k=0;$k<count($f);$k++) {
-    if (preg_match("/split/",$f[$k]))
-      $sA = str_split($s);
-    elseif (preg_match("/join/",$f[$k]))
-      $sA = implode($sA);
-    elseif (preg_match("/(\w+)\(\w+,(\d+)/",$f[$k],$r1)) { //AT(a,33)
-       //print_r ($r);
-       if (!$a[$r1[1]]) //daca nu exista nicio functie..... nu cred ca e cazul
-          $sA = _slice($sA,$r1[2]); //????
-       else {
-         if (preg_match("/splice/",$a[$r1[1]]))
-            $sA = _splice($sA,$r1[2]);
-         elseif (preg_match("/reverse/",$a[$r1[1]]))
-            $sA = _reverse($sA,$r1[2]);
-         elseif (preg_match("/\w%\w\.length/",$a[$r1[1]]))
-            $sA = _slice($sA,$r1[2]);
-       }
-    }
-  }
-  $signature = $sA;
-  $r=$output['url']."&".$tip."=".$signature;
-}
-return $r;
-}
-} else
-  return "";
-}
+include ("../filme/youtube.php");
 //http://gradajoven.es/spicenew.php
 //http://edge3.spicetvnetwork.de:1935/live/_definst_/mp4:spicetv/ro/6tv.stream/chunklist_w2087458837.m3u8?c=176&u=52409&e=1398753453&t=298944a96a9161b2300ae3ae072b85f4&d=android&i=1.30
 //http://edge1.spicetvnetwork.de:1935/live/_definst_/mp4:spicetv/ro/6tv.streamchunklist_w2087458837.m3u8?c=176&u=52560&e=1398777448&t=3869972b307e53bfd2e048f093fd5f1c&d=site&i=Android%2C+Safari
@@ -678,11 +487,10 @@ $head=array("X-Requested-With: XMLHttpRequest",
   $html = curl_exec($ch);
   curl_close($ch);
   //echo $html;
-  //http://vid2.stirileprotv.ro/2019/01/12/62014229-2.mp4
-  $t1=explode('sources: [',$html);
-  $t2=explode('src: "',$t1[1]);
-  $t3=explode('"',$t2[1]);
-  $link=$t3[0];
+  if (preg_match("/http.+\.mp4/",$html,$m)) {
+   $link=$m[0];
+  } else
+   $link="";
   $link=str_replace("https","http",$link);
 }
 if ($from=="libertatea") {
@@ -1243,6 +1051,7 @@ if (strpos($out,"m3u8") !== false)
 else
    $type="mp4";
 }
+$title=str_replace('"',"'",$title);
 //header('Access-Control-Allow-Origin: *');
 //,
             //onXhrOpen: function(xhr, url) {

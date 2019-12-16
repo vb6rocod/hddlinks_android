@@ -3,6 +3,10 @@
 include ("../common.php");
 include ("../util.php");
 //error_reporting(0);
+if (file_exists($base_pass."debug.txt"))
+ $debug=true;
+else
+ $debug=false;
 function loadsource($data_host, $data_id) {
     $link_host = '';
     switch ($data_host) {
@@ -113,6 +117,9 @@ function openlink(link) {
   request.onreadystatechange = function() {
     if (request.readyState == 4) {
       off();
+      <?php
+      if ($debug) echo "document.getElementById('debug').innerHTML = request.responseText.match(/http.+#/g);"."\r\n";
+      ?>
       document.getElementById("mytest1").href=request.responseText;
       document.getElementById("mytest1").click();
     }
@@ -303,6 +310,9 @@ echo '<br>
 <table border="0px" width="100%">
 <TR>
 <TD><font size="4"><b>Scurtaturi: 1=opensubtitles, 2=titrari, 3=subs, 4=subtitrari, 5=vizioneaza</b></font></TD></TR></TABLE>
+';
+include("../debug.html");
+echo '
 <div id="overlay">
   <div id="text">Wait....</div>
 </div>

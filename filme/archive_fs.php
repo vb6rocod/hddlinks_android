@@ -7,6 +7,10 @@ $list = glob($base_sub."*.srt");
     str_replace(" ","%20",$l);
     unlink($l);
 }
+if (file_exists($base_pass."debug.txt"))
+ $debug=true;
+else
+ $debug=false;
 if (file_exists($base_pass."player.txt")) {
 $flash=trim(file_get_contents($base_pass."player.txt"));
 } else {
@@ -78,6 +82,9 @@ function openlink(link) {
   request.onreadystatechange = function() {
     if (request.readyState == 4) {
       off();
+      <?php
+      if ($debug) echo "document.getElementById('debug').innerHTML = request.responseText.match(/http.+#/g);"."\r\n";
+      ?>
       document.getElementById("mytest1").href=request.responseText;
       document.getElementById("mytest1").click();
     }
@@ -196,6 +203,9 @@ echo '<br>
 <table border="0px" width="100%">
 <TR>
 <TD><font size="4"><b>Scurtaturi: 1=opensubtitles, 2=titrari, 3=subs, 4=subtitrari, 5=vizioneaza</b></font></TD></TR></TABLE>
+';
+include("../debug.html");
+echo '
 <div id="overlay">
   <div id="text">Wait....</div>
 </div>
