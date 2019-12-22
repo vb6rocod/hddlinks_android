@@ -21,7 +21,7 @@ $fav_target="";
 $add_target="filme_add.php";
 $add_file="";
 $fs_target="";
-$target="filmeonline2019.php";
+$target="filmecinema.php";
 /* ==================================================== */
 $base=basename($_SERVER['SCRIPT_FILENAME']);
 $p=$_SERVER['QUERY_STRING'];
@@ -164,52 +164,86 @@ echo '</TR>'."\r\n";
 
 if($tip=="release") {
  if ($page>1)
-  $l=$link."page/".$page."/";
+  $l=$link."/page/".$page."/";
  else
   $l=$link;
 } else {
-  $search=str_replace(" ","-",$tit);
-  if ($page > 1)
-     $l="https://filmeonline2019.biz/page/".$page."/?s=".$search;
-  else
-     $l="https://filmeonline2019.biz/?s=".$search;
+  $search=str_replace(" ","+",$tit);
+  $post="do=search&subaction=search&story=".$search;
+  $l="https://www.filmecinema.net/";
 }
 $ua = $_SERVER['HTTP_USER_AGENT'];
+$cookie=$base_cookie."biz.dat";
+$r=array();
+if ($tip=="release") {
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $l);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
   curl_setopt($ch, CURLOPT_USERAGENT, $ua);
+  curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie);
   curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
   curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
   curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
   curl_setopt($ch, CURLOPT_TIMEOUT, 15);
   $html = curl_exec($ch);
   curl_close($ch);
-
-  $videos = explode('article id="post-', $html);
+  //echo $html;
+  //$html=str_between($html,'ul class="shortstory-film3',"</ul");
+  
+  $videos = explode('<div itemscope itemtype="http://schema.org/Movie', $html);
   unset($videos[0]);
   $videos = array_values($videos);
   foreach($videos as $video) {
-   if (!preg_match("/class=\"playthumb/",$video)) {
     $t1=explode('href="',$video);
     $t2=explode('"',$t1[1]);
     $link=$t2[0];
-    $t1=explode('class="Title">',$video);
+    $t1=explode('strong>',$video);
     $t2=explode('<',$t1[1]);
     $title=$t2[0];
     $t1=explode('src="',$video);
     $t2=explode('"',$t1[1]);
     $image=$t2[0];
+    if (strpos($image,"http") === false) $image="https://www.filmecinema.net".$image;
     $title=prep_tit($title);
+    $r[]=array($link,$title,$image);
+  }
+  } else {
+  $ch = curl_init($l);
+  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
+  curl_setopt ($ch, CURLOPT_POST, 1);
+  curl_setopt ($ch, CURLOPT_POSTFIELDS, $post);
+  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER  ,1);  // RETURN THE CONTENTS OF THE CALL
+  curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+  $html = curl_exec($ch);
+  curl_close ($ch);
+  $videos = explode('<div itemscope itemtype="http://schema.org/Movie', $html);
+  unset($videos[0]);
+  $videos = array_values($videos);
+  foreach($videos as $video) {
+    $t1=explode('href="',$video);
+    $t2=explode('"',$t1[1]);
+    $link=$t2[0];
+    $t1=explode('strong>',$video);
+    $t2=explode('<',$t1[1]);
+    $title=$t2[0];
+    $t1=explode('src="',$video);
+    $t2=explode('"',$t1[1]);
+    $image=$t2[0];
+    if (strpos($image,"http") === false) $image="https://www.filmecinema.net".$image;
+    $title=prep_tit($title);
+    $r[]=array($link,$title,$image);
+  }
+  }
+  for ($k=0;$k<count($r);$k++) {
+    $link=$r[$k][0];
+    $title=$r[$k][1];
+    $image=$r[$k][2];
     $year="";
     $imdb="";
-    if (preg_match("/\(?((1|2)\d{3})\)?/",$title,$r)) {
-     $year=$r[1];
-    }
-    $t1=explode(" - ",$title);
-    $t=$t1[0];
-    $t=preg_replace("/\(?((1|2)\d{3})\)?/","",$t);
-    $tit_imdb=trim($t);
+    $tit_imdb=$title;
   if ($has_fs == "no")
     $link_f='filme_link.php?file='.urlencode($link).'&title='.urlencode(fix_t($title));
   else
@@ -237,7 +271,6 @@ $ua = $_SERVER['HTTP_USER_AGENT'];
   if ($n == 4) {
   echo '</tr>'."\r\n";
   $n=0;
-  }
   }
 }
   if ($n < 4 && $n > 0) {

@@ -125,7 +125,9 @@ foreach($arr as $key => $value) {
     $imdb="";
 	$link = urldecode($arr[$key]["link"]);
     $title = unfix_t(urldecode($key));
-    $image="r_m.php?file=".urldecode($arr[$key]["image"]);
+    $image=urldecode($arr[$key]["image"]);
+    $image=$host.parse_url($image)['path'];
+    $image="r_m.php?file=".$image;
     //$image=$host.parse_url($image)['path'];
     $year="";
     $link=$host.parse_url($link)['path'];

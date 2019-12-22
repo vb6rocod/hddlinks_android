@@ -15,14 +15,14 @@ $width="200px";
 $height="278px";
 /* ==================================================== */
 $has_fav="yes";
-$has_search="no";
+$has_search="yes";
 $has_add="yes";
 $has_fs="yes";
-$fav_target="veziseriale_s_fav.php?host=http://www.veziserialeonline.info";
-$add_target="veziseriale_s_add.php";
+$fav_target="europix_f_fav.php?host=https://123europix.pro";
+$add_target="europix_f_add.php";
 $add_file="";
-$fs_target="veziseriale_s_ep.php";
-$target="veziseriale_s.php";
+$fs_target="europix_fs.php";
+$target="europix_f.php";
 /* ==================================================== */
 $base=basename($_SERVER['SCRIPT_FILENAME']);
 $p=$_SERVER['QUERY_STRING'];
@@ -40,12 +40,12 @@ $prev=$base."?page=".($page-1)."&".$p;
 $tit=unfix_t(urldecode($tit));
 $link=unfix_t(urldecode($link));
 /* ==================================================== */
-if (file_exists($base_cookie."seriale.dat"))
-  $val_search=file_get_contents($base_cookie."seriale.dat");
+if (file_exists($base_cookie."filme.dat"))
+  $val_search=file_get_contents($base_cookie."filme.dat");
 else
   $val_search="";
 $form='<form action="'.$target.'" target="_blank">
-Cautare serial:  <input type="text" id="title" name="title" value="'.$val_search.'">
+Cautare film:  <input type="text" id="title" name="title" value="'.$val_search.'">
 <input type="hidden" name="page" id="page" value="1">
 <input type="hidden" name="tip" id="tip" value="search">
 <input type="hidden" name="link" id="link" value="">
@@ -54,7 +54,7 @@ Cautare serial:  <input type="text" id="title" name="title" value="'.$val_search
 /* ==================================================== */
 if ($tip=="search") {
   $page_title = "Cautare: ".$tit;
-  if ($page == 1) file_put_contents($base_cookie."seriale.dat",$tit);
+  if ($page == 1) file_put_contents($base_cookie."filme.dat",$tit);
 } else
   $page_title=$tit;
 /* ==================================================== */
@@ -165,82 +165,138 @@ if ($page==1) {
 } else {
    echo '<TD class="nav" colspan="4" align="right"><a href="'.$prev.'">&nbsp;&lt;&lt;&nbsp;</a> | <a href="'.$next.'">&nbsp;&gt;&gt;&nbsp;</a></TD>'."\r\n";
 }
-echo '</TR></TABLE>'."\r\n";
-$l = "http://www.veziseriale.online/tv-shows";
-$l="http://www.veziserialeonline.info/tv-shows";
-$r=array();
+echo '</TR>'."\r\n";
 $ua = $_SERVER['HTTP_USER_AGENT'];
+//$ua="Mozilla/5.0 (Windows NT 10.0; rv:71.0) Gecko/20100101 Firefox/71.0";
+$cookie=$base_cookie."hdpopcorns.dat";
+$requestLink="https://123europix.pro/";  // ? de ce android trebuie cu https ???????????
+$host=parse_url($requestLink)['host'];
+if ($page==1 && $tip !="search") {
+//if (file_exists($cookie)) unlink ($cookie);
+$head=array(
+'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+'Accept-Language: en-US,en;q=0.5',
+'Accept-Encoding: deflate, br',
+'Connection: keep-alive',
+'Upgrade-Insecure-Requests: 1');
+  $ch = curl_init();
+  curl_setopt($ch, CURLOPT_URL, $requestLink);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
+  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+  curl_setopt($ch,CURLOPT_HTTPHEADER,$head);
+  curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie);
+  curl_setopt($ch, CURLOPT_COOKIEJAR, $cookie);
+  curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'GET');
+  curl_setopt($ch, CURLOPT_HTTPGET, true);
+  curl_setopt($ch, CURLINFO_HEADER_OUT, true);
+  curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
+  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+  curl_setopt($ch, CURLOPT_HEADER,1);
+  $h = curl_exec($ch);
+ if (strpos($h,"503 Service") !== false) {
+  if (strpos($h,'id="cf-dn') === false)
+   $q1= getClearanceLink_old($h,$requestLink);
+  else
+   $q1= getClearanceLink($h,$requestLink);
+  $t1=explode('action="',$h);
+  $t2=explode('"',$t1[1]);
+  $requestLink="https://".$host.$t2[0];
+  $t1=explode("?",$q1);
+  $post=$t1[1];
+  //echo $post;
+$head=array('Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
+'Accept-Encoding: gzip, deflate, br',
+'Content-Type: application/x-www-form-urlencoded',
+'Content-Length: '.strlen($post).'',
+'Referer: https://'.$host.'',
+'Origin: https://'.$host.'',
+'Connection: keep-alive',
+'Upgrade-Insecure-Requests: 1');
+
+  curl_setopt($ch, CURLOPT_URL, $requestLink);
+  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
+  //curl_setopt($ch,CURLOPT_REFERER,$l1);
+  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,0);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER  ,1);  // RETURN THE CONTENTS OF THE CALL
+  curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie);
+  curl_setopt($ch, CURLOPT_COOKIEJAR, $cookie);
+  curl_setopt($ch, CURLOPT_HTTPHEADER, $head);
+  curl_setopt($ch, CURLOPT_HEADER,1);
+  curl_setopt($ch, CURLOPT_NOBODY,1);
+  curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'POST');
+  curl_setopt($ch, CURLOPT_HTTPGET, false);
+  //curl_setopt($ch, CURLINFO_HEADER_OUT, true);
+  curl_setopt ($ch, CURLOPT_POST, 1);
+  curl_setopt ($ch, CURLOPT_POSTFIELDS, $post);
+  curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
+  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 25);
+  $h = curl_exec($ch);
+  curl_close ($ch);
+ } else {
+    curl_close($ch);
+ }
+}
+$ad="";
+if ($page<10) $ad="0";
+if($tip=="release") {
+  //$l="https://europixhd.io/tvshow-filter/all-tv-shows-page-"
+  //https://europixhd.io/tvshow-filter/all-tv-shows-page-02?search=
+  $l="https://".$host."/year/allmovies-page-".$page."?search=";
+} else {
+  $search=str_replace(" ","+",$tit);
+  $l="https://".$host."/search?search=".$search;
+}
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $l);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-  curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 10.0; rv:55.0) Gecko/20100101 Firefox/55.0');
+  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
+  curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie);
   curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
-  curl_setopt($ch, CURLOPT_ENCODING, "");
-  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
   curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
   curl_setopt($ch, CURLOPT_TIMEOUT, 15);
   $html = curl_exec($ch);
   curl_close($ch);
-  $videos = explode('<li class="post-', $html);
-  unset($videos[0]);
-  $videos = array_values($videos);
-  foreach($videos as $video) {
-    $t1=explode('href="',$video);
-    $t2=explode('"',$t1[1]);
-    $link=$t2[0];
-    $t1 = explode('title="', $video);
-    $t2 = explode('"', $t1[1]);
-    $title=trim($t2[0]);
-    $t1=explode('src="',$video);
-    $t2=explode('"',$t1[1]);
-    $image=$t2[0];
-    array_push($r ,array($title,$link, $image));
-  }
-$c=count($r);
-$p=0;
-$k=intval($c/15) + 1;
-echo '<table border="1px" width="100%"><tr>'."\n\r";
-for ($m=1;$m<$k;$m++) {
-   echo '<TD class="nav" align="center"><a href="#myLink'.($m*15).'">Salt:'.($m*15).'</a></td>';
-   $p++;
-   if ($p >9) {
-    $p=0;
-    echo '</TR>';
-   }
-}
-echo '</TR></table>';
 
-echo '<table border="1px" width="100%">'."\n\r";
-for ($k=0;$k<$c;$k++) {
-  $title=$r[$k][0];
-  $title=prep_tit($title);
-  $link=$r[$k][1];
-  $image=$r[$k][2];
-  $rest = substr($title, -6);
-  if (preg_match("/\((\d+)\)/",$rest,$m)) {
-   $year=$m[1];
-   $tit_imdb=trim(str_replace($m[0],"",$title));
-  } else {
-   $year="";
-   $tit_imdb=$title;
-  }
-
+ //echo $html;
+ $videos = explode('class="movie">', $html);
+ unset($videos[0]);
+ $videos = array_values($videos);
+ foreach($videos as $video) {
+  preg_match("/href\=(\'|\")(.*?)(\'|\")/mei",$video,$m);
+  $link=$m[2];
+  $link="https://".$host."/".str_replace("../","",$link);
+  //echo $link1;
+  $t1 = explode('class="name">', $video);
+  $t2 = explode('<', $t1[1]);
+  $title = trim($t2[0]);
+  preg_match("/src\=(\'|\")(.*?)(\'|\")/mei",$video,$m);
+  $image = $m[2];
+  if (strpos($image,"../") !== false)
+  $image="https://".$host."/".str_replace("../","",$image);
+  $year="";
   $imdb="";
-  $link_f=$fs_target.'?tip=series&link='.urlencode($link).'&title='.urlencode(fix_t($title)).'&image='.$image."&sez=&ep=&ep_tit=&year=".$year;
-  if ($title) {
+  $link_f=$fs_target.'?tip=movie&link='.urlencode($link).'&title='.urlencode(fix_t($title)).'&image='.$image."&sez=&ep=&ep_tit=&year=".$year;
+  if ($title && strpos($link,"/mov") !== false) {
   if ($n==0) echo '<TR>'."\r\n";
-  $val_imdb="tip=series&title=".urlencode(fix_t($tit_imdb))."&year=".$year."&imdb=".$imdb;
+  $val_imdb="tip=movie&title=".urlencode(fix_t($title))."&year=".$year."&imdb=".$imdb;
   $fav_link="mod=add&title=".urlencode(fix_t($title))."&link=".urlencode($link)."&image=".urlencode($image)."&year=".$year;
+  $image="r_m.php?file=".$image;
   if ($tast == "NU") {
     echo '<td class="mp" width="25%"><a href="'.$link_f.'" id="myLink'.$w.'" target="_blank" onmousedown="isKeyPressed(event)">
-    '.$title.'</a>
+    <img id="myLink'.$w.'" src="'.$image.'" width="'.$width.'" height="'.$height.'"><BR>'.$title.'</a>
     <input type="hidden" id="imdb_myLink'.$w.'" value="'.$val_imdb.'">'."\r\n";
     if ($has_add=="yes")
       echo '<a onclick="ajaxrequest('."'".$fav_link."'".')" style="cursor:pointer;">*</a>'."\r\n";
     echo '</TD>'."\r\n";
   } else {
     echo '<td class="mp" width="25%"><a class ="imdb" id="myLink'.$w.'" href="'.$link_f.'" target="_blank">
-    '.$title.'</a>
+    <img src="'.$image.'" width="'.$width.'" height="'.$height.'"><BR>'.$title.'</a>
     <input type="hidden" id="imdb_myLink'.$w.'" value="'.$val_imdb.'">'."\r\n";
     if ($has_add == "yes")
       echo '<input type="hidden" id="fav_myLink'.$w.'" value="'.$fav_link.'"></a>'."\r\n";
@@ -254,7 +310,6 @@ for ($k=0;$k<$c;$k++) {
   }
   }
  }
-
 /* bottom */
   if ($n < 4 && $n > 0) {
     for ($k=0;$k<4-$n;$k++) {

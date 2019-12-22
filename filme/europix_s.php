@@ -170,8 +170,9 @@ $ua = $_SERVER['HTTP_USER_AGENT'];
 //$ua="Mozilla/5.0 (Windows NT 10.0; rv:71.0) Gecko/20100101 Firefox/71.0";
 $cookie=$base_cookie."hdpopcorns.dat";
 $requestLink="https://europixhd.io/";  // ? de ce android trebuie cu https ???????????
+$host=parse_url($requestLink)['host'];
 if ($page==1 && $tip !="search") {
-if (file_exists($cookie)) unlink ($cookie);
+//if (file_exists($cookie)) unlink ($cookie);
 $head=array(
 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
 'Accept-Language: en-US,en;q=0.5',
@@ -202,7 +203,7 @@ $head=array(
    $q1= getClearanceLink($h,$requestLink);
   $t1=explode('action="',$h);
   $t2=explode('"',$t1[1]);
-  $requestLink="https://europixhd.io".$t2[0];
+  $requestLink="https://".$host.$t2[0];
   $t1=explode("?",$q1);
   $post=$t1[1];
   //echo $post;
@@ -211,8 +212,8 @@ $head=array('Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q
 'Accept-Encoding: gzip, deflate, br',
 'Content-Type: application/x-www-form-urlencoded',
 'Content-Length: '.strlen($post).'',
-'Referer: https://europixhd.io',
-'Origin: https://europixhd.io',
+'Referer: https://'.$host.'',
+'Origin: https://'.$host.'',
 'Connection: keep-alive',
 'Upgrade-Insecure-Requests: 1');
 
@@ -246,12 +247,12 @@ if ($page<10) $ad="0";
 if($tip=="release") {
   //$l="https://europixhd.io/tvshow-filter/all-tv-shows-page-"
   //https://europixhd.io/tvshow-filter/all-tv-shows-page-02?search=
-  $l="https://europixhd.io/tvshow-filter/all-tv-shows-page-".$ad.$page."?search=";
+  //https://123europix.pro/year/allmovies-page-1?search=
+  $l="https://".$host."/tvshow-filter/all-tv-shows-page-".$ad.$page."?search=";
 } else {
   $search=str_replace(" ","+",$tit);
-  $l="https://europixhd.io/search?search=".$search;
+  $l="https://".$host."/search?search=".$search;
 }
-$host=parse_url($l)['host'];
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $l);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
@@ -277,6 +278,7 @@ $host=parse_url($l)['host'];
   $title = trim($t2[0]);
   preg_match("/src\=(\'|\")(.*?)(\'|\")/mei",$video,$m);
   $image = $m[2];
+  $image="https://".$host."/".str_replace("../","",$image);
   $year="";
   $imdb="";
   $link_f=$fs_target.'?tip=series&link='.urlencode($link).'&title='.urlencode(fix_t($title)).'&image='.$image."&sez=&ep=&ep_tit=&year=".$year;
@@ -284,6 +286,7 @@ $host=parse_url($l)['host'];
   if ($n==0) echo '<TR>'."\r\n";
   $val_imdb="tip=series&title=".urlencode(fix_t($title))."&year=".$year."&imdb=".$imdb;
   $fav_link="mod=add&title=".urlencode(fix_t($title))."&link=".urlencode($link)."&image=".urlencode($image)."&year=".$year;
+  $image="r_m.php?file=".$image;
   if ($tast == "NU") {
     echo '<td class="mp" width="25%"><a href="'.$link_f.'" id="myLink'.$w.'" target="_blank" onmousedown="isKeyPressed(event)">
     <img id="myLink'.$w.'" src="'.$image.'" width="'.$width.'" height="'.$height.'"><BR>'.$title.'</a>

@@ -70,9 +70,9 @@ require( 'aes_small.php');
   curl_setopt($ch, CURLOPT_TIMEOUT, 15);
   $html = curl_exec($ch);
   curl_close ($ch);
-
+//echo $html;
 if(preg_match_all('/toNumbers\(\"(\w+)\"/',$html,$m)) {
-
+//print_r ($m);
 $a=cryptoHelpers::toNumbers($m[1][0]);
 $b=cryptoHelpers::toNumbers($m[1][1]);
 $c=cryptoHelpers::toNumbers($m[1][2]);

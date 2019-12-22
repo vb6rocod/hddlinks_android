@@ -531,10 +531,14 @@ $headers=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:71.0) Gecko/2010010
   $h2="eval(function(p,a,c,k,e,d)".$t1[count($t1)-1];
   $jsu = new JavaScriptUnpacker();
   $out = $jsu->Unpack($h2);
+  $out .=$h1;
   $post="post_id=".$id;
-  $t1=explode('url:"',$out);
-  $t2=explode('"',$t1[1]);
-  $l="http://".$host."".$t2[0];
+  $t0=explode('var postId',$out);
+  if (preg_match("/url\:\s*\"(.*?)\"/",$t0[1],$m))
+   $url=$m[1];
+  else
+   $url="/wp-content/themes/vizer/inc/parts/single/field-ajax.php";
+  $l="http://".$host.$url;
   //echo $l;
   //echo $post;
   $ch = curl_init();
@@ -569,6 +573,7 @@ $headers=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:71.0) Gecko/2010010
   $html=$h;
   //echo $h;
 } elseif (strpos($filelink,"filme--online.") !== false) {
+//echo $filelink;
   require_once("JavaScriptUnpacker.php");
   $cookie=$base_cookie."hdpopcorns.dat";
   $host=parse_url($filelink)['host'];
@@ -596,11 +601,16 @@ $headers=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:71.0) Gecko/2010010
   //$jsu = new JavaScriptUnpacker();
   //$out = $jsu->Unpack($h2);
   $post="post_id=".$id;
-  $t1=explode('url:"',$h1);
-  $t2=explode('"',$t1[1]);
-  $l="http://".$host."".$t2[0];
+  $t0=explode('var postId',$h1);
+  if (preg_match("/url\:\s*\"(.*?)\"/",$t0[1],$m))
+   $url=$m[1];
+  else
+   $url="/wp-content/themes/vizer/inc/parts/single/field-ajax.php";
+  $l="http://".$host.$url;
   //echo $l;
   //echo $post;
+  //$l="http://filme--online.ro/wp-content/themes/vizer/inc/parts/single/field-ajax.php";
+  //$post="post_id=2845285";
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL,$l);
   curl_setopt($ch, CURLOPT_USERAGENT, $ua);
@@ -812,7 +822,7 @@ $headers=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:71.0) Gecko/2010010
    $html .=$h;
   }
 //echo $html;
-} elseif (strpos($filelink,"filmeonline.biz") !== false) {
+} elseif (strpos($filelink,"filmeonline.biz") !== false || strpos($filelink,"filmecinema.net") !== false) {
   $headers = array('Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
    'Accept-Encoding: deflate',
    'Accept-Language: en-US,en;q=0.5',
@@ -834,6 +844,7 @@ $headers=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:71.0) Gecko/2010010
   curl_setopt($ch, CURLOPT_TIMEOUT, 15);
   $html = curl_exec($ch);
   curl_close ($ch);
+  $html=urldecode($html);
 } elseif (strpos($filelink,"f-hd.") !== false) {
   $ch = curl_init($filelink);
   curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows; U; Windows NT 6.1; en-US; rv:1.9.1.2) Gecko/20090729 Firefox/3.5.2 GTB5');
@@ -905,9 +916,14 @@ $headers=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:71.0) Gecko/2010010
   $jsu = new JavaScriptUnpacker();
   $out = $jsu->Unpack($h2);
   $post="post_id=".$id;
-  $t1=explode('url:"',$out);
-  $t2=explode('"',$t1[1]);
-  $l="http://".$host."".$t2[0];
+  $t0=explode('var postId',$out);
+  if (preg_match("/url\:\s*\"(.*?)\"/",$h1,$m))
+   $url=$m[1];
+  elseif (preg_match("/url\:\s*\"(.*?)\"/",$out,$m))
+   $url=$m[1];
+  else
+   $url="/wp-content/themes/serialenoi/field-ajax3.php";
+  $l="http://".$host.$url;
   //echo $l;
   //echo $post;
   $ch = curl_init();
@@ -968,6 +984,38 @@ $headers=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:71.0) Gecko/2010010
   curl_setopt($ch, CURLOPT_TIMEOUT, 15);
   $html = curl_exec($ch);
   curl_close($ch);
+} elseif (strpos($filelink,"vezifs.") !== false) {
+  $ua = $_SERVER['HTTP_USER_AGENT'];
+  $ch = curl_init();
+  curl_setopt($ch, CURLOPT_URL, $filelink);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+  curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 10.0; rv:55.0) Gecko/20100101 Firefox/55.0');
+  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+  curl_setopt($ch, CURLOPT_ENCODING, "");
+  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+  $html = curl_exec($ch);
+  curl_close($ch);
+  preg_match("/post_id\s*\:\s*(\d+)/",$html,$m);
+  $id=$m[1];
+  $post="action=show_server&post_id=".$id;
+  $l="https://vezifs.com/wp-admin/admin-ajax.php";
+   $ch = curl_init($l);
+   curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 10.0; rv:55.0) Gecko/20100101 Firefox/55.0');
+   curl_setopt($ch,CURLOPT_REFERER,"https://vezifs.com");
+   curl_setopt ($ch, CURLOPT_POST, 1);
+   curl_setopt ($ch, CURLOPT_POSTFIELDS, $post);
+   //curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+   curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+   curl_setopt($ch, CURLOPT_RETURNTRANSFER  ,1);  // RETURN THE CONTENTS OF THE CALL
+   curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+   curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+   curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+   $h = curl_exec($ch);
+   curl_close ($ch);
+   //echo $h;
+   $html =$h;
 } elseif (preg_match($indirect,$filelink)) {
   $html='<iframe src="'.$filelink.'">';
 } elseif (preg_match("/gomostream\.com\/movie/",$filelink)) {
@@ -1040,7 +1088,8 @@ $s=$s."filmeonlinehd\.tv\/sharemovie|rovideo\.net\/video|flix555\.com|gamovideo\
 $s=$s."bitporno\.com|thevideobee\.to|mangovideo\.|smartshare\.tv|datoporn\.co|xstreamcdn\.com|onlystream\.tv|";
 $s=$s."database\.serialeonline\.to|drive\.google\.com|videomega\.|vidload\.co|mixdrop\.|mystream\.to|mstream\.cloud";
 $s=$s."|hxload\.|bazavox\.com|cloud\.vidhubstr\.org|vidia\.tv|gomostream\.com|viduplayer\.com|leaked-celebrities\.";
-$s=$s."|prostream\.to|videobin\.co|upstream\.to|playtvid\.com|jetload\.net|vidfast\.co|clipwatching\./i";
+$s=$s."|prostream\.to|videobin\.co|upstream\.to|playtvid\.com|jetload\.net|vidfast\.co|clipwatching\.";
+$s=$s."|video\.filmeserialeonline\.org/i";
 /////////////////////////////////////////////
 //$x=preg_grep($s,$links);
 //print_r ($x);
@@ -1060,7 +1109,7 @@ for ($i=0;$i<count($links);$i++) {
     }
   }
   //echo $cur_link."\n";
-  if (preg_match("/bit\.ly|goo\.gl|hideiframe\.com|leaked-celebrities\./",$links[$i])) {
+  if (preg_match("/bit\.ly|goo\.gl|hideiframe\.com|leaked-celebrities\.|video\.filmeserialeonline\.org/",$links[$i])) {
    $l=trim("https:".$links[$i]);
    //echo $l;
    $ch = curl_init();

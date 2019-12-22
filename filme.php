@@ -65,7 +65,7 @@ else
 <TR>
 <TD width="25%"><a href="filme/filmeonline_biz_main.php" target="_blank">filmeonline.biz</a></TD>
 <TD width="25%"><a href="filme/f-hd_main.php" target="_blank">f-hd</a></TD>
-<TD width="25%"><a href="filme/filmeonline2019_main.php" target="_blank">filmeonline2019</a></TD>
+<TD width="25%"><a href="filme/filmecinema_main.php" target="_blank">filmecinema</a></TD>
 <TD width="25%"><a href="filme/filme-bune.php?page=1&tip=release&title=filme-bune&link=" target="_blank">filme-bune</a></TD>
 </TR>
 <TR>
@@ -119,7 +119,7 @@ else
 <TR>
 <TD width="25%"><a href="filme/subsmovies_f.php?page=1&tip=release&title=subsmovie&link=" target="_blank">subsmovies</a></TD>
 <TD width="25%"><a href="filme/avistaz_f.php?page=1&tip=release&title=avistaz&link=" target="_blank">avistaz</a></TD>
-<TD width="25%"></TD>
+<TD width="25%"><a href="filme/hdm_f.php?page=1&tip=release&title=hdm&link=" target="_blank">hdm</a></TD>
 <TD width="25%"><a href="filme/x8_f.php" target="_blank">xmovies8</a></TD>
 </TR>
 
@@ -133,7 +133,7 @@ else
 <TR>
 <TD width="25%"><a href="filme/vumoo_f.php?page=1&tip=release&title=vumoo&link=" target="_blank">vumoo</a></TD>
 <TD width="25%"><a href="filme/cmovies_f.php?page=1&tip=release&title=cmovies&link=" target="_blank">cmovies</a></TD>
-<TD width="25%"></TD>
+<TD width="25%"><a href="filme/europix_f.php?page=1&tip=release&title=europix&link=" target="_blank">europix</a></TD>
 <TD width="25%"></TD>
 </TR>
 <?php

@@ -149,10 +149,12 @@ $id=$t3[0];
 }
 $l="https://0123netflix.site/ajax/episode/info?_token=&id=".$id."&update=0&film=".$film;
 /////////////////////////////////////////////////////////////////////////////////////////
+//echo $l;
    $head=array(
    'Accept: application/json, text/javascript, */*; q=0.01',
    'Accept-Language: en-US,en;q=0.5',
    'Accept-Encoding: deflate',
+   'Origin: https://0123netflix.site',
    'X-Requested-With: XMLHttpRequest'
    );
    $ch = curl_init();
@@ -173,6 +175,10 @@ $l="https://0123netflix.site/ajax/episode/info?_token=&id=".$id."&update=0&film=
    $t1=explode("id=",$l);
    $t2=explode("&",$t1[1]);
    $id=$t2[0];
+$head=array('Accept: application/json, text/javascript, */*; q=0.01',
+'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
+'Accept-Encoding: deflate',
+'Origin: https://0123netflix.site');
    $l="https://0123netflix.site/v/?id=".$id;
    $ch = curl_init();
    curl_setopt($ch, CURLOPT_URL, $l);
@@ -190,6 +196,7 @@ $l="https://0123netflix.site/ajax/episode/info?_token=&id=".$id."&update=0&film=
    $id=$t1[1];
    if ($id) {
    $l="https://proxy.123downloads.today/proxy.php?id=".$id;
+   //echo $l;
    $ch = curl_init();
    curl_setopt($ch, CURLOPT_URL, $l);
    curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
@@ -199,6 +206,7 @@ $l="https://0123netflix.site/ajax/episode/info?_token=&id=".$id."&update=0&film=
    curl_setopt($ch, CURLOPT_HTTPHEADER, $head);
    $h = curl_exec($ch);
    curl_close($ch);
+   //echo $h;
    $r=json_decode($h,1);
    //print_r ($r);
    if (isset($r["src"])) {

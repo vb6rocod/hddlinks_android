@@ -18,11 +18,11 @@ $has_fav="yes";
 $has_search="no";
 $has_add="yes";
 $has_fs="yes";
-$fav_target="veziseriale_s_fav.php?host=http://www.veziserialeonline.info";
-$add_target="veziseriale_s_add.php";
+$fav_target="vezifs_s_fav.php?host=https://vezifs.com";
+$add_target="vezifs_s_add.php";
 $add_file="";
-$fs_target="veziseriale_s_ep.php";
-$target="veziseriale_s.php";
+$fs_target="vezifs_s_ep.php";
+$target="vezifs_s.php";
 /* ==================================================== */
 $base=basename($_SERVER['SCRIPT_FILENAME']);
 $p=$_SERVER['QUERY_STRING'];
@@ -166,8 +166,7 @@ if ($page==1) {
    echo '<TD class="nav" colspan="4" align="right"><a href="'.$prev.'">&nbsp;&lt;&lt;&nbsp;</a> | <a href="'.$next.'">&nbsp;&gt;&gt;&nbsp;</a></TD>'."\r\n";
 }
 echo '</TR></TABLE>'."\r\n";
-$l = "http://www.veziseriale.online/tv-shows";
-$l="http://www.veziserialeonline.info/tv-shows";
+$l="https://vezifs.com/seriale/";
 $r=array();
 $ua = $_SERVER['HTTP_USER_AGENT'];
   $ch = curl_init();
@@ -181,7 +180,7 @@ $ua = $_SERVER['HTTP_USER_AGENT'];
   curl_setopt($ch, CURLOPT_TIMEOUT, 15);
   $html = curl_exec($ch);
   curl_close($ch);
-  $videos = explode('<li class="post-', $html);
+  $videos = explode('div class="movie-show', $html);
   unset($videos[0]);
   $videos = array_values($videos);
   foreach($videos as $video) {
@@ -217,7 +216,7 @@ for ($k=0;$k<$c;$k++) {
   $link=$r[$k][1];
   $image=$r[$k][2];
   $rest = substr($title, -6);
-  if (preg_match("/\((\d+)\)/",$rest,$m)) {
+  if (preg_match("/\(?(\d+)\)?/",$rest,$m)) {
    $year=$m[1];
    $tit_imdb=trim(str_replace($m[0],"",$title));
   } else {
