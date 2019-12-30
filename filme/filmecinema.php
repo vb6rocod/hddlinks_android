@@ -244,6 +244,7 @@ if ($tip=="release") {
     $year="";
     $imdb="";
     $tit_imdb=$title;
+    $image="r_m.php?file=".$image;
   if ($has_fs == "no")
     $link_f='filme_link.php?file='.urlencode($link).'&title='.urlencode(fix_t($title));
   else

@@ -106,6 +106,14 @@ function changeserver(s,t) {
       document.getElementById("subtitrari").click();
      } else if (charCode == "53") {
       document.getElementById("viz").click();
+     } else if (charCode == "55") {
+      document.getElementById("opensub1").click();
+     } else if (charCode == "56") {
+      document.getElementById("titrari1").click();
+     } else if (charCode == "57") {
+      document.getElementById("subs1").click();
+     } else if (charCode == "48") {
+      document.getElementById("subtitrari1").click();
      }
    }
 document.onkeypress =  zx;
@@ -126,103 +134,94 @@ function off() {
 echo '<h2>'.$tit.$tit2.'</H2>';
 echo '<BR>';
 $ua = $_SERVER['HTTP_USER_AGENT'];
-//echo $link;
+$host=parse_url($link)['host'];
+if ($tip=="movie") {
 $ch = curl_init();
 curl_setopt($ch, CURLOPT_URL, $link);
 curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
 curl_setopt($ch, CURLOPT_USERAGENT, $ua);
-curl_setopt($ch, CURLOPT_REFERER, "https://0123netflix.site");
+curl_setopt($ch, CURLOPT_REFERER, "https://".$host);
 curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
 $h = curl_exec($ch);
 curl_close($ch);
-//echo $h;
-$t1=explode('data-id="',$h);
+$t1=explode('episode-id="',$h);
 $t2=explode('"',$t1[1]);
-$film=$t2[0];
-if ($tip=="movie") {
-$t1=explode('ul class="episodes',$h);
-$t2=explode('data-id="',$t1[1]);
-$t3=explode('"',$t2[1]);
-$id=$t3[0];
+$id=$t2[0];
+$l="https://".$host."/ajax/load_embed/".$id;
 } else {
-  $id=substr(strrchr($link, "/"), 1);
+ $l=$link;
 }
-$l="https://0123netflix.site/ajax/episode/info?_token=&id=".$id."&update=0&film=".$film;
-/////////////////////////////////////////////////////////////////////////////////////////
-//echo $l;
-   $head=array(
-   'Accept: application/json, text/javascript, */*; q=0.01',
-   'Accept-Language: en-US,en;q=0.5',
-   'Accept-Encoding: deflate',
-   'Origin: https://0123netflix.site',
-   'X-Requested-With: XMLHttpRequest'
-   );
-   $ch = curl_init();
-   curl_setopt($ch, CURLOPT_URL, $l);
-   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-   curl_setopt($ch, CURLOPT_USERAGENT, $ua);
-   curl_setopt($ch, CURLOPT_REFERER, "https://0123netflix.site");
-   curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
-   curl_setopt($ch, CURLOPT_HTTPHEADER, $head);
-   $h = curl_exec($ch);
-   curl_close($ch);
-   $r=json_decode($h,1);
+$ch = curl_init();
+curl_setopt($ch, CURLOPT_URL, $l);
+curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+curl_setopt($ch, CURLOPT_USERAGENT, $ua);
+curl_setopt($ch, CURLOPT_REFERER, "https://".$host);
+curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
+$h = curl_exec($ch);
+curl_close($ch);
+$r=json_decode($h,1);
    //echo $filelink;
-   //print_r ($r);
-   //https://0123netflix.site/ajax/episode/embed?id=6872344c41713376&film=1930cc83aec11387d3f54e274a3adea6
-   if (isset($r["target"])) {
-   $l=$r["target"];
-   $t1=explode("id=",$l);
-   $t2=explode("&",$t1[1]);
-   $id=$t2[0];
-$head=array('Accept: application/json, text/javascript, */*; q=0.01',
-'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
-'Accept-Encoding: deflate',
-'Origin: https://0123netflix.site');
-   $l="https://0123netflix.site/v/?id=".$id;
-   $ch = curl_init();
-   curl_setopt($ch, CURLOPT_URL, $l);
-   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-   curl_setopt($ch, CURLOPT_USERAGENT, $ua);
-   curl_setopt($ch, CURLOPT_REFERER, "https://0123netflix.site/");
-   curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
-   curl_setopt($ch, CURLOPT_HTTPHEADER, $head);
-   $h = curl_exec($ch);
-   curl_close($ch);
-   $r=json_decode($h,1);
-   //print_r ($r);
-   $l="https:".$r[0];
-   $t1=explode("id=",$l);
-   $id=$t1[1];
-   if ($id) {
-   $l="https://proxy.123downloads.today/proxy.php?id=".$id;
-   //echo $l;
-   $ch = curl_init();
-   curl_setopt($ch, CURLOPT_URL, $l);
-   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-   curl_setopt($ch, CURLOPT_USERAGENT, $ua);
-   curl_setopt($ch, CURLOPT_REFERER, "https://0123netflix.site/");
-   curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
-   curl_setopt($ch, CURLOPT_HTTPHEADER, $head);
-   $h = curl_exec($ch);
-   curl_close($ch);
-   //echo $h;
-   $r=json_decode($h,1);
-   //print_r ($r);
-   if (isset($r["src"])) {
-   $l=$r["src"];
-   $t1=explode("id=",$l);
-   $id=$t1[1];
-   if ($id)
-     $l="https://stream.123downloads.today/hls/".$id."/playlist.m3u8";
-   }
-   }
-   } else {
-    $l="";
-   }
-/////////////////////////////////////////////////////////////////////////////////////////
+$l=$r['embed_url'];
+$t1=explode("#",$l);
+$l="https://123moviesc.me/ajax/load_embed_url/".$t1[1];
+//echo $l;
+$ch = curl_init();
+curl_setopt($ch, CURLOPT_URL, $l);
+curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+curl_setopt($ch, CURLOPT_USERAGENT, $ua);
+curl_setopt($ch, CURLOPT_REFERER, "https://".$host);
+curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
+$h = curl_exec($ch);
+curl_close($ch);
+$r=json_decode($h,1);
+$l=$r['url'];
+$t1=explode('id=',$l);
+$l="https://movies.123moviesc.me/api/?id=".$t1[1];
+$ch = curl_init();
+curl_setopt($ch, CURLOPT_URL, $l);
+curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+curl_setopt($ch, CURLOPT_USERAGENT, $ua);
+curl_setopt($ch, CURLOPT_REFERER, "https://".$host);
+curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
+$h = curl_exec($ch);
+curl_close($ch);
+$p=json_decode($h,1);
+//print_r ($r);
 $r=array();
-if ($l) $r[]=urlencode($l);
+for ($k=0;$k<count($p);$k++) {
+$l=$p[$k]['link'];
+if (strpos($l,"http") === false && $l) $l="https:".$l;
+ if (strpos($l,"load.php") !== false && preg_match("/vidnode|vidcloud/",$l)) {
+  $l1=str_replace("load.php","streaming.php",$l);
+  $r[]=urlencode($l1);
+  $ch = curl_init();
+  curl_setopt($ch, CURLOPT_URL, $l1);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+  curl_setopt($ch,CURLOPT_REFERER,"https://vidcloud9.com");
+  curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 10.0; rv:55.0) Gecko/20100101 Firefox/55.0');
+  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+  $h = curl_exec($ch);
+  curl_close($ch);
+  $videos=explode('data-video="',$h);
+  unset($videos[0]);
+  $videos = array_values($videos);
+  foreach($videos as $video) {
+    $t1=explode('"',$video);
+    $l11=$t1[0];
+    if ($l11) {
+     if (strpos($l11,"http") === false)
+       $l11="https:".$l11;
+     $r[]=urlencode($l11);
+    }
+  }
+ } else {
+   $r[]=urlencode($l);
+ }
+}
+/////////////////////////////////////////////////////////////////////////////////////////
+
 echo '<table border="1" width="100%">';
 echo '<TR><TD class="mp">Alegeti un server: Server curent:<label id="server">'.parse_url(urldecode($r[0]))['host'].'</label>
 <input type="hidden" id="file" value="'.urlencode($r[0]).'"></td></TR></TABLE>';
@@ -280,6 +279,14 @@ echo '<TD class="mp"><a id="titrari" href="titrari_main.php?page=1&'.$sub_link.'
 echo '<TD class="mp"><a id="subs" href="subs_main.php?'.$sub_link.'">subs.ro</a></td>';
 echo '<TD class="mp"><a id="subtitrari" href="subtitrari_main.php?'.$sub_link.'">subtitrari_noi.ro</a></td>';
 echo '</TR></TABLE>';
+echo '<table border="1" width="100%">';
+echo '<TR><TD style="background-color:#0a6996;color:#64c8ff;font-weight: bold;font-size: 1.5em" align="center" colspan="4">Alegeti o subtitrare (cauta imdb id)</td></TR>';
+echo '<TR>';
+echo '<TD class="mp"><a id="opensub1" href="opensubtitles1.php?'.$sub_link.'">opensubtitles</a></td>';
+echo '<TD class="mp"><a id="titrari1" href="titrari_main1.php?page=1&'.$sub_link.'&page=1">titrari.ro</a></td>';
+echo '<TD class="mp"><a id="subs1" href="subs_main1.php?'.$sub_link.'">subs.ro</a></td>';
+echo '<TD class="mp"><a id="subtitrari1" href="subtitrari_main1.php?'.$sub_link.'">subtitrari_noi.ro</a></td>';
+echo '</TR></TABLE>';
 echo '<table border="1" width="100%"><TR>';
 if ($tip=="movie")
   $openlink=urlencode(fix_t($tit3));
@@ -294,7 +301,9 @@ echo '</table>';
 echo '<br>
 <table border="0px" width="100%">
 <TR>
-<TD><font size="4"><b>Scurtaturi: 1=opensubtitles, 2=titrari, 3=subs, 4=subtitrari, 5=vizioneaza</b></font></TD></TR></TABLE>
+<TD><font size="4"><b>Scurtaturi: 1=opensubtitles, 2=titrari, 3=subs, 4=subtitrari, 5=vizioneaza
+<BR>Scurtaturi: 7=opensubtitles, 8=titrari, 9=subs, 0=subtitrari (cauta imdb id)
+</b></font></TD></TR></TABLE>
 ';
 include("../debug.html");
 echo '

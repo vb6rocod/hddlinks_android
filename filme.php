@@ -134,6 +134,12 @@ else
 <TD width="25%"><a href="filme/vumoo_f.php?page=1&tip=release&title=vumoo&link=" target="_blank">vumoo</a></TD>
 <TD width="25%"><a href="filme/cmovies_f.php?page=1&tip=release&title=cmovies&link=" target="_blank">cmovies</a></TD>
 <TD width="25%"><a href="filme/europix_f.php?page=1&tip=release&title=europix&link=" target="_blank">europix</a></TD>
+<TD width="25%"><a href="filme/moonline_f.php?page=1&tip=release&title=moonline&link=" target="_blank">moonline</a></TD>
+</TR>
+<TR>
+<TD width="25%"><a href="filme/gdriveplayer_f.php?page=1&tip=release&title=gdriveplayer&link=&sc=" target="_blank">gdriveplayer</a></TD>
+<TD width="25%"><a href="filme/vidcloud9_f.php?page=1&tip=release&title=vidcloud9&link=" target="_blank">vidcloud9</a></TD>
+<TD width="25%"><a href="filme/moviehdkh_f.php?page=1&tip=release&title=moviehdkh&link=" target="_blank">moviehdkh</a></TD>
 <TD width="25%"></TD>
 </TR>
 <?php

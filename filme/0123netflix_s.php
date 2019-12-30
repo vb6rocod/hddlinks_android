@@ -6,6 +6,10 @@ function str_between($string, $start, $end){
 	return substr($string,$ini,$len);
 }
 include ("../common.php");
+/* =================================================== */
+$l="https://0123netflix.site";
+$l="https://123moviesc.me";
+$host=parse_url($l)['host'];
 $page = $_GET["page"];
 $tip= $_GET["tip"];
 $tit=$_GET["title"];
@@ -17,7 +21,7 @@ $has_fav="yes";
 $has_search="yes";
 $has_add="yes";
 $has_fs="yes";
-$fav_target="0123netflix_s_fav.php?host=https://0123netflix.site";
+$fav_target="0123netflix_s_fav.php?host=https://".$host;
 $add_target="0123netflix_s_add.php";
 $add_file="";
 $fs_target="0123netflix_ep.php";
@@ -167,12 +171,11 @@ if ($page==1) {
 echo '</TR>'."\r\n";
 
 if($tip=="release") {
-  $l="https://0123netflix.site/filter-movies?sort=post_date%3Adesc&genre=0&country=0&type%5B0%5D=2&subtitle=0&quality=0&release=0&page=".$page;
+  $l="https://".$host."/tv-series/page-".$page;
 } else {
   $search=str_replace(" ","%20",$tit);
-  $l = "https://0123netflix.site/search-movies?keyword=".str_replace(" ","%20",$tit)."&page=".$page;
+  $l = "https://".$host."/browse?keyword=".str_replace(" ","%20",$tit)."&page=".$page;
 }
-$host=parse_url($l)['host'];
 $ua = $_SERVER['HTTP_USER_AGENT'];
 /*
   $ch = curl_init();
@@ -187,15 +190,19 @@ $ua = $_SERVER['HTTP_USER_AGENT'];
   */
   $html=@file_get_contents($l);
 //echo $html;
-$videos = explode('class="item"', $html);
+$videos = explode('data-movie-id="', $html);
 unset($videos[0]);
 $videos = array_values($videos);
 foreach($videos as $video) {
+  $t1=explode('"',$video);
+  $link="https://".$host."/ajax/v2_get_episodes/".$t1[0];
+  /*
   $t1 = explode('href="',$video);
   $t2 = explode('"', $t1[1]);
   $link = $t2[0];
   if (strpos($link,"http") === false) $link="https://".$host.$link;
-  $t1 = explode('class="name"', $video);
+  */
+  $t1 = explode('class="mli-info">', $video);
   $t2 = explode('>', $t1[1]);
   $t3 = explode('<',$t2[1]);
   $title = $t3[0];
@@ -206,7 +213,7 @@ foreach($videos as $video) {
   if (strpos($image,"http") === false) $image="https:".$image;
   $year="";
   $imdb="";
-  $sez="";
+  $sez="1";
   if (preg_match("/(:|-)?\s+Season\s+(\d+)/i",$title,$m)) {
   $tit_serial=trim(str_replace($m[0],"",$title));
   $sez=$m[2];
@@ -222,7 +229,7 @@ foreach($videos as $video) {
     $tit_imdb=$title;
   }
   $link_f=$fs_target.'?tip=series&link='.urlencode($link).'&title='.urlencode(fix_t($title)).'&image='.$image."&sez=".$sez."&ep=&ep_tit=&year=".$year;
-  if ($title && strpos($link,"/show") === false) {
+  if ($title) {
   if ($n==0) echo '<TR>'."\r\n";
   $val_imdb="tip=series&title=".urlencode(fix_t($tit_imdb))."&year=".$year."&imdb=".$imdb;
   $fav_link="mod=add&title=".urlencode(fix_t($title))."&link=".urlencode($link)."&image=".urlencode($image)."&year=".$year;

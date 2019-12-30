@@ -2,7 +2,10 @@
 include ("../common.php");
 $file=$_GET["file"];
 $ua = $_SERVER['HTTP_USER_AGENT'];
-$cookie=$base_cookie."hdpopcorns.dat";
+if (strpos($file,"filmecinema.net") !== false)
+ $cookie=$base_cookie."biz.dat";
+else
+ $cookie=$base_cookie."hdpopcorns.dat";
 $ch = curl_init();
 curl_setopt($ch, CURLOPT_URL, $file);
 curl_setopt($ch, CURLOPT_REFERER,$file);

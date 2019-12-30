@@ -114,6 +114,12 @@ document.onkeypress =  zx;
 <TD width="25%"><a href="filme/vumoo_s.php?page=1&tip=release&title=vumoo&link=" target="_blank">vumoo</a></TD>
 <TD width="25%"><a href="filme/cmovies_s.php?page=1&tip=release&title=cmovies&link=" target="_blank">cmovies</a></TD>
 </TR>
+<TR>
+<TD width="25%"><a href="filme/gdriveplayer_s.php?page=1&tip=release&title=gdriveplayer&link=" target="_blank">gdriveplayer</a></TD>
+<TD width="25%"><a href="filme/vidcloud9_s.php?page=1&tip=release&title=vidcloud9&link=" target="_blank">vidcloud9</a></TD>
+<TD width="25%"></TD>
+<TD width="25%"></TD>
+</TR>
 <?php
 if (file_exists($base_pass."tvplay.txt")) {
 echo '<TR>';

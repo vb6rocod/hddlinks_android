@@ -51,6 +51,15 @@ function str_between($string, $start, $end){
 	if ($ini == 0) return ""; $ini += strlen($start); $len = strpos($string,$end,$ini) - $ini;
 	return substr($string,$ini,$len);
 }
+function decode_code($code){
+    return preg_replace_callback(
+        "@\\\(x)?([0-9a-fA-Z]{2,3})@",
+        function($m){
+            return chr($m[1]?hexdec($m[2]):octdec($m[2]));
+        },
+        $code
+    );
+}
 ?>
 <html>
 <head>
@@ -106,6 +115,14 @@ function changeserver(s,t) {
       document.getElementById("subtitrari").click();
      } else if (charCode == "53") {
       document.getElementById("viz").click();
+     } else if (charCode == "55") {
+      document.getElementById("opensub1").click();
+     } else if (charCode == "56") {
+      document.getElementById("titrari1").click();
+     } else if (charCode == "57") {
+      document.getElementById("subs1").click();
+     } else if (charCode == "48") {
+      document.getElementById("subtitrari1").click();
      }
    }
 document.onkeypress =  zx;
@@ -156,12 +173,48 @@ for ($i=0;$i<strlen($ad1);$i++) {
   $out=$out.$ad1[$i];
  }
 }
+//////////////////////////////////////////////////////////////
+$l="https://hdfull.io/js/providers.js";
+  $ch = curl_init($l);
+  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
+  curl_setopt($ch,CURLOPT_REFERER,"https://hdfull.me/");
+  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER  ,1);  // RETURN THE CONTENTS OF THE CALL
+  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+  $h4 = curl_exec($ch);
+  curl_close ($ch);
+  $h4=decode_code($h4);
+  //echo $h4;
+  if (preg_match("/(var\s+(_0x[a-z0-9]+))\=\[(\"(\S*)\"\,?)+\]/ms", $h4, $m)) {
+        $php_code = str_replace($m[1], "\$c0", $m[0]) . ";";
+        eval($php_code);
+  }
+  $pat="/".$m[2]."\[(\d+)\]/";
+  preg_match_all($pat,$h4,$n);
+  for ($k=0;$k<count($n[0]);$k++) {
+    $h4=str_replace($n[0][$k],'"'.$c0[$n[1][$k]].'"',$h4);
+  }
+  //echo $h4;
+  preg_match_all("/p\[(\d+)\]\=(.*?)\'l\'(.*?)return\s+(.*?)\}/mei",$h4,$p);
+  //print_r ($p);
+  //die();
+  $ppp=array_flip($p[1]);
+//////////////////////////////////////////////////////////////////
 $r=array();
 $prov=json_decode($out,1);
+//print_r ($prov);
 for ($k=0;$k<count($prov);$k++) {
   $pp=$prov[$k]["provider"];
   //echo $pp;
   $code=$prov[$k]["code"];
+  $eval="\$l=".$p[4][$ppp[$pp]].";";
+  $eval=preg_replace("/_0x[0-9a-zA-Z]+/","\$code",$eval);
+  $eval=str_replace("+",".",$eval);
+  eval ($eval);
+  $r[]=$l;
+  /*
   if ($pp==1) $r[]="https://powvideo.cc/iframe-".$code."-920x360.html"; //$r[]="https://powvideo.net/".$code;
   if ($pp==2) $r[]="https://streamplay.me/player-".$code."-920x360.html"; //$r[]="https://streamplay.to/".$code;
   if ($pp==3) $r[]="https://openload.co/f/".$code;
@@ -173,6 +226,7 @@ for ($k=0;$k<count($prov);$k++) {
   if ($pp==31) $r[]="https://vidoza.net/".$code;
   if ($pp==20) $r[]="https://flix555.com/embed-".$code.".html";
   if ($pp==23) $r[]="https://verystream.com/e/".$code."/";
+  */
 }
 echo '<table border="1" width="100%">';
 echo '<TR><TD class="mp">Alegeti un server: Server curent:<label id="server">'.parse_url($r[0])['host'].'</label>
@@ -227,6 +281,14 @@ echo '<TD class="mp"><a id="titrari" href="titrari_main.php?page=1&'.$sub_link.'
 echo '<TD class="mp"><a id="subs" href="subs_main.php?'.$sub_link.'">subs.ro</a></td>';
 echo '<TD class="mp"><a id="subtitrari" href="subtitrari_main.php?'.$sub_link.'">subtitrari_noi.ro</a></td>';
 echo '</TR></TABLE>';
+echo '<table border="1" width="100%">';
+echo '<TR><TD style="background-color:#0a6996;color:#64c8ff;font-weight: bold;font-size: 1.5em" align="center" colspan="4">Alegeti o subtitrare (cauta imdb id)</td></TR>';
+echo '<TR>';
+echo '<TD class="mp"><a id="opensub1" href="opensubtitles1.php?'.$sub_link.'">opensubtitles</a></td>';
+echo '<TD class="mp"><a id="titrari1" href="titrari_main1.php?page=1&'.$sub_link.'&page=1">titrari.ro</a></td>';
+echo '<TD class="mp"><a id="subs1" href="subs_main1.php?'.$sub_link.'">subs.ro</a></td>';
+echo '<TD class="mp"><a id="subtitrari1" href="subtitrari_main1.php?'.$sub_link.'">subtitrari_noi.ro</a></td>';
+echo '</TR></TABLE>';
 echo '<table border="1" width="100%"><TR>';
 if ($tip=="movie")
   $openlink=urlencode(fix_t($tit3));
@@ -241,7 +303,9 @@ echo '</table>';
 echo '<br>
 <table border="0px" width="100%">
 <TR>
-<TD><font size="4"><b>Scurtaturi: 1=opensubtitles, 2=titrari, 3=subs, 4=subtitrari, 5=vizioneaza</b></font></TD></TR></TABLE>
+<TD><font size="4"><b>Scurtaturi: 1=opensubtitles, 2=titrari, 3=subs, 4=subtitrari, 5=vizioneaza
+<BR>Scurtaturi: 7=opensubtitles, 8=titrari, 9=subs, 0=subtitrari (cauta imdb id)
+</b></font></TD></TR></TABLE>
 ';
 include("../debug.html");
 echo '

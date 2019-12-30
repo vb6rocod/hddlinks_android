@@ -1,39 +1,10 @@
 <!DOCTYPE html>
 <?php
-function str_between($string, $start, $end){
-	$string = " ".$string; $ini = strpos($string,$start);
-	if ($ini == 0) return ""; $ini += strlen($start); $len = strpos($string,$end,$ini) - $ini;
-	return substr($string,$ini,$len);
-}
+include ("../common.php");
 $main_title="filmecinema";
 $target="filmecinema.php";
 $fav_target="";
 $recente="https://www.filmecinema.net";
-?>
-<html>
-<head>
-<meta http-equiv="content-type" content="text/html; charset=UTF-8">
-<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate"/>
-<meta http-equiv="Pragma" content="no-cache"/>
-<meta http-equiv="Expires" content="0"/>
-<title><?php echo $main_title; ?></title>
-<script type="text/javascript" src="//code.jquery.com/jquery-3.2.1.min.js"></script>
-<link rel="stylesheet" type="text/css" href="../custom.css" />
-<script type="text/javascript">
-   function zx(e){
-    var charCode = (typeof e.which == "number") ? e.which : e.keyCode
-    if (charCode == "53" && e.target.type != "text") {
-      document.getElementById("send").click();
-    } else if (charCode == "50" && e.target.type != "text") {
-      document.getElementById("fav").click();
-    }
-   }
-document.onkeypress =  zx;
-</script>
-</head>
-<body>
-<?php
-include ("../common.php");
 function decode_code($code){
     return preg_replace_callback(
         "@\\\(x)?([0-9a-f]{2,3})@",
@@ -43,25 +14,11 @@ function decode_code($code){
         $code
     );
 }
-if (file_exists($base_cookie."filme.dat"))
-  $val_search=file_get_contents($base_cookie."filme.dat");
-else
-  $val_search="";
-$form='<TD class="form" colspan="2">
-<form action="'.$target.'" target="_blank">
-Cautare film:  <input type="text" id="title" name="title" value="'.$val_search.'">
-<input type="hidden" name="page" id="page" value="1">
-<input type="hidden" name="tip" id="tip" value="search">
-<input type="hidden" name="link" id="link" value="">
-<input type="submit" id="send" value="Cauta...">
-</form>
-</td>';
-echo '<table border="1px" width="100%" style="table-layout:fixed;">'."\r\n";
-echo '<TR><th class="cat" colspan="3">'.$main_title.'</th></TR>';
-echo '<TR><TD class="cat">'.'<a class ="nav" href="'.$target.'?page=1&tip=release&link='.urlencode(fix_t($recente)).'&title=Recente" target="_blank">Recente...</a></TD>';
-echo $form;
-echo '</TR>';
-$n=0;
+function str_between($string, $start, $end){
+	$string = " ".$string; $ini = strpos($string,$start);
+	if ($ini == 0) return ""; $ini += strlen($start); $len = strpos($string,$end,$ini) - $ini;
+	return substr($string,$ini,$len);
+}
 $l="https://www.filmecinema.net";
 $cookie=$base_cookie."biz.dat";
 require( 'cryptoHelpers.php');
@@ -106,6 +63,51 @@ $name   = 'vDDoS';
 $value = $d1;
 
 file_put_contents($cookie, "\n$domain\tTRUE\t/\tFALSE\t$expire\t$name\t$value", FILE_APPEND);
+}
+?>
+<html>
+<head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate"/>
+<meta http-equiv="Pragma" content="no-cache"/>
+<meta http-equiv="Expires" content="0"/>
+<title><?php echo $main_title; ?></title>
+<script type="text/javascript" src="//code.jquery.com/jquery-3.2.1.min.js"></script>
+<link rel="stylesheet" type="text/css" href="../custom.css" />
+<script type="text/javascript">
+   function zx(e){
+    var charCode = (typeof e.which == "number") ? e.which : e.keyCode
+    if (charCode == "53" && e.target.type != "text") {
+      document.getElementById("send").click();
+    } else if (charCode == "50" && e.target.type != "text") {
+      document.getElementById("fav").click();
+    }
+   }
+document.onkeypress =  zx;
+</script>
+</head>
+<body>
+
+<?php
+if (file_exists($base_cookie."filme.dat"))
+  $val_search=file_get_contents($base_cookie."filme.dat");
+else
+  $val_search="";
+$form='<TD class="form" colspan="2">
+<form action="'.$target.'" target="_blank">
+Cautare film:  <input type="text" id="title" name="title" value="'.$val_search.'">
+<input type="hidden" name="page" id="page" value="1">
+<input type="hidden" name="tip" id="tip" value="search">
+<input type="hidden" name="link" id="link" value="">
+<input type="submit" id="send" value="Cauta...">
+</form>
+</td>';
+echo '<table border="1px" width="100%" style="table-layout:fixed;">'."\r\n";
+echo '<TR><th class="cat" colspan="3">'.$main_title.'</th></TR>';
+echo '<TR><TD class="cat">'.'<a class ="nav" href="'.$target.'?page=1&tip=release&link='.urlencode(fix_t($recente)).'&title=Recente" target="_blank">Recente...</a></TD>';
+echo $form;
+echo '</TR>';
+$n=0;
 
 $ch = curl_init($l);
 curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
@@ -116,7 +118,7 @@ curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
 curl_setopt($ch, CURLOPT_TIMEOUT, 15);
 $html=curl_exec($ch);
 curl_close($ch);
-}
+
 
 $html=str_between($html,'ul class="nav-category',"</ul");
 //echo $html;
