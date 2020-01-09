@@ -15,7 +15,7 @@ return $js_code;
 }
 
 function getClearanceLink($content, $url) {
-  sleep (4);
+  sleep (5);
   preg_match_all('/name="\w+" value="(.*?)"/', $content, $matches);
         $params = array();
         list($params['r'],$params['jschl_vc'], $params['pass']) = $matches[1];

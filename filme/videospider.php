@@ -17,11 +17,14 @@ $has_fav="yes";
 $has_search="yes";
 $has_add="yes";
 $has_fs="yes";
-$fav_target="moviehdkh_f_fav.php?host=https://www.moviehdkh.com";
-$add_target="moviehdkh_f_add.php";
+$fav_target_f="videospider_f.php";
+$fav_target_s="videospider_s.php";
+$add_target_f="videospider_f_add.php";
+$add_target_s="videospider_s_add.php";
 $add_file="";
-$fs_target="moviehdkh_fs.php";
-$target="moviehdkh_f.php";
+$fs_target="videospider_fs.php";
+$fs_target_ep="videospider_ep.php";
+$target="videospider.php";
 /* ==================================================== */
 $base=basename($_SERVER['SCRIPT_FILENAME']);
 $p=$_SERVER['QUERY_STRING'];
@@ -44,7 +47,7 @@ if (file_exists($base_cookie."filme.dat"))
 else
   $val_search="";
 $form='<form action="'.$target.'" target="_blank">
-Cautare film:  <input type="text" id="title" name="title" value="'.$val_search.'">
+Cautare film/serial/actor/regizor etc...:  <input type="text" id="title" name="title" value="'.$val_search.'">
 <input type="hidden" name="page" id="page" value="1">
 <input type="hidden" name="tip" id="tip" value="search">
 <input type="hidden" name="link" id="link" value="">
@@ -73,10 +76,10 @@ if ($tip=="search") {
 
 <script type="text/javascript">
 var id_link="";
-function ajaxrequest(link) {
+function ajaxrequest(link,target) {
   var request =  new XMLHttpRequest();
   var the_data = link;
-  var php_file='<?php echo $add_target; ?>';
+  var php_file=target;
   request.open("POST", php_file, true);			// set the request
 
   // adds a header to tell the PHP script to recognize the data as is sent via POST
@@ -102,9 +105,12 @@ function isValid(evt) {
      document.getElementById("fancy").href=msg;
      document.getElementById("fancy").click();
     } else if  (charCode == "51") {
-      id = "fav_" + self.id;
+      //alert (self.id);
+      id = "fav_" + self.id; // fav_myLink_tip
+      id1 = "fav_" + self.id + "_tip"; // fav_myLink_tip
       val_fav=document.getElementById(id).value;
-      ajaxrequest(val_fav);
+      target=document.getElementById(id1).value;
+      ajaxrequest(val_fav,target);
     }
     return true;
 }
@@ -117,8 +123,10 @@ function isValid(evt) {
      } else if (charCode == "53" && e.target.type != "text") {
       document.getElementById("send").click();
      } else if (charCode == "50" && e.target.type != "text") {
-      document.getElementById("fav").click();
-    }
+      document.getElementById("fav_f").click();
+     } else if (charCode == "52" && e.target.type != "text") {
+      document.getElementById("fav_s").click();
+     }
    }
 function isKeyPressed(event) {
   if (event.ctrlKey) {
@@ -145,18 +153,8 @@ echo '<TR>'."\r\n";
 if ($page==1) {
    if ($tip == "release") {
    if ($has_fav=="yes" && $has_search=="yes") {
-     echo '<TD class="nav"><a id="fav" href="'.$fav_target.'" target="_blank">Favorite</a></TD>'."\r\n";
-     echo '<TD class="form" colspan="2">'.$form.'</TD>'."\r\n";
-     echo '<TD class="nav" align="right"><a href="'.$next.'">&nbsp;&gt;&gt;&nbsp;</a></TD>'."\r\n";
-   } else if ($has_fav=="no" && $has_search=="yes") {
-     echo '<TD class="nav"><a id="fav" href="">Reload...</a></TD>'."\r\n";
-     echo '<TD class="form" colspan="2">'.$form.'</TD>'."\r\n";
-     echo '<TD class="nav" align="right"><a href="'.$next.'">&nbsp;&gt;&gt;&nbsp;</a></TD>'."\r\n";
-   } else if ($has_fav=="yes" && $has_search=="no") {
-     echo '<TD class="nav"><a id="fav" href="'.$fav_target.'" target="_blank">Favorite</a></TD>'."\r\n";
-     echo '<TD class="nav" colspan="3" align="right"><a href="'.$next.'">&nbsp;&gt;&gt;&nbsp;</a></TD>'."\r\n";
-   } else if ($has_fav=="no" && $has_search=="no") {
-     echo '<TD class="nav" colspan="4" align="right"><a href="'.$next.'">&nbsp;&gt;&gt;&nbsp;</a></TD>'."\r\n";
+     echo '<TD class="form" colspan="4">'.$form.'</TD>'."\r\n";
+     //echo '<TD class="nav" align="right"><a href="'.$next.'">&nbsp;&gt;&gt;&nbsp;</a></TD>'."\r\n";
    }
    } else {
      echo '<TD class="nav" colspan="4" align="right"><a href="'.$next.'">&nbsp;&gt;&gt;&nbsp;</a></TD>'."\r\n";
@@ -165,103 +163,123 @@ if ($page==1) {
    echo '<TD class="nav" colspan="4" align="right"><a href="'.$prev.'">&nbsp;&lt;&lt;&nbsp;</a> | <a href="'.$next.'">&nbsp;&gt;&gt;&nbsp;</a></TD>'."\r\n";
 }
 echo '</TR>'."\r\n";
-
-if($tip=="release") {
-  if ($page > 1)
-  $l="https://www.moviehdkh.com/?page=".$page;
-  else
-  $l="https://www.moviehdkh.com/";
-} else {
-  $search=str_replace(" ","+",$tit);
-  $l="https://www.moviehdkh.com/searchs?q=".$search;
+if ($page == 1 && $tip=="release") {
+echo '<TR>'."\r\n";
+echo '<TD class="mp" colspan="2"><a id="fav_f" href="'.$fav_target_f.'" target="_blank">Filme favorite</a></TD>'."\r\n";
+echo '<TD class="mp"colspan="2"><a id="fav_s" href="'.$fav_target_s.'" target="_blank">Seriale favorite</a></TD>'."\r\n";
+echo '</TR>'."\r\n";
 }
-$host=parse_url($l)['host'];
-$head=array('Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
-'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2');
-  $ch = curl_init();
-  curl_setopt($ch, CURLOPT_URL, $l);
-  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-  curl_setopt($ch,CURLOPT_REFERER,"https://www.moviehdkh.com");
-  curl_setopt($ch,CURLOPT_HTTPHEADER,$head);
-  curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 10.0; rv:55.0) Gecko/20100101 Firefox/55.0');
+if ($tip == "search") {
+if (file_exists($base_pass."tmdb.txt"))
+  $key=file_get_contents($base_pass."tmdb.txt");
+else
+  $key="";
+$q=urlencode($tit);
+$l="https://api.themoviedb.org/3/search/multi?api_key=".$key."&language=en-US&query=".$q."&page=".$page."&include_adult=false";
+  $ch = curl_init($l);
+  curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows; U; Windows NT 6.1; en-US; rv:1.9.1.2) Gecko/20090729 Firefox/3.5.2 GTB5');
+  //curl_setopt($ch,CURLOPT_REFERER,$l);
   curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER  ,1);  // RETURN THE CONTENTS OF THE CALL
+  //curl_setopt($ch, CURLOPT_HEADER, true);
   curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
   curl_setopt($ch, CURLOPT_TIMEOUT, 15);
-  $html = curl_exec($ch);
-  curl_close($ch);
-//echo $html;
-$r=array();
-if ($tip=="release") {
-  $t1=explode("Daily Update",$html);
-  $html=$t1[1];
-  $videos = explode('div class="ml-item',$html);
-  unset($videos[0]);
-  $videos = array_values($videos);
-  foreach($videos as $video) {
-   $t1 = explode('href="',$video);
-   $t2=explode('"',$t1[1]);
-   $link = $t2[0];
-   if (strpos($link,"http") === false) $link="https://".$host.$link;
-   $t3 = explode('title="', $video);
-   $t4 = explode('"', $t3[1]);
-   $title = $t4[0];
-   $title=prep_tit($title);
-   $t1 = explode('data-original="', $video);
-   $t2 = explode('"', $t1[1]);
-   $image = $t2[0];
-   $r[]=array($link,$title,$image);
-  }
-} else {
-  $videos = explode('div class="ml-item',$html);
-  unset($videos[0]);
-  $videos = array_values($videos);
-  foreach($videos as $video) {
-   $t1 = explode('href="',$video);
-   $t2=explode('"',$t1[1]);
-   $link = $t2[0];
-   if (strpos($link,"http") === false) $link="https://".$host.$link;
-   $t3 = explode('title="', $video);
-   $t4 = explode('"', $t3[1]);
-   $title = $t4[0];
-   $title=prep_tit($title);
-   $t1 = explode('data-original="', $video);
-   $t2 = explode('"', $t1[1]);
-   $image = $t2[0];
-   $r[]=array($link,$title,$image);
-  }
-}
-for ($k=0; $k<count($r);$k++) {
-  $link=$r[$k][0];
-  $title=$r[$k][1];
-  $image=$r[$k][2];
-  if (!preg_match("/\.jpg/",$image)) $image="blank.jpg";
-  $rest = substr($title, -6);
-  if (preg_match("/\((\d+)\)/",$rest,$m)) {
-   $year=$m[1];
-   $tit_imdb=trim(str_replace($m[0],"",$title));
+  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+  $h = curl_exec($ch);
+  curl_close ($ch);
+//echo $h;
+$result=json_decode($h,1);
+$r=$result['results'];
+//print_r ($r);
+$n=0;
+$w=0;
+for ($k=0;$k<count($r);$k++) {
+  $media_type=$r[$k]['media_type'];
+  if ($media_type == "person") {
+   $title=$r[$k]['name'];
+   if ($r[$k]['profile_path'])
+    $image="http://image.tmdb.org/t/p/w500".$r[$k]['profile_path'];
+   else
+    $image="blank.jpg";
+  } else if ($media_type == "tv") {
+   $title=$r[$k]['name'];
+   if ($r[$k]['poster_path'])
+    $image="http://image.tmdb.org/t/p/w500".$r[$k]['poster_path'];
+   else
+    $image="blank.jpg";
   } else {
-   $year="";
-   $tit_imdb=$title;
+   $title=$r[$k]['title'];
+   if ($r[$k]['poster_path'])
+    $image="http://image.tmdb.org/t/p/w500".$r[$k]['poster_path'];
+   else
+    $image="blank.jpg";
   }
-  $imdb="";
-  $link_f=$fs_target.'?tip=movie&link='.urlencode($link).'&title='.urlencode(fix_t($title)).'&image='.$image."&sez=&ep=&ep_tit=&year=".$year;
-  if ($title) {
+  $id=$r[$k]['id'];
+  //echo $id;
+  $y="";
+  $year="";
+if ($media_type != "person") {
+if (isset($r[$k]['release_date'])) {
+$y=$r[$k]['release_date'];
+if ($y) $y=substr($y, 0, 4);  //2007-06-22
+}
+if (!$y) {
+//$y=$r[$k]["first_air_date"]." - ".$r[$k]["last_air_date"];
+if (isset($r[$k]["first_air_date"]))
+ $y1 = substr($r[$k]["first_air_date"],0,4);
+else
+ $y1 = "";
+//$y2 = substr($r[$k]["last_air_date"],0,4);
+$y=$y1;
+}
+$year=$y;
+} else
+$year="";
+//////////////////////////////////////////////
+$tit_imdb=$title;
+$imdb="";
+$id=$r[$k]['id'];
+$link=$id;
+/////////////////////////////////////////////
   if ($n==0) echo '<TR>'."\r\n";
+  //echo $media_type;
+  if ($media_type != "person") {
+  if ($media_type == "movie") {
+  $link_f=$fs_target.'?tip=movie&link='.urlencode($link).'&title='.urlencode(fix_t($title)).'&image='.$image."&sez=&ep=&ep_tit=&year=".$year;
   $val_imdb="tip=movie&title=".urlencode(fix_t($tit_imdb))."&year=".$year."&imdb=".$imdb;
   $fav_link="mod=add&title=".urlencode(fix_t($title))."&link=".urlencode($link)."&image=".urlencode($image)."&year=".$year;
+  } else {
+  $link_f=$fs_target_ep.'?tip=series&link='.urlencode($link).'&title='.urlencode(fix_t($title)).'&image='.$image."&sez=&ep=&ep_tit=&year=".$year;
+  $val_imdb="tip=series&title=".urlencode(fix_t($tit_imdb))."&year=".$year."&imdb=".$imdb;
+  $fav_link="mod=add&title=".urlencode(fix_t($title))."&link=".urlencode($link)."&image=".urlencode($image)."&year=".$year;
+  }
   if ($tast == "NU") {
     echo '<td class="mp" width="25%"><a href="'.$link_f.'" id="myLink'.$w.'" target="_blank" onmousedown="isKeyPressed(event)">
-    <img id="myLink'.$w.'" src="'.$image.'" width="'.$width.'" height="'.$height.'"><BR>'.$title.'</a>
+    <img id="myLink'.$w.'" src="'.$image.'" width="'.$width.'" height="'.$height.'"><BR>'.$title.' ('.$year.')</a>
     <input type="hidden" id="imdb_myLink'.$w.'" value="'.$val_imdb.'">'."\r\n";
-    if ($has_add=="yes")
-      echo '<a onclick="ajaxrequest('."'".$fav_link."'".')" style="cursor:pointer;">*</a>'."\r\n";
+    if ($media_type == "movie") {
+    echo '<input type="hidden" id="fav_myLink'.$w.'_tip" value="videospider_f_add.php">'."\r\n";
+    echo '<a onclick="ajaxrequest('."'".$fav_link."'".','."'videospider_f_add.php'".')" style="cursor:pointer;">*</a>'."\r\n";
+    } else {
+    echo '<input type="hidden" id="fav_myLink'.$w.'_tip" value="videospider_s_add.php">'."\r\n";
+    echo '<a onclick="ajaxrequest('."'".$fav_link."'".','."'videospider_s_add.php'".')" style="cursor:pointer;">*</a>'."\r\n";
+    }
     echo '</TD>'."\r\n";
   } else {
     echo '<td class="mp" width="25%"><a class ="imdb" id="myLink'.$w.'" href="'.$link_f.'" target="_blank">
-    <img src="'.$image.'" width="'.$width.'" height="'.$height.'"><BR>'.$title.'</a>
+    <img src="'.$image.'" width="'.$width.'" height="'.$height.'"><BR>'.$title.' ('.$year.')</a>
     <input type="hidden" id="imdb_myLink'.$w.'" value="'.$val_imdb.'">'."\r\n";
-    if ($has_add == "yes")
-      echo '<input type="hidden" id="fav_myLink'.$w.'" value="'.$fav_link.'"></a>'."\r\n";
+    if ($media_type == "movie")
+    echo '<input type="hidden" id="fav_myLink'.$w.'_tip" value="videospider_f_add.php">'."\r\n";
+    else
+    echo '<input type="hidden" id="fav_myLink'.$w.'_tip" value="videospider_s_add.php">'."\r\n";
+    echo '<input type="hidden" id="fav_myLink'.$w.'" value="'.$fav_link.'"></a>'."\r\n";
+    echo '</TD>'."\r\n";
+  }
+  } else {
+    $link_f="videospider_p.php?page=1&id=".$id."&title=".urlencode(fix_t($title));
+    echo '<td class="mp" width="25%"><a id="myLink'.$w.'" href="'.$link_f.'" target="_blank">
+    <img src="'.$image.'" width="'.$width.'" height="'.$height.'"><BR>'.$title.'</a>';
     echo '</TD>'."\r\n";
   }
   $w++;
@@ -270,9 +288,8 @@ for ($k=0; $k<count($r);$k++) {
   echo '</tr>'."\r\n";
   $n=0;
   }
-  }
- }
-
+}
+}
 /* bottom */
   if ($n < 4 && $n > 0) {
     for ($k=0;$k<4-$n;$k++) {
@@ -280,6 +297,9 @@ for ($k=0; $k<count($r);$k++) {
     }
     echo '</TR>'."\r\n";
   }
+//}
+//}
+if ($tip == "search") {
 echo '<tr>
 <TD class="nav" colspan="4" align="right">'."\r\n";
 if ($page > 1)
@@ -287,7 +307,27 @@ if ($page > 1)
 else
   echo '<a href="'.$next.'">&nbsp;&gt;&gt;&nbsp;</a></TD>'."\r\n";
 echo '</TR>'."\r\n";
+}
 echo "</table>"."\r\n";
 echo "</table>";
+if ($tip=="release") {
+if ($tast=="DA") {
+echo '<p>Pentru a putea folosi acest motor de cautare trebuie sa aveti un API Key pentru TMDB.<BR>
+Vizitati: <a href="https://www.themoviedb.org/settings/api">https://www.themoviedb.org/settings/api</a><BR>
+Setati in "Settings" acest key.<BR>
+Scurtaturi:<BR>
+Folositi tasta 3 pentru a adauga/sterge la favorite.<BR>
+Folositi tasta 2 pentru a accesa direct pagina de "Filme Favorite".<BR>
+Folositi tasta 4 pentru a accesa direct pagina de "Seriale Favorite".<BR>
+Folositi tasta 1 pentru informatii despre film/serial. Apasati "OK" pentru a inchide info.<BR>
+Folositi tasta 5 pentru a simula butonul de cautare.</p>';
+} else {
+echo '<p>Pentru a putea folosi acest motor de cautare trebuie sa aveti un API Key pentru TMDB.<BR>
+Vizitati: <a href="https://www.themoviedb.org/settings/api">https://www.themoviedb.org/settings/api</a><BR>
+Setati in "Settings" acest key.<BR>
+Folositi ctrl+click pentru informatii despre film/serial. Apasati "Esc" pentru a inchide info.<BR>
+Folosti "*" pentru a adauga/sterge la favorite.';
+}
+}
 ?></body>
 </html>

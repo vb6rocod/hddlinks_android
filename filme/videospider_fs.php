@@ -1,7 +1,6 @@
 <!doctype html>
 <?php
 include ("../common.php");
-include ("../util.php");
 error_reporting(0);
 $list = glob($base_sub."*.srt");
    foreach ($list as $l) {
@@ -90,9 +89,10 @@ function openlink(link) {
     }
   }
 }
-function changeserver(s,t) {
+function changeserver(s,t,x) {
   document.getElementById('server').innerHTML = s;
   document.getElementById('file').value=t;
+  document.getElementById('server1').innerHTML = x;
 }
    function zx(e){
      var charCode = (typeof e.which == "number") ? e.which : e.keyCode
@@ -134,181 +134,98 @@ function off() {
 <?php
 echo '<h2>'.$tit.$tit2.'</H2>';
 echo '<BR>';
-//echo $link;
-//$link="https://europixhd.io/svop/srv2?search=dwm-angel-s01e04";
-//$link=$link."-s2";
-$host=parse_url($link)['host'];
-$r=array();
+if (file_exists($base_pass."tmdb.txt"))
+  $key=file_get_contents($base_pass."tmdb.txt");
+else
+  $key="";
 $ua = $_SERVER['HTTP_USER_AGENT'];
-//$ua="Mozilla/5.0 (Windows NT 10.0; rv:71.0) Gecko/20100101 Firefox/71.0";
-$cookie=$base_cookie."hdpopcorns.dat";
-$requestLink=$link;  // ? de ce android trebuie cu https ???????????
-//if ($tip=="movie") $requestLink="https://europixhd.io/";
-$head=array(
-'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
-'Accept-Language: en-US,en;q=0.5',
-'Accept-Encoding: deflate, br',
-'Connection: keep-alive',
-'Upgrade-Insecure-Requests: 1');
-  $ch = curl_init();
-  curl_setopt($ch, CURLOPT_URL, $requestLink);
-  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
+//https://api.themoviedb.org/3/movie/423204?api_key=f8cf02e6b30bf8cc33c04c60695781aa
+//https://api.themoviedb.org/3/tv/2426?api_key=f8cf02e6b30bf8cc33c04c60695781aa
+if ($tip == "movie") {      //2426
+  $l="https://api.themoviedb.org/3/movie/".$link."?api_key=".$key;
+  //echo $l;
+  $ch = curl_init($l);
+  curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows; U; Windows NT 6.1; en-US; rv:1.9.1.2) Gecko/20090729 Firefox/3.5.2 GTB5');
   curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
-  curl_setopt($ch,CURLOPT_HTTPHEADER,$head);
-  curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie);
-  curl_setopt($ch, CURLOPT_COOKIEJAR, $cookie);
-  curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'GET');
-  curl_setopt($ch, CURLOPT_HTTPGET, true);
-  curl_setopt($ch, CURLINFO_HEADER_OUT, true);
-  curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
-  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER  ,1);  // RETURN THE CONTENTS OF THE CALL
+  //curl_setopt($ch, CURLOPT_HEADER, true);
   curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
   curl_setopt($ch, CURLOPT_TIMEOUT, 15);
-  curl_setopt($ch, CURLOPT_HEADER,1);
-  $h = curl_exec($ch);
- if (strpos($h,"503 Service") !== false) {
-  if (strpos($h,'id="cf-dn') === false)
-   $q1= getClearanceLink_old($h,$requestLink);
-  else
-   $q1= getClearanceLink($h,$requestLink);
-  $t1=explode('action="',$h);
-  $t2=explode('"',$t1[1]);
-  $requestLink="https://".$host.$t2[0];
-  $t1=explode("?",$q1);
-  $post=$t1[1];
-  //echo $post;
-$head=array('Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
-'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
-'Accept-Encoding: gzip, deflate, br',
-'Content-Type: application/x-www-form-urlencoded',
-'Content-Length: '.strlen($post).'',
-'Referer: https://'.$host.'',
-'Origin: https://'.$host.'',
-'Connection: keep-alive',
-'Upgrade-Insecure-Requests: 1');
-
-  curl_setopt($ch, CURLOPT_URL, $requestLink);
-  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
-  //curl_setopt($ch,CURLOPT_REFERER,$l1);
-  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,0);
-  curl_setopt($ch, CURLOPT_RETURNTRANSFER  ,1);  // RETURN THE CONTENTS OF THE CALL
-  curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie);
-  curl_setopt($ch, CURLOPT_COOKIEJAR, $cookie);
-  curl_setopt($ch, CURLOPT_HTTPHEADER, $head);
-  curl_setopt($ch, CURLOPT_HEADER,1);
-  curl_setopt($ch, CURLOPT_NOBODY,1);
-  curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'POST');
-  curl_setopt($ch, CURLOPT_HTTPGET, false);
-  //curl_setopt($ch, CURLINFO_HEADER_OUT, true);
-  curl_setopt ($ch, CURLOPT_POST, 1);
-  curl_setopt ($ch, CURLOPT_POSTFIELDS, $post);
-  curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
-  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
-  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
-  curl_setopt($ch, CURLOPT_TIMEOUT, 25);
-  $h = curl_exec($ch);
-  curl_close ($ch);
- } else {
-    curl_close($ch);
- }
-
-///////////////////////////////////////////////////////////////////////////////////
-if ($tip=="series") {
-  $ch = curl_init($link);
-  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
-  curl_setopt($ch, CURLOPT_REFERER, "https://europixhd.net");
-  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
-  curl_setopt($ch, CURLOPT_RETURNTRANSFER  ,1);  // RETURN THE CONTENTS OF THE CALL
-  curl_setopt($ch, CURLOPT_ENCODING,"");
-  curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie);
   curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
-  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
   $h = curl_exec($ch);
   curl_close ($ch);
-$h=urldecode($h);
-$h= preg_replace('/\\\x([a-f0-9]+)/mei',"chr(0x\\1)",$h);
-$h=str_replace("\n","",$h);
-
-if (preg_match("/var\s+_0x[a-z0-9A-Z]+\s*\=\s*\[((\".*?\"\,?)+)\]/ms", $h, $m)) {
-$e="\$c0=array(".$m[1].");";
-eval ($e);
-//print_r ($c0);
-if ($c0[0])
-  $ep_index=$ep-1;
+  $result=json_decode($h,1);
+  $imdbid="";
+  $imdbid = str_replace("tt","",$result['imdb_id']);
+}
+if ($tip=="movie")
+$l="https://videospider.in/getvideo?key=bt1hMKtU7U5GJoaj&video_id=".$link."&tv=0&tmdb=1";
 else
-  $ep_index=$ep;
-$link1 = $c0[$ep_index];
-//echo $link1;
-if (strpos($link1,"http") === false) {
-  $link1="https://".$host.str_replace("../../","/",$link1);
-}
-}
-} else {
-  $link1=$link;
-}
-//echo $link1;
-//$link1="https://europixhd.io/mov/christmas-reservations-2019-online-free-hd-with-subtitles-europix";
-if (strpos($link1,"europix") !== false && strpos($link1,"http") !== false) {
-$ch = curl_init();
-curl_setopt($ch, CURLOPT_URL, $link1);
-curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-curl_setopt($ch, CURLOPT_USERAGENT, $ua);
-curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie);
-curl_setopt($ch, CURLOPT_REFERER, "https://europixhd.net");
-curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
-curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
-curl_setopt($ch, CURLOPT_TIMEOUT, 15);
-$h = curl_exec($ch);
-curl_close($ch);
-$h=urldecode($h);
-//echo $h;
-if (preg_match("/(newsrv\S+)(\'|\")/",$h)) {
-if ($tip=="movie")      //newsrv3?search=dwm-servant-s01e01-
-  preg_match_all("/(\/svop\S+)(\'|\")/",$h,$p);
-else
-  preg_match_all("/(newsrv\S+)(\'|\")/",$h,$p);
-//print_r ($p);
-for ($k=0;$k<count($p[1]);$k++) {
-
-  if ($tip=="movie")
-  $l="https://".$host."/".$p[1][$k];
-  else
-  $l="https://".$host."/svop/".$p[1][$k];
-  //$l="https://europixhd.io/svop2/zznewsrv2?search=dwm-christmas-reservations-2019";
-  //$l="https://europixhd.io/svop2/newsrv1?search=dwm-christmas-reservations-2019";
+$l="https://videospider.in/getvideo?key=bt1hMKtU7U5GJoaj&video_id=".$link."&s=".$sez."&e=".$ep."&tv=1&tmdb=1";
+$r=array();
+$ua="Mozilla/5.0 (Windows NT 10.0; rv:71.0) Gecko/20100101 Firefox/71.0";
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $l);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+  curl_setopt($ch,CURLOPT_REFERER,"http://www.verystream.live");
   curl_setopt($ch, CURLOPT_USERAGENT, $ua);
-  curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie);
-  curl_setopt($ch, CURLOPT_REFERER, "https://europixhd.net");
-  curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
+  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
   curl_setopt($ch, CURLOPT_HEADER,1);
+  $h = curl_exec($ch);
+  curl_close($ch);
+  if (preg_match("/Location:\s*(.+)/",$h,$m))
+    $l1=trim($m[1]);
+    //echo $l1;
+  $ch = curl_init();
+  curl_setopt($ch, CURLOPT_URL, $l1);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+  //curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
+  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
+  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
   curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
   curl_setopt($ch, CURLOPT_TIMEOUT, 15);
   $h = curl_exec($ch);
-  curl_close($ch);
-  $h=urldecode($h);
   //echo $h;
-  if (preg_match("/iframe\s*src\=(\'|\")(.*?)(\'|\")/",$h,$m)) {
-  $link1=$m[2];
-  if(strpos($link1,"http") !== false) $r[] = $link1;
+  $t1=explode('var token = "',$h);
+  $t2=explode('"',$t1[1]);
+  $token=$t2[0];
+  $serv1=array();
+  $name=array();
+  $videos=explode('data-server="',$h);
+  unset($videos[0]);
+  $videos = array_values($videos);
+  foreach($videos as $video) {
+    $t1=explode('"',$video);
+    $server=$t1[0];
+    $t1=explode('data-server-id="',$video);
+    $t2=explode('"',$t1[1]);
+    $id=$t2[0];
+    $t1=explode('title="',$video);
+    $t2=explode('"',$t1[1]);
+    $name[]=$t2[0];
+    $serv1[]=array('serv' => $server,'id' => $id);
   }
-}
-} else {
-  if (preg_match("/iframe\s*src\=(\'|\")(.*?)(\'|\")/",$h,$m)) {
-  $link1=$m[2];
-  if(strpos($link1,"http") !== false) $r[] = $link1;
+  $r=array();
+  for ($k=0;$k<count($serv1);$k++) {
+  $server=$serv1[$k]['serv'];
+  $id=$serv1[$k]['id'];
+  $l1="https://oload.party/loadsource.php?server=".$server."&id=".$id."&token=".$token;
+  curl_setopt($ch, CURLOPT_URL, $l1);
+  $h = curl_exec($ch);
+  //echo $h;
+  //$h=file_get_contents($l1);
+  $t1=explode('iframe src="',$h);
+  $t2=explode('"',$t1[1]);
+  $r[]=urlencode($t2[0]);
   }
-}
-} else {
-if(strpos($link1,"http") !== false) $r[] = $link1;
-}
-//}
+  curl_close($ch);
+/////////////////////////////////////////////////////////////////////////////////////////
+
 echo '<table border="1" width="100%">';
-echo '<TR><TD class="mp">Alegeti un server: Server curent:<label id="server">'.parse_url($r[0])['host'].'</label>
+echo '<TR><TD class="mp">Alegeti un server: Server curent:<label id="server">'.parse_url(urldecode($r[0]))['host'].'</label>
 <input type="hidden" id="file" value="'.urlencode($r[0]).'"></td></TR></TABLE>';
 echo '<table border="1" width="100%"><TR>';
 $k=count($r);
@@ -316,11 +233,11 @@ $x=0;
 for ($i=0;$i<$k;$i++) {
   if ($x==0) echo '<TR>';
   $c_link=$r[$i];
-  $openload=parse_url($r[$i])['host'];
+  $openload=parse_url(urldecode($r[$i]))['host'];
   if (preg_match($indirect,$openload)) {
   echo '<TD class="mp"><a href="filme_link.php?file='.urlencode($c_link).'&title='.urlencode(unfix_t($tit.$tit2)).'" target="_blank">'.$openload.'</a></td>';
   } else
-  echo '<TD class="mp"><a id="myLink" href="#" onclick="changeserver('."'".$openload."','".urlencode($c_link)."'".');return false;">'.$openload.'</a></td>';
+  echo '<TD class="mp"><a id="myLink" href="#" onclick="changeserver('."'".$openload."','".urlencode($c_link)."','".$name[$i]."'".');return false;">'.$openload.'</a></td>';
   $x++;
   if ($x==6) {
     echo '</TR>';
@@ -339,7 +256,7 @@ if ($tip=="movie") {
   $tit2="";
   $sez="";
   $ep="";
-  $imdbid="";
+
   $from="";
   $link_page="";
 } else {
@@ -350,10 +267,14 @@ if ($tip=="movie") {
   $from="";
   $link_page="";
 }
+  $rest = substr($tit3, -6);
+  if (preg_match("/\((\d+)\)/",$rest,$m)) {
+   $tit3=trim(str_replace($m[0],"",$tit3));
+  }
 $sub_link ="from=".$from."&tip=".$tip."&sez=".$sez."&ep=".$ep."&imdb=".$imdbid."&title=".urlencode(fix_t($tit3))."&link=".$link_page."&ep_tit=".urlencode(fix_t($tit2))."&year=".$year;
 echo '<br>';
 echo '<table border="1" width="100%">';
-echo '<TR><TD style="background-color:#0a6996;color:#64c8ff;font-weight: bold;font-size: 1em" align="center" colspan="4">Alegeti o subtitrare</td></TR>';
+echo '<TR><TD style="background-color:#0a6996;color:#64c8ff;font-weight: bold;font-size: 1.5em" align="center" colspan="4">Alegeti o subtitrare</td></TR>';
 echo '<TR>';
 echo '<TD class="mp"><a id="opensub" href="opensubtitles.php?'.$sub_link.'">opensubtitles</a></td>';
 echo '<TD class="mp"><a id="titrari" href="titrari_main.php?page=1&'.$sub_link.'&page=1">titrari.ro</a></td>';
@@ -361,7 +282,7 @@ echo '<TD class="mp"><a id="subs" href="subs_main.php?'.$sub_link.'">subs.ro</a>
 echo '<TD class="mp"><a id="subtitrari" href="subtitrari_main.php?'.$sub_link.'">subtitrari_noi.ro</a></td>';
 echo '</TR></TABLE>';
 echo '<table border="1" width="100%">';
-echo '<TR><TD style="background-color:#0a6996;color:#64c8ff;font-weight: bold;font-size: 1em" align="center" colspan="4">Alegeti o subtitrare (cauta imdb id)</td></TR>';
+echo '<TR><TD style="background-color:#0a6996;color:#64c8ff;font-weight: bold;font-size: 1.5em" align="center" colspan="4">Alegeti o subtitrare (cauta imdb id)</td></TR>';
 echo '<TR>';
 echo '<TD class="mp"><a id="opensub1" href="opensubtitles1.php?'.$sub_link.'">opensubtitles</a></td>';
 echo '<TD class="mp"><a id="titrari1" href="titrari_main1.php?page=1&'.$sub_link.'&page=1">titrari.ro</a></td>';
@@ -378,6 +299,7 @@ else
  else
    echo '<TD align="center" colspan="4"><a id="viz" onclick="'."openlink('".$openlink."')".'"'." style='cursor:pointer;'>".'VIZIONEAZA !</a></td>';
 echo '</tr>';
+echo '<TR><TD class="mp" colspan="4" style="text-align:left">Nume release:<label id="server1" style="color: #e6e600;">'.$name[0].'</label></TD></TR>';
 echo '</table>';
 echo '<br>
 <table border="0px" width="100%">

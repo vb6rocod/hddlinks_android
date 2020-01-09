@@ -200,7 +200,7 @@ foreach($videos as $video) {
   } else {  // tmdb
      $ep_tit = $r["episodes"][$episod-1]["name"];
      if (isset($r["episodes"][$episod-1]["still_path"]))
-      $img_ep="http://image.tmdb.org/t/p/w780".$r["episodes"][$episod-1]["still_path"];
+      $img_ep="http://image.tmdb.org/t/p/w185".$r["episodes"][$episod-1]["still_path"];
      else
       $img_ep=$img_ep_o;
   }

@@ -189,6 +189,7 @@ $host=parse_url($l)['host'];
   curl_setopt($ch, CURLOPT_TIMEOUT, 15);
   $html = curl_exec($ch);
   curl_close($ch);
+  //echo $html;
   if ($tip=="release") {
   $videos = explode('article id="post-', $html);
   unset($videos[0]);
@@ -202,7 +203,7 @@ $host=parse_url($l)['host'];
     $t4 = explode('<', $t3[1]);
     $t5=explode(', serial',$t4[0]);
     $title=trim($t5[0]);
-    $t1=explode('src="',$video);
+    $t1=explode('data-lazy-src="',$video);
     $t2=explode('"',$t1[1]);
     $image=$t2[0];
     if (strpos($link,"seriale") !== false && $title <> "DMCA") array_push($r ,array($title,$link, $image));

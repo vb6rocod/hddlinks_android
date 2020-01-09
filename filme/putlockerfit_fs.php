@@ -58,6 +58,7 @@ function str_between($string, $start, $end){
 <title><?php echo $tit.$tit2; ?></title>
 <link rel="stylesheet" type="text/css" href="../custom.css" />
 <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.0/jquery.min.js"></script>
+<script type="text/javascript" src="putlockerfit.js"></script>
 <script type="text/javascript">
 function openlink1(link) {
   link1=document.getElementById('file').value;
@@ -161,6 +162,7 @@ $host=parse_url($link)['host'];
   $l="https://".$host."/embed-src-v2/".base64_encode($id_post);
   //$l="https://www3.putlocker.fyi/embed-src-v2/NjIwNTc2NA==";
   //$l="https://www5.putlocker.fyi/embed-src-v2/NDY3NTAy";
+  //https://www5.putlocker.fyi/embed-src-v2/NjU3NTc2NA==
   $ch = curl_init($l);
   curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
   curl_setopt($ch, CURLOPT_REFERER, "https://putlockerfit.net/show/lois-clark-the-new-adventures-of-superman/season-4/episode-22/");
@@ -172,52 +174,20 @@ $host=parse_url($link)['host'];
   $h = curl_exec($ch);
   curl_close($ch);
   //echo $h;
+  $t1=explode('name="v"',$h);
+  $t2=explode('value="',$t1[1]);
+  $t3=explode('"',$t2[1]);
+  //echo $t3[0]."\n";
+  $enc=trim($t3[0]);
+  $pass="3FE2C050FE9CC411BE34440A8730E8C0";
+
   $r=array();
-$videos = explode('src="', $h);
-unset($videos[0]);
-$videos = array_values($videos);
-foreach($videos as $video) {
-  $t2=explode('"',$video);
-  $openload=trim($t2[0]);
-  if (!preg_match("/gomostream\.com/",$openload))
-   $r[]=$openload;
-  else {
-    include ("multilink.php");
-    //$r[]=$openload;
-    $x=multilink($openload,$base_cookie."multilink.dat");
-    foreach ($x as $key => $value) {
-      $r[]=$value;
-    }
-  }
-}
+
 //print_r ($r);
 echo '<table border="1" width="100%">';
-echo '<TR><TD class="mp">Alegeti un server: Server curent:<label id="server">'.parse_url($r[0])['host'].'</label>
-<input type="hidden" id="file" value="'.urlencode($r[0]).'"></td></TR></TABLE>';
-echo '<table border="1" width="100%"><TR>';
-$k=count($r);
-$x=0;
-for ($i=0;$i<$k;$i++) {
-  if ($x==0) echo '<TR>';
-  $c_link=$r[$i];
-  $openload=parse_url($r[$i])['host'];
-  if (preg_match($indirect,$openload)) {
-  echo '<TD class="mp"><a href="filme_link.php?file='.urlencode($c_link).'&title='.urlencode(unfix_t($tit.$tit2)).'" target="_blank">'.$openload.'</a></td>';
-  } else
-  echo '<TD class="mp"><a id="myLink" href="#" onclick="changeserver('."'".$openload."','".urlencode($c_link)."'".');return false;">'.$openload.'</a></td>';
-  $x++;
-  if ($x==6) {
-    echo '</TR>';
-    $x=0;
-  }
-}
-if ($x < 6 && $x > 0 & $k>6) {
- for ($k=0;$k<6-$x;$k++) {
-   echo '<TD></TD>'."\r\n";
- }
- echo '</TR>'."\r\n";
-}
-echo '</TABLE>';
+echo '<TR><TD class="mp">Server :<label id="server">'.'Wait..'.'</label>
+<input type="hidden" id="file" value="'.urlencode("").'"></td></TR></TABLE>';
+
 if ($tip=="movie") {
   $tit3=$tit;
   $tit2="";
@@ -276,6 +246,18 @@ echo '<br>
 <TD><font size="4"><b>Scurtaturi: 1=opensubtitles, 2=titrari, 3=subs, 4=subtitrari, 5=vizioneaza
 <BR>Scurtaturi: 7=opensubtitles, 8=titrari, 9=subs, 0=subtitrari (cauta imdb id)
 </b></font></TD></TR></TABLE>
+';
+echo '<script>
+var val=Aes.Ctr.decrypt("'.$enc.'","3FE2C050FE9CC411BE34440A8730E8C0",256);
+var parser = document.createElement("a");
+parser.href = val;
+if (!val.match(/http/g)) {
+val="https:" + val;
+parser.href = val;
+}
+document.getElementById("server").innerHTML = parser.hostname;
+document.getElementById("file").value= val;
+</script>
 ';
 include("../debug.html");
 echo '

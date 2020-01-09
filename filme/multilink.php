@@ -3,7 +3,7 @@
 function multilink($l,$cookie) {
  $r=array();
  $ua = $_SERVER['HTTP_USER_AGENT'];
- if (preg_match("/gomostream\.com/",$l)) {
+ if (preg_match("/gomostream\.com|gomo\.to/",$l)) {
   $head=array('Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
   'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
   'Accept-Encoding: deflate',
@@ -39,6 +39,7 @@ function multilink($l,$cookie) {
   $f=strrev($e);
   $j=$f.$c.$d;
   $l="https://gomostream.com/decoding_v3.php";
+  $l="https://gomo.to/decoding_v3.php";
   $post="tokenCode=".$tc."&_token=".$token;
   $head=array('Accept: */*',
   'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
@@ -68,9 +69,9 @@ function multilink($l,$cookie) {
   curl_close($ch);
   $x=json_decode($h,1);
   foreach ($x as $key => $value) {
-   if ($value <> "" && !preg_match("/gomostream\.com/",$value))
+   if ($value <> "" && !preg_match("/\/vid1?\//",$value))
      $r[]=$value;
-   elseif ($value && preg_match("/gomostream\.com/",$value)) {
+   elseif ($value && preg_match("/\/vid1?\//",$value)) {
     $ch = curl_init();
     curl_setopt($ch, CURLOPT_URL, $value);
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
@@ -86,7 +87,7 @@ function multilink($l,$cookie) {
     $h = curl_exec($ch);
     curl_close($ch);
     if (preg_match("/Location:\s*(\S+)/i",$h,$z)) {
-      $r[]=$z[1];
+      $r[]=trim($z[1]);
     }
    }
   }

@@ -71,6 +71,13 @@ $link=$_GET["link"];
 
 <link rel="stylesheet" type="text/css" href="../custom.css" />
 <script type="text/javascript">
+function on() {
+    document.getElementById("overlay").style.display = "block";
+}
+
+function off() {
+    document.getElementById("overlay").style.display = "none";
+}
 // create the XMLHttpRequest object, according browser
 function get_XmlHttp() {
   // create the variable that will contain the instance of the XMLHttpRequest object (initially with null value)
@@ -84,6 +91,7 @@ function get_XmlHttp() {
   return xmlHttp;
 }
 function changeserver(link) {
+  on();
   var request =  get_XmlHttp();		// call the function for the XMLHttpRequest instance
 
   // create pairs index=value with data that must be sent to server
@@ -100,6 +108,7 @@ function changeserver(link) {
   // If the response is received completely, will be transferred to the HTML tag with tagID
   request.onreadystatechange = function() {
     if (request.readyState == 4) {
+       off();
        alert (request.responseText);
        //document.getElementById("mytest1").href=request.responseText;
       //document.getElementById("mytest1").click();
@@ -115,6 +124,7 @@ function changeserver(link) {
 
 //echo $sub_link ="from=".$from."&tip=".$tip."&sez=".$sez."&ep=".$ep."&imdb=".$imdbid."&title=".$title."&link=".$link;
 $f=$base_cookie."opensub.dat";
+$token="";
 if (file_exists($f)) unlink($f);
 if (file_exists($f)) {
 $token=file_get_contents($f);
@@ -146,9 +156,15 @@ $request="<?xml version=\"1.0\" encoding=\"iso-8859-1\"?>
 </params>
 </methodCall>";
 $response = generateResponse($request);
+//echo $response;
+//$r=xmlrpc_decode($response,"UTF-8");
+//print_r ($r);
+if (preg_match("/200 OK/",$response)) {
 $token=get_value("token",$response);
 file_put_contents($f,$token);
 }
+}
+if ($token) {
 if ($tip=="movie") {
 $request="<?xml version=\"1.0\" encoding=\"iso-8859-1\"?>
 <methodCall>
@@ -204,12 +220,14 @@ $request="<?xml version=\"1.0\" encoding=\"iso-8859-1\"?>
 </params>
 </methodCall>";
 //echo $request;
+$arrsub = array();
 $response = generateResponse($request);
 //echo $response;
+if (preg_match("/200 OK/",$response)) {
 $videos=explode("MatchedBy",$response);
 unset($videos[0]);
 $videos = array_values($videos);
-$arrsub = array();
+
 foreach($videos as $video) {
  $MovieKind = get_value("MovieKind",$video);
  $SubFormat = get_value("SubFormat",$video);
@@ -221,6 +239,7 @@ foreach($videos as $video) {
    $id2=get_value("IDSubtitleFile",$video);
    array_push($arrsub ,array($SubLanguageID,$SubFileName, $id2));
  }
+}
 }
 } else {
 $request="<?xml version=\"1.0\" encoding=\"iso-8859-1\"?>
@@ -289,12 +308,14 @@ $request="<?xml version=\"1.0\" encoding=\"iso-8859-1\"?>
 </params>
 </methodCall>";
 //echo $request;
+$arrsub = array();
 $response = generateResponse($request);
 //echo $response;
+if (preg_match("/200 OK/",$response)) {
 $videos=explode("MatchedBy",$response);
 unset($videos[0]);
 $videos = array_values($videos);
-$arrsub = array();
+
 foreach($videos as $video) {
  //echo $video;
  $MovieKind = get_value("MovieKind",$video);
@@ -308,6 +329,7 @@ foreach($videos as $video) {
    $id2=get_value("IDSubtitleFile",$video);
    array_push($arrsub ,array($SubLanguageID,$SubFileName, $id2));
  }
+}
 }
 }
 arsort($arrsub);
@@ -328,4 +350,14 @@ foreach ($arrsub as $key => $val) {
   //if ($n >9)
 }
 echo '</table>';
+} else {
+  echo 'Server error!';
+}
+echo '</body></html>';
+
 ?>
+<div id="overlay">
+  <div id="text">Wait....</div>
+</div>
+</body>
+</html>

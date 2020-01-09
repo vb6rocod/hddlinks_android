@@ -20,7 +20,7 @@ class CryptoJSAES {
     public static function decrypt($base64, $passphrase) {
         list($ct, $salt) = self::decode($base64);
         list($key, $iv) = self::evpkdf($passphrase, $salt);
-        $data = openssl_decrypt($ct, 'aes-256-cbc', $key, true, $iv);
+        $data = openssl_decrypt($ct, 'aes-256-cbc', $key, true, $iv);   // cbc
         return $data;
     }
     public static function evpkdf($passphrase, $salt) {

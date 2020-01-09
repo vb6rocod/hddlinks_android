@@ -184,6 +184,7 @@ for ($k=0;$k<count($r);$k++) {
     $image="blank.jpg";
   }
   $id=$r[$k]['id'];
+  //echo $id;
   $y="";
   $year="";
 if ($media_type != "person") {

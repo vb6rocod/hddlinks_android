@@ -36,21 +36,21 @@ $ua = $_SERVER['HTTP_USER_AGENT'];
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
   curl_setopt($ch, CURLOPT_USERAGENT, $ua);
   curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
-  curl_setopt ($ch, CURLOPT_REFERER, "https://filmeonlinegratis.org");
+  curl_setopt($ch,CURLOPT_REFERER,"https://serialeonline.biz");
   curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
   curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
   curl_setopt($ch, CURLOPT_TIMEOUT, 15);
-  $html = curl_exec($ch);
+  $h = curl_exec($ch);
   curl_close($ch);
 
 $n=0;
-$videos = explode('class="se-t',$html);
+$videos = explode('class="tvseason', $h);
 $sezoane=array();
 unset($videos[0]);
 $videos = array_values($videos);
 //$videos = array_reverse($videos);
 foreach($videos as $video) {
-  $t1=explode('>',$video);
+  $t1=explode('Sezonul',$video);
   $t2=explode("<",$t1[1]);
   $sezoane[]=trim($t2[0]);
 }
@@ -76,14 +76,14 @@ if ($p < 10 && $p > 0 && $k > 9) {
 echo '</TABLE>';
 
 foreach($videos as $video) {
-  $t1=explode('>',$video);
+  $t1=explode('Sezonul',$video);
   $t2=explode("<",$t1[1]);
   $season=trim($t2[0]);
   $sez = $season;
   echo '<table border="1" width="100%">'."\n\r";
   echo '<TR><td class="sez" style="color:black;background-color:#0a6996;color:#64c8ff;text-align:center" colspan="3">Sezonul '.($sez).'</TD></TR>';
   $n=0;
-  $vids = explode('<a', $video);
+  $vids = explode('href="', $video);
   unset($vids[0]);
   $vids = array_values($vids);
   //$vids = array_reverse($vids);
@@ -91,17 +91,19 @@ foreach($videos as $video) {
   $img_ep="";
   $episod="";
   $ep_tit="";
-  $vid=str_replace('&quot;','"',$vid);
-  if (preg_match("/sezonul-(\d+)-episodul-(\d+)/",$vid,$m)) {
-    $episod=$m[2];
-  }
-  $t1=explode('href="',$vid);
-  $t2=explode('"',$t1[1]);
-  $link=$t2[0];
-  $t3=explode('>',$t1[1]);
-  $t4=explode("<",$t3[1]);
-  $title=$t4[0];
+  $t1=explode('"',$vid);
+  $link=$t1[0];
+  preg_match("/sezonul\-\d+\-episodul\-(\d+)/",$link,$m);
+  $episod=$m[1];
+  $img_ep="";
+  $t2=explode('>',$t1[1]);
+  $t3=explode('<',$t2[1]);
+  $title=trim($t3[0]);
   $title=str_replace("&nbsp;"," ",$title);
+  if (preg_match("/Episodul\s+\d+\s+\-\s+(.+)/i",$title,$m)) {  //Episodul 1 - Pilot
+    $title=$m[1];
+    //print_r ($m);
+  }
   $ep_tit=prep_tit($title);
   if ($ep_tit)
    $ep_tit_d=$season."x".$episod." ".$ep_tit;

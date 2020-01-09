@@ -7,6 +7,8 @@ function str_between($string, $start, $end){
 }
 include ("../common.php");
 include ("../util.php");
+$last_good="https://topeuropix.com";
+$host=parse_url($last_good)['host'];
 $page = $_GET["page"];
 $tip= $_GET["tip"];
 $tit=$_GET["title"];
@@ -18,7 +20,7 @@ $has_fav="yes";
 $has_search="yes";
 $has_add="yes";
 $has_fs="yes";
-$fav_target="europix_f_fav.php?host=https://123europix.pro";
+$fav_target="europix_f_fav.php?host=".$last_good;
 $add_target="europix_f_add.php";
 $add_file="";
 $fs_target="europix_fs.php";
@@ -166,17 +168,27 @@ if ($page==1) {
    echo '<TD class="nav" colspan="4" align="right"><a href="'.$prev.'">&nbsp;&lt;&lt;&nbsp;</a> | <a href="'.$next.'">&nbsp;&gt;&gt;&nbsp;</a></TD>'."\r\n";
 }
 echo '</TR>'."\r\n";
+
+$ad="";
+if ($page<10) $ad="0";
+if($tip=="release") {
+  //$l="https://europixhd.io/tvshow-filter/all-tv-shows-page-"
+  //https://europixhd.io/tvshow-filter/all-tv-shows-page-02?search=
+  $l="https://".$host."/year/allmovies-page-".$page."?search=";
+  $l="https://".$host."/year/2019-page-".$page."?search=2019";
+} else {
+  $search=str_replace(" ","+",$tit);
+  $l="https://".$host."/search?search=".$search;
+}
+///////////////////////////////////////////////////////////////////////////
+$requestLink=$l;
 $ua = $_SERVER['HTTP_USER_AGENT'];
-//$ua="Mozilla/5.0 (Windows NT 10.0; rv:71.0) Gecko/20100101 Firefox/71.0";
 $cookie=$base_cookie."hdpopcorns.dat";
-$requestLink="https://123europix.pro/";  // ? de ce android trebuie cu https ???????????
 $host=parse_url($requestLink)['host'];
-if ($page==1 && $tip !="search") {
-//if (file_exists($cookie)) unlink ($cookie);
 $head=array(
 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
 'Accept-Language: en-US,en;q=0.5',
-'Accept-Encoding: deflate, br',
+'Accept-Encoding: deflate',
 'Connection: keep-alive',
 'Upgrade-Insecure-Requests: 1');
   $ch = curl_init();
@@ -206,17 +218,15 @@ $head=array(
   $requestLink="https://".$host.$t2[0];
   $t1=explode("?",$q1);
   $post=$t1[1];
-  //echo $post;
 $head=array('Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
 'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
-'Accept-Encoding: gzip, deflate, br',
+'Accept-Encoding: deflate',
 'Content-Type: application/x-www-form-urlencoded',
 'Content-Length: '.strlen($post).'',
 'Referer: https://'.$host.'',
 'Origin: https://'.$host.'',
 'Connection: keep-alive',
 'Upgrade-Insecure-Requests: 1');
-
   curl_setopt($ch, CURLOPT_URL, $requestLink);
   curl_setopt($ch, CURLOPT_USERAGENT, $ua);
   //curl_setopt($ch,CURLOPT_REFERER,$l1);
@@ -238,33 +248,25 @@ $head=array('Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q
   curl_setopt($ch, CURLOPT_TIMEOUT, 25);
   $h = curl_exec($ch);
   curl_close ($ch);
+  $ch = curl_init($requestLink);
+  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
+  curl_setopt($ch,CURLOPT_REFERER,"https://".$host);
+  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER  ,1);  // RETURN THE CONTENTS OF THE CALL
+  curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie);
+  curl_setopt($ch, CURLOPT_ENCODING,"");
+  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+  $h = curl_exec($ch);
+  curl_close ($ch);
  } else {
     curl_close($ch);
  }
-}
-$ad="";
-if ($page<10) $ad="0";
-if($tip=="release") {
-  //$l="https://europixhd.io/tvshow-filter/all-tv-shows-page-"
-  //https://europixhd.io/tvshow-filter/all-tv-shows-page-02?search=
-  $l="https://".$host."/year/allmovies-page-".$page."?search=";
-} else {
-  $search=str_replace(" ","+",$tit);
-  $l="https://".$host."/search?search=".$search;
-}
-  $ch = curl_init();
-  curl_setopt($ch, CURLOPT_URL, $l);
-  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
-  curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie);
-  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
-  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
-  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
-  $html = curl_exec($ch);
-  curl_close($ch);
+///////////////////////////////////////////////////////////////////////////
 
  //echo $html;
- $videos = explode('class="movie">', $html);
+ $videos = explode('div class="img', $h);
  unset($videos[0]);
  $videos = array_values($videos);
  foreach($videos as $video) {
@@ -272,7 +274,7 @@ if($tip=="release") {
   $link=$m[2];
   $link="https://".$host."/".str_replace("../","",$link);
   //echo $link1;
-  $t1 = explode('class="name">', $video);
+  $t1 = explode('h5>', $video);
   $t2 = explode('<', $t1[1]);
   $title = trim($t2[0]);
   preg_match("/src\=(\'|\")(.*?)(\'|\")/mei",$video,$m);

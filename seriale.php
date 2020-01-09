@@ -52,7 +52,7 @@ document.onkeypress =  zx;
 <TR>
 <TD width="25%"><a href="filme/filmeseriale_main.php?page=1&tip=release&title=filmeseriale.online&link=" target="_blank">filmeseriale.online</a></TD>
 <TD width="25%"><a href="filme/tvhub_s.php?page=1&tip=release&title=tvhub&link=" target="_blank">tvhub</a></TD>
-<TD width="25%"><a href="filme/gold_s.php?page=1&tip=release&title=filme-seriale.gold&link=" target="_blank">filme-seriale.gold</a></TD>
+<TD width="25%"><a href="filme/filmeonlinegratis_s.php?page=1&tip=release&title=filmeonlinegratis&link=" target="_blank">filmeonlinegratis</a></TD>
 <TD width="25%"><a href="filme/filmeseriale_eu.php?page=1&tip=release&title=filmeseriale.eu&link=" target="_blank">filmeseriale.eu</a></TD>
 </TR>
 <TR>
@@ -70,9 +70,9 @@ document.onkeypress =  zx;
 
 <TR>
 <TD width="25%"><a href="filme/fsgratis_s.php?page=1&tip=release&title=fsgratis&link=" target="_blank">fsgratis</a></TD>
-<TD width="25%"><a href="filme/filmeonlinegratis_s.php?page=1&tip=release&title=filmeonlinegratis&link=" target="_blank">filmeonlinegratis</a></TD>
-<TD width="25%"></TD>
+<TD width="25%"><a href="filme/serialeonline_biz.php?page=1&tip=release&title=serialeonline.biz&link=" target="_blank">serialeonline.biz</a></TD>
 <TD width="25%"><a href="filme/clicksud_main.php" target="_blank">clicksud (seriale romanesti)</a></TD>
+<TD width="25%"><a href="filme/club-seriale_s.php?page=1&tip=release&title=club-seriale&link=" target="_blank">club-seriale</a></TD>
 </TR>
 <!-- straine -->
 <TR>
@@ -117,7 +117,7 @@ document.onkeypress =  zx;
 <TR>
 <TD width="25%"><a href="filme/gdriveplayer_s.php?page=1&tip=release&title=gdriveplayer&link=" target="_blank">gdriveplayer</a></TD>
 <TD width="25%"><a href="filme/vidcloud9_s.php?page=1&tip=release&title=vidcloud9&link=" target="_blank">vidcloud9</a></TD>
-<TD width="25%"></TD>
+<TD width="25%"><a href="filme/yifymovies_s.php?page=1&tip=release&title=yifymovies&link=" target="_blank">yifymovies</a></TD>
 <TD width="25%"></TD>
 </TR>
 <?php

@@ -1018,7 +1018,7 @@ $headers=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:71.0) Gecko/2010010
    $html =$h;
 } elseif (preg_match($indirect,$filelink)) {
   $html='<iframe src="'.$filelink.'">';
-} elseif (preg_match("/gomostream\.com\/movie/",$filelink)) {
+} elseif (preg_match("/gomostream\.com|gomo\.to\/movie/",$filelink)) {
   include("multilink.php");
   $html="";
   $x=multilink($filelink,$base_cookie."multilink.dat");
@@ -1089,7 +1089,7 @@ $s=$s."bitporno\.com|thevideobee\.to|mangovideo\.|smartshare\.tv|datoporn\.co|xs
 $s=$s."database\.serialeonline\.to|drive\.google\.com|videomega\.|vidload\.co|mixdrop\.|mystream\.to|mstream\.cloud";
 $s=$s."|hxload\.|bazavox\.com|cloud\.vidhubstr\.org|vidia\.tv|gomostream\.com|viduplayer\.com|leaked-celebrities\.";
 $s=$s."|prostream\.to|videobin\.co|upstream\.to|playtvid\.com|jetload\.net|vidfast\.co|clipwatching\.";
-$s=$s."|video\.filmeserialeonline\.org|streamwire\./i";
+$s=$s."|video\.filmeserialeonline\.org|streamwire\.|cloudvid\.icu|mstream\.xyz|streamhoe\.online/i";
 /////////////////////////////////////////////
 //$x=preg_grep($s,$links);
 //print_r ($x);
@@ -1130,6 +1130,36 @@ for ($i=0;$i<count($links);$i++) {
    $cur_link=trim($t2[0]);
    //echo $cur_link;
   }
+  if (strpos($links[$i],"cloudvid.icu") !== false) {
+   $l=trim("https:".$links[$i]);
+   //echo $l;
+   $q=parse_str(parse_url($l)['query'],$output);
+   if (isset($output['sub'])) $srt=$output['sub'];
+   $ch = curl_init();
+   curl_setopt($ch, CURLOPT_URL, $l);
+   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+   curl_setopt($ch, CURLOPT_USERAGENT, $ua);
+   curl_setopt($ch,CURLOPT_REFERER,"https://serialeonline.to");
+   curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,0);
+   curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+   curl_setopt($ch, CURLOPT_HEADER,1);
+   curl_setopt($ch, CURLOPT_NOBODY,1);
+   curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+   curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+   $h2 = curl_exec($ch);
+   curl_close($ch);
+   //echo $h2;
+   if (preg_match("/Location:\s*(.+)/i",$h2,$m)) {
+     $l1=$m[1];
+     if (strpos($l1,"database.serialeonline.to") !== false) {
+      $links[$i]=$l1;
+     } else {
+      $cur_link=$l1;
+     }
+   } else {
+     $cur_link="";
+   }
+ }
   if (strpos($links[$i],"database.serialeonline.to") !== false) {
   if (strpos($links[$i],"https://database") === false)
   $l=trim("https:".$links[$i]);
@@ -1398,6 +1428,16 @@ function ajaxrequest1(link) {
       document.getElementById("subs").click();
      } else if (charCode == "52") {
       document.getElementById("subtitrari").click();
+     } else if (charCode == "53") {
+      document.getElementById("viz").click();
+     } else if (charCode == "55") {
+      document.getElementById("opensub1").click();
+     } else if (charCode == "56") {
+      document.getElementById("titrari1").click();
+     } else if (charCode == "57") {
+      document.getElementById("subs1").click();
+     } else if (charCode == "48") {
+      document.getElementById("subtitrari1").click();
      }
    }
 document.onkeypress =  zx;
@@ -1468,9 +1508,21 @@ echo '<TD class="mp"><a id="titrari" href="titrari_main.php?page=1&'.$sub_link.'
 echo '<TD class="mp"><a id="subs" href="subs_main.php?'.$sub_link.'">subs.ro</a></td>';
 echo '<TD class="mp"><a id="subtitrari" href="subtitrari_main.php?'.$sub_link.'">subtitrari_noi.ro</a></td>';
 echo '</TR></TABLE>';
-echo '<BR><table border="0px" width="100%">
+echo '<table border="1" width="100%">';
+echo '<TR><TD style="background-color:#0a6996;color:#64c8ff;font-weight: bold;font-size: 1em" align="center" colspan="4">Alegeti o subtitrare (cauta imdb id)</td></TR>';
+echo '<TR>';
+echo '<TD class="mp"><a id="opensub1" href="opensubtitles1.php?'.$sub_link.'">opensubtitles</a></td>';
+echo '<TD class="mp"><a id="titrari1" href="titrari_main1.php?page=1&'.$sub_link.'&page=1">titrari.ro</a></td>';
+echo '<TD class="mp"><a id="subs1" href="subs_main1.php?'.$sub_link.'">subs.ro</a></td>';
+echo '<TD class="mp"><a id="subtitrari1" href="subtitrari_main1.php?'.$sub_link.'">subtitrari_noi.ro</a></td>';
+echo '</TR></TABLE>';
+echo '<br>
+<table border="0px" width="100%">
 <TR>
-<TD><font size="4"><b>Scurtaturi: 1=opensubtitles, 2=titrari, 3=subs, 4=subtitrari</b></font></TD></TR></TABLE>';
+<TD><font size="4"><b>Scurtaturi: 1=opensubtitles, 2=titrari, 3=subs, 4=subtitrari
+<BR>Scurtaturi: 7=opensubtitles, 8=titrari, 9=subs, 0=subtitrari (cauta imdb id)
+</b></font></TD></TR></TABLE>
+';
 echo '
 <div id="debug" style="vertical-align:top;height:auto;width:100%;word-wrap: break-word;"></div>
 <BR>

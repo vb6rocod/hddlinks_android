@@ -6,6 +6,7 @@ function str_between($string, $start, $end){
 	return substr($string,$ini,$len);
 }
 include ("../common.php");
+include ("../util.php");
 $page = $_GET["page"];
 $tip= $_GET["tip"];
 $tit=$_GET["title"];
@@ -17,11 +18,11 @@ $has_fav="yes";
 $has_search="yes";
 $has_add="yes";
 $has_fs="yes";
-$fav_target="moviehdkh_f_fav.php?host=https://www.moviehdkh.com";
-$add_target="moviehdkh_f_add.php";
+$fav_target="yifymovies_f_fav.php?host=https://yifymovies.tv";
+$add_target="yifymovies_f_add.php";
 $add_file="";
-$fs_target="moviehdkh_fs.php";
-$target="moviehdkh_f.php";
+$fs_target="yifymovies_fs.php";
+$target="yifymovies_f.php";
 /* ==================================================== */
 $base=basename($_SERVER['SCRIPT_FILENAME']);
 $p=$_SERVER['QUERY_STRING'];
@@ -168,51 +169,123 @@ echo '</TR>'."\r\n";
 
 if($tip=="release") {
   if ($page > 1)
-  $l="https://www.moviehdkh.com/?page=".$page;
+  $l="https://yifymovies.tv/movies/page/".$page."/";
   else
-  $l="https://www.moviehdkh.com/";
+  $l="https://yifymovies.tv/movies/";
 } else {
   $search=str_replace(" ","+",$tit);
-  $l="https://www.moviehdkh.com/searchs?q=".$search;
+  $l="https://yifymovies.tv/page/".$page."/?s=".$search;
 }
-$host=parse_url($l)['host'];
-$head=array('Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
-'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2');
+///////////////////////////////////////////////////////////////////////////
+$requestLink=$l;
+$ua = $_SERVER['HTTP_USER_AGENT'];
+$cookie=$base_cookie."hdpopcorns.dat";
+$host=parse_url($requestLink)['host'];
+$head=array(
+'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+'Accept-Language: en-US,en;q=0.5',
+'Accept-Encoding: deflate',
+'Connection: keep-alive',
+'Upgrade-Insecure-Requests: 1');
   $ch = curl_init();
-  curl_setopt($ch, CURLOPT_URL, $l);
+  curl_setopt($ch, CURLOPT_URL, $requestLink);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-  curl_setopt($ch,CURLOPT_REFERER,"https://www.moviehdkh.com");
-  curl_setopt($ch,CURLOPT_HTTPHEADER,$head);
-  curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 10.0; rv:55.0) Gecko/20100101 Firefox/55.0');
+  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
   curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+  curl_setopt($ch,CURLOPT_HTTPHEADER,$head);
+  curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie);
+  curl_setopt($ch, CURLOPT_COOKIEJAR, $cookie);
+  curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'GET');
+  curl_setopt($ch, CURLOPT_HTTPGET, true);
+  curl_setopt($ch, CURLINFO_HEADER_OUT, true);
+  curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
+  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
   curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
   curl_setopt($ch, CURLOPT_TIMEOUT, 15);
-  $html = curl_exec($ch);
-  curl_close($ch);
-//echo $html;
+  curl_setopt($ch, CURLOPT_HEADER,1);
+  $h = curl_exec($ch);
+ if (strpos($h,"503 Service") !== false) {
+  if (strpos($h,'id="cf-dn') === false)
+   $q1= getClearanceLink_old($h,$requestLink);
+  else
+   $q1= getClearanceLink($h,$requestLink);
+  $t1=explode('action="',$h);
+  $t2=explode('"',$t1[1]);
+  $requestLink="https://".$host.$t2[0];
+  $t1=explode("?",$q1);
+  $post=$t1[1];
+$head=array('Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
+'Accept-Encoding: deflate',
+'Content-Type: application/x-www-form-urlencoded',
+'Content-Length: '.strlen($post).'',
+'Referer: https://'.$host.'',
+'Origin: https://'.$host.'',
+'Connection: keep-alive',
+'Upgrade-Insecure-Requests: 1');
+  curl_setopt($ch, CURLOPT_URL, $requestLink);
+  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
+  //curl_setopt($ch,CURLOPT_REFERER,$l1);
+  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,0);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER  ,1);  // RETURN THE CONTENTS OF THE CALL
+  curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie);
+  curl_setopt($ch, CURLOPT_COOKIEJAR, $cookie);
+  curl_setopt($ch, CURLOPT_HTTPHEADER, $head);
+  curl_setopt($ch, CURLOPT_HEADER,1);
+  curl_setopt($ch, CURLOPT_NOBODY,1);
+  curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'POST');
+  curl_setopt($ch, CURLOPT_HTTPGET, false);
+  //curl_setopt($ch, CURLINFO_HEADER_OUT, true);
+  curl_setopt ($ch, CURLOPT_POST, 1);
+  curl_setopt ($ch, CURLOPT_POSTFIELDS, $post);
+  curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
+  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 25);
+  $h = curl_exec($ch);
+  curl_close ($ch);
+  $ch = curl_init($requestLink);
+  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
+  curl_setopt($ch,CURLOPT_REFERER,"https://".$host);
+  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER  ,1);  // RETURN THE CONTENTS OF THE CALL
+  curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie);
+  curl_setopt($ch, CURLOPT_ENCODING,"");
+  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+  $h = curl_exec($ch);
+  curl_close ($ch);
+ } else {
+    curl_close($ch);
+ }
+///////////////////////////////////////////////////////////////////////////
 $r=array();
 if ($tip=="release") {
-  $t1=explode("Daily Update",$html);
-  $html=$t1[1];
-  $videos = explode('div class="ml-item',$html);
+  $videos = explode('<article id="post-',$h);
   unset($videos[0]);
   $videos = array_values($videos);
   foreach($videos as $video) {
+   $t1=explode('"',$video);
+   if (preg_match("/featured/",$t1[0]))
+     $f = "featured";
+   else
+     $f = "post";
    $t1 = explode('href="',$video);
    $t2=explode('"',$t1[1]);
    $link = $t2[0];
    if (strpos($link,"http") === false) $link="https://".$host.$link;
-   $t3 = explode('title="', $video);
+   $t3 = explode('alt="', $video);
    $t4 = explode('"', $t3[1]);
    $title = $t4[0];
    $title=prep_tit($title);
-   $t1 = explode('data-original="', $video);
+   $t1 = explode('src="', $video);
    $t2 = explode('"', $t1[1]);
    $image = $t2[0];
-   $r[]=array($link,$title,$image);
+   if ($f=="post") $r[]=array($link,$title,$image);
   }
 } else {
-  $videos = explode('div class="ml-item',$html);
+  $videos = explode('class="result-item',$h);
   unset($videos[0]);
   $videos = array_values($videos);
   foreach($videos as $video) {
@@ -220,20 +293,21 @@ if ($tip=="release") {
    $t2=explode('"',$t1[1]);
    $link = $t2[0];
    if (strpos($link,"http") === false) $link="https://".$host.$link;
-   $t3 = explode('title="', $video);
+   $t3 = explode('alt="', $video);
    $t4 = explode('"', $t3[1]);
    $title = $t4[0];
    $title=prep_tit($title);
-   $t1 = explode('data-original="', $video);
+   $t1 = explode('src="', $video);
    $t2 = explode('"', $t1[1]);
    $image = $t2[0];
-   $r[]=array($link,$title,$image);
+   if (strpos($link,"/series") === false) $r[]=array($link,$title,$image);
   }
 }
 for ($k=0; $k<count($r);$k++) {
   $link=$r[$k][0];
   $title=$r[$k][1];
   $image=$r[$k][2];
+  $image=str_replace("w92","w185",$image);
   if (!preg_match("/\.jpg/",$image)) $image="blank.jpg";
   $rest = substr($title, -6);
   if (preg_match("/\((\d+)\)/",$rest,$m)) {

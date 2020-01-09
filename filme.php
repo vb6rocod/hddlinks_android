@@ -140,6 +140,13 @@ else
 <TD width="25%"><a href="filme/gdriveplayer_f.php?page=1&tip=release&title=gdriveplayer&link=&sc=" target="_blank">gdriveplayer</a></TD>
 <TD width="25%"><a href="filme/vidcloud9_f.php?page=1&tip=release&title=vidcloud9&link=" target="_blank">vidcloud9</a></TD>
 <TD width="25%"><a href="filme/moviehdkh_f.php?page=1&tip=release&title=moviehdkh&link=" target="_blank">moviehdkh</a></TD>
+<TD width="25%"><a href="filme/yifymovies_f.php?page=1&tip=release&title=yifymovies&link=" target="_blank">yifymovies</a></TD>
+</TR>
+
+<TR>
+<TD width="25%"><a href="filme/videospider.php?page=1&tip=release&title=videospider&link=" target="_blank">videospider</a></TD>
+<TD width="25%"><a href="filme/300mbmoviefree_f.php?page=1&tip=release&title=300mbmoviefree&link=" target="_blank">300mbmoviefree</a></TD>
+<TD width="25%"></TD>
 <TD width="25%"></TD>
 </TR>
 <?php
@@ -147,8 +154,8 @@ if (file_exists($base_pass."tvplay.txt")) {
 echo '
 <TR>
 <TD width="25%"><a href="filme/cineplex_f_main1.php" target="_blank">cineplex</a></TD>
-<TD width="25%"></TD>';
-echo '<TD width="25%"></TD>
+<TD width="25%"></TD>
+<TD width="25%"></TD>
 <TD width="25%"></TD>';
 echo '</TR>';
 } else {

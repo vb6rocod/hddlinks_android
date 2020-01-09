@@ -6,6 +6,9 @@ function str_between($string, $start, $end){
 	return substr($string,$ini,$len);
 }
 include ("../common.php");
+/* =================================================== */
+$l="https://www.300mbmoviefree.com";
+$host=parse_url($l)['host'];
 $page = $_GET["page"];
 $tip= $_GET["tip"];
 $tit=$_GET["title"];
@@ -17,11 +20,11 @@ $has_fav="yes";
 $has_search="yes";
 $has_add="yes";
 $has_fs="yes";
-$fav_target="moviehdkh_f_fav.php?host=https://www.moviehdkh.com";
-$add_target="moviehdkh_f_add.php";
+$fav_target="300mbmoviefree_f_fav.php?host=https://".$host;
+$add_target="300mbmoviefree_f_add.php";
 $add_file="";
-$fs_target="moviehdkh_fs.php";
-$target="moviehdkh_f.php";
+$fs_target="300mbmoviefree_fs.php";
+$target="300mbmoviefree_f.php";
 /* ==================================================== */
 $base=basename($_SERVER['SCRIPT_FILENAME']);
 $p=$_SERVER['QUERY_STRING'];
@@ -167,74 +170,39 @@ if ($page==1) {
 echo '</TR>'."\r\n";
 
 if($tip=="release") {
-  if ($page > 1)
-  $l="https://www.moviehdkh.com/?page=".$page;
-  else
-  $l="https://www.moviehdkh.com/";
+  $l="https://".$host."/movies/page/".$page."/";
 } else {
   $search=str_replace(" ","+",$tit);
-  $l="https://www.moviehdkh.com/searchs?q=".$search;
+  $l = "https://".$host."/page/".$page."/?s=".$search."&submit=Search";
 }
-$host=parse_url($l)['host'];
-$head=array('Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
-'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2');
+
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $l);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-  curl_setopt($ch,CURLOPT_REFERER,"https://www.moviehdkh.com");
-  curl_setopt($ch,CURLOPT_HTTPHEADER,$head);
   curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 10.0; rv:55.0) Gecko/20100101 Firefox/55.0');
   curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
   curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
   curl_setopt($ch, CURLOPT_TIMEOUT, 15);
   $html = curl_exec($ch);
   curl_close($ch);
-//echo $html;
-$r=array();
-if ($tip=="release") {
-  $t1=explode("Daily Update",$html);
-  $html=$t1[1];
-  $videos = explode('div class="ml-item',$html);
-  unset($videos[0]);
-  $videos = array_values($videos);
-  foreach($videos as $video) {
-   $t1 = explode('href="',$video);
-   $t2=explode('"',$t1[1]);
-   $link = $t2[0];
-   if (strpos($link,"http") === false) $link="https://".$host.$link;
-   $t3 = explode('title="', $video);
-   $t4 = explode('"', $t3[1]);
-   $title = $t4[0];
-   $title=prep_tit($title);
-   $t1 = explode('data-original="', $video);
-   $t2 = explode('"', $t1[1]);
-   $image = $t2[0];
-   $r[]=array($link,$title,$image);
-  }
-} else {
-  $videos = explode('div class="ml-item',$html);
-  unset($videos[0]);
-  $videos = array_values($videos);
-  foreach($videos as $video) {
-   $t1 = explode('href="',$video);
-   $t2=explode('"',$t1[1]);
-   $link = $t2[0];
-   if (strpos($link,"http") === false) $link="https://".$host.$link;
-   $t3 = explode('title="', $video);
-   $t4 = explode('"', $t3[1]);
-   $title = $t4[0];
-   $title=prep_tit($title);
-   $t1 = explode('data-original="', $video);
-   $t2 = explode('"', $t1[1]);
-   $image = $t2[0];
-   $r[]=array($link,$title,$image);
-  }
-}
-for ($k=0; $k<count($r);$k++) {
-  $link=$r[$k][0];
-  $title=$r[$k][1];
-  $image=$r[$k][2];
-  if (!preg_match("/\.jpg/",$image)) $image="blank.jpg";
+
+$videos = explode('<article', $html);
+unset($videos[0]);
+$videos = array_values($videos);
+foreach($videos as $video) {
+  $t1=explode('href="',$video);
+  $t2=explode('"',$t1[1]);
+  $link=$t2[0];
+  $t1 = explode('front-title">', $video);
+  $t3 = explode('<',$t1[1]);
+  $title = $t3[0];
+  $title = prep_tit($title);
+  $t1 = explode('url(', $video);
+  $t2 = explode(')', $t1[1]);
+  $image = trim($t2[0]);
+  if (strpos($image,"http") === false) $image="https:".$image;
+  $year="";
+  $imdb="";
   $rest = substr($title, -6);
   if (preg_match("/\((\d+)\)/",$rest,$m)) {
    $year=$m[1];
@@ -243,9 +211,8 @@ for ($k=0; $k<count($r);$k++) {
    $year="";
    $tit_imdb=$title;
   }
-  $imdb="";
   $link_f=$fs_target.'?tip=movie&link='.urlencode($link).'&title='.urlencode(fix_t($title)).'&image='.$image."&sez=&ep=&ep_tit=&year=".$year;
-  if ($title) {
+  if ($title && strpos($link,"/show") === false) {
   if ($n==0) echo '<TR>'."\r\n";
   $val_imdb="tip=movie&title=".urlencode(fix_t($tit_imdb))."&year=".$year."&imdb=".$imdb;
   $fav_link="mod=add&title=".urlencode(fix_t($title))."&link=".urlencode($link)."&image=".urlencode($image)."&year=".$year;

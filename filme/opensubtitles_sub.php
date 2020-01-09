@@ -1,4 +1,5 @@
 <?php
+error_reporting(0);
 $sub=$_POST["id"];
 $srt_name="sub_extern.srt";
 include ("../common.php");
