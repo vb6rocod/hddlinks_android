@@ -5,8 +5,56 @@ function str_between($string, $start, $end){
 	if ($ini == 0) return ""; $ini += strlen($start); $len = strpos($string,$end,$ini) - $ini;
 	return substr($string,$ini,$len);
 }
+function unfuck($js) {
+  $js=str_replace('(+[![]]+[+(+!+[]+(!+[]+[])[!+[]+!+[]+!+[]]+[+!+[]]+[+[]]+[+[]]+[+[]])])[+!+[]+[+[]]]',"'y'",$js);
+  $js = str_replace('+[]','0',$js);
+  $a1 =array(
+   'false' => '![]',
+   'true' => '!![]',
+   'undefined' => '[][[]]',
+   'NaN' => '+[![]]',
+   'Infinity' => '+(+!+[]+(!+[]+[])[!+[]+!+[]+!+[]]+[+!+[]]+[+[]]+[+[]]+[+[]])',
+  );
+  foreach($a1 as $key=>$value) {
+    $js=str_replace($value,$key,$js);
+  }
+  preg_match_all("/\[([\+\!]*0\+?)+\]/",$js,$m);
+  for ($k=0;$k<count($m[0]);$k++) {
+    $s=str_replace("[","",$m[0][$k]);
+    $s=str_replace("]","",$s);
+    $code="\$v=".$s.";";
+    eval ($code);
+    $js=str_replace($m[0][$k],"'".$v."'",$js);
+  }
+
+  $js=str_replace('([false]0[[]])','(falseundefined)',$js);
+  $js=str_replace("(undefined0)'2'",'d',$js);
+  $js=str_replace("(false0)'0'","f",$js);
+  $js=str_replace("(false0)'1'","a",$js);
+  $js=str_replace("(false0)'3'","s",$js);
+  $js=str_replace("(false0)'2'","l",$js);
+  $js=str_replace("(!false0)'1'","r",$js);
+  $js=str_replace("(undefined0)'0'","u",$js);
+  $js=str_replace("(undefined0)'1'","n",$js);
+  preg_match_all("/\[(.*?)\]/",$js,$m);
+  for ($k=0;$k<count($m[0]);$k++) {
+    $s=str_replace("[","",$m[0][$k]);
+    $s=str_replace("]","",$s);
+    $s=str_replace("'","",$s);
+    $code="\$v=".$s.";";
+    eval ($code);
+    $js=str_replace($m[0][$k],"'".$v."'",$js);
+  }
+  $js=str_replace("(falseundefined)'1'","i",$js);
+  $js=str_replace("++","+",$js);
+  $js=str_replace("'","",$js);
+  $js=str_replace("+","",$js);
+  return $js;
+}
 include ("../common.php");
-include ("../util.php");
+/* =================================================== */
+$l="https://moviegaga.to";
+$host=parse_url($l)['host'];
 $page = $_GET["page"];
 $tip= $_GET["tip"];
 $tit=$_GET["title"];
@@ -18,11 +66,11 @@ $has_fav="yes";
 $has_search="yes";
 $has_add="yes";
 $has_fs="yes";
-$fav_target="fsgratis_fav.php?host=https://fsgratis.com";
-$add_target="fsgratis_add.php";
+$fav_target="moviegaga_s_fav.php?host=https://".$host;
+$add_target="moviegaga_s_add.php";
 $add_file="";
-$fs_target="fsgratis_ep.php";
-$target="fsgratis_s.php";
+$fs_target="moviegaga_ep.php";
+$target="moviegaga_s.php";
 /* ==================================================== */
 $base=basename($_SERVER['SCRIPT_FILENAME']);
 $p=$_SERVER['QUERY_STRING'];
@@ -166,89 +214,114 @@ if ($page==1) {
    echo '<TD class="nav" colspan="4" align="right"><a href="'.$prev.'">&nbsp;&lt;&lt;&nbsp;</a> | <a href="'.$next.'">&nbsp;&gt;&gt;&nbsp;</a></TD>'."\r\n";
 }
 echo '</TR>'."\r\n";
-if ($tip == "release")
-   if ($page > 1)
-    $l="https://fsgratis.com/seriale/page/".$page."/";
-   else
-    $l="https://fsgratis.com/seriale/";
-else {
-  $search=str_replace(" ","+",$tit);
-  if ($page == 1)
-    $l="https://fsgratis.com/?s=".$search;
-  else
-    $l="https://fsgratis.com/page/".$page."/?s=".$search;
-}
-$r=array();
-$ua = $_SERVER['HTTP_USER_AGENT'];
+$ua="Mozilla/5.0 (Windows NT 10.0; rv:71.0) Gecko/20100101 Firefox/7";
+if ($tip=="release") {
+  $ref="https://".$host."/browse?t=1&p=".$page;
+  $l="https://".$host."/live";
+  $post="active=true";
+  $head=array('Accept: text/html, */*; q=0.01',
+   'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
+   'Accept-Encoding: deflate',
+   'Content-Type: application/x-www-form-urlencoded; charset=UTF-8',
+   'X-Requested-With: XMLHttpRequest',
+   'Content-Length: 11',
+   'Origin: https://'.$host.'',
+   'Connection: keep-alive',
+   'Referer: '.$ref.'');
   $ch = curl_init();
-  curl_setopt($ch, CURLOPT_URL, $l);
-  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-  curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 10.0; rv:55.0) Gecko/20100101 Firefox/55.0');
+  curl_setopt($ch, CURLOPT_URL,$l);
+  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
   curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
-  curl_setopt($ch, CURLOPT_ENCODING, "");
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER  ,1);
+  curl_setopt($ch, CURLOPT_HTTPHEADER, $head);
+  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+  curl_setopt ($ch, CURLOPT_POST, 1);
+  curl_setopt ($ch, CURLOPT_POSTFIELDS, $post);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+  $h = curl_exec($ch);
+  curl_close ($ch);
+} else {
+  $search=str_replace(" ","%20",$tit);
+  $l="https://".$host."/search?q=".$search."&p=".$page;
+  $head=array('Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+    'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
+    'Accept-Encoding: deflate',
+    'Connection: keep-alive',
+    'Referer: https://'.$host.'');
+  $ch = curl_init($l);
+  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
+  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER  ,1);
+  curl_setopt($ch, CURLOPT_HTTPHEADER, $head);
   curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
   curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
   curl_setopt($ch, CURLOPT_TIMEOUT, 15);
-  $html = curl_exec($ch);
-  curl_close($ch);
-
-$videos = explode('<article', $html);
-
+  $h = curl_exec($ch);
+  $t1=explode('cf.k =',$h);
+  $t2=explode(';',$t1[1]);
+  $js=trim($t2[0]);
+  $jj=unfuck($js);
+  $data_e="";
+  $data_i="";
+  $t1=explode('csdiff',$h);
+  $t2=explode(';',$t1[1]);
+  $code="\$timestamp".str_replace('new Date().getTime()/1000','time()',$t2[0]).";";
+  eval ($code);
+  $csdiff = $timestamp;
+  $timestamp=floor(time() - $csdiff);
+  $token=md5($jj.$data_e.$data_i.$timestamp);
+  $head=array('Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+    'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
+    'Accept-Encoding: deflate',
+    'Connection: keep-alive',
+    'Cookie: timestamp='.$timestamp.'; token='.$token.'',
+    'Referer: https://'.$host.'');
+  curl_setopt($ch, CURLOPT_HTTPHEADER, $head);
+  $h = curl_exec($ch);
+  curl_close ($ch);
+}
+$videos = explode('li class="grid', $h);
 unset($videos[0]);
 $videos = array_values($videos);
-
 foreach($videos as $video) {
-  $t1 = explode('href="', $video);
-  $t2 = explode('"', $t1[1]);
-  $link = $t2[0];
-
-  $t1=explode('class="Title">',$video);
-  //$t2=explode('>',$t1[1]);
-  $t2_0=explode('<',$t1[1]);
-  $t3=str_replace("Vizioneaza Film Online","",$t2_0[0]);
-  $t4=explode("&#8211;",$t3);
-  $title=trim($t4[0]);
-  $title=prep_tit($title);
-  $t1=explode('data-src="',$video);
+  $year="";
+  $t1=explode('href="',$video);
   $t2=explode('"',$t1[1]);
-  $image=$t2[0];
-    if ($link && $title) array_push($r ,array($title,$link, $image));
-  }
-$c=count($r);
-for ($k=0;$k<$c;$k++) {
-  $title=$r[$k][0];
-  $title=str_replace("&#8211;","-",$title);
-  $title=prep_tit($title);
-  $link=$r[$k][1];
-  $image=$r[$k][2];
-  $rest = substr($title, -2);
-  //echo urlencode($rest);
-  if ($rest == " -") $title = substr($title, 0, -2);
-  $rest = substr($title, -6);
-  if (preg_match("/\((\d+)\)/",$rest,$m)) {
-   $year=$m[1];
-   $tit_imdb=trim(str_replace($m[0],"",$title));
-  } else {
-   $year="";
-   $tit_imdb=$title;
-  }
-
+  $link="https://".$host.$t2[0];
+  $t2 = explode('>', $t1[2]);
+  $t3 = explode('<',$t2[1]);
+  $title = $t3[0];
+  $title = prep_tit($title);
+  $t1 = explode('src="', $video);
+  $t2 = explode('"', $t1[1]);
+  $image = trim($t2[0]);
+  if (strpos($image,"http") === false) $image="https:".$image;
+  $t1=explode('"dateCreated">',$video);
+  $t2=explode('<',$t1[1]);
+  $year=$t2[0];
   $imdb="";
-  $link_f=$fs_target.'?tip=series&link='.urlencode($link).'&title='.urlencode(fix_t($title)).'&image='.$image."&sez=&ep=&ep_tit=&year=".$year;
+  $tit_imdb=$title;
+  if (preg_match("/season-(\d+)/i",$link,$m))
+    $sez=$m[1];
+  else
+    $sez="1";
+  $link_f=$fs_target.'?tip=series&link='.urlencode($link).'&title='.urlencode(fix_t($title)).'&image='.$image."&sez=".$sez."&ep=&ep_tit=&year=".$year;
   if ($title) {
   if ($n==0) echo '<TR>'."\r\n";
   $val_imdb="tip=series&title=".urlencode(fix_t($tit_imdb))."&year=".$year."&imdb=".$imdb;
   $fav_link="mod=add&title=".urlencode(fix_t($title))."&link=".urlencode($link)."&image=".urlencode($image)."&year=".$year;
+  if (strpos($image,"i.imgur.com") !== false) $image="r_m.php?file=".$image;
   if ($tast == "NU") {
     echo '<td class="mp" width="25%"><a href="'.$link_f.'" id="myLink'.$w.'" target="_blank" onmousedown="isKeyPressed(event)">
-    <img id="myLink'.$w.'" src="'.$image.'" width="'.$width.'" height="'.$height.'"><BR>'.$title.'</a>
+    <img id="myLink'.$w.'" src="'.$image.'" width="'.$width.'" height="'.$height.'"><BR>'.$title.' ('.$year.')</a>
     <input type="hidden" id="imdb_myLink'.$w.'" value="'.$val_imdb.'">'."\r\n";
     if ($has_add=="yes")
       echo '<a onclick="ajaxrequest('."'".$fav_link."'".')" style="cursor:pointer;">*</a>'."\r\n";
     echo '</TD>'."\r\n";
   } else {
     echo '<td class="mp" width="25%"><a class ="imdb" id="myLink'.$w.'" href="'.$link_f.'" target="_blank">
-    <img src="'.$image.'" width="'.$width.'" height="'.$height.'"><BR>'.$title.'</a>
+    <img src="'.$image.'" width="'.$width.'" height="'.$height.'"><BR>'.$title.' ('.$year.')</a>
     <input type="hidden" id="imdb_myLink'.$w.'" value="'.$val_imdb.'">'."\r\n";
     if ($has_add == "yes")
       echo '<input type="hidden" id="fav_myLink'.$w.'" value="'.$fav_link.'"></a>'."\r\n";

@@ -4,6 +4,8 @@ $file=$_GET["file"];
 $ua = $_SERVER['HTTP_USER_AGENT'];
 if (strpos($file,"filmecinema.net") !== false)
  $cookie=$base_cookie."biz.dat";
+elseif (strpos($file,"cinebloom") !== false)
+ $cookie=$base_cookie."cinebloom.txt";
 else
  $cookie=$base_cookie."hdpopcorns.dat";
 $ch = curl_init();

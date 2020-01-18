@@ -2,6 +2,7 @@
 <?php
 error_reporting(0);
 include ("../common.php");
+include ("../util.php");
 $tit=unfix_t(urldecode($_GET["title"]));
 $image=$_GET["image"];
 $link=urldecode($_GET["link"]);
@@ -10,8 +11,16 @@ $year=$_GET['year'];
 /* ======================================= */
 $width="200px";
 $height="100px";
-$fs_target="soap2day_fs.php";
+$fs_target="cinebloom_fs.php";
 $has_img="no";
+
+  $rest = substr($tit, -6);
+  if (preg_match("/\((\d+)\)/",$rest,$m)) {
+   $year=$m[1];
+   $tit=trim(str_replace($m[0],"",$tit));
+  } else {
+   $year="";
+  }
 ?>
 <html>
 <head>
@@ -31,34 +40,31 @@ function str_between($string, $start, $end){
 }
 echo '<h2>'.$tit.'</h2>';
 $ua = $_SERVER['HTTP_USER_AGENT'];
-//$ua="Mozilla/5.0 (Windows NT 10.0; rv:71.0) Gecko/20100101 Firefox/71.0";
-$cookie=$base_cookie."hdpopcorns.dat";
-$head=array('Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
-'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2');
-$requestLink=$link;
-$host=parse_url($requestLink)['host'];
-  $ch = curl_init($requestLink);
+//$ua="Mozilla/5.0 (Windows NT 10.0; rv:70.0) Gecko/20100101 Firefox/70.0";
+$cookie=$base_cookie."cinebloom.txt";
+  $ch = curl_init($link);
   curl_setopt($ch, CURLOPT_USERAGENT, $ua);
-  curl_setopt($ch,CURLOPT_REFERER,"https://".$host);
-  curl_setopt($ch,CURLOPT_HTTPHEADER,$head);
-  curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie);
+  curl_setopt($ch,CURLOPT_REFERER,"https://www.cinebloom.org");
   curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER  ,1);  // RETURN THE CONTENTS OF THE CALL
+  curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie);
+  //curl_setopt($ch, CURLOPT_HTTPHEADER, $head);
   curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
   curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
   curl_setopt($ch, CURLOPT_TIMEOUT, 15);
   $h = curl_exec($ch);
   curl_close ($ch);
 
-
 $n=0;
-$videos = explode("h4>Season", $h);
+$videos = explode('class="season">', $h);
 $sezoane=array();
 unset($videos[0]);
 //$videos = array_values($videos);
 $videos = array_reverse($videos);
 foreach($videos as $video) {
-  preg_match("/\d+/",$video,$m);
+  $t1=explode('style="float: left;">',$video);
+  $t2=explode("<",$t1[1]);
+  preg_match("/(\d+)/",$t2[0],$m);
   $sezoane[]=$m[0];
 }
 echo '<table border="1" width="100%">'."\n\r";
@@ -83,38 +89,43 @@ if ($p < 10 && $p > 0 && $k > 9) {
 echo '</TABLE>';
 
 foreach($videos as $video) {
-  preg_match("/\d+/",$video,$m);
-  $season=trim($m[0]);
+  $t1=explode('style="float: left;">',$video);
+  $t2=explode("<",$t1[1]);
+  preg_match("/(\d+)/",$t2[0],$m);
+  $season=$m[0];
   $sez = $season;
   echo '<table border="1" width="100%">'."\n\r";
   echo '<TR><td class="sez" style="color:black;background-color:#0a6996;color:#64c8ff;text-align:center" colspan="3">Sezonul '.($sez).'</TD></TR>';
-
-$vids = explode('href="', $video);
-unset($vids[0]);
-//$vids = array_values($vids);
-$vids = array_reverse($vids);
-$n=0;
-foreach($vids as $vid) {
-  $t1=explode('"',$vid);
-  $link="https://".$host.$t1[0];
-  $t2=explode('>',$t1[1]);
-  $t3=explode('<',$t2[1]);
-  $title=trim($t3[0]);
-  //echo $title;
-  //$title=str_replace("&nbsp;"," ",$title);
-  //$title=prep_tit($title);
-  $img_ep=$image;
+  $n=0;
+  $vids = explode("<h5>", $video);
+  unset($vids[0]);
+  //$vids = array_values($vids);
+  $vids = array_reverse($vids);
+  foreach($vids as $vid) {
+  $img_ep="";
   $episod="";
-  $ep_title="";
-  if (preg_match("/(\d+)\.(.*)/",$title,$m)) {      //1.The Man Who Saved Central City
-  //print_r ($m);
-  $episod=$m[1];
-  $ep_tit=trim($m[2]);
+  $ep_tit="";
+
+  $t3=explode('<',$vid);
+  $title=$t3[0];
+
+  if (preg_match("/(\d+)/",$title,$s)) {
+    $episod=$s[0];
+  } else {
+    $episod="";
+  }
+  $t1=explode('</table',$vid);
+  preg_match_all("/(http\S+)(\'|\")/",$t1[0],$x);
+  $link=json_encode($x[1]);
+  //$ep_tit=html_entity_decode($t2[0]);
+  $title=str_replace("&nbsp;"," ",$title);
+  $title=prep_tit($title);
+  $ep_tit="";
   if ($ep_tit)
    $ep_tit_d=$season."x".$episod." ".$ep_tit;
   else
    $ep_tit_d=$season."x".$episod;
-  //}
+
   $link_f=$fs_target.'?tip=series&link='.urlencode($link).'&title='.urlencode(fix_t($tit)).'&image='.$img_ep."&sez=".$season."&ep=".$episod."&ep_tit=".urlencode(fix_t($ep_tit))."&year=".$year;
    if ($n == 0) echo "<TR>"."\n\r";
    if ($has_img == "yes")
@@ -125,7 +136,6 @@ foreach($vids as $vid) {
    if ($n == 3) {
     echo '</TR>'."\n\r";
     $n=0;
-   }
    }
 }  
   if ($n < 3 && $n > 0) {

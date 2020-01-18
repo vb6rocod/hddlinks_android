@@ -1,5 +1,51 @@
 <!doctype html>
 <?php
+function unfuck($js) {
+  $js=str_replace('(+[![]]+[+(+!+[]+(!+[]+[])[!+[]+!+[]+!+[]]+[+!+[]]+[+[]]+[+[]]+[+[]])])[+!+[]+[+[]]]',"'y'",$js);
+  $js = str_replace('+[]','0',$js);
+  $a1 =array(
+   'false' => '![]',
+   'true' => '!![]',
+   'undefined' => '[][[]]',
+   'NaN' => '+[![]]',
+   'Infinity' => '+(+!+[]+(!+[]+[])[!+[]+!+[]+!+[]]+[+!+[]]+[+[]]+[+[]]+[+[]])',
+  );
+  foreach($a1 as $key=>$value) {
+    $js=str_replace($value,$key,$js);
+  }
+  preg_match_all("/\[([\+\!]*0\+?)+\]/",$js,$m);
+  for ($k=0;$k<count($m[0]);$k++) {
+    $s=str_replace("[","",$m[0][$k]);
+    $s=str_replace("]","",$s);
+    $code="\$v=".$s.";";
+    eval ($code);
+    $js=str_replace($m[0][$k],"'".$v."'",$js);
+  }
+
+  $js=str_replace('([false]0[[]])','(falseundefined)',$js);
+  $js=str_replace("(undefined0)'2'",'d',$js);
+  $js=str_replace("(false0)'0'","f",$js);
+  $js=str_replace("(false0)'1'","a",$js);
+  $js=str_replace("(false0)'3'","s",$js);
+  $js=str_replace("(false0)'2'","l",$js);
+  $js=str_replace("(!false0)'1'","r",$js);
+  $js=str_replace("(undefined0)'0'","u",$js);
+  $js=str_replace("(undefined0)'1'","n",$js);
+  preg_match_all("/\[(.*?)\]/",$js,$m);
+  for ($k=0;$k<count($m[0]);$k++) {
+    $s=str_replace("[","",$m[0][$k]);
+    $s=str_replace("]","",$s);
+    $s=str_replace("'","",$s);
+    $code="\$v=".$s.";";
+    eval ($code);
+    $js=str_replace($m[0][$k],"'".$v."'",$js);
+  }
+  $js=str_replace("(falseundefined)'1'","i",$js);
+  $js=str_replace("++","+",$js);
+  $js=str_replace("'","",$js);
+  $js=str_replace("+","",$js);
+  return $js;
+}
 include ("../common.php");
 error_reporting(0);
 $list = glob($base_sub."*.srt");
@@ -133,35 +179,90 @@ function off() {
 <?php
 echo '<h2>'.$tit.$tit2.'</H2>';
 echo '<BR>';
-$ua = $_SERVER['HTTP_USER_AGENT'];
-$head=array('Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
-'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2');
-
-$r=array();
+$rr=array();
+$host=parse_url($link)['host'];
+$ua="Mozilla/5.0 (Windows NT 10.0; rv:71.0) Gecko/20100101 Firefox/7";
+  $ref=$link."/watch";
+  //$ref="https://moviegaga.to/movie/last-man-standing-season-8-jy913z32/watch";
+  $l="https://".$host."/live";
+  $post="active=true";
+  $head=array('Accept: text/html, */*; q=0.01',
+   'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
+   'Accept-Encoding: deflate',
+   'Content-Type: application/x-www-form-urlencoded; charset=UTF-8',
+   'X-Requested-With: XMLHttpRequest',
+   'Content-Length: 11',
+   'Origin: https://'.$host.'',
+   'Connection: keep-alive',
+   'Referer: '.$ref.'');
   $ch = curl_init();
-  curl_setopt($ch, CURLOPT_URL, $link);
-  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-  curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 10.0; rv:55.0) Gecko/20100101 Firefox/55.0');
+  curl_setopt($ch, CURLOPT_URL,$l);
+  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
   curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER  ,1);
+  curl_setopt($ch, CURLOPT_HTTPHEADER, $head);
+  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+  curl_setopt ($ch, CURLOPT_POST, 1);
+  curl_setopt ($ch, CURLOPT_POSTFIELDS, $post);
   curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
   curl_setopt($ch, CURLOPT_TIMEOUT, 15);
-  $html = curl_exec($ch);
-  curl_close($ch);
-  //echo $html;
-  $t1=explode('file": "',$html);
-  $t2=explode('"',$t1[1]);
-  $l=$t2[0];
-$r[]=$l;
+  $h = curl_exec($ch);
+  curl_close ($ch);
+//echo $h;
+  if ($tip=="movie") $ep="1";
+  $pat="/data-epi\=\"(".$ep.")\".*?data-target-i\=\"(\w+)\".*?data-target-e\=\"(\w+)\"/ms";
+  preg_match_all($pat,$h,$m);
+  $t1=explode('cf.k =',$h);
+  $t2=explode(';',$t1[1]);
+  $js=trim($t2[0]);
+  $jj=unfuck($js);
+  $t1=explode('csdiff',$h);
+  $t2=explode(';',$t1[1]);
+  $code="\$timestamp".str_replace('new Date().getTime()/1000','time()',$t2[0]).";";
+  eval ($code);
+  $csdiff = $timestamp;
+  $timestamp=floor(time() - $csdiff);
+  for ($k=0;$k<count($m[0]);$k++) {
+   $data_e=$m[3][$k];
+   $data_i=$m[2][$k];
+   //$timestamp=floor(time() - $csdiff);
+   $token=md5($jj.$data_e.$data_i.$timestamp);
+   $l="https://moviegaga.to/api/get_episode/".$data_i."/".$data_e;
+   $head=array('Accept: application/json, text/javascript, */*; q=0.01',
+    'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
+    'Accept-Encoding: deflate',
+    'X-Requested-With: XMLHttpRequest',
+    'Connection: keep-alive',
+    'Cookie: timestamp='.$timestamp.'; token='.$token.'',
+    'Referer: '.$ref.'');
+   $ch = curl_init();
+   curl_setopt($ch, CURLOPT_URL,$l);
+   curl_setopt($ch, CURLOPT_USERAGENT, $ua);
+   curl_setopt ($ch, CURLOPT_POST, 0);
+   curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+   curl_setopt($ch, CURLOPT_RETURNTRANSFER  ,1);
+   curl_setopt($ch, CURLOPT_HTTPHEADER, $head);
+   curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+   curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+   curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+   $h = curl_exec($ch);
+   curl_close ($ch);
+   $r=json_decode($h,1);
+   $l = $r['data']['sources']['RAW'];
+   if (strpos($l,"http") === false) $l="https:".$l;
+   //echo $l."\n";
+   if ($l) $rr[]=$l;
+}
 echo '<table border="1" width="100%">';
-echo '<TR><TD class="mp">Alegeti un server: Server curent:<label id="server">'.parse_url($r[0])['path'].'</label>
-<input type="hidden" id="file" value="'.urlencode($r[0]).'"></td></TR></TABLE>';
+echo '<TR><TD class="mp">Alegeti un server: Server curent:<label id="server">'.parse_url($rr[0])['host'].'</label>
+<input type="hidden" id="file" value="'.urlencode($rr[0]).'"></td></TR></TABLE>';
 echo '<table border="1" width="100%"><TR>';
-$k=count($r);
+$k=count($rr);
 $x=0;
 for ($i=0;$i<$k;$i++) {
   if ($x==0) echo '<TR>';
-  $c_link=$r[$i];
-  $openload=parse_url($r[$i])['host'];
+  $c_link=$rr[$i];
+  $openload=parse_url($rr[$i])['host'];
   if (preg_match($indirect,$openload)) {
   echo '<TD class="mp"><a href="filme_link.php?file='.urlencode($c_link).'&title='.urlencode(unfix_t($tit.$tit2)).'" target="_blank">'.$openload.'</a></td>';
   } else

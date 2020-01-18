@@ -18,11 +18,11 @@ $has_fav="yes";
 $has_search="yes";
 $has_add="yes";
 $has_fs="yes";
-$fav_target="fsgratis_fav.php?host=https://fsgratis.com";
-$add_target="fsgratis_add.php";
+$fav_target="cinebloom_s_fav.php?host=https://www.cinebloom.org";
+$add_target="cinebloom_s_add.php";
 $add_file="";
-$fs_target="fsgratis_ep.php";
-$target="fsgratis_s.php";
+$fs_target="cinebloom_ep.php";
+$target="cinebloom_s.php";
 /* ==================================================== */
 $base=basename($_SERVER['SCRIPT_FILENAME']);
 $p=$_SERVER['QUERY_STRING'];
@@ -166,64 +166,134 @@ if ($page==1) {
    echo '<TD class="nav" colspan="4" align="right"><a href="'.$prev.'">&nbsp;&lt;&lt;&nbsp;</a> | <a href="'.$next.'">&nbsp;&gt;&gt;&nbsp;</a></TD>'."\r\n";
 }
 echo '</TR>'."\r\n";
-if ($tip == "release")
-   if ($page > 1)
-    $l="https://fsgratis.com/seriale/page/".$page."/";
-   else
-    $l="https://fsgratis.com/seriale/";
-else {
-  $search=str_replace(" ","+",$tit);
-  if ($page == 1)
-    $l="https://fsgratis.com/?s=".$search;
-  else
-    $l="https://fsgratis.com/page/".$page."/?s=".$search;
-}
-$r=array();
 $ua = $_SERVER['HTTP_USER_AGENT'];
+$cookie=$base_cookie."cinebloom.txt";
+
+//$ua="Mozilla/5.0 (Windows NT 10.0; rv:70.0) Gecko/20100101 Firefox/70.0";
+////////////////////////////////////////////////////////////////////////////////////////
+if ($page==100 && $tip !="search") {
+//if (file_exists($cookie)) unlink ($cookie);
+$head=array(
+'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+'Accept-Language: en-US,en;q=0.5',
+'Accept-Encoding: deflate, br',
+'Connection: keep-alive',
+'Upgrade-Insecure-Requests: 1');
+$requestLink="https://www.cinebloom.org/";
   $ch = curl_init();
-  curl_setopt($ch, CURLOPT_URL, $l);
+  curl_setopt($ch, CURLOPT_URL, $requestLink);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-  curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 10.0; rv:55.0) Gecko/20100101 Firefox/55.0');
+  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
   curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
-  curl_setopt($ch, CURLOPT_ENCODING, "");
+  curl_setopt($ch,CURLOPT_HTTPHEADER,$head);
+  curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie);
+  curl_setopt($ch, CURLOPT_COOKIEJAR, $cookie);
+  curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'GET');
+  curl_setopt($ch, CURLOPT_HTTPGET, true);
+  curl_setopt($ch, CURLINFO_HEADER_OUT, true);
+  curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
+  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+  curl_setopt($ch, CURLOPT_HEADER,1);
+  $h = curl_exec($ch);
+ if (strpos($h,"503 Service") !== false) {
+  if (strpos($h,'id="cf-dn') === false)
+   $q1= getClearanceLink_old($h,$requestLink);
+  else
+   $q1= getClearanceLink($h,$requestLink);
+  $t1=explode('action="',$h);
+  $t2=explode('"',$t1[1]);
+  $requestLink="https://www.cinebloom.org".$t2[0];
+  //$requestLink="https://xmovies8.tv".$t2[0];
+  $t1=explode("?",$q1);
+  $post=$t1[1];
+$head=array('Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
+'Accept-Encoding: gzip, deflate, br',
+'Content-Type: application/x-www-form-urlencoded',
+'Content-Length: '.strlen($post).'',
+'Referer: https://www.cinebloom.org',
+'Origin: https://www.cinebloom.org',
+'Connection: keep-alive',
+'Upgrade-Insecure-Requests: 1');
+//$post="r=&id=".$id."&g-recaptcha-response=".$token;
+//echo "<BR>".$post;
+//$ch = curl_init();
+  curl_setopt($ch, CURLOPT_URL, $requestLink);
+  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
+  //curl_setopt($ch,CURLOPT_REFERER,$l1);
+  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,0);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER  ,1);  // RETURN THE CONTENTS OF THE CALL
+  curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie);
+  curl_setopt($ch, CURLOPT_COOKIEJAR, $cookie);
+  curl_setopt($ch, CURLOPT_HTTPHEADER, $head);
+  curl_setopt($ch, CURLOPT_HEADER,1);
+  curl_setopt($ch, CURLOPT_NOBODY,1);
+  curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'POST');
+  curl_setopt($ch, CURLOPT_HTTPGET, false);
+  //curl_setopt($ch, CURLINFO_HEADER_OUT, true);
+  curl_setopt ($ch, CURLOPT_POST, 1);
+  curl_setopt ($ch, CURLOPT_POSTFIELDS, $post);
+  curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
+  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 25);
+  $h = curl_exec($ch);
+  curl_close ($ch);
+  //echo $h;
+///////////////////////////////////
+  //curl_setopt($ch, CURLOPT_URL, $q);
+  //$h = curl_exec($ch);
+  //curl_close($ch);
+ } else {
+    curl_close($ch);
+ }
+}
+////////////////////////////////////////////////////////////////////////////////////////
+if($tip=="release") {
+  $l="https://www.cinebloom.org/tvseries?page=".$page;
+} else {
+  $search=str_replace(" ","+",$tit);
+  $l="https://www.cinebloom.org/searched/tvshows?q=".$search;
+}
+$host=parse_url($l)['host'];
+  $ch = curl_init($l);
+  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
+  curl_setopt($ch,CURLOPT_REFERER,"https://www.cinebloom.org");
+  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER  ,1);  // RETURN THE CONTENTS OF THE CALL
+  curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie);
+  //curl_setopt($ch, CURLOPT_HTTPHEADER, $head);
+  curl_setopt($ch, CURLOPT_HEADER,1);
   curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
   curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
   curl_setopt($ch, CURLOPT_TIMEOUT, 15);
   $html = curl_exec($ch);
-  curl_close($ch);
-
-$videos = explode('<article', $html);
-
+  curl_close ($ch);
+//echo $html;
+if (strpos($html,"HTTP/1.1 403") !== false) {
+  if (file_exists($cookie)) unlink ($cookie);
+  if (file_exists($base_cookie."max_time_cinebloom.txt")) unlink ($base_cookie."max_time_cinebloom.txt");
+  if (file_exists($base_cookie."max_time_cinebloom.txt")) unlink ($base_cookie."max_time_cinebloom.txt");
+  echo '<H2>token expirat! GO Back and try again.</H2>';
+  die();
+}
+$videos = explode('<li class="grid-item', $html);
 unset($videos[0]);
 $videos = array_values($videos);
-
 foreach($videos as $video) {
-  $t1 = explode('href="', $video);
-  $t2 = explode('"', $t1[1]);
-  $link = $t2[0];
-
-  $t1=explode('class="Title">',$video);
-  //$t2=explode('>',$t1[1]);
-  $t2_0=explode('<',$t1[1]);
-  $t3=str_replace("Vizioneaza Film Online","",$t2_0[0]);
-  $t4=explode("&#8211;",$t3);
-  $title=trim($t4[0]);
-  $title=prep_tit($title);
-  $t1=explode('data-src="',$video);
+  $t1 = explode('href="',$video);
   $t2=explode('"',$t1[1]);
-  $image=$t2[0];
-    if ($link && $title) array_push($r ,array($title,$link, $image));
-  }
-$c=count($r);
-for ($k=0;$k<$c;$k++) {
-  $title=$r[$k][0];
-  $title=str_replace("&#8211;","-",$title);
+  $link = $t2[0];
+  //if (strpos($link,"http") === false) $link="https://".$host.$link;
+  $t3 = explode('alt="', $video);
+  $t4 = explode('"', $t3[1]);
+  $title = $t4[0];
   $title=prep_tit($title);
-  $link=$r[$k][1];
-  $image=$r[$k][2];
-  $rest = substr($title, -2);
-  //echo urlencode($rest);
-  if ($rest == " -") $title = substr($title, 0, -2);
+  $t1 = explode('src="', $video);
+  $t2 = explode('"', $t1[1]);
+  $image = "https://www.cinebloom.org".$t2[0];
   $rest = substr($title, -6);
   if (preg_match("/\((\d+)\)/",$rest,$m)) {
    $year=$m[1];
@@ -232,13 +302,13 @@ for ($k=0;$k<$c;$k++) {
    $year="";
    $tit_imdb=$title;
   }
-
   $imdb="";
   $link_f=$fs_target.'?tip=series&link='.urlencode($link).'&title='.urlencode(fix_t($title)).'&image='.$image."&sez=&ep=&ep_tit=&year=".$year;
-  if ($title) {
+  if ($title && strpos($link,"/tvshows") !== false) {
   if ($n==0) echo '<TR>'."\r\n";
   $val_imdb="tip=series&title=".urlencode(fix_t($tit_imdb))."&year=".$year."&imdb=".$imdb;
   $fav_link="mod=add&title=".urlencode(fix_t($title))."&link=".urlencode($link)."&image=".urlencode($image)."&year=".$year;
+  $image="r_m.php?file=".$image;
   if ($tast == "NU") {
     echo '<td class="mp" width="25%"><a href="'.$link_f.'" id="myLink'.$w.'" target="_blank" onmousedown="isKeyPressed(event)">
     <img id="myLink'.$w.'" src="'.$image.'" width="'.$width.'" height="'.$height.'"><BR>'.$title.'</a>

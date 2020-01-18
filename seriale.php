@@ -118,6 +118,12 @@ document.onkeypress =  zx;
 <TD width="25%"><a href="filme/gdriveplayer_s.php?page=1&tip=release&title=gdriveplayer&link=" target="_blank">gdriveplayer</a></TD>
 <TD width="25%"><a href="filme/vidcloud9_s.php?page=1&tip=release&title=vidcloud9&link=" target="_blank">vidcloud9</a></TD>
 <TD width="25%"><a href="filme/yifymovies_s.php?page=1&tip=release&title=yifymovies&link=" target="_blank">yifymovies</a></TD>
+<TD width="25%"><a href="filme/cinebloom_x.php" target="_blank">cinebloom</a></TD>
+</TR>
+<TR>
+<TD width="25%"><a href="filme/moviegaga_s.php?page=1&tip=release&title=moviegaga&link=" target="_blank">moviegaga</a></TD>
+<TD width="25%"></TD>
+<TD width="25%"></TD>
 <TD width="25%"></TD>
 </TR>
 <?php

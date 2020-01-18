@@ -1,7 +1,7 @@
 <!doctype html>
 <?php
 include ("../common.php");
-error_reporting(0);
+//error_reporting(0);
 $list = glob($base_sub."*.srt");
    foreach ($list as $l) {
     str_replace(" ","%20",$l);
@@ -38,6 +38,8 @@ $year=$_GET["year"];
 if ($tip=="movie") {
 $tit2="";
 } else {
+$t1=explode("- Season",$tit);
+$tit=trim($t1[0]);
 if ($ep_title)
    $tit2=" - ".$sez."x".$ep." ".$ep_title;
 else
@@ -133,27 +135,84 @@ function off() {
 <?php
 echo '<h2>'.$tit.$tit2.'</H2>';
 echo '<BR>';
-$ua = $_SERVER['HTTP_USER_AGENT'];
-$head=array('Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
-'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2');
-
-$r=array();
+$ua="Mozilla/5.0 (Windows NT 10.0; rv:71.0) Gecko/20100101 Firefox/71.0";
+//$ua = $_SERVER['HTTP_USER_AGENT'];
+  $r=array();
+  $s=array();
+$x=json_decode($link,1);
+for ($k=0;$k<count($x);$k++) {
+  $link=$x[$k];
+  if (strpos($link,"tvshows/multi") !== false) {
+   preg_match("/(tt\d+)\/(\d+)\/(\d+)/",$link,$m);
+   //https://videospider.stream/getvideo?key=jMo77zpsptGcdUgA&video_id=tt6987476&tv=1&s=3&e=1&ticket=x3dhh5zm8sqtqr3vq9fhplnmhctwb1
+  $l="https://videospider.in/getvideo?key=jMo77zpsptGcdUgA&video_id=".$m[1]."&s=".$m[2]."&e=".$m[3]."&tv=1&tmdb=0";
+  //echo $l;
   $ch = curl_init();
-  curl_setopt($ch, CURLOPT_URL, $link);
+  curl_setopt($ch, CURLOPT_URL, $l);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-  curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 10.0; rv:55.0) Gecko/20100101 Firefox/55.0');
+  curl_setopt($ch,CURLOPT_REFERER,"https://www.cinebloom.org");
+  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
   curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
   curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
   curl_setopt($ch, CURLOPT_TIMEOUT, 15);
-  $html = curl_exec($ch);
+  curl_setopt($ch, CURLOPT_HEADER,1);
+  $h = curl_exec($ch);
   curl_close($ch);
-  //echo $html;
-  $t1=explode('file": "',$html);
+  if (preg_match("/Location:\s*(.+)/",$h,$m))
+    $l1=trim($m[1]);
+    //echo $l1;
+  $ch = curl_init();
+  curl_setopt($ch, CURLOPT_URL, $l1);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+  //curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
+  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
+  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+  $h = curl_exec($ch);
+  //echo $h;
+  $t1=explode('var token = "',$h);
   $t2=explode('"',$t1[1]);
-  $l=$t2[0];
-$r[]=$l;
+  $token=$t2[0];
+  $serv1=array();
+  $name=array();
+  $videos=explode('data-server="',$h);
+  unset($videos[0]);
+  $videos = array_values($videos);
+  foreach($videos as $video) {
+    $t1=explode('"',$video);
+    $server=$t1[0];
+    $t1=explode('data-server-id="',$video);
+    $t2=explode('"',$t1[1]);
+    $id=$t2[0];
+    $t1=explode('title="',$video);
+    $t2=explode('"',$t1[1]);
+    $name[]=$t2[0];
+    $serv1[]=array('serv' => $server,'id' => $id);
+  }
+  for ($z=0;$z<count($serv1);$z++) {
+  $server=$serv1[$z]['serv'];
+  $id=$serv1[$z]['id'];
+  $l1="https://oload.party/loadsource.php?server=".$server."&id=".$id."&token=".$token;
+  curl_setopt($ch, CURLOPT_URL, $l1);
+  $h = curl_exec($ch);
+  //echo $h;
+  //$h=file_get_contents($l1);
+  $t1=explode('iframe src="',$h);
+  $t2=explode('"',$t1[1]);
+  $r[]=$t2[0];
+  $s[]=parse_url($t2[0])['host'];
+  }
+  curl_close($ch);
+  } else {
+   $r[]=$link;
+   $s[]=parse_url($link)['host'];
+  }
+}
+//print_r ($r);
 echo '<table border="1" width="100%">';
-echo '<TR><TD class="mp">Alegeti un server: Server curent:<label id="server">'.parse_url($r[0])['path'].'</label>
+echo '<TR><TD class="mp">Alegeti un server: Server curent:<label id="server">'.$s[0].'</label>
 <input type="hidden" id="file" value="'.urlencode($r[0]).'"></td></TR></TABLE>';
 echo '<table border="1" width="100%"><TR>';
 $k=count($r);
@@ -163,9 +222,9 @@ for ($i=0;$i<$k;$i++) {
   $c_link=$r[$i];
   $openload=parse_url($r[$i])['host'];
   if (preg_match($indirect,$openload)) {
-  echo '<TD class="mp"><a href="filme_link.php?file='.urlencode($c_link).'&title='.urlencode(unfix_t($tit.$tit2)).'" target="_blank">'.$openload.'</a></td>';
+  echo '<TD class="mp"><a href="filme_link.php?file='.urlencode($c_link).'&title='.urlencode(unfix_t($tit.$tit2)).'" target="_blank">'.$s[$i].'</a></td>';
   } else
-  echo '<TD class="mp"><a id="myLink" href="#" onclick="changeserver('."'".$openload."','".urlencode($c_link)."'".');return false;">'.$openload.'</a></td>';
+  echo '<TD class="mp"><a id="myLink" href="#" onclick="changeserver('."'".$s[$i]."','".urlencode($c_link)."'".');return false;">'.$s[$i].'</a></td>';
   $x++;
   if ($x==6) {
     echo '</TR>';
@@ -195,10 +254,6 @@ if ($tip=="movie") {
   $from="";
   $link_page="";
 }
-  $rest = substr($tit3, -6);
-  if (preg_match("/\((\d+)\)/",$rest,$m)) {
-   $tit3=trim(str_replace($m[0],"",$tit3));
-  }
 $sub_link ="from=".$from."&tip=".$tip."&sez=".$sez."&ep=".$ep."&imdb=".$imdbid."&title=".urlencode(fix_t($tit3))."&link=".$link_page."&ep_tit=".urlencode(fix_t($tit2))."&year=".$year;
 echo '<br>';
 echo '<table border="1" width="100%">';

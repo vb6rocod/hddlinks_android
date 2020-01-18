@@ -5,9 +5,9 @@ $host=$_GET['host'];
 $page_title="Seriale favorite";
 $width="200px";
 $height="278px";
-$add_target="soap2day_s_add.php";
-$fs_target="soap2day_ep.php";
-$file=$base_fav."soap2day_s.dat";
+$add_target="cinebloom_s_add.php";
+$fs_target="cinebloom_ep.php";
+$file=$base_fav."cinebloom_s.dat";
 ?>
 <html><head>
 <meta http-equiv="content-type" content="text/html; charset=UTF-8">
@@ -94,6 +94,7 @@ function str_between($string, $start, $end){
 $w=0;
 $n=0;
 echo '<H2>'.$page_title.'</H2>';
+$arr=array();
 $h="";
 if (file_exists($file)) {
   $h=file_get_contents($file);
@@ -125,16 +126,17 @@ foreach($arr as $key => $value) {
 	$link = urldecode($arr[$key]["link"]);
     $title = unfix_t(urldecode($key));
     $image=urldecode($arr[$key]["image"]);
-    $image=$host.parse_url($image)['path'];
-  $rest = substr($title, -6);
-  if (preg_match("/\((\d+)\)/",$rest,$m)) {
-   $year=$m[1];
-   $tit_imdb=trim(str_replace($m[0],"",$title));
-  } else {
-   $year="";
-   $tit_imdb=$title;
+    //$image=$host.parse_url($image)['path'];
+    $year="";
+    //$link=$host.parse_url($link)['path'];
+    $rest = substr($title, -6);
+    if (preg_match("/\((\d+)\)/",$rest,$m)) {
+     $year=$m[1];
+     $tit_imdb=trim(str_replace($m[0],"",$title));
+    } else {
+     $year="";
+     $tit_imdb=$title;
   }
-    $link=$host.parse_url($link)['path'];
     $link_f=$fs_target.'?tip=series&link='.urlencode($link).'&title='.urlencode(fix_t($title)).'&image='.$image."&sez=&ep=&ep_tit=&year=".$year;
   if ($n==0) echo '<TR>'."\r\n";
   $val_imdb="tip=series&title=".urlencode(fix_t($tit_imdb))."&year=".$year."&imdb=".$imdb;

@@ -7,6 +7,12 @@ function str_between($string, $start, $end){
 }
 include ("../common.php");
 include ("../util.php");
+/* links from https://soapgate.org/ */
+$base="https://soap2day.to";
+//$base="https://soap2day.se";
+//$base="https://soap2day.is";
+//$base="https://soap2day.im";
+$host=parse_url($base)['host'];
 $page = $_GET["page"];
 $tip= $_GET["tip"];
 $tit=$_GET["title"];
@@ -18,7 +24,7 @@ $has_fav="yes";
 $has_search="yes";
 $has_add="yes";
 $has_fs="yes";
-$fav_target="soap2day_f_fav.php?host=https://soap2day.com";
+$fav_target="soap2day_f_fav.php?host=https://".$host;
 $add_target="soap2day_f_add.php";
 $add_file="";
 $fs_target="soap2day_fs.php";
@@ -170,7 +176,7 @@ echo '</TR>'."\r\n";
 $ua = $_SERVER['HTTP_USER_AGENT'];
 //$ua="Mozilla/5.0 (Windows NT 10.0; rv:71.0) Gecko/20100101 Firefox/71.0";
 $cookie=$base_cookie."hdpopcorns.dat";
-$requestLink="https://soap2day.com";  // ? de ce android trebuie cu https ???????????
+$requestLink="https://".$host;  // ? de ce android trebuie cu https ???????????
 if ($page==1 && $tip =="release") {
 if (file_exists($cookie)) unlink ($cookie);
 $head=array(
@@ -203,7 +209,7 @@ $head=array(
    $q1= getClearanceLink($h,$requestLink);
   $t1=explode('action="',$h);
   $t2=explode('"',$t1[1]);
-  $requestLink="https://soap2day.com".$t2[0];
+  $requestLink="https://".$host.$t2[0];
   $t1=explode("?",$q1);
   $post=$t1[1];
   //echo $post;
@@ -212,8 +218,8 @@ $head=array('Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q
 'Accept-Encoding: gzip, deflate, br',
 'Content-Type: application/x-www-form-urlencoded',
 'Content-Length: '.strlen($post).'',
-'Referer: https://soap2day.com',
-'Origin: https://soap2day.com',
+'Referer: https://'.$host.'',
+'Origin: https://'.$host.'',
 'Connection: keep-alive',
 'Upgrade-Insecure-Requests: 1');
 
@@ -244,10 +250,10 @@ $head=array('Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q
 }
 ////////////////////////////////////////////
 if($tip=="release") {
-  $l="https://soap2day.com/movielist?page=".$page;
+  $l="https://".$host."/movielist?page=".$page;
 } else {
   $search=str_replace(" ","%20",$tit);
-  $l="https://soap2day.com/search/keyword/".$search;
+  $l="https://".$host."/search/keyword/".$search;
 }
 $host=parse_url($l)['host'];
 $head=array('Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
@@ -255,7 +261,7 @@ $head=array('Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $l);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-  curl_setopt($ch,CURLOPT_REFERER,"https://soap2day.com");
+  curl_setopt($ch,CURLOPT_REFERER,"https://".$host);
   curl_setopt($ch,CURLOPT_HTTPHEADER,$head);
   curl_setopt($ch, CURLOPT_USERAGENT, $ua);
   curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie);

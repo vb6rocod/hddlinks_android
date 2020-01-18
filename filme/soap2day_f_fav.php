@@ -134,7 +134,7 @@ foreach($arr as $key => $value) {
    $year="";
    $tit_imdb=$title;
   }
-    //$link=$host.parse_url($link)['path'];
+    $link=$host.parse_url($link)['path'];
     $link_f=$fs_target.'?tip=movie&link='.urlencode($link).'&title='.urlencode(fix_t($title)).'&image='.$image."&sez=&ep=&ep_tit=&year=".$year;
   if ($n==0) echo '<TR>'."\r\n";
   $val_imdb="tip=movie&title=".urlencode(fix_t($tit_imdb))."&year=".$year."&imdb=".$imdb;

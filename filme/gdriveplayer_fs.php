@@ -206,11 +206,13 @@ $host=parse_url($link)['host'];
     } else {
       parse_str(parse_url($value)['query'],$output);
       $id=$output['id'];
+      //echo $value;
       // https://gdriveplayer.us/database.php?id=5b5ca25ea1ae2bfe21fea56a7e92df27&t=1577309248431
       $l="https://gdriveplayer.us/database.php?id=".$id."&t=".time();
       //echo $l;
+      //$l="http://gdrivecdn.us/drive/index.php?id=".$id;
       $ch = curl_init();
-      curl_setopt($ch, CURLOPT_URL, $l);
+      curl_setopt($ch, CURLOPT_URL, $value);
       curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
       curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows; U; Windows NT 6.1; en-US; rv:1.9.1.2) Gecko/20090729 Firefox/3.5.2 GTB5');
       curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
@@ -224,37 +226,8 @@ $host=parse_url($link)['host'];
       curl_close($ch);
       //echo $h;
       if (preg_match_all("/Location\:\s+(.+)/",$h,$m)) {
-        $filelink=$m[1][count($m[1])-1];
-        if (strpos($filelink,"http") === false) $filelink="https:".$filelink;
-        $t1=explode("@@",$filelink);
-        $filelink= $t1[0];
-        if (preg_match("/streaming\.php/",$filelink)) { //vidnode vidcloud9
-         $ch = curl_init();
-         curl_setopt($ch, CURLOPT_URL, $filelink);
-         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-         curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 10.0; rv:71.0) Gecko/20100101 Firefox/71.0');
-         curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
-         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-         curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
-         curl_setopt($ch, CURLOPT_TIMEOUT, 15);
-         $h2 = curl_exec($ch);
-         curl_close($ch);
-         $videos=explode('data-video="',$h2);
-         unset ($videos[0]);
-         $videos=array_values($videos);
-         foreach ($videos as $video) {
-           $t1=explode('"',$video);
-           $l=$t1[0];
-           if ($l && strpos($l,"http") === false) $l="https:".$l;
-           if ($l) {
-             $r[]="https://database.gdriveplayer.us?".urlencode("file=".urlencode($l)."&sub=".urlencode($srt)."&mod=indirect");
-             $serv[]=parse_url($l)['host'].$ad;
-           }
-         }
-        } else {
-             $r[]="https://database.gdriveplayer.us?".urlencode("file=".urlencode($filelink)."&sub=".urlencode($srt)."&mod=indirect");
-             $serv[]=parse_url($filelink)['host'].$ad;
-        }
+        $serv[]="picasa".$ad;
+        $r[]="https://database.gdriveplayer.us?".urlencode("file=".urlencode(trim($value))."&sub=".urlencode($srt)."&mod=indirect");
       } else {
         $l="https://gdriveplayer.us/?database=".$id.".m3u8";
         $r[]="https://database.gdriveplayer.us?".urlencode("file=".urlencode($l)."&sub=".urlencode($srt)."&mod=direct");
