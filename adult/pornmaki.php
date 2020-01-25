@@ -226,7 +226,7 @@ $host=parse_url($l)['host'];
   curl_setopt($ch, CURLOPT_TIMEOUT, 15);
   $html = curl_exec($ch);
   curl_close($ch);
-
+  //echo $html;
 $r=array();
 $videos = explode('script>stat',$html);
 unset($videos[0]);
@@ -236,7 +236,8 @@ foreach($videos as $video) {
   $t2 = explode('"', $t1[1]);
   $link = "http://pornmaki.com".trim($t2[0]);
   $t1=explode('class="pic-name">',$video);
-  $t3=explode('<',$t1[1]);
+  $t2=explode('>',$t1[1]);
+  $t3=explode('<',$t2[1]);
   $title=$t3[0];
   $title = trim(strip_tags($title));
   $title = prep_tit($title);

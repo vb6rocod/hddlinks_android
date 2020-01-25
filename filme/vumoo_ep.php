@@ -48,7 +48,7 @@ $head=array('Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q
   curl_setopt($ch, CURLOPT_TIMEOUT, 15);
   $html = curl_exec($ch);
   curl_close($ch);
-
+//echo $html;
 
 $n=0;
 
@@ -59,14 +59,14 @@ $t1=explode("- Season",$tit);
 $tit1=trim($t1[0]);
 $t1 = explode("- Miniseries",$tit1);
 $tit1=trim($t1[0]);
-
+$s=array();
 $videos = explode('embedUrl="', $html);
 unset($videos[0]);
 $videos = array_values($videos);
 foreach($videos as $video) {
 
   $t1 = explode('"', $video);
-  $link = $t1[0];
+  //$link = $t1[0];
   //echo $link1;
   $t3 = explode('>', $t1[1]);
   $t4 = explode('<', $t3[1]);
@@ -74,10 +74,16 @@ foreach($videos as $video) {
   if (preg_match("/s(\d+)e(\d+)/i",$title,$m)) {
   $episod=round($m[2]);
   }
-  $img_ep=$image;
-  $season=$sez;
   $ep_tit=$title;
-
+  $s[$episod]=$ep_tit;
+}
+//$s=array_unique($s);
+//print_r ($s);
+$season=$sez;
+$img_ep=$image;
+foreach ($s as $key=>$value) {
+  $episod=$key;
+  $ep_tit=$value;
   if ($ep_tit)
    $ep_tit_d=$season."x".$episod." ".$ep_tit;
   else

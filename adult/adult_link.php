@@ -603,19 +603,20 @@ if (preg_match("/4tube\.com/",$host)) {
   $t1=explode('data-streamkey="',$h);
   $t2=explode('"',$t1[1]);
   $id=$t2[0];
+  /*
   $c=file_get_contents($cookie);
   $t1=explode('sb_csrf_session',$c);
   $t2=explode('#',$t1[1]);
   $csrf=trim($t2[0]);
-
+  */
   $l="https://pl.spankbang.com/api/videos/stream";
   $post="id=".$id."&data=0&sb_csrf_session=".$csrf;
-
+  $post="id=".$id."&data=0";
   $head=array('Accept: application/json, text/javascript, */*; q=0.01',
   'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
   'Referer: https://pl.spankbang.com/30gee/video/thickness',
+  'Origin: https://pl.spankbang.com',
   'Content-Type: application/x-www-form-urlencoded; charset=UTF-8',
-  'X-CSRFToken: '.$csrf.'',
   'X-Requested-With: XMLHttpRequest');
 
   $ch = curl_init();
@@ -635,16 +636,16 @@ if (preg_match("/4tube\.com/",$host)) {
 
   $r=json_decode($x,1);
   //print_r ($r);
-  if (isset($r["stream_url_1080p"]) && $r["stream_url_1080p"] !="")
-    $out=$r["stream_url_1080p"][0];
-  elseif (isset($r["stream_url_720p"]) && $r["stream_url_720p"] !="")
-    $out=$r["stream_url_720p"][0];
-  elseif (isset($r["stream_url_480p"]) && $r["stream_url_480p"] !="")
-    $out=$r["stream_url_480p"][0];
-  elseif (isset($r["stream_url_360p"]) && $r["stream_url_360p"] !="")
-    $out=$r["stream_url_360p"][0];
-  elseif (isset($r["stream_url_240p"]) && $r["stream_url_240p"] !="")
-    $out=$r["stream_url_240p"][0];
+  if (isset($r["1080p"]) && $r["1080p"] !="")
+    $out=$r["1080p"][0];
+  elseif (isset($r["720p"]) && $r["720p"] !="")
+    $out=$r["720p"][0];
+  elseif (isset($r["480p"]) && $r["480p"] !="")
+    $out=$r["480p"][0];
+  elseif (isset($r["360p"]) && $r["360p"] !="")
+    $out=$r["360p"][0];
+  elseif (isset($r["240p"]) && $r["240p"] !="")
+    $out=$r["240p"][0];
   else
     $out="";
 } else if (preg_match("/thumbzilla\.com/",$host)) {

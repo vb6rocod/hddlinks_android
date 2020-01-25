@@ -17,7 +17,9 @@ $has_fav="yes";
 $has_search="yes";
 $has_add="yes";
 $has_fs="yes";
-$fav_target="moonline_f_fav.php?host=https://moonline.tv";
+$ref="https://moonline.ws";
+$host=parse_url($ref)['host'];
+$fav_target="moonline_f_fav.php?host=https://".$ref;
 $add_target="moonline_f_add.php";
 $add_file="";
 $fs_target="moonline_fs.php";
@@ -167,10 +169,10 @@ if ($page==1) {
 echo '</TR>'."\r\n";
 
 if($tip=="release") {
-  $l="https://moonline.tv/movies/page/".$page."/";
+  $l="https://".$host."/movies/page/".$page."/";
 } else {
   $search=str_replace(" ","+",$tit);
-  $l="https://moonline.tv/?s=".$search;
+  $l="https://".$host."/?s=".$search;
 }
 $host=parse_url($l)['host'];
 $ua = $_SERVER['HTTP_USER_AGENT'];
@@ -179,7 +181,7 @@ $head=array('Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $l);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-  curl_setopt($ch,CURLOPT_REFERER,"https://moonline.tv");
+  curl_setopt($ch,CURLOPT_REFERER,"https://".$host);
   curl_setopt($ch,CURLOPT_HTTPHEADER,$head);
   curl_setopt($ch, CURLOPT_USERAGENT, $ua);
   curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);

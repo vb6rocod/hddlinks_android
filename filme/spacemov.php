@@ -196,7 +196,7 @@ $head=array(
   curl_setopt($ch, CURLOPT_TIMEOUT, 15);
   curl_setopt($ch, CURLOPT_HEADER,1);
   $h = curl_exec($ch);
-  file_put_contents("1.txt",$h);
+  //file_put_contents("1.txt",$h);
  if (strpos($h,"503 Service") !== false) {
   if (strpos($h,'id="cf-dn') === false)
    $q1= getClearanceLink_old($h,$requestLink);

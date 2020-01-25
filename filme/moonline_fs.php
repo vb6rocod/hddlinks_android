@@ -134,12 +134,13 @@ function off() {
 echo '<h2>'.$tit.$tit2.'</H2>';
 echo '<BR>';
 $ua = $_SERVER['HTTP_USER_AGENT'];
+$host=parse_url($link)['host'];
 $head=array('Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
 'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2');
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $link);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-  curl_setopt($ch,CURLOPT_REFERER,"https://moonline.tv");
+  curl_setopt($ch,CURLOPT_REFERER,"https://".$host);
   curl_setopt($ch,CURLOPT_HTTPHEADER,$head);
   curl_setopt($ch, CURLOPT_USERAGENT, $ua);
   curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
@@ -164,7 +165,7 @@ $s=array();
     $t1=explode("data-nume='",$video);
     $t2=explode("'",$t1[1]);
     $nume=$t2[0];
-    $l="https://moonline.tv?type=".$type."&post=".$post."&nume=".$nume;
+    $l="https://".$host."?type=".$type."&post=".$post."&nume=".$nume;
     $r[]=$l;
     $t1=explode("class='server'>",$video);
     $t2=explode("<",$t1[1]);

@@ -95,10 +95,10 @@ document.onkeypress =  zx;
 </TR>
 
 <TR>
-<TD width="25%"><a href="filme/0123netflix_s.php?page=1&tip=release&title=0123netflix&link=" target="_blank">0123netflix</a></TD>
-<TD width="25%"><a href="filme/vipmovies_s.php?page=1&tip=release&title=vipmovies&link=" target="_blank">vipmovies</a></TD>
 <TD width="25%"><a href="filme/ffmovies_ss.php?page=1&tip=release&title=ffmoviess&link=" target="_blank">ffmovies</a></TD>
 <TD width="25%"><a href="filme/go2watch_s.php?page=1&tip=release&title=go2watch&link=" target="_blank">go2watch</a></TD>
+<TD width="25%"><a href="filme/moviegaga_s.php?page=1&tip=release&title=moviegaga&link=" target="_blank">moviegaga</a></TD>
+<TD width="25%"><a href="filme/cinebloom_x.php" target="_blank">cinebloom</a></TD>
 </TR>
 
 <TR>
@@ -118,13 +118,7 @@ document.onkeypress =  zx;
 <TD width="25%"><a href="filme/gdriveplayer_s.php?page=1&tip=release&title=gdriveplayer&link=" target="_blank">gdriveplayer</a></TD>
 <TD width="25%"><a href="filme/vidcloud9_s.php?page=1&tip=release&title=vidcloud9&link=" target="_blank">vidcloud9</a></TD>
 <TD width="25%"><a href="filme/yifymovies_s.php?page=1&tip=release&title=yifymovies&link=" target="_blank">yifymovies</a></TD>
-<TD width="25%"><a href="filme/cinebloom_x.php" target="_blank">cinebloom</a></TD>
-</TR>
-<TR>
-<TD width="25%"><a href="filme/moviegaga_s.php?page=1&tip=release&title=moviegaga&link=" target="_blank">moviegaga</a></TD>
-<TD width="25%"></TD>
-<TD width="25%"></TD>
-<TD width="25%"></TD>
+<TD width="25%"><a href="filme/dwatchmovies_s.php?page=1&tip=release&title=dwatchmovies&link=" target="_blank">dwatchmovies</a></TD>
 </TR>
 <?php
 if (file_exists($base_pass."tvplay.txt")) {

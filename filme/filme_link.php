@@ -1089,7 +1089,8 @@ $s=$s."bitporno\.com|thevideobee\.to|mangovideo\.|smartshare\.tv|datoporn\.co|xs
 $s=$s."database\.serialeonline\.to|drive\.google\.com|videomega\.|vidload\.co|mixdrop\.|mystream\.to|mstream\.cloud";
 $s=$s."|hxload\.|bazavox\.com|cloud\.vidhubstr\.org|vidia\.tv|gomostream\.com|viduplayer\.com|leaked-celebrities\.";
 $s=$s."|prostream\.to|videobin\.co|upstream\.to|playtvid\.com|jetload\.net|vidfast\.co|clipwatching\.";
-$s=$s."|video\.filmeserialeonline\.org|streamwire\.|cloudvid\.icu|mstream\.xyz|streamhoe\.online|videyo\./i";
+$s=$s."|video\.filmeserialeonline\.org|streamwire\.|cloudvid\.icu|mstream\.xyz|streamhoe\.online|videyo\.";
+$s=$s."|fastvid\.co|vidload\.net|rovideo\.net\/embed/i";
 /////////////////////////////////////////////
 //$x=preg_grep($s,$links);
 //print_r ($x);
@@ -1109,15 +1110,16 @@ for ($i=0;$i<count($links);$i++) {
     }
   }
   //echo $cur_link."\n";
-  if (preg_match("/bit\.ly|goo\.gl|hideiframe\.com|leaked-celebrities\.|video\.filmeserialeonline\.org/",$links[$i])) {
+  if (preg_match("/bit\.ly|goo\.gl|hideiframe\.com|video\.filmeserialeonline\.org/",$links[$i])) {
    $l=trim("https:".$links[$i]);
    //echo $l;
    $ch = curl_init();
    curl_setopt($ch, CURLOPT_URL, $l);
    curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-   curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 5.1; rv:22.0) Gecko/20100101 Firefox/22.0');
+   curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 10.0; rv:72.0) Gecko/20100101 Firefox/72.0');
    curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+   //curl_setopt($ch,CURLOPT_REFERER,"http://www1.tvhub.ro");
    curl_setopt($ch, CURLOPT_HEADER,1);
    curl_setopt($ch, CURLOPT_NOBODY,1);
    curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
@@ -1125,6 +1127,49 @@ for ($i=0;$i<count($links);$i++) {
    $h2 = curl_exec($ch);
    curl_close($ch);
    //echo $h2;
+   $t1=explode("Location:",$h2);
+   $t2=explode("\n",$t1[1]);
+   $cur_link=trim($t2[0]);
+   //echo $cur_link;
+  }
+   if (preg_match("/leaked-celebrities\./",$links[$i])) {
+   $l=trim("https:".$links[$i]);
+   //echo $l."\n";
+   $ch = curl_init();
+   curl_setopt($ch, CURLOPT_URL, $l);
+   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+   curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 10.0; rv:72.0) Gecko/20100101 Firefox/72.0');
+   curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+   curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+   curl_setopt($ch,CURLOPT_REFERER,"http://www1.tvhub.ro");
+   curl_setopt($ch, CURLOPT_HEADER,1);
+   curl_setopt($ch, CURLOPT_NOBODY,1);
+   curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+   curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+   $h2 = curl_exec($ch);
+   curl_close($ch);
+   //echo $h2."\n";
+   $t1=explode("Location:",$h2);
+   $t2=explode("\n",$t1[1]);
+   $cur_link=trim($t2[0]);
+   //echo $cur_link;
+  }
+  if (strpos($links[$i],"fastvid.co") !== false) {
+   $l=trim("https:".$links[$i]);
+   //echo $filelink;
+   $ch = curl_init();
+   curl_setopt($ch, CURLOPT_URL, $l);
+   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+   curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 10.0; rv:72.0) Gecko/20100101 Firefox/72.0');
+   curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+   curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+   curl_setopt($ch,CURLOPT_REFERER,$filelink);
+   curl_setopt($ch, CURLOPT_HEADER,1);
+   curl_setopt($ch, CURLOPT_NOBODY,1);
+   curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+   curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+   $h2 = curl_exec($ch);
+   curl_close($ch);
    $t1=explode("Location:",$h2);
    $t2=explode("\n",$t1[1]);
    $cur_link=trim($t2[0]);

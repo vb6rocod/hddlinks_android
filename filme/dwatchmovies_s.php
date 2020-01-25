@@ -6,6 +6,9 @@ function str_between($string, $start, $end){
 	return substr($string,$ini,$len);
 }
 include ("../common.php");
+include ("../util.php");
+$last_good="https://dwatchmovies.pro";
+$host=parse_url($last_good)['host'];
 $page = $_GET["page"];
 $tip= $_GET["tip"];
 $tit=$_GET["title"];
@@ -17,11 +20,11 @@ $has_fav="yes";
 $has_search="yes";
 $has_add="yes";
 $has_fs="yes";
-$fav_target="vipmovies_f_fav.php?host=https://vipmovies.to";
-$add_target="vipmovies_f_add.php";
+$fav_target="dwatchmovies_s_fav.php?host=".$last_good;
+$add_target="dwatchmovies_s_add.php";
 $add_file="";
-$fs_target="vipmovies_fs.php";
-$target="vipmovies_f.php";
+$fs_target="dwatchmovies_sez.php";
+$target="dwatchmovies_s.php";
 /* ==================================================== */
 $base=basename($_SERVER['SCRIPT_FILENAME']);
 $p=$_SERVER['QUERY_STRING'];
@@ -39,12 +42,12 @@ $prev=$base."?page=".($page-1)."&".$p;
 $tit=unfix_t(urldecode($tit));
 $link=unfix_t(urldecode($link));
 /* ==================================================== */
-if (file_exists($base_cookie."filme.dat"))
-  $val_search=file_get_contents($base_cookie."filme.dat");
+if (file_exists($base_cookie."seriale.dat"))
+  $val_search=file_get_contents($base_cookie."seriale.dat");
 else
   $val_search="";
 $form='<form action="'.$target.'" target="_blank">
-Cautare film:  <input type="text" id="title" name="title" value="'.$val_search.'">
+Cautare serial:  <input type="text" id="title" name="title" value="'.$val_search.'">
 <input type="hidden" name="page" id="page" value="1">
 <input type="hidden" name="tip" id="tip" value="search">
 <input type="hidden" name="link" id="link" value="">
@@ -53,7 +56,7 @@ Cautare film:  <input type="text" id="title" name="title" value="'.$val_search.'
 /* ==================================================== */
 if ($tip=="search") {
   $page_title = "Cautare: ".$tit;
-  if ($page == 1) file_put_contents($base_cookie."filme.dat",$tit);
+  if ($page == 1) file_put_contents($base_cookie."seriale.dat",$tit);
 } else
   $page_title=$tit;
 /* ==================================================== */
@@ -165,55 +168,50 @@ if ($page==1) {
    echo '<TD class="nav" colspan="4" align="right"><a href="'.$prev.'">&nbsp;&lt;&lt;&nbsp;</a> | <a href="'.$next.'">&nbsp;&gt;&gt;&nbsp;</a></TD>'."\r\n";
 }
 echo '</TR>'."\r\n";
-$r=array();
-$ua = $_SERVER['HTTP_USER_AGENT'];
-if ($tip=="release") {
-  $l="https://vipmovies.to/api/list/content?type=movies&count=40&page=".$page;
-  $ch = curl_init();
-  curl_setopt($ch, CURLOPT_URL, $l);
-  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
-  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
-  curl_setopt($ch, CURLOPT_ENCODING, "");
-  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
-  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
-  $html = curl_exec($ch);
-  curl_close($ch);
-
+if($tip=="release") {
+  $l="https://".$host."/tv-shows-filter/tvs-all-tvseries-page-".$page."?search=";
 } else {
-  $search=str_replace(" ","%20",$tit);
-  $l="https://vipmovies.to/api/search?suggest=true&query=".$search;
+  $search=str_replace(" ","+",$tit);
+  $l="https://".$host."/search.php?search=".$search;
+}
+$ua = $_SERVER['HTTP_USER_AGENT'];
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $l);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
+  curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 10.0; rv:55.0) Gecko/20100101 Firefox/55.0');
   curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
-  curl_setopt($ch, CURLOPT_REFERER, "https://vipmovies.to");
-  curl_setopt($ch, CURLOPT_ENCODING, "");
-  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
   curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
   curl_setopt($ch, CURLOPT_TIMEOUT, 15);
   $html = curl_exec($ch);
   curl_close($ch);
-
-}
-  $x=json_decode($html,1)['data']['contents'];
-  //print_r ($x);
-  //echo count($x);
-  for($k=0;$k<count($x);$k++) {
-    $link=$x[$k]['hash'];
-    $title=$x[$k]['name'];
-    $image="https://vipmovies.to/assets/img/posters/".$x[$k]['poster_path'];
-    $tip=$x[$k]['type'];
-    if ($tip=="0") array_push($r ,array($title,$link, $image));
+if ($tip == "release")
+$videos = explode('div class="col-md-2', $html);
+else
+$videos = explode('div class="col-md-2', $html);
+unset($videos[0]);
+$videos = array_values($videos);
+foreach($videos as $video) {
+  if ($tip =="release") {
+  $t1 = explode('href="',$video);
+  $t2 = explode('"', $t1[1]);
+  } else {
+  $t1 = explode('href="',$video);
+  $t2 = explode('"', $t1[1]);
   }
-$c=count($r);
-for ($k=0;$k<$c;$k++) {
-  $title=$r[$k][0];
-  $title=prep_tit($title);
-  $link=$r[$k][1];
-  $image=$r[$k][2];
+  $link = $t2[0];
+  if (strpos($link,"../") !== false) $link="https://".$host."/".str_replace("../","",$link);
+  $t1 = explode("<figcaption>", $video);
+  $t2 = explode('<', $t1[1]);
+  $title = $t2[0];
+  $title = prep_tit($title);
+  if ($tip == "release") {
+  $t1 = explode('src="', $video);
+  $t2 = explode('"', $t1[1]);
+  } else {
+  $t1 = explode('src="', $video);
+  $t2 = explode('"', $t1[1]);
+  }
+  $image = $t2[0];
   $rest = substr($title, -6);
   if (preg_match("/\((\d+)\)/",$rest,$m)) {
    $year=$m[1];
@@ -222,13 +220,13 @@ for ($k=0;$k<$c;$k++) {
    $year="";
    $tit_imdb=$title;
   }
-
   $imdb="";
-  $link_f=$fs_target.'?tip=movie&link='.urlencode($link).'&title='.urlencode(fix_t($title)).'&image='.$image."&sez=&ep=&ep_tit=&year=".$year."&hash=";
-  if ($title) {
+  $link_f=$fs_target.'?tip=series&link='.urlencode($link).'&title='.urlencode(fix_t($title)).'&image='.$image."&sez=&ep=&ep_tit=&year=".$year;
+  if ($title && strpos($link,"/tvs") !== false) {
   if ($n==0) echo '<TR>'."\r\n";
-  $val_imdb="tip=movie&title=".urlencode(fix_t($tit_imdb))."&year=".$year."&imdb=".$imdb;
+  $val_imdb="tip=series&title=".urlencode(fix_t($title))."&year=".$year."&imdb=".$imdb;
   $fav_link="mod=add&title=".urlencode(fix_t($title))."&link=".urlencode($link)."&image=".urlencode($image)."&year=".$year;
+  $image="r_m.php?file=".$image;
   if ($tast == "NU") {
     echo '<td class="mp" width="25%"><a href="'.$link_f.'" id="myLink'.$w.'" target="_blank" onmousedown="isKeyPressed(event)">
     <img id="myLink'.$w.'" src="'.$image.'" width="'.$width.'" height="'.$height.'"><BR>'.$title.'</a>
@@ -252,7 +250,6 @@ for ($k=0;$k<$c;$k++) {
   }
   }
  }
-
 /* bottom */
   if ($n < 4 && $n > 0) {
     for ($k=0;$k<4-$n;$k++) {

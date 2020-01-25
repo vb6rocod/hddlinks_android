@@ -63,10 +63,10 @@ else
 </TR>
 
 <TR>
-<TD width="25%"><a href="filme/filmeonline_biz_main.php" target="_blank">filmeonline.biz</a></TD>
-<TD width="25%"><a href="filme/f-hd_main.php" target="_blank">f-hd</a></TD>
+<TD width="25%"><a href="filme/fsgratis_main.php" target="_blank">fsgratis</a></TD>
 <TD width="25%"><a href="filme/filmecinema_main.php" target="_blank">filmecinema</a></TD>
-<TD width="25%"><a href="filme/filme-bune.php?page=1&tip=release&title=filme-bune&link=" target="_blank">filme-bune</a></TD>
+<TD width="25%"><a href="filme/f-hd_main.php" target="_blank">f-hd</a></TD>
+<TD width="25%"></TD>
 </TR>
 <TR>
 <TD width="25%"><a href="filme/pefilme_main.php" target="_blank">pefilme</a></TD>
@@ -82,19 +82,20 @@ else
 <TD width="25%"><a href="filme/deseneledublate.php?page=1&tip=release&title=desenedublate&link=" target="_blank">deseneledublate</a></TD>
 <TD width="25%"><a href="filme/desenefaine_main.php" target="_blank">desenefaine.ro</a></TD>
 </TR>
-
+<!--
 <TR>
-<TD width="25%"><a href="filme/fsgratis_main.php" target="_blank">fsgratis</a></TD>
+<TD width="25%"></TD>
 <TD width="25%"></TD>
 <TD width="25%"></TD>
 <TD width="25%"></TD>
 </TR>
+-->
 <!-- straine -->
 <TR>
 <TD width="25%"><a href="filme/tvseries_f.php?page=1&tip=release&title=tvseries&link=" target="_blank">tvseries</a></TD>
 <TD width="25%"><a href="filme/putlockerfit_f.php?page=1&tip=release&title=putlockerfit&link=" target="_blank">putlockerfit</a></TD>
 <TD width="25%"><a href="filme/dwatchmovies_f.php?page=1&tip=release&title=dwatchmovies&link=" target="_blank">dwatchmovies</a></TD>
-<TD width="25%"><a href="filme/0123netflix_f.php?page=1&tip=release&title=0123netflix&link=" target="_blank">0123netflix</a></TD>
+<TD width="25%"><a href="filme/yifymovies_f.php?page=1&tip=release&title=yifymovies&link=" target="_blank">yifymovies</a></TD>
 </TR>
 <TR>
 <TD width="25%"><a href="filme/hdfull_f.php?page=1&tip=release&title=hdfull&link=" target="_blank">hdfull</a></TD>
@@ -105,22 +106,22 @@ else
 <TR>
 <TD width="25%"><a href="filme/onmovies_f.php?page=1&tip=release&title=onmovies&link=" target="_blank">onmovies</a></TD>
 <TD width="25%"><a href="filme/spacemov.php?page=1&tip=release&title=spacemov&link=" target="_blank">spacemov</a></TD>
-<TD width="25%"><a href="filme/hdbest.php?page=1&tip=release&title=hdbest&link=" target="_blank">hdbest</a></TD>
 <TD width="25%"><a href="filme/moviesjoy_f.php?page=1&tip=release&title=moviesjoy&link=" target="_blank">moviesjoy</a></TD>
+<TD width="25%"><a href="filme/moviegaga_f.php?page=1&tip=release&title=moviegaga&link=" target="_blank">moviegaga</a></TD>
 </TR>
 
 <TR>
-<TD width="25%"><a href="filme/vipmovies_f.php?page=1&tip=release&title=vipmovies&link=" target="_blank">vipmovies</a></TD>
 <TD width="25%"><a href="filme/ffmovies_ff.php?page=1&tip=release&title=ffmovies&link=" target="_blank">ffmovies</a></TD>
 <TD width="25%"><a href="filme/gomovies_f.php?page=1&tip=release&title=gomovies&link=" target="_blank">gomovies</a></TD>
 <TD width="25%"><a href="filme/soap2day_f.php?page=1&tip=release&title=soap2day&link=" target="_blank">soap2day</a></TD>
+<TD width="25%"><a href="filme/300mbmoviefree_f.php?page=1&tip=release&title=300mbmoviefree&link=" target="_blank">300mbmoviefree</a></TD>
 </TR>
 
 <TR>
 <TD width="25%"><a href="filme/subsmovies_f.php?page=1&tip=release&title=subsmovie&link=" target="_blank">subsmovies</a></TD>
-<TD width="25%"><a href="filme/avistaz_f.php?page=1&tip=release&title=avistaz&link=" target="_blank">avistaz</a></TD>
 <TD width="25%"><a href="filme/hdm_f.php?page=1&tip=release&title=hdm&link=" target="_blank">hdm</a></TD>
 <TD width="25%"><a href="filme/x8_f.php" target="_blank">xmovies8</a></TD>
+<TD width="25%"><a href="filme/videospider.php?page=1&tip=release&title=videospider&link=" target="_blank">videospider</a></TD>
 </TR>
 
 <TR>
@@ -140,15 +141,9 @@ else
 <TD width="25%"><a href="filme/gdriveplayer_f.php?page=1&tip=release&title=gdriveplayer&link=&sc=" target="_blank">gdriveplayer</a></TD>
 <TD width="25%"><a href="filme/vidcloud9_f.php?page=1&tip=release&title=vidcloud9&link=" target="_blank">vidcloud9</a></TD>
 <TD width="25%"><a href="filme/moviehdkh_f.php?page=1&tip=release&title=moviehdkh&link=" target="_blank">moviehdkh</a></TD>
-<TD width="25%"><a href="filme/yifymovies_f.php?page=1&tip=release&title=yifymovies&link=" target="_blank">yifymovies</a></TD>
-</TR>
-
-<TR>
-<TD width="25%"><a href="filme/videospider.php?page=1&tip=release&title=videospider&link=" target="_blank">videospider</a></TD>
-<TD width="25%"><a href="filme/300mbmoviefree_f.php?page=1&tip=release&title=300mbmoviefree&link=" target="_blank">300mbmoviefree</a></TD>
-<TD width="25%"><a href="filme/moviegaga_f.php?page=1&tip=release&title=moviegaga&link=" target="_blank">moviegaga</a></TD>
 <TD width="25%"></TD>
 </TR>
+
 <?php
 if (file_exists($base_pass."tvplay.txt")) {
 echo '

@@ -12,12 +12,14 @@ $tit=$_GET["title"];
 $link=$_GET["link"];
 $width="200px";
 $height="278px";
+$last_good="https://dwatchmovies.pro";
+$host=parse_url($last_good)['host'];
 /* ==================================================== */
 $has_fav="yes";
 $has_search="yes";
 $has_add="yes";
 $has_fs="yes";
-$fav_target="dwatchmovies_f_fav.php?host=https://dwatchmovies.net";
+$fav_target="dwatchmovies_f_fav.php?host=".$last_good;
 $add_target="dwatchmovies_f_add.php";
 $add_file="";
 $fs_target="dwatchmovies_fs.php";
@@ -167,12 +169,12 @@ if ($page==1) {
 echo '</TR>'."\r\n";
 
 if($tip=="release") {
-  $l="https://dwatchmovies.net/movies-top-20";
+  $l="https://".$host."/movies-top-20";
 } else {
   $search=str_replace(" ","+",$tit);
-  $l="https://dwatchmovies.com/search.php?search=".$search;
+  $l="https://".$host."/search.php?search=".$search;
 }
-$host=parse_url($l)['host'];
+
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $l);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
@@ -182,21 +184,33 @@ $host=parse_url($l)['host'];
   curl_setopt($ch, CURLOPT_TIMEOUT, 15);
   $html = curl_exec($ch);
   curl_close($ch);
-
+if ($tip == "release")
 $videos = explode("div class='col-md-2", $html);
+else
+$videos = explode('div class="col-md-2', $html);
 unset($videos[0]);
 $videos = array_values($videos);
 foreach($videos as $video) {
+  if ($tip =="release") {
   $t1 = explode("href='",$video);
   $t2 = explode("'", $t1[1]);
+  } else {
+  $t1 = explode('href="',$video);
+  $t2 = explode('"', $t1[1]);
+  }
   $link = $t2[0];
-  if (strpos($link,"../") !== false) $link="https://dwatchmovies.com/".str_replace("../","",$link);
+  if (strpos($link,"../") !== false) $link="https://".$host."/".str_replace("../","",$link);
   $t1 = explode("<figcaption>", $video);
   $t2 = explode('<', $t1[1]);
   $title = $t2[0];
   $title = prep_tit($title);
+  if ($tip == "release") {
   $t1 = explode("src='", $video);
   $t2 = explode("'", $t1[1]);
+  } else {
+  $t1 = explode('src="', $video);
+  $t2 = explode('"', $t1[1]);
+  }
   $image = $t2[0];
   $rest = substr($title, -6);
   if (preg_match("/\((\d+)\)/",$rest,$m)) {
@@ -208,7 +222,7 @@ foreach($videos as $video) {
   }
 
   $imdb="";
-  $link_f=$fs_target.'?tip=movie&link='.urlencode($link).'&title='.urlencode(fix_t($title)).'&image='.$image."&sez=&ep=&ep_tit=&year=".$year;
+  $link_f=$fs_target.'?tip=movie&link='.urlencode($link).'&title='.urlencode(fix_t($title)).'&image='.$image."&sez=&ep=&ep_tit=&year=".$year."&imdb=";
   if ($title && strpos($link,"/movie") !== false) {
   if ($n==0) echo '<TR>'."\r\n";
   $val_imdb="tip=movie&title=".urlencode(fix_t($tit_imdb))."&year=".$year."&imdb=".$imdb;

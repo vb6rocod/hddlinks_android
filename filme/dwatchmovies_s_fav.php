@@ -2,12 +2,12 @@
 <?php
 include ("../common.php");
 $host=$_GET['host'];
-$page_title="Filme favorite";
+$page_title="Seriale favorite";
 $width="200px";
 $height="278px";
-$add_target="0123netflix_f_add.php";
-$fs_target="0123netflix_fs.php";
-$file=$base_fav."0123netflix_f.dat";
+$add_target="dwatchmovies_s_add.php";
+$fs_target="dwatchmovies_sez.php";
+$file=$base_fav."dwatchmovies_s.dat";
 ?>
 <html><head>
 <meta http-equiv="content-type" content="text/html; charset=UTF-8">
@@ -129,10 +129,11 @@ foreach($arr as $key => $value) {
     //$image=$host.parse_url($image)['path'];
     $year="";
     $link=$host.parse_url($link)['path'];
-    $link_f=$fs_target.'?tip=movie&link='.urlencode($link).'&title='.urlencode(fix_t($title)).'&image='.$image."&sez=&ep=&ep_tit=&year=".$year;
+    $link_f=$fs_target.'?tip=series&link='.urlencode($link).'&title='.urlencode(fix_t($title)).'&image='.$image."&sez=&ep=&ep_tit=&year=".$year;
   if ($n==0) echo '<TR>'."\r\n";
-  $val_imdb="tip=movie&title=".urlencode(fix_t($title))."&year=".$year."&imdb=".$imdb;
+  $val_imdb="tip=series&title=".urlencode(fix_t($title))."&year=".$year."&imdb=".$imdb;
   $fav_link="file=&mod=del&title=".urlencode(fix_t($title))."&link=".urlencode($link)."&image=".urlencode($image)."&year=".$year;
+  //$image="r_m.php?file=".$image;
   if ($tast == "NU") {
     echo '<td class="mp" width="25%"><a href="'.$link_f.'" id="myLink'.$w.'" target="_blank" onmousedown="isKeyPressed(event)">
     <img id="myLink'.$w.'" src="'.$image.'" width="'.$width.'" height="'.$height.'"><BR>'.$title.'</a>

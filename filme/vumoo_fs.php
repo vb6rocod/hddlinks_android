@@ -149,10 +149,11 @@ if ($tip=="movie") {
   curl_setopt($ch, CURLOPT_TIMEOUT, 15);
   $html = curl_exec($ch);
   curl_close($ch);
-  
+  //echo $html;
   require_once("CryptoJSAES.php");
   $jsu = new CryptoJSAES();
   $key="iso10126";
+  /*
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
   curl_setopt($ch,CURLOPT_REFERER,"http://vumoo.to");
@@ -161,11 +162,14 @@ if ($tip=="movie") {
   curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
   curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
   curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+  */
   $videos=explode('embedUrl="',$html);
   unset($videos[0]);
   $videos = array_values($videos);
   foreach($videos as $video) {
     $t1=explode('"',$video);
+    $r[]=urlencode($t1[0]);
+    /*
     curl_setopt($ch, CURLOPT_URL, $t1[0]);
     $h = curl_exec($ch);
     $t1=explode('embedVal="',$h);
@@ -176,12 +180,14 @@ if ($tip=="movie") {
     for ($k=0;$k<count($f);$k++) {
       $r[]=urlencode($f[$k]['url']);
     }
+    */
   }
-  curl_close($ch);
+  //curl_close($ch);
 } else {
   require_once("CryptoJSAES.php");
   $jsu = new CryptoJSAES();
   $key="iso10126";
+  //echo $link;
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $link);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
@@ -193,14 +199,17 @@ if ($tip=="movie") {
   curl_setopt($ch, CURLOPT_TIMEOUT, 15);
   $h = curl_exec($ch);
   curl_close($ch);
-    $t1=explode('embedVal="',$h);
-    $t2=explode('"',$t1[1]);
-    $data=$t2[0];
-    $out = $jsu->decrypt($data,$key);
-    $f=json_decode($out,1)['videos'];
-    for ($k=0;$k<count($f);$k++) {
-      $r[]=urlencode($f[$k]['url']);
-    }
+  //$ep_title
+  $videos=explode('embedUrl="',$h);
+  unset($videos[0]);
+  $videos = array_values($videos);
+  foreach($videos as $video) {
+    $t1=explode('"',$video);
+    $t3 = explode('>', $t1[1]);
+    $t4 = explode('<', $t3[1]);
+    $title = trim($t4[0]);
+    if ($title == $ep_title)  $r[]=urlencode($t1[0]);
+  }
 }
 echo '<table border="1" width="100%">';
 echo '<TR><TD class="mp">Alegeti un server: Server curent:<label id="server">'.parse_url(urldecode($r[0]))['host'].'</label>

@@ -215,6 +215,7 @@ $ua="Mozilla/5.0 (Windows NT 10.0; rv:71.0) Gecko/20100101 Firefox/7";
   $t1=explode('cf.k =',$h);
   $t2=explode(';',$t1[1]);
   $js=trim($t2[0]);
+  //file_put_contents("1.txt",$js);
   $jj=unfuck($js);
   $t1=explode('csdiff',$h);
   $t2=explode(';',$t1[1]);

@@ -1,7 +1,7 @@
 <!doctype html>
 <?php
 include ("../common.php");
-//error_reporting(0);
+error_reporting(0);
 $list = glob($base_sub."*.srt");
    foreach ($list as $l) {
     str_replace(" ","%20",$l);
@@ -34,6 +34,7 @@ $sez=$_GET["sez"];
 $ep=$_GET["ep"];
 $ep_title=unfix_t(urldecode($_GET["ep_tit"]));
 $ep_title=prep_tit($ep_title);
+$imdbid=$_GET['imdb'];
 $year=$_GET["year"];
 if ($tip=="movie") {
 $tit2="";
@@ -44,7 +45,7 @@ else
    $tit2=" - ".$sez."x".$ep;
 $tip="series";
 }
-$imdbid="";
+
 
 function str_between($string, $start, $end){
 	$string = " ".$string; $ini = strpos($string,$start);
@@ -131,11 +132,24 @@ function off() {
 <body>
 <a href='' id='mytest1'></a>
 <?php
+function decode_code($code){
+    return preg_replace_callback(
+        "@\\\(x)?([0-9a-fA-F]{2,3})@",
+        function($m){
+            return mb_convert_encoding(chr($m[1]?hexdec($m[2]):octdec($m[2])),'ISO-8859-1', 'UTF-8');
+        },
+        $code
+    );
+}
 echo '<h2>'.$tit.$tit2.'</H2>';
 echo '<BR>';
 $ua = $_SERVER['HTTP_USER_AGENT'];
 $l=$link;
-$base=str_replace(substr(strrchr($l, "/"), 1),"",$l);
+$r=array();
+$serv=array();
+if ($tip=="series") {
+    $serv=json_decode($l,1);
+} else {
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $l);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
@@ -146,111 +160,63 @@ $base=str_replace(substr(strrchr($l, "/"), 1),"",$l);
   curl_setopt($ch, CURLOPT_TIMEOUT, 15);
   $h = curl_exec($ch);
   curl_close($ch);
-  $r=array();
-  if ($tip=="series") {
-  $videos = explode('id="chserv', $h);
-  unset($videos[0]);
-  $videos = array_values($videos);
-foreach($videos as $video) {
-  $t1=explode('href="',$video);
-  $t2=explode('"',$t1[1]);
-  $l1=$base.$t2[0];
+  $h=decode_code($h);
+  if (preg_match("/imdb\.com\/title\/tt(\d+)/",$h,$i))
+    $imdbid=$i[1];
+  else
+    $imdbid="";
+  //echo $h;
+/*
+            case 2:
+                src = 'https://dwatchmovies.pro/srvlnk/verybz?search=star-trek-nemesis-200';
+            case 1:
+var _0xde0c=["https://openload.co/embed/fhvG_t3d5b8"];src= _0xde0c[0]
+*/
+
+  //preg_match_all("/".$pat1."/ms",$h,$p);
+  //print_r ($p);
+  $pat1="";
+  preg_match_all("/case\s+(\d+):[\s|\n|\r]+".$pat1."src\s*\=\s*[\"|\'](.*?)[\"|\']\;?/ms",$h,$m);
+  $id=array();
+  for ($k=0;$k<count($m[1]);$k++){
+   $id[$m[1][$k]]=$m[2][$k];
+  }
+  $pat1="(var\s*[a-zA-Z0-9_]+\=\[[\"|\'](.*?)[\"|\']\]\;\s*)?";
+  preg_match_all("/case\s+(\d+):[\s|\n|\r]+".$pat1."src\s*\=\s*[\"|\']?(.*?)[\"|\']?\;?/ms",$h,$m);
+  for ($k=0;$k<count($m[1]);$k++){
+   if ($m[3][$k])
+   $id[$m[1][$k]]=$m[3][$k];
+  }
+  preg_match_all("/(\<\!--)?\s*\<td\>\<a id\=\"(\d+)\"/ms",$h,$m);
+  for ($k=0;$k<count($m[1]);$k++) {
+   if (!preg_match("/\!/ms",$m[0][$k])) {
+    $serv[]=$id[$m[2][$k]];
+   }
+  }
+}
+//print_r ($serv);
   $ch = curl_init();
-  curl_setopt($ch, CURLOPT_URL, $l1);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
   curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 10.0; rv:55.0) Gecko/20100101 Firefox/55.0');
   curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
-  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-  curl_setopt($ch, CURLOPT_HEADER,1);
   curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
   curl_setopt($ch, CURLOPT_TIMEOUT, 15);
-  $h = curl_exec($ch);
+  for ($k=0;$k<count($serv);$k++) {
+    if (preg_match("/dwatchmovies|topeuropix|123europix/",$serv[$k])) {
+    curl_setopt($ch, CURLOPT_URL, $serv[$k]);
+    $h = curl_exec($ch);
+    if (preg_match("/iframe\s+src\=[\'|\"](.*?)[\'|\"]/",$h,$m)) {
+      $l=$m[1];
+      if ($l && strpos($l,"http") === false) $l="https:".$l;
+      if ($l) $r[]=$l;
+    }
+    } else {
+      $l=$serv[$k];
+      if ($l && strpos($l,"http") === false) $l="https:".$l;
+      if ($l) $r[]=$l;
+    }
+  }
   curl_close($ch);
-  if (strpos($h,"404 Not Found") === false) {
-  //echo $h."=============================================================";
-  $t1=explode('id="dodji">',$h);
-  $t3=explode("<Script Language='Javascript'>",$t1[1]);
-  //echo $t3[1]."=============================================================";
-  $t4=explode('</script>',$t3[1]);
-  $h1=$t4[0];
-  //$h1=$h;
-  preg_match_all("@\\\(x)?([0-9a-fA-F]{2,3})@",$h1,$m);
-  for ($k=0;$k<count($m[0]);$k++) {
-    $h1=str_replace($m[0][$k],chr($m[1][$k]?hexdec($m[2][$k]):octdec($m[2][$k])),$h1);
-  }
-  //echo $h1."=============================================================";
-  if (preg_match_all('/([http|https][\.\d\w\-\.\/\\\:\?\&\#\%\_\,\=]*")/', $h1, $m)) {
-  //print_r ($m[0]);
-  $link_ep=str_replace('"',"",$m[0][$ep-1]);
-  }
-  //echo $link_ep."\n";
-  if (strpos($link_ep,"dwatchmovies") !== false) {
-    $ch = curl_init();
-    curl_setopt($ch, CURLOPT_URL, $link_ep);
-    curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-    curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 10.0; rv:55.0) Gecko/20100101 Firefox/55.0');
-    curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
-    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-    curl_setopt($ch, CURLOPT_HEADER,1);
-    curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
-    curl_setopt($ch, CURLOPT_TIMEOUT, 15);
-    $h1 = curl_exec($ch);
-    curl_close($ch);
-    if (strpos($h1,"404 Not Found") === false) {
-    $link_ep="";
-    $link_ep=str_between($h1,"iframe src='","'");
-    if (!$link_ep) $link_ep=str_between($h1,'iframe src="','"');
-    if ($link_ep && strpos($link_ep,"http") !== false) $r[]=$link_ep;
-    }
-  } else {
-    if (strpos($link_ep,"http") !== false) $r[]=$link_ep;
-  }
-}
-}
-} else {
-  //echo $h;
-  $t1=explode("change(id)",$h);
-  //echo $t1[0];
-  $t2=explode("document.getElementById",$t1[1]);
-  $h1=$t2[0];
-  //echo $h1;
-  preg_match_all("@\\\(x)?([0-9a-fA-F]{2,3})@",$h1,$m);
-  for ($k=0;$k<count($m[0]);$k++) {
-    $h1=str_replace($m[0][$k],chr($m[1][$k]?hexdec($m[2][$k]):octdec($m[2][$k])),$h1);
-  }
-  //echo $h1."=============================================================";
-  if (preg_match_all('/([http|https][\.\d\w\-\.\/\\\:\?\&\#\%\_\,\=]*(\"|\'))/', $h1, $m)) {
-  //print_r ($m);
-  for ($k=0;$k<count($m[0]);$k++) {
-  $link_ep=str_replace('"',"",$m[0][$k]);
-  $link_ep=str_replace("'","",$link_ep);
-  //}
-  //echo $link_ep."\n";
-  if (strpos($link_ep,"dwatchmovies") !== false) {
-    $ch = curl_init();
-    curl_setopt($ch, CURLOPT_URL, $link_ep);
-    curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-    curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 10.0; rv:55.0) Gecko/20100101 Firefox/55.0');
-    curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
-    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-    curl_setopt($ch, CURLOPT_HEADER,1);
-    curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
-    curl_setopt($ch, CURLOPT_TIMEOUT, 15);
-    $h1 = curl_exec($ch);
-    curl_close($ch);
-    //echo $h1."\n";
-    if (strpos($h1,"404 Not Found") === false) {
-    $link_ep="";
-    $link_ep=str_between($h1,"iframe src='","'");
-    if (!$link_ep) $link_ep=str_between($h1,'iframe src="','"');
-    if ($link_ep && strpos($link_ep,"http") !== false) $r[]=$link_ep;
-    }
-  } else {
-    if (strpos($link_ep,"http") !== false) $r[]=$link_ep;
-  }
-  }
-}
-}
 echo '<table border="1" width="100%">';
 echo '<TR><TD class="mp">Alegeti un server: Server curent:<label id="server">'.parse_url($r[0])['host'].'</label>
 <input type="hidden" id="file" value="'.urlencode($r[0]).'"></td></TR></TABLE>';
@@ -290,14 +256,12 @@ if ($tip=="movie") {
   $tit2="";
   $sez="";
   $ep="";
-  $imdbid="";
   $from="";
   $link_page="";
 } else {
   $tit3=$tit;
   $sez=$sez;
   $ep=$ep;
-  $imdbid="";
   $from="";
   $link_page="";
 }

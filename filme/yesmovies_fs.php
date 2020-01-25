@@ -137,6 +137,7 @@ echo '<h2>'.$tit.$tit2.'</H2>';
 echo '<BR>';
 $ua = $_SERVER['HTTP_USER_AGENT'];
 //$host=parse_url($link)['host'];
+//echo $link;
 if ($tip=="movie") {
   preg_match("/(\d+)\.html/",$link,$m);
   $id=$m[1];
