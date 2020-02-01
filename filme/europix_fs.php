@@ -228,7 +228,7 @@ if ($tip=="series") {
   $h = curl_exec($ch);
   curl_close ($ch);
 $h=urldecode($h);
-$h= preg_replace('/\\\x([a-f0-9]+)/mei',"chr(0x\\1)",$h);
+$h= preg_replace('/\\\x([a-f0-9]+)/msi',"chr(0x\\1)",$h);
 $h=str_replace("\n","",$h);
 
 if (preg_match("/var\s+_0x[a-z0-9A-Z]+\s*\=\s*\[((\".*?\"\,?)+)\]/ms", $h, $m)) {

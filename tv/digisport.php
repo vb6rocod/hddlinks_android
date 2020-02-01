@@ -86,11 +86,14 @@ else
 echo '<a href="digisport.php?page='.($page+1).','.$search.','.urlencode($page_title).'">&nbsp;&gt;&gt;&nbsp;</a></TD></TR>';
 
 $l = $search."?p=".$page;
+//echo $l;
+$head=array('Cookie: m2digisportro=0');
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $l);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
   curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows; U; Windows NT 6.1; en-US; rv:1.9.1.2) Gecko/20090729 Firefox/3.5.2 GTB5');
   curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+  curl_setopt($ch, CURLOPT_HTTPHEADER,$head);
   //curl_setopt($ch, CURLOPT_COOKIEJAR, $cookie);
   //curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie);
   curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
@@ -98,6 +101,7 @@ $l = $search."?p=".$page;
   curl_setopt($ch, CURLOPT_TIMEOUT, 15);
   $html = curl_exec($ch);
   curl_close($ch);
+  //echo $html;
 $videos = explode('<article class="', $html);
 
 unset($videos[0]);
@@ -105,17 +109,13 @@ $videos = array_values($videos);
 
 foreach($videos as $video) {
     $t1 = explode('href="', $video);
-if (sizeof($t1) > 1) {
     $t2 = explode('"', $t1[1]);
     $link = "https://www.digisport.ro".$t2[0];
-}
-//    $t3=explode("span>",$video);
-    //echo $t3[3];
-//    $t4=explode("<",$t3[3]);
-//    $title=trim($t4[0]);
-    $t=str_between($video,'title="','"');
-    $title = preg_replace("/(<\/?)(\w+)([^>]*>)/e","",$t);
-    //$title=fix_s($title);
+    $t1=explode('article-title">',$video);
+    $t2=explode('>',$t1[1]);
+    $t3=explode('<',$t2[1]);
+    $title=$t3[0];
+    $title=prep_tit($title);
 
     $t1 = explode('src="', $video);
     $t2 = explode('"', $t1[1]);

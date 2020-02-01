@@ -226,7 +226,7 @@ $host=parse_url($l)['host'];
   curl_setopt($ch, CURLOPT_TIMEOUT, 15);
   $html = curl_exec($ch);
   curl_close($ch);
-
+//echo $html;
 $r=array();
 $videos = explode('https://handjobhub.com/video/',$html);
 unset($videos[0]);
@@ -239,7 +239,7 @@ foreach($videos as $video) {
   $title=$t3[0];
   $title = trim(strip_tags($title));
   $title = prep_tit($title);
-  $t1 = explode('src="', $video);
+  $t1 = explode('opts-original="', $video);
   $t2 = explode('"', $t1[1]);
   $image = $t2[0];
   $image="r_m.php?file=".$image;

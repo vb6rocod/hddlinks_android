@@ -3,6 +3,7 @@ $file=$_GET["file"];
 
 $ua="Mozilla/5.0 (Windows NT 10.0; rv:55.0) Gecko/20100101 Firefox/55.0";
 //$cookie=$base_cookie."moviesplanet.dat";
+$ua = $_SERVER['HTTP_USER_AGENT'];
 $ch = curl_init();
 curl_setopt($ch, CURLOPT_URL, $file);
 curl_setopt($ch, CURLOPT_REFERER,$file);

@@ -152,10 +152,12 @@ $head=array(
   curl_setopt($ch, CURLINFO_HEADER_OUT, true);
   curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
   curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
+  curl_setopt($ch, CURLOPT_SSL_CIPHER_LIST, implode(":", $DEFAULT_CIPHERS));
   curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
   curl_setopt($ch, CURLOPT_TIMEOUT, 15);
   curl_setopt($ch, CURLOPT_HEADER,1);
   $h = curl_exec($ch);
+  //echo $h;
  if (strpos($h,"503 Service") !== false) {
   if (strpos($h,'id="cf-dn') === false)
    $q1= getClearanceLink_old($h,$requestLink);
@@ -206,6 +208,7 @@ if ($tip=="movie") {
  preg_match("/watch\/tv\/(\d+)\/.+\/season\/(\d+)\/episode\/(\d+)/",$link,$m);
  $l="https://flixtor.to/ajax/v4/e/".$m[1]."/".$m[2]."/".$m[3];
 }
+//echo $l;
 ////////////////////////////////////////////////////////////////////////////
 $head=array('Accept: text/plain, */*; q=0.01',
 'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',

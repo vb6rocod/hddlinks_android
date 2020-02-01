@@ -229,9 +229,8 @@ if (preg_match("/4tube\.com/",$host)) {
   $t2=explode('"',$t1[1]);
   $out=$t2[0];
 } else if (preg_match("/bitporno\.com/",$host)) {
-  $t1=explode('source src="',$h);
-  $t2=explode('"',$t1[1]);
-  $out=$t2[0];
+  if (preg_match("/source src\=[\"|\']((.*?)\.mp4)[\"|\']/",$h,$m))
+  $out=$m[1];
 } else if (preg_match("/bravoporn\.com/",$host)) {
   if (preg_match_all("/source src\=\"(.*?)\"/",$h,$m)) {
     $out=$m[1][count($m[1])-1];
@@ -283,6 +282,7 @@ if (preg_match("/4tube\.com/",$host)) {
   $t1=explode("hash: '",$h);
   $t2=explode("'",$t1[1]);
   $hash=$t2[0];
+  //echo $hash;
   $hash=calc_hash($hash);
 
   $l ="https://www.eporner.com/xhr/video/".$vid."?hash=".$hash."&device=generic&domain=www.eporner.com&fallback=false&embed=false&supportedFormats=mp4&tech=Html5&_=";
@@ -349,6 +349,7 @@ if (preg_match("/4tube\.com/",$host)) {
   $t2=explode('"',$t1[1]);
   $out=$t2[0];
 } else if (preg_match("/hdmovz\.com|porntrex\.com/",$host)) {
+  //echo $h;
   if (preg_match("/license_code:\s+\'(.*?)\'/ms",$h,$m)) {
    preg_match_all("/(video_url|video_alt_url|video_alt_url2|video_alt_url3)\:\s+\'(.*?)\/\'/ms",$h,$u);
    $movie=$u[2][count($u[2])-1];
@@ -469,10 +470,10 @@ if (preg_match("/4tube\.com/",$host)) {
   $t2=explode('"',$t1[1]);
   $out=$t2[0];
 } else if (preg_match("/porndoe\.com/",$host)) {
-  $t1=explode('video id="',$h);
-  $t2=explode('src="',$t1[1]);
-  $t3=explode('"',$t2[1]);
-  $out=$t3[0];
+//echo $h;
+  if (preg_match_all("/(240|360|480|720)\".*?\"type\": \"video\".*?url\"\: \"([\w\/\:_\-\.]+\.mp4)\"/msi",$h,$m)) {
+   $out=$m[2][count($m[2])-1];
+  }
 } else if (preg_match("/porndroids\.com/",$host)) {
   $t1=explode('data-video="',$h);
   $t2=explode('"',$t1[1]);
@@ -509,10 +510,16 @@ if (preg_match("/4tube\.com/",$host)) {
   $out=str_replace("\\","",$out);
   if (strpos($out,"http") === false && $out) $out="https:".$out;
 } else if (preg_match("/pornhost\.com/",$host)) {
-  $t1=explode('file: "',$h);
-  $t2=explode('"',$t1[1]);
-  $out=$t2[0];
+//echo $h;
+   if (preg_match_all("/(?!\<\!\-\-)\<source\s*src\=\"(.*?)\"/m",$h,$m)) {
+    for ($k=0;$k<count($m[1]);$k++) {
+     if (preg_match("/pornhost/",$m[1][$k])) {
+     $out=$m[1][$k];
+     break;
+     }
+    }
   $out=str_replace("\\","",$out);
+  }
   if (strpos($out,"http") === false && $out) $out="https:".$out;
 } else if (preg_match("/pornhub\.com/",$host)) {
   //https://www.pornhub.com/embed/ph5d4b0d9dbca84
@@ -536,11 +543,10 @@ if (preg_match("/4tube\.com/",$host)) {
   $out=str_replace("\\","",$out);
   if (strpos($out,"http") === false && $out) $out="https:".$out;
 } else if (preg_match("/pornrabbit\.com/",$host)) {
-  $t1=explode("file: '",$h);
-  $t2=explode("'",$t1[1]);
-  $out=$t2[0];
-  $out=str_replace("\\","",$out);
-  if (strpos($out,"http") === false && $out) $out="https:".$out;
+  if(preg_match("/source src\=\"(.*?)\"/",$h,$m)) {
+   $out=$m[1];
+   if (strpos($out,"http") === false && $out) $out="https:".$out;
+  }
 } else if (preg_match("/pornrox\.com/",$host)) {
   if (preg_match_all("/source src\=\"(.*?)\"\s+type\=\'video\/mp4\' label\=\'(1080|720|480|360|240)p\'/ms",$h,$m)) {
      $maxs = array_keys($m[2], max($m[2]));
@@ -610,7 +616,7 @@ if (preg_match("/4tube\.com/",$host)) {
   $csrf=trim($t2[0]);
   */
   $l="https://pl.spankbang.com/api/videos/stream";
-  $post="id=".$id."&data=0&sb_csrf_session=".$csrf;
+  //$post="id=".$id."&data=0&sb_csrf_session=".$csrf;
   $post="id=".$id."&data=0";
   $head=array('Accept: application/json, text/javascript, */*; q=0.01',
   'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
@@ -636,15 +642,15 @@ if (preg_match("/4tube\.com/",$host)) {
 
   $r=json_decode($x,1);
   //print_r ($r);
-  if (isset($r["1080p"]) && $r["1080p"] !="")
+  if (isset($r["1080p"][0]) && $r["1080p"] !="")
     $out=$r["1080p"][0];
-  elseif (isset($r["720p"]) && $r["720p"] !="")
+  elseif (isset($r["720p"][0]) && $r["720p"] !="")
     $out=$r["720p"][0];
-  elseif (isset($r["480p"]) && $r["480p"] !="")
+  elseif (isset($r["480p"][0]) && $r["480p"] !="")
     $out=$r["480p"][0];
-  elseif (isset($r["360p"]) && $r["360p"] !="")
+  elseif (isset($r["360p"][0]) && $r["360p"] !="")
     $out=$r["360p"][0];
-  elseif (isset($r["240p"]) && $r["240p"] !="")
+  elseif (isset($r["240p"][0]) && $r["240p"] !="")
     $out=$r["240p"][0];
   else
     $out="";
@@ -727,6 +733,7 @@ if (preg_match("/4tube\.com/",$host)) {
   $out=str_replace("\\","",$out);
   if (strpos($out,"http") === false && $out) $out="https:".$out;
 }
+
 ///////////////////////////////////////////////////////////////////
 $out=str_replace("&amp;","&",$out);
 if (strpos($out,"http") === false) $out="";

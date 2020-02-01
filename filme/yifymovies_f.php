@@ -176,6 +176,7 @@ if($tip=="release") {
   $search=str_replace(" ","+",$tit);
   $l="https://yifymovies.tv/page/".$page."/?s=".$search;
 }
+// https://yifymovies.tv
 ///////////////////////////////////////////////////////////////////////////
 $requestLink=$l;
 $ua = $_SERVER['HTTP_USER_AGENT'];
@@ -200,10 +201,12 @@ $head=array(
   curl_setopt($ch, CURLINFO_HEADER_OUT, true);
   curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
   curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
+  curl_setopt($ch, CURLOPT_SSL_CIPHER_LIST, implode(":", $DEFAULT_CIPHERS));
   curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
   curl_setopt($ch, CURLOPT_TIMEOUT, 15);
   curl_setopt($ch, CURLOPT_HEADER,1);
   $h = curl_exec($ch);
+  //echo $h;
  if (strpos($h,"503 Service") !== false) {
   if (strpos($h,'id="cf-dn') === false)
    $q1= getClearanceLink_old($h,$requestLink);
@@ -214,6 +217,8 @@ $head=array(
   $requestLink="https://".$host.$t2[0];
   $t1=explode("?",$q1);
   $post=$t1[1];
+  //echo "\n".$requestLink."\n".$post;
+  //die();
 $head=array('Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
 'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
 'Accept-Encoding: deflate',
@@ -259,6 +264,7 @@ $head=array('Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q
  } else {
     curl_close($ch);
  }
+ //echo $h;
 ///////////////////////////////////////////////////////////////////////////
 $r=array();
 if ($tip=="release") {

@@ -760,12 +760,13 @@ if ($from=="digi") {
    if (strpos("http:",$link) === false && $link) $link="http:".$link;
 }
 if ($from == "digisport") {
+  $head=array('Cookie: m2digisportro=0');
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $link);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
   curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 10.0; rv:55.0) Gecko/20100101 Firefox/55.0');
   curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
-  //curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie);
+  curl_setopt($ch, CURLOPT_HTTPHEADER,$head);
   curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
   curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
   curl_setopt($ch, CURLOPT_TIMEOUT, 15);
@@ -1083,7 +1084,7 @@ body {background-color:#000000;}
 var player = jwplayer("container");
 jwplayer("container").setup({
 "playlist": [{
-"title": "'.$title.'",
+"title": "'.preg_replace("/\n|\r|\"/","",$title).'",
 "sources": [{"file": "'.$out.'", "type": "'.$type.'"
 }]
 }],
@@ -1094,8 +1095,8 @@ jwplayer("container").setup({
     "inactive": "#b6b6b6",
     "background": "#282828"
 },
-"title": "'.$title.'",
-"abouttext": "'.$title.'",
+"title": "'.preg_replace("/\n|\r|\"/","",$title).'",
+"abouttext": "'.preg_replace("/\n|\r|\"/","",$title).'",
 "autostart": true,
 "fallback": false,
 "wmode": "direct",

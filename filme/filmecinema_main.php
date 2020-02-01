@@ -5,25 +5,25 @@ $main_title="filmecinema";
 $target="filmecinema.php";
 $fav_target="";
 $recente="https://www.filmecinema.net";
-function decode_code($code){
-    return preg_replace_callback(
-        "@\\\(x)?([0-9a-fA-Z]{2,3})@",
-        function($m){
-            return chr($m[1]?hexdec($m[2]):octdec($m[2]));
-        },
-        $code
-    );
-}
 function str_between($string, $start, $end){
 	$string = " ".$string; $ini = strpos($string,$start);
 	if ($ini == 0) return ""; $ini += strlen($start); $len = strpos($string,$end,$ini) - $ini;
 	return substr($string,$ini,$len);
 }
-
+function decode_code($code){
+    return preg_replace_callback(
+        "@\\\(x)?([0-9a-fA-Z]{2,3})@",
+        function($m){
+            return mb_convert_encoding(chr($m[1]?hexdec($m[2]):octdec($m[2])),'ISO-8859-1', 'UTF-8');
+        },
+        $code
+    );
+}
 $l="https://www.filmecinema.net";
 $cookie=$base_cookie."biz.dat";
 require( 'cryptoHelpers.php');
 require( 'aes_small.php');
+//include ("obfJS.php");
 $ua = $_SERVER['HTTP_USER_AGENT'];
   $ch = curl_init($l);
   curl_setopt($ch, CURLOPT_USERAGENT, $ua);
@@ -37,37 +37,46 @@ $ua = $_SERVER['HTTP_USER_AGENT'];
   $html = curl_exec($ch);
   curl_close ($ch);
   $html=decode_code($html);
+  //echo $html;
+ if(preg_match_all('/toNumbers\(\"(\w+)\"/',$html)) {
+ $pat1="(var\s*([a-z0-9_]+)(\=))";
+ $pat2="(function\s*([a-z0-9_]+)(\(\)\{return))";
+ $pat3="\[([\'|\"][a-zA-Z0-9_\=\+\/\|\;\,\!\"\s\(\)\\\]+[\"|\']\,?){2,}\]";
+ $pat_array="/(".$pat1."|".$pat2.")".$pat3."/ms";
+ if (preg_match($pat_array,$html,$m)) {
+  $c=array();
+  $x=0;
+  $code=str_replace($m[1],"\$c=",$m[0].";");
+  eval ($code);
+  $v=$m[3].$m[6];    // _0x8def[5]
+  $pat="/".$v."\[(\d+)\]/";
+   $html=preg_replace_callback(
+    $pat,
+    function ($matches) {
+     global $c;
+     return '"'.$c[$matches[1]].'"';
+    },
+    $html
+   );
+ }
+ $html=str_replace("atob","base64_decode",$html);
+ $html=str_replace("toNumbers","cryptoHelpers::toNumbers",$html);
+ // c2=toNumbers(c1)
+ $html=preg_replace("/(\w\d)\=/","\$"."\$1"."=",$html);
+ $html=preg_replace("/\((\w\d)\)/","("."\$"."\$1".")",$html);
 
-if(preg_match_all('/toNumbers\(\"(\w+)\"/',$html)) {
-//print_r ($m);
-if (preg_match("/(\w+)\s*\=\s*atob\(\"(.*?)\"\)/mei",$html,$p)) {
-//print_r ($p);
-  $html=str_replace("toNumbers(".$p[1],'toNumbers("'.base64_decode($p[2]).'"',$html);
-}
-if (preg_match("/var\s*(\w+)\s*\=\s*\[\"(.*?)\"\]/mei",$html,$p)) {
-//print_r ($p);
-  $html=str_replace("toNumbers(".$p[1],'toNumbers("'.base64_decode($p[2]).'"',$html);
-}
-$pat="/(\w+)\s*\=\s*atob\(".$p[1]."\[0\]\)/";
-if (preg_match($pat,$html,$u)) {
- $html=str_replace($u[1],'"'.base64_decode($p[2]).'"',$html);
-}
-if (preg_match("/(_0x[a-zA-Z0-9]+)\s*\=\s*\[\"(\S+)\"/mei",$html,$p)) {
- //print_r ($p);
- $html=str_replace("toNumbers(".$p[1]."[0]",'toNumbers("'.$p[2].'"',$html);
-}
-//echo $html;
-preg_match_all('/toNumbers\(\"(\w+)\"/',$html,$m);
-$a=cryptoHelpers::toNumbers($m[1][0]);
-$b=cryptoHelpers::toNumbers($m[1][1]);
-$c=cryptoHelpers::toNumbers($m[1][2]);
-$d=AES::decrypt($c,16,2,$a,16,$b);
-/*
-decrypt(c3, 2, a1, b2))  //b2,a1,c3
-decrypt(c, 2, a, b) //a,b,c
-*/
-$d1=cryptoHelpers::toHex($d);
-//echo $d1;
+ preg_match_all("/\\$(\w\d)\=(cryptoHelpers::toNumbers|base64_decode)\((.*?)\)/ms",$html,$m);
+ $code="";
+ for ($k=0;$k<count($m[0]);$k++) {
+   $code .=$m[0][$k].";";
+ }
+ eval ($code);
+ preg_match("/slowAES\.decrypt\((\w+)\,(\w+)\,(\w+)\,(\w+)\)/",$html,$p);
+ // slowAES.decrypt(a1,2,b1,c2)
+ //$d=AES::decrypt($c,16,2,$a,16,$b);
+ $code="\$d=AES::decrypt("."\$".$p[1].",16,2,"."\$".$p[3].",16,"."\$".$p[4].");";
+ eval ($code);
+ $d1=cryptoHelpers::toHex($d);
 $domain = 'www.filmecinema.net';
 $expire = time() + 3600;
 $name   = 'vDDoS';

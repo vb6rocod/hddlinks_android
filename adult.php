@@ -48,45 +48,37 @@ else
 echo '<th class="cat" colspan="4">Adult</Th>';
 echo '
 </TR>
-<TR>
+
 <TR>
 <TD width="25%"><a href="tv/playlist.php?title=playlist+xxx.m3u8" target="_blank">playlist xxx</a></TD>
 <TD width="25%"><a href="adult/portalultautv.php?tip=release&page=1&title=portalultautv&link=" target="_blank">portalultautv</a></TD>
-<TD width="25%"></TD>
-<TD width="25%"></TD>
-</TR>
-
-<TD width="25%"><a href="adult/tube8_main.php" target="_blank">tube8</a></TD>
-<TD width="25%"><a href="adult/youporn.php?tip=release&page=1&title=youporn&link=" target="_blank">youporn</a></TD>
 <TD width="25%"><a href="adult/redtube_main.php" target="_blank">redtube</a></TD>
 <TD width="25%"><a href="adult/xhamster_main.php" target="_blank">xhamster</a></TD>
-</tr>
-<tr>
+</TR>
 
+<TR>
 <TD width="25%"><a href="adult/xnxx_main.php" target="_blank">xnxx</a></TD>
 <TD width="25%"><a href="adult/xvideos_main.php" target="_blank">xvideos</a></TD>
 <TD width="25%"><a href="adult/4tube_main.php" target="_blank">4tube</a></TD>
 <TD width="25%"><a href="adult/milfzr.php?tip=release&page=1&title=milfzr&link=" target="_blank">milfzr</a></TD>
-</tr>
-<tr>
+</TR>
 
-</tr>
 <TR>
 <TD width="25%"><a href="adult/pornjam_main.php" target="_blank">pornjam</a></TD>
 <TD width="25%"><a href="adult/pornburst_main.php" target="_blank">pornburst</a></TD>
 <TD width="25%"><a href="adult/anybunny_main.php" target="_blank">anybunny</a></TD>
 <TD width="25%"><a href="adult/incestvidz_main.php" target="_blank">incestvidz</a></TD>
 </TR>
+
+
 <TR>
-
-
 <TD width="25%"><a href="adult/slutload_main.php" target="_blank">slutload</a></TD>
 <TD width="25%"><a href="adult/tvporn_main.php" target="_blank">tvporn</a></TD>
 <TD width="25%"><a href="adult/fapbox_main.php" target="_blank">fapbox</a></TD>
 <TD width="25%"><a href="adult/pornhub_main.php" target="_blank">porhub</a></TD>
 </TR>
-<TR>
 
+<TR>
 <TD width="25%"><a href="adult/tnaflix_main.php" target="_blank">tnaflix</a></TD>
 <TD width="25%"><a href="adult/jizzbunker_main.php" target="_blank">jizzbunker</a></TD>
 <TD width="25%"><a href="adult/pornfree_main.php" target="_blank">pornfree.tv</a></TD>
@@ -102,9 +94,9 @@ echo '
 
 <TR>
 <TD width="25%"><a href="adult/youjizz_main.php" target="_blank">youjizz</a></TD>
-<TD width="25%"><a href="adult/porn_main.php" target="_blank">porn.com</a></TD>
 <TD width="25%"><a href="adult/drtuber_main.php" target="_blank">drtuber</a></TD>
 <TD width="25%"><a href="adult/vporn.php?tip=release&page=1&title=vporn&link=" target="_blank">vporn</a></TD>
+<TD width="25%"><a href="adult/tube8_main.php" target="_blank">tube8</a></TD>
 </TR>
 
 <TR>
@@ -118,11 +110,11 @@ echo '
 <TD width="25%"><a href="adult/mofosex_main.php" target="_blank">mofosex</a></TD>
 <TD width="25%"><a href="adult/pornhdo_main.php" target="_blank">pornhdo</a></TD>
 <TD width="25%"><a href="adult/porndroids_main.php" target="_blank">porndroids</a></TD>
-<TD width="25%"><a href="adult/befuck_main.php" target="_blank">befuck</a></TD>
+<TD width="25%"><a href="adult/youporn.php?tip=release&page=1&title=youporn&link=" target="_blank">youporn</a></TD>
 </TR>
 
 <TR>
-<TD width="25%"><a href="adult/hdmovz_main.php" target="_blank">hdmovz</a></TD>
+<TD width="25%"></TD>
 <TD width="25%"><a href="adult/pornrox_main.php" target="_blank">pornrox</a></TD>
 <TD width="25%"><a href="adult/pornmaki_main.php" target="_blank">pornmaki</a></TD>
 <TD width="25%"><a href="adult/proporn_main.php" target="_blank">proporn</a></TD>

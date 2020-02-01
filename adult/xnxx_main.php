@@ -9,7 +9,7 @@ function str_between($string, $start, $end){
 $main_title="xnxx";
 $target="xnxx.php";
 $fav_target="";
-$recente="https://www.xnxx.com/home";
+$recente="https://www.xnxx.com/hits";
 ?>
 <html>
 <head>

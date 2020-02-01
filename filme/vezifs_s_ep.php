@@ -45,7 +45,7 @@ $ua = $_SERVER['HTTP_USER_AGENT'];
 
 $n=0;
 $sezoane=array();
-preg_match_all("/class\=\"title-series-ep\"\>\<a href\=\"(.*?)\" rel\=\"bookmark\" title\=\"(.*?)\s+Sezonul\s+(\d+)\s+Episodul\s+(\d+)\"/mei",$h,$m);
+preg_match_all("/class\=\"title-series-ep\"\>\<a href\=\"(.*?)\" rel\=\"bookmark\" title\=\"(.*?)\s+Sezonul\s+(\d+)\s+Episodul\s+(\d+)\"/msi",$h,$m);
 //print_r ($m);
 $sezoane=array_unique($m[3]);
 echo '<table border="1" width="100%">'."\n\r";

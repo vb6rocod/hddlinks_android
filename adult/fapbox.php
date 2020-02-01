@@ -225,10 +225,10 @@ $host=parse_url($l)['host'];
   curl_setopt($ch, CURLOPT_TIMEOUT, 15);
   $html = curl_exec($ch);
   curl_close($ch);
-
+//echo $html;
 $r=array();
 $html=str_between($html,'<div class="ads-box">','<div class="btn-group clearfix full-width pagination-block">');
-$videos = explode('<a href="', $html);
+$videos = explode('div class="video-box statisticBox', $html);
 unset($videos[0]);
 $videos = array_values($videos);
 foreach($videos as $video) {

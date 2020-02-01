@@ -55,7 +55,7 @@ echo '<TR><TD class="cat">'.'<a class ="nav" href="'.$target.'?page=1&tip=releas
 echo $form;
 echo '</TR>';
 $n=0;
-$l="https://www.pornrabbit.com/page/categories/";
+$l="https://www.pornrabbit.com/channels/";
 $ua = $_SERVER['HTTP_USER_AGENT'];
 $ua="Mozilla/5.0 (Windows NT 10.0; rv:68.0) Gecko/20100101 Firefox/68.0";
   $ch = curl_init();
@@ -68,14 +68,14 @@ $ua="Mozilla/5.0 (Windows NT 10.0; rv:68.0) Gecko/20100101 Firefox/68.0";
   curl_setopt($ch, CURLOPT_TIMEOUT, 15);
   $html = curl_exec($ch);
   curl_close($ch);
-$videos = explode('div class="cat"', $html);
+$videos = explode('<li>', $html);
 unset($videos[0]);
 $videos = array_values($videos);
 foreach($videos as $video) {
     $t=explode('href="',$video);
     $t1=explode('"',$t[1]);
-    $link="https://www.pornrabbit.com".$t1[0];
-    $t2=explode('h2>',$video);
+    $link=$t1[0];
+    $t2=explode('>',$t[1]);
     $t3=explode('<',$t2[1]);
   	$title=$t3[0];
   	$title=prep_tit($title);

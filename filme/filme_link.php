@@ -117,7 +117,7 @@ if (strpos($filelink,"filmeonlinegratis.org") !== false) {
   $h = curl_exec($ch);
   curl_close($ch);
   $html=$h;
-  preg_match_all("/trembed(\S+)\"/mei",$h,$m);
+  preg_match_all("/trembed(\S+)\"/msi",$h,$m);
   for ($k=0;$k<count($m[0]);$k++) {
     $l="https://fsgratis.com/?".prep_tit($m[0][$k]);
     //echo $l;
@@ -606,18 +606,19 @@ $headers=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:71.0) Gecko/2010010
    $url=$m[1];
   else
    $url="/wp-content/themes/vizer/inc/parts/single/field-ajax.php";
-  $l="http://".$host.$url;
+  $l="https://".$host.$url;
   //echo $l;
   //echo $post;
   //$l="http://filme--online.ro/wp-content/themes/vizer/inc/parts/single/field-ajax.php";
   //$post="post_id=2845285";
+  $headers=array('Origin: https://'.$host.'');
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL,$l);
   curl_setopt($ch, CURLOPT_USERAGENT, $ua);
-  curl_setopt($ch,CURLOPT_REFERER,"https://tvhub.org");
+  curl_setopt($ch,CURLOPT_REFERER,"https://".$host);
   curl_setopt ($ch, CURLOPT_POST, 1);
   curl_setopt ($ch, CURLOPT_POSTFIELDS, $post);
-  //curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+  curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
   curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER  ,1);  // RETURN THE CONTENTS OF THE CALL
   //curl_setopt($ch, CURLOPT_HEADER, true);
@@ -1139,9 +1140,9 @@ for ($i=0;$i<count($links);$i++) {
    curl_setopt($ch, CURLOPT_URL, $l);
    curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
    curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 10.0; rv:72.0) Gecko/20100101 Firefox/72.0');
-   curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+   curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,0);
    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-   curl_setopt($ch,CURLOPT_REFERER,"http://www1.tvhub.ro");
+   curl_setopt($ch,CURLOPT_REFERER,$filelink);
    curl_setopt($ch, CURLOPT_HEADER,1);
    curl_setopt($ch, CURLOPT_NOBODY,1);
    curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
@@ -1616,7 +1617,7 @@ echo '<br></div></body>
 if (file_exists($base_pass."debug.txt")) {
 echo '<BR>';
 //echo $h_debug;
-preg_match_all("/\<iframe(.*?)src\=(\"|\')(.*?)(\"|\')/mei",$h_debug,$m);
+preg_match_all("/\<iframe(.*?)src\=(\"|\')(.*?)(\"|\')/msi",$h_debug,$m);
 //print_r ($m);
 for ($k=0;$k<count($m[3]);$k++) {
   echo $m[3][$k]."<BR>";

@@ -205,15 +205,15 @@ echo '</TR>'."\r\n";
 
 if($tip=="release") {
   if ($page>1)
-    $l = $link."/".$page."/";
+    $l = $link."/page".$page.".html";    // https://www.pornrabbit.com/videos/page3.html
   else
-    $l = $link."/".$page."/";
+    $l = $link;
 } else {
   $search=str_replace(" ","%20",$tit);
   if ($page > 1)
-    $l="https://www.pornrabbit.com/search/".$search."/".$page."/";
+    $l="https://www.pornrabbit.com/".$search."/page".$page.".html";
   else
-    $l="https://www.pornrabbit.com/search/".$search."/".$page."/";
+    $l="https://www.pornrabbit.com/".$search;
 }
 $host=parse_url($l)['host'];
   $ch = curl_init();
@@ -228,13 +228,13 @@ $host=parse_url($l)['host'];
   curl_close($ch);
 
 $r=array();
-$videos = explode('class="video">',$html);
+$videos = explode('data-video="',$html);
 unset($videos[0]);
 $videos = array_values($videos);
 foreach($videos as $video) {
   $t1=explode('href="',$video);
   $t2 = explode('"', $t1[1]);
-  $link = "https://www.pornrabbit.com".$t2[0];
+  $link = $t2[0];
   $t1=explode('title="',$video);
   $t3=explode('"',$t1[1]);
   $title=$t3[0];
@@ -243,9 +243,8 @@ foreach($videos as $video) {
   $t1 = explode('src="', $video);
   $t2 = explode('"', $t1[1]);
   $image = $t2[0];
-  $t1=explode('runtime: <b',$video);
-  $t2=explode('>',$t1[1]);
-  $t3=explode("<",$t2[1]);
+  $t1=explode('sub-desc">',$video);
+  $t3=explode("<",$t1[1]);
   $durata=trim($t3[0]);
   $durata = preg_replace("/\n|\r/"," ",strip_tags($durata));
   if ($durata) $title=$title." (".$durata.')';

@@ -189,6 +189,7 @@ $ua = $_SERVER['HTTP_USER_AGENT'];
   curl_setopt($ch, CURLOPT_TIMEOUT, 15);
   $html = curl_exec($ch);
   curl_close($ch);
+  //echo $html;
 if ($tip == "search")
    $videos = explode('<article', $html);
 else
@@ -218,9 +219,10 @@ foreach($videos as $video) {
   $t=$t1[0];
   $t=preg_replace("/\(?((1|2)\d{3})\)?/","",$t);
   $tit_imdb=trim($t);
-  $t1=explode('data-lazy-src="',$video);
-  $t2=explode('"',$t1[1]);
-  $image=$t2[0];
+  if (preg_match("/[\'|\"](http[\w\/\.\_\:\-\@]+\.jpg)[\'|\"]/",$video,$m))
+    $image=trim($m[1]);
+  else
+    $image="blank.jpg";
   if (strpos($link,"filme") !== false && $title <> "DMCA") {
   if ($has_fs == "no")
     $link_f='filme_link.php?file='.urlencode($link).'&title='.urlencode(fix_t($title));

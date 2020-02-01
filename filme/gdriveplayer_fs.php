@@ -192,7 +192,7 @@ $host=parse_url($link)['host'];
   $serv=array();
   $ad="";
   if ($srt) $ad=" (".$lang.")";
-  if(preg_match_all("/file\"\:\"([\w\d\:\\\.\/\?\=\%\*\&\+\_\-]+)\"\,\"label\"\:\"((\d+)p|Original)\"/mei",$h1,$m))
+  if(preg_match_all("/file\"\:\"([\w\d\:\\\.\/\?\=\%\*\&\+\_\-]+)\"\,\"label\"\:\"((\d+)p|Original)\"/msi",$h1,$m))
     $xx = array_unique($m[1]);
     //print_r ($xx);
   foreach ($xx as $key => $value) {

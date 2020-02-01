@@ -197,7 +197,7 @@ $l="https://hdfull.io/js/providers.js";
     $h4=str_replace($n[0][$k],'"'.$c0[$n[1][$k]].'"',$h4);
   }
   //echo $h4;
-  preg_match_all("/p\[(\d+)\]\=(.*?)\'l\'(.*?)return\s+(.*?)\}/mei",$h4,$p);
+  preg_match_all("/p\[(\d+)\]\=(.*?)\'l\'(.*?)return\s+(.*?)\}/msi",$h4,$p);
   //print_r ($p);
   //die();
   $ppp=array_flip($p[1]);

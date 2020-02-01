@@ -13,7 +13,25 @@ function rr($js_code) {
                 ), $js_code);
 return $js_code;
 }
-
+$DEFAULT_CIPHERS =array(
+            "ECDHE+AESGCM",
+            "ECDHE+CHACHA20",
+            "DHE+AESGCM",
+            "DHE+CHACHA20",
+            "ECDH+AESGCM",
+            "DH+AESGCM",
+            "ECDH+AES",
+            "DH+AES",
+            "RSA+AESGCM",
+            "RSA+AES",
+            "!aNULL",
+            "!eNULL",
+            "!MD5",
+            "!DSS",
+            "!ECDHE+SHA",
+            "!AES128-SHA",
+            "!DHE"
+        );
 function getClearanceLink($content, $url) {
   sleep (5);
   preg_match_all('/name="\w+" value="(.*?)"/', $content, $matches);
@@ -26,7 +44,8 @@ $result="";
 $t1=explode('id="cf-dn',$content);
 $t2=explode(">",$t1[1]);
 $t3=explode("<",$t2[1]);
-$cf=$t3[0];
+//$cf=$t3[0];
+eval("\$cf=".rr($t3[0]).";");
 //$cf="";
 preg_match("/f\,\s?([a-zA-z0-9]+)\=\{\"([a-zA-Z0-9]+)\"\:\s?([\/!\[\]+()]+|[-*+\/]?=[\/!\[\]+()]+)/",$content,$m);
 

@@ -138,7 +138,7 @@ $ua = $_SERVER['HTTP_USER_AGENT'];
   $html = curl_exec($ch);
   curl_close($ch);
 //echo $html;
-if (preg_match("/content\=\'(.*?)\'\s+property\=\'og\:image/mei",$html,$m))
+if (preg_match("/content\=\'(.*?)\'\s+property\=\'og\:image/msi",$html,$m))
  $image=$m[1];
 else
  $image="blank.jpg";
@@ -152,7 +152,7 @@ $videos = array_values($videos);
 foreach($videos as $video) {
   $t2 = explode('"', $video);
   $link = $t2[0];
-  if (preg_match("/title\=\'(.*?)\'/mei",$video,$m)) {
+  if (preg_match("/title\=\'(.*?)\'/msi",$video,$m)) {
     //echo $m[1]."\n".$last_tit."\n";
     //if ($m[1] != $last_tit)
     //print_r ($m);

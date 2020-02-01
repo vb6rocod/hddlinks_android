@@ -203,9 +203,10 @@ $host=parse_url($l)['host'];
     $t4 = explode('<', $t3[1]);
     $t5=explode(', serial',$t4[0]);
     $title=trim($t5[0]);
-    $t1=explode('data-lazy-src="',$video);
-    $t2=explode('"',$t1[1]);
-    $image=$t2[0];
+    if (preg_match("/[\'|\"](http[\w\/\.\_\:\-\@]+\.jpg)[\'|\"]/",$video,$m))
+     $image=trim($m[1]);
+    else
+     $image="blank.jpg";
     if (strpos($link,"seriale") !== false && $title <> "DMCA") array_push($r ,array($title,$link, $image));
   }
   } else {
@@ -221,9 +222,10 @@ $host=parse_url($l)['host'];
     $t4 = explode('"', $t3[1]);
     $t5=explode(', serial',$t4[0]);
     $title=trim($t5[0]);
-    $t1=explode('src="',$video);
-    $t2=explode('"',$t1[1]);
-    $image=$t2[0];
+    if (preg_match("/[\'|\"](http[\w\/\.\_\:\-\@]+\.jpg)[\'|\"]/",$video,$m))
+     $image=trim($m[1]);
+    else
+     $image="blank.jpg";
     if (strpos($link,"seriale") !== false && $title && $title <> "DMCA") array_push($r ,array($title,$link, $image));
   }
   }

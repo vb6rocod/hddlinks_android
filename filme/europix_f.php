@@ -270,14 +270,14 @@ $head=array('Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q
  unset($videos[0]);
  $videos = array_values($videos);
  foreach($videos as $video) {
-  preg_match("/href\=(\'|\")(.*?)(\'|\")/mei",$video,$m);
+  preg_match("/href\=(\'|\")(.*?)(\'|\")/msi",$video,$m);
   $link=$m[2];
   $link="https://".$host."/".str_replace("../","",$link);
   //echo $link1;
   $t1 = explode('h5>', $video);
   $t2 = explode('<', $t1[1]);
   $title = trim($t2[0]);
-  preg_match("/src\=(\'|\")(.*?)(\'|\")/mei",$video,$m);
+  preg_match("/src\=(\'|\")(.*?)(\'|\")/msi",$video,$m);
   $image = $m[2];
   if (strpos($image,"../") !== false)
   $image="https://".$host."/".str_replace("../","",$image);

@@ -148,7 +148,7 @@ $host=parse_url($link)['host'];
   curl_close ($ch);
   //echo $h3;
   preg_match("/var\s+\w+=(0x[0-9a-f]{7,});/",$h3,$m);
-  $ac=$m[1];
+  $ac=hexdec($m[1]);
 $r=array();
 $videos = explode("dbneg('", $h3);
 unset($videos[0]);
