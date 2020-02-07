@@ -29,21 +29,21 @@ $ua = $_SERVER['HTTP_USER_AGENT'];
   curl_setopt($ch, CURLOPT_USERAGENT, $ua);
   curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER  ,1);  // RETURN THE CONTENTS OF THE CALL
-  curl_setopt($ch, CURLOPT_COOKIEJAR, $cookie);
   curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie);
+  curl_setopt($ch, CURLOPT_COOKIEJAR, $cookie);
   curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
   curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
   curl_setopt($ch, CURLOPT_TIMEOUT, 15);
   $html = curl_exec($ch);
   curl_close ($ch);
   $html=decode_code($html);
-  //echo $html;
  if(preg_match_all('/toNumbers\(\"(\w+)\"/',$html)) {
  $pat1="(var\s*([a-z0-9_]+)(\=))";
  $pat2="(function\s*([a-z0-9_]+)(\(\)\{return))";
- $pat3="\[([\'|\"][a-zA-Z0-9_\=\+\/\|\;\,\!\"\s\(\)\\\]+[\"|\']\,?){2,}\]";
+ $pat3="\[([\'|\"][a-zA-Z0-9_\=\+\/\|\;\,\!\"\s\(\)\\\]+[\"|\']\,?){1,}\]";
  $pat_array="/(".$pat1."|".$pat2.")".$pat3."/ms";
  if (preg_match($pat_array,$html,$m)) {
+ //print_r ($m);
   $c=array();
   $x=0;
   $code=str_replace($m[1],"\$c=",$m[0].";");
@@ -59,13 +59,15 @@ $ua = $_SERVER['HTTP_USER_AGENT'];
     $html
    );
  }
+ //echo $html."\n";
  $html=str_replace("atob","base64_decode",$html);
  $html=str_replace("toNumbers","cryptoHelpers::toNumbers",$html);
  // c2=toNumbers(c1)
  $html=preg_replace("/(\w\d)\=/","\$"."\$1"."=",$html);
  $html=preg_replace("/\((\w\d)\)/","("."\$"."\$1".")",$html);
 
- preg_match_all("/\\$(\w\d)\=(cryptoHelpers::toNumbers|base64_decode)\((.*?)\)/ms",$html,$m);
+ //echo $html;
+ preg_match_all("/\\$(\w\d)\=\s*(cryptoHelpers::toNumbers|base64_decode)\((.*?)\)/s",$html,$m);
  $code="";
  for ($k=0;$k<count($m[0]);$k++) {
    $code .=$m[0][$k].";";
@@ -75,14 +77,27 @@ $ua = $_SERVER['HTTP_USER_AGENT'];
  // slowAES.decrypt(a1,2,b1,c2)
  //$d=AES::decrypt($c,16,2,$a,16,$b);
  $code="\$d=AES::decrypt("."\$".$p[1].",16,2,"."\$".$p[3].",16,"."\$".$p[4].");";
+
  eval ($code);
  $d1=cryptoHelpers::toHex($d);
 $domain = 'www.filmecinema.net';
-$expire = time() + 3600;
+$expire = time() + 36000;
 $name   = 'vDDoS';
 $value = $d1;
+if (file_exists($cookie)) unlink ($cookie);
+file_put_contents($cookie, "\n$domain\tTRUE\t/\tFALSE\t$expire\t$name\t$value\n", FILE_APPEND);  // add \n la coada pt. 7.3.3
 
-file_put_contents($cookie, "\n$domain\tTRUE\t/\tFALSE\t$expire\t$name\t$value", FILE_APPEND);
+  $ch = curl_init($l);
+  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
+  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER  ,1);  // RETURN THE CONTENTS OF THE CALL
+  curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie);
+  curl_setopt($ch, CURLOPT_COOKIEJAR, $cookie);
+  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+  $html = curl_exec($ch);
+  curl_close ($ch);
 }
 ?>
 <html>
@@ -128,16 +143,6 @@ echo '<TR><TD class="cat">'.'<a class ="nav" href="'.$target.'?page=1&tip=releas
 echo $form;
 echo '</TR>';
 $n=0;
-
-$ch = curl_init($l);
-curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-curl_setopt($ch, CURLOPT_USERAGENT, $ua);
-curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie);
-curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
-curl_setopt($ch, CURLOPT_TIMEOUT, 15);
-$html=curl_exec($ch);
-curl_close($ch);
 
 //echo $html;
 $html=str_between($html,'ul class="nav-category',"</ul");

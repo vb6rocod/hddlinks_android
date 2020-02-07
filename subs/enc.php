@@ -1,4 +1,5 @@
 <?php
+/*
 $h=file_get_contents("test.srt1");
 //$h=htmlspecialchars($h);
 $h=str_replace("&lrm;","",$h);
@@ -9,8 +10,29 @@ $h=preg_replace("/\<\/c.*?\>/","",$h);
 //$h=str_replace("</c.bg_transparent>","",$h);
 echo $h;
 die();
+*/
+$out='1
+00:00:01,000 --> 00:00:01,000
+abc
+2
+00:00:01,100 --> 00:00:20,917
+abc
+abc';
+$b=json_encode($out);
+echo $b;
+die();
+$a="abc";
+$b=json_encode($a);
+$b='"a\u0083b\u0098c"';
+$c=json_decode($b);
+$d=urlencode($c);
+echo $d;
+die();
 $list = glob("*.srt");
 $contents=file_get_contents($list[0]);
+//$h=urlencode($contents);
+//echo $h;
+//die();
 $file_array=explode("\n",$contents);
 $out="";
   foreach($file_array as $line)
@@ -19,7 +41,7 @@ $out="";
         if(preg_match('/(\d\d):(\d\d):(\d\d)(\.|,)(\d\d\d) --> (\d\d):(\d\d):(\d\d)(\.|,)(\d\d\d)/', $line))
          $out .=$line."<BR>";
         else
-         $out .=json_encode($line)." => ".$line."<BR>";
+         $out .=json_encode($line)." => ".$line."<BR>".urlencode($line)."<BR>";
   }
 
   echo $out;

@@ -7,6 +7,7 @@ $list = glob($base_sub."*.srt");
     str_replace(" ","%20",$l);
     unlink($l);
 }
+if (file_exists($base_cookie."look_token.txt")) unlink ($base_cookie."look_token.txt");
 if (file_exists($base_pass."debug.txt"))
  $debug=true;
 else
@@ -138,6 +139,19 @@ $head=array('Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q
 'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2');
 
 $l=$link;
+  $ua = $_SERVER['HTTP_USER_AGENT'];
+  $ch = curl_init();
+  curl_setopt($ch, CURLOPT_URL, $l);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+  curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
+  $h = curl_exec($ch);
+  curl_close($ch);
+  $t1=explode("id_movie='",$h);
+  $t2=explode("'",$t1[1]);
+  $id=$t2[0];
 $r=array();
 $r[]=$l;
 echo '<table border="1" width="100%">';
@@ -222,6 +236,7 @@ echo '<br>
 <TD><font size="4"><b>Scurtaturi: 1=opensubtitles, 2=titrari, 3=subs, 4=subtitrari, 5=vizioneaza
 <BR>Scurtaturi: 7=opensubtitles, 8=titrari, 9=subs, 0=subtitrari (cauta imdb id)
 </b></font></TD></TR></TABLE>
+<iframe src="lookmovie_token.html?id='.$id.'"></iframe>
 ';
 include("../debug.html");
 echo '

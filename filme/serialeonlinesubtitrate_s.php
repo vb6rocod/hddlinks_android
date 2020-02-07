@@ -168,43 +168,8 @@ if ($page==1) {
 echo '</TR>'."\r\n";
 $ua = $_SERVER['HTTP_USER_AGENT'];
 $cookie=$base_cookie."hdpopcorns.dat";
-$requestLink="https://tvhub.org/";
 $requestLink="https://serialeonlinesubtitrate.ro/";
-if ($page==1 && $tip !="search") {
-if (file_exists($cookie)) unlink ($cookie);
-$head=array(
-'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
-'Accept-Language: en-US,en;q=0.5',
-'Accept-Encoding: deflate, br',
-'Connection: keep-alive',
-'Upgrade-Insecure-Requests: 1');
-  $ch = curl_init();
-  curl_setopt($ch, CURLOPT_URL, $requestLink);
-  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
-  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
-  curl_setopt($ch,CURLOPT_HTTPHEADER,$head);
-  curl_setopt($ch, CURLOPT_COOKIEJAR, $cookie);
-  curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'GET');
-  curl_setopt($ch, CURLOPT_HTTPGET, true);
-  curl_setopt($ch, CURLINFO_HEADER_OUT, true);
-  curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
-  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
-  curl_setopt($ch, CURLOPT_HEADER,1);
-  $h = curl_exec($ch);
- if (strpos($h,"503 Service") !== false) {
-  if (strpos($h,'id="cf-dn') === false)
-   $q= getClearanceLink_old($h,$requestLink);
-  else
-   $q= getClearanceLink($h,$requestLink);
 
-  curl_setopt($ch, CURLOPT_URL, $q);
-  $h = curl_exec($ch);
-  curl_close($ch);
- } else {
-    curl_close($ch);
- }
-}
 if ($tip=="search") {
   if ($page == 1)
     $requestLink = "https://serialeonlinesubtitrate.ro?s=".str_replace(" ","+",$tit);
@@ -252,7 +217,7 @@ $r=array();
     $t1=explode('src="',$video);
     $t2=explode('"',$t1[1]);
     $image=$t2[0];
-    $image = "r_m.php?file=".$image;
+    //$image = "r_m.php?file=".$image;
     if (strpos($link,"/serial/") !== false) array_push($r ,array($title,$link, $image));
   }
   } else {
@@ -272,7 +237,7 @@ $r=array();
     $t1=explode('src="',$video);
     $t2=explode('"',$t1[1]);
     $image=$t2[0];
-    $image = "r_m.php?file=".$image;
+    //$image = "r_m.php?file=".$image;
     if (strpos($link,"/serial/") !== false) array_push($r ,array($title,$link, $image));
   }
   }

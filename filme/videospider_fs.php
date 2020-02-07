@@ -175,7 +175,7 @@ $ua="Mozilla/5.0 (Windows NT 10.0; rv:71.0) Gecko/20100101 Firefox/71.0";
   curl_setopt($ch, CURLOPT_HEADER,1);
   $h = curl_exec($ch);
   curl_close($ch);
-  if (preg_match("/Location:\s*(.+)/",$h,$m))
+  if (preg_match("/location:\s*(.+)/i",$h,$m))
     $l1=trim($m[1]);
     //echo $l1;
   $ch = curl_init();

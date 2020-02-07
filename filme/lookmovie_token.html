@@ -1,0 +1,19 @@
+<!doctype html>
+<html>
+  <head>
+<script src='https://www.google.com/recaptcha/api.js?render=6Ley5moUAAAAAJxloiuF--u_uS28aYUj-0E6tSfZ'></script>
+  </head>
+  <body>
+<div class="loader"></div>
+<script>
+		grecaptcha.ready(function() {
+		grecaptcha.execute('6Ley5moUAAAAAJxloiuF--u_uS28aYUj-0E6tSfZ', {action: 'action_name'})
+		.then(function(token) {
+            var x = location.search;
+            var the_data = x +"&token=" + token;
+            location.href="lookmovie_token.php" + the_data;
+		});
+		});
+	</script>
+  </body>
+</html>

@@ -6,7 +6,9 @@ function str_between($string, $start, $end){
 	return substr($string,$ini,$len);
 }
 include ("../common.php");
-include ("../util.php");
+include ("../cloudflare.php");
+$last_good="https://www1.tvhub.ro";
+$host=parse_url($last_good)['host'];
 $page = $_GET["page"];
 $tip= $_GET["tip"];
 $tit=$_GET["title"];
@@ -18,7 +20,7 @@ $has_fav="yes";
 $has_search="yes";
 $has_add="yes";
 $has_fs="yes";
-$fav_target="tvhub_s_fav.php?host=http://www1.tvhub.ro";
+$fav_target="tvhub_s_fav.php?host=".$last_good;
 $add_target="tvhub_s_add.php";
 $add_file="";
 $fs_target="tvhub_s_ep.php";
@@ -168,109 +170,30 @@ if ($page==1) {
 echo '</TR>'."\r\n";
 $ua = $_SERVER['HTTP_USER_AGENT'];
 $cookie=$base_cookie."hdpopcorns.dat";
-$requestLink="https://tvhub.org/";
-$requestLink="https://www1.tvhub.ro/";
-if ($page==1 && $tip !="search") {
-if (file_exists($cookie)) unlink ($cookie);
-$head=array(
-'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
-'Accept-Language: en-US,en;q=0.5',
-'Accept-Encoding: deflate, br',
-'Connection: keep-alive',
-'Upgrade-Insecure-Requests: 1');
+if ($tip=="search") {
+  if ($page == 1)
+    $requestLink = "https://".$host."/?s=".str_replace(" ","+",$tit);
+  else
+    $requestLink  = "https://".$host."/page/".$page."/?s=".str_replace(" ","+",$tit);
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $requestLink);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
   curl_setopt($ch, CURLOPT_USERAGENT, $ua);
   curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
-  curl_setopt($ch,CURLOPT_HTTPHEADER,$head);
-  curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie);
-  curl_setopt($ch, CURLOPT_COOKIEJAR, $cookie);
-  curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'GET');
-  curl_setopt($ch, CURLOPT_HTTPGET, true);
-  curl_setopt($ch, CURLINFO_HEADER_OUT, true);
-  curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
-  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
-  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
-  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
-  curl_setopt($ch, CURLOPT_HEADER,1);
-  $h = curl_exec($ch);
- if (strpos($h,"503 Service") !== false) {
-  if (strpos($h,'id="cf-dn') === false)
-   $q1= getClearanceLink_old($h,$requestLink);
-  else
-   $q1= getClearanceLink($h,$requestLink);
-  $t1=explode('action="',$h);
-  $t2=explode('"',$t1[1]);
-  $requestLink="http://www1.tvhub.ro".$t2[0];
-  //$requestLink="https://xmovies8.tv".$t2[0];
-  $t1=explode("?",$q1);
-  $post=$t1[1];
-$head=array('Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
-'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
-'Accept-Encoding: gzip, deflate, br',
-'Content-Type: application/x-www-form-urlencoded',
-'Content-Length: '.strlen($post).'',
-'Referer: https://www1.tvhub.ro',
-'Origin: https://www1.tvhub.ro',
-'Connection: keep-alive',
-'Upgrade-Insecure-Requests: 1');
-//$post="r=&id=".$id."&g-recaptcha-response=".$token;
-//echo "<BR>".$post;
-//$ch = curl_init();
-  curl_setopt($ch, CURLOPT_URL, $requestLink);
-  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
-  //curl_setopt($ch,CURLOPT_REFERER,$l1);
-  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,0);
-  curl_setopt($ch, CURLOPT_RETURNTRANSFER  ,1);  // RETURN THE CONTENTS OF THE CALL
-  curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie);
-  curl_setopt($ch, CURLOPT_COOKIEJAR, $cookie);
-  curl_setopt($ch, CURLOPT_HTTPHEADER, $head);
-  curl_setopt($ch, CURLOPT_HEADER,1);
-  curl_setopt($ch, CURLOPT_NOBODY,1);
-  curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'POST');
-  curl_setopt($ch, CURLOPT_HTTPGET, false);
-  //curl_setopt($ch, CURLINFO_HEADER_OUT, true);
-  curl_setopt ($ch, CURLOPT_POST, 1);
-  curl_setopt ($ch, CURLOPT_POSTFIELDS, $post);
-  curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
-  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
-  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
-  curl_setopt($ch, CURLOPT_TIMEOUT, 25);
-  $h = curl_exec($ch);
-  curl_close ($ch);
-  //echo $h;
-///////////////////////////////////
-  //curl_setopt($ch, CURLOPT_URL, $q);
-  //$h = curl_exec($ch);
-  //curl_close($ch);
- } else {
-    curl_close($ch);
- }
-}
-if ($tip=="search") {
-  if ($page == 1)
-    $requestLink = "http://www1.tvhub.ro/?s=".str_replace(" ","+",$tit);
-  else
-    $requestLink  = "http://www1.tvhub.ro/page/".$page."/?s=".str_replace(" ","+",$tit);
-  $ch = curl_init($requestLink);
-  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
-  curl_setopt($ch,CURLOPT_REFERER,"https://tvhub.org/");
-  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
-  curl_setopt($ch, CURLOPT_RETURNTRANSFER  ,1);
-  curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie);
+  curl_setopt ($ch, CURLOPT_REFERER, "https://".$host);
   curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+  curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie);
   curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
   curl_setopt($ch, CURLOPT_TIMEOUT, 15);
   $html = curl_exec($ch);
-  curl_close ($ch);
+  curl_close($ch);
 } else {
-  $requestLink="http://www1.tvhub.ro/wp-admin/admin-ajax.php"; // e o problema la ei
+  if ($page==1) $html=cf_pass("https://".$host,$cookie);
+  $requestLink="https://".$host."/wp-admin/admin-ajax.php"; // e o problema la ei
   $post="action=load_more&page=".($page-1)."&template=cactus-channel%2Fcontent-listing&vars%5Bpost_type%5D=ct_channel&vars%5Bposts_per_page%5D=20&vars%5Bpost_status%5D=publish&vars%5Bignore_sticky_posts%5D=1&vars%5Bpaged%5D=1&id_playlist=";
-  //$post="action=load_more&page=1&template=cactus-channel/content-listing&vars[post_type]=ct_channel&vars[posts_per_page]=20&vars[post_status]=publish&vars[ignore_sticky_posts]=1&vars[paged]=1&id_playlist=";
   $ch = curl_init($requestLink);
   curl_setopt($ch, CURLOPT_USERAGENT, $ua);
-  curl_setopt($ch,CURLOPT_REFERER,"https://tvhub.org/");
+  curl_setopt($ch,CURLOPT_REFERER,"https://".$host);
   curl_setopt ($ch, CURLOPT_POST, 1);
   curl_setopt ($ch, CURLOPT_POSTFIELDS, $post);
   curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
@@ -298,7 +221,7 @@ $r=array();
     $t1=explode('src="',$video);
     $t2=explode('"',$t1[1]);
     $image=$t2[0];
-    $image = "r_m.php?file=".$image;
+    //$image = "r_m.php?file=".$image;
     if (strpos($link,"/serial") !== false) array_push($r ,array($title,$link, $image));
   }
   } else {
@@ -318,7 +241,7 @@ $r=array();
     $t1=explode('src="',$video);
     $t2=explode('"',$t1[1]);
     $image=$t2[0];
-    $image = "r_m.php?file=".$image;
+    //$image = "r_m.php?file=".$image;
     if (strpos($link,"/serial") !== false) array_push($r ,array($title,$link, $image));
   }
   }

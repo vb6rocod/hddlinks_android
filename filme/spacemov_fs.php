@@ -195,7 +195,9 @@ foreach($videos as $video) {
   $t2=explode('"',$t1[1]);
   //$t3=explode('"',$t2[1]);
   $openload=trim($t2[0]);
+  //echo $openload;
   if (strpos($openload,"http") === false) {
+  $ua="Mozilla/5.0 (Windows NT 10.0; rv:71.0) Gecko/20100101 Firefox/71.0";
   $l="https://videospider.in/getvideo?key=FQuvG9srL0DO2euN&video_id=".$openload;
   $post="{}";
   $ch = curl_init($l);
@@ -211,36 +213,51 @@ foreach($videos as $video) {
   $h1 = curl_exec($ch);
   curl_close ($ch);
   //echo $h1;
-  //print_r(http_parse_headers($h1));
-  $t1=explode('Location:',$h1);
-  $t2=explode('Expect',$t1[1]);
-  if (strpos($t2[0],"videospider.in") === false)
-    $openload=trim($t2[0]);
-  else
-    $openload="";
+  if (preg_match("/location:\s*(.+)/i",$h1,$m))
+   $openload=trim($m[1]);
+  $ch = curl_init();
+  curl_setopt($ch, CURLOPT_URL, $openload);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+  //curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
+  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
+  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+  $h = curl_exec($ch);
+  //echo $h;
+  $t1=explode('var token = "',$h);
+  $t2=explode('"',$t1[1]);
+  $token=$t2[0];
+  $serv1=array();
+  $name=array();
+  $videos=explode('data-server="',$h);
+  unset($videos[0]);
+  $videos = array_values($videos);
+  foreach($videos as $video) {
+    $t1=explode('"',$video);
+    $server=$t1[0];
+    $t1=explode('data-server-id="',$video);
+    $t2=explode('"',$t1[1]);
+    $id=$t2[0];
+    $t1=explode('title="',$video);
+    $t2=explode('"',$t1[1]);
+    $name[]=$t2[0];
+    $serv1[]=array('serv' => $server,'id' => $id);
   }
-  if (strpos($openload,"oload.party") !== false) {
-     $l="https://oload.party/watch";
-     $ref=$openload;
-     $head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:67.0) Gecko/20100101 Firefox/67.0',
-     'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
-     'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
-     'Accept-Encoding: deflate',
-     'Referer: '.$ref.'',
-     'Connection: keep-alive');
-     $ch = curl_init();
-     curl_setopt($ch, CURLOPT_URL, $l);
-     curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-     curl_setopt($ch,CURLOPT_HTTPHEADER,$head);
-     curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
-     curl_setopt($ch, CURLOPT_TIMEOUT, 15);
-     $h=curl_exec($ch);
-     curl_close($ch);
-     if (preg_match_all("/data-host\=\"(\d+)\" data-id\=\"(.*?)\"/",$h,$m)) {
-       for ($k=0;$k<count($m[1]);$k++) {
-         $r[] = loadsource($m[1][$k],$m[2][$k]);
-       }
-     }
+  for ($k=0;$k<count($serv1);$k++) {
+  $server=$serv1[$k]['serv'];
+  $id=$serv1[$k]['id'];
+  $l1="https://oload.party/loadsource.php?server=".$server."&id=".$id."&token=".$token;
+  curl_setopt($ch, CURLOPT_URL, $l1);
+  $h = curl_exec($ch);
+  //echo $h;
+  //$h=file_get_contents($l1);
+  $t1=explode('iframe src="',$h);
+  $t2=explode('"',$t1[1]);
+  $r[]=$t2[0];
+  }
+  curl_close($ch);
   } else if (strpos($openload,"http") !== false) $r[]=$openload;
 }
 echo '<table border="1" width="100%">';

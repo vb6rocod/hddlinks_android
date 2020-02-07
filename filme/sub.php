@@ -19,6 +19,7 @@ $mod=$_POST["mod"];
 //$id=str_replace("[","\[",$id);
 //$id=str_replace("]","\]",$id);
 //$id=str_replace("'","\'",$id);
+if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') $id=str_replace("/","\\",$id);
 //if (strpos($base_sub,":") !== false) $id=str_replace("/","\\",$id);
 //Madam Secretary - Sezonul 4 (2017)Madam.Secretary.S04E01.1080p-720p.HDTV.X264-DIMENSION.srt
 //die();

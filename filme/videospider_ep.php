@@ -46,12 +46,17 @@ $l="https://api.themoviedb.org/3/tv/".$link."?api_key=".$key;
   $h = curl_exec($ch);
   curl_close ($ch);
   $s=json_decode($h,1)['seasons'];
+  //print_r ($s);
 $sezoane_name=array();
 $sezoane=array();
 $sezoane_id=array();
 for ($k=0; $k<count($s);$k++) {
-  $sezoane_name[]=$s[$k]['name'];
+  //$sezoane_name[]=$s[$k]['name'];  // See Babylon 5
   $sezoane[]=$s[$k]['season_number'];
+  if ($s[$k]['season_number'] == 0)
+    $sezoane_name[]="Specials";
+  else
+    $sezoane_name[]="Season ".$s[$k]['season_number'];
   $sezoane_id[]=$s[$k]['id'];
 }
 echo '<table border="1" width="100%">'."\n\r";

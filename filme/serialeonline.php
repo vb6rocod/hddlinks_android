@@ -191,6 +191,7 @@ $ua = $_SERVER['HTTP_USER_AGENT'];
   curl_setopt($ch, CURLOPT_TIMEOUT, 15);
   $html = curl_exec($ch);
   curl_close($ch);
+  //echo $html;
   if ($tip=="release") {
   $videos = explode('article id="post', $html);
   unset($videos[0]);
@@ -202,9 +203,10 @@ $ua = $_SERVER['HTTP_USER_AGENT'];
     $t1=explode('alt="',$video);
     $t2=explode('"',$t1[1]);
     $title=trim($t2[0]);
-    $t1=explode('data-lazy-src="',$video);
-    $t2=explode('"',$t1[1]);
-    $image=$t2[0];
+    if (preg_match("/[\'|\"](http[\w\/\.\_\:\-\@]+\.jpg)[\'|\"]/",$video,$m))
+     $image=trim($m[1]);
+    else
+     $image="blank.jpg";
     if (strpos($link,"/serial") !== false) array_push($r ,array($title,$link, $image));
   }
   } else {
@@ -218,9 +220,10 @@ $ua = $_SERVER['HTTP_USER_AGENT'];
     $t1=explode('alt="',$video);
     $t2=explode('"',$t1[1]);
     $title=trim($t2[0]);
-    $t1=explode('data-lazy-src="',$video);
-    $t2=explode('"',$t1[1]);
-    $image=$t2[0];
+    if (preg_match("/[\'|\"](http[\w\/\.\_\:\-\@]+\.jpg)[\'|\"]/",$video,$m))
+     $image=trim($m[1]);
+    else
+     $image="blank.jpg";
     if (strpos($link,"/serial") !== false) array_push($r ,array($title,$link, $image));
   }
   }

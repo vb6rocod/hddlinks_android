@@ -22,6 +22,8 @@ http://live.trm.md:1935/live/MoldovaDoi2/playlist.m3u8
 https://livebeta.publika.md/LIVE/P/6810.m3u8
 #EXTINF:0 ,MD| TV8 
 http://live.cdn.tv8.md/TV7/video1.m3u8?token=1
+#EXTINF:0 ,MD| N4
+http://web.sats.gstv.tech/cpl11/00987101-cd36-49ed-a5e1-bcfaa25d0d85/N4web.m3u8
 #EXTINF:-1,PRO TV HD
 https://vid.hls.protv.ro/protvhdn/protvhd_3_34/index.m3u8?1
 #EXTINF:-1,PRO X HD
