@@ -16,15 +16,19 @@ $id=str_replace("&amp;","&",$id);
 $mod=$_POST["mod"];
 //$mod="rar";
 //echo $id;
-//$id=str_replace("[","\[",$id);
-//$id=str_replace("]","\]",$id);
-//$id=str_replace("'","\'",$id);
-if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') $id=str_replace("/","\\",$id);
+if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN' && $mod=="rar") {
+$id=str_replace("[","\[",$id);
+$id=str_replace("]","\]",$id);
+$id=str_replace("'","\'",$id);
+$id=str_replace("/","\\",$id);
+}
 //if (strpos($base_sub,":") !== false) $id=str_replace("/","\\",$id);
 //Madam Secretary - Sezonul 4 (2017)Madam.Secretary.S04E01.1080p-720p.HDTV.X264-DIMENSION.srt
 //die();
 //if (file_exists($base_sub."sub.zip")) $mod="zip";
 //if (file_exists($base_sub."sub.rar")) $mod="rar";
+//echo $id;
+//die();
 if ($mod=="rar") {
    $file_srt=$base_sub."sub.rar";
    $rar_file = rar_open($file_srt);

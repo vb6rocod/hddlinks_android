@@ -205,8 +205,8 @@ var _0xde0c=["https://openload.co/embed/fhvG_t3d5b8"];src= _0xde0c[0]
     if (preg_match("/dwatchmovies|topeuropix|123europix/",$serv[$k])) {
     curl_setopt($ch, CURLOPT_URL, $serv[$k]);
     $h = curl_exec($ch);
-    if (preg_match("/iframe\s+src\=[\'|\"](.*?)[\'|\"]/",$h,$m)) {
-      $l=$m[1];
+    if (preg_match("/((iframe\s*src)|(window\.location))\=(\'|\")(.*?)(\'|\")/",$h,$m)) {
+      $l=$m[5];
       if ($l && strpos($l,"http") === false) $l="https:".$l;
       if ($l) $r[]=$l;
     }

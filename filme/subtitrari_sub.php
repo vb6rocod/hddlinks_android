@@ -190,7 +190,8 @@ if (strpos($h,"WEBVTT") !== false) {
    return $h;
 }
 $ua="Mozilla/5.0 (Windows NT 10.0; rv:55.0) Gecko/20100101 Firefox/55.0";
-  $l="http://subtitrari-noi.ro/".str_replace(" ","%20",$id_sub);
+  $l="https://subtitrari-noi.ro/".str_replace(" ","%20",$id_sub);
+  $head=array('Origin: https://subtitrari-noi.ro');
   $filename=$id_sub;
   //echo $filename;
   $ext = substr(strrchr($filename, '.'), 1);
@@ -202,7 +203,8 @@ if (preg_match("/(srt|txt|vtt)/i",$ext)) {
    curl_setopt($ch, CURLOPT_USERAGENT, $ua);
    curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
    curl_setopt($ch, CURLOPT_HEADER, false);
-   curl_setopt($ch,CURLOPT_REFERER,"http://subtitrari-noi.ro");
+   curl_setopt($ch,CURLOPT_REFERER,"https://subtitrari-noi.ro");
+   curl_setopt($ch, CURLOPT_HTTPHEADER, $head);
    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
    //curl_setopt($ch, CURLOPT_FILE, $fp);
   curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
@@ -225,8 +227,8 @@ if (preg_match("/(srt|txt|vtt)/i",$ext)) {
    curl_setopt($ch, CURLOPT_URL, $l);
    curl_setopt($ch, CURLOPT_USERAGENT, $ua);
    curl_setopt($ch, CURLOPT_HEADER, false);
-   //curl_setopt($ch, CURLOPT_HTTPHEADER, $head);
-   curl_setopt($ch,CURLOPT_REFERER,"http://subtitrari-noi.ro");
+   curl_setopt($ch, CURLOPT_HTTPHEADER, $head);
+   curl_setopt($ch,CURLOPT_REFERER,"https://subtitrari-noi.ro");
    //curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
    curl_setopt($ch, CURLOPT_FILE, $fp);
    //curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);

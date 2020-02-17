@@ -171,85 +171,7 @@ $cookie=$base_cookie."cinebloom.txt";
 
 //$ua="Mozilla/5.0 (Windows NT 10.0; rv:70.0) Gecko/20100101 Firefox/70.0";
 ////////////////////////////////////////////////////////////////////////////////////////
-if ($page==100 && $tip !="search") {
-//if (file_exists($cookie)) unlink ($cookie);
-$head=array(
-'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
-'Accept-Language: en-US,en;q=0.5',
-'Accept-Encoding: deflate, br',
-'Connection: keep-alive',
-'Upgrade-Insecure-Requests: 1');
-$requestLink="https://www.cinebloom.org/";
-  $ch = curl_init();
-  curl_setopt($ch, CURLOPT_URL, $requestLink);
-  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
-  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
-  curl_setopt($ch,CURLOPT_HTTPHEADER,$head);
-  curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie);
-  curl_setopt($ch, CURLOPT_COOKIEJAR, $cookie);
-  curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'GET');
-  curl_setopt($ch, CURLOPT_HTTPGET, true);
-  curl_setopt($ch, CURLINFO_HEADER_OUT, true);
-  curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
-  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
-  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
-  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
-  curl_setopt($ch, CURLOPT_HEADER,1);
-  $h = curl_exec($ch);
- if (strpos($h,"503 Service") !== false) {
-  if (strpos($h,'id="cf-dn') === false)
-   $q1= getClearanceLink_old($h,$requestLink);
-  else
-   $q1= getClearanceLink($h,$requestLink);
-  $t1=explode('action="',$h);
-  $t2=explode('"',$t1[1]);
-  $requestLink="https://www.cinebloom.org".$t2[0];
-  //$requestLink="https://xmovies8.tv".$t2[0];
-  $t1=explode("?",$q1);
-  $post=$t1[1];
-$head=array('Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
-'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
-'Accept-Encoding: gzip, deflate, br',
-'Content-Type: application/x-www-form-urlencoded',
-'Content-Length: '.strlen($post).'',
-'Referer: https://www.cinebloom.org',
-'Origin: https://www.cinebloom.org',
-'Connection: keep-alive',
-'Upgrade-Insecure-Requests: 1');
-//$post="r=&id=".$id."&g-recaptcha-response=".$token;
-//echo "<BR>".$post;
-//$ch = curl_init();
-  curl_setopt($ch, CURLOPT_URL, $requestLink);
-  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
-  //curl_setopt($ch,CURLOPT_REFERER,$l1);
-  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,0);
-  curl_setopt($ch, CURLOPT_RETURNTRANSFER  ,1);  // RETURN THE CONTENTS OF THE CALL
-  curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie);
-  curl_setopt($ch, CURLOPT_COOKIEJAR, $cookie);
-  curl_setopt($ch, CURLOPT_HTTPHEADER, $head);
-  curl_setopt($ch, CURLOPT_HEADER,1);
-  curl_setopt($ch, CURLOPT_NOBODY,1);
-  curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'POST');
-  curl_setopt($ch, CURLOPT_HTTPGET, false);
-  //curl_setopt($ch, CURLINFO_HEADER_OUT, true);
-  curl_setopt ($ch, CURLOPT_POST, 1);
-  curl_setopt ($ch, CURLOPT_POSTFIELDS, $post);
-  curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
-  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
-  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
-  curl_setopt($ch, CURLOPT_TIMEOUT, 25);
-  $h = curl_exec($ch);
-  curl_close ($ch);
-  //echo $h;
-///////////////////////////////////
-  //curl_setopt($ch, CURLOPT_URL, $q);
-  //$h = curl_exec($ch);
-  //curl_close($ch);
- } else {
-    curl_close($ch);
- }
-}
+
 ////////////////////////////////////////////////////////////////////////////////////////
 if($tip=="release") {
   $l="https://www.cinebloom.org/tvseries?page=".$page;
@@ -265,16 +187,16 @@ $host=parse_url($l)['host'];
   curl_setopt($ch, CURLOPT_RETURNTRANSFER  ,1);  // RETURN THE CONTENTS OF THE CALL
   curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie);
   //curl_setopt($ch, CURLOPT_HTTPHEADER, $head);
-  curl_setopt($ch, CURLOPT_HEADER,1);
+  curl_setopt($ch, CURLINFO_HEADER_OUT, true);
   curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
   curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
   curl_setopt($ch, CURLOPT_TIMEOUT, 15);
   $html = curl_exec($ch);
+  $info = curl_getinfo($ch);
   curl_close ($ch);
 //echo $html;
-if (strpos($html,"HTTP/1.1 403") !== false) {
+if ($info['http_code'] === 403) {
   if (file_exists($cookie)) unlink ($cookie);
-  if (file_exists($base_cookie."max_time_cinebloom.txt")) unlink ($base_cookie."max_time_cinebloom.txt");
   if (file_exists($base_cookie."max_time_cinebloom.txt")) unlink ($base_cookie."max_time_cinebloom.txt");
   echo '<H2>token expirat! GO Back and try again.</H2>';
   die();

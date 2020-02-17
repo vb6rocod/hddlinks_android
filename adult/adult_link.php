@@ -71,7 +71,7 @@ $host=parse_url($l)["host"];
 $out="";
 $type="mp4";
 $cookie=$base_cookie."adultc.dat";
-if (preg_match("/jizzbunker\.com|familyporn\.tv|zbporn\.com/",$host)) {
+if (preg_match("/jizzbunker\.com|familyporn\.tv|zbporn\.com|trannytube\.net/",$host)) {
   $h=@file_get_contents($l);
 } else {
   $ch = curl_init();
@@ -83,8 +83,8 @@ if (preg_match("/jizzbunker\.com|familyporn\.tv|zbporn\.com/",$host)) {
   curl_setopt($ch, CURLOPT_REFERER, $l);
   curl_setopt($ch, CURLOPT_COOKIEJAR, $cookie);
   curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie);
-  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
-  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 25);
   $h = curl_exec($ch);
   curl_close($ch);
 }
@@ -362,6 +362,8 @@ if (preg_match("/4tube\.com/",$host)) {
   if (preg_match_all("/src\=\"([http|https][\.\d\w\-\.\/\\\:\?\&\#\%\_\,\=]*)\"\s+title\=\"(\d+)p\"/",$h,$m)) {
      $maxs = array_keys($m[2], max($m[2]));
      $out=$m[1][$maxs[0]];
+     if ($out && $flash != "flash")
+        $out=$out."|Referer=".urlencode('https://hellmoms.com')."&Origin=".urlencode('https://hellmoms.com');
   }
 } else if (preg_match("/jizzbunker\.com/",$host)) {
   $out = urldecode(str_between($h, "src:'", "'"));

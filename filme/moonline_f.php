@@ -19,7 +19,7 @@ $has_add="yes";
 $has_fs="yes";
 $ref="https://moonline.ws";
 $host=parse_url($ref)['host'];
-$fav_target="moonline_f_fav.php?host=https://".$ref;
+$fav_target="moonline_f_fav.php?host=".$ref;
 $add_target="moonline_f_add.php";
 $add_file="";
 $fs_target="moonline_fs.php";

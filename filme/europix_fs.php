@@ -142,76 +142,6 @@ $r=array();
 $ua = $_SERVER['HTTP_USER_AGENT'];
 //$ua="Mozilla/5.0 (Windows NT 10.0; rv:71.0) Gecko/20100101 Firefox/71.0";
 $cookie=$base_cookie."hdpopcorns.dat";
-$requestLink=$link;  // ? de ce android trebuie cu https ???????????
-//if ($tip=="movie") $requestLink="https://europixhd.io/";
-$head=array(
-'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
-'Accept-Language: en-US,en;q=0.5',
-'Accept-Encoding: deflate, br',
-'Connection: keep-alive',
-'Upgrade-Insecure-Requests: 1');
-  $ch = curl_init();
-  curl_setopt($ch, CURLOPT_URL, $requestLink);
-  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
-  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
-  curl_setopt($ch,CURLOPT_HTTPHEADER,$head);
-  curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie);
-  curl_setopt($ch, CURLOPT_COOKIEJAR, $cookie);
-  curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'GET');
-  curl_setopt($ch, CURLOPT_HTTPGET, true);
-  curl_setopt($ch, CURLINFO_HEADER_OUT, true);
-  curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
-  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
-  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
-  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
-  curl_setopt($ch, CURLOPT_HEADER,1);
-  $h = curl_exec($ch);
- if (strpos($h,"503 Service") !== false) {
-  if (strpos($h,'id="cf-dn') === false)
-   $q1= getClearanceLink_old($h,$requestLink);
-  else
-   $q1= getClearanceLink($h,$requestLink);
-  $t1=explode('action="',$h);
-  $t2=explode('"',$t1[1]);
-  $requestLink="https://".$host.$t2[0];
-  $t1=explode("?",$q1);
-  $post=$t1[1];
-  //echo $post;
-$head=array('Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
-'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
-'Accept-Encoding: gzip, deflate, br',
-'Content-Type: application/x-www-form-urlencoded',
-'Content-Length: '.strlen($post).'',
-'Referer: https://'.$host.'',
-'Origin: https://'.$host.'',
-'Connection: keep-alive',
-'Upgrade-Insecure-Requests: 1');
-
-  curl_setopt($ch, CURLOPT_URL, $requestLink);
-  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
-  //curl_setopt($ch,CURLOPT_REFERER,$l1);
-  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,0);
-  curl_setopt($ch, CURLOPT_RETURNTRANSFER  ,1);  // RETURN THE CONTENTS OF THE CALL
-  curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie);
-  curl_setopt($ch, CURLOPT_COOKIEJAR, $cookie);
-  curl_setopt($ch, CURLOPT_HTTPHEADER, $head);
-  curl_setopt($ch, CURLOPT_HEADER,1);
-  curl_setopt($ch, CURLOPT_NOBODY,1);
-  curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'POST');
-  curl_setopt($ch, CURLOPT_HTTPGET, false);
-  //curl_setopt($ch, CURLINFO_HEADER_OUT, true);
-  curl_setopt ($ch, CURLOPT_POST, 1);
-  curl_setopt ($ch, CURLOPT_POSTFIELDS, $post);
-  curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
-  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
-  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
-  curl_setopt($ch, CURLOPT_TIMEOUT, 25);
-  $h = curl_exec($ch);
-  curl_close ($ch);
- } else {
-    curl_close($ch);
- }
 
 ///////////////////////////////////////////////////////////////////////////////////
 if ($tip=="series") {
@@ -251,6 +181,8 @@ if (strpos($link1,"http") === false) {
 //echo $link1;
 //$link1="https://europixhd.io/mov/christmas-reservations-2019-online-free-hd-with-subtitles-europix";
 if (strpos($link1,"europix") !== false && strpos($link1,"http") !== false) {
+$path=parse_url($link1)['path'];
+//echo $path;
 $ch = curl_init();
 curl_setopt($ch, CURLOPT_URL, $link1);
 curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
@@ -278,6 +210,7 @@ for ($k=0;$k<count($p[1]);$k++) {
   $l="https://".$host."/svop/".$p[1][$k];
   //$l="https://europixhd.io/svop2/zznewsrv2?search=dwm-christmas-reservations-2019";
   //$l="https://europixhd.io/svop2/newsrv1?search=dwm-christmas-reservations-2019";
+  //echo $l;
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $l);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
@@ -292,14 +225,16 @@ for ($k=0;$k<count($p[1]);$k++) {
   curl_close($ch);
   $h=urldecode($h);
   //echo $h;
-  if (preg_match("/iframe\s*src\=(\'|\")(.*?)(\'|\")/",$h,$m)) {
-  $link1=$m[2];
+  if (preg_match("/((iframe\s*src)|(window\.location))\=(\'|\")(.*?)(\'|\")/",$h,$m)) {
+  $link1=$m[5];
+  //print_r ($m);
   if(strpos($link1,"http") !== false) $r[] = $link1;
   }
 }
 } else {
-  if (preg_match("/iframe\s*src\=(\'|\")(.*?)(\'|\")/",$h,$m)) {
-  $link1=$m[2];
+  if (preg_match("/((iframe\s*src)|(window\.location))\=(\'|\")(.*?)(\'|\")/",$h,$m)) {
+  $link1=$m[5];
+  //print_r ($m);
   if(strpos($link1,"http") !== false) $r[] = $link1;
   }
 }

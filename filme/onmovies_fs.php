@@ -148,7 +148,7 @@ $r=array();
   curl_close ($ch);
   //echo $html;
   $t1=explode('data-video="',$html);
-  $t2=explode('&id=',$t1[1]);
+  $t2=explode('id=',$t1[1]);
   $t3=explode("&",$t2[1]);
   $id=$t3[0];
   $l="https://vidcloud9.com/streaming.php?id=".$id;

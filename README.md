@@ -22,7 +22,7 @@ Accesati acum "Setari", si alegeti setarile dorite (mod player = flash sau MPC/V
 Descarcati <a href="https://www.mediafire.com/file/hmdf5browqibf2t/Server_for_PHP_HD4ALL.apk/file">Server_for_PHP_HD4ALL.apk</a>
 Este aplicatia "Server for PHP" din google play modificata de mine (contine si pachetul de instalare pentru HD4ALL).
 Pentru browser, mai ales daca folositi un media player cu android (cu tastatura) va recomand sa instalati <a href="https://www.mediafire.com/file/tyt33k5vqisacil/org.lineageos.jelly.apk/file">Jelly Browser</a>.
-Este un browser foarte bun si cel mai important e ca puteti naviga in pagina cu tastele sageti. Atentie, trubuie sa fie instalata o versiune de Android >= 7.1.2
+(ATENTIE: Instalati aceasta versiune, nu cea din Google Play). Este un browser foarte bun si cel mai important e ca puteti naviga in pagina cu tastele sageti. Atentie, trubuie sa fie instalata o versiune de Android >= 7.1.2
 Pentru video player folositi MX Player (pro sau ad).
 
 <li>Pasul 1. Instalare Server for PHP</li>

@@ -393,39 +393,6 @@ echo '</select>
 <hr>
 ';
 
-$f=$base_pass."css.txt";
-if (file_exists($f)) {
-$h=file_get_contents($f);
-$t1=explode("|",$h);
-$user=$t1[0];
-if (sizeof ($t1) > 1 )
-	$pass=$t1[1];
-} else {
-$user="";
-$pass="";
-}
-echo '
-<h4>Mod contur link</h4>
-<form action="settings.php">
-Alege mod: <select id="user" name="user">
-';
-if ($user=="ALB") {
-echo '
-<option value="ALB" selected>MOD MEDIA PLAYER (contur)</option>
-<option value="NEGRU">Fara contur</option>';
-} else {
-echo '
-<option value="ALB">MOD MEDIA PLAYER (contur)</option>
-<option value="NEGRU" selected>Fara contur</option>';
-}
-echo '</select>
-</BR>
-<input type="hidden" name="tip" value="css">
-<input type="submit" value="Memoreaza">
-</form>
-<BR>
-<hr>
-';
 $f=$base_pass."tmdb.txt";
 if (file_exists($f)) {
 $h=file_get_contents($f);
@@ -489,49 +456,7 @@ cod:<input type="text" name="user" value="'.$user.'" size="40"></BR>
 </form>
 <hr>
 ';
-$f=$base_pass."filmeseriale.txt";
-if (file_exists($f)) {
-$h=file_get_contents($f);
-$t1=explode("|",$h);
-$user=$t1[0];
-if (sizeof ($t1) > 1 )
-	$pass=$t1[1];
-} else {
-$user="";
-$pass="";
-}
 
-echo '
-<h4>GoogleCaptcha filmeseriale</h4>
-<form action="settings.php">
-cod:<input type="text" name="user" value="'.$user.'"></BR>
-<input type="hidden" name="tip" value="filmeseriale">
-<input type="submit" value="Memoreaza">
-</form>
-<hr>
-';
-
-$f=$base_pass."tvpemobil.txt";
-if (file_exists($f)) {
-$h=file_get_contents($f);
-$t1=explode("|",$h);
-$user=$t1[0];
-if (sizeof ($t1) > 1 )
-	$pass=$t1[1];
-} else {
-$user="";
-$pass="";
-}
-echo '
-<h4>Cont tvpemobil.net</h4>
-<form action="settings.php">
-User:<input type="text" name="user" value="'.$user.'"></BR>
-Pass:<input type="password" name="pass" value="'.$pass.'"></BR>
-<input type="hidden" name="tip" value="tvpemobil">
-<input type="submit" value="Memoreaza">
-</form>
-<hr>
-';
 $f=$base_pass."cineplex.txt";
 if (file_exists($f)) {
 $h=file_get_contents($f);
@@ -570,27 +495,6 @@ echo '
 <form action="settings.php">
 cod:<input type="text" name="user" value="'.$user.'" size="40"></BR>
 <input type="hidden" name="tip" value="cineplex_serv">
-<input type="submit" value="Memoreaza">
-</form>
-<hr>
-';
-$f=$base_pass."antenaplay.txt";
-if (file_exists($f)) {
-$h=file_get_contents($f);
-$t1=explode("|",$h);
-$user=$t1[0];
-if (sizeof ($t1) > 1 ) 
-	$pass=$t1[1];
-} else {
-$user="";
-$pass="";
-}
-echo '
-<h4>Cont antenaplay</h4>
-<form action="settings.php">
-User:<input type="text" name="user" value="'.$user.'"></BR>
-Pass:<input type="password" name="pass" value="'.$pass.'"></BR>
-<input type="hidden" name="tip" value="antenaplay">
 <input type="submit" value="Memoreaza">
 </form>
 <hr>

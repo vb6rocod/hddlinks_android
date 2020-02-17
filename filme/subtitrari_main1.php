@@ -101,7 +101,7 @@ else
 echo '<a href="'.$next.'"><font size="4">&nbsp;&gt;&gt;&nbsp;</font></a></TD>';
 echo '</TR>';
   $ua="Mozilla/5.0 (Windows NT 10.0; rv:55.0) Gecko/20100101 Firefox/55.0";
-$l="http://subtitrari-noi.ro/paginare_filme.php";
+$l="https://subtitrari-noi.ro/paginare_filme.php";
 //search_q=1&query_q=G&cautare=G&tip=2&an=Toti anii&gen=Toate
 if ($imdbid)
    $post="search_q=".$page."&query_q=".$imdbid."&cautare=".$imdbid."&tip=2&an=Toti+anii&gen=Toate";
@@ -112,13 +112,14 @@ else
   'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
   'Accept-Language: ro-ro,ro;q=0.8,en-us;q=0.6,en-gb;q=0.4,en;q=0.2',
   'Accept-Encoding: deflate','Content-Type: application/x-www-form-urlencoded',
+  'Origin: https://subtitrari-noi.ro',
   'Content-Length: '.strlen($post));
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $l);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
   curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows; U; Windows NT 6.1; en-US; rv:1.9.1.2) Gecko/20090729 Firefox/3.5.2 GTB5');
   curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
-  curl_setopt($ch, CURLOPT_REFERER, "http://subtitrari-noi.ro");
+  curl_setopt($ch, CURLOPT_REFERER, "https://subtitrari-noi.ro");
   //curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
   curl_setopt($ch, CURLOPT_HTTPHEADER, $head);
   //curl_setopt($ch, CURLOPT_NOBODY,1);

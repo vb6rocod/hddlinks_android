@@ -151,10 +151,15 @@ echo '<BR>';
 $r=array();
 $s=array();
 $requestLink=$link;
+//echo $link;
 $ua = $_SERVER['HTTP_USER_AGENT'];
 $cookie=$base_cookie."hdpopcorns.dat";
 $host=parse_url($requestLink)['host'];
 $h=cf_pass($link,$cookie);
+$t1=explode('var htt_player',$h);
+$t2=explode('nonce":"',$t1[1]);
+$t3=explode('"',$t2[1]);
+$nonce=$t3[0];
 $videos=explode("li id='player-option",$h);
 unset($videos[0]);
 $videos = array_values($videos);
@@ -172,10 +177,56 @@ foreach($videos as $video) {
  $t2=explode("'",$t1[1]);
  $n=$t2[0];
  if ($n <> 'trailer') {
-  $r[]="https://".$host."?action=doo_player_ajax&post=".$p."&nume=".$n."&type=".$t;
-  $s[]=$serv;
+  //$r[]="https://".$host."?action=doo_player_ajax&post=".$p."&nume=".$n."&type=".$t;
+  //$s[]=$serv;
+  $post="action=doo_player_ajax&post=".$p."&nume=".$n."&type=".$t;
+  $l="https://".$host."/wp-admin/admin-ajax.php";
+  $head=array('Accept: */*',
+  'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
+  'Accept-Encoding: deflate',
+  'Content-Type: application/x-www-form-urlencoded; charset=UTF-8',
+  'X-Requested-With: XMLHttpRequest',
+  'Content-Length: '.strlen($post).'',
+  'Origin: https://'.$host.'',
+  'Connection: keep-alive',
+  'Referer: https://'.$host.'');
+  $ch = curl_init();
+  curl_setopt($ch, CURLOPT_URL, $l);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
+  curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
+  curl_setopt($ch, CURLOPT_HTTPHEADER, $head);
+  curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie);
+  //curl_setopt($ch, CURLOPT_HEADER, 1);
+  curl_setopt ($ch, CURLOPT_POST, 1);
+  curl_setopt ($ch, CURLOPT_POSTFIELDS, $post);
+  $h = curl_exec($ch);
+  curl_close($ch);
+  $t1=explode('class="htp-player',$h);
+  $t2=explode('data-id="',$t1[1]);
+  $t3=explode('"',$t2[1]);
+  $player=$t3[0];
+
+  $vids=explode('li class="server',$h);
+  unset($vids[0]);
+  $vids = array_values($vids);
+  foreach($vids as $vid) {
+   $t1=explode('data-id="',$vid);
+   $t2=explode('"',$t1[1]);
+   $id_serv=$t2[0];
+   $s[]="Server ".$id_serv;
+   $p=array(
+   'action' => 'htp_player_get_vid_info',
+   'nonce'  => $nonce,
+   'id'     => $player,
+   'server' => $id_serv);
+   $post=http_build_query($p);
+   //echo $post;
+   $r[]="https://".$host."?".$post."&ref=".$link;
+  }
  }
 }
+//die();
 echo '<table border="1" width="100%">';
 echo '<TR><TD class="mp">Alegeti un server: Server curent:<label id="server">'.$s[0].'</label>
 <input type="hidden" id="file" value="'.urlencode($r[0]).'"></td></TR></TABLE>';

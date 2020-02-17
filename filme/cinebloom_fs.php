@@ -1,7 +1,7 @@
 <!doctype html>
 <?php
 include ("../common.php");
-//error_reporting(0);
+error_reporting(0);
 $list = glob($base_sub."*.srt");
    foreach ($list as $l) {
     str_replace(" ","%20",$l);
@@ -158,7 +158,7 @@ for ($k=0;$k<count($x);$k++) {
   curl_setopt($ch, CURLOPT_HEADER,1);
   $h = curl_exec($ch);
   curl_close($ch);
-  if (preg_match("/Location:\s*(.+)/",$h,$m))
+  if (preg_match("/Location:\s*(.+)/i",$h,$m))
     $l1=trim($m[1]);
     //echo $l1;
   $ch = curl_init();

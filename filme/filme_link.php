@@ -1083,7 +1083,7 @@ $s=$s."database\.serialeonline\.to|drive\.google\.com|videomega\.|vidload\.co|mi
 $s=$s."|hxload\.|bazavox\.com|cloud\.vidhubstr\.org|vidia\.tv|gomostream\.com|viduplayer\.com|leaked-celebrities\.";
 $s=$s."|prostream\.to|videobin\.co|upstream\.to|playtvid\.com|jetload\.net|vidfast\.co|clipwatching\.";
 $s=$s."|video\.filmeserialeonline\.org|streamwire\.|cloudvid\.icu|mstream\.xyz|streamhoe\.online|videyo\.";
-$s=$s."|fastvid\.co|vidload\.net|rovideo\.net\/embed/i";
+$s=$s."|fastvid\.co|vidload\.net|rovideo\.net\/embed|eplayvid\.com/i";
 /////////////////////////////////////////////
 //$x=preg_grep($s,$links);
 //print_r ($x);
@@ -1153,7 +1153,7 @@ for ($i=0;$i<count($links);$i++) {
    curl_setopt($ch, CURLOPT_URL, $l);
    curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
    curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 10.0; rv:72.0) Gecko/20100101 Firefox/72.0');
-   curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+   curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,0);
    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
    curl_setopt($ch,CURLOPT_REFERER,$filelink);
    curl_setopt($ch, CURLOPT_HEADER,1);
@@ -1162,9 +1162,15 @@ for ($i=0;$i<count($links);$i++) {
    curl_setopt($ch, CURLOPT_TIMEOUT, 15);
    $h2 = curl_exec($ch);
    curl_close($ch);
-   if (preg_match("/location\:\s*(.+)/i",$h2,$m))
-    $cur_link=trim($m[1]);
-   else
+   //echo $h2;
+   if (preg_match("/location\:\s*(.+)/i",$h2,$m)) {
+     $l1=$m[1];
+     if (strpos($l1,"database.serialeonline.to") !== false) {
+      $links[$i]=$l1;
+     } else {
+      $cur_link=$l1;
+     }
+   } else
     $cur_link="";
   }
   if (strpos($links[$i],"cloudvid.icu") !== false) {
@@ -1217,9 +1223,10 @@ for ($i=0;$i<count($links);$i++) {
   curl_setopt($ch, CURLOPT_TIMEOUT, 30);
   $h2 = curl_exec($ch);
   curl_close($ch);
-  //echo $h2;
    if (preg_match("/location\:\s*(.+)/i",$h2,$m))
     $cur_link=trim($m[1]);
+   else
+    $cur_link="";
   }
   if (strpos($links[$i],"2target.net") !== false) {
     //https://event.2target.net/jc1M
