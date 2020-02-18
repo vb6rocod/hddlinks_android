@@ -2549,12 +2549,11 @@ if (count($pl) > 1) {
   //echo $out;
   if (preg_match('/\/\/.+\.mp4/', $out, $m)) {
   $link="https:".$m[0];
-  if (preg_match_all('/([http|https][\.\d\w\-\.\/\\\:\?\&\#\%\_\,\)\(\s\[\+\]]*(\.(srt|vtt)))\" srclang=\"\S+\" label=\"(.*?)\"/', $out, $s))
-  //print_r ($s);
+  if (preg_match_all('/([\.\d\w\-\.\=\/\\\:\?\&\#\%\_\,\)\(\s\[\+\]]+(\.(srt|vtt)))\" srclang=\"(\w+)\" label=\"(\w+)\"/', $out, $s))
   $srts=array();
-  if (isset($s[4])) {
-    for ($k=0;$k<count($s[4]);$k++) {
-      $srts[$s[4][$k]] = $s[1][$k];
+  if (isset($s[5])) {
+    for ($k=0;$k<count($s[5]);$k++) {
+      $srts[$s[5][$k]] = $s[1][$k];
     }
   }
   if (isset($srts["Romanian"]))
