@@ -1,7 +1,7 @@
 <!doctype html>
 <?php
 include ("../common.php");
-error_reporting(0);
+//error_reporting(0);
 $list = glob($base_sub."*.srt");
    foreach ($list as $l) {
     str_replace(" ","%20",$l);
@@ -57,9 +57,7 @@ function str_between($string, $start, $end){
 <meta http-equiv="content-type" content="text/html; charset=UTF-8">
 <title><?php echo $tit.$tit2; ?></title>
 <link rel="stylesheet" type="text/css" href="../custom.css" />
-<script type="text/javascript" src="//code.jquery.com/jquery-3.2.1.min.js"></script>
-<script src="../jquery.fancybox.min.js"></script>
-<link rel="stylesheet" type="text/css" href="../jquery.fancybox.min.css">
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.0/jquery.min.js"></script>
 <script type="text/javascript">
 function openlink1(link) {
   link1=document.getElementById('file').value;
@@ -94,12 +92,6 @@ function openlink(link) {
 function changeserver(s,t) {
   document.getElementById('server').innerHTML = s;
   document.getElementById('file').value=t;
-  var dec=decodeURI(t);
-  if (dec.match(/streamplay|powvideo|povvideo/)) {  // rezerva in caz ca nu mai merge....
-    msg="ptlink.php?file="+t;
-    document.getElementById("fancy").href=msg;
-    document.getElementById("fancy").click();
-  }
 }
    function zx(e){
      var charCode = (typeof e.which == "number") ? e.which : e.keyCode
@@ -137,40 +129,73 @@ function off() {
 </script>
 </head>
 <body>
-<a id="fancy" data-fancybox data-type="iframe" href=""></a>
 <a href='' id='mytest1'></a>
 <?php
 echo '<h2>'.$tit.$tit2.'</H2>';
 echo '<BR>';
-//echo $link;
-$ua = $_SERVER['HTTP_USER_AGENT'];
-  $ch = curl_init($link);
-  curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows; U; Windows NT 6.1; en-US; rv:1.9.1.2) Gecko/20090729 Firefox/3.5.2 GTB5');
-  curl_setopt($ch, CURLOPT_REFERER, "https://www1.swatchseries.to");
+$r=array();
+  $ua = $_SERVER['HTTP_USER_AGENT'];
+  $ch = curl_init();
+  curl_setopt($ch, CURLOPT_URL, $link);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
+  curl_setopt($ch,CURLOPT_REFERER,"https://pubfilm.xyz");
   curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
-  curl_setopt($ch, CURLOPT_RETURNTRANSFER  ,1);  // RETURN THE CONTENTS OF THE CALL
-  curl_setopt($ch, CURLOPT_ENCODING,"");
   curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
   curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
   curl_setopt($ch, CURLOPT_TIMEOUT, 15);
-  $h3 = curl_exec($ch);
-  curl_close ($ch);
-  //echo $h3;
-$r=array();
-$videos = explode("?r=", $h3);
-unset($videos[0]);
-$videos = array_values($videos);
-foreach($videos as $video) {
-   $t1=explode('Delete link',$video);
-   $t2=explode("'",$t1[1]);
-   //$t1=explode('"',$video);
-   //$l1 = base64_decode($t1[0]);
-   $l1=trim($t2[0]);
-   //echo $l1;
-   if (strpos($l1,"http") !== false) $r[]=$l1;
-}
+  $h = curl_exec($ch);
+  curl_close($ch);
+  //echo $h;
+  //echo $link;
+
+  $videos=explode("li id='player-option",$h);
+  unset($videos[0]);
+  $videos = array_values($videos);
+  foreach($videos as $video) {
+    $t1=explode("data-type='",$video);
+    $t2=explode("'",$t1[1]);
+    $type=$t2[0];
+    $t1=explode("data-post='",$video);
+    $t2=explode("'",$t1[1]);
+    $p=$t2[0];
+    $t1=explode("data-nume='",$video);
+    $t2=explode("'",$t1[1]);
+    $nume=$t2[0];
+    $l="https://pubfilm.xyz/wp-admin/admin-ajax.php";
+
+    $post="action=doo_player_ajax&post=".$p."&nume=".$nume."&type=".$type;
+    //echo $post;
+    $head=array('Accept: */*',
+     'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
+     'Accept-Encoding: deflate',
+     'Content-Type: application/x-www-form-urlencoded; charset=UTF-8',
+     'X-Requested-With: XMLHttpRequest',
+     'Content-Length: '.strlen($post).'',
+     'Origin: https://pubfilm.xyz',
+     'Connection: keep-alive');
+   $ch = curl_init();
+   curl_setopt($ch, CURLOPT_URL, $l);
+   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+   curl_setopt($ch, CURLOPT_USERAGENT, $ua);
+   curl_setopt($ch,CURLOPT_REFERER,"https://pubfilm.xyz");
+   curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+   curl_setopt($ch, CURLOPT_HTTPHEADER, $head);
+   curl_setopt ($ch, CURLOPT_POST, 1);
+   curl_setopt ($ch, CURLOPT_POSTFIELDS, $post);
+   curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+   curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+   curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+   $h = curl_exec($ch);
+   curl_close($ch);
+   //echo $h;
+   if (preg_match("/src\=[\'|\"](.*?)[\'|\"]/",$h,$m))
+   $r[]=$m[1];
+ }
+
+
 echo '<table border="1" width="100%">';
-echo '<TR><TD class="mp">Alegeti un server: Server curent:<label id="server">'.parse_url($r[0])['host'].'</label>
+echo '<TR><TD class="mp">Alegeti un server: Server curent:<label id="server">'.parse_url(urldecode($r[0]))['host'].'</label>
 <input type="hidden" id="file" value="'.urlencode($r[0]).'"></td></TR></TABLE>';
 echo '<table border="1" width="100%"><TR>';
 $k=count($r);
@@ -178,9 +203,9 @@ $x=0;
 for ($i=0;$i<$k;$i++) {
   if ($x==0) echo '<TR>';
   $c_link=$r[$i];
-  $openload=parse_url($r[$i])['host'];
+  $openload=parse_url(urldecode($r[$i]))['host'];
   if (preg_match($indirect,$openload)) {
-  echo '<TD class="mp"><a href="filme_link.php?file='.urlencode($c_link).'&title='.urlencode(unfix_t($tit.$tit2)).'" target="_blank">'.$openload.'</a></td>';
+  echo '<TD class="mp"><a href="filme_link.php?file='.$c_link.'&title='.urlencode(unfix_t($tit.$tit2)).'" target="_blank">'.$openload.'</a></td>';
   } else
   echo '<TD class="mp"><a id="myLink" href="#" onclick="changeserver('."'".$openload."','".urlencode($c_link)."'".');return false;">'.$openload.'</a></td>';
   $x++;
@@ -212,6 +237,10 @@ if ($tip=="movie") {
   $from="";
   $link_page="";
 }
+  $rest = substr($tit3, -6);
+  if (preg_match("/\((\d+)\)/",$rest,$m)) {
+   $tit3=trim(str_replace($m[0],"",$tit3));
+  }
 $sub_link ="from=".$from."&tip=".$tip."&sez=".$sez."&ep=".$ep."&imdb=".$imdbid."&title=".urlencode(fix_t($tit3))."&link=".$link_page."&ep_tit=".urlencode(fix_t($tit2))."&year=".$year;
 echo '<br>';
 echo '<table border="1" width="100%">';

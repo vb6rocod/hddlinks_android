@@ -57,7 +57,9 @@ function str_between($string, $start, $end){
 <meta http-equiv="content-type" content="text/html; charset=UTF-8">
 <title><?php echo $tit.$tit2; ?></title>
 <link rel="stylesheet" type="text/css" href="../custom.css" />
-<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.0/jquery.min.js"></script>
+<script type="text/javascript" src="//code.jquery.com/jquery-3.2.1.min.js"></script>
+<script src="../jquery.fancybox.min.js"></script>
+<link rel="stylesheet" type="text/css" href="../jquery.fancybox.min.css">
 <script type="text/javascript">
 function openlink1(link) {
   link1=document.getElementById('file').value;
@@ -92,6 +94,12 @@ function openlink(link) {
 function changeserver(s,t) {
   document.getElementById('server').innerHTML = s;
   document.getElementById('file').value=t;
+  var dec=decodeURI(t);
+  if (dec.match(/streamplay|powvideo|povvideo/)) {  // rezerva in caz ca nu mai merge....
+    msg="ptlink.php?file="+t;
+    document.getElementById("fancy").href=msg;
+    document.getElementById("fancy").click();
+  }
 }
    function zx(e){
      var charCode = (typeof e.which == "number") ? e.which : e.keyCode
@@ -129,6 +137,7 @@ function off() {
 </script>
 </head>
 <body>
+<a id="fancy" data-fancybox data-type="iframe" href=""></a>
 <a href='' id='mytest1'></a>
 <?php
 echo '<h2>'.$tit.$tit2.'</H2>';

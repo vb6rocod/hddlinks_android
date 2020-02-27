@@ -196,69 +196,8 @@ foreach($videos as $video) {
   //$t3=explode('"',$t2[1]);
   $openload=trim($t2[0]);
   //echo $openload;
-  if (strpos($openload,"http") === false) {
-  $ua="Mozilla/5.0 (Windows NT 10.0; rv:71.0) Gecko/20100101 Firefox/71.0";
-  $l="https://videospider.in/getvideo?key=FQuvG9srL0DO2euN&video_id=".$openload;
-  $post="{}";
-  $ch = curl_init($l);
-  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
-  curl_setopt($ch,CURLOPT_REFERER,$l);
-  curl_setopt ($ch, CURLOPT_POST, 1);
-  curl_setopt ($ch, CURLOPT_POSTFIELDS, $post);
-  curl_setopt($ch, CURLOPT_RETURNTRANSFER  ,1);  // RETURN THE CONTENTS OF THE CALL
-  curl_setopt($ch, CURLOPT_HEADER, true);
-  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
-  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
-  $h1 = curl_exec($ch);
-  curl_close ($ch);
-  //echo $h1;
-  if (preg_match("/location:\s*(.+)/i",$h1,$m))
-   $openload=trim($m[1]);
-  $ch = curl_init();
-  curl_setopt($ch, CURLOPT_URL, $openload);
-  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-  //curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
-  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
-  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
-  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
-  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
-  $h = curl_exec($ch);
-  //echo $h;
-  $t1=explode('var token = "',$h);
-  $t2=explode('"',$t1[1]);
-  $token=$t2[0];
-  $serv1=array();
-  $name=array();
-  $videos=explode('data-server="',$h);
-  unset($videos[0]);
-  $videos = array_values($videos);
-  foreach($videos as $video) {
-    $t1=explode('"',$video);
-    $server=$t1[0];
-    $t1=explode('data-server-id="',$video);
-    $t2=explode('"',$t1[1]);
-    $id=$t2[0];
-    $t1=explode('title="',$video);
-    $t2=explode('"',$t1[1]);
-    $name[]=$t2[0];
-    $serv1[]=array('serv' => $server,'id' => $id);
-  }
-  for ($k=0;$k<count($serv1);$k++) {
-  $server=$serv1[$k]['serv'];
-  $id=$serv1[$k]['id'];
-  $l1="https://oload.party/loadsource.php?server=".$server."&id=".$id."&token=".$token;
-  curl_setopt($ch, CURLOPT_URL, $l1);
-  $h = curl_exec($ch);
-  //echo $h;
-  //$h=file_get_contents($l1);
-  $t1=explode('iframe src="',$h);
-  $t2=explode('"',$t1[1]);
-  $r[]=$t2[0];
-  }
-  curl_close($ch);
-  } else if (strpos($openload,"http") !== false) $r[]=$openload;
+  if (strpos($openload,"http") !== false)
+   $r[]=$openload;
 }
 echo '<table border="1" width="100%">';
 echo '<TR><TD class="mp">Alegeti un server: Server curent:<label id="server">'.parse_url($r[0])['host'].'</label>

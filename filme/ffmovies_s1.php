@@ -19,8 +19,8 @@ $cookie=$base_cookie."ffmovies.dat";
   $info = curl_getinfo($ch);
   curl_close($ch);
 if (strpos($h, "waf-verify"))
-  $loc="ffmovies_f.php";
+  $loc="ffmovies_s.php";
 else
-  $loc="ffmovies_ff.php?page=1&tip=release&title=ffmovies&link=";
+  $loc="ffmovies_ss.php?page=1&tip=release&title=ffmovies&link=";
 header("Location: $loc");
 ?>

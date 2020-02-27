@@ -7,29 +7,24 @@ function str_between($string, $start, $end){
 	return substr($string,$ini,$len);
 }
 include ("../common.php");
-include ("../util.php");
-/* links from https://soapgate.org/ */
-$base="https://soap2day.to";
-//$base="https://soap2day.se";
-//$base="https://soap2day.is";
-//$base="https://soap2day.im";
-$host=parse_url($base)['host'];
+$l="https://ling.online";
+$host=parse_url($l)['host'];
 $page = $_GET["page"];
 $tip= $_GET["tip"];
 $tit=$_GET["title"];
 $link=$_GET["link"];
 $width="200px";
-$height="278px";
+$height="200px";
 /* ==================================================== */
 $has_fav="yes";
 $has_search="yes";
 $has_add="yes";
 $has_fs="yes";
-$fav_target="soap2day_s_fav.php?host=https://".$host;
-$add_target="soap2day_s_add.php";
+$fav_target="ling_s_fav.php?host=https://".$host;
+$add_target="ling_s_add.php";
 $add_file="";
-$fs_target="soap2day_ep.php";
-$target="soap2day_s.php";
+$fs_target="ling_ep.php";
+$target="ling_s.php";
 /* ==================================================== */
 $base=basename($_SERVER['SCRIPT_FILENAME']);
 $p=$_SERVER['QUERY_STRING'];
@@ -173,69 +168,59 @@ if ($page==1) {
    echo '<TD class="nav" colspan="4" align="right"><a href="'.$prev.'">&nbsp;&lt;&lt;&nbsp;</a> | <a href="'.$next.'">&nbsp;&gt;&gt;&nbsp;</a></TD>'."\r\n";
 }
 echo '</TR>'."\r\n";
-$ua = $_SERVER['HTTP_USER_AGENT'];
-//$ua="Mozilla/5.0 (Windows NT 10.0; rv:71.0) Gecko/20100101 Firefox/71.0";
-$cookie=$base_cookie."hdpopcorns.dat";
+
 if($tip=="release") {
-  $l="https://".$host."/tvlist?page=".$page;
+  if ($page>1)
+   $l="https://".$host."/en/video/serials/?page=".$page;
+  else
+   $l="https://".$host."/en/video/serials/";
 } else {
-  $search=str_replace(" ","%20",$tit);
-  $l="https://".$host."/search/keyword/".$search;
+  $search=str_replace(" ","+",$tit);
+  if ($page > 1)
+   $l="https://".$host."/en/video/serials/?genre=&country=&order_by=-rating&page=".$page."&title=".$search;
+  else
+   $l = "https://".$host."/en/video/serials/?title=".$search."&genre=&country=&order_by=-rating";
+
 }
-$host=parse_url($l)['host'];
-$head=array('Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
-'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2');
+
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $l);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-  curl_setopt($ch,CURLOPT_REFERER,"https://".$host);
-  curl_setopt($ch,CURLOPT_HTTPHEADER,$head);
-  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
-  curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie);
+  curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 10.0; rv:55.0) Gecko/20100101 Firefox/55.0');
   curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
   curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
   curl_setopt($ch, CURLOPT_TIMEOUT, 15);
   $html = curl_exec($ch);
   curl_close($ch);
-//echo $html;
-$videos = explode('class="img-group">', $html);
+
+$videos = explode('class="video">', $html);
 unset($videos[0]);
 $videos = array_values($videos);
 foreach($videos as $video) {
-  $t1 = explode("href='",$video);
-  $t2=explode("'",$t1[1]);
-  $link = $t2[0];
-  if (strpos($link,"http") === false) $link="https://".$host.$link;
-  if ($tip=="release") {
-  $t3 = explode('>', $t1[2]);
-  $t4 = explode('<', $t3[1]);
-  $title = $t4[0];
-  } else {
-   $t1=explode('href="',$video);
-   $t2=explode('>',$t1[1]);
-   $t3=explode('<',$t2[1]);
-   $title=$t3[0];
-  }
-  $title=prep_tit($title);
+  $t1=explode('href="',$video);
+  $t2=explode('"',$t1[1]);
+  $link="https://".$host.$t2[0]."iframe/";
+  $t1 = explode('h5>', $video);
+  $t3 = explode('<',$t1[1]);
+  $title = $t3[0];
+  $title = prep_tit($title);
   $t1 = explode('src="', $video);
   $t2 = explode('"', $t1[1]);
-  $image = "https://".$host.$t2[0];
+  $image = "https://".$host.trim($t2[0]);
+  $t1=explode('p>',$video);
+  if (preg_match("/\d{4}/",$t1[1],$m))
+   $year=$m[0];
+  else
+   $year="";
+  $imdb="";
   $rest = substr($title, -6);
   if (preg_match("/\((\d+)\)/",$rest,$m)) {
-   $year=$m[1];
    $tit_imdb=trim(str_replace($m[0],"",$title));
   } else {
-   $year="";
    $tit_imdb=$title;
   }
-  $t1=explode('style="padding:3">',$video);
-  $t2=explode('<',$t1[1]);
-  $year=$t2[0];
-  $imdb="";
-
-  $imdb="";
   $link_f=$fs_target.'?tip=series&link='.urlencode($link).'&title='.urlencode(fix_t($title)).'&image='.$image."&sez=&ep=&ep_tit=&year=".$year;
-  if ($title && strpos($link,"tv_") !== false) {
+  if ($title) {
   if ($n==0) echo '<TR>'."\r\n";
   $val_imdb="tip=series&title=".urlencode(fix_t($tit_imdb))."&year=".$year."&imdb=".$imdb;
   $fav_link="mod=add&title=".urlencode(fix_t($title))."&link=".urlencode($link)."&image=".urlencode($image)."&year=".$year;

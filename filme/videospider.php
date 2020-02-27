@@ -312,8 +312,9 @@ echo "</table>"."\r\n";
 echo "</table>";
 if ($tip=="release") {
 if ($tast=="DA") {
-echo '<p>Pentru a putea folosi acest motor de cautare trebuie sa aveti un API Key pentru TMDB.<BR>
+echo '<p>Pentru a putea folosi acest motor de cautare trebuie sa aveti un API Key pentru TMDB si unul pentru videospider (personal)<BR>
 Vizitati: <a href="https://www.themoviedb.org/settings/api">https://www.themoviedb.org/settings/api</a><BR>
+si <a href="https://videospider.in">https://videospider.in</a><BR>
 Setati in "Settings" acest key.<BR>
 Scurtaturi:<BR>
 Folositi tasta 3 pentru a adauga/sterge la favorite.<BR>
@@ -322,8 +323,9 @@ Folositi tasta 4 pentru a accesa direct pagina de "Seriale Favorite".<BR>
 Folositi tasta 1 pentru informatii despre film/serial. Apasati "OK" pentru a inchide info.<BR>
 Folositi tasta 5 pentru a simula butonul de cautare.</p>';
 } else {
-echo '<p>Pentru a putea folosi acest motor de cautare trebuie sa aveti un API Key pentru TMDB.<BR>
+echo '<p>Pentru a putea folosi acest motor de cautare trebuie sa aveti un API Key pentru TMDB si unul pentru videospider (personal)<BR>
 Vizitati: <a href="https://www.themoviedb.org/settings/api">https://www.themoviedb.org/settings/api</a><BR>
+si <a href="https://videospider.in">https://videospider.in</a><BR>
 Setati in "Settings" acest key.<BR>
 Folositi ctrl+click pentru informatii despre film/serial. Apasati "Esc" pentru a inchide info.<BR>
 Folosti "*" pentru a adauga/sterge la favorite.';

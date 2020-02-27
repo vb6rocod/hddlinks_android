@@ -56,6 +56,12 @@ if ($tip=="cineplex") {
  $fh = fopen($new_file, 'w');
  fwrite($fh, $txt);
  fclose($fh);
+} elseif ($tip=="videospider") {
+ $txt=$user;
+ $new_file = $base_pass."videospider.txt";
+ $fh = fopen($new_file, 'w');
+ fwrite($fh, $txt);
+ fclose($fh);
 } elseif ($tip=="omdb") {
  $txt=$user;
  $new_file = $base_pass."omdb.txt";
@@ -410,6 +416,27 @@ echo '
 <form action="settings.php">
 cod:<input type="text" name="user" value="'.$user.'" size="40"></BR>
 <input type="hidden" name="tip" value="tmdb">
+<input type="submit" value="Memoreaza">
+</form>
+<hr>
+';
+$f=$base_pass."videospider.txt";
+if (file_exists($f)) {
+$h=file_get_contents($f);
+$t1=explode("|",$h);
+$user=$t1[0];
+if (sizeof ($t1) > 1 )
+	$pass=$t1[1];
+} else {
+$user="";
+$pass="";
+}
+
+echo '
+<h4>videospider Api Key (https://videospider.in)</h4>
+<form action="settings.php">
+cod:<input type="text" name="user" value="'.$user.'" size="40"></BR>
+<input type="hidden" name="tip" value="videospider">
 <input type="submit" value="Memoreaza">
 </form>
 <hr>

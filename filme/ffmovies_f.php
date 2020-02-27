@@ -5,7 +5,7 @@ $cookie=$base_cookie."ffmovies.dat";
 if (file_exists($cookie)) unlink ($cookie);
 if (isset($_GET['response'])) {
 
-  $l="https://ffmovies.to/movies?page=2";
+  $l="https://ffmovies.to/tv-series";
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $l);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
@@ -86,18 +86,19 @@ curl_setopt($ch, CURLOPT_COOKIEJAR, $cookie);
 $h = curl_exec($ch);
 curl_close($ch);
 //echo $h;
+//die();
 if (!preg_match("/waf_token/",$h)) {
   echo "Video not found! or bad script";
   echo '<script>setTimeout(function(){ history.go(-2); }, 2000);</script>';
 } else {
   $t0=explode('waf_token=',$h);
-  $t1=explode("expires",$t0[1]);
-  $t2=explode("path",$t1[1]);
-  echo "expires".$t2[0];
-  $t1=explode("=",$t2[0]);
-  $t2=explode(";",$t1[1]);
+  $t1=explode("-",$t0[1]);
+  //$t2=explode("path",$t1[1]);
+  echo "expires ".date('d-m-Y H:i:s',$t1[0]);
+  //$t1=explode("=",$t2[0]);
+  //$t2=explode(";",$t1[1]);
   //$t3=explode(";",$t1[2]);
-  $time1 = strtotime($t2[0]);
+  $time1 = $t1[0];
   //$time2 = time() + $time1;
   file_put_contents($base_cookie."max_time_ffmovies.txt",$time1);
   echo '<script>location.href="ffmovies_ff.php?page=1&tip=release&title=ffmovies&link=";</script>';

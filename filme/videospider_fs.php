@@ -158,16 +158,21 @@ if ($tip == "movie") {      //2426
   $imdbid="";
   $imdbid = str_replace("tt","",$result['imdb_id']);
 }
-if ($tip=="movie")
-$l="https://videospider.in/getvideo?key=bt1hMKtU7U5GJoaj&video_id=".$link."&tv=0&tmdb=1";
+if (file_exists($base_pass."videospider.txt"))
+  $key=trim(file_get_contents($base_pass."videospider.txt"));
 else
-$l="https://videospider.in/getvideo?key=bt1hMKtU7U5GJoaj&video_id=".$link."&s=".$sez."&e=".$ep."&tv=1&tmdb=1";
+  $key="l81VXYfPFbaneLed";
+if ($tip=="movie")
+$l="https://videospider.stream/personal?key=".$key."&video_id=".$link."&tv=0&tmdb=1";
+else
+$l="https://videospider.stream/personal?key=".$key."&video_id=".$link."&s=".$sez."&e=".$ep."&tv=1&tmdb=1";
 $r=array();
 $ua="Mozilla/5.0 (Windows NT 10.0; rv:71.0) Gecko/20100101 Firefox/71.0";
+
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $l);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-  curl_setopt($ch,CURLOPT_REFERER,"http://www.verystream.live");
+  //curl_setopt($ch,CURLOPT_REFERER,"http://www.verystream.live");
   curl_setopt($ch, CURLOPT_USERAGENT, $ua);
   curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
   curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
@@ -177,18 +182,22 @@ $ua="Mozilla/5.0 (Windows NT 10.0; rv:71.0) Gecko/20100101 Firefox/71.0";
   curl_close($ch);
   if (preg_match("/location:\s*(.+)/i",$h,$m))
     $l1=trim($m[1]);
-    //echo $l1;
+
+
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $l1);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
   curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-  //curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
+  //curl_setopt($ch, CURLOPT_HTTPHEADER,$head);
+  //curl_setopt($ch, CURLOPT_POST,1);
+  //curl_setopt($ch, CURLOPT_POSTFIELDS,$post);
+  curl_setopt($ch, CURLOPT_HEADER, 1);
+  //curl_setopt($ch, CURLOPT_REFERER,"https://streamvideo.link");
   curl_setopt($ch, CURLOPT_USERAGENT, $ua);
   curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
   curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
   curl_setopt($ch, CURLOPT_TIMEOUT, 15);
   $h = curl_exec($ch);
-  //echo $h;
   $t1=explode('var token = "',$h);
   $t2=explode('"',$t1[1]);
   $token=$t2[0];

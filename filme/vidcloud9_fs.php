@@ -152,6 +152,7 @@ $head=array('Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q
   $t1=explode("streaming.php",$html);
   $t2=explode('"',$t1[1]);
   $l="https://".$host."/streaming.php".$t2[0];
+  $l=str_replace(" ","+",$l);
   $r[]=urlencode($l);
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $l);

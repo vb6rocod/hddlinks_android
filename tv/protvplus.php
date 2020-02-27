@@ -4,6 +4,7 @@ error_reporting(0);
 include ("../common.php");
 $page = $_GET["page"];
 $show= $_GET["show"];
+$sez=$_GET["sez"];
 $tit=$_GET["title"];
 $link=$_GET["link"];
 $width="200px";
@@ -20,11 +21,12 @@ $page_title=$tit;
   $ua = $_SERVER['HTTP_USER_AGENT'];
 if ($page == 1) {
   $l=$link;
+  $show="";
+  $sez="";
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $l);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
   curl_setopt($ch, CURLOPT_USERAGENT, $ua);
-  //curl_setopt($ch,CURLOPT_REFERER,"http://solarmoviesonline.net");
   curl_setopt($ch,CURLOPT_HTTPHEADER,$head);
   //curl_setopt($ch,CURLOPT_HEADER,1);
   curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
@@ -34,11 +36,16 @@ if ($page == 1) {
   $h = curl_exec($ch);
   curl_close($ch);
   //echo $h;
-  $t1=explode('entity_id=',$h);
+  $t1=explode('show=',$h);
   $t2=explode('&',$t1[1]);
   $show=$t2[0];
-
-  $l="https://protvplus.ro/api/v1/plugin/broadcasted-episodes?show=".$show."&channel=&season=&count=12&dir=DESC&page=".$page;
+  $t1=explode('season=',$h);
+  $t2=explode('&',$t1[1]);
+  $sez=$t2[0];
+  $t1=explode("EMISIUNI INTEGRALE",$h);
+  $h=$t1[0];
+  if ($show && $sez) {
+  $l="https://protvplus.ro/api/v1/plugin/broadcasted-episodes?show=".$show."&channel=&season=".$sez."&count=12&dir=DESC&page=".$page;
   //echo $l;
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $l);
@@ -52,9 +59,11 @@ if ($page == 1) {
   curl_setopt($ch, CURLOPT_TIMEOUT, 15);
   $h = curl_exec($ch);
   curl_close($ch);
+  }
 
 } else {
-$l="https://protvplus.ro/api/v1/plugin/broadcasted-episodes?show=".$show."&channel=&season=&count=12&dir=DESC&page=".$page;
+$l="https://protvplus.ro/api/v1/plugin/broadcasted-episodes?show=".$show."&channel=&season=".$sez."&count=12&dir=DESC&page=".$page;
+//https://protvplus.ro/api/v1/plugin/broadcasted-episodes?show=22&channel=&season=105&count=8&dir=DESC&page=2
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $l);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
@@ -85,14 +94,15 @@ $base=basename($_SERVER['SCRIPT_FILENAME']);
 $p=$_SERVER['QUERY_STRING'];
 parse_str($p, $output);
 unset($output['show']);
+unset($output['sez']);
 if (isset($output['page'])) unset($output['page']);
 $p = http_build_query($output);
 if (!isset($_GET["page"]))
   $page=1;
 else
   $page=$_GET["page"];
-$next=$base."?page=".($page+1)."&".$p."&show=".$show;
-$prev=$base."?page=".($page-1)."&".$p."&show=".$show;
+$next=$base."?page=".($page+1)."&".$p."&show=".$show."&sez=".$sez;
+$prev=$base."?page=".($page-1)."&".$p."&show=".$show."&sez=".$sez;
 /* ==================================================== */
 ?>
 <html><head>

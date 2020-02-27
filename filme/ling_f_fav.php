@@ -4,10 +4,10 @@ include ("../common.php");
 $host=$_GET['host'];
 $page_title="Filme favorite";
 $width="200px";
-$height="278px";
-$add_target="soap2day_f_add.php";
-$fs_target="soap2day_fs.php";
-$file=$base_fav."soap2day_f.dat";
+$height="200px";
+$add_target="ling_f_add.php";
+$fs_target="ling_fs.php";
+$file=$base_fav."ling_f.dat";
 ?>
 <html><head>
 <meta http-equiv="content-type" content="text/html; charset=UTF-8">
@@ -139,7 +139,6 @@ foreach($arr as $key => $value) {
   if ($n==0) echo '<TR>'."\r\n";
   $val_imdb="tip=movie&title=".urlencode(fix_t($tit_imdb))."&year=".$year."&imdb=".$imdb;
   $fav_link="file=&mod=del&title=".urlencode(fix_t($title))."&link=".urlencode($link)."&image=".urlencode($image)."&year=".$year;
-  //$image="r_m.php?file=".$image;
   if ($tast == "NU") {
     echo '<td class="mp" width="25%"><a href="'.$link_f.'" id="myLink'.$w.'" target="_blank" onmousedown="isKeyPressed(event)">
     <img id="myLink'.$w.'" src="'.$image.'" width="'.$width.'" height="'.$height.'"><BR>'.$title.'</a>

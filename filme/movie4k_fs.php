@@ -141,6 +141,7 @@ $id=$t2[0];
 
 //https://cdn.movie4k.ag/embed/update_links?id=1500219&lang=3
 $ua = $_SERVER['HTTP_USER_AGENT'];
+/*
 if ($tip=="movie")
 $l="https://cdn.movie4k.ag/embed/update_links?id=".$id."&lang=3";
 else
@@ -158,6 +159,7 @@ $post="";
   $h = curl_exec($ch);
   curl_close($ch);
   //echo $h;
+*/
 $captcha="03";
 $head=array('Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
 'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',

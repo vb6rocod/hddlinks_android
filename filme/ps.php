@@ -21,6 +21,10 @@
      },
      $dec
     );
+    $dec=preg_replace("/\\$\(\"div:first\"\)\[\w+\]/",'\$("div:first").data',$dec);
+    // $(oe).data
+    $dec=preg_replace("/\\$\(\w+\)\.data/",'\$("div:first").data',$dec);
+    //echo $dec;
     $dec=preg_replace_callback(   // if "da" + "to" , ['"data"] to .data
      "/\[([a-dt\"\+]+)\]/",
      function ($matches) {

@@ -66,7 +66,7 @@ else
 <TD width="25%"><a href="filme/fsgratis_main.php" target="_blank">fsgratis</a></TD>
 <TD width="25%"><a href="filme/filmecinema_main.php" target="_blank">filmecinema</a></TD>
 <TD width="25%"><a href="filme/f-hd_main.php" target="_blank">f-hd</a></TD>
-<TD width="25%"></TD>
+<TD width="25%"><a href="filme/serialeonline_f.php?page=1&tip=release&title=serialeonline&link=" target="_blank">serialeonline</a></TD>
 </TR>
 <TR>
 <TD width="25%"><a href="filme/pefilme_main.php" target="_blank">pefilme</a></TD>
@@ -95,23 +95,23 @@ else
 <TD width="25%"><a href="filme/tvseries_f.php?page=1&tip=release&title=tvseries&link=" target="_blank">tvseries</a></TD>
 <TD width="25%"><a href="filme/putlockerfit_f.php?page=1&tip=release&title=putlockerfit&link=" target="_blank">putlockerfit</a></TD>
 <TD width="25%"><a href="filme/dwatchmovies_f.php?page=1&tip=release&title=dwatchmovies&link=" target="_blank">dwatchmovies</a></TD>
-<TD width="25%"><a href="filme/yifymovies_f.php?page=1&tip=release&title=yifymovies&link=" target="_blank">yifymovies</a></TD>
+<TD width="25%"><a href="filme/ling_f.php?page=1&tip=release&title=ling.online&link=" target="_blank">ling.online</a></TD>
 </TR>
 <TR>
 <TD width="25%"><a href="filme/hdfull_f.php?page=1&tip=release&title=hdfull&link=" target="_blank">hdfull</a></TD>
 <TD width="25%"><a href="filme/cineplex_f_main.php" target="_blank">cineplex (cont)</a></TD>
-<TD width="25%"><a href="filme/vikv.php?page=1&tip=release&title=vikv&link=" target="_blank">vikv</a></TD>
+<TD width="25%"><a href="filme/foumovies_f.php?page=1&tip=release&title=foumovies&link=" target="_blank">foumovies</a></TD>
 <TD width="25%"><a href="filme/lookmovie_f.php?page=1&tip=release&title=lookmovie&link=" target="_blank">lookmovie</a></TD>
 </TR>
 <TR>
-<TD width="25%"><a href="filme/onmovies_f.php?page=1&tip=release&title=onmovies&link=" target="_blank">onmovies</a></TD>
 <TD width="25%"><a href="filme/spacemov.php?page=1&tip=release&title=spacemov&link=" target="_blank">spacemov</a></TD>
-<TD width="25%"><a href="filme/moviesjoy_f.php?page=1&tip=release&title=moviesjoy&link=" target="_blank">moviesjoy</a></TD>
 <TD width="25%"><a href="filme/moviegaga_f.php?page=1&tip=release&title=moviegaga&link=" target="_blank">moviegaga</a></TD>
+<TD width="25%"><a href="filme/pubfilm_f.php?page=1&tip=release&title=pubfilm&link=" target="_blank">pubfilm</a></TD>
+<TD width="25%"><a href="filme/vidcloud9_f.php?page=1&tip=release&title=vidcloud9&link=" target="_blank">vidcloud9</a></TD>
 </TR>
 
 <TR>
-<TD width="25%"><a href="filme/ffmovies_ff.php?page=1&tip=release&title=ffmovies&link=" target="_blank">ffmovies</a></TD>
+<TD width="25%"><a href="filme/ffmovies_f1.php?page=1&tip=release&title=ffmovies&link=" target="_blank">ffmovies</a></TD>
 <TD width="25%"><a href="filme/gomovies_f.php?page=1&tip=release&title=gomovies&link=" target="_blank">gomovies</a></TD>
 <TD width="25%"><a href="filme/soap2day_f.php?page=1&tip=release&title=soap2day&link=" target="_blank">soap2day</a></TD>
 <TD width="25%"><a href="filme/300mbmoviefree_f.php?page=1&tip=release&title=300mbmoviefree&link=" target="_blank">300mbmoviefree</a></TD>
@@ -133,15 +133,9 @@ else
 
 <TR>
 <TD width="25%"><a href="filme/vumoo_f.php?page=1&tip=release&title=vumoo&link=" target="_blank">vumoo</a></TD>
-<TD width="25%"><a href="filme/cmovies_f.php?page=1&tip=release&title=cmovies&link=" target="_blank">cmovies</a></TD>
+<TD width="25%"><a href="filme/moviehdkh_f.php?page=1&tip=release&title=moviehdkh&link=" target="_blank">moviehdkh</a></TD>
 <TD width="25%"><a href="filme/europix_f.php?page=1&tip=release&title=europix&link=" target="_blank">europix</a></TD>
 <TD width="25%"><a href="filme/moonline_f.php?page=1&tip=release&title=moonline&link=" target="_blank">moonline</a></TD>
-</TR>
-<TR>
-<TD width="25%"><a href="filme/gdriveplayer_f.php?page=1&tip=release&title=gdriveplayer&link=&sc=" target="_blank">gdriveplayer</a></TD>
-<TD width="25%"><a href="filme/vidcloud9_f.php?page=1&tip=release&title=vidcloud9&link=" target="_blank">vidcloud9</a></TD>
-<TD width="25%"><a href="filme/moviehdkh_f.php?page=1&tip=release&title=moviehdkh&link=" target="_blank">moviehdkh</a></TD>
-<TD width="25%"></TD>
 </TR>
 
 <?php

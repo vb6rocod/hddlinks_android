@@ -68,7 +68,7 @@ foreach($videos as $video) {
     $t2 = explode('title="', $video);
     $t3 = explode('"', $t2[1]);
     $title = $t3[0];
-    $link=$target."?page=1&show=&link=".urlencode(fix_t($link))."&title=".urlencode(fix_t($title));
+    $link=$target."?page=1&show=&sez=&link=".urlencode(fix_t($link))."&title=".urlencode(fix_t($title));
     if (!preg_match("/IN CURAND|FILME SERIALE|Contact|TOP IMDb|Filme online/i",$title)) {
 	if ($n == 0) echo "<TR>"."\r\n";
 	echo '<TD class="cat">'.'<a class ="cat" href="'.$link.'" target="_blank">'.$title.'</a></TD>';

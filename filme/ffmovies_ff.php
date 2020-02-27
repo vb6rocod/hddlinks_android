@@ -22,20 +22,7 @@ $add_target="ffmovies_f_add.php";
 $add_file="";
 $fs_target="ffmovies_fs.php";
 $target="ffmovies_ff.php";
-if (file_exists("../../cookie/max_time_ffmovies.txt")) {
-   //$time_exp=file_get_contents($base_cookie."max_time_hqq.txt");
-   $time_exp=file_get_contents("../../cookie/max_time_ffmovies.txt");
-   $time_now=time();
-   if ($time_exp > $time_now) {
-     $minutes = intval(($time_exp-$time_now)/60);
-     $seconds= ($time_exp-$time_now) - $minutes*60;
-     if ($seconds < 10) $seconds = "0".$seconds;
-     $msg_captcha="Token expira in ".$minutes.":".$seconds." min.";
-   } else
-     $msg_captcha="Token Expirat";
-} else {
-   $msg_captcha="Token Expirat";
-}
+
 /* ==================================================== */
 $base=basename($_SERVER['SCRIPT_FILENAME']);
 $p=$_SERVER['QUERY_STRING'];
@@ -192,22 +179,7 @@ $head=array('Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q
 'Accept-Encoding: deflate',
 'Connection: keep-alive',
 'Upgrade-Insecure-Requests: 1');
-  $ch = curl_init();
-  curl_setopt($ch, CURLOPT_URL, "https://ffmovies.to/film/christmas-scavenger-hunt.42w2o/3ry5wyy");
-  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
-  //curl_setopt($ch,CURLOPT_REFERER,"https://ffmovies.to");
-  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
-  //curl_setopt($ch, CURLOPT_HEADER,1);
-  curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie);
-  curl_setopt($ch, CURLOPT_COOKIEJAR, $cookie);
-  curl_setopt($ch, CURLOPT_HTTPHEADER, $head);
-  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
-  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
-  $html = curl_exec($ch);
-  curl_close($ch);
-  
+
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $l);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
@@ -216,7 +188,7 @@ $head=array('Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q
   curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
   //curl_setopt($ch, CURLOPT_HEADER,1);
   curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie);
-  curl_setopt($ch, CURLOPT_COOKIEJAR, $cookie);
+  //curl_setopt($ch, CURLOPT_COOKIEJAR, $cookie);
   curl_setopt($ch, CURLOPT_HTTPHEADER, $head);
   curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
   curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);

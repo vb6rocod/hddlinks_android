@@ -306,38 +306,28 @@ if (strpos($filelink,"filmeonlinegratis.org") !== false) {
   //echo $h;
   $html=$h;
   if (preg_match_all("/player.php\?id\=([\w\-]*)/",$h,$m)) {
-   //print_r ($m);
   for ($k=0;$k<count($m[1]);$k++) {
   $l="https://divxfilmeonline.org/script/myplayer/player.php?id=".$m[1][$k];
-   //echo $l;
   $head=array('Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
   'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
-  'Accept-Encoding: gzip, deflate, br');
-  $cookie=$base_cookie."divx.dat";
+  'Accept-Encoding: deflate');
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $l);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
   curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 10.0; rv:64.0) Gecko/20100101 Firefox/64.0');
-  //curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
   curl_setopt($ch,CURLOPT_HTTPHEADER,$head);
-  //curl_setopt($ch, CURLOPT_REFERER, "https://divxfilmeonline.org");
   curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
   curl_setopt($ch, CURLOPT_HEADER,1);
   curl_setopt($ch, CURLOPT_NOBODY,1);
-  //curl_setopt($ch, CURLOPT_COOKIEJAR, $cookie);
-  //curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie);
   curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
   curl_setopt($ch, CURLOPT_TIMEOUT, 15);
   $h = curl_exec($ch);
   curl_close($ch);
-  if (strpos($h,"Location:") !== false) {
-  $t1=explode("Location:",$h);
-  $t2=explode("\n",$t1[1]);
-  $html .='<iframe src="'.$t2[0].'"> ';
+  if (preg_match_all("/Location\:\s+(.+)/i",$h,$m)) {
+  $html .='<iframe src="'.trim($m[1]).'"> ';
   }
   }
   }
-  //print_r ($m);
 } elseif (strpos($filelink,"pefilme.net") !== false) {
   $html="";
   $ch = curl_init();
@@ -489,19 +479,19 @@ $headers=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:71.0) Gecko/2010010
   if (preg_match_all("/data\-src\=\"(.*?)\"/ms",$html,$m)) {
    $n=array_unique($m[1]);
    //print_r ($n);
+   $ch = curl_init();
+   curl_setopt($ch, CURLOPT_USERAGENT,$ua);
+   curl_setopt($ch,CURLOPT_REFERER,"http://filmehd.se/");
+   curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+   curl_setopt($ch, CURLOPT_RETURNTRANSFER  ,1);  // RETURN THE CONTENTS OF THE CALL
+   curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+   curl_setopt($ch, CURLOPT_TIMEOUT, 15);
    foreach ($n as $key => $value) {
-    $ch = curl_init("https://filmehd.se".$value);
-    curl_setopt($ch, CURLOPT_USERAGENT,$ua);
-    curl_setopt($ch,CURLOPT_REFERER,"http://filmehd.se/");
-    curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
-    curl_setopt($ch, CURLOPT_RETURNTRANSFER  ,1);  // RETURN THE CONTENTS OF THE CALL
-    curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
-    curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+    curl_setopt($ch, CURLOPT_URL, "https://filmehd.se".$value);
     $h = curl_exec($ch);
-    curl_close ($ch);
-    //echo $h;
     $html .=$h;
    }
+   curl_close ($ch);
  }
 } elseif (strpos($filelink,"tvhub.") !== false || strpos($filelink,"serialeonlinesubtitrate.") !== false) {
   //echo $filelink;

@@ -57,9 +57,7 @@ function str_between($string, $start, $end){
 <meta http-equiv="content-type" content="text/html; charset=UTF-8">
 <title><?php echo $tit.$tit2; ?></title>
 <link rel="stylesheet" type="text/css" href="../custom.css" />
-<script type="text/javascript" src="//code.jquery.com/jquery-3.2.1.min.js"></script>
-<script src="../jquery.fancybox.min.js"></script>
-<link rel="stylesheet" type="text/css" href="../jquery.fancybox.min.css">
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.0/jquery.min.js"></script>
 <script type="text/javascript">
 function openlink1(link) {
   link1=document.getElementById('file').value;
@@ -94,12 +92,6 @@ function openlink(link) {
 function changeserver(s,t) {
   document.getElementById('server').innerHTML = s;
   document.getElementById('file').value=t;
-  var dec=decodeURI(t);
-  if (dec.match(/streamplay|powvideo|povvideo/)) {  // rezerva in caz ca nu mai merge....
-    msg="ptlink.php?file="+t;
-    document.getElementById("fancy").href=msg;
-    document.getElementById("fancy").click();
-  }
 }
    function zx(e){
      var charCode = (typeof e.which == "number") ? e.which : e.keyCode
@@ -137,38 +129,12 @@ function off() {
 </script>
 </head>
 <body>
-<a id="fancy" data-fancybox data-type="iframe" href=""></a>
 <a href='' id='mytest1'></a>
 <?php
 echo '<h2>'.$tit.$tit2.'</H2>';
 echo '<BR>';
-//echo $link;
-$ua = $_SERVER['HTTP_USER_AGENT'];
-  $ch = curl_init($link);
-  curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows; U; Windows NT 6.1; en-US; rv:1.9.1.2) Gecko/20090729 Firefox/3.5.2 GTB5');
-  curl_setopt($ch, CURLOPT_REFERER, "https://www1.swatchseries.to");
-  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
-  curl_setopt($ch, CURLOPT_RETURNTRANSFER  ,1);  // RETURN THE CONTENTS OF THE CALL
-  curl_setopt($ch, CURLOPT_ENCODING,"");
-  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
-  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
-  $h3 = curl_exec($ch);
-  curl_close ($ch);
-  //echo $h3;
 $r=array();
-$videos = explode("?r=", $h3);
-unset($videos[0]);
-$videos = array_values($videos);
-foreach($videos as $video) {
-   $t1=explode('Delete link',$video);
-   $t2=explode("'",$t1[1]);
-   //$t1=explode('"',$video);
-   //$l1 = base64_decode($t1[0]);
-   $l1=trim($t2[0]);
-   //echo $l1;
-   if (strpos($l1,"http") !== false) $r[]=$l1;
-}
+$r[]=$link;
 echo '<table border="1" width="100%">';
 echo '<TR><TD class="mp">Alegeti un server: Server curent:<label id="server">'.parse_url($r[0])['host'].'</label>
 <input type="hidden" id="file" value="'.urlencode($r[0]).'"></td></TR></TABLE>';
@@ -212,6 +178,10 @@ if ($tip=="movie") {
   $from="";
   $link_page="";
 }
+  $rest = substr($tit3, -6);
+  if (preg_match("/\((\d+)\)/",$rest,$m)) {
+   $tit3=trim(str_replace($m[0],"",$tit3));
+  }
 $sub_link ="from=".$from."&tip=".$tip."&sez=".$sez."&ep=".$ep."&imdb=".$imdbid."&title=".urlencode(fix_t($tit3))."&link=".$link_page."&ep_tit=".urlencode(fix_t($tit2))."&year=".$year;
 echo '<br>';
 echo '<table border="1" width="100%">';

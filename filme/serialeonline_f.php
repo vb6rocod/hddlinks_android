@@ -1,19 +1,11 @@
 <!DOCTYPE html>
 <?php
-error_reporting(0);
 function str_between($string, $start, $end){
 	$string = " ".$string; $ini = strpos($string,$start);
 	if ($ini == 0) return ""; $ini += strlen($start); $len = strpos($string,$end,$ini) - $ini;
 	return substr($string,$ini,$len);
 }
 include ("../common.php");
-include ("../util.php");
-/* links from https://soapgate.org/ */
-$base="https://soap2day.to";
-//$base="https://soap2day.se";
-//$base="https://soap2day.is";
-//$base="https://soap2day.im";
-$host=parse_url($base)['host'];
 $page = $_GET["page"];
 $tip= $_GET["tip"];
 $tit=$_GET["title"];
@@ -21,15 +13,15 @@ $link=$_GET["link"];
 $width="200px";
 $height="278px";
 /* ==================================================== */
-$has_fav="yes";
+$has_fav="no";
 $has_search="yes";
 $has_add="yes";
-$has_fs="yes";
-$fav_target="soap2day_s_fav.php?host=https://".$host;
-$add_target="soap2day_s_add.php";
+$has_fs="no";
+$fav_target="";
+$add_target="filme_add.php";
 $add_file="";
-$fs_target="soap2day_ep.php";
-$target="soap2day_s.php";
+$fs_target="";
+$target="serialeonline_f.php";
 /* ==================================================== */
 $base=basename($_SERVER['SCRIPT_FILENAME']);
 $p=$_SERVER['QUERY_STRING'];
@@ -47,12 +39,12 @@ $prev=$base."?page=".($page-1)."&".$p;
 $tit=unfix_t(urldecode($tit));
 $link=unfix_t(urldecode($link));
 /* ==================================================== */
-if (file_exists($base_cookie."seriale.dat"))
-  $val_search=file_get_contents($base_cookie."seriale.dat");
+if (file_exists($base_cookie."filme.dat"))
+  $val_search=file_get_contents($base_cookie."filme.dat");
 else
   $val_search="";
 $form='<form action="'.$target.'" target="_blank">
-Cautare serial:  <input type="text" id="title" name="title" value="'.$val_search.'">
+Cautare film:  <input type="text" id="title" name="title" value="'.$val_search.'">
 <input type="hidden" name="page" id="page" value="1">
 <input type="hidden" name="tip" id="tip" value="search">
 <input type="hidden" name="link" id="link" value="">
@@ -61,7 +53,7 @@ Cautare serial:  <input type="text" id="title" name="title" value="'.$val_search
 /* ==================================================== */
 if ($tip=="search") {
   $page_title = "Cautare: ".$tit;
-  if ($page == 1) file_put_contents($base_cookie."seriale.dat",$tit);
+  if ($page == 1) file_put_contents($base_cookie."filme.dat",$tit);
 } else
   $page_title=$tit;
 /* ==================================================== */
@@ -173,53 +165,78 @@ if ($page==1) {
    echo '<TD class="nav" colspan="4" align="right"><a href="'.$prev.'">&nbsp;&lt;&lt;&nbsp;</a> | <a href="'.$next.'">&nbsp;&gt;&gt;&nbsp;</a></TD>'."\r\n";
 }
 echo '</TR>'."\r\n";
-$ua = $_SERVER['HTTP_USER_AGENT'];
-//$ua="Mozilla/5.0 (Windows NT 10.0; rv:71.0) Gecko/20100101 Firefox/71.0";
-$cookie=$base_cookie."hdpopcorns.dat";
+//https://www.filmeseriale.eu/filme/page/2/
 if($tip=="release") {
-  $l="https://".$host."/tvlist?page=".$page;
+ if ($page>1)
+  $l ="https://serialeonline.to/filme/page/".$page."/";
+ else
+  $l="https://serialeonline.to/filme/";
 } else {
-  $search=str_replace(" ","%20",$tit);
-  $l="https://".$host."/search/keyword/".$search;
+  $search=str_replace(" ","+",$tit);
+  if ($page > 1)
+    $l="https://serialeonline.to/?s=".$search;
+  else
+    $l="https://serialeonline.to/page/".$page."/?s=".$search;
 }
-$host=parse_url($l)['host'];
-$head=array('Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
-'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2');
+$r=array();
+$ua = $_SERVER['HTTP_USER_AGENT'];
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $l);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-  curl_setopt($ch,CURLOPT_REFERER,"https://".$host);
-  curl_setopt($ch,CURLOPT_HTTPHEADER,$head);
-  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
-  curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie);
+  curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 10.0; rv:55.0) Gecko/20100101 Firefox/55.0');
   curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+  curl_setopt($ch, CURLOPT_ENCODING, "");
+  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
   curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
   curl_setopt($ch, CURLOPT_TIMEOUT, 15);
   $html = curl_exec($ch);
   curl_close($ch);
-//echo $html;
-$videos = explode('class="img-group">', $html);
-unset($videos[0]);
-$videos = array_values($videos);
-foreach($videos as $video) {
-  $t1 = explode("href='",$video);
-  $t2=explode("'",$t1[1]);
-  $link = $t2[0];
-  if (strpos($link,"http") === false) $link="https://".$host.$link;
+  //echo $html;
   if ($tip=="release") {
-  $t3 = explode('>', $t1[2]);
-  $t4 = explode('<', $t3[1]);
-  $title = $t4[0];
-  } else {
-   $t1=explode('href="',$video);
-   $t2=explode('>',$t1[1]);
-   $t3=explode('<',$t2[1]);
-   $title=$t3[0];
+  $videos = explode('article id="post', $html);
+  unset($videos[0]);
+  $videos = array_values($videos);
+  foreach($videos as $video) {
+    $t1=explode('href="',$video);
+    $t2=explode('"',$t1[1]);
+    $link=$t2[0];
+    $t1=explode('alt="',$video);
+    $t2=explode('"',$t1[1]);
+    $title=trim($t2[0]);
+    if (preg_match("/[\'|\"](http[\w\/\.\_\:\-\@]+\.jpg)[\'|\"]/",$video,$m))
+     $image=trim($m[1]);
+    else
+     $image="blank.jpg";
+    if (strpos($link,"/filme") !== false) array_push($r ,array($title,$link, $image));
   }
+  } else {
+  $videos = explode('div class="result-item', $html);
+  unset($videos[0]);
+  $videos = array_values($videos);
+  foreach($videos as $video) {
+    $t1=explode('href="',$video);
+    $t2=explode('"',$t1[1]);
+    $link=$t2[0];
+    $t1=explode('alt="',$video);
+    $t2=explode('"',$t1[1]);
+    $title=trim($t2[0]);
+    if (preg_match("/[\'|\"](http[\w\/\.\_\:\-\@]+\.jpg)[\'|\"]/",$video,$m))
+     $image=trim($m[1]);
+    else
+     $image="blank.jpg";
+    if (strpos($link,"/filme") !== false) array_push($r ,array($title,$link, $image));
+  }
+  }
+$c=count($r);
+for ($k=0;$k<$c;$k++) {
+  $title=$r[$k][0];
+  $title=str_replace("&#8211;","-",$title);
   $title=prep_tit($title);
-  $t1 = explode('src="', $video);
-  $t2 = explode('"', $t1[1]);
-  $image = "https://".$host.$t2[0];
+  $link=$r[$k][1];
+  $image=$r[$k][2];
+  $rest = substr($title, -2);
+  //echo urlencode($rest);
+  if ($rest == " -") $title = substr($title, 0, -2);
   $rest = substr($title, -6);
   if (preg_match("/\((\d+)\)/",$rest,$m)) {
    $year=$m[1];
@@ -228,18 +245,15 @@ foreach($videos as $video) {
    $year="";
    $tit_imdb=$title;
   }
-  $t1=explode('style="padding:3">',$video);
-  $t2=explode('<',$t1[1]);
-  $year=$t2[0];
   $imdb="";
-
-  $imdb="";
-  $link_f=$fs_target.'?tip=series&link='.urlencode($link).'&title='.urlencode(fix_t($title)).'&image='.$image."&sez=&ep=&ep_tit=&year=".$year;
-  if ($title && strpos($link,"tv_") !== false) {
+  if (strpos($link,"filme") !== false && $title <> "DMCA") {
+  if ($has_fs == "no")
+    $link_f='filme_link.php?file='.urlencode($link).'&title='.urlencode(fix_t($title));
+  else
+    $link_f=$fs_target.'?tip=movie&link='.urlencode($link).'&title='.urlencode(fix_t($tit)).'&image='.$image."&sez=&ep=&ep_tit=&year=".$year;
   if ($n==0) echo '<TR>'."\r\n";
-  $val_imdb="tip=series&title=".urlencode(fix_t($tit_imdb))."&year=".$year."&imdb=".$imdb;
-  $fav_link="mod=add&title=".urlencode(fix_t($title))."&link=".urlencode($link)."&image=".urlencode($image)."&year=".$year;
-  //$image="r_m.php?file=".$image;
+  $val_imdb="tip=movie&title=".urlencode(fix_t($tit_imdb))."&year=".$year."&imdb=".$imdb;
+  $fav_link="file=".$add_file."&mod=add&title=".urlencode(fix_t($title))."&link=".urlencode($link)."&image=".urlencode($image)."&year=".$year;
   if ($tast == "NU") {
     echo '<td class="mp" width="25%"><a href="'.$link_f.'" id="myLink'.$w.'" target="_blank" onmousedown="isKeyPressed(event)">
     <img id="myLink'.$w.'" src="'.$image.'" width="'.$width.'" height="'.$height.'"><BR>'.$title.'</a>
@@ -262,9 +276,7 @@ foreach($videos as $video) {
   $n=0;
   }
   }
- }
-
-/* bottom */
+}
   if ($n < 4 && $n > 0) {
     for ($k=0;$k<4-$n;$k++) {
       echo '<TD></TD>'."\r\n";
@@ -279,6 +291,6 @@ else
   echo '<a href="'.$next.'">&nbsp;&gt;&gt;&nbsp;</a></TD>'."\r\n";
 echo '</TR>'."\r\n";
 echo "</table>"."\r\n";
-echo "</table>";
-?></body>
+?>
+<br></body>
 </html>

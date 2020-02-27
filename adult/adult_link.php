@@ -708,6 +708,8 @@ if (preg_match("/4tube\.com/",$host)) {
   if (preg_match_all("/(144|240|360|480|720|1080)p\"\:\"(.*?)\"/",$h,$m)) {
     $out=$m[2][0];
   }
+  if ($out && $flash <> "flash")
+    $out=$out."|Referer=".urlencode("https://xhamster.com");
 } else if (preg_match("/xozilla\.com/",$host)) {
   $t1=explode("video_url: '",$h);
   $t2=explode("'",$t1[1]);
