@@ -56,8 +56,8 @@ if (strpos($filelink, "powvideo.") !== false || strpos($filelink, "povvideo.") !
     curl_setopt($ch, CURLOPT_NOBODY,0);
     $h = curl_exec($ch);
     curl_close($ch);
-} elseif (strpos($filelink,"streamplay.") !== false) {
-    preg_match('/(?:\/\/|\.)(streamplay\.(?:to|club|top|me))\/(?:embed-|player-)?([0-9a-zA-Z]+)/', $filelink, $m);
+} elseif (preg_match("/str?eamplay\./i",$filelink)) {
+    preg_match('/(?:\/\/|\.)(str?eamplay\.(?:to|club|top|me))\/(?:embed-|player-)?([0-9a-zA-Z]+)/', $filelink, $m);
     $id=$m[2];
     $ua       = $_SERVER["HTTP_USER_AGENT"];
     $host=parse_url($filelink)['host'];

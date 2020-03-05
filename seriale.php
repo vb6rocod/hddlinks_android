@@ -72,7 +72,7 @@ document.onkeypress =  zx;
 <TD width="25%"><a href="filme/fsgratis_s.php?page=1&tip=release&title=fsgratis&link=" target="_blank">fsgratis</a></TD>
 <TD width="25%"><a href="filme/serialeonline_biz.php?page=1&tip=release&title=serialeonline.biz&link=" target="_blank">serialeonline.biz</a></TD>
 <TD width="25%"><a href="filme/clicksud_main.php" target="_blank">clicksud (seriale romanesti)</a></TD>
-<TD width="25%"><a href="filme/club-seriale_s.php?page=1&tip=release&title=club-seriale&link=" target="_blank">club-seriale</a></TD>
+<TD width="25%"></TD>
 </TR>
 <!-- straine -->
 <TR>

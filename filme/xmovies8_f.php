@@ -7,6 +7,8 @@ function str_between($string, $start, $end){
 }
 include ("../common.php");
 include ("../util.php");
+$last_good="https://xmovies8.si";
+$host=parse_url($last_good)['host'];
 $page = $_GET["page"];
 $tip= $_GET["tip"];
 $tit=$_GET["title"];
@@ -18,7 +20,7 @@ $has_fav="yes";
 $has_search="yes";
 $has_add="yes";
 $has_fs="yes";
-$fav_target="xmovies8_f_fav.php?host=https://xmovies8.tv";
+$fav_target="xmovies8_f_fav.php?host=".$last_good;
 $add_target="xmovies8_f_add.php";
 $add_file="";
 $fs_target="xmovies8_fs.php";
@@ -171,15 +173,15 @@ $cookie=$base_cookie."xmovies8.txt";
 
 $ua="Mozilla/5.0 (Windows NT 10.0; rv:70.0) Gecko/20100101 Firefox/70.0";
 if($tip=="release") {
-  $l="https://xmovies8.tv/free-latest-movies-online/".$page;
+  $l="https://".$host."/free-latest-movies-online/".$page;
 } else {
   $search=str_replace(" ","+",$tit);
-  $l="https://xmovies8.tv/movie/search/".$search."/".$page;
+  $l="https://".$host."/movie/search/".$search."/".$page;
 }
 $host=parse_url($l)['host'];
   $ch = curl_init($l);
   curl_setopt($ch, CURLOPT_USERAGENT, $ua);
-  curl_setopt($ch,CURLOPT_REFERER,"https://xmovies8.tv");
+  curl_setopt($ch,CURLOPT_REFERER,$last_good);
   curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER  ,1);  // RETURN THE CONTENTS OF THE CALL
   curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie);
@@ -221,7 +223,7 @@ foreach($videos as $video) {
    $tit_imdb=$title;
   }
   $imdb="";
-  $link_f=$fs_target.'?tip=movie&link='.urlencode($link).'&title='.urlencode(fix_t($title)).'&image='.$image."&sez=&ep=&ep_tit=&year=".$year;
+  $link_f=$fs_target.'?tip=movie&link='.urlencode($link).'&title='.urlencode(fix_t($title)).'&image='.$image."&sez=&ep=&ep_tit=&year=".$year."&last=".$last_good;
   if ($title) {
   if ($n==0) echo '<TR>'."\r\n";
   $val_imdb="tip=movie&title=".urlencode(fix_t($tit_imdb))."&year=".$year."&imdb=".$imdb;

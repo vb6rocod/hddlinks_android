@@ -201,7 +201,7 @@ if ($tip=="movie") {
   $link_page="";
 }
   $rest = substr($tit3, -6);
-  if (preg_match("/\((\d+)\)/",$rest,$m)) {
+  if (preg_match("/\(?(\d{4})\)?/",$rest,$m)) {
    $tit3=trim(str_replace($m[0],"",$tit3));
   }
 $sub_link ="from=".$from."&tip=".$tip."&sez=".$sez."&ep=".$ep."&imdb=".$imdbid."&title=".urlencode(fix_t($tit3))."&link=".$link_page."&ep_tit=".urlencode(fix_t($tit2))."&year=".$year;

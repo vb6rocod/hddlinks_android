@@ -127,7 +127,7 @@ foreach($arr as $key => $value) {
     $image=urldecode($arr[$key]["image"]);
     //$image=$host.parse_url($image)['path'];
   $rest = substr($title, -6);
-  if (preg_match("/\((\d+)\)/",$rest,$m)) {
+  if (preg_match("/\(?(\d{4})\)?/",$rest,$m)) {
    $year=$m[1];
    $tit_imdb=trim(str_replace($m[0],"",$title));
   } else {

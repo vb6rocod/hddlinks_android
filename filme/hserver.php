@@ -34,6 +34,7 @@ if (preg_match("/Location\:\s+(http.+)/i",$h,$m)) {
   $c=trim($m[1]);
   header("Location: $c");
   //echo $c;
+//print $c;
 }
 
 

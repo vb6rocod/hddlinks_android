@@ -2,7 +2,9 @@
 include ("../common.php");
 $ua = $_SERVER['HTTP_USER_AGENT'];
 $cookie=$base_cookie."ffmovies.dat";
+//if (file_exists($cookie)) unlink($cookie);
   $l="https://ffmovies.to/tv-series";
+  $l="https://ffmovies.to/ajax/film/servers/1qyqw";
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $l);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);

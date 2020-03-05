@@ -1,6 +1,8 @@
 <?php
 include ("../common.php");
 //include ("../util.php");
+$last_good="https://xmovies8.si";
+$host=parse_url($last_good)['host'];
 $ua = $_SERVER['HTTP_USER_AGENT'];
 $ua="Mozilla/5.0 (Windows NT 10.0; rv:70.0) Gecko/20100101 Firefox/70.0";
 $cookie=$base_cookie."xmovies8.txt";
@@ -27,7 +29,7 @@ curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
 curl_setopt($ch, CURLOPT_USERAGENT, $ua);
 curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
 curl_setopt($ch, CURLOPT_HTTPHEADER, $head);
-curl_setopt($ch,CURLOPT_REFERER,"https://xmovies8.tv");
+curl_setopt($ch,CURLOPT_REFERER,$last_good);
 //curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie);
 //curl_setopt($ch, CURLOPT_COOKIEJAR, $cookie);
 //curl_setopt($ch, CURLOPT_HEADER, 1);
@@ -43,7 +45,7 @@ $token=$m[1][0];
 //////////////////////////////////////////////////////////////
 
 //////////////////////////////////////////////////////////////
-$l1="https://xmovies8.tv/watch-earthquake-bird-2019-1080p-hd-online-free/watching.html";
+$l1="https://".$host."/watch-earthquake-bird-2019-1080p-hd-online-free/watching.html";
 //$l1="https://xmovies8.tv/";
 $head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:70.0) Gecko/20100101 Firefox/70.0',
 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
@@ -72,7 +74,7 @@ $head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:70.0) Gecko/20100101 F
   //echo $html;
   $t1=explode('action="',$html);
   $t2=explode('"',$t1[1]);
-  $requestLink="https://xmovies8.tv".$t2[0];
+  $requestLink=$last_good.$t2[0];
 
   //if (strpos($html,'id="cf-dn') === false)
    //$q1= getClearanceLink_old($html,$requestLink);
@@ -113,8 +115,8 @@ $head=array('Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q
 'Accept-Encoding: gzip, deflate, br',
 'Content-Type: application/x-www-form-urlencoded',
 'Content-Length: '.strlen($post).'',
-'Referer: https://xmovies8.tv/watch-earthquake-bird-2019-1080p-hd-online-free/watching.html',
-'Origin: https://xmovies8.tv',
+'Referer: https://'.$host.'/watch-earthquake-bird-2019-1080p-hd-online-free/watching.html',
+'Origin: '.$last_good.'',
 'Connection: keep-alive',
 'Upgrade-Insecure-Requests: 1');
 //$post="r=&id=".$id."&g-recaptcha-response=".$token;
@@ -183,7 +185,7 @@ $ch = curl_init();
 curl_setopt($ch, CURLOPT_URL, $l);
 curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
 curl_setopt($ch, CURLOPT_USERAGENT, $ua);
-curl_setopt($ch, CURLOPT_REFERER, "https://xmovies8.tv");
+curl_setopt($ch, CURLOPT_REFERER, $last_good);
 curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 0);
 curl_setopt($ch, CURLOPT_HTTPHEADER, $head);
 curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie);

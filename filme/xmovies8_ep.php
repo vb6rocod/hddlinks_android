@@ -8,6 +8,8 @@ $link=urldecode($_GET["link"]);
 $tip=$_GET["tip"];
 $year=$_GET['year'];
 $sez=$_GET['sez'];
+$last_good=$_GET['last'];
+$host=parse_url($last_good)['host'];
 /* ======================================= */
 $width="200px";
 $height="100px";
@@ -51,10 +53,10 @@ $sez=$season;
 $ua = $_SERVER['HTTP_USER_AGENT'];
 $ua="Mozilla/5.0 (Windows NT 10.0; rv:70.0) Gecko/20100101 Firefox/70.0";
 $cookie=$base_cookie."xmovies8.txt";
-$l="https://xmovies8.tv/ajax/movie_load_info/".$link;
+$l="https://".$host."/ajax/movie_load_info/".$link;
   $ch = curl_init($l);
   curl_setopt($ch, CURLOPT_USERAGENT, $ua);
-  curl_setopt($ch,CURLOPT_REFERER,"https://xmovies8.tv");
+  curl_setopt($ch,CURLOPT_REFERER,$last_good);
   curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER  ,1);  // RETURN THE CONTENTS OF THE CALL
   curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie);
@@ -71,7 +73,7 @@ $l="https://xmovies8.tv/ajax/movie_load_info/".$link;
   //echo $l;
   $ch = curl_init($l);
   curl_setopt($ch, CURLOPT_USERAGENT, $ua);
-  curl_setopt($ch,CURLOPT_REFERER,"https://xmovies8.tv");
+  curl_setopt($ch,CURLOPT_REFERER,$last_good);
   curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER  ,1);  // RETURN THE CONTENTS OF THE CALL
   curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie);
@@ -117,7 +119,7 @@ foreach($videos as $video) {
    $ep_tit_d=$season."x".$episod;
   }
   if ($episod) {
-  $link_f=$fs_target.'?tip=series&link='.urlencode($link).'&title='.urlencode(fix_t($tit)).'&image='.$img_ep."&sez=".$season."&ep=".$episod."&ep_tit=".urlencode(fix_t($ep_tit))."&year=".$year;
+  $link_f=$fs_target.'?tip=series&link='.urlencode($link).'&title='.urlencode(fix_t($tit)).'&image='.$img_ep."&sez=".$season."&ep=".$episod."&ep_tit=".urlencode(fix_t($ep_tit))."&year=".$year."&last=".$last_good;
    if ($n == 0) echo "<TR>"."\n\r";
    if ($has_img == "yes")
     echo '<TD class="mp" width="33%">'.'<a id="sez'.$sez.'" href="'.$link_f.'" target="_blank"><img width="'.$width.'" height="'.$height.'" src="'.$img_ep.'"><BR>'.$ep_tit_d.'</a></TD>'."\r\n";

@@ -6,7 +6,7 @@ function str_between($string, $start, $end){
 	return substr($string,$ini,$len);
 }
 include ("../common.php");
-include ("../util.php");
+include ("../cloudflare.php");
 /* links from https://soapgate.org/ */
 $base="https://soap2day.to";
 //$base="https://soap2day.se";
@@ -178,7 +178,10 @@ $ua = $_SERVER['HTTP_USER_AGENT'];
 $cookie=$base_cookie."hdpopcorns.dat";
 
 if($tip=="release") {
+  if ($page>1)
   $l="https://".$host."/movielist?page=".$page;
+  else
+  $l="https://".$host."/movielist/";
 } else {
   $search=str_replace(" ","%20",$tit);
   $l="https://".$host."/search/keyword/".$search;
@@ -186,6 +189,7 @@ if($tip=="release") {
 $host=parse_url($l)['host'];
 $head=array('Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
 'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2');
+/*
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $l);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
@@ -198,6 +202,10 @@ $head=array('Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q
   curl_setopt($ch, CURLOPT_TIMEOUT, 15);
   $html = curl_exec($ch);
   curl_close($ch);
+//echo $html;
+*/
+//$l="https://soap2day.to";
+$html=cf_pass($l,$cookie);
 //echo $html;
 $videos = explode('class="img-group">', $html);
 unset($videos[0]);
@@ -231,7 +239,7 @@ foreach($videos as $video) {
   if ($n==0) echo '<TR>'."\r\n";
   $val_imdb="tip=movie&title=".urlencode(fix_t($tit_imdb))."&year=".$year."&imdb=".$imdb;
   $fav_link="mod=add&title=".urlencode(fix_t($title))."&link=".urlencode($link)."&image=".urlencode($image)."&year=".$year;
-  //$image="r_m.php?file=".$image;
+  $image="r_m.php?file=".$image;
   if ($tast == "NU") {
     echo '<td class="mp" width="25%"><a href="'.$link_f.'" id="myLink'.$w.'" target="_blank" onmousedown="isKeyPressed(event)">
     <img id="myLink'.$w.'" src="'.$image.'" width="'.$width.'" height="'.$height.'"><BR>'.$title.'</a>

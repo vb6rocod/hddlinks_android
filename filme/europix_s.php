@@ -209,7 +209,7 @@ $host=parse_url($requestLink)['host'];
   $title = trim($t2[0]);
   preg_match("/src\=(\'|\")(.*?)(\'|\")/msi",$video,$m);
   $image = $m[2];
-  $image="https://".$host."/".str_replace("../","",$image);
+  if (strpos($image,"../") !== false) $image="https://".$host."/".str_replace("../","",$image);
   $year="";
   $imdb="";
   $link_f=$fs_target.'?tip=series&link='.urlencode($link).'&title='.urlencode(fix_t($title)).'&image='.$image."&sez=&ep=&ep_tit=&year=".$year;

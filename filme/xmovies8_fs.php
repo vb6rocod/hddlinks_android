@@ -36,6 +36,8 @@ $ep=$_GET["ep"];
 $ep_title=unfix_t(urldecode($_GET["ep_tit"]));
 $ep_title=prep_tit($ep_title);
 $year=$_GET["year"];
+$last_good=$_GET['last'];
+$host=parse_url($last_good)['host'];
 if ($tip=="movie") {
 $tit2="";
 } else {
@@ -140,10 +142,10 @@ $ua = $_SERVER['HTTP_USER_AGENT'];
 $ua="Mozilla/5.0 (Windows NT 10.0; rv:70.0) Gecko/20100101 Firefox/70.0";
 $cookie=$base_cookie."xmovies8.txt";
 if ($tip=="movie") {
-$l="https://xmovies8.tv/ajax/movie_load_info/".$link;
+$l="https://".$host."/ajax/movie_load_info/".$link;
   $ch = curl_init($l);
   curl_setopt($ch, CURLOPT_USERAGENT, $ua);
-  curl_setopt($ch,CURLOPT_REFERER,"https://xmovies8.tv");
+  curl_setopt($ch,CURLOPT_REFERER,$last_good);
   curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER  ,1);  // RETURN THE CONTENTS OF THE CALL
   curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie);
@@ -159,7 +161,7 @@ $l="https://xmovies8.tv/ajax/movie_load_info/".$link;
   $l=$t3[0];
   $ch = curl_init($l);
   curl_setopt($ch, CURLOPT_USERAGENT, $ua);
-  curl_setopt($ch,CURLOPT_REFERER,"https://xmovies8.tv");
+  curl_setopt($ch,CURLOPT_REFERER,$last_good);
   curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER  ,1);  // RETURN THE CONTENTS OF THE CALL
   curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie);
@@ -175,7 +177,7 @@ unset($videos[0]);
 $videos = array_values($videos);
 foreach($videos as $video) {
  $t1=explode('"',$video);
- $l1="https://xmovies8.tv".$t1[0];
+ $l1=$last_good.$t1[0];
  $r[]=$l1;
  $t2=explode(">",$video);
  $t3=explode("<",$t2[1]);
@@ -184,7 +186,7 @@ foreach($videos as $video) {
 } else {
   $ch = curl_init($link);
   curl_setopt($ch, CURLOPT_USERAGENT, $ua);
-  curl_setopt($ch,CURLOPT_REFERER,"https://xmovies8.tv");
+  curl_setopt($ch,CURLOPT_REFERER,$last_good);
   curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER  ,1);  // RETURN THE CONTENTS OF THE CALL
   curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie);
@@ -200,7 +202,7 @@ unset($videos[0]);
 $videos = array_values($videos);
 foreach($videos as $video) {
  $t1=explode('"',$video);
- $l1="https://xmovies8.tv".$t1[0];
+ $l1=$last_good.$t1[0];
  $r[]=$l1;
  $t2=explode(">",$video);
  $t3=explode("<",$t2[1]);

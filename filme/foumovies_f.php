@@ -6,6 +6,7 @@ function str_between($string, $start, $end){
 	return substr($string,$ini,$len);
 }
 include ("../common.php");
+error_reporting(0);
 /* =================================================== */
 $l="https://www.foumovies.me";
 //http://www.stupiddrive.com
@@ -246,7 +247,15 @@ for ($k=0;$k<count($r);$k++) {
   $title=trim(preg_replace("/((Free Movie)|(Movie Free)|(Movie Download)|(Full Movie)).+/i","",$title));
   $image=$r[$k][2];
   $year=$r[$k][3];
-  $tit_imdb=$title;
+  $rest = substr($title, -6);
+  if (preg_match("/\(?(\d{4})\)?/",$rest,$m)) {
+   $tit_imdb=trim(str_replace($m[0],"",$title));
+   $year=$m[1];
+   $title=$tit_imdb;
+  } else {
+   $tit_imdb=$title;
+  }
+  //$tit_imdb=$title;
   $tit_fav=$title." (".$year.")";
   $link_f=$fs_target.'?tip=movie&link='.urlencode($link).'&title='.urlencode(fix_t($title)).'&image='.$image."&sez=&ep=&ep_tit=&year=".$year;
   if ($title && strpos($link,"/show") === false) {

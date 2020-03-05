@@ -6,6 +6,12 @@
       $dec=$m[1];
      }
     }
+    while (preg_match("/(\w+)\s*\=\s*(\w+)\.replace\(\s*\"(\w+)\"\s*\,\s*\"(.*?)\"\s*\)\;?/",$dec,$m)) {
+    $dec=str_replace($m[0],"",$dec);
+    $pat="/(".$m[1].")\s*\=\s*\"(\w+)\"/";
+    preg_match($pat,$dec,$n);
+    $dec=str_replace($n[0],$n[1].'="'.str_replace($m[3],$m[4],$n[2]).'"',$dec);
+    }
     $dec=str_replace("Math.","",$dec);
     $dec=preg_replace_callback(   // if Math[op]  but not Math["round"]
      "/Math\[\s*(\w+)\s*\]/",
@@ -53,7 +59,7 @@
     );
     // next try to fix var op="sqrt",oi="5"; or var oe="sqrt"; to function for "sqrt" or $oi=5
     $pat1=""; // build a pattern with oi|oe ......
-    if (preg_match_all("/(var\s*)?((\w+)\s*\=\s*\"(\w+)\"\s*\,?)+;/",$dec,$m)) {
+    if (preg_match_all("/(var\s*)?((\w+)\s*\=\s*\"([\w\:]+)\"\s*\,?)+;/",$dec,$m)) {
      for ($k=0;$k<count($m[0]);$k++) {
       $find=$m[0][$k];
       preg_match_all("/(\w+)\=\"(\w+)\"/",$find,$n);

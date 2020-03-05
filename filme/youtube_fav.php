@@ -119,8 +119,8 @@ echo "<a href='".$c."' id='mytest1'></a>".'<div id="mainnav">';
 echo '<table border="1px" width="100%"><TR><TD class="form">'."\n\r";
 echo '<form action="youtube_search.php" target="_blank">Cautare: ';
 echo '<input type="text" id="search" name="search"><input type="hidden" id="token" name="token" value=""><input type="submit" value="Cauta !"></form></TD>';
-echo '<TD align="right"><a href="#">?</a></TD></TR></TABLE>';
-
+echo '<TD align="right"><a href="https://developers.google.com/youtube/v3/getting-started">GET Your API KEY!</a></TD></TR></TABLE>';
+//https://developers.google.com/youtube/v3/getting-started
 
 $file=$base_fav."youtube.dat";
 
