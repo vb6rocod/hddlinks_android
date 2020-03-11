@@ -95,20 +95,8 @@ $(document).on('keyup', '.imdb', isValid);
 <TD width="25%"><a href="tv/iptv.php" target="_blank">IPTV International</a></TD>
 <TD width="25%"><a href="tv/playlist.php?title=Sport+IPTV&link=https://iptv-org.github.io/iptv/categories/sport.m3u" target="_blank">Sport IPTV</a></TD>
 <TD width="25%"><a href="tv/arconaitv.php" target="_blank">arconaitv</a></TD>
-<TD width="25%"></TD>
+<TD width="25%"><a href="tv/digifree.php" target="_blank">Digi Sport (Live)</a></TD>
 </TR>
-<?php
-include ("common.php");
-if (file_exists($base_fav."flc_c.txt")) {
-  echo '<TR>';
-  echo '<TD width="25%"><a href="tv/flc.php" target="_blank">Folclor TV</a></TD>';
-  echo '<TD width="25%"><a href="tv/flc1.php" target="_blank">Folclor TV (1)</a></TD>';
-  echo '<TD width="25%"></TD>';
-  echo '<TD width="25%"></TD>';
-  echo '</TR>';
-}
-?>
-
 <!--
 <TR>
 <TD width="25%"><a href="tv/arconaitv.php" target="_blank">arconaitv</a></TD>
@@ -125,6 +113,7 @@ if (file_exists($base_fav."flc_c.txt")) {
 </TR>
 <TR>
 <?php
+include ("common.php");
 $list = glob($base_sub."*.srt");
    foreach ($list as $l) {
     str_replace(" ","%20",$l);

@@ -2,6 +2,7 @@
 <?php
 error_reporting(0);
 include ("../common.php");
+include ("../cloudflare.php");
 $tit=unfix_t(urldecode($_GET["title"]));
 $image=$_GET["image"];
 $link=urldecode($_GET["link"]);
@@ -54,6 +55,7 @@ $ua = $_SERVER['HTTP_USER_AGENT'];
 $ua="Mozilla/5.0 (Windows NT 10.0; rv:70.0) Gecko/20100101 Firefox/70.0";
 $cookie=$base_cookie."xmovies8.txt";
 $l="https://".$host."/ajax/movie_load_info/".$link;
+  /*
   $ch = curl_init($l);
   curl_setopt($ch, CURLOPT_USERAGENT, $ua);
   curl_setopt($ch,CURLOPT_REFERER,$last_good);
@@ -66,11 +68,14 @@ $l="https://".$host."/ajax/movie_load_info/".$link;
   curl_setopt($ch, CURLOPT_TIMEOUT, 15);
   $html = curl_exec($ch);
   curl_close ($ch);
+  */
+  $html=cf_pass($l,$cookie);
   $t1=explode('class="jtip-bottom">',$html);
   $t2=explode('href="',$t1[1]);
   $t3=explode('"',$t2[1]);
   $l=$t3[0];
   //echo $l;
+  /*
   $ch = curl_init($l);
   curl_setopt($ch, CURLOPT_USERAGENT, $ua);
   curl_setopt($ch,CURLOPT_REFERER,$last_good);
@@ -83,6 +88,8 @@ $l="https://".$host."/ajax/movie_load_info/".$link;
   curl_setopt($ch, CURLOPT_TIMEOUT, 15);
   $h = curl_exec($ch);
   curl_close ($ch);
+  */
+  $h=cf_pass($l,$cookie);
   //echo $h;
   $t1=explode('<div class="les-content"',$h);
   $h=$t1[1];

@@ -46,6 +46,8 @@ $token=$m[1][0];
 
 //////////////////////////////////////////////////////////////
 $l1="https://".$host."/watch-earthquake-bird-2019-1080p-hd-online-free/watching.html";
+//echo $l1;
+//$l1=$last_good;
 //$l1="https://xmovies8.tv/";
 $head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:70.0) Gecko/20100101 Firefox/70.0',
 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',

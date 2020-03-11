@@ -166,12 +166,12 @@ if ($page==1) {
    echo '<TD class="nav" colspan="4" align="right"><a href="'.$prev.'">&nbsp;&lt;&lt;&nbsp;</a> | <a href="'.$next.'">&nbsp;&gt;&gt;&nbsp;</a></TD>'."\r\n";
 }
 echo '</TR>'."\r\n";
-if ($tip == "release")
+if ($tip == "release") {
    if ($page > 1)
     $l="https://serialeonline.to/seriale/page/".$page."/";
    else
     $l="https://serialeonline.to/seriale/";
-else {
+} else {
   $search=str_replace(" ","+",$tit);
   if ($page == 1)
     $l="https://serialeonline.to/?s=".$search;

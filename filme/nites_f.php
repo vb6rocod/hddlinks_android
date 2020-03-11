@@ -6,8 +6,8 @@ function str_between($string, $start, $end){
 	return substr($string,$ini,$len);
 }
 include ("../common.php");
-include ("../cloudflare.php");
-$last_good="https://xmovies8.si";
+error_reporting(0);
+$last_good="http://nites.tv";
 $host=parse_url($last_good)['host'];
 $page = $_GET["page"];
 $tip= $_GET["tip"];
@@ -20,11 +20,11 @@ $has_fav="yes";
 $has_search="yes";
 $has_add="yes";
 $has_fs="yes";
-$fav_target="xmovies8_f_fav.php?host=".$last_good;
-$add_target="xmovies8_f_add.php";
+$fav_target="nites_f_fav.php?host=".$last_good;
+$add_target="nites_f_add.php";
 $add_file="";
-$fs_target="xmovies8_fs.php";
-$target="xmovies8_f.php";
+$fs_target="nites_fs.php";
+$target="nites_f.php";
 /* ==================================================== */
 $base=basename($_SERVER['SCRIPT_FILENAME']);
 $p=$_SERVER['QUERY_STRING'];
@@ -168,55 +168,59 @@ if ($page==1) {
    echo '<TD class="nav" colspan="4" align="right"><a href="'.$prev.'">&nbsp;&lt;&lt;&nbsp;</a> | <a href="'.$next.'">&nbsp;&gt;&gt;&nbsp;</a></TD>'."\r\n";
 }
 echo '</TR>'."\r\n";
-$ua = $_SERVER['HTTP_USER_AGENT'];
-$cookie=$base_cookie."xmovies8.txt";
-
-$ua="Mozilla/5.0 (Windows NT 10.0; rv:70.0) Gecko/20100101 Firefox/70.0";
 if($tip=="release") {
-  $l="https://".$host."/free-latest-movies-online/".$page;
+  if ($page>1)
+  $l="https://".$host."/latest-movies-added/page/".$page."/";
+  else
+  $l="https://".$host."/latest-movies-added/";
 } else {
   $search=str_replace(" ","+",$tit);
-  $l="https://".$host."/movie/search/".$search."/".$page;
+  if ($page>1)
+  $l="http://".$host."/page/".$page."/?s=".$search;
+  else
+  $l="http://".$host."/?s=".$search;
 }
-/*
-$host=parse_url($l)['host'];
-  $ch = curl_init($l);
-  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
+$head=array('Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2');
+  $ch = curl_init();
+  curl_setopt($ch, CURLOPT_URL, $l);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
   curl_setopt($ch,CURLOPT_REFERER,$last_good);
+  curl_setopt($ch,CURLOPT_HTTPHEADER,$head);
+  curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 10.0; rv:55.0) Gecko/20100101 Firefox/55.0');
   curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
-  curl_setopt($ch, CURLOPT_RETURNTRANSFER  ,1);  // RETURN THE CONTENTS OF THE CALL
-  curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie);
-  curl_setopt($ch, CURLOPT_HEADER,1);
-  //curl_setopt($ch, CURLOPT_HTTPHEADER, $head);
-  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
   curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
   curl_setopt($ch, CURLOPT_TIMEOUT, 15);
   $html = curl_exec($ch);
-  curl_close ($ch);
-if (strpos($html,"503 Service") !== false) {
-  if (file_exists($cookie)) unlink ($cookie);
-  if (file_exists($base_cookie."max_time_xx.txt")) unlink ($base_cookie."max_time_xx.txt");
-  if (file_exists($base_cookie."max_time_x.txt")) unlink ($base_cookie."max_time_x.txt");
-  echo '<H2>token expirat! GO Back and try again.</H2>';
-  die();
-}
-*/
-$html=cf_pass($l,$cookie);
-$videos = explode('div data-movie-id="', $html);
-unset($videos[0]);
-$videos = array_values($videos);
-foreach($videos as $video) {
-  $t1 = explode('"',$video);
-  //$t2=explode('"',$t1[1]);
-  $link = $t1[0];
-  //if (strpos($link,"http") === false) $link="https://".$host.$link;
-  $t3 = explode('title="', $video);
-  $t4 = explode('"', $t3[1]);
-  $title = $t4[0];
-  $title=prep_tit($title);
-  $t1 = explode('&url=', $video);
-  $t2 = explode('"', $t1[1]);
-  $image = $t2[0];
+  curl_close($ch);
+//echo $html;
+$r=array();
+  $videos = explode('article class="post',$html);
+  unset($videos[0]);
+  $videos = array_values($videos);
+  foreach($videos as $video) {
+   $t1=explode('class="play fa-play',$video);
+   $t2 = explode('href="',$t1[1]);
+   $t3=explode('"',$t2[1]);
+   $link = $t3[0];
+   if (strpos($link,"http") === false) $link="http://".$host.$link;
+   $t1=explode('title"',$video);
+   $t3 = explode('>', $t1[1]);
+   $t4 = explode('<', $t3[1]);
+   $title = $t4[0];
+   $title=prep_tit($title);
+   $t1 = explode('data-src="', $video);
+   $t2 = explode('"', $t1[1]);
+   $image = $t2[0];
+   $image=str_replace("/w342","/w185",$image);
+   if (strpos($image,"http") === false) $image="https:".$image;
+   if (!preg_match("/TV\-Show/si",$video)) $r[]=array($link,$title,$image);
+  }
+
+for ($k=0; $k<count($r);$k++) {
+  $link=$r[$k][0];
+  $title=$r[$k][1];
+  $image=$r[$k][2];
   $rest = substr($title, -6);
   if (preg_match("/\((\d+)\)/",$rest,$m)) {
    $year=$m[1];
@@ -226,7 +230,7 @@ foreach($videos as $video) {
    $tit_imdb=$title;
   }
   $imdb="";
-  $link_f=$fs_target.'?tip=movie&link='.urlencode($link).'&title='.urlencode(fix_t($title)).'&image='.$image."&sez=&ep=&ep_tit=&year=".$year."&last=".$last_good;
+  $link_f=$fs_target.'?tip=movie&link='.urlencode($link).'&title='.urlencode(fix_t($title)).'&image='.$image."&sez=&ep=&ep_tit=&year=".$year;
   if ($title) {
   if ($n==0) echo '<TR>'."\r\n";
   $val_imdb="tip=movie&title=".urlencode(fix_t($tit_imdb))."&year=".$year."&imdb=".$imdb;

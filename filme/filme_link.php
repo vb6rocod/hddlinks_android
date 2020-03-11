@@ -117,9 +117,10 @@ if (strpos($filelink,"filmeonlinegratis.org") !== false) {
   $h = curl_exec($ch);
   curl_close($ch);
   $html=$h;
+  //echo $h;
   preg_match_all("/trembed(\S+)\"/msi",$h,$m);
-  for ($k=0;$k<count($m[0]);$k++) {
-    $l="https://fsgratis.com/?".prep_tit($m[0][$k]);
+  for ($k=0;$k<count($m[1]);$k++) {
+    $l="https://fsgratis.com/?trembed".prep_tit($m[1][$k]);
     //echo $l;
     $ch = curl_init();
     curl_setopt($ch, CURLOPT_URL, $l);
@@ -134,6 +135,7 @@ if (strpos($filelink,"filmeonlinegratis.org") !== false) {
     $h1 = curl_exec($ch);
     curl_close($ch);
     //echo $h1;
+    /*
     $t1=explode("tid=",$h1);
     $t2=explode('"',$t1[1]);
     $id = substr($t2[0], 0, -1);
@@ -154,6 +156,8 @@ if (strpos($filelink,"filmeonlinegratis.org") !== false) {
     curl_close($ch);
     //echo $h2;
     if (preg_match("/location:\s*(\S+)/i",$h2,$p))
+    */
+    if (preg_match("/src\=\"(.*?)\"/",$h1,$p))
       $html .='<iframe src="'.$p[1].'"> ';
   }
 } elseif (strpos($filelink,"filme-bune.info") !== false) {
@@ -1205,7 +1209,7 @@ for ($i=0;$i<count($links);$i++) {
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
   curl_setopt($ch, CURLOPT_USERAGENT, $ua);
   curl_setopt($ch,CURLOPT_REFERER,"https://serialeonline.to");
-  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,0);
+  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
   curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
   curl_setopt($ch, CURLOPT_HEADER,1);
   curl_setopt($ch, CURLOPT_NOBODY,1);
@@ -1213,9 +1217,10 @@ for ($i=0;$i<count($links);$i++) {
   curl_setopt($ch, CURLOPT_TIMEOUT, 30);
   $h2 = curl_exec($ch);
   curl_close($ch);
-   if (preg_match("/location\:\s*(.+)/i",$h2,$m))
-    $cur_link=trim($m[1]);
-   else
+  //echo $h2;
+   if (preg_match_all("/location\:\s*(.+)/i",$h2,$m)) {
+    $cur_link=trim($m[1][count($m[1]) - 1]);
+   } else
     $cur_link="";
   }
   if (strpos($links[$i],"2target.net") !== false) {

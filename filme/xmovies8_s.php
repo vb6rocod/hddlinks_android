@@ -6,7 +6,7 @@ function str_between($string, $start, $end){
 	return substr($string,$ini,$len);
 }
 include ("../common.php");
-include ("../util.php");
+include ("../cloudflare.php");
 $last_good="https://xmovies8.si";
 $host=parse_url($last_good)['host'];
 $page = $_GET["page"];
@@ -181,6 +181,7 @@ if($tip=="release") {
   $search=str_replace(" ","+",$tit);
   $l="https://".$host."/movie/search/".$search."/".$page;
 }
+/*
 $host=parse_url($l)['host'];
   $ch = curl_init($l);
   curl_setopt($ch, CURLOPT_USERAGENT, $ua);
@@ -203,6 +204,8 @@ if (strpos($html,"503 Service") !== false) {
   echo '<H2>token expirat! GO Back and try again.</H2>';
   die();
 }
+*/
+$html=cf_pass($l,$cookie);
 $videos = explode('div data-movie-id="', $html);
 unset($videos[0]);
 $videos = array_values($videos);

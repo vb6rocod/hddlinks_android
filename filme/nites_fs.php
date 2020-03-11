@@ -1,8 +1,7 @@
 <!doctype html>
 <?php
 include ("../common.php");
-include ("../cloudflare.php");
-error_reporting(0);
+//error_reporting(0);
 $list = glob($base_sub."*.srt");
    foreach ($list as $l) {
     str_replace(" ","%20",$l);
@@ -27,26 +26,23 @@ if ($flash != "mp") {
 if (preg_match("/android|ipad/i",$user_agent) && preg_match("/chrome|firefox|mobile/i",$user_agent)) $flash="chrome";
 }
 $tit=unfix_t(urldecode($_GET["title"]));
-$tit=prep_tit($tit);
 $image=$_GET["image"];
 $link=urldecode($_GET["link"]);
 $tip=$_GET["tip"];
 $sez=$_GET["sez"];
 $ep=$_GET["ep"];
 $ep_title=unfix_t(urldecode($_GET["ep_tit"]));
-$ep_title=prep_tit($ep_title);
-$imdbid=$_GET['imdb'];
 $year=$_GET["year"];
 if ($tip=="movie") {
 $tit2="";
 } else {
 if ($ep_title)
-   $tit2=" - ".$sez."x".$ep." ".$ep_title;
+$tit2=" - ".$sez."x".$ep." ".$ep_title;
 else
-   $tit2=" - ".$sez."x".$ep;
+$tit2=" - ".$sez."x".$ep;
 $tip="series";
 }
-
+$imdbid="";
 
 function str_between($string, $start, $end){
 	$string = " ".$string; $ini = strpos($string,$start);
@@ -133,133 +129,76 @@ function off() {
 <body>
 <a href='' id='mytest1'></a>
 <?php
-function decode_code($code){
-    return preg_replace_callback(
-        "@\\\(x)?([0-9a-fA-F]{2,3})@",
-        function($m){
-            return mb_convert_encoding(chr($m[1]?hexdec($m[2]):octdec($m[2])),'ISO-8859-1', 'UTF-8');
-        },
-        $code
-    );
-}
-echo '<h2>'.$tit.$tit2.'</H2>';
+echo '<h2>'.$tit.' '.$tit2.'</H2>';
 echo '<BR>';
-$ua = $_SERVER['HTTP_USER_AGENT'];
-$cookie=$base_cookie."hdpopcorns.dat";
-$l=$link;
+$host=parse_url($link)['host'];
+$head=array('Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2');
+  $ch = curl_init();
+  curl_setopt($ch, CURLOPT_URL, $link);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+  curl_setopt($ch,CURLOPT_REFERER,"http://nites.tv");
+  curl_setopt($ch,CURLOPT_HTTPHEADER,$head);
+  curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 10.0; rv:55.0) Gecko/20100101 Firefox/55.0');
+  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+  $html = curl_exec($ch);
+  curl_close($ch);
+  //echo $html;
 $r=array();
-$serv=array();
-if ($tip=="series") {
-    $serv=json_decode($l,1);
-} else {
+$videos = explode('div id="options-', $html);
+unset($videos[0]);
+$videos = array_values($videos);
+foreach($videos as $video) {
+  $t1=explode('src="',$video);
+  $t2=explode('"',$t1[1]);
+  $l=str_replace("&#038;","&",$t2[0]);
+  $l=str_replace("&amp;","&",$l);
+  if (strpos($l,"trembed") === false) {
+   $r[]=$l;
+  } else {
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $l);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+  curl_setopt($ch,CURLOPT_REFERER,"http://nites.tv");
+  curl_setopt($ch,CURLOPT_HTTPHEADER,$head);
   curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 10.0; rv:55.0) Gecko/20100101 Firefox/55.0');
   curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
-  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
   curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
   curl_setopt($ch, CURLOPT_TIMEOUT, 15);
   $h = curl_exec($ch);
   curl_close($ch);
-  $h=decode_code($h);
-  if (preg_match("/imdb\.com\/title\/tt(\d+)/",$h,$i))
-    $imdbid=$i[1];
-  else
-    $imdbid="";
-  //echo $h;
-/*
-            case 2:
-                src = 'https://dwatchmovies.pro/srvlnk/verybz?search=star-trek-nemesis-200';
-            case 1:
-var _0xde0c=["https://openload.co/embed/fhvG_t3d5b8"];src= _0xde0c[0]
-*/
-
-  //preg_match_all("/".$pat1."/ms",$h,$p);
-  //print_r ($p);
-  $pat1="";
-  preg_match_all("/case\s+(\d+):[\s|\n|\r]+".$pat1."src\s*\=\s*[\"|\'](.*?)[\"|\']\;?/ms",$h,$m);
-  $id=array();
-  for ($k=0;$k<count($m[1]);$k++){
-   $id[$m[1][$k]]=$m[2][$k];
-  }
-  $pat1="(var\s*[a-zA-Z0-9_]+\=\[[\"|\'](.*?)[\"|\']\]\;\s*)?";
-  preg_match_all("/case\s+(\d+):[\s|\n|\r]+".$pat1."src\s*\=\s*[\"|\']?(.*?)[\"|\']?\;?/ms",$h,$m);
-  for ($k=0;$k<count($m[1]);$k++){
-   if ($m[3][$k])
-   $id[$m[1][$k]]=$m[3][$k];
-  }
-  preg_match_all("/(\<\!--)?\s*\<td\>\<a id\=\"(\d+)\"/ms",$h,$m);
-  for ($k=0;$k<count($m[1]);$k++) {
-   if (!preg_match("/\!/ms",$m[0][$k])) {
-    $serv[]=$id[$m[2][$k]];
-   }
+  if (preg_match("/src\=[\"\'](.*?)[\'|\"]/",$h,$m))
+   $r[]=str_replace("&amp;","&",$m[1]);
   }
 }
-//print_r ($serv);
-// https://topeuropix.com
-cf_pass("https://topeuropix.com",$cookie);
-
-  for ($k=0;$k<count($serv);$k++) {
-    if (preg_match("/dwatchmovies|topeuropix|123europix/",$serv[$k])) {
-    $h=cf_pass($serv[$k],$cookie);
-    if (preg_match("/((iframe\s*src)|(window\.location))\=(\'|\")(.*?)(\'|\")/",$h,$m)) {
-      $l=$m[5];
-      if ($l && strpos($l,"http") === false) $l="https:".$l;
-      if ($l) $r[]=$l;
-    }
-    } else {
-      $l=$serv[$k];
-      if ($l && strpos($l,"http") === false) $l="https:".$l;
-      if ($l) $r[]=$l;
-    }
-  }
-  //curl_close($ch);
+//print_r ($r);
 echo '<table border="1" width="100%">';
 echo '<TR><TD class="mp">Alegeti un server: Server curent:<label id="server">'.parse_url($r[0])['host'].'</label>
 <input type="hidden" id="file" value="'.urlencode($r[0]).'"></td></TR></TABLE>';
 echo '<table border="1" width="100%"><TR>';
 $k=count($r);
-$x=0;
+echo '<TR>';
 for ($i=0;$i<$k;$i++) {
-  if ($x==0) echo '<TR>';
   $c_link=$r[$i];
   $openload=parse_url($r[$i])['host'];
-  if (preg_match($indirect,$openload)) {
-  echo '<TD class="mp"><a href="filme_link.php?file='.urlencode($c_link).'&title='.urlencode(unfix_t($tit.$tit2)).'" target="_blank">'.$openload.'</a></td>';
-  } else
   echo '<TD class="mp"><a id="myLink" href="#" onclick="changeserver('."'".$openload."','".urlencode($c_link)."'".');return false;">'.$openload.'</a></td>';
-  $x++;
-  if ($x==6) {
-    echo '</TR>';
-    $x=0;
-  }
 }
-if ($x < 6 && $x > 0 && $k>6) {
- for ($k=0;$k<6-$x;$k++) {
-   echo '<TD></TD>'."\r\n";
- }
- echo '</TR>'."\r\n";
-}
-echo '</TABLE>';
+echo '</TR></TABLE>';
 if ($tip=="movie") {
-  $rest = substr($tit, -6);
-  if (preg_match("/\((\d+)\)/",$rest,$m)) {
-   $year=$m[1];
-   $tit3=trim(str_replace($m[0],"",$tit));
-  } else {
-   $year="";
-   $tit3=$tit;
-  }
+  $tit3=$tit;
   $tit2="";
   $sez="";
   $ep="";
+  $imdbid="";
   $from="";
   $link_page="";
 } else {
   $tit3=$tit;
   $sez=$sez;
   $ep=$ep;
+  $imdbid="";
   $from="";
   $link_page="";
 }
@@ -300,7 +239,8 @@ echo '<br>
 </b></font></TD></TR></TABLE>
 ';
 include("../debug.html");
-echo '<div id="overlay">
+echo '
+<div id="overlay">
   <div id="text">Wait....</div>
 </div>
 </body>

@@ -1,7 +1,7 @@
 <!doctype html>
 <?php
 include ("../common.php");
-include ("../util.php");
+include ("../cloudflare.php");
 //error_reporting(0);
 $list = glob($base_sub."*.srt");
    foreach ($list as $l) {
@@ -143,6 +143,7 @@ $ua="Mozilla/5.0 (Windows NT 10.0; rv:70.0) Gecko/20100101 Firefox/70.0";
 $cookie=$base_cookie."xmovies8.txt";
 if ($tip=="movie") {
 $l="https://".$host."/ajax/movie_load_info/".$link;
+/*
   $ch = curl_init($l);
   curl_setopt($ch, CURLOPT_USERAGENT, $ua);
   curl_setopt($ch,CURLOPT_REFERER,$last_good);
@@ -155,10 +156,14 @@ $l="https://".$host."/ajax/movie_load_info/".$link;
   curl_setopt($ch, CURLOPT_TIMEOUT, 15);
   $html = curl_exec($ch);
   curl_close ($ch);
+  */
+  $html=cf_pass($l,$cookie);
+  //echo $html;
   $t1=explode('class="jtip-bottom">',$html);
   $t2=explode('href="',$t1[1]);
   $t3=explode('"',$t2[1]);
   $l=$t3[0];
+  /*
   $ch = curl_init($l);
   curl_setopt($ch, CURLOPT_USERAGENT, $ua);
   curl_setopt($ch,CURLOPT_REFERER,$last_good);
@@ -171,7 +176,8 @@ $l="https://".$host."/ajax/movie_load_info/".$link;
   curl_setopt($ch, CURLOPT_TIMEOUT, 15);
   $h = curl_exec($ch);
   curl_close ($ch);
-  //echo $h;
+  */
+  $h=cf_pass($l,$cookie);
 $videos = explode('option value="', $h);
 unset($videos[0]);
 $videos = array_values($videos);
@@ -184,6 +190,7 @@ foreach($videos as $video) {
  $s[]=$t3[0];
 }
 } else {
+  /*
   $ch = curl_init($link);
   curl_setopt($ch, CURLOPT_USERAGENT, $ua);
   curl_setopt($ch,CURLOPT_REFERER,$last_good);
@@ -196,7 +203,9 @@ foreach($videos as $video) {
   curl_setopt($ch, CURLOPT_TIMEOUT, 15);
   $h = curl_exec($ch);
   curl_close ($ch);
+  */
   //echo $h;
+  $h=cf_pass($link,$cookie);
 $videos = explode('option value="', $h);
 unset($videos[0]);
 $videos = array_values($videos);

@@ -66,42 +66,20 @@ if (strpos($link,"jurnaltv.md/JurnalTV") !== false) {
     curl_close($ch);
     $link=str_between($h,'source src="','"');
 }
-if ($from=="seenow") {
-$id=$link;
-$l="http://www.seenow.ro:1937/service3/play/index/id/".$id."/platform_id/12";
-//echo urldecode("http%3A%2F%2Fwww.seenow.ro%2F'+platformUrl+'%2Fplaceholder%2Flist%2Fid%2F9");
-// http://www.seenow.ro/12/placeholder/list/id/9
-//http://fms72.mediadirect.ro:1937/live3/_definst_/realitatea-tv/playlist.m3u8
+if ($from=="digilive") {
   $ch = curl_init();
-  curl_setopt($ch, CURLOPT_URL, $l);
+  curl_setopt($ch, CURLOPT_URL, $link);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
   curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 5.1; rv:14.0) Gecko/20100101 Firefox/14.0.1');
   curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
-  curl_setopt($ch, CURLOPT_REFERER,"http://www.seenow.ro/");
+  //curl_setopt($ch, CURLOPT_REFERER,"http://www.seenow.ro/");
   curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
   curl_setopt($ch, CURLOPT_TIMEOUT, 15);
   $h = curl_exec($ch);
   curl_close($ch);
-  $r=json_decode($h,1);
-
-$l_serv=$r["indexUrl"];
-  $ch = curl_init();
-  curl_setopt($ch, CURLOPT_URL, $l_serv);
-  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-  curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 5.1; rv:14.0) Gecko/20100101 Firefox/14.0.1');
-  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
-  curl_setopt($ch, CURLOPT_REFERER,"http://www.seenow.ro/");
-  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
-  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
-  $h1 = curl_exec($ch);
-  curl_close($ch);
-$t1=explode('server=',$h1);
-$t2=explode('&',$t1[1]);
-$serv=$t2[0];
-$link_f=$r['streamUrl'];
-$t1=explode("|",$link_f);
-$link_f=$t1[0];
-$link=str_replace('[%server_name%]',$serv,$link_f);
+  $t1=explode("videoLink = '",$h);
+  $t2=explode("'",$t1[1]);
+  $link=$t2[0];
 }
 if ($from=="protvplus") {
   $ua = $_SERVER['HTTP_USER_AGENT'];
@@ -343,7 +321,12 @@ if ($from=="flc1") {
     $link=trim($h);
 }
 if ($from=="digifree") {
-  $l="http://balancer.digi24.ro/?scope=".$link."&type=hls&quality=hq&outputFormat=jsonp&callback=jsonp_callback_1";
+  $l="http://balancer2.digi24.ro/?scope=".$link."&type=hls&quality=hq&outputFormat=jsonp&callback=jsonp_callback_1";
+  //echo $l;
+  $l="http://balancer2.digi24.ro/streamer/make_key.php";
+  $key=file_get_contents($l);
+  //echo $h;                    // abr
+  $l="http://balancer2.digi24.ro/streamer.php?&scope=".$link."&key=".$key."&outputFormat=json&type=abr&quality=hq";  //&is=4&ns=digi24&pe=site&s=site&sn=digi24.ro&p=browser&pd=windows
     $ch = curl_init();
     curl_setopt($ch, CURLOPT_URL, $l);
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
@@ -359,11 +342,14 @@ if ($from=="digifree") {
     $h = curl_exec($ch);
     curl_close($ch);
     //echo $h;
+    $r=json_decode($h,1);
+    //print_r ($r);
     $h=str_replace("\/","/",$h);
     $link=str_between($h,'file":"','"');
     $link=preg_replace("/edge\d+\.rcs\-rds\.ro/","82.76.40.81",$link);
     $link=preg_replace("/edge\d+\.rdsnet\.ro/","82.76.40.81",$link);
-    if ($link) $link="http:".$link;
+    //if ($link) $link="http:".$link;
+    $link=$r['file'];
 
 }
 if ($from=="neterra") {

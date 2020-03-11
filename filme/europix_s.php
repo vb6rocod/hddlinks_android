@@ -6,7 +6,7 @@ function str_between($string, $start, $end){
 	return substr($string,$ini,$len);
 }
 include ("../common.php");
-include ("../util.php");
+include ("../cloudflare.php");
 $last_good="https://topeuropix.com";
 $host=parse_url($last_good)['host'];
 $page = $_GET["page"];
@@ -184,17 +184,11 @@ if($tip=="release") {
 $requestLink=$l;
 $ua = $_SERVER['HTTP_USER_AGENT'];
 $cookie=$base_cookie."hdpopcorns.dat";
-$host=parse_url($requestLink)['host'];
-  $ch = curl_init();
-  curl_setopt($ch, CURLOPT_URL, $l);
-  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-  curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie);
-  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
-  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
-  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
-  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
-  $h = curl_exec($ch);
-  curl_close($ch);
+if ($page==1 && $tip=="release") {
+ $l1=$last_good;
+cf_pass($l1,$cookie);
+}
+$h = cf_pass($l,$cookie);
 ///////////////////////////////////////////////////////////////////////////
  $videos = explode('div class="img', $h);
  unset($videos[0]);

@@ -129,6 +129,7 @@ $l="https://digiapis.rcs-rds.ro/digionline/api/v11/playprograms.php?action=getAl
   //curl_setopt($ch,CURLOPT_HTTPHEADER,$head);
   $html = curl_exec($ch);
   curl_close($ch);
+  //echo $html;
 $videos = explode('id_stream', $html);
 unset($videos[0]);
 $n=0;

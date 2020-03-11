@@ -72,7 +72,7 @@ document.onkeypress =  zx;
 <TD width="25%"><a href="filme/fsgratis_s.php?page=1&tip=release&title=fsgratis&link=" target="_blank">fsgratis</a></TD>
 <TD width="25%"><a href="filme/serialeonline_biz.php?page=1&tip=release&title=serialeonline.biz&link=" target="_blank">serialeonline.biz</a></TD>
 <TD width="25%"><a href="filme/clicksud_main.php" target="_blank">clicksud (seriale romanesti)</a></TD>
-<TD width="25%"></TD>
+<TD width="25%"><a href="filme/serialeturcesti.php?page=1&tip=release&title=serialeturcesti&link=" target="_blank">serialeturcesti</a></TD>
 </TR>
 <!-- straine -->
 <TR>
@@ -103,7 +103,7 @@ document.onkeypress =  zx;
 
 <TR>
 <TD width="25%"><a href="filme/subsmovies_s.php?page=1&tip=release&title=subsmovie&link=" target="_blank">subsmovies</a></TD>
-<TD width="25%"><a href="filme/x8_s.php" target="_blank">xmovies8</a></TD>
+<TD width="25%"><a href="filme/xmovies8_s.php?page=1&tip=release&title=xmovies8&link=" target="_blank">xmovies8</a></TD>
 <TD width="25%"><a href="filme/solarmoviesonline_s.php?page=1&tip=release&title=solarmoviesonline&link=" target="_blank">solarmoviesonline</a></TD>
 <TD width="25%"><a href="filme/flixtor_s.php?page=1&tip=release&title=flixtor&link=" target="_blank">flixtor</a></TD>
 </TR>

@@ -168,9 +168,9 @@ if ($page==1) {
    echo '<TD class="nav" colspan="4" align="right"><a href="'.$prev.'">&nbsp;&lt;&lt;&nbsp;</a> | <a href="'.$next.'">&nbsp;&gt;&gt;&nbsp;</a></TD>'."\r\n";
 }
 echo '</TR>'."\r\n";
-
+// https://www.300mbmoviefree.com/language/english/
 if($tip=="release") {
-  $l="https://".$host."/movies/page/".$page."/";
+  $l="https://".$host."/language/english/page/".$page."/";
 } else {
   $search=str_replace(" ","+",$tit);
   $l = "https://".$host."/page/".$page."/?s=".$search."&submit=Search";

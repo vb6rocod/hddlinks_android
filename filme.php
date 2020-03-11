@@ -120,7 +120,7 @@ else
 <TR>
 <TD width="25%"><a href="filme/subsmovies_f.php?page=1&tip=release&title=subsmovie&link=" target="_blank">subsmovies</a></TD>
 <TD width="25%"><a href="filme/hdm_f.php?page=1&tip=release&title=hdm&link=" target="_blank">hdm</a></TD>
-<TD width="25%"><a href="filme/x8_f.php" target="_blank">xmovies8</a></TD>
+<TD width="25%"><a href="filme/xmovies8_f.php?page=1&tip=release&title=xmovies8&link=" target="_blank">xmovies8</a></TD>
 <TD width="25%"><a href="filme/videospider.php?page=1&tip=release&title=videospider&link=" target="_blank">videospider</a></TD>
 </TR>
 
@@ -137,7 +137,12 @@ else
 <TD width="25%"><a href="filme/europix_f.php?page=1&tip=release&title=europix&link=" target="_blank">europix</a></TD>
 <TD width="25%"><a href="filme/moonline_f.php?page=1&tip=release&title=moonline&link=" target="_blank">moonline</a></TD>
 </TR>
-
+<TR>
+<TD width="25%"><a href="filme/couchtuner123_f.php?page=1&tip=release&title=couchtuner123&link=" target="_blank">couchtuner123</a></TD>
+<TD width="25%"><a href="filme/nites_f.php?page=1&tip=release&title=nites&link=" target="_blank">nites</a></TD>
+<TD width="25%"></TD>
+<TD width="25%"></TD>
+</TR>
 <?php
 if (file_exists($base_pass."tvplay.txt")) {
 echo '
