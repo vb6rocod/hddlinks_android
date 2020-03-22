@@ -218,14 +218,14 @@ foreach($videos as $video) {
   $r[]=array($link,$title,$image,$year);
 }
 } else {
-$videos = explode('div class="fit', $html);
+$videos = explode('div id="mt-', $html);
 unset($videos[0]);
 $videos = array_values($videos);
 foreach($videos as $video) {
   $t1=explode('href="',$video);
   $t2=explode('"',$t1[1]);
   $link=$t2[0];
-  $t1 = explode('h1>', $video);
+  $t1 = explode('class="tt">', $video);
   $t3 = explode('<',$t1[1]);
   $title = $t3[0];
   $title = prep_tit($title);
@@ -235,7 +235,7 @@ foreach($videos as $video) {
   //if (strpos($image,"http") === false) $image="https:".$image;
   $year="";
   $imdb="";
-  $t1=explode('rel="tag">',$video);
+  $t1=explode('class="year">',$video);
   $t2=explode("<",$t1[1]);
   $year=$t2[0];
   $r[]=array($link,$title,$image,$year);

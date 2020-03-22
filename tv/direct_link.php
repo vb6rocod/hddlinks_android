@@ -51,7 +51,7 @@ $flash="direct";
 //$link=urldecode("https%3A%2F%2Fwww.youtube.com%2Fwatch%3Fv%3Dr_d4ryn9UsA&title=Gaming%20Music%20Radio%20%E2%9A%A1%2024/7%20NCS%20Live%20Stream%20%E2%9A%A1%20Trap,%20Chill,%20Electro,%20Dubstep,%20Future%20Bass,%20EDM");
 //$mod="direct";
 if (strpos($link,"jurnaltv.md/JurnalTV") !== false) {
-    $l="http://www.jurnaltv.md/page/live";
+    $l="https://www.jurnaltv.md/page/live";
     $ch = curl_init();
     curl_setopt($ch, CURLOPT_URL, $l);
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
@@ -65,6 +65,36 @@ if (strpos($link,"jurnaltv.md/JurnalTV") !== false) {
     $h = curl_exec($ch);
     curl_close($ch);
     $link=str_between($h,'source src="','"');
+}
+if ($from=="tvhd") {
+  $t1=explode("id=",$link);
+  $id=$t1[1];
+  $link="http://tvhd-online.com/hls/live/".$id.".m3u8";
+$ad="User-Agent=".urlencode("Mozilla/5.0(Linux;Android 10.1.2) MXPlayer");
+//$ad .="&Accept=".urlencode("*/*")."&Accept-Language=".urlencode("ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2");
+//$ad .="&Accept-Encoding=".urlencode("gzip, deflate, br");
+$ad .="&X-CustomHeader=videojs";
+$ad ."&Origin=".urlencode("http://tvhd-online.com");
+//$ad .="&Connection=".urlencode("keep-alive");
+$ad .="&Referer=".urlencode("http://tvhd-online.com");
+//   if ($link && $flash != "flash")
+//     $link=$link."|".$ad;
+/*
+  $link="http://tvhd-online.com/vod/live/225.mp4";
+
+
+
+$ad ."Origin=".urlencode("http://tvhd-online.com");
+//$ad .="&Connection=".urlencode("keep-alive");
+$ad .="&Referer=".urlencode("http://tvhd-online.com");
+//$ad.="&Connection=".urlencode("keep-alive");
+   if ($link && $flash != "flash")
+     $link=$link."|".$ad;
+*/
+   if ($link && $flash != "flash")
+    $link="http://127.0.0.1:8080/scripts/tv/redirect.php?file=".$link;
+   else
+    $link="redirect.php?file=".$link;
 }
 if ($from=="digilive") {
   $ch = curl_init();
@@ -327,30 +357,36 @@ if ($from=="digifree") {
   $key=file_get_contents($l);
   //echo $h;                    // abr
   $l="http://balancer2.digi24.ro/streamer.php?&scope=".$link."&key=".$key."&outputFormat=json&type=abr&quality=hq";  //&is=4&ns=digi24&pe=site&s=site&sn=digi24.ro&p=browser&pd=windows
+  $proxy="79.115.245.227:8080";
+  $proxy="188.27.137.163:30987";
+  //$proxy="86.124.162.105:9090";
     $ch = curl_init();
     curl_setopt($ch, CURLOPT_URL, $l);
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
     curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 10.0; rv:64.0) Gecko/20100101 Firefox/64.0');
     curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
     curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-    curl_setopt($ch, CURLOPT_REFERER, "http://207.180.233.100:2539");
+    //curl_setopt($ch, CURLOPT_REFERER, "http://207.180.233.100:2539");
+    //curl_setopt($ch, CURLOPT_PROXY, $proxy);
+    //curl_setopt($ch, CURLOPT_PROXYTYPE, CURLPROXY_SOCKS5);
     //curl_setopt($ch, CURLOPT_HEADER,1);
     //curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
     //curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
-    curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
-    curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+    //curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+    //curl_setopt($ch, CURLOPT_TIMEOUT, 15);
     $h = curl_exec($ch);
     curl_close($ch);
     //echo $h;
     $r=json_decode($h,1);
     //print_r ($r);
-    $h=str_replace("\/","/",$h);
-    $link=str_between($h,'file":"','"');
-    $link=preg_replace("/edge\d+\.rcs\-rds\.ro/","82.76.40.81",$link);
-    $link=preg_replace("/edge\d+\.rdsnet\.ro/","82.76.40.81",$link);
-    //if ($link) $link="http:".$link;
+    //$h=str_replace("\/","/",$h);
+    //$link=str_between($h,'file":"','"');
     $link=$r['file'];
-
+    $host=parse_url($link)['host'];
+    //$link=preg_replace("/edge\d+\.rcs\-rds\.ro/","82.76.40.81",$link);
+    //$link=preg_replace("/edge\d+\.rdsnet\.ro/","82.76.40.81",$link);
+    //$link=str_replace($host,"edge30.rcs-rds.ro",$link);
+    //if ($link) $link="http:".$link;
 }
 if ($from=="neterra") {
 $file=$base_cookie."neterra.dat";

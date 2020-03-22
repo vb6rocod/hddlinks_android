@@ -97,6 +97,20 @@ $(document).on('keyup', '.imdb', isValid);
 <TD width="25%"><a href="tv/arconaitv.php" target="_blank">arconaitv</a></TD>
 <TD width="25%"><a href="tv/digifree.php" target="_blank">Digi Sport (Live)</a></TD>
 </TR>
+<?php
+include ("common.php");
+if (file_exists($base_pass."tvplay.txt")) {
+
+echo '
+<TR>
+<TD width="25%"><a href="tv/tvhd-online.php" target="_blank">tvhd-online</a></TD>
+<TD width="25%"></TD>
+<TD width="25%"></TD>
+<TD width="25%"></TD>
+</TR>
+';
+}
+?>
 <!--
 <TR>
 <TD width="25%"><a href="tv/arconaitv.php" target="_blank">arconaitv</a></TD>
@@ -113,7 +127,7 @@ $(document).on('keyup', '.imdb', isValid);
 </TR>
 <TR>
 <?php
-include ("common.php");
+//include ("common.php");
 $list = glob($base_sub."*.srt");
    foreach ($list as $l) {
     str_replace(" ","%20",$l);

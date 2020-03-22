@@ -62,7 +62,8 @@ $tit1=trim($t1[0]);
 $s=array();
 $videos = explode('embedUrl="', $html);
 unset($videos[0]);
-$videos = array_values($videos);
+//$videos = array_values($videos);
+$videos = array_reverse($videos);
 foreach($videos as $video) {
 
   $t1 = explode('"', $video);

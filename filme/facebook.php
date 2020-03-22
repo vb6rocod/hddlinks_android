@@ -2,26 +2,111 @@
 <?php
 include ("../common.php");
 error_reporting(0);
-$token = "";
+$cookie=$base_cookie."facebook.dat";
+if (file_exists($base_pass."facebook.txt")) {
+ $h=trim(file_get_contents($base_pass."facebook.txt"));
+ $t1=explode("|",$h);
+ $c_user=$t1[0];
+ $fb_dtsg=$t1[1];
+} else {
+ $c_user="";
+ $fb_dtsg="";
+}
+$ceva="14159";
+$ua="Mozilla/5.0 (Windows NT 10.0; rv:74.0) Gecko/20100101 Firefox/74.0";
 $page=$_GET['page'];
 $search=$_GET["search"];
-$next="";
-$prev="";
+$doc_id=$_GET['doc_id'];
+$token=$_GET['next'];
+$token_prev=$token;
+if ($page==1) {
+$ref="https://www.facebook.com/pg/".$search."/videos/?ref=page_internal";
+$ref="https://www.facebook.com/".$search;
+$head=array('Accept: */*',
+'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
+'Accept-Encoding: deflate',
+'Origin: https://www.facebook.com',
+'Connection: keep-alive',
+);
+
+//echo $href;
+$ch = curl_init();
+curl_setopt($ch, CURLOPT_URL, $ref);
+curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+curl_setopt($ch, CURLOPT_USERAGENT, $ua);
+curl_setopt($ch, CURLOPT_HTTPHEADER, $head);
+curl_setopt($ch, CURLOPT_HEADER,1);
+//curl_setopt($ch, CURLOPT_COOKIEJAR, $cookie);
+curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+$h = curl_exec($ch);
+curl_close($ch);
+$t1=explode('pageID":"',$h);
+$t2=explode('"',$t1[1]);
+$doc_id=$t2[0];
+$t1=explode('pageName":"',$h);
+$t2=explode('"',$t1[1]);
+$pg=$t2[0];
+}
+//echo "\n".$doc_id."\n";
+
+
+$p=array('av' => $c_user,
+    '__user' => $c_user,
+    '__a' => '1',
+    '__csr' => '',
+    '__beoa' => '0',
+    '__pc' => 'PHASED:DEFAULT',
+    'dpr' => '1',
+    '__rev' => '1001841741',
+    '__comet_req' => '0',
+    'fb_dtsg' => $fb_dtsg,
+    '__spin_r' => '1001841741',
+    '__spin_b' => 'trunk',
+    '__spin_t' => time(),
+    'fb_api_caller_class' => 'RelayModern',
+    'fb_api_req_friendly_name' => 'PagesCometChannelTabAllVideosCardImplPaginationQuery',
+    'variables' => '{"count":25,"cursor":"'.$token.'","useDefaultActor":false,"id":"'.$doc_id.'"}',
+    'doc_id' => '2730244443691106'
+);
+$post=http_build_query($p);
+
+$l="https://www.facebook.com/api/graphql/";
+$head=array('Accept: */*',
+'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
+'Accept-Encoding: deflate',
+'Content-Type: application/x-www-form-urlencoded',
+'Content-Length: '.strlen($post).'',
+'Origin: https://www.facebook.com',
+'Connection: keep-alive',
+'Cookie: c_user='.$c_user.'; xs='.urlencode("145:MQRpz_9AbGBtpw:2:1565597893:".$ceva.":7283").';'
+);
+$ch = curl_init();
+curl_setopt($ch, CURLOPT_URL, $l);
+curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+curl_setopt($ch, CURLOPT_USERAGENT, $ua);
+curl_setopt($ch, CURLOPT_POST,1);
+curl_setopt($ch, CURLOPT_POSTFIELDS,$post);
+//curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie);
+curl_setopt($ch, CURLOPT_HTTPHEADER, $head);
+curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+$h1 = curl_exec($ch);
+curl_close($ch);
+//echo $h1;
+$r=json_decode($h1,1);
+$token=$r['data']['node']['all_videos']['page_info']['end_cursor'];
+
+$x=$r['data']['node']['all_videos']['edges'];
 $page_title=$search;
 $width="200px";
 $height=intval(200*(128/227))."px";
 $base=basename($_SERVER['SCRIPT_FILENAME']);
-$p=$_SERVER['QUERY_STRING'];
-parse_str($p, $output);
 
-if (isset($output['page'])) unset($output['page']);
-$p = http_build_query($output);
-if (!isset($_GET["page"]))
-  $page=1;
-else
-  $page=$_GET["page"];
-$next=$base."?page=".($page+1)."&".$p;
-$prev=$base."?page=".($page-1)."&".$p;
+$next=$base."?page=".($page+1)."&prev=&next=".$token."&doc_id=".$doc_id."&search=".$search;
+$prev=$base."?page=".($page-1)."&prev=&next=".$token_prev."&doc_id=".$doc_id."&search=".$search;
 //https://developers.facebook.com/tools/explorer/
 ?>
 <html>
@@ -106,6 +191,16 @@ function str_between($string, $start, $end){
 	if ($ini == 0) return ""; $ini += strlen($start); $len = strpos($string,$end,$ini) - $ini;
 	return substr($string,$ini,$len);
 }
+function format_sec($seconds) {
+$hours = floor($seconds / 3600);
+$mins = floor(($seconds - $hours*3600) / 60);
+$s = $seconds - ($hours*3600 + $mins*60);
+
+$mins = ($mins<10?"0".$mins:"".$mins);
+$s = ($s<10?"0".$s:"".$s);
+
+return ($hours>0?$hours.":":"").$mins.":".$s;
+}
 if (file_exists($base_pass."tastatura.txt")) {
 $tast=trim(file_get_contents($base_pass."tastatura.txt"));
 } else {
@@ -134,59 +229,26 @@ $c="";
 echo "<a href='".$c."' id='mytest1'></a>".'<div id="mainnav">';
 echo '<table border="1px" width="100%">'."\n\r";
 echo '<tr><TD colspan="3" align="right">';
-if ($page>1)
+if ($page>100)
 echo '<a href="'.$prevpage.'">&nbsp;&lt;&lt;&nbsp;</a> | <a href="'.$nextpage.'">&nbsp;&gt;&gt;&nbsp;</a></TD></TR>';
 else
 echo '<a href="'.$nextpage.'">&nbsp;&gt;&gt;&nbsp;</a></TD></TR>';
 //https://www.facebook.com/VoceaBasarabiei/videos/?page=2
- $l4="https://www.facebook.com/pg/".$search."/videos/?ref=page_internal";
- $l4="https://www.facebook.com/pg/".$search."/videos/?page=".$page;
- //$l4="https://www.facebook.com/pg/EMCpress/live_videos/?ref=page_internal";
-  $ch = curl_init();
-  curl_setopt($ch, CURLOPT_URL, $l4);
-  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-  curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows; U; Windows NT 6.1; en-US; rv:1.9.1.2) Gecko/20090729 Firefox/3.5.2 GTB5');
-  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
-  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
-  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
-  $h = curl_exec($ch);
-  curl_close($ch);
-  $h=html_entity_decode($h);
-//$h=urldecode($h);
-//$h=str_replace('href','ssss',$h);
-//echo $h;
-//preg_match_all("/\<td class\=\".*?\"\>\<td class\=\".*?\".*?href\=\"(\S+)\"\s+aria\-label\=\"(.*?)\".*?src\=\"(.*?)\".*?title\=\"(.*?)\"(.*?)\<\/td\>/ms",$h,$m);
-//print_r ($m);
-//die();
-$t1=explode('og:image" content="',$h);
-$t2=explode('"',$t1[1]);
-$cover=urldecode($t2[0]);
-$cover=str_replace("&amp;","&",$cover);
-  $add_fav="mod=add&title=".urlencode(fix_t($search))."&image=".urlencode(fix_t($cover));
 
+$cover="";
+  $add_fav="mod=add&title=".urlencode(fix_t($search))."&image=".urlencode(fix_t($cover));
+//print_r ($x);
 //if (preg_match_all("/\<td class\=\"\S+\"\>\<.*?href\=\"(\S+)\"\s+aria\-label\=\"(.*?)\".*?src\=\"(\S+)\"/ms",$h,$m)) {
-if (preg_match_all("/\<td class\=\".*?\"\>\<td class\=\".*?\".*?href\=\"(\S+)\"\s+aria\-label\=\"(.*?)\".*?src\=\"(.*?)\".*?\>\<div class\=\".*?\"\>\<\/div\>\<div.*?\>(.*?)\<.*?\<\/td\>/ms",$h,$m)) {
-//print_r ($m);
-for ($k=0;$k<count($m[0]);$k++) {
-  $link = "";
-  $id="";
-  $title="";
-  $t1=explode('videos/',$m[1][$k]);
-  $t2=explode('/',$t1[1]);
-  $id=$t2[0];
-  $title="";
-  $t1=explode('title="',$m[0][$k]);
-  $t2=explode('"',$t1[1]);
-  $title=$t2[0];
-  $image=urldecode($m[3][$k]);
-  $durata=$m[4][$k];
+for ($k=0;$k<count($x);$k++) {
+  $title=$x[$k]['node']['savable_title']['text'];
+  $image=$x[$k]['node']['VideoThumbnailImage']['uri'];
+  $sec=$x[$k]['node']['playable_duration'];
+  $durata=format_sec($sec);
   if ($title)
     $title=$title." (".$durata.")";
   else
     $title=$durata;
-   $link1="".urlencode("https://www.facebook.com/video/embed?video_id=".$id)."&title=".urlencode($title);
-  if ($id) {
+   $link1="".urlencode($x[$k]['node']['url'])."&title=".urlencode($title);
   if ($n==0) echo '<TR>';
 
   if ($tast == "NU") {
@@ -207,11 +269,10 @@ for ($k=0;$k<count($m[0]);$k++) {
   echo '</tr>';
   $n=0;
   }
-  }
 }
-}
+
 echo '<tr><TD colspan="3" align="right">';
-if ($page>1)
+if ($page>100)
 echo '<a href="'.$prevpage.'">&nbsp;&lt;&lt;&nbsp;</a> | <a href="'.$nextpage.'">&nbsp;&gt;&gt;&nbsp;</a></TD></TR>';
 else
 echo '<a href="'.$nextpage.'">&nbsp;&gt;&gt;&nbsp;</a></TD></TR>';

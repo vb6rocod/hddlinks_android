@@ -79,7 +79,8 @@ $videos=array(
 'Digi Sport 1' => 'https://sportbar.biz/ds1ro.html',
 'Digi Sport 2' => 'https://sportbar.biz/digisport2ro.html',
 'Digi Sport 3' => 'https://sportbar.biz/digi3ro.html',
-'Digi Sport 4' => 'https://sportbar.biz/rodigi4.html'
+'Digi Sport 4' => 'https://sportbar.biz/rodigi4.html',
+'Eurosport 1'  => 'https://sportbar.biz/eurosport1ro.html'
 );
 
 

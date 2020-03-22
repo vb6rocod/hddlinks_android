@@ -7,53 +7,6 @@ $list = glob($base_sub."*.srt");
     str_replace(" ","%20",$l);
     unlink($l);
 }
-if (isset($_GET["renew"])) {
- $file=$base_fav."facebook.dat";
- $h="";
- if (file_exists($file)) {
-  $h=trim(file_get_contents($file));
-  $t1=explode("\r\n",$h);
-  $out="";
-  for ($k=0;$k<count($t1);$k++) {
-    $image="";
-    $title="";
-    $a=explode("#separator",$t1[$k]);
-    if ($a) {
-      $title=trim($a[0]);
-      $image=trim($a[1]);
-      if (strpos(@get_headers($image)[0],"403 Forbidden") !== false) {
-       $l4="https://www.facebook.com/pg/".$search."/videos/?ref=page_internal";
-
-       $cover="";
-       $ch = curl_init();
-       curl_setopt($ch, CURLOPT_URL, $l4);
-       curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-       curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows; U; Windows NT 6.1; en-US; rv:1.9.1.2) Gecko/20090729 Firefox/3.5.2 GTB5');
-       curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
-       curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-       curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
-       curl_setopt($ch, CURLOPT_TIMEOUT, 15);
-       $h = curl_exec($ch);
-       curl_close($ch);
-       $h=urldecode($h);
-       //echo $h;
-       $t1=explode('og:image" content="',$h);
-       $t2=explode('"',$t1[1]);
-       $cover=urldecode($t2[0]);
-       $cover=str_replace("&amp;","&",$cover);
-       if ($cover) {
-        $out .= $title."#separator".$cover."\r\n";
-       } else {
-         $out .= $title."#separator".$image."\r\n";
-       }
-      } else {
-         $out .= $title."#separator".$image."\r\n";
-      }
-    }
-  }
- file_put_contents($file,$out);
- }
-}
 ?>
 <html>
 <head>
@@ -63,7 +16,6 @@ if (isset($_GET["renew"])) {
 <meta http-equiv="Expires" content="0"/>
 <title><?php echo $page_title; ?></title>
 <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
-<script async defer crossorigin="anonymous" src="https://connect.facebook.net/ro_RO/sdk.js#xfbml=1&version=v4.0&appId=133744210505475&autoLogAppEvents=1"></script>
 <link rel="stylesheet" type="text/css" href="../custom.css" />
 <script type="text/javascript">
 function ajaxrequest2(link) {
@@ -158,7 +110,12 @@ $c="";
 echo "<a href='".$c."' id='mytest1'></a>".'<div id="mainnav">';
 echo '<table border="1px" width="100%"><TR><TD class="form" >'."\n\r";
 echo '<form action="facebook.php" target="_blank">Cautare (user video): ';
-echo '<input type="text" id="search" name="search"><input type="hidden" id="page" name="page" value="1"><input type="submit" value="Cauta !"></form></TD>';
+echo '<input type="text" id="search" name="search">
+<input type="hidden" id="page" name="page" value="1">
+<input type="hidden" id="prev" name="prev" value="">
+<input type="hidden" id="next" name="next" value="">
+<input type="hidden" id="doc_id" name="doc_id" value="">
+<input type="submit" value="Cauta !"></form></TD>';
 echo '<TD class="nav" align="right"></TD></TR></TABLE>';
 
 
@@ -178,7 +135,7 @@ echo '<table border="1px" width="100%">'."\n\r";
     }
 
   $add_fav="mod=del&title=".urlencode(fix_t($title))."&image=".$image;
-  $playlist="facebook.php?page=1&search=".$title;
+  $playlist="facebook.php?page=1&prev=&next=&doc_id=&search=".$title;
 
   if ($n==0) echo '<TR>';
 
@@ -202,7 +159,6 @@ echo '<table border="1px" width="100%"><TR><TD>Apasti tasta 3 pentru a adauga/st
 }
 
 ?>
-<div class="fb-login-button" data-width="" data-size="medium" data-button-type="continue_with" data-auto-logout-link="false" data-use-continue-as="false"></div>
 
 </body>
 </html>

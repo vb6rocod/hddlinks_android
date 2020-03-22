@@ -228,21 +228,21 @@ $host=parse_url($l)['host'];
   curl_close($ch);
   
 $r=array();
-$videos = explode('data-video=', $html);
+$videos = explode('article class="video-item', $html);
 unset($videos[0]);
 $videos = array_values($videos);
 foreach($videos as $video) {
   $t1=explode('href="',$video);
   $t2 = explode('"', $t1[1]);
-  $link = "https://www.pornhd.com".$t2[0];
+  $link = $t2[0];
   $t1=explode('alt="',$video);
   $t3=explode('"',$t1[1]);
   $title=$t3[0];
   $title = trim(strip_tags($title));
   $title = prep_tit($title);
-  if (strpos($video,'data-original="') !== false) {
-    $t1 = explode('data-original="', $video);
-    $t2 = explode('"', $t1[1]);
+  if (strpos($video,'srcset="') !== false) {
+    $t1 = explode('srcset="', $video);
+    $t2 = explode('"', $t1[2]);
     $image = $t2[0];
     } else {
     $t1 = explode('src="', $video);
@@ -251,12 +251,12 @@ foreach($videos as $video) {
   }
   if (strpos($image,"http") === false) $image="https:".$image;
   $image="r.php?file=".$image;
-  $t1 = explode('time>',$video);
+  $t1 = explode('video-duration">',$video);
   $t2 = explode ('<',$t1[1]);
   $durata=trim($t2[0]);
   $durata = preg_replace("/\n|\r/"," ",strip_tags($durata));
   if ($durata) $title=$title." (".$durata.')';
-  if ($title) array_push($r ,array($title,$link, $image));
+  if ($title && strpos($link,"http") !== false) array_push($r ,array($title,$link, $image));
 }
 $c=count($r);
 for ($k=0;$k<$c;$k++) {

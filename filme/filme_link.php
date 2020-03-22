@@ -407,6 +407,8 @@ if (strpos($filelink,"filmeonlinegratis.org") !== false) {
     //$id=str_between($h2,'data: {id: ',')');
     $tip=1;
     $post="id=".$id."&logat=1";
+    $post="id=".$id;
+    $l="http://www.filmeserialeonline.org/wp-content/themes/grifus/includes/single/second.php";
     $l="http://www.filmeserialeonline.org/wp-content/themes/grifus/includes/single/second.php";
   } else {
     //$id=str_between($h2,'data: {id: ','}');

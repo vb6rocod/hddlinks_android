@@ -205,9 +205,9 @@ echo '</TR>'."\r\n";
 
 if($tip=="release") {
   if ($page>1)
-    $l=$link."page".$page."/?filter=latest";
+    $l=$link."page".$page."";
   else
-    $l=$link."page".$page."/?filter=latest";
+    $l=$link."page".$page."";
 } else {
   $search=str_replace(" ","+",$tit);
   if ($page > 1)
@@ -227,15 +227,15 @@ $host=parse_url($l)['host'];
   $html = curl_exec($ch);
   curl_close($ch);
 $r=array();
-$videos=explode('article id="post-',$html);
+$videos=explode('data-post-id="',$html);
 unset($videos[0]);
 $videos = array_values($videos);
 foreach($videos as $video) {
   $t1=explode('href="',$video);
   $t2 = explode('"', $t1[1]);
   $link = $t2[0];
-  $t1=explode('title="',$video);
-  $t2=explode('"',$t1[1]);
+  $t1=explode('class="title">',$video);
+  $t2=explode('<',$t1[1]);
   $title=$t2[0];
   $title = trim(strip_tags($title));
   $title = prep_tit($title);

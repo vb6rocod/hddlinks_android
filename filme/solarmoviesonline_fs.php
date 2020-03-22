@@ -133,6 +133,7 @@ function off() {
 <?php
 echo '<h2>'.$tit.$tit2.'</H2>';
 echo '<BR>';
+//echo $link;
 $r=array();
   $ua = $_SERVER['HTTP_USER_AGENT'];
   $ch = curl_init();

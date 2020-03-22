@@ -148,7 +148,7 @@ if (file_exists($base_pass."tvplay.txt")) {
 echo '
 <TR>
 <TD width="25%"><a href="filme/cineplex_f_main1.php" target="_blank">cineplex</a></TD>
-<TD width="25%"></TD>
+<TD width="25%"><a href="filme/tvhd-online.php" target="_blank">tvhd-online</a></TD>
 <TD width="25%"></TD>
 <TD width="25%"></TD>';
 echo '</TR>';

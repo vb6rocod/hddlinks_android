@@ -68,7 +68,7 @@ $ua="Mozilla/5.0 (Windows NT 10.0; rv:68.0) Gecko/20100101 Firefox/68.0";
   curl_setopt($ch, CURLOPT_TIMEOUT, 15);
   $html = curl_exec($ch);
   curl_close($ch);
-$videos = explode('class="category">', $html);
+$videos = explode('<article', $html);
 unset($videos[0]);
 $videos = array_values($videos);
 foreach($videos as $video) {

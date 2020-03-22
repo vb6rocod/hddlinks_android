@@ -137,7 +137,6 @@ echo '<BR>';
 $ua = $_SERVER['HTTP_USER_AGENT'];
 $head=array('Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
 'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2');
-
 $l=$link;
   $ua = $_SERVER['HTTP_USER_AGENT'];
   $ch = curl_init();

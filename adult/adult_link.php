@@ -483,10 +483,9 @@ if (preg_match("/4tube\.com/",$host)) {
   $out=str_replace("\\","",$out);
   if (strpos($out,"http") === false && $out) $out="https:".$out;
 } else if (preg_match("/pornhd\.com/",$host)) {
-  if (preg_match_all("/(1080|720|480|360|240)p\"\:\"(.*?)\"/ms",$h,$m)) {
-     $maxs = array_keys($m[1], max($m[1]));
-     $out=$m[2][$maxs[0]];
-     $out=str_replace("\\","",$out);
+//echo $h;
+  if (preg_match("/source\s+src\=\"(.*?)\"/msi",$h,$p)) {
+   $out=$p[1];
      if (strpos($out,"http") === false) $out="https://www.pornhd.com".$out;
       $ch = curl_init();
       curl_setopt($ch, CURLOPT_URL, $out);
@@ -501,9 +500,10 @@ if (preg_match("/4tube\.com/",$host)) {
       curl_setopt($ch, CURLOPT_TIMEOUT, 15);
       $ret = curl_exec($ch);
       curl_close($ch);
-      $t1=explode("Location:",$ret);
-      $t2=explode("\n",$t1[1]);
-      $out=trim($t2[0]);
+      if (preg_match("/location:\s*(.+)/",$ret,$m))
+       $out=trim($m[1]);
+      else
+       $out="";
  }
 } else if (preg_match("/pornheed\.com/",$host)) {
   $t1=explode('source src="',$h);
