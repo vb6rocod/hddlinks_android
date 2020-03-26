@@ -2,12 +2,42 @@
 <?php
 include ("../common.php");
 error_reporting(0);
+function my_simple_crypt( $string, $secret_key,$secret_iv,$action = 'e' ) {
+
+    $output = false;
+    $encrypt_method = "AES-256-CBC";
+    $key = hash( 'sha256', $secret_key );
+    $iv = substr( hash( 'sha256', $secret_iv ), 0, 16 );
+
+    if( $action == 'e' ) {
+        $output = base64_encode( openssl_encrypt( $string, $encrypt_method, $key, 0, $iv ) );
+    }
+    else if( $action == 'd' ){
+        $output = openssl_decrypt( base64_decode( $string ), $encrypt_method, $key, 0, $iv );
+    }
+
+    return $output;
+}
 $cookie=$base_cookie."facebook.dat";
+
 if (file_exists($base_pass."facebook.txt")) {
  $h=trim(file_get_contents($base_pass."facebook.txt"));
- $t1=explode("|",$h);
- $c_user=$t1[0];
- $fb_dtsg=$t1[1];
+ $t1=explode("|",trim($h));
+ $key=$t1[0];
+ $IV=$t1[1];
+  $l="https://raw.githubusercontent.com/vb6rocod/hddlinks/master/fb.txt";
+  $ch = curl_init();
+  curl_setopt($ch, CURLOPT_URL, $l);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+  curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows; U; Windows NT 6.1; en-US; rv:1.9.1.2) Gecko/20090729 Firefox/3.5.2 GTB5');
+  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+  $h = curl_exec($ch);
+  curl_close($ch);
+  $dec=my_simple_crypt(trim($h),$key,$IV,"d");
+  $t2=explode("|",$dec);
+  $c_user=$t2[0];
+  $fb_dtsg=$t2[1];
 } else {
  $c_user="";
  $fb_dtsg="";

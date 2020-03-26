@@ -433,7 +433,9 @@ header("Location: $movie_mpc");
     $x=file_get_contents($base_sub."orig.srt");
     file_put_contents($base_sub.$srt_name,$x);
  }
+  if ($tip=="series")
   $c="intent:".$movie_mpc."#Intent;package=com.mxtech.videoplayer.".$mx.";S.title=".urlencode($title).";end";
+  else
   $c="intent:".$movie_mpc."#Intent;package=com.mxtech.videoplayer.".$mx.";S.title=".urlencode($title).";b.decode_mode=1;end";
   echo $c;
 } else {
