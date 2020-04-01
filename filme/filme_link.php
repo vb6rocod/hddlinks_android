@@ -467,6 +467,7 @@ $headers=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:71.0) Gecko/2010010
       $html .=$h3;
     }
   }
+  //echo $html;
 } elseif (strpos($filelink,"filmehd.se") !== false) {
   $ua = $_SERVER['HTTP_USER_AGENT'];
   $html="";
@@ -1040,6 +1041,8 @@ $h_debug=$html;
 $html=str_replace("https","http",$html);
 $html=str_replace("&#038;","&",$html);
 $html=str_replace("&amp;","&",$html);
+$html=str_replace("&quot;","'",$html);
+//echo $html;
 if(preg_match_all("/(\/\/.*?)(\"|\'|\s)+/si",$html,$matches)) {
 $links=$matches[1];
 //print_r ($links);
@@ -1078,8 +1081,8 @@ $s=$s."bitporno\.com|thevideobee\.to|mangovideo\.|smartshare\.tv|datoporn\.co|xs
 $s=$s."database\.serialeonline\.to|drive\.google\.com|videomega\.|vidload\.co|mixdrop\.|mystream\.to|mstream\.cloud";
 $s=$s."|hxload\.|bazavox\.com|cloud\.vidhubstr\.org|vidia\.tv|gomostream\.com|viduplayer\.com|leaked-celebrities\.";
 $s=$s."|prostream\.to|videobin\.co|upstream\.to|playtvid\.com|jetload\.net|vidfast\.co|clipwatching\.";
-$s=$s."|video\.filmeserialeonline\.org|streamwire\.|cloudvid\.icu|mstream\.xyz|streamhoe\.online|videyo\.";
-$s=$s."|fastvid\.co|vidload\.net|rovideo\.net\/embed|eplayvid\.com/i";
+$s=$s."|(video|player)\.filmeserialeonline\.org|streamwire\.|cloudvid\.icu|mstream\.xyz|streamhoe\.online|videyo\.";
+$s=$s."|fastvid\.co|vidload\.net|rovideo\.net\/embed|eplayvid\.com|dood\.watch/i";
 /////////////////////////////////////////////
 //$x=preg_grep($s,$links);
 //print_r ($x);
@@ -1099,14 +1102,14 @@ for ($i=0;$i<count($links);$i++) {
     }
   }
   //echo $cur_link."\n";
-  if (preg_match("/bit\.ly|goo\.gl|hideiframe\.com|video\.filmeserialeonline\.org/",$links[$i])) {
+  if (preg_match("/bit\.ly|goo\.gl|hideiframe\.com|(video|player)\.filmeserialeonline\.org/",$links[$i])) {
    $l=trim("https:".$links[$i]);
    //echo $l;
    $ch = curl_init();
    curl_setopt($ch, CURLOPT_URL, $l);
    curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
    curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 10.0; rv:72.0) Gecko/20100101 Firefox/72.0');
-   curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+   curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,0);
    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
    curl_setopt($ch,CURLOPT_REFERER,$filelink);
    curl_setopt($ch, CURLOPT_HEADER,1);

@@ -66,6 +66,21 @@ if (strpos($link,"jurnaltv.md/JurnalTV") !== false) {
     curl_close($ch);
     $link=str_between($h,'source src="','"');
 }
+if ($from=="b1tv") {
+  $ch = curl_init();
+  curl_setopt($ch, CURLOPT_URL, $link);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+  curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows; U; Windows NT 6.1; en-US; rv:1.9.1.2) Gecko/20090729 Firefox/3.5.2 GTB5');
+  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+  $html = curl_exec($ch);
+  curl_close($ch);
+  $t1=explode('src":"',$html);
+  $t2=explode('"',$t1[1]);
+  $link="https:".$t2[0];
+}
 if ($from=="tvhd") {
   $cookie=$base_cookie."tvhd.dat";
   $ch = curl_init();

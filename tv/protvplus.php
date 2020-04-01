@@ -59,6 +59,7 @@ if ($page == 1) {
   curl_setopt($ch, CURLOPT_TIMEOUT, 15);
   $h = curl_exec($ch);
   curl_close($ch);
+  //echo $h;
   }
 
 } else {

@@ -68,7 +68,7 @@ $(document).on('keyup', '.imdb', isValid);
 </TR>
 <TR>
 <TD width="25%"><a href="tv/privesc.php?page=1&link=https://www.privesc.eu/arhiva/categorii/Toate&title=privesc.eu" target="_blank">privesc.eu</a></TD>
-<TD width="25%"><a href="tv/epochtimes.php?page=1&link=&title=epochtimes-romania" target="_blank">epochtimes-romania</a></TD>
+<TD width="25%"><a href="tv/b1_main.php?page=1&link=&title=B1TV" target="_blank">B1 Emisiuni</a></TD>
 <TD width="25%"><a href="tv/adevarul.php?page=1&link=https://adevarul.ro/video-center/&title=Toate" target="_blank">Adevarul.ro</a></TD>
 <TD width="25%"><a href="tv/tvrplus_main.php" target="_blank">TVR+ (Emisiuni)</a></TD>
 </TR>

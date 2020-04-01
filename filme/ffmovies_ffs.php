@@ -1,179 +1,118 @@
 <?php
 include ("../common.php");
-//include ("../util.php");
 $ua = $_SERVER['HTTP_USER_AGENT'];
-//$ua="Mozilla/5.0 (Windows NT 10.0; rv:70.0) Gecko/20100101 Firefox/70.0";
-$cookie=$base_cookie."cinebloom.txt";
+$cookie=$base_cookie."ffmovies.dat";
 if (file_exists($cookie)) unlink ($cookie);
 if (isset($_GET['response'])) {
+
+  $l="https://ffmovies.to/tv-series";
+  $ch = curl_init();
+  curl_setopt($ch, CURLOPT_URL, $l);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
+  //curl_setopt($ch,CURLOPT_REFERER,"https://ffmovies.to");
+  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+  //curl_setopt($ch, CURLOPT_HEADER,1);
+  curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie);
+  curl_setopt($ch, CURLOPT_COOKIEJAR, $cookie);
+  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+  $h = curl_exec($ch);
+  curl_close($ch);
+
 $q = $_SERVER["QUERY_STRING"];
 $post=$q;
-////////////////////////////////////////////////////////////
-
-////////////////////////////////////////////////////////////
 $head=array('Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
 'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
 'Accept-Encoding: deflate',
-'Referer: https://www.google.com/recaptcha/api/fallback?k=6LfBixYUAAAAABhdHynFUIMA_sa4s-XsJvnjtgB0',
+'Referer: https://www.google.com/recaptcha/api/fallback?k=6Lc50JwUAAAAAAVVXOTavycUhRtMGphLfi3sj0v6',
 'Content-Type: application/x-www-form-urlencoded',
 'Content-Length: '.strlen($post).'',
 'Connection: keep-alive'
 );
 //6LfCmh4TAAAAAKog9f8wTyEOc0U8Ms2RTuDFyYP_
-$l="https://www.google.com/recaptcha/api/fallback?k=6LfBixYUAAAAABhdHynFUIMA_sa4s-XsJvnjtgB0";
+$l="https://www.google.com/recaptcha/api/fallback?k=6Lc50JwUAAAAAAVVXOTavycUhRtMGphLfi3sj0v6";
 $ch = curl_init();
 curl_setopt($ch, CURLOPT_URL, $l);
 curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
 curl_setopt($ch, CURLOPT_USERAGENT, $ua);
 curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
 curl_setopt($ch, CURLOPT_HTTPHEADER, $head);
-curl_setopt($ch,CURLOPT_REFERER,"https://www.cinebloom.org");
 //curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie);
 //curl_setopt($ch, CURLOPT_COOKIEJAR, $cookie);
 //curl_setopt($ch, CURLOPT_HEADER, 1);
 curl_setopt ($ch, CURLOPT_POST, 1);
 curl_setopt ($ch, CURLOPT_POSTFIELDS, $post);
+curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+curl_setopt($ch, CURLOPT_TIMEOUT, 15);
 $h = curl_exec($ch);
 curl_close($ch);
 //echo $h;
 //die();
 $pat='/\<textarea dir\=\"ltr\" readonly\>(.+?)\</';
 if (preg_match_all($pat,$h,$m)) {
-$token=$m[1][0];
-//////////////////////////////////////////////////////////////
 
-//////////////////////////////////////////////////////////////
-$l1="https://www.cinebloom.org/tvseries";
-//$l1="https://xmovies8.tv/";
+$token=$m[1][0];
+//echo $token;
+$post="g-recaptcha-response=".$token;
+//echo $post."<BR>";
 $head=array('Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
 'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
 'Accept-Encoding: deflate',
-'Connection: keep-alive',
-'Upgrade-Insecure-Requests: 1');
-  $ch = curl_init();
-  curl_setopt($ch, CURLOPT_URL, $l1);
-  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
-  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
-  curl_setopt($ch,CURLOPT_HTTPHEADER,$head);
-  curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie);
-  curl_setopt($ch, CURLOPT_COOKIEJAR, $cookie);
-  curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'GET');
-  curl_setopt($ch, CURLOPT_HTTPGET, true);
-  curl_setopt($ch, CURLINFO_HEADER_OUT, true);
-  curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
-  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
-  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
-  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
-  curl_setopt($ch, CURLOPT_HEADER,1);
-  $html = curl_exec($ch);
-  //$html=str_replace("script", "sxxxxcript",$html);
-  //echo $html;
-  $t1=explode('action="',$html);
-  $t2=explode('"',$t1[1]);
-  $requestLink="https://www.cinebloom.org".$t2[0];
-
-  //if (strpos($html,'id="cf-dn') === false)
-   //$q1= getClearanceLink_old($html,$requestLink);
-  //else
- $t1=explode('r" value="',$html);
- $t2=explode('"',$t1[1]);
- $rr=$t2[0];
- $t1=explode('data-ray="',$html);
- $t2=explode('"',$t1[1]);
- $id=$t2[0];
- $post="r=".$rr."&id=".$id."&g-recaptcha-response=".$token;
-
-//}
-//die();
-//////////////////////////////////////////////////////////////////////
-  //die();
-  //curl_close ($ch);
-  /*
-  $t1=explode('name="s" value="',$html);
-  $t2=explode('"',$t1[1]);
-  $s=$t2[0];
-  */
-  /*
-  $t1=explode('action="',$html);
-  $t2=explode('"',$t1[1]);
-  $l="https://xmovies8.tv".$t2[0];
-  $t1=explode('data-ray="',$html);
-  $t2=explode('"',$t1[1]);
-  $id=$t2[0];
-  //$id="53bf24890c70293";
-//$l="https://xmovies8.tv/cdn-cgi/l/chk_captcha?s=".urlencode($s)."&g-recaptcha-response=".$token;
-  //$ch = curl_init();
-  echo $l;
-  */
-  //sleep (5);
-$head=array('Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
-'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
-'Accept-Encoding: gzip, deflate, br',
+'Referer: https://ffmovies.to/movies?page=2',
 'Content-Type: application/x-www-form-urlencoded',
 'Content-Length: '.strlen($post).'',
-'Referer: https://www.cinebloom.org/tvseries',
-'Origin: https://www.cinebloom.org',
 'Connection: keep-alive',
-'Upgrade-Insecure-Requests: 1');
-//$post="r=&id=".$id."&g-recaptcha-response=".$token;
-//echo "<BR>".$post;
-//$ch = curl_init();
-  curl_setopt($ch, CURLOPT_URL, $requestLink);
-  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
-  //curl_setopt($ch,CURLOPT_REFERER,$l1);
-  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,0);
-  curl_setopt($ch, CURLOPT_RETURNTRANSFER  ,1);  // RETURN THE CONTENTS OF THE CALL
-  curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie);
-  curl_setopt($ch, CURLOPT_COOKIEJAR, $cookie);
-  curl_setopt($ch, CURLOPT_HTTPHEADER, $head);
-  curl_setopt($ch, CURLOPT_HEADER,1);
-  curl_setopt($ch, CURLOPT_NOBODY,0);
-  curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'POST');
-  curl_setopt($ch, CURLOPT_HTTPGET, false);
-  //curl_setopt($ch, CURLINFO_HEADER_OUT, true);
-  curl_setopt ($ch, CURLOPT_POST, 1);
-  curl_setopt ($ch, CURLOPT_POSTFIELDS, $post);
-  curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
-  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
-  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
-  curl_setopt($ch, CURLOPT_TIMEOUT, 25);
-  $h = curl_exec($ch);
-  curl_close ($ch);
-  //echo $h;
-  //die();
+'Upgrade-Insecure-Requests: 1'
+);
+$l="https://ffmovies.to/waf-verify";
+$ch = curl_init();
+curl_setopt($ch, CURLOPT_URL, $l);
+curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,0);
+curl_setopt($ch, CURLOPT_USERAGENT, $ua);
+curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+//curl_setopt($ch, CURLOPT_REFERER, "https://ffmovies.to");
+curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+curl_setopt($ch, CURLOPT_HEADER,1);
+curl_setopt ($ch, CURLOPT_POST, 1);
+curl_setopt ($ch, CURLOPT_POSTFIELDS, $post);
+curl_setopt($ch, CURLOPT_HTTPHEADER, $head);
+curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie);
+curl_setopt($ch, CURLOPT_COOKIEJAR, $cookie);
+//curl_setopt($ch, CURLOPT_NOBODY,1);
+$h = curl_exec($ch);
+curl_close($ch);
+//echo $h;
 //die();
-if (!preg_match("/cf_clearance=/",$h)) {
+if (!preg_match("/waf_token/",$h)) {
   echo "Video not found! or bad script";
   echo '<script>setTimeout(function(){ history.go(-2); }, 2000);</script>';
 } else {
-//file_put_contents("result.txt",urldecode($h));
-  $t0=explode('cf_clearance=',$h);
-  $t1=explode("expires",$t0[1]);
-  $t2=explode(";",$t1[1]);
-  echo "expires".$t2[0];
-  $t1=explode("=",$t2[0]);
-  file_put_contents($base_cookie."max_time_cinebloom.txt",$t1[1]);
+  $t0=explode('waf_token=',$h);
+  $t1=explode("-",$t0[1]);
+  //$t2=explode("path",$t1[1]);
+  echo "expires ".date('d-m-Y H:i:s',$t1[0]);
+  //$t1=explode("=",$t2[0]);
   //$t2=explode(";",$t1[1]);
   //$t3=explode(";",$t1[2]);
-  //$time1 = strtotime($t2[0]);
-  $time2 = strtotime($t1[1]);
-  $time2=time() + 6*3600;
-  file_put_contents($base_cookie."max_time_cinebloom.txt",$time2);
-  echo '<script>setTimeout(function(){ location.href="cinebloom_s.php?page=1&tip=release&title=cinebloom&link="; }, 1000);</script>';
+  $time1 = $t1[0];
+  //$time2 = time() + $time1;
+  file_put_contents($base_cookie."max_time_ffmovies.txt",$time1);
+  echo '<script>setTimeout(function(){ history.go(-2); }, 2000);</script>';
 }
 } else {
   echo "BAD CAPTCHA!";
   echo '<script>setTimeout(function(){ history.go(-2); }, 2000);</script>';
 }
 } else {
-////////////////////////////////////////////////
 
-////////////////////////////////////////////////
 //$cookie = __DIR__ . "\v3.txt";
-$key="6LfBixYUAAAAABhdHynFUIMA_sa4s-XsJvnjtgB0";
+$key="6Lc50JwUAAAAAAVVXOTavycUhRtMGphLfi3sj0v6";
 
-$l="https://www.google.com/recaptcha/api/fallback?k=6LfBixYUAAAAABhdHynFUIMA_sa4s-XsJvnjtgB0";
+$l="https://www.google.com/recaptcha/api/fallback?k=6Lc50JwUAAAAAAVVXOTavycUhRtMGphLfi3sj0v6";
 $head = array(
 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
 'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2'
@@ -182,12 +121,14 @@ $ch = curl_init();
 curl_setopt($ch, CURLOPT_URL, $l);
 curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
 curl_setopt($ch, CURLOPT_USERAGENT, $ua);
-curl_setopt($ch, CURLOPT_REFERER, "https://www.cinebloom.org");
+curl_setopt($ch, CURLOPT_REFERER, "https://ffmovies.to/movies?page=2");
 curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 0);
 curl_setopt($ch, CURLOPT_HTTPHEADER, $head);
 curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie);
 curl_setopt($ch, CURLOPT_COOKIEJAR, $cookie);
 curl_setopt($ch, CURLOPT_HEADER, 1);
+curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+curl_setopt($ch, CURLOPT_TIMEOUT, 15);
 $h = curl_exec($ch);
 curl_close($ch);
 $pat='/value\=\"8\"\>\<img class\=\"fbc-imageselect-payload\" src\=\"(.+?)"/';
@@ -205,7 +146,6 @@ preg_match_all($pat,$h,$m);
 $k=$m[1][0];
 $l='https://www.google.com'.str_replace("&amp;","&amp;",$captchaScrap);
 //echo $l;
-//$tast="NU";
 echo '
 <!DOCTYPE HTML>
 <html dir="ltr">

@@ -331,78 +331,13 @@ if (strpos($filelink,"yifymovies.") !== false) {
   if ($link && $flash <> "flash")
     $link=$link."|Referer=".urlencode("https://".$host)."&Origin=".urlencode("https://".$host);
 }
-if (strpos($filelink,"database.gdriveplayer.us") !== false) {
+if (strpos($filelink,"apicdn.vip") !== false) {
 //echo $filelink;
 //die();
-  parse_str(parse_url($filelink)['query'],$output);
-  //print_r ($output);
-  $mod=$output['mod'];
-  if ($mod=="direct") {
-   $link=$output['file'];
-   $link=str_replace("+","%2B",$link);
-  } else {
-   //$filelink=$output['file'];
-   //echo $filelink;
-   $t1=explode("file=",$filelink);
-   $filelink=$t1[1];
-   $filelink=str_replace("+","%2B",$filelink);
-      $ch = curl_init();
-      curl_setopt($ch, CURLOPT_URL, $filelink);
-      curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-      curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows; U; Windows NT 6.1; en-US; rv:1.9.1.2) Gecko/20090729 Firefox/3.5.2 GTB5');
-      curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
-      curl_setopt($ch, CURLOPT_REFERER,"https://database.gdriveplayer.us");
-      curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-      curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
-      curl_setopt($ch, CURLOPT_TIMEOUT, 15);
-      curl_setopt($ch, CURLOPT_HEADER,1);
-      curl_setopt($ch, CURLOPT_NOBODY,1);
-      $h = curl_exec($ch);
-      curl_close($ch);
-      if (preg_match_all("/Location\:\s+(.+)/i",$h,$m)) {
-        $filelink=trim($m[1][count($m[1])-1]);
-        if (strpos($filelink,"http") === false) $filelink="https:".$filelink;
-        $t1=explode("@@",$filelink);
-        $filelink= $t1[0];
-      } else {
-        $filelink="";
-      }
-  }
-  $srt=$output['sub'];
-  //$srt=str_replace("%2B","+",$srt);
-  //echo $srt;
-  //echo $link;
-  if ($mod=="direct" && strpos($link,"index.php") !== false) {
-   $ch = curl_init();
-   curl_setopt($ch, CURLOPT_URL, $link);
-   curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
-   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-   curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-   curl_setopt($ch, CURLOPT_USERAGENT, $ua);
-   curl_setopt($ch, CURLOPT_HEADER,1);
-   curl_setopt($ch, CURLOPT_NOBODY,1);
-   $h = curl_exec($ch);
-   curl_close($ch) ;
-   if (preg_match("/Location\:\s+(http.+)/i",$h,$m))
-    $link=trim($m[1]);
-  }
-  if ($mod=="direct" && strpos($link,".m3u8") !== false) {
-    $h=file_get_contents($link);
-    preg_match_all ("/^(?!#).+/msi",$h,$m);
-    $l="https:".$m[0][count($m[0])-1];
-    $h=file_get_contents($l);
-    $h=preg_replace_callback(
-    "/hls\.php.+/",
-    function ($matches) {
-      $base2="https://gdriveplayer.us/";
-      $host="gdriveplayer.us";
-      return "hserver.php?file=".base64_encode("link=".$base2.$matches[0]."&origin=".urlencode("https://".$host.""));
-    },
-    $h
-    );
-   file_put_contents("lava.m3u8",$h);
-   $link=$hash_path."/lava.m3u8";
-   }
+ $filelink=str_replace("+","%2B",$filelink);
+ $filelink=str_replace(" ","%2B",$filelink);
+ $filelink=str_replace("%20","%2B",$filelink);
+ $link=$filelink;
 }
 if (strpos($filelink,"moviehdkh.com") !== false) {
    $ua = $_SERVER['HTTP_USER_AGENT'];
@@ -1533,6 +1468,101 @@ if (strpos($filelink,".googlevideo.com") !== false) {
  }
 } elseif (strpos($filelink,"archive.org") !== false) {
   $link=$filelink;
+} elseif (strpos($filelink,"dood.watch") !== false) {
+  //https://dood.watch/e/gd93oog2e3vq?c1_file=https://serialeonline.to/subtitrarifilme/tt4619908.vtt&c1_label=Romana
+  function makePlay() {
+   $a="";
+   $t = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+   $n = strlen($t) - 1;
+   for ($o = 0; 10>$o; $o++) {
+    $a .= $t[rand(0,$n)];
+   }
+   return $a;
+  }
+  $filelink=str_replace("/f/","/e",$filelink);
+  $ua="Mozilla/5.0 (Windows NT 10.0; WOW64; rv:46.0) Gecko/20100101 Firefox/46.0";
+  $ch = curl_init();
+  curl_setopt($ch, CURLOPT_URL, $filelink);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
+  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+  curl_setopt($ch, CURLOPT_ENCODING, "");
+  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 25);
+  $h = curl_exec($ch);
+  curl_close($ch);
+  //echo $h;
+  if (preg_match('/(\/\/[\.\d\w\-\.\/\\\:\?\&\#\%\_\,]*(\.(srt|vtt)))/', $h, $s))
+  $srt="https:".$s[1];
+  //echo $srt;
+  $hash="";
+  $token="";
+  $mp="";
+  $t1=explode('hash=',$h);
+  $t2=explode('&',$t1[1]);
+  $hash=$t2[0];
+  $t1=explode('token=',$h);
+  $t2=explode('&',$t1[1]);
+  $token=$t2[0];
+  $t1=explode('return a+"',$h);
+  $t2=explode('"',$t1[1]);
+  $mp=$t2[0];
+  if ($token && $hash) {
+  $l="https://dood.watch/dood?op=get_md5&hash=".$hash."&token=".$token;
+  $head=array('X-Requested-With: XMLHttpRequest');
+  $ch = curl_init();
+  curl_setopt($ch, CURLOPT_URL, $l);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
+  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+  curl_setopt($ch, CURLOPT_HTTPHEADER,$head);
+  curl_setopt($ch, CURLOPT_REFERER,$filelink);
+  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 25);
+  $h = curl_exec($ch);
+  curl_close($ch);
+  $h=str_replace("\n","",$h);
+  $h1=preg_replace("/\//","1",$h);
+  $h1=base64_decode($h1);
+  $h1=preg_replace("/\//","Z",$h1);
+  $h1=base64_decode($h1);
+  $h1=preg_replace("/@/","a",$h1);
+  $h1=base64_decode($h1);
+  if (strpos($h1,"http") !== false) {
+   $link=$h1.makePlay().$mp.time()*1000;
+   if ($flash <> "flash") $link =$link."|Referer=".urlencode("https://dood.watch");
+  }
+  }
+} elseif (strpos($filelink,"supervideo.tv") !== false) {
+  // https://supervideo.tv/e/ekymi52ok8s8
+  $filelink=str_replace("/f/","/e",$filelink);
+  require_once("JavaScriptUnpacker.php");
+  $ua="Mozilla/5.0 (Windows NT 10.0; WOW64; rv:46.0) Gecko/20100101 Firefox/46.0";
+  $ch = curl_init();
+  curl_setopt($ch, CURLOPT_URL, $filelink);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
+  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+  curl_setopt($ch,CURLOPT_REFERER,"supervideo.tv");
+  curl_setopt($ch, CURLOPT_ENCODING, "");
+  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+  $h3 = curl_exec($ch);
+  curl_close($ch);
+  //echo $h3;
+  $jsu = new JavaScriptUnpacker();
+  $out = $jsu->Unpack($h3);
+  //echo $out;
+  if (preg_match('/([http|https][\.\d\w\-\.\/\\\:\?\&\#\%\_\,]*(\.(mp4|m3u8)))/', $out, $m)) {
+  $link=$m[1];
+  if (preg_match('/([http|https][\.\d\w\-\.\/\\\:\?\&\#\%\_\,]*(\.(srt|vtt)))/', $out, $s))
+  $srt=$s[1];
+  } else {
+    $link="";
+  }
 } elseif (strpos($filelink,"abcvideo.") !== false) {
   // https://abcvideo.cc/5x1yjkc56c39.html
   // https://abcvideo.cc/embed-5x1yjkc56c39.html
@@ -2845,9 +2875,11 @@ if (count($pl) > 1) {
   //echo $out;
   if (preg_match("/(\/\/[\w|\.\:\?\&\/\=\_\-]+\.mp4\?[\w|\.\:\?\&\/\=\_\-]+)[\'\"]/",$out,$m)) {
       $link="https:".$m[1];
-      if (preg_match("/\.sub\s*\=\s*\"(.*?)\"/",$out,$s)) {
-       $srt= $s[1];
-       if (strpos($srt,"http") === false) $srt="https:".$srt;
+      if (preg_match("/\.(remote)?sub\s*\=\s*\"(.*?)\"/",$out,$s)) {
+      //print_r ($s);
+       $srt= urldecode($s[2]);
+       $srt=str_replace(" ","%20",$srt);
+       if (strpos($srt,"http") === false && $srt) $srt="https:".$srt;
       }
   } else {
     $link="";
@@ -4878,7 +4910,17 @@ $h = curl_exec($ch);
 curl_close($ch);
 $h=urldecode($h);
 $y="";
-//echo $h;
+//echo $h."\n"."\n";
+///////////////////////////////////////////////////
+$sh="";
+  preg_match_all("/eval\(function\(w\,i\,s\,e\)(.*?)\<\/script/ms",$h,$r);
+  if (isset($r[1][0])) {
+    $e=decode_wise($r[1][0]);
+    $t1=explode('sh="',$e);
+    $t2=explode('"',$t1[1]);
+    $sh=$t2[0];
+  }
+
 $gt="";
 $x1=file_get_contents($cookie);
 preg_match("/gt\s+(\S+)/",$x1,$g);
@@ -4890,8 +4932,9 @@ if (preg_match("/get_md5/",$h)){
   //echo $srt;
   }
   $l="http://hqq.tv/player/get_md5.php?ver=3&secure=0&adb=0%2F&v=".$vid."&token=";
-  $l="https://hqq.tv/player/get_md5.php?ver=3&secure=0&adb=0%2F&v=".$vid;
-  $l=$l."&gt=".$gt."&embed_from=0&wasmcheck=1";
+  $l="https://hqq.tv/player/get_md5.php?st=".$sh."&ver=4&secure=0&adb=0%2F&v=".$vid;
+  $l=$l."&gt=".$gt."&token=&embed_from=0&wasmcheck=1";
+  //echo $l;
     $ch = curl_init();
     curl_setopt($ch, CURLOPT_URL, $l);
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
@@ -6524,7 +6567,7 @@ if (strpos($movie,"http") === false) $movie="";
 // Set HW+ mod //
 $hw="/hqq\.|hindipix\.|pajalusta\.|lavacdn\.xyz|mcloud\.to|putload\.|thevideobee\.";
 $hw .="|flixtor\.|0123netflix|mangovideo|waaw1?|lookmovie\.ag|onlystream\.|archive\.org";
-$hw .="|hxload.|jetload\.net|azm\.to|movie4k\.ag|hlsplay\.com|videobin\.|moonline\./";
+$hw .="|hxload.|jetload\.net|azm\.to|movie4k\.ag|hlsplay\.com|videobin\.|moonline\.|dood\.watch/";
 if ($flash== "mpc") {
   $mpc=trim(file_get_contents($base_pass."mpc.txt"));
   $c='"'.$mpc.'" /fullscreen "'.$movie.'"';
@@ -6653,8 +6696,8 @@ body {background-color:#000000;}
 </style>
 <style type="text/css">*{margin:0;padding:0}#player{position:absolute;width:100%!important;height:100%!important}.jw-button-color:hover,.jw-toggle,.jw-toggle:hover,.jw-open,.w-progress{color:#008fee!important;}.jw-active-option{background-color:#008fee!important;}.jw-progress{background:#008fee!important;}.jw-skin-seven .jw-toggle.jw-off{color:fff!important}</style>
 <script type="text/javasript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
-<script type="text/javascript" src="https://jwpsrv.com/library/AqFhtu2PEeOMGiIACyaB8g.js"></script>
-<script type="text/javascript">jwplayer.key = "9dOyFG96QFb9AWbR+FhhislXHfV1gIhrkaxLYfLydfiYyC0s";</script>
+<script type="text/javascript" src="../jwplayer.js"></script>
+
 </head>
 <body>
 <div id="player"></div>

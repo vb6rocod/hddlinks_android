@@ -244,7 +244,7 @@ foreach($videos as $video) {
 for ($k=0;$k<count($r);$k++) {
   $link=$r[$k][0];
   $title=$r[$k][1];
-  $title=trim(preg_replace("/((Free Movie)|(Movie Free)|(Movie Download)|(Full Movie)).+/i","",$title));
+  $title=trim(preg_replace("/((Free Download)|(Free Movie)|(Movie Free)|(Movie Download)|(Full Movie)).*/i","",$title));
   $image=$r[$k][2];
   $year=$r[$k][3];
   $rest = substr($title, -6);
