@@ -183,6 +183,7 @@ $rr=array();
 $host=parse_url($link)['host'];
 $ua="Mozilla/5.0 (Windows NT 10.0; rv:71.0) Gecko/20100101 Firefox/7";
   $ref=$link."/watch";
+
   //$ref="https://moviegaga.to/movie/last-man-standing-season-8-jy913z32/watch";
   $l="https://".$host."/live";
   $post="active=true";
@@ -223,6 +224,7 @@ $ua="Mozilla/5.0 (Windows NT 10.0; rv:71.0) Gecko/20100101 Firefox/7";
   eval ($code);
   $csdiff = $timestamp;
   $timestamp=floor(time() - $csdiff);
+
   for ($k=0;$k<count($m[0]);$k++) {
    $data_e=$m[3][$k];
    $data_i=$m[2][$k];
@@ -252,8 +254,81 @@ $ua="Mozilla/5.0 (Windows NT 10.0; rv:71.0) Gecko/20100101 Firefox/7";
    $l = $r['data']['sources']['RAW'];
    if (strpos($l,"http") === false) $l="https:".$l;
    //echo $l."\n";
+//////////////////////////////////////////////////////////////////////
+$z=0;
+while ($z < 5) {
+   if (strpos($l,"embed.iseek") !== false) {
+
+   $ua="Mozilla/5.0 (Windows NT 10.0; rv:71.0) Gecko/20100101 Firefox/7";
+   $head=array('Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+    'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
+    'Accept-Encoding: deflate',
+    'Connection: keep-alive',
+    'Referer: https://moviegaga.to');
+
+   $ch = curl_init($l);
+   curl_setopt($ch, CURLOPT_USERAGENT, $ua);
+   curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+   curl_setopt($ch, CURLOPT_RETURNTRANSFER  ,1);
+   curl_setopt($ch, CURLOPT_HTTPHEADER, $head);
+   curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+   curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
+   curl_setopt($ch, CURLOPT_TIMEOUT, 25);
+   curl_setopt($ch, CURLOPT_HEADER,1);
+   $h = curl_exec($ch);
+   curl_close ($ch);
+   //echo $h;
+   $t1=explode("var json_data = '",$h);
+   $t2=explode("'",$t1[1]);
+   $x=json_decode($t2[0],1);
+   $l2=$x['sources']['RAW'];
+   //echo $l2."\n";
+   if ($l2[0]=="_") {
+    $l1=substr($l2,1);
+    $link=preg_replace_callback(
+    "/[a-zA-Z]/",
+    function ($a1) {
+     return chr(($a1[0] <= 'Z' ? 90 : 122) >= ($a1 = ord($a1[0]) + 13) ? $a1 : $a1 - 26);
+    },
+    $l1
+    );
+    if (strpos($link,"http") === false) $link="https:".$link;
+    //echo $link."\n";
+    $head=array('Referer: https://embed.iseek.to',
+     'Upgrade-Insecure-Requests: 1');
+
+    $ch = curl_init($link);
+    curl_setopt($ch, CURLOPT_USERAGENT, $ua);
+    curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER  ,1);
+    curl_setopt($ch, CURLOPT_HTTPHEADER, $head);
+    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+    curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
+    curl_setopt($ch, CURLOPT_TIMEOUT, 25);
+    $h = curl_exec($ch);
+    curl_close ($ch);
+    //echo $h;
+    $t1=explode("ifr.target_url='",$h);
+    $t2=explode("'",$t1[1]);
+    $link1=$t2[0];  // mcloud/notfound
+    //echo $z."\n";
+    if (!preg_match("/notfound/msi",$h)) {
+    if (strpos($link1,"http") === false && $link1) $link1="https:".$link1;
+    $rr[]=$link1;
+    break;
+    }
+    $z++;
+    sleep(2);
+    } else {
+      $rr[]=$l2;
+      break;
+    }
+   } else {   // not iseek
    if ($l) $rr[]=$l;
-}
+   break;
+   }
+} //end for
+} // end while
 echo '<table border="1" width="100%">';
 echo '<TR><TD class="mp">Alegeti un server: Server curent:<label id="server">'.parse_url($rr[0])['host'].'</label>
 <input type="hidden" id="file" value="'.urlencode($rr[0]).'"></td></TR></TABLE>';

@@ -85,7 +85,7 @@ else
 
 <TR>
 <TD width="25%"><a href="filme/telecinemateca.php" target="_blank">telecinemateca</a></TD>
-<TD width="25%"></TD>
+<TD width="25%"><a href="filme/dailymotion_main.php" target="_blank">dailymotion</a></TD>
 <TD width="25%"></TD>
 <TD width="25%"></TD>
 </TR>

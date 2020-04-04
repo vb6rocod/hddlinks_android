@@ -4,6 +4,11 @@ include ("../common.php");
 $page_title="telecinemateca";
 $width="200px";
 $height="278px";
+$list = glob($base_sub."*.srt");
+   foreach ($list as $l) {
+    str_replace(" ","%20",$l);
+     unlink($l);
+}
 ?>
 <html><head>
 <meta http-equiv="content-type" content="text/html; charset=UTF-8">

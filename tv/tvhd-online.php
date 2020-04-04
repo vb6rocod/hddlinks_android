@@ -116,8 +116,19 @@ $w=0;
 echo '<h2>'.$page_title.'</H2>';
 echo '<table border="1px" width="100%">'."\n\r";
 $cookie=$base_cookie."tvhd.dat";
+$f=$base_pass."tvhd-online.txt";
+if (file_exists($f)) {
+$h=file_get_contents($f);
+$t1=explode("|",$h);
+$user=$t1[0];
+if (sizeof ($t1) > 1 )
+	$pass=$t1[1];
+} else {
+$user="";
+$pass="";
+}
 $l="http://tvhd-online.com/canale-tv.html";
-$post="uid=traianp&pwds=113298&submit=&logare=";
+$post="uid=".$user."&pwds=".$pass."&submit=&logare=";
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $l);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);

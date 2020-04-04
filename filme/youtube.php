@@ -48,12 +48,14 @@ if(preg_match('/youtube\.com\/(v\/|watch\?v=|embed\/)([\w\-]+)/', $file, $match)
   curl_close($ch);
   $p++;
   }
-
-  $html = str_between($html,'ytplayer.config = ',';ytplayer.load');
+  //echo $html;
+  $html = str_between($html,'ytplayer.config = ',';ytplayer.web_player_context_config');
+  //echo "\n"."========================".$html;
   $parts = json_decode($html,1);
-
+  //print_r ($parts);
 
   $r1=json_decode($parts['args']['player_response'],1);
+  //print_r ($r1);
   if (isset($r1['streamingData']["hlsManifestUrl"])) {
       $url=$r1['streamingData']["hlsManifestUrl"];
       $ua="Mozilla/5.0 (Windows NT 5.1; rv:22.0) Gecko/20100101 Firefox/22.0";

@@ -212,6 +212,12 @@ if ($tip=="cineplex") {
  $fh = fopen($new_file, 'w');
  fwrite($fh, $txt);
  fclose($fh);
+} elseif ($tip=="tvhd-online") {
+ $txt=$user."|".$pass;
+ $new_file = $base_pass."tvhd-online.txt";
+ $fh = fopen($new_file, 'w');
+ fwrite($fh, $txt);
+ fclose($fh);
  } elseif ($tip=="tvplay") {
  $txt=$user;
  $new_file = $base_pass."tvplay.txt";
@@ -483,7 +489,27 @@ cod:<input type="text" name="user" value="'.$user.'" size="40"></BR>
 </form>
 <hr>
 ';
-
+$f=$base_pass."tvhd-online.txt";
+if (file_exists($f)) {
+$h=file_get_contents($f);
+$t1=explode("|",$h);
+$user=$t1[0];
+if (sizeof ($t1) > 1 )
+	$pass=$t1[1];
+} else {
+$user="";
+$pass="";
+}
+echo '
+<h4>Cont tvhd-online</h4>
+<form action="settings.php">
+User:<input type="text" name="user" value="'.$user.'"></BR>
+Pass:<input type="password" name="pass" value="'.$pass.'"></BR>
+<input type="hidden" name="tip" value="tvhd-online">
+<input type="submit" value="Memoreaza">
+</form>
+<hr>
+';
 $f=$base_pass."cineplex.txt";
 if (file_exists($f)) {
 $h=file_get_contents($f);

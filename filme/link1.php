@@ -816,6 +816,7 @@ if (strpos($filelink,"https://embed.iseek.to") !== false) {
     $l
     );
     if (strpos($link,"http") === false) $link="https:".$link;
+    //echo $link;
     $head=array('Referer: https://embed.iseek.to',
      'Upgrade-Insecure-Requests: 1');
     $ch = curl_init($link);
@@ -5286,39 +5287,29 @@ $ua="Mozilla/5.0 (Windows NT 10.0; rv:63.0) Gecko/20100101 Firefox/63.0";
   $h=file_get_contents($filelink);
   $link=str_between($h,"{url: '","'");
 } elseif (strpos($filelink,"dailymotion.com") !==false) {
-  if (strpos($filelink,"embed") !== false) {
-    $h=file_get_contents($filelink);
-    //echo $h;
-    $l=str_between($h,'stream_h264_url":"','"');
-    $link=str_replace("\\","",$l);
-  } else {
-    $html = file_get_contents($filelink);
-    $h=urldecode($html);
-    $link=urldecode(str_between($h,'video_url":"','"'));
-    if (!$link) {
-    $t1 = explode('sdURL', $html);
-    $sd=urldecode($t1[1]);
-    $t1=explode('"',$sd);
-    $sd=$t1[2];
-    $sd=str_replace("\\","",$sd);
-    $n=explode("?",$sd);
-    $nameSD=$n[0];
-    $nameSD=substr(strrchr($nameSD,"/"),1);
-    $t1 = explode('hqURL', $html);
-    $hd=urldecode($t1[1]);
-    $t1=explode('"',$hd);
-    $hd=$t1[2];
-    $hd=str_replace("\\","",$hd);
-    $n=explode("?",$hd);
-    $nameHD=$n[0];
-    $nameHD=substr(strrchr($nameHD,"/"),1);
-    if ($hd <> "") {
-     $link = $hd;
-    }
-    if (($sd <> "") && ($hd=="")) {
-     $link = $sd;
-    }
-    }
+//echo $filelink;
+  // https://www.dailymotion.com/video/x2jtx5v
+  // https://www.dailymotion.com/embed/video/x2l65up?autoplay=1
+  preg_match ("/video\/([a-zA-Z0-9]+)/",$filelink,$m);
+  $id=$m[1];
+  $filelink="https://www.dailymotion.com/embed/video/".$id;
+  $ua="Mozilla/5.0 (Windows NT 10.0; rv:63.0) Gecko/20100101 Firefox/63.0";
+
+  $h=file_get_contents($filelink);
+  $t1=explode('var config = {',$h);
+  $t2=explode('window.playerV5',$t1[1]);
+  $h1=trim("{".$t2[0]);
+  $h1=substr($h1, 0, -1);
+
+  $r=json_decode($h1,1)['metadata']['qualities'];
+  if (isset($r['auto'][0]['url'])) {
+  $l_main=$r['auto'][0]['url'];
+  $h2=file_get_contents($l_main);
+  if (preg_match_all("/PROGRESSIVE-URI\=\"(.*?)\"/",$h2,$q)) {
+   $link=$q[1][count($q[1])-1];
+   $t1=explode("#",$link);
+   $link=$t1[0];
+  }
   }
 } elseif (strpos($filelink,"streamcloud.eu") !==false) {
    //op=download1&usr_login=&id=zo88qnclmj5z&fname=666_-_Best_Of_Piss_Nr_2_German.avi&referer=http%3A%2F%2Fstreamcloud.eu%2Fzo88qnclmj5z%2F666_-_Best_Of_Piss_Nr_2_German.avi.html&hash=&imhuman=Weiter+zum+Video
@@ -6567,7 +6558,7 @@ if (strpos($movie,"http") === false) $movie="";
 // Set HW+ mod //
 $hw="/hqq\.|hindipix\.|pajalusta\.|lavacdn\.xyz|mcloud\.to|putload\.|thevideobee\.";
 $hw .="|flixtor\.|0123netflix|mangovideo|waaw1?|lookmovie\.ag|onlystream\.|archive\.org";
-$hw .="|hxload.|jetload\.net|azm\.to|movie4k\.ag|hlsplay\.com|videobin\.|moonline\.|dood\.watch/";
+$hw .="|hxload.|jetload\.net|azm\.to|movie4k\.ag|hlsplay\.com|videobin\.|moonline\.|dood\.watch|dailymotion\.com/";
 if ($flash== "mpc") {
   $mpc=trim(file_get_contents($base_pass."mpc.txt"));
   $c='"'.$mpc.'" /fullscreen "'.$movie.'"';

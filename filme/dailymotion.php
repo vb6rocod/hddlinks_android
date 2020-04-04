@@ -1,7 +1,8 @@
 <!DOCTYPE html>
 <?php
 include ("../common.php");
-$page_title="tvhd-online";
+$user=$_GET['user'];
+$page_title=urldecode($_GET['title']);
 $width="200px";
 $height="278px";
 $list = glob($base_sub."*.srt");
@@ -97,6 +98,7 @@ function off() {
 <a href='' id='mytest1'></a>
 <a id="fancy" data-fancybox data-type="iframe" href=""></a>
 <?php
+error_reporting(0);
 function str_between($string, $start, $end){
 	$string = " ".$string; $ini = strpos($string,$start);
 	if ($ini == 0) return ""; $ini += strlen($start); $len = strpos($string,$end,$ini) - $ini;
@@ -116,60 +118,36 @@ $user_agent     =   $_SERVER['HTTP_USER_AGENT'];
 if ($flash != "mp") {
 if (preg_match("/android|ipad/i",$user_agent) && preg_match("/chrome|firefox|mobile/i",$user_agent)) $flash="chrome";
 }
-$n=0;
-$w=0;
+
 echo '<h2>'.$page_title.'</H2>';
 echo '<table border="1px" width="100%">'."\n\r";
-$cookie=$base_cookie."tvhd.dat";
-$f=$base_pass."tvhd-online.txt";
-if (file_exists($f)) {
-$h=file_get_contents($f);
-$t1=explode("|",$h);
-$user=$t1[0];
-if (sizeof ($t1) > 1 )
-	$pass=$t1[1];
-} else {
-$user="";
-$pass="";
-}
-$l="http://tvhd-online.com/canale-tv.html";
-$post="uid=".$user."&pwds=".$pass."&submit=&logare=";
-$l="http://tvhd-online.com/filme/26/filme.html";
-
+$r=array();
   $ch = curl_init();
-  curl_setopt($ch, CURLOPT_URL, $l);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
   curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 10.0; rv:55.0) Gecko/20100101 Firefox/55.0');
   curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
   curl_setopt($ch, CURLOPT_ENCODING, "");
   curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-  curl_setopt($ch, CURLOPT_POST,1);
-  curl_setopt($ch, CURLOPT_POSTFIELDS,$post);
   curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
   curl_setopt($ch, CURLOPT_TIMEOUT, 15);
-  curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie);
-  curl_setopt($ch, CURLOPT_COOKIEJAR, $cookie);
-  $html = curl_exec($ch);
-  curl_close($ch);
-  //echo $html;
-$videos = explode('a class="title', $html);
-unset($videos[0]);
-$n=0;
-$videos = array_values($videos);
-  foreach($videos as $video) {
-  $t1=explode('href="',$video);
-  $t2=explode('"',$t1[1]);
-  $link="http://tvhd-online.com".$t2[0];
-  $t3=explode('item-title">',$video);
-  $t4=explode('<',$t3[1]);
-  $title=$t4[0];
-  $t1=explode('src="',$video);
-  $t2=explode('"',$t1[1]);
-  $image=$t2[0];
+$p=1;
+while (true) {
+  $l="https://api.dailymotion.com/user/".$user."/videos?page=".$p."&limit=100";
+  curl_setopt($ch, CURLOPT_URL, $l);
+  $h = curl_exec($ch);
+  $r=json_decode($h,1);
+  //print_r ($r);
+  $n=0;
+  $w=0;
+  for ($k=0;$k<count($r['list']);$k++) {
+  $tip=$r['list'][$k]['channel'];
+  $title=$r['list'][$k]['title'];
+  $id=$r['list'][$k]['id'];
+  $link="https://www.dailymotion.com/video/".$id;
   $year="";
   $imdb="";
   $rest = substr($title, -6);
-  if (preg_match("/\(?(\d+)\)?/",$rest,$m)) {
+  if (preg_match("/\[?(\d+)\]?/",$rest,$m)) {
    $year=$m[1];
    $tit_imdb=trim(str_replace($m[0],"",$title));
   } else {
@@ -179,23 +157,27 @@ $videos = array_values($videos);
     $val_prog="tip=movie&title=".urlencode(fix_t($tit_imdb))."&year=".$year."&imdb=".$imdb;
     $link1="link1.php?file=".$link."&title=".urlencode(fix_t($title));
     $l="link=".urlencode(fix_t($link))."&title=".urlencode(fix_t($title));
-
+  //if ($tip=="shortfilms") {
   if ($n==0) echo '<TR>';
   if ($flash != "mp") {
   echo '<td class="mp" align="center" width="25%"><a class ="imdb" id="myLink'.($w*1).'" href="'.$link1.'" target="_blank" onmousedown="isKeyPressed(event)">
-  <img id="myLink'.($w*1).'" src="'.$image.'" width="'.$width.'" height="'.$height.'"><BR>'.$title.'<input type="hidden" id="imdb_myLink'.($w*1).'" value="'.$val_prog.'"></a>
+  '.$title.'<input type="hidden" id="imdb_myLink'.($w*1).'" value="'.$val_prog.'"></a>
   <a onclick="prog('."'".$val_prog."')".'"'." style='cursor:pointer;'>"." *".'</a>
   </TD>';
   }  else
-  echo '<td class="mp" align="center" width="25%">'.'<a class ="imdb" id="myLink'.($w*1).'" onclick="ajaxrequest('."'".$l."')".'"'." style='cursor:pointer;'>".'<img id="myLink'.($w*1).'" src="'.$image.'" width="'.$width.'" height="'.$height.'"><BR>'.$title.'<input type="hidden" id="imdb_myLink'.($w*1).'" value="'.$val_prog.'"></a></TD>';
+  echo '<td class="mp" align="center" width="25%">'.'<a class ="imdb" id="myLink'.($w*1).'" onclick="ajaxrequest('."'".$l."')".'"'." style='cursor:pointer;'>".''.$title.'<input type="hidden" id="imdb_myLink'.($w*1).'" value="'.$val_prog.'"></a></TD>';
   $w++;
   $n++;
   if ($n == 4) {
   echo '</tr>';
   $n=0;
   }
-
+  //}
 }
+if ($r['has_more'] != "1") break;
+$p++;
+}
+curl_close($ch);
 echo "</table>";
 ?>
 <div id="overlay"">
