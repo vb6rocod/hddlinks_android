@@ -7,6 +7,7 @@ function str_between($string, $start, $end){
 	return substr($string,$ini,$len);
 }
 include ("../common.php");
+include ("../cloudflare.php");
 $page = $_GET["page"];
 $tip= $_GET["tip"];
 $tit=$_GET["title"];
@@ -166,42 +167,69 @@ if ($page==1) {
    echo '<TD class="nav" colspan="4" align="right"><a href="'.$prev.'">&nbsp;&lt;&lt;&nbsp;</a> | <a href="'.$next.'">&nbsp;&gt;&gt;&nbsp;</a></TD>'."\r\n";
 }
 echo '</TR>'."\r\n";
-
+$ua = $_SERVER['HTTP_USER_AGENT'];
 if($tip=="release") {
+ if (strpos($ua,"Windows") !== false)
   $l="https://lookmovie.ag/?p=".$page."&r=1";
+ else
+  $l="https://lookmovie.ag/page/".$page;
 } else {
   $search=str_replace(" ","%20",$tit);
   $l="https://lookmovie.ag/movies/search/?p=".$page."&q=".$search;
 }
 $host=parse_url($l)['host'];
+$cookie=$base_cookie."hdpopcorns.dat";
+if ($page==1 && $tip=="release") {
+ $l1="https://lookmovie.ag";
+ $h=cf_pass($l1,$cookie);
+}
 $head=array('Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
 'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2');
+
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $l);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
   curl_setopt($ch,CURLOPT_REFERER,"https://lookmovie.ag");
-  curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 10.0; rv:55.0) Gecko/20100101 Firefox/55.0');
+  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
+  curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie);
   curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
   curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
   curl_setopt($ch, CURLOPT_TIMEOUT, 15);
   $html = curl_exec($ch);
   curl_close($ch);
+
 //echo $html;
-$videos = explode('div class="movie-item-', $html);
+//$html=str_replace("script","",$html);
+//echo $html;
+//file_put_contents($base_cookie."look.txt",$html);
+if (strpos($html,'div class="movie-list-detailed mobile') === false)
+$videos = explode('div class="movie-', $html);
+else
+$videos=explode('div class="movie-list-detailed mobile',$html);
+//print_r ($videos);
 unset($videos[0]);
 $videos = array_values($videos);
+//print_r ($videos);
 foreach($videos as $video) {
   $t1 = explode('href="',$video);
   $t2=explode('"',$t1[1]);
   $link = $t2[0];
   if (strpos($link,"http") === false) $link="https://".$host.$link;
+  if (strpos($video,'detailed__title">') === false) {
   $t3 = explode('>', $t1[3]);
   $t4 = explode('<', $t3[1]);
+  } else {
+  $t3=explode('detailed__title">',$video);
+  $t4=explode('<',$t3[1]);
+  }
   $title = trim($t4[0]);
   $title=prep_tit($title);
   $t1 = explode('data-src="', $video);
   $t2 = explode('"', $t1[1]);
   $image=$t2[0];
+  //$t1=explode('data-src="'
+  //$image=str_replace("w342","w300",$image);
+  //$image="https://image.tmdb.org/t/p/w342/zfxZSe4cGPYj3XUOgJO8OBRy47n.jpg";
   $rest = substr($title, -6);
   if (preg_match("/\((\d+)\)/",$rest,$m)) {
    $year=$m[1];
@@ -210,8 +238,13 @@ foreach($videos as $video) {
    $year="";
    $tit_imdb=$title;
   }
+  if (strpos($video,'year-intitle">') !== false) {
   $t1=explode('class="year">',$video);
   $t2=explode('<',$t1[1]);
+  } else {
+  $t1=explode('year-intitle">',$video);
+  $t2=explode('<',$t1[1]);
+  }
   $year=$t2[0];
   $imdb="";
   $link_f=$fs_target.'?tip=movie&link='.urlencode($link).'&title='.urlencode(fix_t($title)).'&image='.$image."&sez=&ep=&ep_tit=&year=".$year;

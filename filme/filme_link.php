@@ -11,6 +11,21 @@ $filelink = $_GET["file"];
 $link_f =  array();
 $type = "mp4";
 $pg="";
+// hqq
+if (file_exists($base_cookie."max_time_hqq.txt")) {
+$time_now=time();
+$time_exp=file_get_contents($base_cookie."max_time_hqq.txt");
+   if ($time_exp > $time_now) {
+     $minutes = intval(($time_exp-$time_now)/60);
+     $seconds= ($time_exp-$time_now) - $minutes*60;
+     if ($seconds < 10) $seconds = "0".$seconds;
+     $msg_captcha=" | Expira in ".$minutes.":".$seconds." min.";
+   } else
+     $msg_captcha="";
+} else {
+   $msg_captcha="";
+}
+/////////////////////////////
 if (file_exists($base_pass."debug.txt"))
  $debug=true;
 else
@@ -35,6 +50,7 @@ $list = glob($base_sub."*.srt");
      unlink($l);
     }
 }
+/*
 if (file_exists("../../cookie/max_time_hqq.txt")) {
    $time_exp=file_get_contents("../../cookie/max_time_hqq.txt");
    $time_now=time();
@@ -48,6 +64,7 @@ if (file_exists("../../cookie/max_time_hqq.txt")) {
 } else {
    $msg_captcha="";
 }
+*/
 /**####################################**/
 if (preg_match("/(.*?)\s+\(?((1|2)\d{3})\)?\s+(\d+)x(\d+)/",$pg,$m)) { // series and year
   $tip="series";
@@ -1388,8 +1405,8 @@ echo '
       <meta charset="utf-8">
       <title>Alege varianta</title>
    	  <link rel="stylesheet" type="text/css" href="../custom.css" />
-     <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.0/jquery.min.js"></script>
- <script src="../jquery.fancybox.min.js"></script>
+<script type="text/javascript" src="//code.jquery.com/jquery-3.2.1.min.js"></script>
+<script src="../jquery.fancybox.min.js"></script>
 <link rel="stylesheet" type="text/css" href="../jquery.fancybox.min.css">
 <script type="text/javascript">
 // create the XMLHttpRequest object, according browser
@@ -1499,6 +1516,7 @@ td.link {
 //$c="intent:".$out1."#Intent;package=com.mxtech.videoplayer.".$mx.";S.title=".urlencode($title).";end";
 //alert (request.responseText);
 $c="";
+
 echo "<a href='".$c."' id='mytest1'></a>".'<div id="mainnav">';
 echo '<h2>'.$pg."</H2><BR>";
 echo '<label id="server"><font size="6" color="lightblue">Alegeti un server</font></label><BR>';
@@ -1508,7 +1526,34 @@ foreach($link_f as $k=>$val) {
 $server="";
 $server = parse_url($link_f[$k])["host"];
 if (preg_match("/hqq\.|waaw1?|netu|pajalusta|hindipix\./",$link_f[$k])) {
-    $link_f[$k]=str_replace($server,"hqq.watch",$link_f[$k]);
+    $link_f[$k]=str_replace($server,"hqq.tv",$link_f[$k]);
+    $l1=str_replace("/e/","/watch_video.php?v=",$link_f[$k]);
+$pattern = "@(?:\/\/|\.)((?:waaw1?|netu|hqq|hindipix)\.(?:tv|watch|in))\/(?:watch_video\.php\?v|.+?vid)=([a-zA-Z0-9]+)@";
+//echo $link_f[$k];
+  if (preg_match($pattern,$l1,$m))
+    $vid=$m[2];
+  elseif (preg_match("/(hqq|netu)(\.tv|\.watch)\/player\/hash\.php\?hash=\d+/",$link_f[$k])) {
+      $ch = curl_init();
+      curl_setopt($ch, CURLOPT_URL, $l1);
+      curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+      curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+      curl_setopt($ch, CURLOPT_USERAGENT, $ua);
+      curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+      curl_setopt($ch,CURLOPT_ENCODING, '');
+      curl_setopt($ch, CURLOPT_REFERER, "http://hqq.watch/");
+      //curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie);
+      //curl_setopt($ch, CURLOPT_COOKIEJAR, $cookie);
+      curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+      curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+      $h1 = curl_exec($ch);
+      curl_close($ch);
+      $h1=urldecode($h1);
+      //echo urldecode("%3c");
+      //echo $h1;
+      //vid':'
+     preg_match("/vid\s*\'\:\s*\'(?P<vid>[^\']+)\'/",$h1,$m);
+     $vid=$m["vid"];
+  }
     $find_hqq=true;
     $cap++;
 }
@@ -1516,8 +1561,10 @@ if (preg_match("/hqq\.|waaw1?|netu|pajalusta|hindipix\./",$link_f[$k])) {
    //echo $link_f[$k];
    if (strpos($link_f[$k],"hqq.") !== false ) {
     echo '<TR><td class="link"><a href="link1.php?file='.urlencode($link_f[$k]).','.urlencode($pg).'" target="_blank">'.$server.'</a>
-    <a href="hqq3.php"><font color="lightblue"> | Rezolva captcha (v2)</font></a>';
-    if($cap==1)  echo '<span id="span">'.$msg_captcha.'</span>';
+    <a id="fancy" data-fancybox data-type="iframe" href="hqq_sh.php?vid='.$vid.'">| get sh!</a>
+    <a href="hqq_captcha.php" target="_blank"><font color="lightblue"> | Captcha</font></a>
+    ';
+if ($cap == 1)  echo $msg_captcha;
     echo '</TD></TR>';
    } elseif (strpos($link_f[$k],"thevideo.") !== false || strpos($link_f[$k],"vev.") !== false)
     echo '<TR><td class="link"><a href="link1.php?file='.urlencode($link_f[$k]).','.urlencode($pg).'" target="_blank">'.$server.'</a> <a href="https://vev.io/pair" target="_blank"><font color="lightblue"> | Pair IP (4 ore)</font></a></TD></TR>';
@@ -1528,8 +1575,11 @@ if (preg_match("/hqq\.|waaw1?|netu|pajalusta|hindipix\./",$link_f[$k])) {
   } else {  //== "mp"
    if (strpos($link_f[$k],"hqq.") !== false) {
    echo '<TR><td class="link"><a onclick="ajaxrequest('."'".urlencode($pg)."', '".urlencode($link_f[$k])."')".'"'." style='cursor:pointer;'>".$server.'</a>
-   <a href="hqq3.php"><font color="lightblue"> | Captcha (v2)</font></a>';
-    if($cap==1)  echo '<span id="span">'.$msg_captcha.'</span>';
+   <a id="fancy" data-fancybox data-type="iframe" href="hqq_sh.php?vid='.$vid.'">| get sh!</a>
+   <a href="hqq_captcha.php" target="_blank"><font color="lightblue"> | Captcha</font></a>
+   <a href="intent:http://127.0.0.1:8080/scripts/filme/hqq_captcha.php#Intent;package=org.mozilla.firefox;S.title=Captcha;end" target="_blank"><font color="lightblue"> | Captcha (firefox)</font></a>
+   ';
+if ($cap == 1)  echo $msg_captcha;
     echo '</TD></TR>';
    } elseif (strpos($link_f[$k],"thevideo.") !== false || strpos($link_f[$k],"vev.") !== false)
    echo '<TR><td class="link"><a onclick="ajaxrequest('."'".urlencode($pg)."', '".urlencode($link_f[$k])."')".'"'." style='cursor:pointer;'>".''.$server.'</a> <a href="https://vev.io/pair" target="_blank"><font color="lightblue"> | Pair IP (4 ore)</font></a></TD></TR>';
@@ -1569,30 +1619,6 @@ echo '
 <div id="debug" style="vertical-align:top;height:auto;width:100%;word-wrap: break-word;"></div>
 <BR>
 ';
-if ($find_hqq) {
-echo '
-<script type="text/javascript">
-var span = document.getElementById("span");
-function time() {
-var link="../../cookie/max_time_hqq.txt?rand=" + Math.random();
-$.get( link, function( data ) {
-  time_now=Math.floor(Date.now() / 1000);
-  time_max=data;
-  dif = time_max-time_now;
-  if (dif > 0) {
-  var minutes = Math.floor(dif / 60);
-  var seconds = dif - minutes * 60;
-  if (seconds < 10) seconds="0" + seconds;
-  span.textContent = " | Expira in " + minutes + ":" + seconds + " min.";
-  } else {
-    span.textContent = "";
-  }
-});
-}
-setInterval(time, 1000);
-</script>
-';
-}
 echo '<br></div></body>';
 echo '</html>';
 } else {

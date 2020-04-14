@@ -2,6 +2,12 @@
 include ("../common.php");
 $ua = $_SERVER['HTTP_USER_AGENT'];
 $cookie=$base_cookie."hqq.txt";
+$key="6LfCmh4TAAAAAKog9f8wTyEOc0U8Ms2RTuDFyYP_";
+$key="6LfCmh4TAAAAAKog9f8wTyEOc0U8Ms2RTuDFyYP_";
+//$key="6Ldf5F0UAAAAALErn6bLEcv7JldhivPzb93Oy5t9";
+//$key="6LfwW48UAAAAAPOxDGJBARwBjEoVJX2YyXjj1ev_";
+//$key="6LfsXx4TAAAAAG7fRIpL2LpS_NLxj1HBlotEDhT7";
+//$key="6Ldf5F0UAAAAALErn6bLEcv7JldhivPzb93Oy5t9";
 if (file_exists($cookie)) unlink ($cookie);
 if (isset($_GET['response'])) {
 $q = $_SERVER["QUERY_STRING"];
@@ -9,13 +15,13 @@ $post=$q;
 $head=array('Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
 'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
 'Accept-Encoding: deflate',
-'Referer: https://www.google.com/recaptcha/api/fallback?k=6LfCmh4TAAAAAKog9f8wTyEOc0U8Ms2RTuDFyYP_',
+'Referer: https://www.google.com/recaptcha/api/fallback?k='.$key.'',
 'Content-Type: application/x-www-form-urlencoded',
 'Content-Length: '.strlen($post).'',
 'Connection: keep-alive'
 );
 //6LfCmh4TAAAAAKog9f8wTyEOc0U8Ms2RTuDFyYP_
-$l="https://www.google.com/recaptcha/api/fallback?k=6LfCmh4TAAAAAKog9f8wTyEOc0U8Ms2RTuDFyYP_";
+$l="https://www.google.com/recaptcha/api/fallback?k=".$key;
 $ch = curl_init();
 curl_setopt($ch, CURLOPT_URL, $l);
 curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
@@ -50,10 +56,12 @@ curl_setopt($ch, CURLOPT_TIMEOUT, 15);
 curl_setopt($ch, CURLOPT_HEADER,1);
 curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie);
 curl_setopt($ch, CURLOPT_COOKIEJAR, $cookie);
-curl_setopt($ch, CURLOPT_NOBODY,1);
+curl_setopt($ch, CURLOPT_NOBODY,0);
 $h = curl_exec($ch);
 curl_close($ch);
-$h=urldecode($h);
+//$h=urldecode($h);
+//echo $h;
+//die();
 if (!preg_match("/gt=/",$h)) {
   echo "Video not found! or bad script";
   echo '<script>setTimeout(function(){ history.go(-2); }, 2000);</script>';
@@ -78,18 +86,19 @@ if (!preg_match("/gt=/",$h)) {
 } else {
 
 //$cookie = __DIR__ . "\v3.txt";
-$key="6LfCmh4TAAAAAKog9f8wTyEOc0U8Ms2RTuDFyYP_";
 
-$l="https://www.google.com/recaptcha/api/fallback?k=6LfCmh4TAAAAAKog9f8wTyEOc0U8Ms2RTuDFyYP_";
+
+$l="https://www.google.com/recaptcha/api/fallback?k=".$key;
 $head = array(
 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
-'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2'
+'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
+'Origin: http://waaw.tv'
 );
 $ch = curl_init();
 curl_setopt($ch, CURLOPT_URL, $l);
 curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
 curl_setopt($ch, CURLOPT_USERAGENT, $ua);
-curl_setopt($ch, CURLOPT_REFERER, "https://hqq.tv/player/embed_player.php?vid=WkhtUjNXNWNocGRsMGJEdzhqbEc0Zz09&autoplay=no");
+curl_setopt($ch, CURLOPT_REFERER, "http://waaw.tv");
 curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 0);
 curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
 curl_setopt($ch, CURLOPT_HTTPHEADER, $head);
@@ -98,6 +107,7 @@ curl_setopt($ch, CURLOPT_COOKIEJAR, $cookie);
 curl_setopt($ch, CURLOPT_HEADER, 1);
 $h = curl_exec($ch);
 curl_close($ch);
+//echo $h;
 $pat='/value\=\"8\"\>\<img class\=\"fbc-imageselect-payload\" src\=\"(.+?)"/';
 preg_match_all($pat,$h,$m);
 $captchaScrap=$m[1][0];

@@ -1,6 +1,6 @@
 <?php
 include ("../common.php");
-$filelink=urldecode($_GET["file"]);
+//$filelink=urldecode($_GET["file"]);
 function str_between($string, $start, $end){
 	$string = " ".$string; $ini = strpos($string,$start);
 	if ($ini == 0) return ""; $ini += strlen($start); $len = strpos($string,$end,$ini) - $ini;
@@ -302,7 +302,7 @@ document.onreadystatechange = function () {
 <label id="server"><font size="6" color="lightblue">Rezolvati captcha, copiati adresa rezultata in campul de mai jos</font></label><BR>
 <BR>
 <BR>
-<a id="mytest1" href="http://hqq.watch/sec/player/embed_player.php?gtoken=03" target="_blank"><font size="6" color="yellow">Rezolvati captcha</font></a>
+<a id="mytest1" href="http://hqq.watch/sec/player/embed_player.php?gtoken=03&vid=1" target="_blank"><font size="6" color="yellow">Rezolvati captcha</font></a>
 <BR><input type="text" id="gt1" value="" size="70" onpaste="setTimeout(msg2,1000)">(paste)<BR>
 <textarea id="gt" rows="5" cols="50"></textarea>(1)
 <BR>

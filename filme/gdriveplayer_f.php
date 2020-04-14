@@ -183,9 +183,9 @@ echo '</TABLE>'."\r\n";
 echo '<table border="1px" width="100%" style="table-layout:fixed;">'."\r\n";
 if($tip=="release") {
   if ($page==1)
-   $l="https://database.gdriveplayer.us/movie.php?page=1&sort=latest";
+   $l="https://database.gdriveplayer.me/movie.php?page=1&sort=latest";
   else
-   $l="https://database.gdriveplayer.us/movie.php?page=".$page."&sort=latest";
+   $l="https://database.gdriveplayer.me/movie.php?page=".$page."&sort=latest";
 } else {
   $search=str_replace(" ","+",$tit);
   if ($sc=="title")

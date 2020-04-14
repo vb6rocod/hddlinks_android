@@ -56,6 +56,7 @@ echo $form;
 echo '</TR>';
 $n=0;
 $l="https://www.ashemaletube.com/tags/";
+$l="https://www.ashemaletube.com/tags/json/";
 $ua = $_SERVER['HTTP_USER_AGENT'];
 $ua="Mozilla/5.0 (Windows NT 10.0; rv:68.0) Gecko/20100101 Firefox/68.0";
   $ch = curl_init();
@@ -68,17 +69,11 @@ $ua="Mozilla/5.0 (Windows NT 10.0; rv:68.0) Gecko/20100101 Firefox/68.0";
   curl_setopt($ch, CURLOPT_TIMEOUT, 15);
   $html = curl_exec($ch);
   curl_close($ch);
-$videos = explode('a title="', $html);
-unset($videos[0]);
-$videos = array_values($videos);
-foreach($videos as $video) {
-    $t=explode('href="',$video);
-    $t1=explode('"',$t[1]);
-    $link=$t1[0];
-	$link="https://www.ashemaletube.com".$link;
-  	$t2=explode(">",$t[1]);
-    $t1=explode("<",$t2[1]);
-    $title=$t1[0];
+  $r=json_decode($html,1);
+ // print_r ($r);
+for ($k=0;$k<count($r);$k++) {
+	$link="https://www.ashemaletube.com".$r[$k]['link'];
+    $title=$r[$k]['name'];
   	$title=prep_tit($title);
     $link=$target."?page=1&tip=release&link=".urlencode(fix_t($link))."&title=".urlencode(fix_t($title));
     if ($title) {

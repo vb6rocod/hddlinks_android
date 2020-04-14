@@ -185,6 +185,7 @@ $ua = $_SERVER['HTTP_USER_AGENT'];
   curl_setopt($ch, CURLOPT_TIMEOUT, 15);
   $html = curl_exec($ch);
   curl_close($ch);
+  //echo $html;
   $videos = explode('div class="item', $html);
   unset($videos[0]);
   $videos = array_values($videos);
@@ -206,7 +207,7 @@ $ua = $_SERVER['HTTP_USER_AGENT'];
 $c=count($r);
 for ($k=0;$k<$c;$k++) {
   $title=$r[$k][0];
-  $title=prep_tit($title);
+  //$title=prep_tit($title);
   $link="https://www.rovideo.net/embed/".$r[$k][1];
   $image=$r[$k][2];
   $durata=$r[$k][3];

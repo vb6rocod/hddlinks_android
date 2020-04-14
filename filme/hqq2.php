@@ -11,14 +11,19 @@ $l=str_replace("&amp;","&",$l);
 $l=str_replace("https","http",$l);
 $l=str_replace("gt;","gt",$l);
 //file_put_contents($base_cookie."cc.txt",$l);
-//$l=str_replace("hqq.watch","hqq.tv",$l);
+//$l=str_replace("pajalusta.club","hqq.watch",$l);
+//$token=$_GET['g-recaptcha-response'];
+//https://hqq.tv/sec/player/embed_player.php?vid=1&need_captcha=1&gtoken=03&http_referer=http%253A%252F%252F127.0.0.1%252Fmobile1%252Fscripts%252Ffilme%252Fhqq_captcha.php&g-recaptcha-response=03AHaCkAYgvYe6hUOsKVwIRqvJyz6EiRiFEl8p8lyyljuHRyn033B27PGHl2A--5qP6vguRSBALC6pwprsQZ2NzLTp3BzD1WxQRX4XOI70PAE4bn1GoDOmknlpnTsLQVHLUUGk7c_Tw-_KEqjvDOx2YSbMFLQTTQ75dvl-iJOPWI5vnru3H19FSXWu0N4sNd8XbFu2fAbMcvLOQ7lnS1MPzH1ry-zx2Cz9f624sZ6B3c6Hur8Di247e_GL7kGFWUZON4E4O-57yTyy1Olst_isNDXUcIwy55WRhUn2clyx3bA75iHIqeREDP1-H-PvotsZRReRJ0xgum8XMzMnxqOqL0AdOr7BtD40X1jgCA3ialKQwjmS7YMzjkYoHm4K7TPcGZ-o2YomXx5ogwLj5Lw4frQVf_A7WY-JJ4EVTtk2RVUPxUJbBh_hBLQYCk_SWhHjN4wZtAWo3MOV#iss=NzguOTYuODIuNDA=
+//$l="http://hqq.watch/sec/player/embed_player.php?vid=1&g-recaptcha-response=".$token;
+//$l="https://hqq.tv/sec/player/embed_player.php?vid=1&need_captcha=1&gtoken=03&http_referer=&g-recaptcha-response=03AHaCkAaB6Fg3NJuSjYS9CYChQ0U5EcInp9-eJvTm_URaU7u88nIJK-82pjgXB9SRnmEouGZwKiVSH3T8uZ3Yk0zVAktiu_6dkMFkCsAusW5yLimtmTWbuZN69KPrj0bAAqYiOI2dhHuq9hIRvUu08PYq_-q8E9kDJEYteSNvA9mXl0K11oyVmlNjHB5geMbZsDGrIJzt2PuNhoL7wj66jQqbmg6Z4SqpiIp9Zn3s3W4utM4h0yqi_t5IDYNzC-LWCQqpeftKaRGhnp85crgK7UlHRJ5eiYMTRtjLODfphwasn0fZ2QQPneeTlaRK0aDXmIWfe0_mWkYfyu8Xgoh8pTxcmenhtRszz8bbx_A_fzitUTvVyRTySFQ5zgd3NLQAeDXnM9dfN0xmamLA6VypPD3E-zspTHFeY2-uBf3kwCxywqFXagNfyYZGaFYWRAvTegHhJKa_7A3M#iss=NzguOTYuODIuNDA=";
+//$l="http://hqq.watch/sec/player/embed_player.php?vid=1&need_captcha=1&gtoken=03&http_referer=http%253A%252F%252F127.0.0.1%252Fmobile1%252Fscripts%252Ffilme%252Fhqq_captcha.php&g-recaptcha-response=03AHaCkAax8gmzwliGIOdylx9V95hmKhfxlvTGsU-Aw_Bo-F5xifdu3NQ5rZk9doXDtAy7ZjGcZwcdhWupSruJF02Oa1Tpv-4LCunw-mFa5aURTKdt3Crq8_8T78XjRCHFG8hndHvavsW3eq-KF4f73EapePx4DyvPCWaWvYw9Fc3E2PO4fU5xLkXBQZIfZV-EJB0G5Ldii_t8H-4fI_FeA0o-gXhIZisbEz1qrxQrL3r_fzd4AUujAH_Fx80evy0e_GVI2oAAt6vP3mtAaM_Na3kYq829jyLgTx8Gz_0shKJSeAwk7MN6kg9vmRBbLCRm1_QtnrSIoZ5rtPZoANI4X8L_f58dO2Q666RJMdcd8v82dfA_lqPbX1DmuUdahiJciXQe7RMYGGHsuL14UO6qc3qG-jDjDiYfPtINtLHTzXFlxVbMbG-jl0M76TfQU8dC5hWZax8OOcSG";
       $ch = curl_init();
       curl_setopt($ch, CURLOPT_URL, $l);
       curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
       curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
       curl_setopt($ch, CURLOPT_USERAGENT, $ua);
       //curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-      curl_setopt($ch, CURLOPT_REFERER, "http://hqq.watch/player/embed_player.php?vid=aGtEK1o2bDc0UytacHJiai9HSUV1Zz09");
+      curl_setopt($ch, CURLOPT_REFERER, "https://hqq.watch/player/embed_player.php?vid=aGtEK1o2bDc0UytacHJiai9HSUV1Zz09");
       curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
       curl_setopt($ch, CURLOPT_TIMEOUT, 15);
       curl_setopt($ch, CURLOPT_HEADER,1);
@@ -30,13 +35,14 @@ $l=str_replace("gt;","gt",$l);
 
 $h=urldecode($h);
 //echo $h;
-if (!preg_match("/gt=/",$h))
+if (!preg_match("/gt\=([a-zA-Z0-9]+)/",$h,$m))
   echo "Video not found! or bad script";
 else {
 //file_put_contents("result.txt",urldecode($h));
   $t1=explode("expires",$h);
   $t2=explode("path",$t1[1]);
-  echo "expires".$t2[0];
+  $gt=$m[1];
+  echo "expires".$t2[0]."<BR>"."gt=".$m[1];
   $t1=explode("=",$t2[0]);
   $t2=explode(";",$t1[1]);
   $t3=explode(";",$t1[2]);
@@ -45,7 +51,7 @@ else {
   file_put_contents($base_cookie."max_time_hqq.txt",$time2);
   $y=file_get_contents($cookie);
   $y=str_replace("hqq.watch","hqq.tv",$y);
-  file_put_contents($cookie,$y);
+  file_put_contents($cookie,$gt);
 }
 //echo $h;
 ?>
