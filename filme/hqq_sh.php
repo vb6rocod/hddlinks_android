@@ -1,9 +1,23 @@
 <?php
+include ("../common.php");
+if (file_exists($base_cookie."max_time_hqq.txt")) {
+$time_now=time();
+$time_exp=file_get_contents($base_cookie."max_time_hqq.txt");
+   if ($time_exp > $time_now) {
+     $minutes = intval(($time_exp-$time_now)/60);
+     $seconds= ($time_exp-$time_now) - $minutes*60;
+     if ($seconds < 10) $seconds = "0".$seconds;
+     $msg_captcha=" | Expira in ".$minutes.":".$seconds." min.";
+   } else
+     $msg_captcha="";
+} else {
+   $msg_captcha="";
+}
 $vid=$_GET['vid'];
 $l="https://hqq.tv/e/".$vid;
-
+$l="https://hqq.tv/player/embed_player.php?vid=".$vid."&autoplay=no";
 $ua     =   $_SERVER['HTTP_USER_AGENT'];
-//$ua="Mozilla/5.0 (Windows NT 10.0; rv:75.0) Gecko/20100101 Firefox/75.0";
+$ua="Mozilla/5.0 (Windows NT 10.0; rv:75.0) Gecko/20100101 Firefox/75.0";
 $ch = curl_init();
 curl_setopt($ch, CURLOPT_URL, $l);
 curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
@@ -42,6 +56,7 @@ var the_data = "";
 var php_file="sh.php?link=" + shh;
 request.open("GET", php_file, true);
 request.send(the_data);
+window.parent.document.getElementById("hqq_msg").innerHTML = "'.$msg_captcha.'";
 parent.$.fancybox.close();
 </script>
 ';

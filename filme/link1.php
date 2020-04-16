@@ -4921,8 +4921,8 @@ $ua="Mozilla/5.0 (Windows NT 10.0; rv:75.0) Gecko/20100101 Firefox/75.0";
   }
   //$vid="19hfRmn5ZcxP";
 
-$l="http://hqq.tv/player/embed_player.php?vid=".$vid."&autoplay=no";
-$l="http://hqq.watch/e/".$vid;
+$l="https://hqq.tv/player/embed_player.php?vid=".$vid."&autoplay=no";
+//$l="http://hqq.watch/e/".$vid;
 $cookie=$base_cookie."hqq.txt";
 
 
@@ -4940,21 +4940,6 @@ $h = curl_exec($ch);
 curl_close($ch);
 $h=urldecode($h);
 
-/*
-$iss=base64_encode($_SERVER['REMOTE_ADDR']);
-$vid="";
-$vid=str_between($h,"videokeyorig='","'");
-$at="";
-$http_referer="";
-if (preg_match_all("/eval\(function\(w\,i\,s\,e\)(.*?)\<\/script/ms",$h,$r)) {
-  //$h .=decode_wise($r[1][0]);
-  //$h .=decode_wise($r[1][1]);
-  $vid=str_between($h,"videokeyorig='","'");
-  $at=str_between($h,"attoken='","'");
-  $http_referer=str_between($h,"server_referer='","'");
-}
-*/
-//echo $h;
 $y="";
 
 if (preg_match("/get_md5/",$h)){
@@ -4969,9 +4954,30 @@ if (file_exists($base_cookie."sh.dat"))
  $sh=file_get_contents($base_cookie."sh.dat");
 else
  $sh="69c3c1a92a671f959e23bec790b0a20417fe0359";
- //$sh="85d69c03865afd162a7fc26f93cf1b6d20c0cccc";
 $gt="";
 $token="";
+if (file_exists("/storage/emulated/0/Download/cookies.txt")) {
+$h1=file_get_contents("/storage/emulated/0/Download/cookies.txt");
+if (preg_match("/hqq\.tv	FALSE	\/	FALSE	(\d+)	gt	([a-zA-Z0-9]+)/",$h1,$m)) {
+  $t= $m[1]-time();
+  if ($t>0) {
+    file_put_contents($base_cookie."max_time_hqq.txt",$m[1]);
+    file_put_contents($base_cookie."hqq.txt",$m[2]);
+  }
+}
+unlink ("/storage/emulated/0/Download/cookies.txt");
+}
+if (file_exists($base_cookie."cookies.txt")) {
+$h1=file_get_contents($base_cookie."cookies.txt");
+if (preg_match("/hqq\.tv	FALSE	\/	FALSE	(\d+)	gt	([a-zA-Z0-9]+)/",$h1,$m)) {
+  $t= $m[1]-time();
+  if ($t>0) {
+    file_put_contents($base_cookie."max_time_hqq.txt",$m[1]);
+    file_put_contents($base_cookie."hqq.txt",$m[2]);
+  }
+}
+unlink ($base_cookie."cookies.txt");
+}
 if (file_exists($base_cookie."max_time_hqq.txt")) {
 $time_now=time();
 $time_exp=file_get_contents($base_cookie."max_time_hqq.txt");
@@ -5002,11 +5008,11 @@ $p=array(
   'embed_from' => '0',
   'wasmcheck' => '1'
 );
-$l="http://hqq.watch/player/get_md5.php?".http_build_query($p)."&debug=1";
+$l="https://hqq.tv/player/get_md5.php?".http_build_query($p)."&debug=1";
 $head=array('Accept: */*',
 'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
 'Accept-Encoding: deflate',
-'Referer: https://palajusta.club',
+'Referer: https://hqq.tv',
 'X-Requested-With: XMLHttpRequest',
 'Connection: keep-alive',
 );
@@ -5022,7 +5028,6 @@ curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
 curl_setopt($ch, CURLOPT_HTTPHEADER,$head);
 $h = curl_exec($ch);
 curl_close($ch);
-file_put_contents("link2.txt",$l.$h.$msg_captcha);
    // echo $h;
     $file=str_between($h,'obf_link":"','"');
     $y=decodeUN($file);

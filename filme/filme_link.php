@@ -12,6 +12,29 @@ $link_f =  array();
 $type = "mp4";
 $pg="";
 // hqq
+if (file_exists("/storage/emulated/0/Download/cookies.txt")) {
+$h1=file_get_contents("/storage/emulated/0/Download/cookies.txt");
+if (preg_match("/hqq\.tv	FALSE	\/	FALSE	(\d+)	gt	([a-zA-Z0-9]+)/",$h1,$m)) {
+  $t= $m[1]-time();
+  if ($t>0) {
+    file_put_contents($base_cookie."max_time_hqq.txt",$m[1]);
+    file_put_contents($base_cookie."hqq.txt",$m[2]);
+  }
+}
+unlink ("/storage/emulated/0/Download/cookies.txt");
+}
+//
+if (file_exists($base_cookie."cookies.txt")) {
+$h1=file_get_contents($base_cookie."cookies.txt");
+if (preg_match("/hqq\.tv	FALSE	\/	FALSE	(\d+)	gt	([a-zA-Z0-9]+)/",$h1,$m)) {
+  $t= $m[1]-time();
+  if ($t>0) {
+    file_put_contents($base_cookie."max_time_hqq.txt",$m[1]);
+    file_put_contents($base_cookie."hqq.txt",$m[2]);
+  }
+}
+unlink ($base_cookie."cookies.txt");
+}
 if (file_exists($base_cookie."max_time_hqq.txt")) {
 $time_now=time();
 $time_exp=file_get_contents($base_cookie."max_time_hqq.txt");
@@ -1563,8 +1586,9 @@ $pattern = "@(?:\/\/|\.)((?:waaw1?|netu|hqq|hindipix)\.(?:tv|watch|in))\/(?:watc
     echo '<TR><td class="link"><a href="link1.php?file='.urlencode($link_f[$k]).','.urlencode($pg).'" target="_blank">'.$server.'</a>
     <a id="fancy" data-fancybox data-type="iframe" href="hqq_sh.php?vid='.$vid.'">| get sh!</a>
     <a href="hqq_captcha.php" target="_blank"><font color="lightblue"> | Captcha</font></a>
+    <a href="http://hqq.tv/sec/player/embed_player.php?gtoken=03&vid=1" target="_blank"><font color="lightblue"> | Captcha (cookie.txt add-onn)</font></a>
     ';
-if ($cap == 1)  echo $msg_captcha;
+if ($cap == 1)  echo '<label id="hqq_msg">'.$msg_captcha."</label>";
     echo '</TD></TR>';
    } elseif (strpos($link_f[$k],"thevideo.") !== false || strpos($link_f[$k],"vev.") !== false)
     echo '<TR><td class="link"><a href="link1.php?file='.urlencode($link_f[$k]).','.urlencode($pg).'" target="_blank">'.$server.'</a> <a href="https://vev.io/pair" target="_blank"><font color="lightblue"> | Pair IP (4 ore)</font></a></TD></TR>';
@@ -1578,8 +1602,9 @@ if ($cap == 1)  echo $msg_captcha;
    <a id="fancy" data-fancybox data-type="iframe" href="hqq_sh.php?vid='.$vid.'">| get sh!</a>
    <a href="hqq_captcha.php" target="_blank"><font color="lightblue"> | Captcha</font></a>
    <a href="intent:http://127.0.0.1:8080/scripts/filme/hqq_captcha.php#Intent;package=org.mozilla.firefox;S.title=Captcha;end" target="_blank"><font color="lightblue"> | Captcha (firefox)</font></a>
+   <a href="intent:http://hqq.tv/sec/player/embed_player.php?gtoken=03&vid=1#Intent;package=org.mozilla.firefox;S.title=Captcha;end" target="_blank"><font color="lightblue"> | Captcha (firefox-ext cookie.txt)</font></a>
    ';
-if ($cap == 1)  echo $msg_captcha;
+if ($cap == 1)  echo '<label id="hqq_msg">'.$msg_captcha."</label>";
     echo '</TD></TR>';
    } elseif (strpos($link_f[$k],"thevideo.") !== false || strpos($link_f[$k],"vev.") !== false)
    echo '<TR><td class="link"><a onclick="ajaxrequest('."'".urlencode($pg)."', '".urlencode($link_f[$k])."')".'"'." style='cursor:pointer;'>".''.$server.'</a> <a href="https://vev.io/pair" target="_blank"><font color="lightblue"> | Pair IP (4 ore)</font></a></TD></TR>';
@@ -1612,7 +1637,8 @@ echo '<br>
 <table border="0px" width="100%">
 <TR>
 <TD><font size="4"><b>Scurtaturi: 1=opensubtitles, 2=titrari, 3=subs, 4=subtitrari
-<BR>Scurtaturi: 7=opensubtitles, 8=titrari, 9=subs, 0=subtitrari (cauta imdb id)
+<BR>Scurtaturi: 7=opensubtitles, 8=titrari, 9=subs, 0=subtitrari (cauta imdb id)<BR>
+Instructiuni pentru "Captcha" gasiti <a href="hqq_exp.html">aici.</a>
 </b></font></TD></TR></TABLE>
 ';
 echo '

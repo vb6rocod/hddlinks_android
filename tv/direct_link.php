@@ -100,13 +100,20 @@ if ($from=="tvhd") {
   $t2=explode('"',$t1[1]);
   $link=$t2[0];
   if (strpos($link,"http") === false) $link="http:".$link;
+$ad1="";
+if (file_exists($cookie)) {
+  $h=file_get_contents($cookie);
+  if (preg_match("/PHPSESSID\s+([a-zA-Z0-9]+)/",$h,$m)) {
+   $ad1="&Cookie=".urlencode("PHPSESSID=".$m[1]);
+}
+}
 $ad="User-Agent=".urlencode("Mozilla/5.0(Linux;Android 10.1.2) MXPlayer");
 //$ad .="&Accept=".urlencode("*/*")."&Accept-Language=".urlencode("ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2");
 //$ad .="&Accept-Encoding=".urlencode("gzip, deflate, br");
 $ad .="&X-CustomHeader=videojs";
 $ad ."&Origin=".urlencode("http://tvhd-online.com");
 //$ad .="&Connection=".urlencode("keep-alive");
-$ad .="&Referer=".urlencode("http://tvhd-online.com");
+$ad .="Referer=".urlencode("http://tvhd-online.com").$ad1;
 //   if ($link && $flash != "flash")
 //     $link=$link."|".$ad;
 /*
@@ -121,9 +128,10 @@ $ad .="&Referer=".urlencode("http://tvhd-online.com");
    if ($link && $flash != "flash")
      $link=$link."|".$ad;
 */
-   if ($link && $flash != "flash")
+   if ($link && $flash != "flash") {
     $link="http://127.0.0.1:8080/scripts/tv/redirect.php?file=".$link;
-   else
+    //$link=$link."|".$ad;
+   } else
     $link="redirect.php?file=".$link;
 }
 if ($from=="digilive") {
@@ -1063,6 +1071,8 @@ if (count($pl) > 1) {
 }
 }
 }
+if (strpos($out,"cmn.digitalcable.ro") !== false && $out)
+ $out=$out."|User-Agent=".urlencode("Mozilla/5.0 (Windows NT 10.0; rv:75.0) Gecko/20100101 Firefox/75.0")."&Origin=".urlencode("https://www.akta.ro")."&Referer=".urlencode("https://www.akta.ro");
 $c="intent:".$out."#Intent;type=video/mp4;package=com.mxtech.videoplayer.".$mx.";S.title=".urlencode($title).";end";
 //$c="intent:".$out."#Intent;package=com.mxtech.videoplayer.".$mx.";action=android.intent.action.view();S.title=".urlencode($title).";end";
 if (strpos($out,"ONETV") !== false)

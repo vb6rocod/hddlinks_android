@@ -112,6 +112,7 @@ if(preg_match('/youtube\.com\/(v\/|watch\?v=|embed\/)([\w\-]+)/', $file, $match)
   $s=$output["s"];
   $tip=$output["sp"];
   $l = "https://s.ytimg.com".$parts['assets']['js'];
+  $l = "https://www.youtube.com".$parts['assets']['js'];
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $l);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
@@ -122,8 +123,10 @@ if(preg_match('/youtube\.com\/(v\/|watch\?v=|embed\/)([\w\-]+)/', $file, $match)
   curl_setopt($ch, CURLOPT_TIMEOUT, 15);
   $h = curl_exec($ch);
   curl_close($ch);
+  //echo $h;
   preg_match("/a\=a\.split\(\"\"\);(.*?)return a\.join\(\"\"\)/",$h,$m);
   $code=$m[1];
+  //echo $code;
   $pat="/(\w+\.(\w+))\((\w+)\,(\w+)\);/";
   preg_match_all($pat,$code,$m);
   $pat1=implode("|", $m[2]);
