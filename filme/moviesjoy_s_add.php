@@ -2,18 +2,12 @@
 //error_reporting(0);
 //62
 include ("../common.php");
-function str_between($string, $start, $end){
-	$string = " ".$string; $ini = strpos($string,$start);
-	if ($ini == 0) return ""; $ini += strlen($start); $len = strpos($string,$end,$ini) - $ini;
-	return substr($string,$ini,$len);
-}
 //$fav_link="mod=add&title=".urlencode(fix_t($title11))."&link=".$link1."&image=".$image;
 $mod=$_POST["mod"];
 $link=$_POST["link"];
 $title=$_POST["title"];
 $image=urldecode($_POST["image"]);
-
-$file=$base_fav."serialeonline_biz.dat";
+$file=$base_fav."moviesjoy_s1.dat";
 $arr=array();
 $h="";
 if (file_exists($file)) {

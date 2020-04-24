@@ -1,6 +1,7 @@
 <!doctype html>
 <?php
 include ("../common.php");
+include ("../cloudflare.php");
 //error_reporting(0);
 $list = glob($base_sub."*.srt");
    foreach ($list as $l) {
@@ -134,6 +135,9 @@ function off() {
 echo '<h2>'.$tit.$tit2.'</H2>';
 echo '<BR>';
 $ua = $_SERVER['HTTP_USER_AGENT'];
+$cookie=$base_cookie."hdpopcorns.dat";
+//$h=cf_pass($link,$cookie);
+//echo $h;
 $head=array('Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
 'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2');
 

@@ -173,6 +173,8 @@ $cookie=$base_cookie."hdpopcorns.dat";
 $ua = $_SERVER['HTTP_USER_AGENT'];
 $requestLink="https://".$host."/movies/page/".$page."/";
 $html=cf_pass($requestLink,$cookie);
+if ($page==1) $html=cf_pass($requestLink,$cookie);
+//echo $html;
  $videos = explode('div class="ml-item', $html);
  unset($videos[0]);
  $videos = array_values($videos);

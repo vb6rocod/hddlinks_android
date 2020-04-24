@@ -154,13 +154,16 @@ if (strpos($filelink,"filmeonlinegratis.org") !== false) {
   curl_setopt($ch, CURLOPT_NOBODY,0);
   curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
   curl_setopt($ch, CURLOPT_TIMEOUT, 15);
-  $h = curl_exec($ch);
+  $h = htmlspecialchars_decode(curl_exec($ch));
   curl_close($ch);
-  $html=$h;
+  //$html=$h;
   //echo $h;
-  preg_match_all("/trembed(\S+)\"/msi",$h,$m);
-  for ($k=0;$k<count($m[1]);$k++) {
-    $l="https://fsgratis.com/?trembed".prep_tit($m[1][$k]);
+  //preg_match_all("/trembed(\S+)\"/msi",$h,$m);
+  $r=array();
+  if (preg_match_all("/playerembed(\S+)\"/",$h,$m))
+   $r=array_unique($m[1]);
+  foreach($r as $key=>$value) {
+    $l="https://fsgratis.com/playerembed".$value;
     //echo $l;
     $ch = curl_init();
     curl_setopt($ch, CURLOPT_URL, $l);
@@ -1122,7 +1125,7 @@ $s=$s."database\.serialeonline\.to|drive\.google\.com|videomega\.|vidload\.co|mi
 $s=$s."|hxload\.|bazavox\.com|cloud\.vidhubstr\.org|vidia\.tv|gomostream\.com|viduplayer\.com|leaked-celebrities\.";
 $s=$s."|prostream\.to|videobin\.co|upstream\.to|playtvid\.com|jetload\.net|vidfast\.co|clipwatching\.";
 $s=$s."|(video|player)\.filmeserialeonline\.org|streamwire\.|cloudvid\.icu|mstream\.xyz|streamhoe\.online|videyo\.";
-$s=$s."|fastvid\.co|vidload\.net|rovideo\.net\/embed|eplayvid\.com|dood\.watch/i";
+$s=$s."|fastvid\.co|vidload\.net|rovideo\.net\/embed|eplayvid\.com|dood\.watch|mediashore\.org|uptostream\.com/i";
 /////////////////////////////////////////////
 //$x=preg_grep($s,$links);
 //print_r ($x);
@@ -1550,7 +1553,8 @@ $server="";
 $server = parse_url($link_f[$k])["host"];
 if (preg_match("/hqq\.|waaw1?|netu|pajalusta|hindipix\./",$link_f[$k])) {
     $link_f[$k]=str_replace($server,"hqq.tv",$link_f[$k]);
-    $l1=str_replace("/e/","/watch_video.php?v=",$link_f[$k]);
+    $l1=str_replace("/f/","/e/",$link_f[$k]);
+    $l1=str_replace("/e/","/watch_video.php?v=",$l1);
 $pattern = "@(?:\/\/|\.)((?:waaw1?|netu|hqq|hindipix)\.(?:tv|watch|in))\/(?:watch_video\.php\?v|.+?vid)=([a-zA-Z0-9]+)@";
 //echo $link_f[$k];
   if (preg_match($pattern,$l1,$m))

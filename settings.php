@@ -20,6 +20,7 @@ if ($tip) {
 $user=$_GET["user"];
 $user=str_replace("%40","@",$user);
 $pass=$_GET["pass"];
+if (isset($_GET['ua'])) $ua=$_GET['ua'];
 if ($tip=="cineplex") {
  $txt=$user."|".$pass;
  $new_file = $base_pass."cineplex.txt";
@@ -113,6 +114,12 @@ if ($tip=="cineplex") {
 } elseif ($tip=="tvpemobil") {
  $txt=$user."|".$pass;
  $new_file = $base_pass."tvpemobil.txt";
+ $fh = fopen($new_file, 'w');
+ fwrite($fh, $txt);
+ fclose($fh);
+} elseif ($tip=="opensubtitles") {
+ $txt=$user."|".$pass."|".$ua;
+ $new_file = $base_pass."opensubtitles.txt";
  $fh = fopen($new_file, 'w');
  fwrite($fh, $txt);
  fclose($fh);
@@ -485,6 +492,30 @@ echo '
 <form action="settings.php">
 cod:<input type="text" name="user" value="'.$user.'" size="40"></BR>
 <input type="hidden" name="tip" value="youtube">
+<input type="submit" value="Memoreaza">
+</form>
+<hr>
+';
+$f=$base_pass."opensubtitles.txt";
+if (file_exists($f)) {
+$h=file_get_contents($f);
+$t1=explode("|",$h);
+$user=$t1[0];
+if (sizeof ($t1) > 1 )
+	$pass=$t1[1];
+$ua=$t1[2];
+} else {
+$user="";
+$pass="";
+$ua="";
+}
+echo '
+<h4>Setari opensubtitles (see https://www.opensubtitles.org)</h4>
+<form action="settings.php">
+User:<input type="text" name="user" value="'.$user.'"></BR>
+Pass:<input type="password" name="pass" value="'.$pass.'"></BR>
+UserAgent:<input type="text" name="ua" value="'.$ua.'"></BR>
+<input type="hidden" name="tip" value="opensubtitles">
 <input type="submit" value="Memoreaza">
 </form>
 <hr>

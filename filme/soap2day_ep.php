@@ -2,6 +2,7 @@
 <?php
 error_reporting(0);
 include ("../common.php");
+include ("../cloudflare.php");
 $tit=unfix_t(urldecode($_GET["title"]));
 $image=$_GET["image"];
 $link=urldecode($_GET["link"]);
@@ -37,6 +38,7 @@ $head=array('Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q
 'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2');
 $requestLink=$link;
 $host=parse_url($requestLink)['host'];
+/*
   $ch = curl_init($requestLink);
   curl_setopt($ch, CURLOPT_USERAGENT, $ua);
   curl_setopt($ch,CURLOPT_REFERER,"https://".$host);
@@ -49,7 +51,8 @@ $host=parse_url($requestLink)['host'];
   curl_setopt($ch, CURLOPT_TIMEOUT, 15);
   $h = curl_exec($ch);
   curl_close ($ch);
-
+  */
+$h=cf_pass($link,$cookie);
 
 $n=0;
 $videos = explode("h4>Season", $h);

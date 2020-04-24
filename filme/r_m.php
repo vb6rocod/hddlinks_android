@@ -8,6 +8,7 @@ elseif (strpos($file,"cinebloom") !== false)
  $cookie=$base_cookie."cinebloom.txt";
 else
  $cookie=$base_cookie."hdpopcorns.dat";
+if (strpos($file,"soap2day")=== false) {
 $ch = curl_init();
 curl_setopt($ch, CURLOPT_URL, $file);
 curl_setopt($ch, CURLOPT_REFERER,$file);
@@ -24,4 +25,9 @@ $res = curl_exec($ch);
 $rescode = curl_getinfo($ch, CURLINFO_HTTP_CODE); 
 curl_close($ch) ;
 echo $res;
+} else {
+include ("../cloudflare.php");
+$cookie=$base_cookie."hdpopcorns2.dat";
+echo cf_pass($file,$cookie);
+}
 ?>

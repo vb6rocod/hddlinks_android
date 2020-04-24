@@ -182,7 +182,9 @@ $cookie=$base_cookie."hdpopcorns.dat";
 if ($page==1 && $tip=="release") {
  $l1="https://lookmovie.ag";
  $h=cf_pass($l1,$cookie);
+ //$h=cf_pass($l1,$cookie);
 }
+//echo $h;
 $head=array('Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
 'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2');
 

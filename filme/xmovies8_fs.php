@@ -178,16 +178,17 @@ $l="https://".$host."/ajax/movie_load_info/".$link;
   curl_close ($ch);
   */
   $h=cf_pass($l,$cookie);
-$videos = explode('option value="', $h);
+  //echo $h;
+$videos = explode('option sv="', $h);
 unset($videos[0]);
 $videos = array_values($videos);
 foreach($videos as $video) {
  $t1=explode('"',$video);
- $l1=$last_good.$t1[0];
+ $s[]=$t1[0];
+ $t2=explode('value="',$video);
+ $t3=explode('"',$t2[1]);
+ $l1=$last_good.$t3[0];
  $r[]=$l1;
- $t2=explode(">",$video);
- $t3=explode("<",$t2[1]);
- $s[]=$t3[0];
 }
 } else {
   /*
@@ -206,16 +207,16 @@ foreach($videos as $video) {
   */
   //echo $h;
   $h=cf_pass($link,$cookie);
-$videos = explode('option value="', $h);
+$videos = explode('option sv="', $h);
 unset($videos[0]);
 $videos = array_values($videos);
 foreach($videos as $video) {
  $t1=explode('"',$video);
- $l1=$last_good.$t1[0];
+ $s[]=$t1[0];
+ $t2=explode('value="',$video);
+ $t3=explode('"',$t2[1]);
+ $l1=$last_good.$t3[0];
  $r[]=$l1;
- $t2=explode(">",$video);
- $t3=explode("<",$t2[1]);
- $s[]=$t3[0];
 }
 }
 /*

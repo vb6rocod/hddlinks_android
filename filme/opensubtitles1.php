@@ -149,6 +149,17 @@ if (!$imdbid) {
    $imdbid=str_replace("tt","",$match[1]);
 }
 //echo $sub_link ="from=".$from."&tip=".$tip."&sez=".$sez."&ep=".$ep."&imdb=".$imdbid."&title=".$title."&link=".$link;
+if (file_exists($base_pass."opensubtitles.txt")) {
+ $h=file_get_contents($base_pass."opensubtitles.txt");
+ $t1=explode("|",$h);
+ $user=$t1[0];
+ $pass=$t1[1];
+ $user_ag=$t1[2];
+} else {
+ $user="";
+ $pass="";
+ $user_ag="";
+}
 $f=$base_cookie."opensub.dat";
 $token="";
 if (file_exists($f)) unlink($f);
@@ -161,12 +172,12 @@ $request="<?xml version=\"1.0\" encoding=\"iso-8859-1\"?>
 <params>
  <param>
   <value>
-   <string></string>
+   <string>".$user."</string>
   </value>
  </param>
  <param>
   <value>
-   <string></string>
+   <string>".$pass."</string>
   </value>
  </param>
  <param>
@@ -176,7 +187,7 @@ $request="<?xml version=\"1.0\" encoding=\"iso-8859-1\"?>
  </param>
  <param>
   <value>
-   <string>hd4all</string>
+   <string>".$user_ag."</string>
   </value>
  </param>
 </params>

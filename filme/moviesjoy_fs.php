@@ -32,20 +32,21 @@ $link=urldecode($_GET["link"]);
 $tip=$_GET["tip"];
 $sez=$_GET["sez"];
 $ep=$_GET["ep"];
-$imdbid=$_GET['imdb'];
 $ep_title=unfix_t(urldecode($_GET["ep_tit"]));
 $ep_title=prep_tit($ep_title);
 $year=$_GET["year"];
 if ($tip=="movie") {
 $tit2="";
 } else {
+$t1=explode("- Season",$tit);
+$tit=trim($t1[0]);
 if ($ep_title)
    $tit2=" - ".$sez."x".$ep." ".$ep_title;
 else
    $tit2=" - ".$sez."x".$ep;
 $tip="series";
 }
-
+$imdbid="";
 
 function str_between($string, $start, $end){
 	$string = " ".$string; $ini = strpos($string,$start);
@@ -107,27 +108,16 @@ function changeserver(s,t) {
       document.getElementById("subtitrari").click();
      } else if (charCode == "53") {
       document.getElementById("viz").click();
+     } else if (charCode == "55") {
+      document.getElementById("opensub1").click();
+     } else if (charCode == "56") {
+      document.getElementById("titrari1").click();
+     } else if (charCode == "57") {
+      document.getElementById("subs1").click();
+     } else if (charCode == "48") {
+      document.getElementById("subtitrari1").click();
      }
    }
-function savesub(sub) {
-  on();
-  var request =  new XMLHttpRequest();
-  var the_data = "link=" + sub;
-  var php_file="savesub.php";
-  request.open("POST", php_file, true);			// set the request
-
-  // adds a header to tell the PHP script to recognize the data as is sent via POST
-  request.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-  request.send(the_data);		// calls the send() method with datas as parameter
-
-  // Check request status
-  // If the response is received completely, will be transferred to the HTML tag with tagID
-  request.onreadystatechange = function() {
-    if (request.readyState == 4) {
-      off();
-    }
-  }
-}
 document.onkeypress =  zx;
 </script>
 <script>
@@ -145,97 +135,122 @@ function off() {
 <?php
 echo '<h2>'.$tit.$tit2.'</H2>';
 echo '<BR>';
-function cryptoJsAesDecrypt($passphrase, $jsonString){
-    $jsondata = json_decode($jsonString, true);
-    try {
-        $salt = hex2bin($jsondata["s"]);
-        $iv  = hex2bin($jsondata["iv"]);
-    } catch(Exception $e) { return null; }
-    $ct = base64_decode($jsondata["ct"]);
-    $concatedPassphrase = $passphrase.$salt;
-    $md5 = array();
-    $md5[0] = md5($concatedPassphrase, true);
-    $result = $md5[0];
-    for ($i = 1; $i < 3; $i++) {
-        $md5[$i] = md5($md5[$i - 1].$concatedPassphrase, true);
-        $result .= $md5[$i];
-    }
-    $key = substr($result, 0, 32);
-    $data = openssl_decrypt($ct, 'aes-256-cbc', $key, true, $iv);
-    return json_decode($data, true);
-}
-
-//echo $link;
-$host=parse_url($link)['host'];
-  $ua = $_SERVER['HTTP_USER_AGENT'];
-  $ch = curl_init();
-  curl_setopt($ch, CURLOPT_URL, $link);
-  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
-  curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
+$ua = $_SERVER['HTTP_USER_AGENT'];
+//$host=parse_url($link)['host'];
+if ($tip=="movie") {
+  /*
+  $ch = curl_init($link);
+  curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows; U; Windows NT 6.1; en-US; rv:1.9.1.2) Gecko/20090729 Firefox/3.5.2 GTB5');
+  curl_setopt($ch,CURLOPT_REFERER,"https://www.moviesjoy.net");
+  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER  ,1);  // RETURN THE CONTENTS OF THE CALL
+  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
   curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
   curl_setopt($ch, CURLOPT_TIMEOUT, 15);
   $h = curl_exec($ch);
+  curl_close ($ch);
+  $t1=explode("movie = {",$h);
+  $t2=explode('id: "',$t1[1]);
+  $t3=explode('"',$t2[1]);
+  $id=$t3[0];
+
+  $t2=explode('movie_id: "',$t1[1]);
+  $t3=explode('"',$t2[1]);
+  $movie_id=$t3[0];
+  //https://www1.moviesjoy.net/ajax/movie/episodes/58758
+  $l="https://www1.moviesjoy.net/ajax/v4_movie_episodes/".$id."/".$movie_id;
+  */
+  $l="https://www1.moviesjoy.net/ajax/movie/episodes/".$link;
+  $ch = curl_init($l);
+  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+  curl_setopt($ch, CURLOPT_REFERER, $l);
+  curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 10.0; rv:55.0) Gecko/20100101 Firefox/55.0');
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER  ,1);  // RETURN THE CONTENTS OF THE CALL
+  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+  $h = curl_exec($ch);
   curl_close($ch);
-  require_once("JavaScriptUnpacker.php");
-  $jsu = new JavaScriptUnpacker();
-  $h = $jsu->Unpack($h);
-  $t1=explode("null,'",$h);
-  $t2=explode("'",$t1[1]);
-  $js=$t2[0];
-  $keywords = preg_split("/[a-zA-Z]{1,}/",$js);
-  $out="";
-  for ($k=0;$k<count($keywords);$k++) {
-   $out .=chr($keywords[$k]);
-  }
-  $t1=explode('pass = "',$out);
-  $t2=explode('"',$t1[1]);
-  $pass=$t2[0];
-  $t1=explode("'",$h);
-  $x=cryptoJsAesDecrypt($pass,$t1[1]);
-  $h1 = $jsu->Unpack($x);
-  //echo $h1;
+
+  //$x=json_decode($h,1);
+  //$h=$x['html'];
   $r=array();
-  $q=array();
-  $subs=array();
-  $lang=array();
-  /* GET LINKS */
-  preg_match_all("/file\":\"([\w\/\=\.\?\:\%\&\+\_\-]+)\"\,\"label\":\"(\w+)\"\,\"type\":\"(\w+)\"/msi",$h1,$m);
-  if (isset($m[1])) {
-   $r=$m[1];
-   $q=$m[2];
-   //echo 'LINKS:<BR>';
-   for ($k=0;$k<count($m[1]);$k++) {
-    //echo '<a href="'.$m[1][$k].'" target="_blank">'.$m[2][$k].' ('.$m[3][$k].')</a> == ';
-   }
+  $s=array();
+  $videos=explode('data-linkid="',$h);
+  unset($videos[0]);
+  $videos = array_values($videos);
+  foreach($videos as $video) {
+    $t1=explode('</i>',$video);
+    $t2=explode('<',$t1[1]);
+    $svr_name=trim($t2[0]);
+    $t3=explode('"',$video);
+    $l="https://www1.moviesjoy.net/movie/".$t3[0];
+    $r[]=$l;
+    $s[]=$svr_name;
   }
-  //print_r ($r);
-  /* GET SUBTITLES */
-  preg_match_all("/file\":\"([\w\/\=\.\?\:\%\&\+\_\-]+)\"\,\"kind\":\"(\w+)\"\,\"label\":\"(\w+)\"/msi",$h1,$s);
-  if (isset($s[1])) {
-  //if (!preg_match("/Indonesian/i",$s[3])) {
-   $subs=$s[1];
-   $lang=$s[3];
-   //}
-   //echo '<BR>Captions:<BR>';
-   for ($k=0;$k<count($s[1]);$k++) {
-    //echo '<a href="'.$s[1][$k].'" target="_blank">'.$s[3][$k].'</a> == ';
-   }
+} else {
+  $r=array();
+  $s=array();
+  $svr_name=array();
+  $l="https://www1.moviesjoy.net/ajax/season/episodes/".$link;
+  $ch = curl_init($l);
+  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+  curl_setopt($ch, CURLOPT_REFERER, $link);
+  curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 10.0; rv:55.0) Gecko/20100101 Firefox/55.0');
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER  ,1);  // RETURN THE CONTENTS OF THE CALL
+  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+  $h = curl_exec($ch);
+  curl_close($ch);
+  //echo $h;
+  $videos=explode('href="#',$h);
+  unset($videos[0]);
+  $videos = array_values($videos);
+  foreach($videos as $video) {
+    $t1=explode('"',$video);
+    $t2=explode('aria-selected',$video);
+    $t3=explode('>',$t2[1]);
+    $t4=explode('<',$t3[1]);
+    $svr_name[$t1[0]]=$t4[0];
   }
+  //print_r ($svr_name);
+  $videos=explode('div class="tab-pane',$h);
+  unset($videos[0]);
+  $videos = array_values($videos);
+  foreach($videos as $video) {
+    $t1=explode('id="',$video);
+    $t2=explode('"',$t1[1]);
+    $id_serv=$t2[0];
+    $vids=explode('data-linkid="',$video);
+    //$vids = explode('data-linkid="', $h);
+    unset($vids[0]);
+    $vids = array_values($vids);
+    foreach($vids as $vid) {
+      $t1=explode('"',$vid);
+      $id_link=$t1[0];
+      $t1=explode('strong>',$vid);
+      $t2=explode(':',$t1[1]);
+      preg_match("/\d+/",$t2[0],$p);
+      $episod=$p[0];
+      if ($episod == $ep) {
+        $l="https://www1.moviesjoy.net/movie/".$id_link;
+        $r[]=$l;
+        $s[]=$svr_name[$id_serv];
+      }
+    }
+  }
+}
 echo '<table border="1" width="100%">';
-echo '<TR><TD class="mp">Alegeti o varianta:<label id="server">'.$q[0].'</label>
-<input type="hidden" id="file" value="'.$r[0].'"></td></TR></TABLE>';
+echo '<TR><TD class="mp">Alegeti un server: Server curent:<label id="server">'.$s[0].'</label>
+<input type="hidden" id="file" value="'.urlencode($r[0]).'"></td></TR></TABLE>';
 echo '<table border="1" width="100%"><TR>';
 $k=count($r);
 $x=0;
 for ($i=0;$i<$k;$i++) {
   if ($x==0) echo '<TR>';
   $c_link=$r[$i];
-  $openload=$q[$i];
+  $openload=parse_url($r[$i])['host'];
   if (preg_match($indirect,$openload)) {
-  echo '<TD class="mp"><a href="filme_link.php?file='.urlencode($c_link).'&title='.urlencode(unfix_t($tit.$tit2)).'" target="_blank">'.$openload.'</a></td>';
+  echo '<TD class="mp"><a href="filme_link.php?file='.urlencode($c_link).'&title='.urlencode(unfix_t($tit.$tit2)).'" target="_blank">'.$s[$i].'</a></td>';
   } else
-  echo '<TD class="mp"><a id="myLink" href="#" onclick="changeserver('."'".$openload."','".urlencode($c_link)."'".');return false;">'.$openload.'</a></td>';
+  echo '<TD class="mp"><a id="myLink" href="#" onclick="changeserver('."'".$s[$i]."','".urlencode($c_link)."'".');return false;">'.$s[$i].'</a></td>';
   $x++;
   if ($x==6) {
     echo '</TR>';
@@ -254,16 +269,18 @@ if ($tip=="movie") {
   $tit2="";
   $sez="";
   $ep="";
+  $imdbid="";
   $from="";
   $link_page="";
 } else {
   $tit3=$tit;
   $sez=$sez;
   $ep=$ep;
+  $imdbid="";
   $from="";
   $link_page="";
 }
-$sub_link ="from=".$from."&tip=".$tip."&sez=".$sez."&ep=".$ep."&imdb=".str_replace("tt","",$imdbid)."&title=".urlencode(fix_t($tit3))."&link=".$link_page."&ep_tit=".urlencode(fix_t($tit2))."&year=".$year;
+$sub_link ="from=".$from."&tip=".$tip."&sez=".$sez."&ep=".$ep."&imdb=".$imdbid."&title=".urlencode(fix_t($tit3))."&link=".$link_page."&ep_tit=".urlencode(fix_t($tit2))."&year=".$year;
 echo '<br>';
 echo '<table border="1" width="100%">';
 echo '<TR><TD style="background-color:#0a6996;color:#64c8ff;font-weight: bold;font-size: 1.5em" align="center" colspan="4">Alegeti o subtitrare</td></TR>';
@@ -272,6 +289,14 @@ echo '<TD class="mp"><a id="opensub" href="opensubtitles.php?'.$sub_link.'">open
 echo '<TD class="mp"><a id="titrari" href="titrari_main.php?page=1&'.$sub_link.'&page=1">titrari.ro</a></td>';
 echo '<TD class="mp"><a id="subs" href="subs_main.php?'.$sub_link.'">subs.ro</a></td>';
 echo '<TD class="mp"><a id="subtitrari" href="subtitrari_main.php?'.$sub_link.'">subtitrari_noi.ro</a></td>';
+echo '</TR></TABLE>';
+echo '<table border="1" width="100%">';
+echo '<TR><TD style="background-color:#0a6996;color:#64c8ff;font-weight: bold;font-size: 1.5em" align="center" colspan="4">Alegeti o subtitrare (cauta imdb id)</td></TR>';
+echo '<TR>';
+echo '<TD class="mp"><a id="opensub1" href="opensubtitles1.php?'.$sub_link.'">opensubtitles</a></td>';
+echo '<TD class="mp"><a id="titrari1" href="titrari_main1.php?page=1&'.$sub_link.'&page=1">titrari.ro</a></td>';
+echo '<TD class="mp"><a id="subs1" href="subs_main1.php?'.$sub_link.'">subs.ro</a></td>';
+echo '<TD class="mp"><a id="subtitrari1" href="subtitrari_main1.php?'.$sub_link.'">subtitrari_noi.ro</a></td>';
 echo '</TR></TABLE>';
 echo '<table border="1" width="100%"><TR>';
 if ($tip=="movie")
@@ -284,19 +309,6 @@ else
    echo '<TD align="center" colspan="4"><a id="viz" onclick="'."openlink('".$openlink."')".'"'." style='cursor:pointer;'>".'VIZIONEAZA !</a></td>';
 echo '</tr>';
 echo '</table>';
-if (count($subs) > 0) echo '<H2>Subtitrari disponibile</H2>';
-echo '<table border="1" width="100%">';
-$x=0;
-for ($z=0;$z<count($subs);$z++) {
-if ($x==0) echo '<TR>';
-echo '<TD class="mp"><a onclick="'."savesub('".base64_encode($subs[$z])."')".'"'." style='cursor:pointer;'>".$lang[$z].'</a></td>';
-$x++;
-  if ($x==6) {
-    echo '</TR>';
-    $x=0;
-  }
-}
-echo '</TR></TABLE>';
 echo '<br>
 <table border="0px" width="100%">
 <TR>
@@ -304,11 +316,13 @@ echo '<br>
 <BR>Scurtaturi: 7=opensubtitles, 8=titrari, 9=subs, 0=subtitrari (cauta imdb id)
 </b></font></TD></TR></TABLE>
 ';
-//print_r ($subs);
 include("../debug.html");
 echo '
 <div id="overlay">
   <div id="text">Wait....</div>
 </div>
+';
+
+echo '
 </body>
 </html>';

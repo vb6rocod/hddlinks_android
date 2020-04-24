@@ -1,5 +1,27 @@
 <?php
 include ("../common.php");
+if (file_exists("/storage/emulated/0/Download/cookies.txt")) {
+$h1=file_get_contents("/storage/emulated/0/Download/cookies.txt");
+if (preg_match("/hqq\.tv	FALSE	\/	FALSE	(\d+)	gt	([a-zA-Z0-9]+)/",$h1,$m)) {
+  $t= $m[1]-time();
+  if ($t>0) {
+    file_put_contents($base_cookie."max_time_hqq.txt",$m[1]);
+    file_put_contents($base_cookie."hqq.txt",$m[2]);
+  }
+}
+unlink ("/storage/emulated/0/Download/cookies.txt");
+}
+if (file_exists($base_cookie."cookies.txt")) {
+$h1=file_get_contents($base_cookie."cookies.txt");
+if (preg_match("/hqq\.tv	FALSE	\/	FALSE	(\d+)	gt	([a-zA-Z0-9]+)/",$h1,$m)) {
+  $t= $m[1]-time();
+  if ($t>0) {
+    file_put_contents($base_cookie."max_time_hqq.txt",$m[1]);
+    file_put_contents($base_cookie."hqq.txt",$m[2]);
+  }
+}
+unlink ($base_cookie."cookies.txt");
+}
 if (file_exists($base_cookie."max_time_hqq.txt")) {
 $time_now=time();
 $time_exp=file_get_contents($base_cookie."max_time_hqq.txt");
