@@ -2,7 +2,7 @@
 <?php
 error_reporting(0);
 include ("../common.php");
-include ("../util.php");
+include ("../cloudflare.php");
 $tit=unfix_t(urldecode($_GET["title"]));
 $image=$_GET["image"];
 $link=urldecode($_GET["link"]);
@@ -12,7 +12,7 @@ $sez=$_GET['sez'];
 /* ======================================= */
 $width="200px";
 $height="100px";
-$fs_target="europix_fs.php";
+$fs_target="spacemov_fs.php";
 $has_img="no";
 ?>
 <html>
@@ -31,57 +31,59 @@ function str_between($string, $start, $end){
 	if ($ini == 0) return ""; $ini += strlen($start); $len = strpos($string,$end,$ini) - $ini;
 	return substr($string,$ini,$len);
 }
+if (preg_match("/(:|-)?\s+Season\s+(\d+)/i",$tit,$m)) {
+  $tit=trim(str_replace($m[0],"",$tit));
+}
 echo '<h2>'.$tit.'</h2>';
-$ua = $_SERVER['HTTP_USER_AGENT'];
-//$ua="Mozilla/5.0 (Windows NT 10.0; rv:71.0) Gecko/20100101 Firefox/71.0";
-$cookie=$base_cookie."hdpopcorns.dat";
 $host=parse_url($link)['host'];
+$cookie=$base_cookie."hdpopcorns.dat";
+$link=$link."watching/";
+$html=cf_pass($link,$cookie);
+//echo $html;
 
-///////////////////////////////////////////////////////////////////////////////////
-$l=$link;
-$ch = curl_init($l);
-curl_setopt($ch, CURLOPT_USERAGENT, $ua);
-curl_setopt($ch,CURLOPT_REFERER,"https://europixhd.net");
-curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie);
-curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
-curl_setopt($ch, CURLOPT_RETURNTRANSFER  ,1);  // RETURN THE CONTENTS OF THE CALL
-curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
-curl_setopt($ch, CURLOPT_TIMEOUT, 15);
-$h = curl_exec($ch);
-curl_close ($ch);
-$h=urldecode($h);
-//echo $h;
-//$t1=explode('OPLO -->',$h);
-//echo $t1[1];
-//$t2=explode('<!--',$t1[2]);
-//$h=$t2[0];
-//$h=str_between($h,'<!-- OPLO -->','<!--');
 $n=0;
+
 echo '<table border="1" width="100%">'."\n\r";
 echo '<TR><td class="sez" style="color:black;background-color:#0a6996;color:#64c8ff;text-align:center" colspan="3">Sezonul '.($sez).'</TD></TR>';
-preg_match_all("/change\((\d+)\)(\"|\') \>\s*Episode\s+\d+\s+\-?\s*(\"|\')?(.*?)(\"|\')?\</ms",$h,$m);
-//change(2)" >  Episode 02 <
-//print_r ($m);
-preg_match_all("/\<\!\-\-\s+.*change\((\d+)\)(\"|\') \>\s*Episode\s+\d+\s+\-?\s*(\"|\')?(.*?)(\"|\')?\</",$h,$p);
-//print_r ($p);
-$n=0;
-for($k=0;$k<count($m[0]);$k++) {
-  $t1 = explode('/i>', $video);
-  $t2 = explode('<', $t1[1]);
-  $title = trim($t2[0]);
-  $title=prep_tit($title);
-  $img_ep=$image;
-  $season=$sez;
-  $episod=$m[1][$k];
-  if (in_array($episod,$p[1])) $episod="";   // false episode...
-  $ep_tit=$m[4][$k];
+
+$t1=explode("- Season",$tit);
+$tit1=trim($t1[0]);
+$t1 = explode("- Miniseries",$tit1);
+$tit1=trim($t1[0]);
+$s=array();
+$videos = explode('data-svv', $html);
+unset($videos[0]);
+//$videos = array_values($videos);
+$videos = array_reverse($videos);
+foreach($videos as $video) {
+
+  $t1 = explode('"', $video);
+  $link = $t1[1];
+  //echo $link1;
+  $t3 = explode('>', $video);
+  $t4 = explode('<', $t3[1]);
+  $title = trim($t4[0]);
+  // Episode 20: Like Father...
+  if (preg_match("/Episode\s+(\d+)\:\s*(.+)/i",$title,$m)) {
+  //print_r ($m);
+  $episod=round($m[1]);
+  $ep_tit=$m[2];
+  }
+
+  $s[$episod]=$ep_tit;
+}
+//$s=array_unique($s);
+//print_r ($s);
+$season=$sez;
+$img_ep=$image;
+foreach ($s as $key=>$value) {
+  $episod=$key;
+  $ep_tit=$value;
   if ($ep_tit)
    $ep_tit_d=$season."x".$episod." ".$ep_tit;
   else
    $ep_tit_d=$season."x".$episod;
 
-  if ($episod) {
   $link_f=$fs_target.'?tip=series&link='.urlencode($link).'&title='.urlencode(fix_t($tit)).'&image='.$img_ep."&sez=".$season."&ep=".$episod."&ep_tit=".urlencode(fix_t($ep_tit))."&year=".$year;
    if ($n == 0) echo "<TR>"."\n\r";
    if ($has_img == "yes")
@@ -93,7 +95,6 @@ for($k=0;$k<count($m[0]);$k++) {
     echo '</TR>'."\n\r";
     $n=0;
    }
-  }
 }  
   if ($n < 3 && $n > 0) {
     for ($k=0;$k<3-$n;$k++) {
@@ -101,7 +102,6 @@ for($k=0;$k<count($m[0]);$k++) {
     }
     echo '</TR>'."\r\n";
   }
-
 echo '</table>';
 ?>
 </body>

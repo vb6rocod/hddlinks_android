@@ -8,6 +8,7 @@ function str_between($string, $start, $end){
 include ("../common.php");
 include ("../cloudflare.php");
 $last_good="https://w1.spacemov.cc";
+$last_good="https://hulu.to";
 $host=parse_url($last_good)['host'];
 $page = $_GET["page"];
 $tip= $_GET["tip"];
@@ -17,7 +18,7 @@ $width="200px";
 $height="278px";
 /* ==================================================== */
 $has_fav="yes";
-$has_search="no";
+$has_search="yes";
 $has_add="yes";
 $has_fs="yes";
 $fav_target="spacemov_fav.php?host=".$last_good;
@@ -171,9 +172,14 @@ echo '</TR>'."\r\n";
 
 $cookie=$base_cookie."hdpopcorns.dat";
 $ua = $_SERVER['HTTP_USER_AGENT'];
+if ($tip=="release")
 $requestLink="https://".$host."/movies/page/".$page."/";
+else {
+$search=str_replace(" ","+",$tit);
+$requestLink="https://".$host."/search-query/".$search."/page/".$page."/";
+}
 $html=cf_pass($requestLink,$cookie);
-if ($page==1) $html=cf_pass($requestLink,$cookie);
+//if ($page==1) $html=cf_pass($requestLink,$cookie);
 //echo $html;
  $videos = explode('div class="ml-item', $html);
  unset($videos[0]);
@@ -207,7 +213,7 @@ if ($page==1) $html=cf_pass($requestLink,$cookie);
   }
   $imdb="";
   $link_f=$fs_target.'?tip=movie&link='.urlencode($link).'&title='.urlencode(fix_t($title)).'&image='.$image."&sez=&ep=&ep_tit=&year=".$year;
-  if ($title && strpos($link,"/tvserie") === false) {
+  if ($title && strpos($link,"/tv/") === false) {
   if ($n==0) echo '<TR>'."\r\n";
   $val_imdb="tip=movie&title=".urlencode(fix_t($tit_imdb))."&year=".$year."&imdb=".$imdb;
   $fav_link="mod=add&title=".urlencode(fix_t($title))."&link=".urlencode($link)."&image=".urlencode($image)."&year=".$year;

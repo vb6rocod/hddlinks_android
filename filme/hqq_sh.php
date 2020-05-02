@@ -53,8 +53,9 @@ $h = curl_exec($ch);
 curl_close($ch);
 //echo $h;
 //$h=urldecode($h);
-if (strpos($h,"shh='';") !== false) {
-$t1=explode("shh='';",$h);
+if (preg_match("/get_md5\.php\?(\w+)\=\"\+(\w+)/",$h,$m)) {
+if (strpos($h,$m[2]."=''") !== false) {
+$t1=explode("var ddomain",$h);
 $t2=explode('<script',$t1[1]);
 
 $h="<script".trim($t2[1]);
@@ -70,7 +71,7 @@ $out = '<!DOCTYPE html>
 <body>
 ';
 $out .= '<script>
-var shh="";</script>'.$h.'';
+var '.$m[2].'="";</script>'.$h.'';
 $out .= '<script>
 //alert (shh);
 var request = new XMLHttpRequest();
@@ -85,6 +86,11 @@ parent.$.fancybox.close();
 $out .= '</body>
 </html>';
 echo $out;
+} else {
+echo '<script>
+parent.$.fancybox.close();
+</script>';
+}
 } else {
 echo '<script>
 parent.$.fancybox.close();

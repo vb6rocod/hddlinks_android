@@ -1,7 +1,7 @@
 <!doctype html>
 <?php
 include ("../common.php");
-include ("../cloudflare.php");
+include ("../cloudflare1.php");
 error_reporting(0);
 $list = glob($base_sub."*.srt");
    foreach ($list as $l) {

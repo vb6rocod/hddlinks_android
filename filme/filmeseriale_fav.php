@@ -1,13 +1,23 @@
 <!DOCTYPE html>
 <?php
 include ("../common.php");
+set_time_limit(300);
 $host=$_GET['host'];
+if (isset($_GET['fix']))
+ $fix="yes";
+else
+ $fix="no";
 $page_title="Seriale favorite";
 $width="200px";
 $height="278px";
 $add_target="filmeseriale_add.php";
 $fs_target="filmeseriale.php";
 $file=$base_fav."filmeseriale_new.dat";
+$fav_target_fix="filmeseriale_fav.php?host=".$host."&fix=yes";
+if (file_exists($base_pass."tmdb.txt"))
+  $api_key=file_get_contents($base_pass."tmdb.txt");
+else
+  $api_key="";
 ?>
 <html><head>
 <meta http-equiv="content-type" content="text/html; charset=UTF-8">
@@ -89,7 +99,7 @@ function str_between($string, $start, $end){
 }
 $w=0;
 $n=0;
-echo '<H2>'.$page_title.'</H2>';
+echo '<H2>'.$page_title.' <a href="'.$fav_target_fix.'">(fix image)</a></H2>';
 $arr=array();
 $h="";
 if (file_exists($file)) {
@@ -130,6 +140,41 @@ foreach($arr as $key => $value) {
     $title = unfix_t(urldecode($key));
     $image=urldecode($arr[$key]["image"]);
     //$image=$host.parse_url($image)['path'];
+    if (preg_match("/tmdb\.org/",$image) && $fix=="yes" && $api_key) {
+    $x=implode(",",get_headers($image));
+    if (preg_match("/404 Not Found/",$x)) {
+       $rest = substr($title, -6);
+       if (preg_match("/\(?((1|2)\d{3})\)?/",$rest,$m)) {
+       $year=$m[1];
+       $title1=trim(str_replace($m[0],"",$title));
+    } else {
+      $year="";
+      $title1=$title;
+    }
+      $l="https://api.themoviedb.org/3/search/tv?api_key=".$api_key."&query=".urlencode($title1);
+      //echo $l;
+      $ch = curl_init($l);
+      curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows; U; Windows NT 6.1; en-US; rv:1.9.1.2) Gecko/20090729 Firefox/3.5.2 GTB5');
+      curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+      curl_setopt($ch, CURLOPT_RETURNTRANSFER  ,1);  // RETURN THE CONTENTS OF THE CALL
+      curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+      curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+      curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+      $h_img = curl_exec($ch);
+      curl_close ($ch);
+      $result=json_decode($h_img,1);
+      //print_r ($result);
+      $r=$result['results'];
+      if (isset($r[0]['poster_path'])) {
+        $last = substr(strrchr($image, "/"), 1);
+        //$new_image="https://image.tmdb.org/t/p/w185".$r[0]['poster_path'];
+        $new_image=str_replace($last,$r[0]['poster_path'],$image);
+        $h=str_replace($image,$new_image,$h);
+        file_put_contents($file,$h);
+        $image=$new_image;
+      }
+    }
+    }
     $year="";
     $link=$host.parse_url($link)['path'];
     $link_f=$fs_target.'?tip=series&link='.urlencode($link).'&title='.urlencode(fix_t($title)).'&image='.$image."&sez=&ep=&ep_tit=&year=".$year;

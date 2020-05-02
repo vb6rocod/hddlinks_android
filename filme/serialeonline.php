@@ -19,6 +19,7 @@ $has_search="yes";
 $has_add="yes";
 $has_fs="yes";
 $fav_target="serialeonline_fav.php?host=https://serialeonline.to";
+$fav_target_fix="serialeonline_fav.php?host=https://serialeonline.to&fix=yes";
 $add_target="serialeonline_add.php";
 $add_file="";
 $fs_target="serialeonline_ep.php";
@@ -146,7 +147,8 @@ echo '<TR>'."\r\n";
 if ($page==1) {
    if ($tip == "release") {
    if ($has_fav=="yes" && $has_search=="yes") {
-     echo '<TD class="nav"><a id="fav" href="'.$fav_target.'" target="_blank">Favorite</a></TD>'."\r\n";
+     echo '<TD class="nav"><a id="fav" href="'.$fav_target.'" target="_blank">Favorite</a>
+     </TD>'."\r\n";
      echo '<TD class="form" colspan="2">'.$form.'</TD>'."\r\n";
      echo '<TD class="nav" align="right"><a href="'.$next.'">&nbsp;&gt;&gt;&nbsp;</a></TD>'."\r\n";
    } else if ($has_fav=="no" && $has_search=="yes") {

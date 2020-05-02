@@ -172,6 +172,7 @@ echo '<BR>';
 $ua = $_SERVER['HTTP_USER_AGENT'];
 $cookie=$base_cookie."hdpopcorns.dat";
 $host=parse_url($link)["host"];
+if ($tip=="movie") {
 $link=$link."watching/?ep=1";
 $link=str_replace("www0.spacemov.is","spacemov.cc",$link);
   $ch = curl_init($link);
@@ -198,6 +199,10 @@ foreach($videos as $video) {
   //echo $openload;
   if (strpos($openload,"http") !== false)
    $r[]=$openload;
+}
+} else {
+ $r=array();
+ $r[]=$link;
 }
 echo '<table border="1" width="100%">';
 echo '<TR><TD class="mp">Alegeti un server: Server curent:<label id="server">'.parse_url($r[0])['host'].'</label>

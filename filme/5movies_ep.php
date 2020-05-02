@@ -2,7 +2,7 @@
 <?php
 error_reporting(0);
 include ("../common.php");
-include ("../cloudflare.php");
+include ("../cloudflare1.php");
 $tit=unfix_t(urldecode($_GET["title"]));
 $image=$_GET["image"];
 $link=urldecode($_GET["link"]);

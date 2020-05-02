@@ -74,7 +74,8 @@ $l="https://".$host."/movies/getMovieLink?id=".$id."&token=".$token."&oPid=&_=";
   $token=trim($t2[0]);
   //echo $h1;
 echo '
-<TR><TD class="cat" ><a id="fav" href="cineplex_f_fav.php?token='.$token.'" target="_blank">Favorite</a></TD>
+<TR><TD class="cat" ><a id="fav" href="cineplex_f_fav.php?token='.$token.'" target="_blank">Favorite</a>
+</TD>
 ';
 echo '<TD class="form" colspan="2"><form action="cineplex_f.php" target="_blank">
 <input type="hidden" name="page" id="page" value="">

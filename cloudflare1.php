@@ -112,6 +112,7 @@ function cf_pass ($l,$cookie) {
   $ssl_version=0;
 
  $ua = $_SERVER['HTTP_USER_AGENT'];
+ $ua="IE6";
  $host=parse_url($l)['host'];
  $head=array('Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
  'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
@@ -124,7 +125,7 @@ function cf_pass ($l,$cookie) {
  curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie);
  curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
  curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
- //curl_setopt($ch, CURLOPT_USERAGENT, $ua);
+ curl_setopt($ch, CURLOPT_USERAGENT, $ua);
  curl_setopt($ch, CURLOPT_HTTPHEADER,$head);
  curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
@@ -145,7 +146,7 @@ function cf_pass ($l,$cookie) {
   $k=0;
   while (!($post= getClearanceLink($page,$l)) && $k<5) {
    sleep(1);
-   $page = curl_exec($ch);;
+   $page = curl_exec($ch);
    $post= getClearanceLink($page,$l);
    $k++;
   }
@@ -157,10 +158,8 @@ function cf_pass ($l,$cookie) {
   $headers[]='Origin: https://'.$host;
   $headers[]= 'Referer: https://'.$host;
   curl_setopt($ch, CURLOPT_URL, $requestLink);
-  curl_setopt($ch, CURLOPT_SSL_CIPHER_LIST, implode(":", $DEFAULT_CIPHERS));
-  curl_setopt($ch, CURLOPT_SSLVERSION,$ssl_version);
   curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
-  curl_setopt($ch, CURLOPT_HEADER,0);
+  curl_setopt($ch, CURLOPT_HEADER,1);
   curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
   curl_setopt($ch, CURLOPT_POSTFIELDS, $post);
   $page = curl_exec($ch);

@@ -72,7 +72,7 @@ document.onkeypress =  zx;
 <TD width="25%"><a href="filme/fsgratis_s.php?page=1&tip=release&title=fsgratis&link=" target="_blank">fsgratis</a></TD>
 <TD width="25%"><a href="filme/clicksud_main.php" target="_blank">clicksud (seriale romanesti)</a></TD>
 <TD width="25%"></TD>
-<TD width="25%"></TD>
+<TD width="25%"><a href="filme/hulu_s.php?page=1&tip=release&title=hulu&link=" target="_blank">hulu</a></TD>
 </TR>
 <!-- straine -->
 <TR>
@@ -84,12 +84,12 @@ document.onkeypress =  zx;
 <TR>
 <TD width="25%"><a href="filme/swatchseries_s.php?page=1&tip=release&title=swatchseries&link=" target="_blank">swatchseries</a></TD>
 <TD width="25%"><a href="filme/soap2day_s.php?page=1&tip=release&title=soap2day&link=" target="_blank">soap2day</a></TD>
+<TD width="25%"><a href="filme/moviesjoy_s.php?page=1&tip=release&title=moviesjoy&link=" target="_blank">moviesjoy</a></TD>
 <TD width="25%"><a href="filme/cineplex_s_main.php" target="_blank">cineplex (cont)</a></TD>
-<TD width="25%"></TD>
 </TR>
 <TR>
 <TD width="25%"><a href="filme/seriesfreetv_s.php?page=1&tip=release&title=seriesfreetv&link=" target="_blank">seriesfreetv</a></TD>
-<TD width="25%"><a href="filme/europix_s.php?page=1&tip=release&title=europix&link=" target="_blank">europix</a></TD>
+<TD width="25%"><a href="filme/vumoo_s.php?page=1&tip=release&title=vumoo&link=" target="_blank">vumoo</a></TD>
 <TD width="25%"><a href="filme/ling_s.php?page=1&tip=release&title=ling.online&link=" target="_blank">ling.online</a></TD>
 <TD width="25%"><a href="filme/vidcloud9_s.php?page=1&tip=release&title=vidcloud9&link=" target="_blank">vidcloud9</a></TD>
 </TR>
@@ -97,8 +97,8 @@ document.onkeypress =  zx;
 <TR>
 <TD width="25%"><a href="filme/ffmovies_s1.php?page=1&tip=release&title=ffmoviess&link=" target="_blank">ffmovies</a></TD>
 <TD width="25%"><a href="filme/go2watch_s.php?page=1&tip=release&title=go2watch&link=" target="_blank">go2watch</a></TD>
-<TD width="25%"><a href="filme/moviesjoy_s.php?page=1&tip=release&title=moviesjoy&link=" target="_blank">moviesjoy</a></TD>
-<TD width="25%"></TD>
+<TD width="25%"><a href="filme/movie4k_s.php?page=1&tip=release&title=movie4k&link=" target="_blank">movie4k</a></TD>
+<TD width="25%"><a href="filme/yesmovies_s.php?page=1&tip=release&title=yesmovies&link=" target="_blank">yesmovies</a></TD>
 </TR>
 
 <TR>
@@ -106,13 +106,6 @@ document.onkeypress =  zx;
 <TD width="25%"><a href="filme/xmovies8_s.php?page=1&tip=release&title=xmovies8&link=" target="_blank">xmovies8</a></TD>
 <TD width="25%"><a href="filme/solarmoviesonline_s.php?page=1&tip=release&title=solarmoviesonline&link=" target="_blank">solarmoviesonline</a></TD>
 <TD width="25%"><a href="filme/flixtor_s.php?page=1&tip=release&title=flixtor&link=" target="_blank">flixtor</a></TD>
-</TR>
-
-<TR>
-<TD width="25%"><a href="filme/movie4k_s.php?page=1&tip=release&title=movie4k&link=" target="_blank">movie4k</a></TD>
-<TD width="25%"><a href="filme/yesmovies_s.php?page=1&tip=release&title=yesmovies&link=" target="_blank">yesmovies</a></TD>
-<TD width="25%"><a href="filme/vumoo_s.php?page=1&tip=release&title=vumoo&link=" target="_blank">vumoo</a></TD>
-<TD width="25%"><a href="filme/dwatchmovies_s.php?page=1&tip=release&title=dwatchmovies&link=" target="_blank">dwatchmovies</a></TD>
 </TR>
 
 <?php

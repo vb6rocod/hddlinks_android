@@ -8,6 +8,7 @@ function str_between($string, $start, $end){
 include ("../common.php");
 /* =================================================== */
 $l="https://pubfilm.xyz";
+//$l="https://www.pubfilm.nl";
 $host=parse_url($l)['host'];
 $page = $_GET["page"];
 $tip= $_GET["tip"];
@@ -178,7 +179,10 @@ if($tip=="release") {
   $search=str_replace(" ","+",$tit);
   $l = "https://".$host."/?s=".$search;
 }
-
+//$l="https://pubfilm.xyz/movies/";
+//$l="https://pubfilm.xyz/";
+//$l="https://pubfilm.xyz/trending/?get=movies";
+//$l="https://pubfilm.xyz/trending/page/2/?get=movies";
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $l);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
@@ -188,6 +192,7 @@ if($tip=="release") {
   curl_setopt($ch, CURLOPT_TIMEOUT, 15);
   $html = curl_exec($ch);
   curl_close($ch);
+  //echo $html;
 $r=array();
 if ($tip == "release") {
 $videos = explode('article id="post-', $html);

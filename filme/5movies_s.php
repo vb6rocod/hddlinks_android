@@ -6,7 +6,7 @@ function str_between($string, $start, $end){
 	return substr($string,$ini,$len);
 }
 include ("../common.php");
-include ("../cloudflare.php");
+include ("../cloudflare1.php");
 $last_good="https://5movies.fm";
 $host=parse_url($last_good)['host'];
 $page = $_GET["page"];
@@ -181,13 +181,13 @@ if($tip=="release") {
   else
    $l="https://".$host."/search-movies/".$search.".html";
   }
-
+//echo $l;
 $ua = $_SERVER['HTTP_USER_AGENT'];
 //$ua="Mozilla/5.0 (Windows NT 10.0; rv:71.0) Gecko/20100101 Firefox/71.0";
 $cookie=$base_cookie."hdpopcorns.dat";
-
+//$l="https://5movies.fm";
 $html=cf_pass($l,$cookie);
-
+//echo $html;
 $videos = explode('div class="ml-item"', $html);
 unset($videos[0]);
 $videos = array_values($videos);

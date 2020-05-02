@@ -154,10 +154,27 @@ function off() {
 echo '<h2>'.$tit.$tit2.'</H2>';
 echo '<BR>';
 $ua = $_SERVER['HTTP_USER_AGENT'];
-//$l1="https://api.hdv.fun/embed/".$link;
-
+$l1="https://api.hdv.fun/embed/".$link;
+$ch = curl_init();
+curl_setopt($ch, CURLOPT_URL, $l1);
+curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 0);
+curl_setopt($ch,CURLOPT_REFERER,"https://vikv.net");
+curl_setopt($ch, CURLOPT_USERAGENT, $ua);
+curl_setopt($ch, CURLOPT_HEADER,1);
+curl_setopt($ch, CURLOPT_NOBODY,1);
+curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+$h = curl_exec($ch);
+curl_close($ch);
+if (preg_match("/location:\s*(.+)/i",$h,$m)) {
+ $host=parse_url(trim($m[1]))['host'];
+} else {
+ $host="api.hdv.fun";
+}
+//die();
 $l="https://api.hdv.fun/l1";
-$l="https://ffull.pw/l1";
+$l="https://".$host."/l1";
 //$link="tt1502397";
 $ip=$_SERVER['REMOTE_ADDR'];
 $post="imdb=".$link."&ip=".$ip."&hd=true";
@@ -172,13 +189,15 @@ curl_setopt($ch, CURLOPT_HTTPHEADER, array(
      'Accept-Encoding: deflate',
      'Content-Type: application/x-www-form-urlencoded; charset=UTF-8',
      'Content-Length: '.strlen($post).'',
-     'Origin: https://api.hdv.fun',
+     'Origin: https://'.$host.'',
      'X-Requested-With: XMLHttpRequest'
 ));
-curl_setopt($ch, CURLOPT_REFERER, "https://api.hdv.fun/embed/".$link);
+curl_setopt($ch, CURLOPT_REFERER, "https://".$host."/embed/".$link);
 curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
 curl_setopt ($ch, CURLOPT_POST, 1);
 curl_setopt ($ch, CURLOPT_POSTFIELDS, $post);
+curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+curl_setopt($ch, CURLOPT_TIMEOUT, 15);
 $h = curl_exec($ch);
 curl_close($ch);
 //echo $h;
@@ -191,7 +210,7 @@ $s_l=array();
 //https://api.hdv.fun/sub?fid=22&lg=english
 //https://sub1.hdv.fun/vtt1/442044.vtt
 for ($k=0;$k<count($p);$k++) {
- $l=$p[$k]['src'][0]['src'];
+ $l=$p[$k]['src'][0]['src']."&referer=https://".$host;
  $name=$p[$k]['name'];
  if (strpos($l,"http") !== false) $r[]=urlencode($l)."||".$name;
  if (isset($p[$k]['sub'])) {
