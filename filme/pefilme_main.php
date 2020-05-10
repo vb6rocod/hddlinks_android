@@ -9,6 +9,7 @@ $main_title="pefilme";
 $target="pefilme.php";
 $fav_target="";
 $recente="https://filmehd.pefilme.net/";
+$recente="https://pefilme.biz/";
 ?>
 <html>
 <head>
@@ -54,7 +55,7 @@ echo '<TR><TD class="cat">'.'<a class ="nav" href="'.$target.'?page=1&tip=releas
 echo $form;
 echo '</TR>';
 $n=0;
-$l="https://filmehd.pefilme.net/";
+$l="https://pefilme.biz/";
 $ua = $_SERVER['HTTP_USER_AGENT'];
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $l);
@@ -77,7 +78,7 @@ foreach($videos as $video) {
     $t2 = explode('>', $t0[1]);
     $t3 = explode('<', $t2[1]);
     $title = $t3[0];
-    if (preg_match("/pefilme\.net\/gen/",$link) && !preg_match("/serial/i",$title)) {
+    if (preg_match("/pefilme\.\w+\/gen/",$link) && !preg_match("/serial/i",$title)) {
     $link=$target."?page=1&tip=release&link=".urlencode(fix_t($link))."&title=".urlencode(fix_t($title));
 	if ($n == 0) echo "<TR>"."\r\n";
 	echo '<TD class="cat">'.'<a class ="cat" href="'.$link.'" target="_blank">'.$title.'</a></TD>';

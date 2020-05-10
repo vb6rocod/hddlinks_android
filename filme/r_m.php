@@ -8,7 +8,7 @@ elseif (strpos($file,"cinebloom") !== false)
  $cookie=$base_cookie."cinebloom.txt";
 else
  $cookie=$base_cookie."hdpopcorns.dat";
-if (strpos($file,"5movies")=== false) {
+if (!preg_match("/5movies|filmehd\./",$file)) {
 $ch = curl_init();
 curl_setopt($ch, CURLOPT_URL, $file);
 curl_setopt($ch, CURLOPT_REFERER,$file);

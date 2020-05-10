@@ -35,7 +35,7 @@ document.onkeypress =  zx;
 <body>
 <?php
 include ("../common.php");
-
+include ("../cloudflare1.php");
 if (file_exists($base_cookie."filme.dat"))
   $val_search=file_get_contents($base_cookie."filme.dat");
 else
@@ -57,16 +57,9 @@ echo '</TR>';
 $n=0;
 $l="https://filmehd.se";
 $ua = $_SERVER['HTTP_USER_AGENT'];
-  $ch = curl_init();
-  curl_setopt($ch, CURLOPT_URL, $l);
-  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
-  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
-  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
-  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
-  $html = curl_exec($ch);
-  curl_close($ch);
+//$ua="Mozilla/5.0 (Windows NT 10.0; rv:71.0) Gecko/20100101 Firefox/71.0";
+$cookie=$base_cookie."hdpopcorns.dat";
+$html=cf_pass($l,$cookie);
 //$html=str_between($html,'menu-seria-categorys-container','</div>');
 $videos = explode('li id="menu-item', $html);
 unset($videos[0]);

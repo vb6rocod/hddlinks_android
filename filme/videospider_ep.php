@@ -102,6 +102,7 @@ for ($x=0; $x<count($sezoane);$x++) {
   curl_setopt($ch, CURLOPT_TIMEOUT, 15);
   $h = curl_exec($ch);
   curl_close($ch);
+  //print_r (json_decode($h,1));
   $r=json_decode($h,1)['episodes'];
   //print_r ($r);
   //die();

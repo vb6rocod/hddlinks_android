@@ -1,7 +1,7 @@
 <!doctype html>
 <?php
 include ("../common.php");
-//error_reporting(0);
+error_reporting(0);
 $list = glob($base_sub."*.srt");
    foreach ($list as $l) {
     str_replace(" ","%20",$l);
@@ -11,20 +11,6 @@ if (file_exists($base_pass."debug.txt"))
  $debug=true;
 else
  $debug=false;
-if (file_exists("../../cookie/max_time_ffmovies.txt")) {
-   //$time_exp=file_get_contents($base_cookie."max_time_hqq.txt");
-   $time_exp=file_get_contents("../../cookie/max_time_ffmovies.txt");
-   $time_now=time();
-   if ($time_exp > $time_now) {
-     $minutes = intval(($time_exp-$time_now)/60);
-     $seconds= ($time_exp-$time_now) - $minutes*60;
-     if ($seconds < 10) $seconds = "0".$seconds;
-     $msg_captcha="Token expira in ".$minutes.":".$seconds." min.";
-   } else
-     $msg_captcha="Token Expirat";
-} else {
-   $msg_captcha="Token Expirat";
-}
 if (file_exists($base_pass."player.txt")) {
 $flash=trim(file_get_contents($base_pass."player.txt"));
 } else {
@@ -39,7 +25,6 @@ $user_agent     =   $_SERVER['HTTP_USER_AGENT'];
 if ($flash != "mp") {
 if (preg_match("/android|ipad/i",$user_agent) && preg_match("/chrome|firefox|mobile/i",$user_agent)) $flash="chrome";
 }
-$qs=$_SERVER['QUERY_STRING'];
 $tit=unfix_t(urldecode($_GET["title"]));
 $tit=prep_tit($tit);
 $image=$_GET["image"];
@@ -148,14 +133,115 @@ function off() {
 <?php
 echo '<h2>'.$tit.$tit2.'</H2>';
 echo '<BR>';
+$r=array();
+$host=parse_url($link)['host'];
 $ua = $_SERVER['HTTP_USER_AGENT'];
-$cookie=$base_cookie."ffmovies.dat";
 //echo $link;
+  $ch = curl_init();
+  curl_setopt($ch, CURLOPT_URL, $link);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
+  curl_setopt($ch,CURLOPT_REFERER,"https://cartoonhd.app");
+  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+  curl_setopt($ch, CURLOPT_HEADER,1);
+  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+  $h = curl_exec($ch);
+  //echo $h;
+  curl_close($ch);
+  if (preg_match("/\[\'imdb\'\]\=\"tt(\d+)/",$h,$m))
+    $imdbid=$m[1];
+  else
+    $imdbid="";
+  $t1=explode("var tok    = '",$h);
+  $t2=explode("'",$t1[1]);
+  $token=$t2[0];
+  $t1=explode('elid = "',$h);
+  $t2=explode('"',$t1[1]);
+  $id=$t2[0];
+  $l="https://cartoonhd.app/ajax/vsozrflxcw.php";
+  if ($tip=="movie")
+   $post="action=getMovieEmb&idEl=".$id."&token=".$token."&nopop=&elid=".urlencode(base64_encode(time()));
+  else
+   $post="action=getEpisodeEmb&idEl=".$id."&token=".$token."&nopop=&elid=".urlencode(base64_encode(time()));
 
-$s[]="MyCloud";
-$r[]="https://ffmovies.to?".$qs;
+  $head=array('Accept: application/json, text/javascript, */*; q=0.01',
+'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
+'Accept-Encoding: deflate',
+'Content-Type: application/x-www-form-urlencoded',
+'X-Requested-With: XMLHttpRequest',
+'Content-Length: '.strlen($post).'',
+'Origin: https://cartoonhd.app',
+'Connection: keep-alive',
+'Referer: https://cartoonhd.app/tv-show/supergirl/season/5/episode/1');
+  $ch = curl_init();
+  curl_setopt($ch, CURLOPT_URL, $l);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+  curl_setopt($ch, CURLOPT_HTTPHEADER,$head);
+  curl_setopt($ch, CURLOPT_POST,1);
+  curl_setopt($ch, CURLOPT_POSTFIELDS,$post);
+  //curl_setopt($ch, CURLOPT_HEADER, 1);
+  //curl_setopt($ch, CURLOPT_REFERER,$ref);
+  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
+  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+  $h = curl_exec($ch);
+  //echo $h;
+  $x=json_decode($h,1);
+  //print_r ($x);
+  $s1=array();
+  foreach ($x as $key => $value) {
+    $s= $x[$key]['embed'];
+    $t1=explode('src="',$s);
+    $t2=explode('"',$t1[1]);
+    $s=str_replace("vidnode.net","vidcloud9.com",$t2[0]);
+    $s=str_replace("load.php","streaming.php",$s);
+    if (!preg_match("/vidsrc\.me/",$s)) $s1[]=$s;
+  }
+  $s1=array_unique($s1);
+  $r=array();
+  foreach ($s1 as $key => $value) {
+   $l=str_replace(" ","+",$value);
+   if (preg_match("/vidcloud9\./",$l)) {
+    $r[]=urlencode($l);
+    $head=array('Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+     'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2');
+    $ch = curl_init();
+    curl_setopt($ch, CURLOPT_URL, $l);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+    curl_setopt($ch,CURLOPT_REFERER,"https://vidcloud9.com");
+    curl_setopt($ch,CURLOPT_HTTPHEADER,$head);
+    curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 10.0; rv:55.0) Gecko/20100101 Firefox/55.0');
+    curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+    curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+    curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+    $h = curl_exec($ch);
+    curl_close($ch);
+    //echo $h;
+    $videos=explode('data-video="',$h);
+    unset($videos[0]);
+    $videos = array_values($videos);
+     foreach($videos as $video) {
+      $t1=explode('"',$video);
+      $l=$t1[0];
+      if ($l) {
+       if (strpos($l,"http") === false)
+         $l="https:".$l;
+       $r[]=urlencode($l);
+      }
+     }
+   } else {
+    $r[]=urlencode($l);
+   }
+  }
+  $r=array_unique($r);
+
+
 echo '<table border="1" width="100%">';
-echo '<TR><TD class="mp">Alegeti un server: Server curent:<label id="server">'.$s[0].'</label>
+echo '<TR><TD class="mp">Alegeti un server: Server curent:<label id="server">'.parse_url(urldecode($r[0]))['host'].'</label>
 <input type="hidden" id="file" value="'.urlencode($r[0]).'"></td></TR></TABLE>';
 echo '<table border="1" width="100%"><TR>';
 $k=count($r);
@@ -163,7 +249,7 @@ $x=0;
 for ($i=0;$i<$k;$i++) {
   if ($x==0) echo '<TR>';
   $c_link=$r[$i];
-  $openload=$s[$i];
+  $openload=parse_url(urldecode($r[$i]))['host'];
   if (preg_match($indirect,$openload)) {
   echo '<TD class="mp"><a href="filme_link.php?file='.urlencode($c_link).'&title='.urlencode(unfix_t($tit.$tit2)).'" target="_blank">'.$openload.'</a></td>';
   } else
@@ -186,17 +272,19 @@ if ($tip=="movie") {
   $tit2="";
   $sez="";
   $ep="";
-  $imdbid="";
   $from="";
   $link_page="";
 } else {
   $tit3=$tit;
   $sez=$sez;
   $ep=$ep;
-  $imdbid="";
   $from="";
   $link_page="";
 }
+  $rest = substr($tit3, -6);
+  if (preg_match("/\((\d+)\)/",$rest,$m)) {
+   $tit3=trim(str_replace($m[0],"",$tit3));
+  }
 $sub_link ="from=".$from."&tip=".$tip."&sez=".$sez."&ep=".$ep."&imdb=".$imdbid."&title=".urlencode(fix_t($tit3))."&link=".$link_page."&ep_tit=".urlencode(fix_t($tit2))."&year=".$year;
 echo '<br>';
 echo '<table border="1" width="100%">';
@@ -206,14 +294,6 @@ echo '<TD class="mp"><a id="opensub" href="opensubtitles.php?'.$sub_link.'">open
 echo '<TD class="mp"><a id="titrari" href="titrari_main.php?page=1&'.$sub_link.'&page=1">titrari.ro</a></td>';
 echo '<TD class="mp"><a id="subs" href="subs_main.php?'.$sub_link.'">subs.ro</a></td>';
 echo '<TD class="mp"><a id="subtitrari" href="subtitrari_main.php?'.$sub_link.'">subtitrari_noi.ro</a></td>';
-echo '</TR></TABLE>';
-echo '<table border="1" width="100%">';
-echo '<TR><TD style="background-color:#0a6996;color:#64c8ff;font-weight: bold;font-size: 1.5em" align="center" colspan="4">Alegeti o subtitrare (cauta imdb id)</td></TR>';
-echo '<TR>';
-echo '<TD class="mp"><a id="opensub1" href="opensubtitles1.php?'.$sub_link.'">opensubtitles</a></td>';
-echo '<TD class="mp"><a id="titrari1" href="titrari_main1.php?page=1&'.$sub_link.'&page=1">titrari.ro</a></td>';
-echo '<TD class="mp"><a id="subs1" href="subs_main1.php?'.$sub_link.'">subs.ro</a></td>';
-echo '<TD class="mp"><a id="subtitrari1" href="subtitrari_main1.php?'.$sub_link.'">subtitrari_noi.ro</a></td>';
 echo '</TR></TABLE>';
 echo '<table border="1" width="100%"><TR>';
 if ($tip=="movie")
@@ -229,9 +309,7 @@ echo '</table>';
 echo '<br>
 <table border="0px" width="100%">
 <TR>
-<TD><font size="4"><b>
-<a href="ffmovies_ffs.php">Daca nu apar sursele...apasati aici.</a><BR>
-Scurtaturi: 1=opensubtitles, 2=titrari, 3=subs, 4=subtitrari, 5=vizioneaza
+<TD><font size="4"><b>Scurtaturi: 1=opensubtitles, 2=titrari, 3=subs, 4=subtitrari, 5=vizioneaza
 <BR>Scurtaturi: 7=opensubtitles, 8=titrari, 9=subs, 0=subtitrari (cauta imdb id)
 </b></font></TD></TR></TABLE>
 ';

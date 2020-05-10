@@ -184,8 +184,9 @@ $host=parse_url($l)['host'];
 if ($page==1 && $tip=="release") {
 $l1="https://moviehdkh.com/";
 $html1=cf_pass($l1,$cookie);
-$html=cf_pass($l,$cookie);
 }
+$html=cf_pass($l,$cookie);
+
 //echo $html;
 $r=array();
 if ($tip=="release") {

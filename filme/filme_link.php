@@ -375,7 +375,7 @@ if (strpos($filelink,"filmeonlinegratis.org") !== false) {
   }
   }
   }
-} elseif (strpos($filelink,"pefilme.net") !== false) {
+} elseif (strpos($filelink,"pefilme.") !== false) {
   $html="";
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $filelink);
@@ -389,7 +389,7 @@ if (strpos($filelink,"filmeonlinegratis.org") !== false) {
   $h = curl_exec($ch);
   curl_close($ch);
   //echo $h;
-  $videos = explode('baza64.com/pefilme/', $h);
+  $videos = explode('"https://s1.pefilme.biz/?', $h);
   unset($videos[0]);
   $videos = array_values($videos);
   //print_r ($videos);
@@ -512,30 +512,25 @@ $headers=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:71.0) Gecko/2010010
   }
   //echo $html;
 } elseif (strpos($filelink,"filmehd.se") !== false) {
+  include ("../cloudflare1.php");
   $ua = $_SERVER['HTTP_USER_AGENT'];
   $html="";
-  $ch = curl_init();
-  curl_setopt($ch, CURLOPT_URL, $filelink);
-  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
-  curl_setopt($ch,CURLOPT_REFERER,$filelink);
-  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
-  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
-  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
-  $html = curl_exec($ch);
-  curl_close($ch);
+  $ua = $_SERVER['HTTP_USER_AGENT'];
+  //$ua="Mozilla/5.0 (Windows NT 10.0; rv:71.0) Gecko/20100101 Firefox/71.0";
+  $cookie=$base_cookie."hdpopcorns.dat";
+  $html=cf_pass($filelink,$cookie);
 
   if (preg_match_all("/data\-src\=\"(.*?)\"/ms",$html,$m)) {
    $n=array_unique($m[1]);
    //print_r ($n);
    $ch = curl_init();
-   curl_setopt($ch, CURLOPT_USERAGENT,$ua);
+   curl_setopt($ch, CURLOPT_USERAGENT,"IE6");
    curl_setopt($ch,CURLOPT_REFERER,"http://filmehd.se/");
    curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
    curl_setopt($ch, CURLOPT_RETURNTRANSFER  ,1);  // RETURN THE CONTENTS OF THE CALL
    curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
    curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+   curl_setopt($ch, CURLOPT_COOKIEFILE,$cookie);
    foreach ($n as $key => $value) {
     curl_setopt($ch, CURLOPT_URL, "https://filmehd.se".$value);
     $h = curl_exec($ch);

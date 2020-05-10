@@ -48,8 +48,9 @@ echo '<table border="1" width="100%">'."\n\r";
   curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
   $h = curl_exec($ch);
   curl_close($ch);
-
+//echo $h;
 $n=0;
+$z=1;
 $videos = explode('li id="season-', $h);
 $sezoane=array();
 
@@ -59,8 +60,11 @@ $videos = array_values($videos);
 foreach($videos as $video) {
   $t1=explode('title="',$video);
   $t2=explode('"',$t1[1]);
-  preg_match("/\d+/",$t2[0],$m);
-  $sezoane[]=$m[0];
+  if (preg_match("/\d+/",$t2[0],$m))
+     $sezoane[]=$m[0];
+  else
+     $sezoane[]=$z;
+  $z++;
 }
 echo '<table border="1" width="100%">'."\n\r";
 
@@ -82,12 +86,15 @@ if ($p < 10 && $p > 0 && $k > 9) {
  echo '</TR>'."\r\n";
 }
 echo '</TABLE>';
-
+$z=1;
 foreach($videos as $video) {
   $t1=explode('title="',$video);
   $t2=explode('"',$t1[1]);
-  preg_match("/\d+/",$t2[0],$m);
-  $season=$m[0];
+  if (preg_match("/\d+/",$t2[0],$m))
+     $season=$m[0];
+  else
+     $season=$z;
+  $z++;
   $sez = $season;
   $t1=explode('"',$video);
   $id_sez=$t1[0];

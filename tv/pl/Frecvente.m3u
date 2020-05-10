@@ -18,6 +18,10 @@ https://livebeta.publika.md/LIVE/P/6810.m3u8
 https://live1.cdn.tv8.md/TV7/index.m3u8?token=1
 #EXTINF:0 ,MD| N4
 http://web.sats.gstv.tech/cpl11/00987101-cd36-49ed-a5e1-bcfaa25d0d85/N4web.m3u8
+#EXTINF:0 ,MD| 10TV
+http://212.0.215.115/10TVHD/playlist.m3u8
+#EXTINF:0 ,MD| Vocea Basarabiei
+http://hls.voceabasarabiei.md/hls/vocea_basarabiei.m3u8
 #EXTINF:-1,PRO TV HD
 https://vid.hls.protv.ro/protvhdn/protvhd_3_34/index.m3u8?1
 #EXTINF:-1,PRO X HD
@@ -34,3 +38,15 @@ http://vid.hls.protv.ro/protvnews/protvnews.m3u8?1
 https://cmn.digitalcable.ro/free/cm/playlist.m3u8
 #EXTINF:-1,Comedy Est
 https://cmn.digitalcable.ro/free/comedyest/playlist.m3u8
+#EXTINF:-1,6TV
+https://stream.chrominance.ro/clients/6tv/playlist.m3u8
+#EXTINF:-1,Iasi TV
+http://82.208.151.107:8088/high/tvriasi/index.m3u8
+#EXTINF:-1,Media Regional
+http://83.103.150.198:8080
+#EXTINF:-1,QTV HD
+http://encoder.inedittv.ro:9090/seconds4hls/live.m3u8
+#EXTINF:-1,TVSE HD
+http://89.38.8.130:39419
+#EXTINF:-1,Curier TV
+http://5.2.164.135:1935/live/curiertv/playlist.m3u8

@@ -421,7 +421,29 @@ if (strpos($filelink,"moviehdkh.com") !== false) {
       $link=$links['360'];
     else
       $link="";
-
+    if (strpos($link,"proxy") !== false) {
+      $t1=explode("url=",$link);
+      //$link=urldecode($t1[1]);
+    }
+  /*
+  $ch = curl_init();
+  curl_setopt($ch, CURLOPT_URL, $link);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+  curl_setopt($ch,CURLOPT_REFERER,"https://www.moviehdkh.com");
+  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
+  //curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie);
+  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+  curl_setopt($ch, CURLOPT_HEADER,1);
+  curl_setopt($ch, CURLOPT_NOBODY,1);
+  $h = curl_exec($ch);
+  curl_close($ch);
+  echo $h;
+  */
+  if ($link && $flash <> "flash")
+   $link=$link."|Referer=".urlencode("https://www.moviehdkh.com");
+  
 }
 if (strpos($filelink,"yesmovies.ag") !== false) {
   $ch = curl_init($filelink);
@@ -872,21 +894,103 @@ if (strpos($filelink,"https://embed.iseek.to") !== false) {
    }
 }
 if (strpos($filelink,"https://ffmovies.to") !== false) {
+//echo $filelink;
+$t1=explode("?",$filelink);
+parse_str($t1[1],$w);
+$tip=$w['tip'];
+$link=$w['link'];
+$ep=$w['ep'];
+//print_r ($w);
+//die();
  $ua = $_SERVER['HTTP_USER_AGENT'];
  $cookie=$base_cookie."ffmovies.dat";
+if ($tip=="series")
+$l1="https://ffmovies.to/ajax/film/servers?id=".$link."&_=839&ts=".time();
+else
+$l1="https://ffmovies.to/ajax/film/servers?id=".$link."&_=839&ts=".time();
+//$l1="https://ffmovies.to/ajax/film/servers/".$link;
+///////////////////////////////////////////////////////////////////
+
+$r=array();
+$s=array();
 $head=array('Accept: application/json, text/javascript, */*; q=0.01',
 'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
 'Accept-Encoding: deflate',
-'Age: 0',
 'X-Requested-With: XMLHttpRequest',
 'Connection: keep-alive',
-'Referer: https://ffmovies.to/film/in-the-tall-grass.1q7nx');
- $find = substr(strrchr($filelink, "."), 1);
- $t1=explode("/",$find);
- //echo $find;
-
- $l="https://ffmovies.to/ajax/film/servers/".$t1[0];
- //echo $l;
+'Referer: https://ffmovies.to/film/in-the-tall-grass.'.$link);
+  $ch = curl_init();
+  curl_setopt($ch, CURLOPT_URL, $l1);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
+  //curl_setopt($ch,CURLOPT_REFERER,"https://ffmovies.to");
+  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+  //curl_setopt($ch, CURLOPT_HEADER,1);
+  curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie);
+  curl_setopt($ch, CURLOPT_COOKIEJAR, $cookie);
+  curl_setopt($ch, CURLOPT_HTTPHEADER, $head);
+  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+  $h = curl_exec($ch);
+  curl_close($ch);
+$x=json_decode($h,1);
+$h=$x['html'];
+//echo $h;
+/////////////////////////////////////////////
+$head2=array('Accept: */*',
+'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
+'Accept-Encoding: deflate',
+'Connection: keep-alive',
+'Referer: https://ffmovies.to/film/5g-zombies.'.$link.'');
+// https://mcloud2.to/key -->>  e8b62
+$l2="https://mcloud2.to/key";
+  $ch = curl_init();
+  curl_setopt($ch, CURLOPT_URL, $l2);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
+  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+  //curl_setopt($ch, CURLOPT_HEADER,1);
+  curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie);
+  //curl_setopt($ch, CURLOPT_COOKIEJAR, $cookie);
+  curl_setopt($ch, CURLOPT_HTTPHEADER, $head2);
+  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+  $h2 = curl_exec($ch);
+  //echo $h;
+  $t1=explode("mcloudKey='",$h2);
+  $t2=explode("'",$t1[1]);
+  $key=$t2[0];
+/////////////////////////////////////////////////
+if ($tip == "movie") {
+$videos = explode('class="server row', $h);
+unset($videos[0]);
+$videos = array_values($videos);
+foreach($videos as $video) {
+  $t1=explode('data-id="',$video);
+  $t3=explode('"',$t1[1]);
+  $server1=$t3[0];
+  $t4=explode('"',$t1[2]);
+  $id=$t4[0];
+  $t1=explode('href="',$video);
+  $t2=explode('"',$t1[1]);
+  $l="https://ffmovies.to".$t2[0];
+  $find = substr(strrchr($l, "."), 1);
+  $t5=explode("/",$find);
+  $t3=explode('data-id="',$video);
+  $t4=explode('"',$t3[2]);
+  $id1=$t4[0];
+  $t1=explode('i>',$video);
+  $t2=explode("<",$t1[1]);
+  $server=trim($t2[0]);
+  $l="https://ffmovies.to/ajax/episode/info?id=".$id1."&server=".$server1."&mcloud=".$key."&_=935&ts=".time();
+  $head=array('Accept: application/json, text/javascript, */*; q=0.01',
+  'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
+  'Accept-Encoding: deflate',
+  'X-Requested-With: XMLHttpRequest',
+  'Connection: keep-alive',
+  'Referer: https://ffmovies.to/film/5g-zombies.'.$t5[0].'/'.$t5[1].'');
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $l);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
@@ -895,96 +999,78 @@ $head=array('Accept: application/json, text/javascript, */*; q=0.01',
   curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
   //curl_setopt($ch, CURLOPT_HEADER,1);
   curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie);
-  //curl_setopt($ch, CURLOPT_COOKIEJAR, $cookie);
+  curl_setopt($ch, CURLOPT_COOKIEJAR, $cookie);
   curl_setopt($ch, CURLOPT_HTTPHEADER, $head);
   curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
   curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
   curl_setopt($ch, CURLOPT_TIMEOUT, 15);
   $h = curl_exec($ch);
-  //curl_close($ch);
-$x=json_decode($h,1);
-$h=$x['html'];
+  curl_close($ch);
+  $x=json_decode($h,1);
+  //print_r ($x);
+  $filelink=urldecode($x['target']);
+  //echo  $l;
+}
+} else {
 //echo $h;
-//die();
-$videos = explode('div class="server row', $h);
+$videos = explode('class="server row', $h);
 unset($videos[0]);
 $videos = array_values($videos);
 foreach($videos as $video) {
-  $t2=explode('data-id="',$video);
-  $t3=explode('"',$t2[1]);
-  $server=$t3[0];
-  $vids=explode('data-id="',$video);
+  $t1=explode('i>',$video);
+  $t2=explode("<",$t1[1]);
+  $server=trim($t2[0]);
+  $t3=explode('data-id="',$video);
+  $t4=explode('"',$t3[1]);
+  $server1=$t4[0];
+  $vids=explode('<li',$video);
   unset($vids[0]);
   foreach($vids as $vid) {
-  $t4=explode('"',$vid);
-  $id=$t4[0];
-  $t1=explode('href="',$vid);
-  $t2=explode('"',$t1[1]);
-  $l="https://ffmovies.to".$t2[0];
-  if (strpos($l,$find) !== false) {
-   $id_bun=$id;
-   $server_bun=$server;
-   //echo $server_bun."\n".$id_bun."\n";
-   break;
-  }
-  }
-}
-$head=array('Accept: application/json, text/javascript, */*; q=0.01',
-'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
-'Accept-Encoding: deflate',
-'Age: 0',
-'X-Requested-With: XMLHttpRequest',
-'Connection: keep-alive',
-'Upgrade-Insecure-Requests: 1');
-// https://mcloud2.to/key -->>  e8b62
-$l="https://mcloud2.to/key";
+    $t1=explode('data-id="',$vid);
+    $t2=explode('"',$t1[1]);
+    $id1=$t2[0];
+    $t2=explode('href="',$vid);
+    $t6=explode('"',$t2[1]);
+    $l22="https://ffmovies.to".$t6[0];
+    $find = substr(strrchr($l22, "."), 1);
+    $t5=explode("/",$find);
+    $t3=explode(">",$t2[1]);
+    $t4=explode("<",$t3[1]);
+    $e=$t4[0];
+    if ($e==$ep) {
+    //echo $e;
+    $l="";
+  $l="https://ffmovies.to/ajax/episode/info?id=".$id1."&server=".$server1."&mcloud=".$key."&_=935&ts=".time();
+  $head=array('Accept: application/json, text/javascript, */*; q=0.01',
+  'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
+  'Accept-Encoding: deflate',
+  'X-Requested-With: XMLHttpRequest',
+  'Connection: keep-alive',
+  'Referer: https://ffmovies.to/film/5g-zombies.'.$t5[0].'/'.$t5[1].'');
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $l);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
   curl_setopt($ch, CURLOPT_USERAGENT, $ua);
-  curl_setopt($ch,CURLOPT_REFERER,"https://ffmovies.to");
+  //curl_setopt($ch,CURLOPT_REFERER,"https://ffmovies.to");
   curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
   //curl_setopt($ch, CURLOPT_HEADER,1);
   curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie);
-  //curl_setopt($ch, CURLOPT_COOKIEJAR, $cookie);
-  //curl_setopt($ch, CURLOPT_HTTPHEADER, $head);
-  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
-  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
-  $h = curl_exec($ch);
-  //echo $h;
-  $t1=explode("mcloudKey='",$h);
-  $t2=explode("'",$t1[1]);
-  $key=$t2[0];
-  $l="https://ffmovies.to/ajax/episode/info?id=".$id_bun."&server=".$server_bun."&mcloud=".$key;
-  //echo $l;
-  //https://ffmovies.to/ajax/episode/info?id=3268b804dc0c9c58b7516729144067e98c4e30484693002863edafa3cb833290&server=28
-  //$l="https://ffmovies.to/ajax/episode/info?ts=1588064400&_=742&id=2c5ec508a1304323810a6e829de17806ee73340b654be36c372f343aef8f4fe5&server=28&mcloud=e8b62";
-  //$l="https://ffmovies.to/ajax/episode/info?ts=1573545600&_=694&id=5c6a3d606b92fd4c03c0efd4d46d3d0000082fcfb564f79fdcc61c331307edb3&server=36";
- //echo $l;
-  curl_setopt($ch, CURLOPT_URL, $l);
-  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
-  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
-  curl_setopt($ch, CURLOPT_HEADER,1);
-  curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie);
+  curl_setopt($ch, CURLOPT_COOKIEJAR, $cookie);
   curl_setopt($ch, CURLOPT_HTTPHEADER, $head);
   curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
   curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
   curl_setopt($ch, CURLOPT_TIMEOUT, 15);
-  for ($k=0;$k<10;$k++) {
-   $h = curl_exec($ch);
-   if (strpos($h,"200 OK") !== false) break;
-  }
-
+  $h = curl_exec($ch);
   curl_close($ch);
-  $t1=explode("{",$h);
-  $h="{".$t1[1];
-  //echo $h;
   $x=json_decode($h,1);
   //print_r ($x);
- $filelink=urldecode($x['target']);
- //echo $filelink;
+  $filelink=urldecode($x['target']);
+    }
+  }
+}
+}
+//echo $filelink;
+///////////////////////////////////////////////////
  $srt=$x['subtitle'];
 }
 if (strpos($filelink,"moviesjoy.net") !== false) {
@@ -1453,6 +1539,48 @@ $filelink=str_prep($filelink);
 //die();
 if (strpos($filelink,".googlevideo.com") !== false) {
   $link=$filelink;
+} elseif (preg_match("/master\.m3u8/",$filelink)) { // from cartoonhd (https://rbfq1m.svid.li)
+  $ua = $_SERVER['HTTP_USER_AGENT'];
+  $l=$filelink;
+  $ch = curl_init();
+  curl_setopt($ch, CURLOPT_URL, $l);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
+  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+  curl_setopt($ch,CURLOPT_REFERER,$filelink);
+  curl_setopt($ch, CURLOPT_ENCODING, "");
+  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+  $h = curl_exec($ch);
+  curl_close($ch);
+  // get max res
+$base1=str_replace(strrchr($l, "/"),"/",$l);
+$base2=getSiteHost($l);
+if (preg_match("/\.m3u8/",$h)) {
+$a1=explode("\n",$h);
+for ($k=0;$k<count($a1);$k++) {
+  if ($a1[$k][0] !="#" && $a1[$k]) $pl[]=trim($a1[$k]);
+}
+if ($pl[0][0] == "/")
+  $base=$base2;
+elseif (preg_match("/http(s)?:/",$pl[0]))
+  $base="";
+else
+  $base=$base1;
+if (count($pl) > 1) {
+  if (preg_match_all("/RESOLUTION\=(\d+)/i",$h))
+    preg_match_all("/RESOLUTION\=(\d+)/i",$h,$m);
+  else
+    preg_match_all("/BANDWIDTH\=(\d+)/i",$h,$m);
+  $max_res=max($m[1]);
+  $arr_max=array_keys($m[1], $max_res);
+  $key_max=$arr_max[0];
+  $link=$base.$pl[$key_max];
+}
+} else {
+  $link=$l;
+}
 } elseif (strpos($filelink,"hydrax.net") !== false) {
     //https://hydrax.net/watch?v=fZUPUFcqYIz
     //echo $filelink;
@@ -2257,6 +2385,7 @@ $head=array('Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q
 'Connection: keep-alive',
 'Referer: https://ffmovies.to/film/lois-clark-the-new-adventures-of-superman-3.m21x8/6l8n350',
 'Upgrade-Insecure-Requests: 1');
+
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $filelink);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
@@ -2273,7 +2402,7 @@ $head=array('Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q
   curl_setopt($ch, CURLOPT_TIMEOUT, 25);
   $h = curl_exec($ch);
   curl_close($ch);
-  //echo $h;
+
   //include ("obfJS.php");
   //$enc=$h;
   //echo obfJS();
