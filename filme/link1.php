@@ -445,6 +445,102 @@ if (strpos($filelink,"moviehdkh.com") !== false) {
    $link=$link."|Referer=".urlencode("https://www.moviehdkh.com");
   
 }
+if (strpos($filelink,"bmovies.") !== false) {
+  $ua="Mozilla/5.0 (Windows NT 10.0; rv:75.0) Gecko/20100101 Firefox/75.0";
+  $head=array('Accept: application/json, text/javascript, */*; q=0.01',
+  'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
+  'Accept-Encoding: deflate',
+  'X-Requested-With: XMLHttpRequest',
+  'Connection: keep-alive',
+  'Referer: https://bmovies.cloud/');
+  $ch = curl_init();
+  curl_setopt($ch, CURLOPT_URL, $filelink);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
+  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+  curl_setopt($ch, CURLOPT_HTTPHEADER, $head);
+  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+  $h = curl_exec($ch);
+  curl_close($ch);
+  //echo $h;
+  $x=json_decode($h,1);
+  $l=$x['src'];
+  $head1=array('Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
+  'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
+  'Accept-Encoding: deflate',
+  'Connection: keep-alive',
+  'Referer: https://bmovies.cloud/film',
+  'Upgrade-Insecure-Requests: 1');
+  $ch = curl_init();
+  curl_setopt($ch, CURLOPT_URL, $l);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
+  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+  curl_setopt($ch, CURLOPT_HTTPHEADER, $head1);
+  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+  $h = curl_exec($ch);
+  curl_close($ch);
+  if (preg_match("/iframe src\=\"(.*?)\"/",$h,$m)) {
+    $filelink=$m[1];
+  } else {
+   if (preg_match('/(\/\/[\.\d\w\-\.\/\\\:\?\&\#\%\_\,\+]*(\.(srt|vtt)))/', $h, $s))
+    $srt="https:".$s[1];
+   $t1=explode('sources:',$h);
+   $t2=explode('tracks',$t1[1]);
+   $h=$t2[0];
+   if (preg_match_all("/file\"\s*\:\s*\"(.*?)\"/",$h,$m)) {
+   if (count($m[1]) > 1)
+     $link=$m[1][count($m[1])-1];
+   else
+     $link=$m[1][0];
+   $host=parse_url($l)['host'];
+   if (strpos($link,"m3u8") !== false) {
+   $head=array('Origin: https://'.$host.'',
+   'Referer: '.$l);
+   $ch = curl_init();
+   curl_setopt($ch, CURLOPT_URL, $link);
+   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+   curl_setopt($ch, CURLOPT_USERAGENT, $ua);
+   curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+   curl_setopt($ch, CURLOPT_HTTPHEADER, $head);
+   curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+   curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
+   curl_setopt($ch, CURLOPT_TIMEOUT, 25);
+   $h = curl_exec($ch);
+   curl_close($ch);
+    $base1=str_replace(strrchr($link, "/"),"/",$link);
+    $base2=getSiteHost($link);
+    if (preg_match("/\.m3u8/",$h)) {
+     $pl=array();
+     if (preg_match_all ("/^(?!#).+/m",$h,$m))
+      $pl=$m[0];
+     if ($pl[0][0] == "/")
+      $base=$base2;
+     elseif (preg_match("/http(s)?:/",$pl[0]))
+      $base="";
+     else
+      $base=$base1;
+     if (count($pl) > 1) {
+      if (preg_match_all("/RESOLUTION\=(\d+)/i",$h))
+       preg_match_all("/RESOLUTION\=(\d+)/i",$h,$m);
+      else
+       preg_match_all("/BANDWIDTH\=(\d+)/i",$h,$m);
+      $max_res=max($m[1]);
+      $arr_max=array_keys($m[1], $max_res);
+      $key_max=$arr_max[0];
+      $link=$base.$pl[$key_max];
+     }
+    }
+   }
+   if ($link && $flash <> "flash")
+     $link=$link."|Referer=".urlencode($l)."&Origin=".urlencode("https://".$host);
+   }
+  }
+}
 if (strpos($filelink,"yesmovies.ag") !== false) {
   $ch = curl_init($filelink);
   curl_setopt($ch, CURLOPT_USERAGENT, $ua);
@@ -900,17 +996,45 @@ parse_str($t1[1],$w);
 $tip=$w['tip'];
 $link=$w['link'];
 $ep=$w['ep'];
+$href=$w['href'];
 //print_r ($w);
 //die();
  $ua = $_SERVER['HTTP_USER_AGENT'];
  $cookie=$base_cookie."ffmovies.dat";
+ $time=round(time()/100)*100;
 if ($tip=="series")
-$l1="https://ffmovies.to/ajax/film/servers?id=".$link."&_=839&ts=".time();
+$l1="https://ffmovies.to/ajax/film/servers?id=".$link."&_=839&ts=".$time;
 else
-$l1="https://ffmovies.to/ajax/film/servers?id=".$link."&_=839&ts=".time();
+$l1="https://ffmovies.to/ajax/film/servers?id=".$link."&_=839&ts=".$time;
 //$l1="https://ffmovies.to/ajax/film/servers/".$link;
 ///////////////////////////////////////////////////////////////////
-
+$l2="https://ffmovies.to".$href;
+$head=array('Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
+'Accept-Encoding: deflate',
+'Connection: keep-alive',
+'Upgrade-Insecure-Requests: 1');
+/*
+  $ch = curl_init();
+  curl_setopt($ch, CURLOPT_URL, $l2);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
+  curl_setopt($ch,CURLOPT_REFERER,"https://ffmovies.to");
+  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+  //curl_setopt($ch, CURLOPT_HEADER,1);
+  curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie);
+  curl_setopt($ch, CURLOPT_COOKIEJAR, $cookie);
+  curl_setopt($ch, CURLOPT_HTTPHEADER, $head);
+  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+  $h2 = curl_exec($ch);
+  curl_close($ch);
+  //echo $h2;
+  if (preg_match("/https.+)\/key/",$h2,$z)) {
+    print_r ($z);
+  }
+*/
 $r=array();
 $s=array();
 $head=array('Accept: application/json, text/javascript, */*; q=0.01',
@@ -944,7 +1068,7 @@ $head2=array('Accept: */*',
 'Connection: keep-alive',
 'Referer: https://ffmovies.to/film/5g-zombies.'.$link.'');
 // https://mcloud2.to/key -->>  e8b62
-$l2="https://mcloud2.to/key";
+$l2="https://mcloud.to/key";
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $l2);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
@@ -963,34 +1087,35 @@ $l2="https://mcloud2.to/key";
   $t2=explode("'",$t1[1]);
   $key=$t2[0];
 /////////////////////////////////////////////////
-if ($tip == "movie") {
-$videos = explode('class="server row', $h);
+//if ($tip == "movie") {
+
+$videos=explode('<li><a',$h);
 unset($videos[0]);
 $videos = array_values($videos);
 foreach($videos as $video) {
   $t1=explode('data-id="',$video);
   $t3=explode('"',$t1[1]);
-  $server1=$t3[0];
-  $t4=explode('"',$t1[2]);
-  $id=$t4[0];
+  $id=$t3[0];
   $t1=explode('href="',$video);
   $t2=explode('"',$t1[1]);
-  $l="https://ffmovies.to".$t2[0];
-  $find = substr(strrchr($l, "."), 1);
-  $t5=explode("/",$find);
-  $t3=explode('data-id="',$video);
-  $t4=explode('"',$t3[2]);
-  $id1=$t4[0];
-  $t1=explode('i>',$video);
-  $t2=explode("<",$t1[1]);
-  $server=trim($t2[0]);
-  $l="https://ffmovies.to/ajax/episode/info?id=".$id1."&server=".$server1."&mcloud=".$key."&_=935&ts=".time();
+  if ($t2[0] == $href) break;
+  }
+  //https://ffmovies.to/ajax/episode/info?id=e84e5ab7ddc1ce79a765790b29767a7c89f4e20d1da7b897b90873eac9626947&mcloud=4f7c5&_=887&ts=1589526000
+  //https://ffmovies.to/ajax/episode/info?id=1cf6dfdf85e33b52a812f393127c051fca8056c283b082194d602df299cb7a97&mcloud=4f7c5&_=887&ts=1589526000
+  $l="https://ffmovies.to/ajax/episode/info?id=".$id."&mcloud=".$key."&_=887&ts=".$time;
+  //echo $l;
+  //die();
+  //1589538107
+  //1589526000
+  //1589551200
   $head=array('Accept: application/json, text/javascript, */*; q=0.01',
   'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
   'Accept-Encoding: deflate',
   'X-Requested-With: XMLHttpRequest',
   'Connection: keep-alive',
-  'Referer: https://ffmovies.to/film/5g-zombies.'.$t5[0].'/'.$t5[1].'');
+  'Referer: https://ffmovies.to'.$href.'');
+  //print_r ($head);
+  //die();
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $l);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
@@ -1010,65 +1135,7 @@ foreach($videos as $video) {
   //print_r ($x);
   $filelink=urldecode($x['target']);
   //echo  $l;
-}
-} else {
-//echo $h;
-$videos = explode('class="server row', $h);
-unset($videos[0]);
-$videos = array_values($videos);
-foreach($videos as $video) {
-  $t1=explode('i>',$video);
-  $t2=explode("<",$t1[1]);
-  $server=trim($t2[0]);
-  $t3=explode('data-id="',$video);
-  $t4=explode('"',$t3[1]);
-  $server1=$t4[0];
-  $vids=explode('<li',$video);
-  unset($vids[0]);
-  foreach($vids as $vid) {
-    $t1=explode('data-id="',$vid);
-    $t2=explode('"',$t1[1]);
-    $id1=$t2[0];
-    $t2=explode('href="',$vid);
-    $t6=explode('"',$t2[1]);
-    $l22="https://ffmovies.to".$t6[0];
-    $find = substr(strrchr($l22, "."), 1);
-    $t5=explode("/",$find);
-    $t3=explode(">",$t2[1]);
-    $t4=explode("<",$t3[1]);
-    $e=$t4[0];
-    if ($e==$ep) {
-    //echo $e;
-    $l="";
-  $l="https://ffmovies.to/ajax/episode/info?id=".$id1."&server=".$server1."&mcloud=".$key."&_=935&ts=".time();
-  $head=array('Accept: application/json, text/javascript, */*; q=0.01',
-  'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
-  'Accept-Encoding: deflate',
-  'X-Requested-With: XMLHttpRequest',
-  'Connection: keep-alive',
-  'Referer: https://ffmovies.to/film/5g-zombies.'.$t5[0].'/'.$t5[1].'');
-  $ch = curl_init();
-  curl_setopt($ch, CURLOPT_URL, $l);
-  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
-  //curl_setopt($ch,CURLOPT_REFERER,"https://ffmovies.to");
-  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
-  //curl_setopt($ch, CURLOPT_HEADER,1);
-  curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie);
-  curl_setopt($ch, CURLOPT_COOKIEJAR, $cookie);
-  curl_setopt($ch, CURLOPT_HTTPHEADER, $head);
-  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
-  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
-  $h = curl_exec($ch);
-  curl_close($ch);
-  $x=json_decode($h,1);
-  //print_r ($x);
-  $filelink=urldecode($x['target']);
-    }
-  }
-}
-}
+//}
 //echo $filelink;
 ///////////////////////////////////////////////////
  $srt=$x['subtitle'];
@@ -1539,6 +1606,8 @@ $filelink=str_prep($filelink);
 //die();
 if (strpos($filelink,".googlevideo.com") !== false) {
   $link=$filelink;
+} elseif (strpos($filelink,"storage.googleapis.com") !== false) {
+  $link=$filelink;
 } elseif (preg_match("/master\.m3u8/",$filelink)) { // from cartoonhd (https://rbfq1m.svid.li)
   $ua = $_SERVER['HTTP_USER_AGENT'];
   $l=$filelink;
@@ -1658,6 +1727,32 @@ if (count($pl) > 1) {
  }
 } elseif (strpos($filelink,"archive.org") !== false) {
   $link=$filelink;
+} elseif (strpos($filelink,"streamtape.") !== false) {
+  // https://streamtape.com/e/Jq2V9jmvyrT9Ja
+  $ua="Mozilla/5.0 (Windows NT 10.0; WOW64; rv:46.0) Gecko/20100101 Firefox/46.0";
+  $ch = curl_init();
+  curl_setopt($ch, CURLOPT_URL, $filelink);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
+  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+  //curl_setopt($ch,CURLOPT_REFERER,"supervideo.tv");
+  curl_setopt($ch, CURLOPT_ENCODING, "");
+  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+  $h = curl_exec($ch);
+  curl_close($ch);
+  //echo $h;
+  if (preg_match('/(\/\/[\.\d\w\-\.\/\\\:\?\&\#\%\_\,]*(\.(srt|vtt)))/', $h, $s))
+  $srt="https:".$s[1];
+  //echo $srt;
+  $t1=explode('div id="videolink',$h);
+  $t2=explode(">",$t1[1]);
+  $t3=explode("<",$t2[1]);
+  if (strpos($t3[0],"http") === false)
+  $link="https:".$t3[0];
+  else
+  $link=$t3[0];
 } elseif (strpos($filelink,"dogestream.") !== false) {
   // https://dogestream.me/player/index.php?data=d3802b1dc0d80d8a3c8ccc6ccc068e7c
   //echo $filelink;
@@ -1822,6 +1917,8 @@ if ($link && $flash<>"flash")
 } elseif (strpos($filelink,"movcloud.net") !== false) {
   // https://movcloud.net/embed/ns-9qmdfjZfB
   if (preg_match("/\/embed\/([a-zA-Z0-9_\-]+)/",$filelink,$m)) {
+  if (preg_match('/([http|https][\.\d\w\-\.\/\\\:\?\&\#\%\_\,]*(\.(srt|vtt)))/', $filelink, $s))
+  $srt=$s[1];
    $id=$m[1];
    $l="https://api.movcloud.net/stream/".$id;
    $head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:75.0) Gecko/20100101 Firefox/75.0',
@@ -1840,6 +1937,7 @@ if ($link && $flash<>"flash")
   $h = curl_exec($ch);
   curl_close($ch);
   $r=json_decode($h,1);
+  //print_r ($r);
   $link=$r['data']['sources'][0]['file'];
   if (strpos($link,"http") !== false && $flash <> "flash")
    $link=$link."|Origin=".urlencode("https://movcloud.net");
@@ -2314,7 +2412,7 @@ if (count($pl) > 0) {
   $filelink=$t1[0];
   $ref=$t1[1];
   $link=$filelink;
-
+  /*
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $link);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
@@ -2330,8 +2428,47 @@ if (count($pl) > 0) {
   //echo $h;
   if (preg_match("/location:\s*(http.+)/i",$h,$m))
    $link = trim($m[1]);
-  if ($link && $flash <> "flash")
-   $link=$link."|Referer=".urlencode($ref);
+  */
+  $ch = curl_init();
+  curl_setopt($ch, CURLOPT_URL, $link);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
+  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+  //curl_setopt($ch, CURLOPT_HEADER,1);
+  //curl_setopt($ch, CURLOPT_NOBODY,1);
+  curl_setopt($ch, CURLOPT_REFERER,$ref);
+  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+  $h = curl_exec($ch);
+  curl_close($ch);
+  $h=preg_replace_callback(
+    "/http.+/",  // "" + num
+    function ($m) {
+      $t1=explode("url=",$m[0]);
+      $host=parse_url($t1[1])['host'];
+      $x=str_replace($host,"rr1.srtaemyl.icu",$m[0]);
+      return $x;
+    },
+    $h
+  );
+  //$h=preg_replace("/http.+/","redirect.php?file="."\$0",$h);
+  //echo $h;
+  //die();
+  file_put_contents("lava.m3u8",$h);
+
+  if ($flash == "flash") {
+
+  //$p = dirname($_SERVER['HTTP_REFERER']);
+  $t1=explode("?",$_SERVER['HTTP_REFERER']);
+  $p=dirname($t1[0]);
+  $link = $p."/lava.m3u8";
+  } else {
+  $link = "http://127.0.0.1:8080/scripts/filme/lava.m3u8";
+  }
+
+  //if ($link && $flash <> "flash")
+  // $link=$link."|Referer=".urlencode($ref)."&Origin=".urlencode($ref);
   //echo $link;
   //$h=file_get_contents($link);  //#EXT-X-BYTERANGE:2685580@3072 ??????
   //echo $h;

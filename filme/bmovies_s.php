@@ -5,24 +5,25 @@ function str_between($string, $start, $end){
 	if ($ini == 0) return ""; $ini += strlen($start); $len = strpos($string,$end,$ini) - $ini;
 	return substr($string,$ini,$len);
 }
-include ("../common.php");
-include ("../cloudflare.php");
+include ("../common.php");;
 $page = $_GET["page"];
 $tip= $_GET["tip"];
 $tit=$_GET["title"];
 $link=$_GET["link"];
 $width="200px";
 $height="278px";
+$last_good="https://bmovies.vip";
+$host=parse_url($last_good)['host'];
 /* ==================================================== */
 $has_fav="yes";
 $has_search="yes";
 $has_add="yes";
 $has_fs="yes";
-$fav_target="yesmovies_s_fav.php?host=https://yesmovies.ag";
-$add_target="yesmovies_s_add.php";
+$fav_target="bmovies_s_fav.php?host=".$last_good;;
+$add_target="bmovies_s_add.php";
 $add_file="";
-$fs_target="yesmovies_ep.php";
-$target="yesmovies_s.php";
+$fs_target="bmovies_ep.php";
+$target="bmovies_s.php";
 /* ==================================================== */
 $base=basename($_SERVER['SCRIPT_FILENAME']);
 $p=$_SERVER['QUERY_STRING'];
@@ -167,45 +168,34 @@ if ($page==1) {
 }
 echo '</TR>'."\r\n";
 if($tip=="release") {
-  $l="https://yesmovies.ag/movie/filter/series/page-".$page.".html";
+  $l="https://".$host."/movie/filter/series/".$page."/";
 } else {
   $search=str_replace(" ","+",$tit);
-  $l = "https://yesmovies.ag/searching/".$search."/page-".$page.".html";
+  $l = "https://".$host."/search/".$search;
 }
 ///////////////////////////////////////////////
 $ua = $_SERVER['HTTP_USER_AGENT'];
-//$ua="Mozilla/5.0 (Windows NT 10.0; rv:71.0) Gecko/20100101 Firefox/71.0";
-$cookie=$base_cookie."hdpopcorns.dat";
-if ($page==1 && $tip =="search") {
-$html=cf_pass($l,$cookie);
-sleep(1);
-$html=cf_pass($l,$cookie);
-} else {
+$ua="Mozilla/5.0 (Windows NT 10.0; rv:71.0) Gecko/20100101 Firefox/71.0";
 
-///////////////////////////////////////////////
 
 $host=parse_url($l)['host'];
   $ch = curl_init($l);
   curl_setopt($ch, CURLOPT_USERAGENT, $ua);
-  curl_setopt($ch,CURLOPT_REFERER,"https://yesmovies.ag");
   curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER  ,1);  // RETURN THE CONTENTS OF THE CALL
-  curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie);
-  curl_setopt($ch, CURLOPT_COOKIEJAR, $cookie);
   curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
   curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
   curl_setopt($ch, CURLOPT_TIMEOUT, 15);
   $html = curl_exec($ch);
   curl_close ($ch);
-}
+  
 $videos = explode('div class="ml-item', $html);
 unset($videos[0]);
 $videos = array_values($videos);
 foreach($videos as $video) {
-  $t1 = explode('href="',$video);
-  $t2 = explode('"', $t1[1]);
+  $t1 = explode('load_info/',$video);
+  $t2 = explode('/', $t1[1]);
   $link = $t2[0];
-  if (strpos($link,"http") === false) $link="https://".$host.$link;
   $t1 = explode('title="', $video);
   $t2 = explode('"', $t1[1]);
   $title = $t2[0];

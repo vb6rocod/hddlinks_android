@@ -159,6 +159,25 @@ if ($imdbid) {
      $res['data'][$k]['attributes']['files'][0]['id']
    );
   }
+} else {
+  $search=array(
+   'query' => $title
+  );
+  $q=http_build_query($search);
+  $l="https://www.opensubtitles.com/api/v1/search/movie?".$q;
+  $ch = curl_init();
+  curl_setopt($ch, CURLOPT_URL, $l);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
+  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+  curl_setopt($ch, CURLOPT_HTTPHEADER, $head);
+  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+  $h = curl_exec($ch);
+  curl_close($ch);
+  $res=json_decode($h,1);
+  print_r ($res);
 }
 } else {  // start tv
 if ($imdbid) {

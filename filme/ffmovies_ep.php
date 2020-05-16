@@ -38,9 +38,30 @@ if (preg_match("/(.*?)(\d+)$/",$tit,$m)) {
 }
 $ua     =   $_SERVER['HTTP_USER_AGENT'];
 $cookie=$base_cookie."ffmovies.dat";
-$l="https://ffmovies.to/ajax/film/servers/".$link;
-$l="https://ffmovies.to/ajax/film/servers?id=".$link;
-$l="https://ffmovies.to/ajax/film/servers?id=".$link."&_=839&ts=".time();
+$time=round(time()/100)*100;
+  $l1="https://ffmovies.to/user/ajax/menu-bar?ts=".$time."&_=743";
+$head=array('Accept: application/json, text/javascript, */*; q=0.01',
+'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
+'Accept-Encoding: deflate',
+'Connection: keep-alive',
+'Upgrade-Insecure-Requests: 1');
+  $ch = curl_init();
+  curl_setopt($ch, CURLOPT_URL, $l1);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
+  curl_setopt($ch,CURLOPT_REFERER,"https://ffmovies.to/tv-series");
+  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+  curl_setopt($ch, CURLOPT_HEADER,1);
+  curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie);
+  curl_setopt($ch, CURLOPT_COOKIEJAR, $cookie);
+  curl_setopt($ch, CURLOPT_HTTPHEADER, $head);
+  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+  $h = curl_exec($ch);
+  curl_close($ch);
+  
+$l="https://ffmovies.to/ajax/film/servers?id=".$link."&_=839&ts=".$time;
 $head=array('Accept: application/json, text/javascript, */*; q=0.01',
 'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
 'Accept-Encoding: deflate',
@@ -66,37 +87,70 @@ $x=json_decode($h,1);
 $h=$x['html'];
 //echo $h;
 $s=array();
-$videos = explode('href="', $h);
+$videos = explode('<li><a', $h);
 unset($videos[0]);
 $videos = array_values($videos);
 foreach($videos as $video) {
-  $t1=explode('>',$video);
-  $t2=explode("<",$t1[1]);
-  $s[]=$t2[0];
+  $t1=explode('href="',$video);
+  $t2=explode('"',$t1[1]);
+  $href=$t2[0];
+  $t3=explode('span>',$t1[1]);
+  $t4=explode("<",$t3[1]);
+  $ep_tit=trim($t4[0]);
+  $t1=explode('data-kname="',$video);
+  $t2=explode('"',$t1[1]);
+  $t3=explode(":",$t2[0]);
+  $episod=$t3[1];
+  $sez1=$t3[0];
+  $s[$sez1][$episod]=$ep_tit;
 }
 //die();
-$s=array_unique($s);
-//ksort($s);
-asort($s);
-//print_r($s);
+//$s=array_unique($s);
+//print_r ($s);
+//$s1=array_unique($s[1]);
+//print_r ($s1);
 //die();
-$n=0;
+//ksort($s);
+//ksort($s);
 
 echo '<table border="1" width="100%">'."\n\r";
 
 $p=0;
 
-echo '<TR>';
-echo '<td class="sez" style="color:black;text-align:center"><a href="#sez'.$season.'">Sezonul '.$season.'</a></TD>';
-
+foreach ($s as $key => $value) {
+if ($p==0) echo '<TR>';
+echo '<td class="sez" style="color:black;text-align:center"><a href="#sez'.($key).'">Sezonul '.($key).'</a></TD>';
+$p++;
+if ($p == 10) {
+ echo '</tr>';
+ $p=0;
+ }
+}
+if ($p < 10 && $p > 0 && $k > 9) {
+ for ($x=0;$x<10-$p;$x++) {
+   echo '<TD></TD>'."\r\n";
+ }
+ echo '</TR>'."\r\n";
+}
 echo '</TABLE>';
+foreach ($s as $key => $value) {
+echo '<table border="1" width="100%">'."\n\r";
+ $season=$key;
+
+echo '<TR>';
+echo '<td class="sez" style="color:black;background-color:#0a6996;color:#64c8ff;text-align:center">Sezonul '.$season.'</TD>';
+echo '</TR></TABLE>';
 echo '<table border="1" width="100%">'."\n\r";
 $year="";
 $img_ep="";
 $sez=$season;
-foreach ($s as $key=>$value) {
-  $episod=$value;
-  $ep_title=$episod;
+$n=0;
+foreach ($s[$key] as $key1=>$value1) {
+  $episod=$key1;
+  $ep_tit=$value1;
+  if ($value1 <> "")
+  $ep_tit_d=$season."x".$episod." ".$value1;
+  else
   $ep_tit_d=$season."x".$episod;
   $link_f=$fs_target.'?tip=series&link='.urlencode($link).'&title='.urlencode(fix_t($tit)).'&image='.$img_ep."&sez=".$season."&ep=".$episod."&ep_tit=".urlencode(fix_t($ep_tit))."&year=".$year."&hash=".$hash;
    if ($n == 0) echo "<TR>"."\n\r";
@@ -118,6 +172,7 @@ foreach ($s as $key=>$value) {
     echo '</TR>'."\r\n";
   }
 echo '</table>';
+}
 
 ?>
 </body>

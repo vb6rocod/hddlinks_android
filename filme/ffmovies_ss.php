@@ -194,7 +194,8 @@ $head=array('Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q
   curl_setopt($ch, CURLOPT_TIMEOUT, 15);
   $html = curl_exec($ch);
   curl_close($ch);
-  $l1="https://ffmovies.to/user/ajax/menu-bar?ts=".time()."&_=743";
+  $time=round(time()/100)*100;
+  $l1="https://ffmovies.to/user/ajax/menu-bar?ts=".$time."&_=743";
 $head=array('Accept: application/json, text/javascript, */*; q=0.01',
 'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
 'Accept-Encoding: deflate',
@@ -226,10 +227,16 @@ foreach($videos as $video) {
  $link=$t2[0];
  $t1=explode('href="',$video);
  $t2=explode('"',$t1[1]);
+ if (strpos($video,'div class="season') !== false)
+  $movie=true;
+ else
+  $movie=false;
+ /*
  if (strpos($t2[0],"/film/") !== false)
    $movie=true;
  else
    $movie=false;
+ */
  $t1=explode('src="',$video);
  $t2=explode('"',$t1[1]);
  $image=$t2[0];
