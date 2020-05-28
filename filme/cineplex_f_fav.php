@@ -179,19 +179,23 @@ foreach($arr as $key => $value) {
     $link1=$link;
     $title11 = $key;
     $image=$arr[$key]["image"];
+    $year=$arr[$key]["year"];
+    //echo $title11."\n";
     if (preg_match("/tmdb\.org/",$image) && $fix=="yes" && $api_key) {
     $x=implode(",",get_headers($image));
-    if (preg_match("/404 Not Found/",$x)) {
-       $rest = substr($title11, -6);
+    //echo $x;
+    if (preg_match("/text\/html/",$x)) {
+       $title2=unfix_t(urldecode($title11));
+       $rest = substr($title2, -6);
        if (preg_match("/\(?((1|2)\d{3})\)?/",$rest,$m)) {
-       //$year=$m[1];
-       $title1=trim(str_replace($m[0],"",$title11));
+       //$year1=$m[1];
+       $title1=trim(str_replace($m[0],"",$title2));
     } else {
       //$year="";
-      $title1=$title11;
+      $title1=$title2;
     }
-      $l="https://api.themoviedb.org/3/search/movie?api_key=".$api_key."&query=".urlencode($title1);
-      //echo $l;
+      $l="https://api.themoviedb.org/3/search/movie?api_key=".$api_key."&query=".urlencode($title1)."&year=".$year;
+      //echo $l."\n";
       $ch = curl_init($l);
       curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows; U; Windows NT 6.1; en-US; rv:1.9.1.2) Gecko/20090729 Firefox/3.5.2 GTB5');
       curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
@@ -214,7 +218,7 @@ foreach($arr as $key => $value) {
       }
     }
     }
-    $year=$arr[$key]["year"];
+
 
   if ($n==0) echo '<TR>';
   $link='cineplex_fs.php?tip=movie&imdb='.$link1.'&title='.urlencode(fix_t($title11)).'&image='.$image."&year=".$year."&token=".$token;

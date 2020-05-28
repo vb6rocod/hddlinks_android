@@ -70,7 +70,7 @@ foreach($videos as $video) {
   $ep_tit=$m[2];
   }
 
-  $s[$episod]=$ep_tit;
+  $s[$episod]=array($link,$ep_tit);
 }
 //$s=array_unique($s);
 //print_r ($s);
@@ -78,7 +78,8 @@ $season=$sez;
 $img_ep=$image;
 foreach ($s as $key=>$value) {
   $episod=$key;
-  $ep_tit=$value;
+  $ep_tit=$value[1];
+  $link=$value[0];
   if ($ep_tit)
    $ep_tit_d=$season."x".$episod." ".$ep_tit;
   else

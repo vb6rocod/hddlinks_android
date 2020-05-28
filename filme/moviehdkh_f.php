@@ -6,7 +6,7 @@ function str_between($string, $start, $end){
 	return substr($string,$ini,$len);
 }
 include ("../common.php");
-include ("../cloudflare1.php");
+include ("../cloudflare.php");
 $page = $_GET["page"];
 $tip= $_GET["tip"];
 $tit=$_GET["title"];
@@ -181,13 +181,31 @@ $ua = $_SERVER['HTTP_USER_AGENT'];
 $cookie=$base_cookie."hdpopcorns.dat";
 
 $host=parse_url($l)['host'];
+/*
 if ($page==1 && $tip=="release") {
 $l1="https://moviehdkh.com/";
 $html1=cf_pass($l1,$cookie);
 }
-$html=cf_pass($l,$cookie);
-
-//echo $html;
+*/
+//$html=cf_pass($l,$cookie);
+/*
+  $ch = curl_init();
+  curl_setopt($ch, CURLOPT_URL, $l);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
+  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+  curl_setopt($ch, CURLOPT_ENCODING, "");
+  curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie);
+  curl_setopt($ch, CURLOPT_COOKIEJAR, $cookie);
+  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+  //curl_setopt($ch,CURLOPT_HTTPHEADER,$head);
+  $html = curl_exec($ch);
+  curl_close($ch);
+echo $html;
+*/
+$html=file_get_contents($l);
 $r=array();
 if ($tip=="release") {
   $t1=explode("Daily Update",$html);

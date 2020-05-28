@@ -16,6 +16,7 @@ $t1=explode("|",$h);
 $adult=$t1[0];
 }
 ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html><head>
 <meta http-equiv="content-type" content="text/html; charset=UTF-8">
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate"/>
@@ -64,6 +65,8 @@ function ajaxrequest(url) {
        msg="tv/w.php";
        document.getElementById("fancy").href=msg;
        document.getElementById("fancy").click();
+     } else if (charCode == "48" && e.target.type != "text") {
+       document.getElementById("manual1").click();
     }
    }
 document.onkeypress =  zx;
@@ -72,6 +75,9 @@ document.onkeypress =  zx;
 </head>
 <body>
 <a id="fancy" data-fancybox data-type="iframe" href=""></a>
+<a id="manual1" href="my_sister.jpg" data-fancybox data-caption="in memoriam...">
+
+</a>
 <script>
 function on() {
     document.getElementById("overlay").style.display = "block";

@@ -11,17 +11,17 @@ $tip= $_GET["tip"];
 $tit=$_GET["title"];
 $link=$_GET["link"];
 $width="200px";
-$height="278px";
+$height="100px";
 /* ==================================================== */
-$has_fav="yes";
-$has_search="yes";
-$has_add="yes";
-$has_fs="yes";
-$fav_target="movie4k_f_fav.php?host=https://movie4k.ag";
-$add_target="movie4k_f_add.php";
+$has_fav="no";
+$has_search="no";
+$has_add="no";
+$has_fs="no";
+$fav_target="";
+$add_target="filme_add.php";
 $add_file="";
-$fs_target="movie4k_fs.php";
-$target="movie4k_f.php";
+$fs_target="";
+$target="latimp.php";
 /* ==================================================== */
 $base=basename($_SERVER['SCRIPT_FILENAME']);
 $p=$_SERVER['QUERY_STRING'];
@@ -165,66 +165,77 @@ if ($page==1) {
    echo '<TD class="nav" colspan="4" align="right"><a href="'.$prev.'">&nbsp;&lt;&lt;&nbsp;</a> | <a href="'.$next.'">&nbsp;&gt;&gt;&nbsp;</a></TD>'."\r\n";
 }
 echo '</TR>'."\r\n";
-$captcha="03";
-if($tip=="release") {
-  $l="https://movie4k.ag/?c=movie&m=filter2&g_recaptcha_response=".$captcha."&page=".$page."&position=0&order_by=releases&keyword=&date=&quality=&res=&genre=&directors=&cast=&subtitles=&country=&year=&yrf=&yrt=&rating=&votes=&language=&lang=";
-} else {
-  $search=str_replace(" ","%20",$tit);
-  $l="https://movie4k.ag/?c=movie&m=filter2&g_recaptcha_response=03&page=".$page."&position=0&order_by=movies&keyword=".$search."&date=&quality=&res=&genre=&directors=&cast=&subtitles=&country=&year=&yrf=&yrt=&rating=&votes=&language=&lang=";
+
+if($link=="stan") {
+$post='action=load_more&page='.($page-1).'&template=html/loop/content&vars[post_type]=post&vars[post_status]=publish&vars[ignore_sticky_posts]=1&vars[paged]=1&vars[orderby]=latest&vars[order]=DESC&vars[meta_query][0][key]=channel_id&vars[meta_query][0][value]="5369";&vars[meta_query][0][compare]=LIKE&vars[meta_query][1][key]=channel_id&vars[meta_query][1][value]=:5369;&vars[meta_query][1][compare]=LIKE&vars[meta_query][2][key]=channel_id&vars[meta_query][2][value]=5369&vars[meta_query][2][compare]==&vars[meta_query][relation]=OR&id_playlist=';
 }
-$host=parse_url($l)['host'];
-$ua = $_SERVER['HTTP_USER_AGENT'];
-$head=array('Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+$ua="Mozilla/5.0 (Windows NT 10.0; rv:75.0) Gecko/20100101 Firefox/75.0";
+$l="https://latimp.eu/wp-admin/admin-ajax.php";
+$head=array('Accept: */*',
 'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
 'Accept-Encoding: deflate',
-'Connection: keep-alive',
+'Referer: https://latimp.eu/channel/stan-si-bran/',
+'Content-Type: application/x-www-form-urlencoded; charset=UTF-8',
 'X-Requested-With: XMLHttpRequest',
-'Referer: https://movie4k.ag/',
-'Cookie: MarketGidStorage=0 ; captcha='.$captcha.'; approve=1; _gat=1; approve_search=1',
-'Upgrade-Insecure-Requests: 1');
+'Content-Length: '.strlen($post).'',
+'Origin: https://latimp.eu',
+'Connection: keep-alive');
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $l);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
   curl_setopt($ch, CURLOPT_USERAGENT, $ua);
   curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
-  curl_setopt($ch,CURLOPT_HTTPHEADER,$head);;
-  curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
-  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
+  curl_setopt($ch, CURLOPT_HTTPHEADER, $head);
+  curl_setopt($ch, CURLOPT_POST,1);
+  curl_setopt($ch, CURLOPT_POSTFIELDS,$post);
+  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
   curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
   curl_setopt($ch, CURLOPT_TIMEOUT, 15);
-  $html = curl_exec($ch);
-//echo $html;
-$videos = explode('div id="post-', $html);
+  //curl_setopt($ch, CURLOPT_HEADER,1);
+  $h = curl_exec($ch);
+  curl_close($ch);
+  //echo $h;
+//die();
+$videos = explode('<div class="picture">', $h);
+
 unset($videos[0]);
 $videos = array_values($videos);
+
 foreach($videos as $video) {
-  $t1 = explode('href="',$video);
+  $t1 = explode('href="', $video);
   $t2 = explode('"', $t1[1]);
   $link = $t2[0];
-  if (strpos($link,"http") === false) $link="https://".$host.$link;
-  $t2 = explode('>', $t1[2]);
-  $t3 = explode('<',$t2[1]);
-  $title = trim($t3[0]);
-  $title = prep_tit($title);
-  $t1 = explode('src="', $video);
-  $t2 = explode('"', $t1[1]);
-  $image = $t2[0];
-  if (strpos($image,"http") === false) $image="https:".$image;
+
+  $t1=explode('title="',$video);
+  $t2=explode('"',$t1[1]);
+  $t4=explode("film",$t2[0]);
+  $title=trim($t2[0]);
+
+  $title=prep_tit($title);
+  $title=preg_replace("/Stan \S+ Bran \-\s*/i","",$title);
+  if (substr($title, -1)=="-")
+   $title=trim(substr($title, 0, -1));
   $year="";
   $imdb="";
-  $rest = substr($title, -6);
-  if (preg_match("/\((\d+)\)/",$rest,$m)) {
-   $year=$m[1];
-   $tit_imdb=trim(str_replace($m[0],"",$title));
-  } else {
-   $year="";
-   $tit_imdb=$title;
+  if (preg_match("/\(?((1|2)\d{3})\)?/",$title,$r)) {
+     $year=$r[1];
   }
-  $link_f=$fs_target.'?tip=movie&link='.urlencode($link).'&title='.urlencode(fix_t($title)).'&image='.$image."&sez=&ep=&ep_tit=&year=".$year;
-  if ($title) {
+  $t1=explode(" - ",$title);
+  $t=$t1[0];
+  $t=preg_replace("/\(?((1|2)\d{3})\)?/","",$t);
+  $tit_imdb=trim($t);
+  $t1=explode('data-src="',$video);
+  $t2=explode('"',$t1[1]);
+  $image=$t2[0];
+  //$image = "r_m.php?file=".$image;
+
+  if ($has_fs == "no")
+    $link_f='filme_link.php?file='.urlencode($link).'&title='.urlencode(fix_t($title));
+  else
+    $link_f=$fs_target.'?tip=movie&link='.urlencode($link).'&title='.urlencode(fix_t($tit)).'&image='.$image."&sez=&ep=&ep_tit=&year=".$year;
   if ($n==0) echo '<TR>'."\r\n";
   $val_imdb="tip=movie&title=".urlencode(fix_t($tit_imdb))."&year=".$year."&imdb=".$imdb;
-  $fav_link="mod=add&title=".urlencode(fix_t($title))."&link=".urlencode($link)."&image=".urlencode($image)."&year=".$year;
+  $fav_link="file=".$add_file."&mod=add&title=".urlencode(fix_t($title))."&link=".urlencode($link)."&image=".urlencode($image)."&year=".$year;
   if ($tast == "NU") {
     echo '<td class="mp" width="25%"><a href="'.$link_f.'" id="myLink'.$w.'" target="_blank" onmousedown="isKeyPressed(event)">
     <img id="myLink'.$w.'" src="'.$image.'" width="'.$width.'" height="'.$height.'"><BR>'.$title.'</a>
@@ -246,10 +257,7 @@ foreach($videos as $video) {
   echo '</tr>'."\r\n";
   $n=0;
   }
-  }
- }
-
-/* bottom */
+}
   if ($n < 4 && $n > 0) {
     for ($k=0;$k<4-$n;$k++) {
       echo '<TD></TD>'."\r\n";
@@ -264,6 +272,6 @@ else
   echo '<a href="'.$next.'">&nbsp;&gt;&gt;&nbsp;</a></TD>'."\r\n";
 echo '</TR>'."\r\n";
 echo "</table>"."\r\n";
-echo "</table>";
-?></body>
+?>
+<br></body>
 </html>

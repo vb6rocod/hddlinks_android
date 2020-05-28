@@ -45,7 +45,7 @@ $host=parse_url($requestLink)['host'];
   $h = curl_exec($ch);
   curl_close ($ch);
 
-
+//echo $h;
 $n=0;
 $sezoane=array();
 $sezoane[]=$sezon;
@@ -74,9 +74,10 @@ echo '</TABLE>';
   echo '<table border="1" width="100%">'."\n\r";
   echo '<TR><td class="sez" style="color:black;background-color:#0a6996;color:#64c8ff;text-align:center" colspan="3">Sezonul '.($sez).'</TD></TR>';
 
-$t1=explode('hidden" value=',$h);
+$t1=explode('playlist" type="hidden" value=',$h);
 $t2=explode("'",$t1[1]);
 $e=json_decode($t2[1],1);
+//print_r ($e);
 $n=0;
 $season=$sezon;
 for ($k=0;$k<count($e);$k++) {
@@ -88,10 +89,10 @@ for ($k=0;$k<count($e);$k++) {
   $img_ep=$image;
   $episod="";
   $ep_title="";
-  if (preg_match("/Episode (\d+)\s+(.*?)/",$title,$m)) {      //1.The Man Who Saved Central City
+  if (preg_match("/(Episode (\d+)\s+([a-zA-Z0-9\s]+))|(.*\s*\-\s*\d*x(\d+)\s*\-\s*([a-zA-Z0-9\s]+))/",$title,$m)) {      //1.The Man Who Saved Central City
   //print_r ($m);
-  $episod=$m[1];
-  $ep_tit=trim($m[2]);
+  $episod=$m[2].$m[5];
+  $ep_tit=trim($m[3].$m[6]);
   if ($ep_tit)
    $ep_tit_d=$season."x".$episod." ".$ep_tit;
   else

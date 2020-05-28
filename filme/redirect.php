@@ -1,7 +1,8 @@
 <?php
 include ("../common.php");
-$file=$_GET["file"];
+$file=urldecode($_GET["file"]);
 $ua = $_SERVER['HTTP_USER_AGENT'];
+$ua="Mozilla/5.0 (Windows NT 10.0; rv:75.0) Gecko/20100101 Firefox/75.0";
 $head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:75.0) Gecko/20100101 Firefox/75.0',
 'Accept: */*',
 'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
@@ -11,17 +12,22 @@ $head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:75.0) Gecko/20100101 F
 'Referer: https://eb1.ffull.co/embed/tt0114887');
 $ch = curl_init();
 curl_setopt($ch, CURLOPT_URL, $file);
-curl_setopt($ch, CURLOPT_REFERER,$file);
-curl_setopt($ch, CURLOPT_HEADER, false);
-curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+//curl_setopt($ch, CURLOPT_REFERER,$file);
+curl_setopt($ch, CURLOPT_HEADER, 1);
+curl_setopt($ch, CURLOPT_NOBODY,1);
+//curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
 curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
 curl_setopt($ch, CURLOPT_USERAGENT, $ua);
 curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
 curl_setopt($ch, CURLOPT_TIMEOUT, 15);
-$res = curl_exec($ch);
-$rescode = curl_getinfo($ch, CURLINFO_HTTP_CODE); 
+$h = curl_exec($ch);
+//$rescode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
 curl_close($ch) ;
-echo $res;
-
+//echo $res;
+//echo $h;
+if (preg_match("/location:\s*(.+)/i",$h,$m)){
+ $movie=trim($m[1]);
+ header("Location: $movie");
+}
 ?>

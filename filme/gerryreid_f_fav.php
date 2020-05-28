@@ -5,9 +5,9 @@ $host=$_GET['host'];
 $page_title="Filme favorite";
 $width="200px";
 $height="278px";
-$add_target="movie4k_f_add.php";
-$fs_target="movie4k_fs.php";
-$file=$base_fav."movie4k_f.dat";
+$add_target="gerryreid_f_add.php";
+$fs_target="gerryreid_fs.php";
+$file=$base_fav."gerryreid_f.dat";
 ?>
 <html><head>
 <meta http-equiv="content-type" content="text/html; charset=UTF-8">

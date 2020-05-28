@@ -12,16 +12,18 @@ $tit=$_GET["title"];
 $link=$_GET["link"];
 $width="200px";
 $height="278px";
+$last_good="https://gerryreid.com";
+$host=parse_url($last_good)['host'];
 /* ==================================================== */
 $has_fav="yes";
 $has_search="yes";
 $has_add="yes";
 $has_fs="yes";
-$fav_target="movie4k_s_fav.php?host=https://movie4k.ag";
-$add_target="movie4k_s_add.php";
+$fav_target="gerryreid_f_fav.php?host=".$last_good;
+$add_target="gerryreid_f_add.php";
 $add_file="";
-$fs_target="movie4k_ep.php";
-$target="movie4k_s.php";
+$fs_target="gerryreid_fs.php";
+$target="gerryreid_f.php";
 /* ==================================================== */
 $base=basename($_SERVER['SCRIPT_FILENAME']);
 $p=$_SERVER['QUERY_STRING'];
@@ -39,12 +41,12 @@ $prev=$base."?page=".($page-1)."&".$p;
 $tit=unfix_t(urldecode($tit));
 $link=unfix_t(urldecode($link));
 /* ==================================================== */
-if (file_exists($base_cookie."seriale.dat"))
-  $val_search=file_get_contents($base_cookie."seriale.dat");
+if (file_exists($base_cookie."filme.dat"))
+  $val_search=file_get_contents($base_cookie."filme.dat");
 else
   $val_search="";
 $form='<form action="'.$target.'" target="_blank">
-Cautare serial:  <input type="text" id="title" name="title" value="'.$val_search.'">
+Cautare film:  <input type="text" id="title" name="title" value="'.$val_search.'">
 <input type="hidden" name="page" id="page" value="1">
 <input type="hidden" name="tip" id="tip" value="search">
 <input type="hidden" name="link" id="link" value="">
@@ -53,7 +55,7 @@ Cautare serial:  <input type="text" id="title" name="title" value="'.$val_search
 /* ==================================================== */
 if ($tip=="search") {
   $page_title = "Cautare: ".$tit;
-  if ($page == 1) file_put_contents($base_cookie."seriale.dat",$tit);
+  if ($page == 1) file_put_contents($base_cookie."filme.dat",$tit);
 } else
   $page_title=$tit;
 /* ==================================================== */
@@ -165,53 +167,51 @@ if ($page==1) {
    echo '<TD class="nav" colspan="4" align="right"><a href="'.$prev.'">&nbsp;&lt;&lt;&nbsp;</a> | <a href="'.$next.'">&nbsp;&gt;&gt;&nbsp;</a></TD>'."\r\n";
 }
 echo '</TR>'."\r\n";
-$captcha="03";
-if($tip=="release") {
-  $l="https://movie4k.ag/?c=movie&m=filter2&g_recaptcha_response=".$captcha."&page=".$page."&position=0&order_by=tvshows&keyword=&date=&quality=&res=&genre=&directors=&cast=&subtitles=&country=&year=&yrf=&yrt=&rating=&votes=&language=&lang=";
+$f=array();
+if ($tip=="search") {
+ $l="https://".$host."/list/".str_replace(" ","%20",$tit);
 } else {
-  $search=str_replace(" ","%20",$tit);
-  $l="https://movie4k.ag/?c=movie&m=filter2&g_recaptcha_response=03&page=".$page."&position=0&order_by=tvshows&keyword=".$search."&date=&quality=&res=&genre=&directors=&cast=&subtitles=&country=&year=&yrf=&yrt=&rating=&votes=&language=&lang=";
+ $l="https://".$host."/category/movies/page/".$page."/";
 }
-$host=parse_url($l)['host'];
-$ua = $_SERVER['HTTP_USER_AGENT'];
-$head=array('Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
-'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
-'Accept-Encoding: deflate',
-'Connection: keep-alive',
-'X-Requested-With: XMLHttpRequest',
-'Referer: https://movie4k.ag/',
-'Cookie: MarketGidStorage=0 ; captcha='.$captcha.'; approve=1; _gat=1; approve_search=1',
-'Upgrade-Insecure-Requests: 1');
+$ua="Mozilla/5.0 (Windows NT 10.0; rv:75.0) Gecko/20100101 Firefox/75.0";
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $l);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
   curl_setopt($ch, CURLOPT_USERAGENT, $ua);
   curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
-  curl_setopt($ch,CURLOPT_HTTPHEADER,$head);;
-  curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
-  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
-  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
-  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
-  $html = curl_exec($ch);
-//echo $html;
-$videos = explode('div id="post-', $html);
+  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 25);
+  $h = curl_exec($ch);
+  curl_close($ch);
+  if (!$h) $h=file_get_contents($l);
+
+$host=parse_url($l)['host'];
+$videos = explode('class="movie-poster">', $h);
 unset($videos[0]);
 $videos = array_values($videos);
 foreach($videos as $video) {
-  $t1 = explode('href="',$video);
-  $t2 = explode('"', $t1[1]);
-  $link = $t2[0];
-  if (strpos($link,"http") === false) $link="https://".$host.$link;
-  $t2 = explode('>', $t1[2]);
-  $t3 = explode('<',$t2[1]);
-  $title = trim($t3[0]);
-  $title = prep_tit($title);
-  $t1 = explode('src="', $video);
-  $t2 = explode('"', $t1[1]);
-  $image = $t2[0];
-  if (strpos($image,"http") === false) $image="https:".$image;
+ $t1=explode('href="',$video);
+ $t2=explode('"',$t1[1]);
+ $link=$t2[0];
+ $t1=explode('src="',$video);
+ $t2=explode('"',$t1[1]);
+ $image=$t2[0];
+ $t1=explode('class="movie-title">',$video);
+ $t2=explode('title="',$t1[1]);
+ $t3=explode('"',$t2[1]);
+ $title=$t3[0];
+  if ($title) $f[] = array($title,$link,$image);
+}
+//echo $html;
+foreach($f as $key => $value) {
+  $title=$value[0];
+  $title=prep_tit($title);
+  $link=$value[1];
+  $image=$value[2];
   $year="";
   $imdb="";
+  $year="";
   $rest = substr($title, -6);
   if (preg_match("/\((\d+)\)/",$rest,$m)) {
    $year=$m[1];
@@ -220,10 +220,10 @@ foreach($videos as $video) {
    $year="";
    $tit_imdb=$title;
   }
-  $link_f=$fs_target.'?tip=series&link='.urlencode($link).'&title='.urlencode(fix_t($title)).'&image='.$image."&sez=&ep=&ep_tit=&year=".$year;
-  if ($title) {
+  $link_f=$fs_target.'?tip=movie&link='.urlencode($link).'&title='.urlencode(fix_t($title)).'&image='.$image."&sez=&ep=&ep_tit=&year=".$year;
+  if ($title && strpos($link,"/show") === false) {
   if ($n==0) echo '<TR>'."\r\n";
-  $val_imdb="tip=series&title=".urlencode(fix_t($tit_imdb))."&year=".$year."&imdb=".$imdb;
+  $val_imdb="tip=movie&title=".urlencode(fix_t($tit_imdb))."&year=".$year."&imdb=".$imdb;
   $fav_link="mod=add&title=".urlencode(fix_t($title))."&link=".urlencode($link)."&image=".urlencode($image)."&year=".$year;
   if ($tast == "NU") {
     echo '<td class="mp" width="25%"><a href="'.$link_f.'" id="myLink'.$w.'" target="_blank" onmousedown="isKeyPressed(event)">

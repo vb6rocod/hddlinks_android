@@ -206,6 +206,7 @@ if (strpos($html,"503 Service") !== false) {
 }
 */
 $html=cf_pass($l,$cookie);
+//echo $html;
 $videos = explode('div data-movie-id="', $html);
 unset($videos[0]);
 $videos = array_values($videos);
@@ -218,7 +219,7 @@ foreach($videos as $video) {
   $t4 = explode('"', $t3[1]);
   $title = $t4[0];
   $title=prep_tit($title);
-  $t1 = explode('&url=', $video);
+  $t1 = explode('src="', $video);
   $t2 = explode('"', $t1[1]);
   $image = $t2[0];
   $rest = substr($title, -6);

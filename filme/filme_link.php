@@ -1025,9 +1025,14 @@ $headers=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:71.0) Gecko/2010010
   curl_setopt($ch, CURLOPT_TIMEOUT, 15);
   $html = curl_exec($ch);
   curl_close($ch);
+  //echo $html;
   preg_match("/post_id\s*\:\s*(\d+)/",$html,$m);
   $id=$m[1];
-  $post="action=show_server&post_id=".$id;
+  preg_match("/s3id\:\s*\'(tt\d+)\'/",$html,$m);
+  $s3=$m[1];
+  $post="action=show_server&post_id=".$id."&s3id=".$s3;
+  //echo "\n".$post."\n";
+  $l="https://vezifs.com/wp-admin/admin-ajax.php";
   $l="https://vezifs.com/wp-admin/admin-ajax.php";
    $ch = curl_init($l);
    curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 10.0; rv:55.0) Gecko/20100101 Firefox/55.0');
@@ -1120,8 +1125,8 @@ $s=$s."database\.serialeonline\.to|drive\.google\.com|videomega\.|vidload\.co|mi
 $s=$s."|hxload\.|bazavox\.com|cloud\.vidhubstr\.org|vidia\.tv|gomostream\.com|viduplayer\.com|leaked-celebrities\.";
 $s=$s."|prostream\.to|videobin\.co|upstream\.to|playtvid\.com|jetload\.net|vidfast\.co|clipwatching\.";
 $s=$s."|(video|player)\.filmeserialeonline\.org|streamwire\.|cloudvid\.icu|mstream\.xyz|streamhoe\.online|videyo\.";
-$s=$s."|fastvid\.co|vidload\.net|rovideo\.net\/embed|eplayvid\.com|dood\.watch|mediashore\.org|uptostream\.com";
-$s=$s."|movcloud\.net|dogestream\.|streamtape\./i";
+$s=$s."|fastvid\.co|vidload\.net|rovideo\.net\/embed|eplayvid\.com|dood\.|mediashore\.org|uptostream\.com";
+$s=$s."|movcloud\.net|dogestream\.|streamtape\.|jawcloud\.|evoload\./i";
 /////////////////////////////////////////////
 //$x=preg_grep($s,$links);
 //print_r ($x);
@@ -1391,7 +1396,7 @@ for ($i=0;$i<count($links);$i++) {
    $pat="/hqq\.watch|xopenload\.me|hqq\.tv\/player\/script\.php|top\.mail\.ru|facebook|twitter|player\.swf";
    $pat .="|img\.youtube|youtube\.com\/user|radioarad|\.jpg|\.png|\.gif|jq\/(js|css)";
    $pat .="|fsplay\.net\?s|changejplayer\.js|validateemb\.php|restore_google\.php|";
-   $pat .="ExoLoader.addZone|js\/api\/share\.js|hindipix\.in\/(js|style)/i";
+   $pat .="ExoLoader.addZone|js\/api\/share\.js|hindipix\.in\/(js|style)|share\.php\?/i";
    if (!preg_match($pat,$cur_link)) {
      $cur_link=str_replace(urldecode("%0A"),"",$cur_link);
      if ($cur_link) $link_f[]=$cur_link;

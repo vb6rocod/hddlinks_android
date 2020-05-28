@@ -135,6 +135,7 @@ foreach($arr as $key => $value) {
 	$link = urldecode($arr[$key]["link"]);
     $title = unfix_t(urldecode($key));
     $image=urldecode($arr[$key]["image"]);
+    if (strpos($image,"http") === false) $image="https:".$image;
     if (preg_match("/tmdb\.org/",$image) && $fix=="yes" && $api_key) {
     $x=implode(",",get_headers($image));
     if (preg_match("/404 Not Found/",$x)) {

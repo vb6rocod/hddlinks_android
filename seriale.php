@@ -71,8 +71,8 @@ document.onkeypress =  zx;
 <TR>
 <TD width="25%"><a href="filme/fsgratis_s.php?page=1&tip=release&title=fsgratis&link=" target="_blank">fsgratis</a></TD>
 <TD width="25%"><a href="filme/clicksud_main.php" target="_blank">clicksud (seriale romanesti)</a></TD>
+<TD width="25%"><a href="filme/diverse.php" target="_blank">diverse</a></TD>
 <TD width="25%"><a href="filme/cartoonhd_s.php?page=1&tip=release&title=cartoonhd&link=" target="_blank">cartoonhd</a></TD>
-<TD width="25%"><a href="filme/hulu_s.php?page=1&tip=release&title=hulu&link=" target="_blank">hulu</a></TD>
 </TR>
 <!-- straine -->
 <TR>
@@ -97,16 +97,17 @@ document.onkeypress =  zx;
 <TR>
 <TD width="25%"><a href="filme/ffmovies_s1.php?page=1&tip=release&title=ffmoviess&link=" target="_blank">ffmovies</a></TD>
 <TD width="25%"><a href="filme/go2watch_s.php?page=1&tip=release&title=go2watch&link=" target="_blank">go2watch</a></TD>
-<TD width="25%"><a href="filme/movie4k_s.php?page=1&tip=release&title=movie4k&link=" target="_blank">movie4k</a></TD>
+<TD width="25%"><a href="filme/gerryreid_s.php?page=1&tip=release&title=gerryreid&link=" target="_blank">gerryreid</a></TD>
 <TD width="25%"><a href="filme/yesmovies_s.php?page=1&tip=release&title=yesmovies&link=" target="_blank">yesmovies</a></TD>
 </TR>
 
 <TR>
 <TD width="25%"><a href="filme/subsmovies_s.php?page=1&tip=release&title=subsmovie&link=" target="_blank">subsmovies</a></TD>
 <TD width="25%"><a href="filme/xmovies8_s.php?page=1&tip=release&title=xmovies8&link=" target="_blank">xmovies8</a></TD>
-<TD width="25%"><a href="filme/solarmoviesonline_s.php?page=1&tip=release&title=solarmoviesonline&link=" target="_blank">solarmoviesonline</a></TD>
+<TD width="25%"><a href="filme/hulu_s.php?page=1&tip=release&title=hulu&link=" target="_blank">hulu</a></TD>
 <TD width="25%"><a href="filme/flixtor_s.php?page=1&tip=release&title=flixtor&link=" target="_blank">flixtor</a></TD>
 </TR>
+
 
 <?php
 if (file_exists($base_pass."tvplay.txt")) {
@@ -123,12 +124,6 @@ $mx=trim(file_get_contents($base_pass."mx.txt"));
 } else {
 $mx="ad";
 }
-echo '<TR>';
-echo '<TD width="25%"><a href="filme/archive_ep.php?title='.urlencode("Planet of the Apes").'&link=https://archive.org/embed/PlanetOfTheApesTVSeries&sezon=1&imdb=tt0071033" target="_blank">Planet of the Apes</a></TD>';
-echo '<TD width="25%"></TD>';
-echo '<TD width="25%"></TD>';
-echo '<TD width="25%"></TD>';
-echo '</TR>';
 }
 ?>
 <!--<TD width="25%"></TD>-->

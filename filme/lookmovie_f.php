@@ -229,6 +229,7 @@ foreach($videos as $video) {
   $t1 = explode('data-src="', $video);
   $t2 = explode('"', $t1[1]);
   $image=$t2[0];
+  if (strpos($image,"http") === false) $image="https:".$image;
   //$t1=explode('data-src="'
   //$image=str_replace("w342","w300",$image);
   //$image="https://image.tmdb.org/t/p/w342/zfxZSe4cGPYj3XUOgJO8OBRy47n.jpg";

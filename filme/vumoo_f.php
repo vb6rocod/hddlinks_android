@@ -6,6 +6,7 @@ function str_between($string, $start, $end){
 	return substr($string,$ini,$len);
 }
 include ("../common.php");
+error_reporting(0);
 $page = $_GET["page"];
 $tip= $_GET["tip"];
 $tit=$_GET["title"];

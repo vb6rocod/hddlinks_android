@@ -287,7 +287,7 @@ if (preg_match("/trial(\d+)/",$movie,$m)) {
  echo '<hr><table border="1" width="100%">';
  echo '<TR><TD class="cat">Alegeti alt server:</TD>';
  echo '<TD class="cat">';
- for ($k=1;$k<7;$k++) {
+ for ($k=1;$k<8;$k++) {
   if ($k==hexdec($serv))
    echo '<input type="radio" name="svr" id="svr'.$k.'" value="'.$k.'" checked><label for="svr'.$k.'">Server: '.$k.'</label>';
   else
