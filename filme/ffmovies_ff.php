@@ -235,7 +235,7 @@ foreach($videos as $video) {
  else
    $movie=false;
  */
- if (strpos($video,'div class="season') === false)
+ if (strpos($video,'class="eps">') === false)
   $movie=true;
  else
   $movie=false;

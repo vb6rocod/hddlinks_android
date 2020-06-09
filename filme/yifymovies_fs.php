@@ -1,18 +1,18 @@
 <!doctype html>
 <?php
 include ("../common.php");
+include ("../cloudflare.php");
 //error_reporting(0);
-$cookie=$base_cookie."hdpopcorns.dat";
 $list = glob($base_sub."*.srt");
    foreach ($list as $l) {
     str_replace(" ","%20",$l);
     unlink($l);
 }
-if (file_exists($base_cookie."look_token.txt")) unlink ($base_cookie."look_token.txt");
 if (file_exists($base_pass."debug.txt"))
  $debug=true;
 else
  $debug=false;
+
 if (file_exists($base_pass."player.txt")) {
 $flash=trim(file_get_contents($base_pass."player.txt"));
 } else {
@@ -39,14 +39,12 @@ $ep_title=prep_tit($ep_title);
 $year=$_GET["year"];
 if ($tip=="movie") {
 $tit2="";
-$slug="";
 } else {
 if ($ep_title)
    $tit2=" - ".$sez."x".$ep." ".$ep_title;
 else
    $tit2=" - ".$sez."x".$ep;
 $tip="series";
-$slug=$_GET['slug'];
 }
 $imdbid="";
 
@@ -137,71 +135,27 @@ function off() {
 <?php
 echo '<h2>'.$tit.$tit2.'</H2>';
 echo '<BR>';
-if ($tip=="movie") {
-$ua = $_SERVER['HTTP_USER_AGENT'];
-$cookie=$base_cookie."hdpopcorns.dat";
-$head=array('Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
-'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2');
-$l=$link;
-  $ua = $_SERVER['HTTP_USER_AGENT'];
-  $ch = curl_init();
-  curl_setopt($ch, CURLOPT_URL, $l);
-  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
-  curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie);
-  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
-  curl_setopt($ch, CURLOPT_TIMEOUT, 25);
-  curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
-  $h = curl_exec($ch);
-  curl_close($ch);
-  if (preg_match("/file\"\:\s*\"((.*?)Romanian\.vtt)/",$h,$s))
-    $sub="https://lookmovie.ag".$s[1];
-  elseif (preg_match("/file\"\:\s*\"((.*?)English\.vtt)/",$h,$s))
-    $sub="https://lookmovie.ag".$s[1];
-  else
-    $sub="";
-  //echo $h;
-  //$t1=explode("id_movie='",$h);
-  //$t2=explode("'",$t1[1]);
-  //$id=$t2[0];
-  if (preg_match("/id_movie\:?\s*\'?(\d+)/",$h,$m))
-   $id=$m[1];
-   $l="https://lookmovie.ag?sub=".$sub;
-} else {
-  $id=$link;
-  $sub="";
-  $ua = $_SERVER['HTTP_USER_AGENT'];
-  $l="https://lookmovie.ag/api/v1/shows/episode-subtitles/?id_episode=".$id;
-  $ch = curl_init();
-  curl_setopt($ch, CURLOPT_URL, $l);
-  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
-  curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie);
-  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
-  curl_setopt($ch, CURLOPT_TIMEOUT, 25);
-  curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
-  $h = curl_exec($ch);
-  curl_close($ch);
-  $s=json_decode($h,1);
-  $srt=array();
-  for ($k=0;$k<count($s);$k++) {
-    $srt[$s[$k]["languageName"]]="https://lookmovie.ag/".$s[$k]["shard"]."/".(time()*1000)."/".$s[$k]["storagePath"].$s[$k]["isoCode"].".vtt";
-  }
-  if (isset($srt["Romanian"]))
-    $sub=$srt["Romanian"];
-  elseif (isset($srt["English"]))
-    $sub=$srt["English"];
-  else
-    $sub="";
-  //echo $sub;
-  //echo 'lookmovie_token.html?id='.$id.'&slug='.$slug;
-  $l="https://lookmovie.ag?sub=".$sub;
-  // https://lookmovie.ag/api/v1/shows/episode-subtitles/?id_episode=96036
-}
 $r=array();
+$s=array();
+$requestLink=$link;
+//echo $link;
+$ua = $_SERVER['HTTP_USER_AGENT'];
+$ua="Mozilla/5.0 (Windows NT 10.0; rv:76.0) Gecko/20100101 Firefox/76.0";
+$cookie=$base_cookie."hdpopcorns.dat";
+$host=parse_url($requestLink)['host'];
+
+$h=cf_pass($link,$cookie);
+//echo $link."\n".$h;
+preg_match("/class\=\'dooplay_player_option\'\s+data-type='(\w+)\'\s+data-post\=\'(\w+)\'\s+data-nume\=\'(\w+)\'/",$h,$m);
+//print_r ($m);
+//die();
+$l="https://yifymovies.tv?action=doo_player_ajax&post=".$m[2]."&nume=".$m[3]."&type=".$m[1];
+//echo $l;
 $r[]=$l;
+$s[]="GD";
+//die();
 echo '<table border="1" width="100%">';
-echo '<TR><TD class="mp">Alegeti un server: Server curent:<label id="server">'.parse_url($r[0])['host'].'</label>
+echo '<TR><TD class="mp">Alegeti un server: Server curent:<label id="server">'.$s[0].'</label>
 <input type="hidden" id="file" value="'.urlencode($r[0]).'"></td></TR></TABLE>';
 echo '<table border="1" width="100%"><TR>';
 $k=count($r);
@@ -209,7 +163,7 @@ $x=0;
 for ($i=0;$i<$k;$i++) {
   if ($x==0) echo '<TR>';
   $c_link=$r[$i];
-  $openload=parse_url($r[$i])['host'];
+  $openload=$s[$i];
   if (preg_match($indirect,$openload)) {
   echo '<TD class="mp"><a href="filme_link.php?file='.urlencode($c_link).'&title='.urlencode(unfix_t($tit.$tit2)).'" target="_blank">'.$openload.'</a></td>';
   } else
@@ -243,9 +197,12 @@ if ($tip=="movie") {
   $from="";
   $link_page="";
 }
+$tit3=urldecode(str_replace("%E2%80%99","'",urlencode($tit3)));
+$tit3=urldecode(str_replace("%E2%80%A6","...",urlencode($tit3)));
   $rest = substr($tit3, -6);
   if (preg_match("/\((\d+)\)/",$rest,$m)) {
    $tit3=trim(str_replace($m[0],"",$tit3));
+   $year=$m[1];
   }
 $sub_link ="from=".$from."&tip=".$tip."&sez=".$sez."&ep=".$ep."&imdb=".$imdbid."&title=".urlencode(fix_t($tit3))."&link=".$link_page."&ep_tit=".urlencode(fix_t($tit2))."&year=".$year;
 echo '<br>';
@@ -276,20 +233,12 @@ else
    echo '<TD align="center" colspan="4"><a id="viz" onclick="'."openlink('".$openlink."')".'"'." style='cursor:pointer;'>".'VIZIONEAZA !</a></td>';
 echo '</tr>';
 echo '</table>';
-echo '<br>';
-if ($tip=="movie") {
-if (preg_match("/English|Romanian/",$sub,$z))
- echo '<b>Subtitles: '.$z[0]."</b><BR>";
-} else {
-if (preg_match("/(en|ro)\.vtt/",$sub,$z))
- echo '<b>Subtitles: '.$z[1]."</b><BR>";
-}
-echo '<table border="0px" width="100%">
+echo '<br>
+<table border="0px" width="100%">
 <TR>
 <TD><font size="4"><b>Scurtaturi: 1=opensubtitles, 2=titrari, 3=subs, 4=subtitrari, 5=vizioneaza
 <BR>Scurtaturi: 7=opensubtitles, 8=titrari, 9=subs, 0=subtitrari (cauta imdb id)
 </b></font></TD></TR></TABLE>
-<iframe src="lookmovie_token.html?id='.$id.'&slug='.$slug.'"></iframe>
 ';
 include("../debug.html");
 echo '

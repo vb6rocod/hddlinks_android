@@ -2,6 +2,7 @@
 <?php
 error_reporting(0);
 include ("../common.php");
+include ("../cloudflare.php");
 $tit=unfix_t(urldecode($_GET["title"]));
 $image=$_GET["image"];
 $link=urldecode($_GET["link"]);
@@ -10,8 +11,8 @@ $year=$_GET['year'];
 /* ======================================= */
 $width="200px";
 $height="100px";
-$fs_target="ling_fs.php";
-$has_img="no";
+$fs_target="yifymovies_fs.php";
+$has_img="yes";
 ?>
 <html>
 <head>
@@ -30,30 +31,22 @@ function str_between($string, $start, $end){
 	return substr($string,$ini,$len);
 }
 echo '<h2>'.$tit.'</h2>';
+$requestLink=$link;
 $ua = $_SERVER['HTTP_USER_AGENT'];
-  $host=parse_url($link)['host'];
-  $ch = curl_init();
-  curl_setopt($ch, CURLOPT_URL, $link);
-  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
-  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
-  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
-  curl_setopt($ch, CURLOPT_TIMEOUT, 25);
-  curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
-  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
-  $h = curl_exec($ch);
-  curl_close($ch);
-  //echo $h;
+$cookie=$base_cookie."hdpopcorns.dat";
+$host=parse_url($requestLink)['host'];
+$h=cf_pass($link,$cookie);
+
 $n=0;
-$videos = explode('id="tab_', $h);
+$videos = explode("class='se-q'>", $h);
 $sezoane=array();
 unset($videos[0]);
 $videos = array_values($videos);
 //$videos = array_reverse($videos);
 foreach($videos as $video) {
-  $t1=explode('"',$video);
-  $sezoane[]=$t1[0];
+  $t1=explode('>',$video);
+  $t2=explode("<",$t1[1]);
+  $sezoane[]=trim($t2[0]);
 }
 echo '<table border="1" width="100%">'."\n\r";
 
@@ -77,41 +70,49 @@ if ($p < 10 && $p > 0 && $k > 9) {
 echo '</TABLE>';
 
 foreach($videos as $video) {
-  $t1=explode('"',$video);
-  $season=$t1[0];
+  $t1=explode('>',$video);
+  $t2=explode("<",$t1[1]);
+  $season=trim($t2[0]);
   $sez = $season;
   echo '<table border="1" width="100%">'."\n\r";
   echo '<TR><td class="sez" style="color:black;background-color:#0a6996;color:#64c8ff;text-align:center" colspan="3">Sezonul '.($sez).'</TD></TR>';
-
-  $vids = explode('class="pull-left">', $video);
+  $n=0;
+  $vids = explode("class='mark", $video);
   unset($vids[0]);
   $vids = array_values($vids);
   //$vids = array_reverse($vids);
-  $n=0;
   foreach($vids as $vid) {
-  $img_ep=$image;
+  $img_ep="";
   $episod="";
-  $ep_title="";
-  $t1=explode('>',$vid);
-  $t2=explode('<',$t1[1]);
-  if (preg_match("/\d+/",trim($t2[0]),$m))
-   $episod=$m[0];
-  $t1=explode("seriesModal', '",$vid);
+  $ep_tit="";
+  $t1=explode("href='",$vid);
   $t2=explode("'",$t1[1]);
-  $link="https://".$host.$t2[0];
-  $t3=explode('>',$t1[1]);
-  $t4=explode('<',$t3[1]);
-  $title=trim($t4[0]);
-  //echo $title;
-  //$title=str_replace("&nbsp;"," ",$title);
+  $link=$t2[0];
+
+  $t2=explode('>',$t1[1]);
+  $t3=explode('<',$t2[1]);
+  $title=$t3[0];
+  $t1=explode("src='",$vid);
+  $t2=explode("'",$t1[1]);
+  $img_ep=$t2[0];
+  if (preg_match("/\.png/",$img_ep)) $img_ep=$image;
+  $t1=explode("class='numerando'>",$vid);
+  $t2=explode("'",$t1[1]);
+  $num=$t2[0];
+  if (preg_match("/(\d+)\s*\-\s+(\d+)/",$num,$m)) {
+    $episod=$m[2];
+  } else {
+    $episod="";
+  }
+  //$ep_tit=html_entity_decode($t2[0]);
+  $title=str_replace("&nbsp;"," ",$title);
   $title=prep_tit($title);
   $ep_tit=$title;
-
   if ($ep_tit)
    $ep_tit_d=$season."x".$episod." ".$ep_tit;
   else
    $ep_tit_d=$season."x".$episod;
-  //}
+
   $link_f=$fs_target.'?tip=series&link='.urlencode($link).'&title='.urlencode(fix_t($tit)).'&image='.$img_ep."&sez=".$season."&ep=".$episod."&ep_tit=".urlencode(fix_t($ep_tit))."&year=".$year;
    if ($n == 0) echo "<TR>"."\n\r";
    if ($has_img == "yes")
@@ -123,14 +124,13 @@ foreach($videos as $video) {
     echo '</TR>'."\n\r";
     $n=0;
    }
-   }
+}  
   if ($n < 3 && $n > 0) {
     for ($k=0;$k<3-$n;$k++) {
       echo '<TD></TD>'."\r\n";
     }
     echo '</TR>'."\r\n";
   }
-  
 echo '</table>';
 }
 ?>

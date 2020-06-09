@@ -35,7 +35,8 @@
 
  function getClearanceLink($content, $url) {
  $content=preg_replace("/\<\!\-\-.+\-\-\>/","",$content);
-  sleep (5);
+ //echo $content."\n";
+  //sleep (5);
   $params = array();
   $params1 = array();
   $params2 = array();
@@ -79,10 +80,12 @@
      $line=str_replace("k+","\$z+",rr($t[$k])).";";
      eval ($line);
      $find=$n[1].$z;
+     //echo $find."==============="."\n";
      $a1=explode('div id="'.$find.'">',$content);
      $a2=explode('<',$a1[1]);
      $line="\$cf=".rr($a2[0]).";";
      eval ($line);
+     //echo $cf."============"."\n";
    }
   }
   $params['jschl_answer'] = round($result, 10);
@@ -151,13 +154,16 @@ function cf_pass ($l,$cookie) {
   curl_setopt($ch, CURLOPT_SSL_CIPHER_LIST, implode(":", $DEFAULT_CIPHERS));
   curl_setopt($ch, CURLOPT_SSLVERSION,$ssl_version);
   $page = curl_exec($ch);
+  //echo $page;
   $k=0;
+  //sleep (5);
   while (!($post= getClearanceLink($page,$l)) && $k<5) {
-   sleep(1);
+   //sleep(1);
    $page = curl_exec($ch);;
    $post= getClearanceLink($page,$l);
    $k++;
   }
+  sleep(5);
   $t1=explode('action="',$page);
   $t2=explode('"',$t1[1]);
   $requestLink="https://".$host.$t2[0];

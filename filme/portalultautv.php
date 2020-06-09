@@ -1,28 +1,29 @@
 <!DOCTYPE html>
 <?php
+error_reporting(0);
 function str_between($string, $start, $end){
 	$string = " ".$string; $ini = strpos($string,$start);
 	if ($ini == 0) return ""; $ini += strlen($start); $len = strpos($string,$end,$ini) - $ini;
 	return substr($string,$ini,$len);
 }
-// alt. https://fmovies.wtf/
 include ("../common.php");
 $page = $_GET["page"];
 $tip= $_GET["tip"];
 $tit=$_GET["title"];
 $link=$_GET["link"];
-$width="200px";
-$height="278px";
 /* ==================================================== */
-$has_fav="yes";
-$has_search="yes";
+$has_fav="no";
+$has_search="no";
 $has_add="yes";
-$has_fs="yes";
-$fav_target="ffmovies_s_fav.php?host=https://ffmovies.to";
-$add_target="ffmovies_s_add.php";
+$has_fs="no";
+$fav_target="";
+$add_target="filme_add.php";
 $add_file="";
-$fs_target="ffmovies_ep.php";
-$target="ffmovies_ss.php";
+$fs_target="filme_link.php";
+$target="portalultautv.php";
+$width="200px";
+$height=intval(200*(360/254))."px";
+/* ==================================================== */
 /* ==================================================== */
 $base=basename($_SERVER['SCRIPT_FILENAME']);
 $p=$_SERVER['QUERY_STRING'];
@@ -40,12 +41,12 @@ $prev=$base."?page=".($page-1)."&".$p;
 $tit=unfix_t(urldecode($tit));
 $link=unfix_t(urldecode($link));
 /* ==================================================== */
-if (file_exists($base_cookie."seriale.dat"))
-  $val_search=file_get_contents($base_cookie."seriale.dat");
+if (file_exists($base_cookie."adult.dat"))
+  $val_search=file_get_contents($base_cookie."adult.dat");
 else
   $val_search="";
 $form='<form action="'.$target.'" target="_blank">
-Cautare serial:  <input type="text" id="title" name="title" value="'.$val_search.'">
+Cautare film:  <input type="text" id="title" name="title" value="'.$val_search.'">
 <input type="hidden" name="page" id="page" value="1">
 <input type="hidden" name="tip" id="tip" value="search">
 <input type="hidden" name="link" id="link" value="">
@@ -54,7 +55,7 @@ Cautare serial:  <input type="text" id="title" name="title" value="'.$val_search
 /* ==================================================== */
 if ($tip=="search") {
   $page_title = "Cautare: ".$tit;
-  if ($page == 1) file_put_contents($base_cookie."seriale.dat",$tit);
+  if ($page == 1) file_put_contents($base_cookie."adult.dat",$tit);
 } else
   $page_title=$tit;
 /* ==================================================== */
@@ -136,13 +137,33 @@ document.onkeypress =  zx;
 </head>
 <body>
 <a id="fancy" data-fancybox data-type="iframe" href=""></a>
+
 <?php
+if (file_exists($base_pass."player.txt")) {
+$flash=trim(file_get_contents($base_pass."player.txt"));
+} else {
+$flash="direct";
+}
+if (file_exists($base_pass."mx.txt")) {
+$mx=trim(file_get_contents($base_pass."mx.txt"));
+} else {
+$mx="ad";
+}
+$user_agent     =   $_SERVER['HTTP_USER_AGENT'];
+if ($flash != "mp") {
+if (preg_match("/android|ipad/i",$user_agent) && preg_match("/chrome|firefox|mobile/i",$user_agent)) $flash="chrome";
+}
+if ($flash=="chrome") $flash="mp";
 $w=0;
 $n=0;
+if ($tast=="NU")
+echo '<H2><a href="adult_fav.php" target="_blank">'.$page_title.'</a></H2>'."\r\n";
+else
 echo '<H2>'.$page_title.'</H2>'."\r\n";
 
 echo '<table border="1px" width="100%" style="table-layout:fixed;">'."\r\n";
 echo '<TR>'."\r\n";
+if ($has_main == "no") {
 if ($page==1) {
    if ($tip == "release") {
    if ($has_fav=="yes" && $has_search=="yes") {
@@ -165,102 +186,81 @@ if ($page==1) {
 } else {
    echo '<TD class="nav" colspan="4" align="right"><a href="'.$prev.'">&nbsp;&lt;&lt;&nbsp;</a> | <a href="'.$next.'">&nbsp;&gt;&gt;&nbsp;</a></TD>'."\r\n";
 }
-echo '</TR>'."\r\n";
-$ua     =   $_SERVER['HTTP_USER_AGENT'];
-$cookie=$base_cookie."ffmovies.dat";
-$r=array();
-if ($tip=="search") {
- $l="https://ffmovies.to/search?keyword=".str_replace(" ","+",$tit)."&page=".$page;
 } else {
- $l="https://ffmovies.to/tv-series?page=".$page;
+if ($page == 1)
+  echo '<TD class="nav" colspan="4" align="right"><a href="'.$next.'">&nbsp;&gt;&gt;&nbsp;</a></TD>'."\r\n";
+else
+  echo '<TD class="nav" colspan="4" align="right"><a href="'.$prev.'">&nbsp;&lt;&lt;&nbsp;</a> | <a href="'.$next.'">&nbsp;&gt;&gt;&nbsp;</a></TD>'."\r\n";
 }
-$head=array('Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
-'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
-'Accept-Encoding: deflate',
-'Connection: keep-alive',
-'Upgrade-Insecure-Requests: 1');
+echo '</TR>'."\r\n";
 
+if($tip=="release") {
+  if ($page>1)
+    $l=$link."page/".$page."/";
+  else
+    $l=$link;
+} else {
+  $search=str_replace(" ","+",$tit);
+  if ($page > 1)
+    $l="https://portalultautv.net/page/".$page."/?s=".$search;
+  else
+    $l="https://portalultautv.net/?s=".$search;
+}
+$host=parse_url($l)['host'];
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $l);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
-  //curl_setopt($ch,CURLOPT_REFERER,"https://ffmovies.to");
-  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
-  //curl_setopt($ch, CURLOPT_HEADER,1);
-  curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie);
-  curl_setopt($ch, CURLOPT_COOKIEJAR, $cookie);
-  curl_setopt($ch, CURLOPT_HTTPHEADER, $head);
+  curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows; U; Windows NT 6.1; en-US; rv:1.9.1.2) Gecko/20090729 Firefox/3.5.2 GTB5');
   curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
   curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
   curl_setopt($ch, CURLOPT_TIMEOUT, 15);
   $html = curl_exec($ch);
   curl_close($ch);
-  $time=round(time()/100)*100;
-  $l1="https://ffmovies.to/user/ajax/menu-bar?ts=".$time."&_=743";
-$head=array('Accept: application/json, text/javascript, */*; q=0.01',
-'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
-'Accept-Encoding: deflate',
-'Connection: keep-alive',
-'Upgrade-Insecure-Requests: 1');
-  $ch = curl_init();
-  curl_setopt($ch, CURLOPT_URL, $l1);
-  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
-  curl_setopt($ch,CURLOPT_REFERER,"https://ffmovies.to/tv-series");
-  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
-  curl_setopt($ch, CURLOPT_HEADER,1);
-  curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie);
-  curl_setopt($ch, CURLOPT_COOKIEJAR, $cookie);
-  curl_setopt($ch, CURLOPT_HTTPHEADER, $head);
-  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
-  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
-  $h = curl_exec($ch);
-  curl_close($ch);
-
-$host=parse_url($l)['host'];
-$videos = explode('<div class="item', $html);
+$r=array();
+$videos=explode('id="post-',$html);
 unset($videos[0]);
 $videos = array_values($videos);
 foreach($videos as $video) {
- $t1=explode('tooltip/',$video);
- $t2=explode('"',$t1[1]);
- $link=$t2[0];
- $t1=explode('href="',$video);
- $t2=explode('"',$t1[1]);
- if (strpos($video,'class="eps">') !== false)
-  $movie=true;
- else
-  $movie=false;
- /*
- if (strpos($t2[0],"/film/") !== false)
-   $movie=true;
- else
-   $movie=false;
- */
- $t1=explode('src="',$video);
- $t2=explode('"',$t1[1]);
- $image=$t2[0];
- $t1=explode('class="name"',$video);
- $t2=explode(">",$t1[1]);
- $t3=explode("<",$t2[1]);
- $title=$t3[0];
-  if ($title && $movie) $f[] = array($title,$link,$image);
+  $t1=explode('href="',$video);
+  $t2 = explode('"', $t1[1]);
+  $link = $t2[0];
+  $t1=explode('title="',$video);
+  $t2=explode('"',$t1[1]);
+  $title=$t2[0];
+  $title = trim(strip_tags($title));
+  $title = prep_tit($title);
+  $t1 = explode('src="https:', $video);
+  $t2 = explode('"', $t1[1]);
+  $image = $t2[0];
+  if (strpos($image,"http") === false) $image="https:".$image;
+  //$image="r.php?file=".$image;
+  $durata="";
+  $t1=explode('category tag">',$video);
+  $t2=explode('<',$t1[1]);
+  $cat=$t2[0];
+  $durata = preg_replace("/\n|\r/"," ",strip_tags($durata));
+  if ($durata) $title=$title." (".$durata.')';
+  if ($title && !preg_match("/Erotice/i",$cat)) array_push($r ,array($title,$link, $image));
 }
-
-
-foreach($f as $key => $value) {
-  $title=$value[0];
-  $title=prep_tit($title);
-  $link=$value[1];
-  $image=$value[2];
+$c=count($r);
+for ($k=0;$k<$c;$k++) {
+  $title=$r[$k][0];
+  $link=$r[$k][1];
+  $image=$r[$k][2];
   $year="";
   $imdb="";
-  $link_f=$fs_target.'?tip=series&link='.urlencode($link).'&title='.urlencode(fix_t($title)).'&image='.$image."&sez=&ep=&ep_tit=&year=".$year;
-  if ($title && strpos($link,"/show") === false) {
+  if (preg_match("/\(?((1|2)\d{3})\)?/",$title,$z)) {
+     $year=$z[1];
+  }
+  $tit_imdb=trim(preg_replace("/\(?((1|2)\d{3})\)?/","",$title));
+  if ($has_fs == "no")
+    $link_f='filme_link.php?file='.urlencode($link).'&title='.urlencode(fix_t($title));
+  else
+    $link_f=$fs_target.'?tip=movie&link='.urlencode($link).'&title='.urlencode(fix_t($tit)).'&image='.$image."&sez=&ep=&ep_tit=&year=".$year;
   if ($n==0) echo '<TR>'."\r\n";
-  $val_imdb="tip=series&title=".urlencode(fix_t($title))."&year=".$year."&imdb=".$imdb;
-  $fav_link="mod=add&title=".urlencode(fix_t($title))."&link=".urlencode($link)."&image=".urlencode($image)."&year=".$year;
+  $val_imdb="tip=movie&title=".urlencode(fix_t($tit_imdb))."&year=".$year."&imdb=".$imdb;
+  $fav_link="file=".$add_file."&mod=add&title=".urlencode(fix_t($title))."&link=".urlencode($link)."&image=".urlencode($image)."&year=".$year;
   if ($tast == "NU") {
     echo '<td class="mp" width="25%"><a href="'.$link_f.'" id="myLink'.$w.'" target="_blank" onmousedown="isKeyPressed(event)">
     <img id="myLink'.$w.'" src="'.$image.'" width="'.$width.'" height="'.$height.'"><BR>'.$title.'</a>
@@ -282,7 +282,6 @@ foreach($f as $key => $value) {
   echo '</tr>'."\r\n";
   $n=0;
   }
-  }
  }
 
 /* bottom */
@@ -301,5 +300,9 @@ else
 echo '</TR>'."\r\n";
 echo "</table>"."\r\n";
 echo "</table>";
-?></body>
+?>
+<div id="overlay"">
+  <div id="text">Wait....</div>
+</div>
+</body>
 </html>

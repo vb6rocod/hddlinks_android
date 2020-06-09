@@ -1,14 +1,21 @@
 <!doctype html>
 <?php
 include ("../common.php");
-//error_reporting(0);
-$cookie=$base_cookie."hdpopcorns.dat";
+function decode_code($code){
+    return preg_replace_callback(
+        "@\\\(x)?([0-9a-fA-Z]{2,3})@",
+        function($m){
+            return mb_convert_encoding(chr($m[1]?hexdec($m[2]):octdec($m[2])),'ISO-8859-1', 'UTF-8');
+        },
+        $code
+    );
+}
+error_reporting(0);
 $list = glob($base_sub."*.srt");
    foreach ($list as $l) {
     str_replace(" ","%20",$l);
     unlink($l);
 }
-if (file_exists($base_cookie."look_token.txt")) unlink ($base_cookie."look_token.txt");
 if (file_exists($base_pass."debug.txt"))
  $debug=true;
 else
@@ -39,14 +46,12 @@ $ep_title=prep_tit($ep_title);
 $year=$_GET["year"];
 if ($tip=="movie") {
 $tit2="";
-$slug="";
 } else {
 if ($ep_title)
    $tit2=" - ".$sez."x".$ep." ".$ep_title;
 else
    $tit2=" - ".$sez."x".$ep;
 $tip="series";
-$slug=$_GET['slug'];
 }
 $imdbid="";
 
@@ -137,69 +142,120 @@ function off() {
 <?php
 echo '<h2>'.$tit.$tit2.'</H2>';
 echo '<BR>';
-if ($tip=="movie") {
-$ua = $_SERVER['HTTP_USER_AGENT'];
-$cookie=$base_cookie."hdpopcorns.dat";
-$head=array('Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
-'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2');
-$l=$link;
-  $ua = $_SERVER['HTTP_USER_AGENT'];
-  $ch = curl_init();
-  curl_setopt($ch, CURLOPT_URL, $l);
-  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
-  curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie);
-  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
-  curl_setopt($ch, CURLOPT_TIMEOUT, 25);
-  curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
-  $h = curl_exec($ch);
-  curl_close($ch);
-  if (preg_match("/file\"\:\s*\"((.*?)Romanian\.vtt)/",$h,$s))
-    $sub="https://lookmovie.ag".$s[1];
-  elseif (preg_match("/file\"\:\s*\"((.*?)English\.vtt)/",$h,$s))
-    $sub="https://lookmovie.ag".$s[1];
-  else
-    $sub="";
-  //echo $h;
-  //$t1=explode("id_movie='",$h);
-  //$t2=explode("'",$t1[1]);
-  //$id=$t2[0];
-  if (preg_match("/id_movie\:?\s*\'?(\d+)/",$h,$m))
-   $id=$m[1];
-   $l="https://lookmovie.ag?sub=".$sub;
-} else {
-  $id=$link;
-  $sub="";
-  $ua = $_SERVER['HTTP_USER_AGENT'];
-  $l="https://lookmovie.ag/api/v1/shows/episode-subtitles/?id_episode=".$id;
-  $ch = curl_init();
-  curl_setopt($ch, CURLOPT_URL, $l);
-  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
-  curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie);
-  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
-  curl_setopt($ch, CURLOPT_TIMEOUT, 25);
-  curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
-  $h = curl_exec($ch);
-  curl_close($ch);
-  $s=json_decode($h,1);
-  $srt=array();
-  for ($k=0;$k<count($s);$k++) {
-    $srt[$s[$k]["languageName"]]="https://lookmovie.ag/".$s[$k]["shard"]."/".(time()*1000)."/".$s[$k]["storagePath"].$s[$k]["isoCode"].".vtt";
-  }
-  if (isset($srt["Romanian"]))
-    $sub=$srt["Romanian"];
-  elseif (isset($srt["English"]))
-    $sub=$srt["English"];
-  else
-    $sub="";
-  //echo $sub;
-  //echo 'lookmovie_token.html?id='.$id.'&slug='.$slug;
-  $l="https://lookmovie.ag?sub=".$sub;
-  // https://lookmovie.ag/api/v1/shows/episode-subtitles/?id_episode=96036
-}
+//echo $link;
+//$link="https://europixhd.io/svop/srv2?search=dwm-angel-s01e04";
+//$link=$link."-s2";
+$host=parse_url($link)['host'];
 $r=array();
-$r[]=$l;
+$ua = $_SERVER['HTTP_USER_AGENT'];
+//$ua="Mozilla/5.0 (Windows NT 10.0; rv:71.0) Gecko/20100101 Firefox/71.0";
+$cookie=$base_cookie."hdpopcorns.dat";
+
+///////////////////////////////////////////////////////////////////////////////////
+if ($tip=="series") {
+  $ch = curl_init($link);
+  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
+  curl_setopt($ch, CURLOPT_REFERER, "https://europixhd.net");
+  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER  ,1);  // RETURN THE CONTENTS OF THE CALL
+  curl_setopt($ch, CURLOPT_ENCODING,"");
+  curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie);
+  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+  $h = curl_exec($ch);
+  curl_close ($ch);
+$h=urldecode($h);
+$h= preg_replace('/\\\x([a-f0-9]+)/msi',"chr(0x\\1)",$h);
+$h=str_replace("\n","",$h);
+
+if (preg_match("/var\s+_0x[a-z0-9A-Z]+\s*\=\s*\[((\".*?\"\,?)+)\]/ms", $h, $m)) {
+$e="\$c0=array(".$m[1].");";
+eval ($e);
+//print_r ($c0);
+if ($c0[0])
+  $ep_index=$ep-1;
+else
+  $ep_index=$ep;
+$link1 = $c0[$ep_index];
+//echo $link1;
+if (strpos($link1,"http") === false) {
+  $link1="https://".$host.str_replace("../../","/",$link1);
+}
+}
+} else {
+  $link1=$link;
+}
+//echo $link1;
+//$link1="https://europixhd.io/mov/christmas-reservations-2019-online-free-hd-with-subtitles-europix";
+if (strpos($link1,"europix") !== false && strpos($link1,"http") !== false) {
+$path=parse_url($link1)['path'];
+//echo $path;
+$ch = curl_init();
+curl_setopt($ch, CURLOPT_URL, $link1);
+curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+curl_setopt($ch, CURLOPT_USERAGENT, $ua);
+curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie);
+curl_setopt($ch, CURLOPT_REFERER, "https://europixhd.net");
+curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
+curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+$h = curl_exec($ch);
+curl_close($ch);
+$h=urldecode($h);
+$h=decode_code($h);
+//$h=str_replace("\n","",$h);
+//echo $h;
+if (preg_match("/title\/tt(\d+)/",$h,$y))
+  $imdbid=$y[1];
+else
+  $imdbid="";
+if (preg_match("/(newsrv\S+)(\'|\")/",$h)) {
+if ($tip=="movie")      //newsrv3?search=dwm-servant-s01e01-
+  preg_match_all("/(\/svop\S+)(\'|\")/",$h,$p);
+else
+  preg_match_all("/(newsrv\S+)(\'|\")/",$h,$p);
+//print_r ($p);
+for ($k=0;$k<count($p[1]);$k++) {
+
+  if ($tip=="movie")
+  $l="https://".$host."".$p[1][$k];
+  else
+  $l="https://".$host."/svop/".$p[1][$k];
+  //$l="https://europixhd.io/svop2/zznewsrv2?search=dwm-christmas-reservations-2019";
+  //$l="https://europixhd.io/svop2/newsrv1?search=dwm-christmas-reservations-2019";
+  //echo $l."================="."\n";;
+  $ch = curl_init();
+  curl_setopt($ch, CURLOPT_URL, $l);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
+  curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie);
+  curl_setopt($ch, CURLOPT_REFERER, "https://europixhd.net");
+  curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
+  curl_setopt($ch, CURLOPT_HEADER,1);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+  $h = curl_exec($ch);
+  curl_close($ch);
+  $h=urldecode($h);
+  //echo $h;
+  if (preg_match("/((iframe\s*src)|(window\.location))\=(\'|\")(.*?)(\'|\")/",$h,$m)) {
+  $link1=$m[5];
+  //print_r ($m);
+  if(strpos($link1,"http") !== false) $r[] = $link1;
+  }
+}
+} else {
+  if (preg_match("/((iframe\s*src)|(window\.location))\=(\'|\")(.*?)(\'|\")/",$h,$m)) {
+  $link1=$m[5];
+  //print_r ($m);
+  if(strpos($link1,"http") !== false) $r[] = $link1;
+  }
+}
+} else {
+if(strpos($link1,"http") !== false) $r[] = $link1;
+}
+//}
 echo '<table border="1" width="100%">';
 echo '<TR><TD class="mp">Alegeti un server: Server curent:<label id="server">'.parse_url($r[0])['host'].'</label>
 <input type="hidden" id="file" value="'.urlencode($r[0]).'"></td></TR></TABLE>';
@@ -232,38 +288,26 @@ if ($tip=="movie") {
   $tit2="";
   $sez="";
   $ep="";
-  $imdbid="";
+  //$imdbid="";
   $from="";
   $link_page="";
 } else {
   $tit3=$tit;
   $sez=$sez;
   $ep=$ep;
-  $imdbid="";
+  //$imdbid="";
   $from="";
   $link_page="";
 }
-  $rest = substr($tit3, -6);
-  if (preg_match("/\((\d+)\)/",$rest,$m)) {
-   $tit3=trim(str_replace($m[0],"",$tit3));
-  }
 $sub_link ="from=".$from."&tip=".$tip."&sez=".$sez."&ep=".$ep."&imdb=".$imdbid."&title=".urlencode(fix_t($tit3))."&link=".$link_page."&ep_tit=".urlencode(fix_t($tit2))."&year=".$year;
 echo '<br>';
 echo '<table border="1" width="100%">';
-echo '<TR><TD style="background-color:#0a6996;color:#64c8ff;font-weight: bold;font-size: 1.5em" align="center" colspan="4">Alegeti o subtitrare</td></TR>';
+echo '<TR><TD style="background-color:#0a6996;color:#64c8ff;font-weight: bold;font-size: 1em" align="center" colspan="4">Alegeti o subtitrare</td></TR>';
 echo '<TR>';
 echo '<TD class="mp"><a id="opensub" href="opensubtitles.php?'.$sub_link.'">opensubtitles</a></td>';
 echo '<TD class="mp"><a id="titrari" href="titrari_main.php?page=1&'.$sub_link.'&page=1">titrari.ro</a></td>';
 echo '<TD class="mp"><a id="subs" href="subs_main.php?'.$sub_link.'">subs.ro</a></td>';
 echo '<TD class="mp"><a id="subtitrari" href="subtitrari_main.php?'.$sub_link.'">subtitrari_noi.ro</a></td>';
-echo '</TR></TABLE>';
-echo '<table border="1" width="100%">';
-echo '<TR><TD style="background-color:#0a6996;color:#64c8ff;font-weight: bold;font-size: 1.5em" align="center" colspan="4">Alegeti o subtitrare (cauta imdb id)</td></TR>';
-echo '<TR>';
-echo '<TD class="mp"><a id="opensub1" href="opensubtitles1.php?'.$sub_link.'">opensubtitles</a></td>';
-echo '<TD class="mp"><a id="titrari1" href="titrari_main1.php?page=1&'.$sub_link.'&page=1">titrari.ro</a></td>';
-echo '<TD class="mp"><a id="subs1" href="subs_main1.php?'.$sub_link.'">subs.ro</a></td>';
-echo '<TD class="mp"><a id="subtitrari1" href="subtitrari_main1.php?'.$sub_link.'">subtitrari_noi.ro</a></td>';
 echo '</TR></TABLE>';
 echo '<table border="1" width="100%"><TR>';
 if ($tip=="movie")
@@ -276,20 +320,12 @@ else
    echo '<TD align="center" colspan="4"><a id="viz" onclick="'."openlink('".$openlink."')".'"'." style='cursor:pointer;'>".'VIZIONEAZA !</a></td>';
 echo '</tr>';
 echo '</table>';
-echo '<br>';
-if ($tip=="movie") {
-if (preg_match("/English|Romanian/",$sub,$z))
- echo '<b>Subtitles: '.$z[0]."</b><BR>";
-} else {
-if (preg_match("/(en|ro)\.vtt/",$sub,$z))
- echo '<b>Subtitles: '.$z[1]."</b><BR>";
-}
-echo '<table border="0px" width="100%">
+echo '<br>
+<table border="0px" width="100%">
 <TR>
 <TD><font size="4"><b>Scurtaturi: 1=opensubtitles, 2=titrari, 3=subs, 4=subtitrari, 5=vizioneaza
 <BR>Scurtaturi: 7=opensubtitles, 8=titrari, 9=subs, 0=subtitrari (cauta imdb id)
 </b></font></TD></TR></TABLE>
-<iframe src="lookmovie_token.html?id='.$id.'&slug='.$slug.'"></iframe>
 ';
 include("../debug.html");
 echo '

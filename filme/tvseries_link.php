@@ -107,9 +107,11 @@ $l="http://www.tvseries.net".$requestLink;
   curl_setopt($ch, CURLOPT_TIMEOUT, 15);
   $movie = curl_exec($ch);
   curl_close($ch);
+
   }
 //http://ng1.tvseries.net:82/1536822447/f280d51278edfb37acbff2f804a41b77/LzAxLzEzNS8xMzUuMDA5LkRlc3RpbmF0aW9uLldlZGRpbmcuZmYyWkpnM1QubXA0.mp4
 //http://ng1.tvseries.net:82/1536864873/c8f2e2c05dba3c7c2ff3f085c262c2af/LzAxLzEzNS8xMzUuMDA5LkRlc3RpbmF0aW9uLldlZGRpbmcuZmYyWkpnM1QubXA0.mp4
+$movie=str_replace("tvseries.net:/","tvseries.net/",$movie);
 $movie=str_replace("play2.vip","play.vip",$movie);
 $t1=explode("?",$movie);
    $movie_file=substr(strrchr($t1[0], "/"), 1);

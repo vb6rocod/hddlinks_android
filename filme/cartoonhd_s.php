@@ -315,6 +315,7 @@ for ($k=0; $k<count($r);$k++) {
   $val_imdb="tip=movie&title=".urlencode(fix_t($tit_imdb))."&year=".$year."&imdb=".$imdb;
   $fav_link="mod=add&title=".urlencode(fix_t($title))."&link=".urlencode($link)."&image=".urlencode($image)."&year=".$year;
   if ($year) $title=$title." (".$year.")";
+  $image="r_m.php?file=".$image;
   if ($tast == "NU") {
     echo '<td class="mp" width="25%"><a href="'.$link_f.'" id="myLink'.$w.'" target="_blank" onmousedown="isKeyPressed(event)">
     <img id="myLink'.$w.'" src="'.$image.'" width="'.$width.'" height="'.$height.'"><BR>'.$title.'</a>
@@ -337,6 +338,7 @@ for ($k=0; $k<count($r);$k++) {
   $val_imdb="tip=serie&title=".urlencode(fix_t($tit_imdb))."&year=".$year."&imdb=".$imdb;
   $fav_link="mod=add&title=".urlencode(fix_t($title))."&link=".urlencode($link)."&image=".urlencode($image)."&year=".$year;
   if ($year) $title=$title." (".$year.")";
+  $image="r_m.php?file=".$image;
   if ($tast == "NU") {
     echo '<td class="mp" width="25%"><a href="'.$link_f.'" id="myLink'.$w.'" target="_blank" onmousedown="isKeyPressed(event)">
     <img id="myLink'.$w.'" src="'.$image.'" width="'.$width.'" height="'.$height.'"><BR>'.$title.'</a>
@@ -357,6 +359,7 @@ for ($k=0; $k<count($r);$k++) {
   } elseif (preg_match("/actor|director/",$type)) {
     $link_f=$fs_target2.'?tip=actor&link='.urlencode($link).'&title='.urlencode(fix_t($title)).'&image='.$image."&sez=&ep=&ep_tit=&year=".$year;
     $title=$title." (".$type.")";
+    $image="r_m.php?file=".$image;
     echo '<td class="mp" width="25%"><a class ="imdb" id="myLink_s'.$w.'" href="'.$link_f.'" target="_blank">
     <img src="'.$image.'" width="'.$width.'" height="'.$height.'"><BR>'.$title.'</a></TD>'."\r\n";
   $w++;

@@ -6,7 +6,7 @@ function str_between($string, $start, $end){
 	return substr($string,$ini,$len);
 }
 include ("../common.php");
-include ("../cloudflare.php");
+include ("../cloudflare1.php");
 $page = $_GET["page"];
 $tip= $_GET["tip"];
 $tit=$_GET["title"];
@@ -170,18 +170,23 @@ if($tip=="release") {
   $l="https://yesmovies.ag/movie/filter/movies/page-".$page.".html";
 } else {
   $search=str_replace(" ","+",$tit);
+  if ($page > 1)
   $l = "https://yesmovies.ag/searching/".$search."/page-".$page.".html";
+  else
+  $l="https://yesmovies.ag/searching/".$search.".html";
 }
 ///////////////////////////////////////////////
 $ua = $_SERVER['HTTP_USER_AGENT'];
 //$ua="Mozilla/5.0 (Windows NT 10.0; rv:71.0) Gecko/20100101 Firefox/71.0";
 $cookie=$base_cookie."hdpopcorns.dat";
 if ($page==1 && $tip =="search") {
-$requestLink=$l;
-$html=cf_pass($l,$cookie);
-sleep(1);
+//$l="https://yesmovies.ag/searching/trek.html";
 $html=cf_pass($l,$cookie);
 
+//sleep(1);
+//$html=cf_pass($l,$cookie);
+
+  //echo $html;
 } else {
 
 $host=parse_url($l)['host'];

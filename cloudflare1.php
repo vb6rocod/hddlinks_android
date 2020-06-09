@@ -35,7 +35,7 @@
 
  function getClearanceLink($content, $url) {
   $content=preg_replace("/\<\!\-\-.+\-\-\>/","",$content);
-  sleep (5);
+  //sleep (5);
   $params = array();
   $params1 = array();
   $params2 = array();
@@ -120,6 +120,7 @@ function cf_pass ($l,$cookie) {
 
  $ua = $_SERVER['HTTP_USER_AGENT'];
  $ua="IE6";
+ //$ua="MSI";
  $host=parse_url($l)['host'];
  $head=array('Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
  'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
@@ -153,12 +154,14 @@ function cf_pass ($l,$cookie) {
   curl_setopt($ch, CURLOPT_SSLVERSION,$ssl_version);
   $page = curl_exec($ch);
   $k=0;
+  //sleep(5);
   while (!($post= getClearanceLink($page,$l)) && $k<5) {
-   sleep(1);
+   //sleep(1);
    $page = curl_exec($ch);
    $post= getClearanceLink($page,$l);
    $k++;
   }
+  sleep(5);
   $t1=explode('action="',$page);
   $t2=explode('"',$t1[1]);
   $requestLink="https://".$host.$t2[0];

@@ -5,9 +5,9 @@ $host=$_GET['host'];
 $page_title="Seriale favorite";
 $width="200px";
 $height="278px";
-$add_target="yesmovies_s_add.php";
-$fs_target="yesmovies_ep.php";
-$file=$base_fav."yesmovies_s.dat";
+$add_target="yifymovies_s_add.php";
+$fs_target="yifymovies_s_ep.php";
+$file=$base_fav."yifymovies_s.dat";
 ?>
 <html><head>
 <meta http-equiv="content-type" content="text/html; charset=UTF-8">
@@ -122,33 +122,17 @@ for ($m=1;$m<$k;$m++) {
 echo '</TR></table>';
 echo '<table border="1px" width="100%">'."\n\r";
 foreach($arr as $key => $value) {
-  $imdb="";
-  $link = urldecode($arr[$key]["link"]);
-  $title = unfix_t(urldecode($key));
-  $image=urldecode($arr[$key]["image"]);
-  //$image=$host.parse_url($image)['path'];
-  $year="";
-  $sez="";
-  $link=$host.parse_url($link)['path'];
-  if (preg_match("/(:|-)?\s+Season\s+(\d+)/i",$title,$m)) {
-  $tit_serial=trim(str_replace($m[0],"",$title));
-  $sez=$m[2];
-  $rest = substr($tit_serial, -6);
-  if (preg_match("/\((\d+)\)/",$rest,$m)) {
-   $year=$m[1];
-   $tit_imdb=trim(str_replace($m[0],"",$title));
-  } else {
-   $year="";
-   $tit_imdb=$tit_serial;
-  }
-  } else {
-    $tit_imdb=$title;
-  }
-    $link_f=$fs_target.'?tip=series&link='.urlencode($link).'&title='.urlencode(fix_t($title)).'&image='.$image."&sez=".$sez."&ep=&ep_tit=&year=".$year;
+    $imdb="";
+	$link = urldecode($arr[$key]["link"]);
+    $title = unfix_t(urldecode($key));
+    $image=urldecode($arr[$key]["image"]);
+    //$image=$host.parse_url($image)['path'];
+    $year="";
+    $link=$host.parse_url($link)['path'];
+    $link_f=$fs_target.'?tip=series&link='.urlencode($link).'&title='.urlencode(fix_t($title)).'&image='.$image."&sez=&ep=&ep_tit=&year=".$year;
   if ($n==0) echo '<TR>'."\r\n";
-  $val_imdb="tip=series&title=".urlencode(fix_t($tit_imdb))."&year=".$year."&imdb=".$imdb;
+  $val_imdb="tip=series&title=".urlencode(fix_t($title))."&year=".$year."&imdb=".$imdb;
   $fav_link="file=&mod=del&title=".urlencode(fix_t($title))."&link=".urlencode($link)."&image=".urlencode($image)."&year=".$year;
-  $image="r_m.php?file=".$image;
   if ($tast == "NU") {
     echo '<td class="mp" width="25%"><a href="'.$link_f.'" id="myLink'.$w.'" target="_blank" onmousedown="isKeyPressed(event)">
     <img id="myLink'.$w.'" src="'.$image.'" width="'.$width.'" height="'.$height.'"><BR>'.$title.'</a>

@@ -30,12 +30,14 @@ function str_between($string, $start, $end){
 	return substr($string,$ini,$len);
 }
 echo '<h2>'.$tit.'</h2>';
+/*
 if (preg_match("/(.*?)(\d+)$/",$tit,$m)) {
   $season=$m[2];
   $tit=trim($m[1]);
 } else {
   $season=1;
 }
+*/
 $ua     =   $_SERVER['HTTP_USER_AGENT'];
 $cookie=$base_cookie."ffmovies.dat";
 $time=round(time()/100)*100;

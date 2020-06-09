@@ -178,7 +178,7 @@ if (strpos($filelink,"filmeonlinegratis.org") !== false) {
     $h1 = curl_exec($ch);
     curl_close($ch);
     //echo $h1;
-    /*
+
     $t1=explode("tid=",$h1);
     $t2=explode('"',$t1[1]);
     $id = substr($t2[0], 0, -1);
@@ -199,7 +199,7 @@ if (strpos($filelink,"filmeonlinegratis.org") !== false) {
     curl_close($ch);
     //echo $h2;
     if (preg_match("/location:\s*(\S+)/i",$h2,$p))
-    */
+      $html .='<iframe src="'.$p[1].'"> ';
     if (preg_match("/src\=\"(.*?)\"/",$h1,$p))
       $html .='<iframe src="'.$p[1].'"> ';
   }
@@ -480,7 +480,7 @@ $headers=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:71.0) Gecko/2010010
   curl_setopt ($ch, CURLOPT_POSTFIELDS, $post);
   curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER  ,1);  // RETURN THE CONTENTS OF THE CALL
-  curl_setopt($ch, CURLOPT_HEADER, true);
+  //curl_setopt($ch, CURLOPT_HEADER, true);
   curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
   curl_setopt($ch, CURLOPT_TIMEOUT, 15);
   $html = curl_exec($ch);
@@ -507,6 +507,22 @@ $headers=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:71.0) Gecko/2010010
       curl_setopt($ch, CURLOPT_TIMEOUT, 15);
       $h3 = curl_exec($ch);
       curl_close ($ch);
+      //echo $h3."\n";
+      if (strpos($h3,"filmeserialeonline.org") !== false) {
+        $t1=explode('src="',$h3);
+        $t2=explode('"',$t1[1]);
+        $l=$t2[0];
+        $ch = curl_init($l);
+        curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows; U; Windows NT 6.1; en-US; rv:1.9.1.2) Gecko/20090729 Firefox/3.5.2 GTB5');
+        curl_setopt($ch,CURLOPT_REFERER,$filelink);
+        curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER  ,1);  // RETURN THE CONTENTS OF THE CALL
+        curl_setopt($ch, CURLOPT_HEADER, true);
+        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+        curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+        $h3 = curl_exec($ch);
+        curl_close ($ch);
+      }
       $html .=$h3;
     }
   }
@@ -1126,7 +1142,7 @@ $s=$s."|hxload\.|bazavox\.com|cloud\.vidhubstr\.org|vidia\.tv|gomostream\.com|vi
 $s=$s."|prostream\.to|videobin\.co|upstream\.to|playtvid\.com|jetload\.net|vidfast\.co|clipwatching\.";
 $s=$s."|(video|player)\.filmeserialeonline\.org|streamwire\.|cloudvid\.icu|mstream\.xyz|streamhoe\.online|videyo\.";
 $s=$s."|fastvid\.co|vidload\.net|rovideo\.net\/embed|eplayvid\.com|dood\.|mediashore\.org|uptostream\.com";
-$s=$s."|movcloud\.net|dogestream\.|streamtape\.|jawcloud\.|evoload\./i";
+$s=$s."|movcloud\.net|dogestream\.|streamtape\.|jawcloud\.|evoload\.|sendvid\./i";
 /////////////////////////////////////////////
 //$x=preg_grep($s,$links);
 //print_r ($x);
@@ -1267,8 +1283,11 @@ for ($i=0;$i<count($links);$i++) {
   $h2 = curl_exec($ch);
   curl_close($ch);
   //echo $h2;
-   if (preg_match_all("/location\:\s*(.+)/i",$h2,$m)) {
-    $cur_link=trim($m[1][count($m[1]) - 1]);
+   if (preg_match("/location\:\s*(.+)/i",$h2,$m)) {
+    $cur_link=trim($m[1]);
+    if (strpos($cur_link,"database.serialeonline.to") !== false) {
+     $cur_link="";
+    }
    } else
     $cur_link="";
   }

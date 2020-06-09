@@ -168,6 +168,7 @@ if ($page==1) {
 }
 echo '</TR>'."\r\n";
 $ua = $_SERVER['HTTP_USER_AGENT'];
+$ua="Mozilla/5.0 (Windows NT 10.0; rv:55.0) Gecko/20100101 Firefox/55.0";
 if($tip=="release") {
  if (strpos($ua,"Windows") !== false)
   $l="https://lookmovie.ag/?p=".$page."&r=1";
@@ -179,12 +180,13 @@ if($tip=="release") {
 }
 $host=parse_url($l)['host'];
 $cookie=$base_cookie."hdpopcorns.dat";
-if ($page==1 && $tip=="release") {
+if ($page==10000 && $tip=="release") {
  $l1="https://lookmovie.ag";
  $h=cf_pass($l1,$cookie);
  //$h=cf_pass($l1,$cookie);
 }
 //echo $h;
+
 $head=array('Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
 'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2');
 
@@ -226,10 +228,12 @@ foreach($videos as $video) {
   }
   $title = trim($t4[0]);
   $title=prep_tit($title);
+  $imamge="";
   $t1 = explode('data-src="', $video);
   $t2 = explode('"', $t1[1]);
   $image=$t2[0];
-  if (strpos($image,"http") === false) $image="https:".$image;
+  if (strpos($image,"http") === false && $image) $image="https:".$image;
+  if (!$image) $image="blank.jpg";
   //$t1=explode('data-src="'
   //$image=str_replace("w342","w300",$image);
   //$image="https://image.tmdb.org/t/p/w342/zfxZSe4cGPYj3XUOgJO8OBRy47n.jpg";

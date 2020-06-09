@@ -227,20 +227,20 @@ $host=parse_url($l)['host'];
   
 
 $r=array();
-$videos=explode('id=post',$html);
+$videos=explode('id="post',$html);
 unset($videos[0]);
 $videos = array_values($videos);
 foreach($videos as $video) {
-  $t1=explode('href=',$video);
-  $t2 = explode('>', $t1[1]);
+  $t1=explode('href="',$video);
+  $t2 = explode('"', $t1[1]);
   $link = $t2[0];
   if (strpos($link,"http") === false) $link="https://".$host.$link;
   $t1 = explode('title="', $video);
   $t2 = explode('"', $t1[1]);
   $title = trim(strip_tags($t2[0]));
   $title = prep_tit($title);
-  $t1 = explode('src=', $video);
-  $t2 = explode(' ', $t1[1]);
+  $t1 = explode('src="', $video);
+  $t2 = explode('"', $t1[1]);
   $image = $t2[0];
   if (strpos($image,"http") === false) $image="https:".$image;
   $durata="";

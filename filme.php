@@ -82,6 +82,13 @@ else
 <TD width="25%"><a href="filme/deseneledublate.php?page=1&tip=release&title=desenedublate&link=" target="_blank">deseneledublate</a></TD>
 <TD width="25%"><a href="filme/desenefaine_main.php" target="_blank">desenefaine.ro</a></TD>
 </TR>
+
+<TR>
+<TD width="25%"><a href="filme/portalultautv_main.php" target="_blank">portalultautv</a></TD>
+<TD width="25%"><a href="filme/dozaanimata_f.php?page=1&tip=release&title=dozaanimata&link=" target="_blank">dozaanimata</a></TD>
+<TD width="25%"></TD>
+<TD width="25%"></TD>
+</TR>
 <!-- straine -->
 <TR>
 <TD width="25%"><a href="filme/tvseries_f.php?page=1&tip=release&title=tvseries&link=" target="_blank">tvseries</a></TD>
@@ -129,7 +136,12 @@ else
 <TD width="25%"><a href="filme/moonline_f.php?page=1&tip=release&title=moonline&link=" target="_blank">moonline</a></TD>
 <TD width="25%"><a href="filme/dailymotion_fav.php" target="_blank">dailymotion</a></TD>
 </TR>
-
+<TR>
+<TD width="25%"><a href="filme/europix_f.php?page=1&tip=release&title=europix&link=" target="_blank">europix</a></TD>
+<TD width="25%"><a href="filme/esubmovie.php?page=1&tip=release&title=esubmovie&link=" target="_blank">esubmovie</a></TD>
+<TD width="25%"><a href="filme/yifymovies_f.php?page=1&tip=release&title=yifymovies&link=" target="_blank">yifymovies</a></TD>
+<TD width="25%"></TD>
+</TR>
 <?php
 if (file_exists($base_pass."tvplay.txt")) {
 echo '

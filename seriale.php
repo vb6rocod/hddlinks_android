@@ -79,7 +79,7 @@ document.onkeypress =  zx;
 <TD width="25%"><a href="filme/tvseries_s.php?page=1&tip=release&title=tvseries&link=" target="_blank">tvseries</a></TD>
 <TD width="25%"><a href="filme/gomovies_s.php?page=1&tip=release&title=gomovies&link=" target="_blank">gomovies</a></TD>
 <TD width="25%"><a href="filme/hdfull_s.php?page=1&tip=release&title=hdfull&link=" target="_blank">hdfull</a></TD>
-<TD width="25%"><a href="filme/5movies_s.php?page=1&tip=release&title=5movies&link=" target="_blank">5movies</a></TD>
+<TD width="25%"><a href="filme/lookmovie_s.php?page=1&tip=release&title=lookmovie&link=" target="_blank">lookmovie</a></TD>
 </TR>
 <TR>
 <TD width="25%"><a href="filme/swatchseries_s.php?page=1&tip=release&title=swatchseries&link=" target="_blank">swatchseries</a></TD>
@@ -107,7 +107,12 @@ document.onkeypress =  zx;
 <TD width="25%"><a href="filme/hulu_s.php?page=1&tip=release&title=hulu&link=" target="_blank">hulu</a></TD>
 <TD width="25%"><a href="filme/flixtor_s.php?page=1&tip=release&title=flixtor&link=" target="_blank">flixtor</a></TD>
 </TR>
-
+<TR>
+<TD width="25%"><a href="filme/yifymovies_s.php?page=1&tip=release&title=yifymovies&link=" target="_blank">yifymovies</a></TD>
+<TD width="25%"></TD>
+<TD width="25%"></TD>
+<TD width="25%"><a href="filme/5movies_s.php?page=1&tip=release&title=5movies&link=" target="_blank">5movies</a></TD>
+</TR>
 
 <?php
 if (file_exists($base_pass."tvplay.txt")) {

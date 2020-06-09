@@ -119,6 +119,7 @@ foreach($vids as $vid) {
    $ep_tit_d=$season."x".$episod;
   //}
   $link_f=$fs_target.'?tip=series&link='.urlencode($link).'&title='.urlencode(fix_t($tit)).'&image='.$img_ep."&sez=".$season."&ep=".$episod."&ep_tit=".urlencode(fix_t($ep_tit))."&year=".$year;
+  $img_ep="r_m.php?file=".$img_ep;
    if ($n == 0) echo "<TR>"."\n\r";
    if ($has_img == "yes")
     echo '<TD class="mp" width="33%">'.'<a id="sez'.$sez.'" href="'.$link_f.'" target="_blank"><img width="'.$width.'" height="'.$height.'" src="'.$img_ep.'"><BR>'.$ep_tit_d.'</a></TD>'."\r\n";
