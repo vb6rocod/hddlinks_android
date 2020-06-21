@@ -69,7 +69,7 @@ else
 <TD width="25%"><a href="filme/telecinemateca.php" target="_blank">telecinemateca</a></TD>
 </TR>
 <TR>
-<TD width="25%"><a href="filme/pefilme_main.php" target="_blank">pefilme</a></TD>
+<TD width="25%"></TD>
 <TD width="25%"><a href="filme/topfilmenoi_main.php" target="_blank">topfilmenoi</a></TD>
 <TD width="25%"><a href="filme/divxfilmeonline.php?page=1&tip=release&title=divxfilmeonline&link=" target="_blank">divxfilmeonline</a></TD>
 <TD width="25%"><a href="filme/filmeseriale_eu_f.php?page=1&tip=release&title=filmeseriale.eu&link=" target="_blank">filmeseriale.eu</a></TD>
@@ -133,14 +133,14 @@ else
 <TR>
 <TD width="25%"><a href="filme/vikv.php?page=1&tip=release&title=vikv&link=" target="_blank">vikv</a></TD>
 <TD width="25%"><a href="filme/moviehdkh_f.php?page=1&tip=release&title=moviehdkh&link=" target="_blank">moviehdkh</a></TD>
-<TD width="25%"><a href="filme/moonline_f.php?page=1&tip=release&title=moonline&link=" target="_blank">moonline</a></TD>
+<TD width="25%"></TD>
 <TD width="25%"><a href="filme/dailymotion_fav.php" target="_blank">dailymotion</a></TD>
 </TR>
 <TR>
 <TD width="25%"><a href="filme/europix_f.php?page=1&tip=release&title=europix&link=" target="_blank">europix</a></TD>
 <TD width="25%"><a href="filme/esubmovie.php?page=1&tip=release&title=esubmovie&link=" target="_blank">esubmovie</a></TD>
 <TD width="25%"><a href="filme/yifymovies_f.php?page=1&tip=release&title=yifymovies&link=" target="_blank">yifymovies</a></TD>
-<TD width="25%"></TD>
+<TD width="25%"><a href="filme/movs4u_f.php?page=1&tip=release&title=movs4u&link=" target="_blank">movs4u</a></TD>
 </TR>
 <?php
 if (file_exists($base_pass."tvplay.txt")) {

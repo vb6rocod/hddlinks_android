@@ -156,7 +156,7 @@ $r=array();
 //echo $link;
 //echo $qs;
 $time=round(time()/100)*100;
-  $l1="https://ffmovies.to/user/ajax/menu-bar?ts=".$time."&_=743";
+  $l1="https://ffmovies.to/user/ajax/menu-bar?ts=".$time."&_=744";
 $head=array('Accept: application/json, text/javascript, */*; q=0.01',
 'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
 'Accept-Encoding: deflate',
@@ -178,9 +178,9 @@ $head=array('Accept: application/json, text/javascript, */*; q=0.01',
   $h = curl_exec($ch);
   curl_close($ch);
 if ($tip=="series")
-$l1="https://ffmovies.to/ajax/film/servers?id=".$link."&_=839&ts=".$time;
+$l1="https://ffmovies.to/ajax/film/servers?id=".$link."&_=840&ts=".$time;
 else
-$l1="https://ffmovies.to/ajax/film/servers?id=".$link."&_=839&ts=".$time;
+$l1="https://ffmovies.to/ajax/film/servers?id=".$link."&_=840&ts=".$time;
 //$l1="https://ffmovies.to/ajax/film/servers/".$link;
 ///////////////////////////////////////////////////////////////////
 //echo $l1;
@@ -325,7 +325,6 @@ echo '<br>
 <table border="0px" width="100%">
 <TR>
 <TD><font size="4"><b>
-<a href="ffmovies_ffs.php">Daca nu apar sursele...apasati aici.</a><BR>
 Scurtaturi: 1=opensubtitles, 2=titrari, 3=subs, 4=subtitrari, 5=vizioneaza
 <BR>Scurtaturi: 7=opensubtitles, 8=titrari, 9=subs, 0=subtitrari (cauta imdb id)
 </b></font></TD></TR></TABLE>

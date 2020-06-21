@@ -41,7 +41,7 @@ if (preg_match("/(.*?)(\d+)$/",$tit,$m)) {
 $ua     =   $_SERVER['HTTP_USER_AGENT'];
 $cookie=$base_cookie."ffmovies.dat";
 $time=round(time()/100)*100;
-  $l1="https://ffmovies.to/user/ajax/menu-bar?ts=".$time."&_=743";
+  $l1="https://ffmovies.to/user/ajax/menu-bar?ts=".$time."&_=744";
 $head=array('Accept: application/json, text/javascript, */*; q=0.01',
 'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
 'Accept-Encoding: deflate',
@@ -63,7 +63,7 @@ $head=array('Accept: application/json, text/javascript, */*; q=0.01',
   $h = curl_exec($ch);
   curl_close($ch);
   
-$l="https://ffmovies.to/ajax/film/servers?id=".$link."&_=839&ts=".$time;
+$l="https://ffmovies.to/ajax/film/servers?id=".$link."&_=840&ts=".$time;
 $head=array('Accept: application/json, text/javascript, */*; q=0.01',
 'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
 'Accept-Encoding: deflate',

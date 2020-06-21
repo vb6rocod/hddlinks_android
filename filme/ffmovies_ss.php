@@ -196,7 +196,7 @@ $head=array('Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q
   $html = curl_exec($ch);
   curl_close($ch);
   $time=round(time()/100)*100;
-  $l1="https://ffmovies.to/user/ajax/menu-bar?ts=".$time."&_=743";
+  $l1="https://ffmovies.to/user/ajax/menu-bar?ts=".$time."&_=744";
 $head=array('Accept: application/json, text/javascript, */*; q=0.01',
 'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
 'Accept-Encoding: deflate',

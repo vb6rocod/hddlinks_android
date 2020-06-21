@@ -140,6 +140,14 @@ if ($tip=="movie")
 $l=$link."/watching";
 else
 $l=$link;
+$l_mhdk=$l;
+///////////////////////////////////
+
+
+
+//$link=$link."|Referer=".urlencode("https://www.moviehdkh.com");
+//echo $link."<BR>";
+/////////////////////////////////////////
 $r=array();
 $r[]=$l;
 echo '<table border="1" width="100%">';
@@ -150,7 +158,7 @@ $k=count($r);
 $x=0;
 for ($i=0;$i<$k;$i++) {
   if ($x==0) echo '<TR>';
-  $c_link=$r[$i];
+  $c_link=urlencode($r[$i]);
   $openload=parse_url($r[$i])['host'];
   if (preg_match($indirect,$openload)) {
   echo '<TD class="mp"><a href="filme_link.php?file='.urlencode($c_link).'&title='.urlencode(unfix_t($tit.$tit2)).'" target="_blank">'.$openload.'</a></td>';

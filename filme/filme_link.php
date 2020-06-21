@@ -1142,7 +1142,7 @@ $s=$s."|hxload\.|bazavox\.com|cloud\.vidhubstr\.org|vidia\.tv|gomostream\.com|vi
 $s=$s."|prostream\.to|videobin\.co|upstream\.to|playtvid\.com|jetload\.net|vidfast\.co|clipwatching\.";
 $s=$s."|(video|player)\.filmeserialeonline\.org|streamwire\.|cloudvid\.icu|mstream\.xyz|streamhoe\.online|videyo\.";
 $s=$s."|fastvid\.co|vidload\.net|rovideo\.net\/embed|eplayvid\.com|dood\.|mediashore\.org|uptostream\.com";
-$s=$s."|movcloud\.net|dogestream\.|streamtape\.|jawcloud\.|evoload\.|sendvid\./i";
+$s=$s."|movcloud\.net|dogestream\.|streamtape\.|jawcloud\.|evoload\.|sendvid\.|easyload\.io|okstream\./i";
 /////////////////////////////////////////////
 //$x=preg_grep($s,$links);
 //print_r ($x);
@@ -1179,9 +1179,10 @@ for ($i=0;$i<count($links);$i++) {
    $h2 = curl_exec($ch);
    curl_close($ch);
    //echo $h2;
-   if (preg_match("/location\:\s*(.+)/i",$h2,$m))
+   if (preg_match("/location\:\s*(.+)/i",$h2,$m)) {
     $cur_link=trim($m[1]);
-   else
+    if (strpos($cur_link,"http") === false) $cur_link="https:".$cur_link;
+   } else
     $cur_link="";
   }
    if (preg_match("/leaked-celebrities\./",$links[$i])) {
@@ -1607,7 +1608,7 @@ $pattern = "@(?:\/\/|\.)((?:waaw1?|netu|hqq|hindipix)\.(?:tv|watch|in))\/(?:watc
  if ($flash != "mp")  {
    //echo $link_f[$k];
    if (strpos($link_f[$k],"hqq.") !== false ) {
-    echo '<TR><td class="link"><a href="link1.php?file='.urlencode($link_f[$k]).','.urlencode($pg).'" target="_blank">'.$server.'</a>
+    echo '<TR><td class="link"><a href="link1.php?file='.urlencode($link_f[$k]).'&title='.urlencode($pg).'" target="_blank">'.$server.'</a>
     <a id="fancy" data-fancybox data-type="iframe" href="hqq_sh.php?vid='.$vid.'">| get sh!</a>
     <a href="hqq_captcha.php" target="_blank"><font color="lightblue"> | Captcha</font></a>
     <a href="http://hqq.tv/sec/player/embed_player.php?gtoken=03&vid=1" target="_blank"><font color="lightblue"> | Captcha (cookie.txt add-onn)</font></a>
@@ -1615,11 +1616,11 @@ $pattern = "@(?:\/\/|\.)((?:waaw1?|netu|hqq|hindipix)\.(?:tv|watch|in))\/(?:watc
 if ($cap == 1)  echo '<label id="hqq_msg">'.$msg_captcha."</label>";
     echo '</TD></TR>';
    } elseif (strpos($link_f[$k],"thevideo.") !== false || strpos($link_f[$k],"vev.") !== false)
-    echo '<TR><td class="link"><a href="link1.php?file='.urlencode($link_f[$k]).','.urlencode($pg).'" target="_blank">'.$server.'</a> <a href="https://vev.io/pair" target="_blank"><font color="lightblue"> | Pair IP (4 ore)</font></a></TD></TR>';
+    echo '<TR><td class="link"><a href="link1.php?file='.urlencode($link_f[$k]).'&title='.urlencode($pg).'" target="_blank">'.$server.'</a> <a href="https://vev.io/pair" target="_blank"><font color="lightblue"> | Pair IP (4 ore)</font></a></TD></TR>';
    elseif (strpos($link_f[$k],"vidup.io") !== false)
-    echo '<TR><td class="link"><a href="link1.php?file='.urlencode($link_f[$k]).','.urlencode($pg).'" target="_blank">'.$server.'</a> <a href="https://vidup.io/pair" target="_blank"><font color="lightblue"> | Pair IP (4 ore)</font></a></TD></TR>';
+    echo '<TR><td class="link"><a href="link1.php?file='.urlencode($link_f[$k]).'&title='.urlencode($pg).'" target="_blank">'.$server.'</a> <a href="https://vidup.io/pair" target="_blank"><font color="lightblue"> | Pair IP (4 ore)</font></a></TD></TR>';
    else
-    echo '<TR><td class="link"><a href="link1.php?file='.urlencode($link_f[$k]).','.urlencode($pg).'" target="_blank">'.$server.'</a></TD></TR>';
+    echo '<TR><td class="link"><a href="link1.php?file='.urlencode($link_f[$k]).'&title='.urlencode($pg).'" target="_blank">'.$server.'</a></TD></TR>';
   } else {  //== "mp"
    if (strpos($link_f[$k],"hqq.") !== false) {
    echo '<TR><td class="link"><a onclick="ajaxrequest('."'".urlencode($pg)."', '".urlencode($link_f[$k])."')".'"'." style='cursor:pointer;'>".$server.'</a>

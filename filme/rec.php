@@ -19,6 +19,7 @@
 
 function rec($site_key,$co,$sa,$loc) {
   $ua = $_SERVER['HTTP_USER_AGENT'];
+  //$ua="Mozilla/5.0 (Windows NT 10.0; rv:77.0) Gecko/20100101 Firefox/77.0";
   $head = array(
    'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
    'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2'
@@ -38,8 +39,11 @@ function rec($site_key,$co,$sa,$loc) {
   $t2=explode("/",$t1[1]);
   $v=$t2[0];
   //$v="BT5UwN2jyUJCo7TdbwTYi_58";
+  //$v="oqtdXEs9TE9ZUAIhXNz5JBt_";
   $cb="123456789";
+  //$cb="k180y8u3wwv3";
   $l2="https://www.google.com/recaptcha/api2/anchor?ar=1&k=".$site_key."&co=".$co."&hl=ro&v=".$v."&size=invisible&cb=".$cb;
+  //echo $l2;
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $l2);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
