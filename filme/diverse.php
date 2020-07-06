@@ -18,7 +18,7 @@ function str_between($string, $start, $end){
 	return substr($string,$ini,$len);
 }
 echo '<table border="1px" width="100%">'."\n\r";
-echo '<TR><td style="color:black;background-color:#0a6996;color:#64c8ff;text-align:center" colspan="3"><font size="6"><b>Diverse...</b></font></TD></TR>';
+echo '<TR><td style="color:black;background-color:#0a6996;color:#64c8ff;text-align:center" colspan="4"><font size="6"><b>Diverse...</b></font></TD></TR>';
 
 $n=0;
 if ($n == 0) echo "<TR>"."\n\r";
@@ -34,6 +34,11 @@ echo '<TD style="text-align:center"><font size="4">'.'<a href="'.$link.'" target
 $title="The Visitors";
 $link='archive_ep.php?title='.urlencode("The Visitors").'&link=https://archive.org/embed/TheVisitors&sezon=1&imdb=tt0085106';
 echo '<TD style="text-align:center"><font size="4">'.'<a href="'.$link.'" target="_blank">'.$title.'</a></font></TD>';
+
+$title="Sliders";
+$link='archive_ep.php?title='.urlencode("Sliders").'&link=https://archive.org/embed/sliders1x011x02pilot&sezon=1&imdb=tt0112167';
+echo '<TD style="text-align:center"><font size="4">'.'<a href="'.$link.'" target="_blank">'.$title.'</a></font></TD>';
+
 
  echo "</TR>"."\n\r";
  echo '</table>';

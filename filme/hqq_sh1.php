@@ -63,38 +63,27 @@ $h="<script".trim($t2[1]);
 //$h=str_replace("\u03","\u00",$h);
 //$h=json_decode($h);
 //echo $h;
-$out = '<!DOCTYPE html>
-<head>
-<meta http-equiv="content-type" content="text/html; charset=UTF-8">
-<title>Video player</title>
-</head>
-<body>
-';
-$out .= '<script>
-var '.$m[2].'="";</script>'.$h.'';
-$out .= '<script>
+//$msg_captcha="OK";
+$out="";
+$out .= '
+var '.$m[2].'="";'.$h.'';
+$out .= '
 //alert (shh);
 var request = new XMLHttpRequest();
 var the_data = "";
 var php_file="sh.php?link=" + shh + "&vid='.$vid.'";
 request.open("GET", php_file, true);
 request.send(the_data);
-window.parent.document.getElementById("hqq_msg").innerHTML = "'.$msg_captcha.'";
-parent.$.fancybox.close();
-</script>
+document.getElementById("hqq_msg").innerHTML = "'.$msg_captcha.'";
 ';
-$out .= '</body>
-</html>';
+$out=str_replace("<script>","",$out);
+$out=str_replace("</script>","",$out);
 echo $out;
 } else {
-echo '<script>
-parent.$.fancybox.close();
-</script>';
+echo '';
 }
 } else {
-echo '<script>
-parent.$.fancybox.close();
-</script>';
+echo '';
 }
 //$fp = fopen('hqq3.html', 'w');
 //fwrite($fp, $out);

@@ -40,8 +40,9 @@ if (preg_match("/(.*?)(\d+)$/",$tit,$m)) {
 */
 $ua     =   $_SERVER['HTTP_USER_AGENT'];
 $cookie=$base_cookie."ffmovies.dat";
+$host="fmovies.solar";
 $time=round(time()/100)*100;
-  $l1="https://ffmovies.to/user/ajax/menu-bar?ts=".$time."&_=744";
+  $l1="https://".$host."/user/ajax/menu-bar?ts=".$time."&_=744";
 $head=array('Accept: application/json, text/javascript, */*; q=0.01',
 'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
 'Accept-Encoding: deflate',
@@ -51,7 +52,7 @@ $head=array('Accept: application/json, text/javascript, */*; q=0.01',
   curl_setopt($ch, CURLOPT_URL, $l1);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
   curl_setopt($ch, CURLOPT_USERAGENT, $ua);
-  curl_setopt($ch,CURLOPT_REFERER,"https://ffmovies.to/tv-series");
+  curl_setopt($ch,CURLOPT_REFERER,"https://".$host."/tv-series");
   curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
   curl_setopt($ch, CURLOPT_HEADER,1);
   curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie);
@@ -63,13 +64,13 @@ $head=array('Accept: application/json, text/javascript, */*; q=0.01',
   $h = curl_exec($ch);
   curl_close($ch);
   
-$l="https://ffmovies.to/ajax/film/servers?id=".$link."&_=840&ts=".$time;
+$l="https://".$host."/ajax/film/servers?id=".$link."&_=840&ts=".$time;
 $head=array('Accept: application/json, text/javascript, */*; q=0.01',
 'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
 'Accept-Encoding: deflate',
 'X-Requested-With: XMLHttpRequest',
 'Connection: keep-alive',
-'Referer: https://ffmovies.to/film/in-the-tall-grass.'.$link);
+'Referer: https://'.$host.'/film/in-the-tall-grass.'.$link);
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $l);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);

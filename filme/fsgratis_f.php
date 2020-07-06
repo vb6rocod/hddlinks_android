@@ -212,7 +212,7 @@ foreach($videos as $video) {
   $t=$t1[0];
   $t=preg_replace("/\(?((1|2)\d{3})\)?/","",$t);
   $tit_imdb=trim($t);
-  $t1=explode('data-src="',$video);
+  $t1=explode('src="',$video);
   $t2=explode('"',$t1[1]);
   $image=$t2[0];
   //$image="r_m.php?file=".$image;

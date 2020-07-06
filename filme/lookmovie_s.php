@@ -211,7 +211,7 @@ $head=array('Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q
     $t1=explode('class="year">',$video);
     $t2=explode('<',$t1[1]);
     $year=$t2[0];
-    if (strpos($image,"http") === false && $image) $image="https:".$image;
+    if (strpos($image,"http") === false && $image) $image="https://".$host.$image;
     if (!$image) $image="blank.jpg";
     if (strpos($link,"/shows") !== false) array_push($r ,array($title,$link, $image,$year));
   }

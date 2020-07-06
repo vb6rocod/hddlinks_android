@@ -226,7 +226,7 @@ $host=parse_url($l)['host'];
   curl_setopt($ch, CURLOPT_TIMEOUT, 15);
   $html = curl_exec($ch);
   curl_close($ch);
-
+//echo $html;
 $r=array();
 $videos = explode('div class="th">',$html);
 unset($videos[0]);
@@ -240,7 +240,7 @@ foreach($videos as $video) {
   $title=$t3[0];
   $title = trim(strip_tags($title));
   $title = prep_tit($title);
-  $t1 = explode('src="', $video);
+  $t1 = explode('data-src="', $video);
   $t2 = explode('"', $t1[1]);
   $image = $t2[0];
   if (strpos($image,"http") === false) $image="https:".$image;
@@ -261,6 +261,7 @@ for ($k=0;$k<$c;$k++) {
   $fav_link="mod=add&title=".urlencode(fix_t($title))."&link=".urlencode($link)."&image=".urlencode($image)."&width=".$width."&height=".$height."&file=adult_link.php";
   else
   $fav_link="mod=add&title=".urlencode(fix_t($title))."&link=".urlencode($link)."&image=".urlencode($image)."&width=".$width."&height=".$height."&file=filme_link.php";
+  $image="r_m.php?file=".$image;
   if (true) {
   if ($n==0) echo '<TR>'."\r\n";
   if ($tast == "NU" && $flash !="mp") {

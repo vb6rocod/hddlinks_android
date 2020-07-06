@@ -234,7 +234,7 @@ $videos = array_values($videos);
 foreach($videos as $video) {
   $t1=explode('href="',$video);
   $t2 = explode('"', $t1[1]);
-  $link = $t2[0];
+  $link = "https://www.pornrox.com".$t2[0];
   $t1=explode('alt="',$video);
   $t3=explode('"',$t1[1]);
   $title=$t3[0];

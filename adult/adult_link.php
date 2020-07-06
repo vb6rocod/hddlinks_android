@@ -148,6 +148,11 @@ if (preg_match("/4tube\.com/",$host)) {
       } else $out="";
  }
 } else if (preg_match("/anybunny\.com/",$host)) {
+//echo $h;
+$t1=explode("source src='",$h);
+$t2=explode("'",$t1[1]);
+$out=$t2[0];
+/*
   $id=str_between($h,"embed/",'"');
   $l="https://vartuc.com/embed/".$id;
 
@@ -220,6 +225,7 @@ if (preg_match("/4tube\.com/",$host)) {
   } else {
     $out=$link1;
   }
+  */
 } else if (preg_match("/ashemaletube\.com/",$host)) {
   $t1=explode('source src="',$h);
   $t2=explode('"',$t1[1]);
@@ -461,6 +467,10 @@ if (preg_match("/4tube\.com/",$host)) {
      $maxs = array_keys($m[1], max($m[1]));
      $out=$m[2][$maxs[0]];
   }
+} else if (preg_match("/pefilme\.info/",$host)) {
+  $t1=explode('source src="',$h);
+  $t2=explode('"',$t1[1]);
+  $out=$t2[0];
 } else if (preg_match("/porn300\.com/",$host)) {
   $t1=explode('source src="',$h);
   $t2=explode('"',$t1[1]);
@@ -473,8 +483,10 @@ if (preg_match("/4tube\.com/",$host)) {
   $out=$t2[0];
 } else if (preg_match("/porndoe\.com/",$host)) {
 //echo $h;
-  if (preg_match_all("/(240|360|480|720)\".*?\"type\": \"video\".*?url\"\: \"([\w\/\:_\-\.]+\.mp4)\"/msi",$h,$m)) {
-   $out=$m[2][count($m[2])-1];
+  // https://cdnu.porndoe.com/movie/1/4/2/8/3/2/4/5efa4157a7128-976-240p-400.mp4?cdn_bw_fs=4000k&cdn_bw=608000
+  if (preg_match_all("/src=\"([\w\/\:_\-\.\=\&\?]+)\"\s+type\=\"video\/mp4\"/msi",$h,$m)) {
+  //print_r ($m);
+   $out=$m[1][count($m[1])-1];
   }
 } else if (preg_match("/porndroids\.com/",$host)) {
   $t1=explode('data-video="',$h);
@@ -482,16 +494,19 @@ if (preg_match("/4tube\.com/",$host)) {
   $out=$t2[0];
   $out=str_replace("\\","",$out);
   if (strpos($out,"http") === false && $out) $out="https:".$out;
-} else if (preg_match("/pornhd\.com/",$host)) {
+} else if (preg_match("/pornhdprime\.com/",$host)) {
 //echo $h;
   if (preg_match("/source\s+src\=\"(.*?)\"/msi",$h,$p)) {
    $out=$p[1];
-     if (strpos($out,"http") === false) $out="https://www.pornhd.com".$out;
+   $out=str_replace("&amp;","&",$out);
+     if (strpos($out,"http") === false) $out="https://pornhdprime.com".$out;
+     /*
+     echo $out;
       $ch = curl_init();
       curl_setopt($ch, CURLOPT_URL, $out);
       curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
       curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 10.0; WOW64; rv:46.0) Gecko/20100101 Firefox/46.0');
-      curl_setopt($ch, CURLOPT_REFERER, "https://www.pornhd.com");
+      curl_setopt($ch, CURLOPT_REFERER, "https://pornhdprime.com");
       curl_setopt($ch, CURLOPT_COOKIEJAR, $cookie);
       curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie);
       curl_setopt($ch, CURLOPT_NOBODY,true);
@@ -500,10 +515,12 @@ if (preg_match("/4tube\.com/",$host)) {
       curl_setopt($ch, CURLOPT_TIMEOUT, 15);
       $ret = curl_exec($ch);
       curl_close($ch);
-      if (preg_match("/location:\s*(.+)/",$ret,$m))
+      echo $ret;
+      if (preg_match("/location:\s*(.+)/i",$ret,$m))
        $out=trim($m[1]);
       else
        $out="";
+      */
  }
 } else if (preg_match("/pornheed\.com/",$host)) {
   $t1=explode('source src="',$h);
@@ -550,6 +567,7 @@ if (preg_match("/4tube\.com/",$host)) {
    if (strpos($out,"http") === false && $out) $out="https:".$out;
   }
 } else if (preg_match("/pornrox\.com/",$host)) {
+//echo $h;
   if (preg_match_all("/source src\=\"(.*?)\"\s+type\=\'video\/mp4\' label\=\'(1080|720|480|360|240)p\'/ms",$h,$m)) {
      $maxs = array_keys($m[2], max($m[2]));
      $out=$m[1][$maxs[0]];
@@ -569,9 +587,11 @@ if (preg_match("/4tube\.com/",$host)) {
       curl_setopt($ch, CURLOPT_TIMEOUT, 15);
       $ret = curl_exec($ch);
       curl_close($ch);
-      $t1=explode("Location:",$ret);
-      $t2=explode("\n",$t1[1]);
-      $out=trim($t2[0]);
+      //echo $ret;
+      if (preg_match("/location:\s*(.+)/i",$ret,$m))
+       $out=trim($m[1]);
+      else
+       $out="";
       if (strpos($out,"http") === false && $out) $out="https:".trim($t2[0]);
  }
 } else if (preg_match("/redtube\.com/",$host)) {
@@ -691,7 +711,7 @@ if (preg_match("/4tube\.com/",$host)) {
   if (strpos($out,"http") === false && $out) $out="https:".$out;
 } else if (preg_match("/tube8\.com/",$host)) {
   $out=trim(str_between($h,'videoUrlJS = "','"'));
-} else if (preg_match("/vporn\.com/",$host)) {
+} else if (preg_match("/vporn\.com|pornone\.com/",$host)) {
   $t1=explode('source src="',$h);
   $t2=explode('"',$t1[1]);
   $out=$t2[0];

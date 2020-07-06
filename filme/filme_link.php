@@ -142,8 +142,9 @@ if (strpos($filelink,"filmeonlinegratis.org") !== false) {
   $html = curl_exec($ch);
   curl_close($ch);
   $html = urldecode(str_replace("@","%",$html));
-} elseif (strpos($filelink,"fsgratis.com") !== false) {
+} elseif (strpos($filelink,"fsgratis.") !== false) {
   //https://fsgratis.com/miss-me-this-christmas/
+  $host=parse_url($filelink)['host'];
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $filelink);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
@@ -163,7 +164,7 @@ if (strpos($filelink,"filmeonlinegratis.org") !== false) {
   if (preg_match_all("/playerembed(\S+)\"/",$h,$m))
    $r=array_unique($m[1]);
   foreach($r as $key=>$value) {
-    $l="https://fsgratis.com/playerembed".$value;
+    $l="https://".$host."/playerembed".$value;
     //echo $l;
     $ch = curl_init();
     curl_setopt($ch, CURLOPT_URL, $l);
@@ -183,13 +184,13 @@ if (strpos($filelink,"filmeonlinegratis.org") !== false) {
     $t2=explode('"',$t1[1]);
     $id = substr($t2[0], 0, -1);
     $id=strrev($id);
-    $l="https://fsgratis.com/?trhide=1&trhex=".$id;
+    $l="https://".$host."/?trhide=1&trhex=".$id;
     $ch = curl_init();
     curl_setopt($ch, CURLOPT_URL, $l);
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
     curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 10.0; rv:70.0) Gecko/20100101 Firefox/70.0');
     curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,0);
-    curl_setopt($ch, CURLOPT_REFERER, "https://fsgratis.com/?trhide=1&tid=".strrev($id));
+    curl_setopt($ch, CURLOPT_REFERER, "https://".$host."/?trhide=1&tid=".strrev($id));
     curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
     curl_setopt($ch, CURLOPT_HEADER,1);
     curl_setopt($ch, CURLOPT_NOBODY,0);
@@ -690,6 +691,7 @@ $headers=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:71.0) Gecko/2010010
   curl_close ($ch);
   $html=$h;
 } elseif (strpos($filelink,"vezi-online.eu") !== false) {
+//echo $filelink;
   $ch = curl_init($filelink);
   curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows; U; Windows NT 6.1; en-US; rv:1.9.1.2) Gecko/20090729 Firefox/3.5.2 GTB5');
   curl_setopt($ch,CURLOPT_REFERER,"https://vezi-online.eu");
@@ -700,8 +702,8 @@ $headers=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:71.0) Gecko/2010010
   curl_setopt($ch, CURLOPT_RETURNTRANSFER  ,1);  // RETURN THE CONTENTS OF THE CALL
   //curl_setopt($ch, CURLOPT_HEADER, true);
   curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
-  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 25);
   $html = curl_exec($ch);
   curl_close ($ch);
   $videos = explode("li id='player-option", $html);
@@ -730,8 +732,8 @@ $headers=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:71.0) Gecko/2010010
    curl_setopt($ch, CURLOPT_RETURNTRANSFER  ,1);  // RETURN THE CONTENTS OF THE CALL
    //curl_setopt($ch, CURLOPT_HEADER, true);
    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-   curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
-   curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+   curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
+   curl_setopt($ch, CURLOPT_TIMEOUT, 25);
    $h = curl_exec($ch);
    curl_close ($ch);
    $html .=$h;
@@ -1142,7 +1144,8 @@ $s=$s."|hxload\.|bazavox\.com|cloud\.vidhubstr\.org|vidia\.tv|gomostream\.com|vi
 $s=$s."|prostream\.to|videobin\.co|upstream\.to|playtvid\.com|jetload\.net|vidfast\.co|clipwatching\.";
 $s=$s."|(video|player)\.filmeserialeonline\.org|streamwire\.|cloudvid\.icu|mstream\.xyz|streamhoe\.online|videyo\.";
 $s=$s."|fastvid\.co|vidload\.net|rovideo\.net\/embed|eplayvid\.com|dood\.|mediashore\.org|uptostream\.com";
-$s=$s."|movcloud\.net|dogestream\.|streamtape\.|jawcloud\.|evoload\.|sendvid\.|easyload\.io|okstream\./i";
+$s=$s."|movcloud\.net|dogestream\.|streamtape\.|jawcloud\.|evoload\.|sendvid\.|easyload\.io|okstream\.";
+$s=$s."|youdbox\.com/i";
 /////////////////////////////////////////////
 //$x=preg_grep($s,$links);
 //print_r ($x);
@@ -1573,6 +1576,10 @@ foreach($link_f as $k=>$val) {
 $server="";
 $server = parse_url($link_f[$k])["host"];
 if (preg_match("/hqq\.|waaw1?|netu|pajalusta|hindipix\./",$link_f[$k])) {
+  if (preg_match("/\?vid\=http/",$link_f[$k])) {
+   $t1=explode("?vid",$link_f[$k]);
+   $link_f[$k]=$t1[1];
+  }
     $link_f[$k]=str_replace($server,"hqq.tv",$link_f[$k]);
     $l1=str_replace("/f/","/e/",$link_f[$k]);
     $l1=str_replace("/e/","/watch_video.php?v=",$l1);
@@ -1604,14 +1611,16 @@ $pattern = "@(?:\/\/|\.)((?:waaw1?|netu|hqq|hindipix)\.(?:tv|watch|in))\/(?:watc
   }
     $find_hqq=true;
     $cap++;
+    //echo $vid;
 }
  if ($flash != "mp")  {
    //echo $link_f[$k];
    if (strpos($link_f[$k],"hqq.") !== false ) {
     echo '<TR><td class="link"><a href="link1.php?file='.urlencode($link_f[$k]).'&title='.urlencode($pg).'" target="_blank">'.$server.'</a>
-    <a id="fancy" data-fancybox data-type="iframe" href="hqq_sh.php?vid='.$vid.'">| get sh!</a>
-    <a href="hqq_captcha.php" target="_blank"><font color="lightblue"> | Captcha</font></a>
+    <!--<a id="fancy" data-fancybox data-type="iframe" href="hqq_sh.php?vid='.$vid.'">| get sh!</a>-->
+    <a href="hqq.html" target="_blank"><font color="lightblue"> | Captcha</font></a>
     <a href="http://hqq.tv/sec/player/embed_player.php?gtoken=03&vid=1" target="_blank"><font color="lightblue"> | Captcha (cookie.txt add-onn)</font></a>
+    <script type="application/javascript" src="hqq_sh1.php?vid='.$vid.'"></script>
     ';
 if ($cap == 1)  echo '<label id="hqq_msg">'.$msg_captcha."</label>";
     echo '</TD></TR>';
@@ -1624,10 +1633,12 @@ if ($cap == 1)  echo '<label id="hqq_msg">'.$msg_captcha."</label>";
   } else {  //== "mp"
    if (strpos($link_f[$k],"hqq.") !== false) {
    echo '<TR><td class="link"><a onclick="ajaxrequest('."'".urlencode($pg)."', '".urlencode($link_f[$k])."')".'"'." style='cursor:pointer;'>".$server.'</a>
-   <a id="fancy" data-fancybox data-type="iframe" href="hqq_sh.php?vid='.$vid.'">| get sh!</a>
-   <a href="hqq_captcha.php" target="_blank"><font color="lightblue"> | Captcha</font></a>
-   <a href="intent:http://127.0.0.1:8080/scripts/filme/hqq_captcha.php#Intent;package=org.mozilla.firefox;S.title=Captcha;end" target="_blank"><font color="lightblue"> | Captcha (firefox)</font></a>
-   <a href="intent:http://hqq.tv/sec/player/embed_player.php?gtoken=03&vid=1#Intent;package=org.mozilla.firefox;S.title=Captcha;end" target="_blank"><font color="lightblue"> | Captcha (firefox-ext cookie.txt)</font></a>
+   <!--<a id="fancy" data-fancybox data-type="iframe" href="hqq_sh.php?vid='.$vid.'">| get sh!</a>-->
+   <!--<a href="hqq_captcha.php" target="_blank"><font color="lightblue"> | Captcha</font></a>-->
+   <!--<a href="intent:http://127.0.0.1:8080/scripts/filme/hqq_captcha.php#Intent;package=org.mozilla.firefox;S.title=Captcha;end" target="_blank"><font color="lightblue"> | Captcha (firefox)</font></a>-->
+   <a href="intent:http://hqq.tv/sec/player/embed_player.php?gtoken=03&vid=1#Intent;package=org.mozilla.firefox;S.title=Captcha;end" target="_blank"><font color="lightblue"> | Captcha</font></a>
+   <!--<a href="intent:http://127.0.0.1:8080/scripts/filme/hqq.html#Intent;package=org.mozilla.firefox;S.title=Captcha;end" target="_blank"><font color="lightblue"> | Captcha (v2)</font></a>-->
+   <script type="application/javascript" src="hqq_sh1.php?vid='.$vid.'"></script>
    ';
 if ($cap == 1)  echo '<label id="hqq_msg">'.$msg_captcha."</label>";
     echo '</TD></TR>';

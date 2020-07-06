@@ -12,12 +12,14 @@ $tit=$_GET["title"];
 $link=$_GET["link"];
 $width="200px";
 $height="278px";
+$last_good="https://fmovies.solar";
+$host=parse_url($last_good)['host'];
 /* ==================================================== */
 $has_fav="yes";
 $has_search="yes";
 $has_add="yes";
 $has_fs="yes";
-$fav_target="ffmovies_f_fav.php?host=https://ffmovies.to";
+$fav_target="ffmovies_f_fav.php?host=".$last_good;
 $add_target="ffmovies_f_add.php";
 $add_file="";
 $fs_target="ffmovies_fs.php";
@@ -171,9 +173,9 @@ $ua     =   $_SERVER['HTTP_USER_AGENT'];
 $cookie=$base_cookie."ffmovies.dat";
 $r=array();
 if ($tip=="search") {
- $l="https://ffmovies.to/search?keyword=".str_replace(" ","+",$tit)."&page=".$page;
+ $l="https://".$host."/search?keyword=".str_replace(" ","+",$tit)."&page=".$page;
 } else {
- $l="https://ffmovies.to/movies?page=".$page;
+ $l="https://".$host."/movies?page=".$page;
 }
 $head=array('Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
 'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
@@ -197,7 +199,7 @@ $head=array('Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q
   $html = curl_exec($ch);
   curl_close($ch);
   $time=round(time()/100)*100;
-  $l1="https://ffmovies.to/user/ajax/menu-bar?ts=".$time."&_=744";
+  $l1="https://".$host."/user/ajax/menu-bar?ts=".$time."&_=744";
 $head=array('Accept: application/json, text/javascript, */*; q=0.01',
 'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
 'Accept-Encoding: deflate',
@@ -207,7 +209,7 @@ $head=array('Accept: application/json, text/javascript, */*; q=0.01',
   curl_setopt($ch, CURLOPT_URL, $l1);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
   curl_setopt($ch, CURLOPT_USERAGENT, $ua);
-  curl_setopt($ch,CURLOPT_REFERER,"https://ffmovies.to/movies");
+  curl_setopt($ch,CURLOPT_REFERER,"https://".$host."/movies");
   curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
   curl_setopt($ch, CURLOPT_HEADER,1);
   curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie);

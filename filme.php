@@ -59,36 +59,29 @@ else
 <TD width="25%"><a href="filme/filmeseriale_filme.php?page=1&tip=release&title=filmeseriale&link=" target="_blank">filmeseriale.online</a></TD>
 <TD width="25%"><a href="filme/filmeonline2016_main.php" target="_blank">filmeonline2016</a></TD>
 <TD width="25%"><a href="filme/filme-seriale_f.php?page=1&tip=release&title=filme-seriale&link=" target="_blank">filme-seriale</a></TD>
-<TD width="25%"><a href="filme/filmenoihd_main.php" target="_blank">filmenoihd</a></TD>
+<TD width="25%"><a href="filme/dozaanimata_f.php?page=1&tip=release&title=dozaanimata&link=" target="_blank">dozaanimata</a></TD>
 </TR>
 
 <TR>
 <TD width="25%"><a href="filme/fsgratis_main.php" target="_blank">fsgratis</a></TD>
 <TD width="25%"><a href="filme/f-hd_main.php" target="_blank">f-hd</a></TD>
 <TD width="25%"><a href="filme/serialeonline_f.php?page=1&tip=release&title=serialeonline&link=" target="_blank">serialeonline</a></TD>
-<TD width="25%"><a href="filme/telecinemateca.php" target="_blank">telecinemateca</a></TD>
+<TD width="25%"><a href="filme/portalultautv_main.php" target="_blank">portalultautv</a></TD>
 </TR>
 <TR>
-<TD width="25%"></TD>
 <TD width="25%"><a href="filme/topfilmenoi_main.php" target="_blank">topfilmenoi</a></TD>
 <TD width="25%"><a href="filme/divxfilmeonline.php?page=1&tip=release&title=divxfilmeonline&link=" target="_blank">divxfilmeonline</a></TD>
 <TD width="25%"><a href="filme/filmeseriale_eu_f.php?page=1&tip=release&title=filmeseriale.eu&link=" target="_blank">filmeseriale.eu</a></TD>
-
+<TD width="25%"><a href="filme/vezionline_main.php" target="_blank">vezionline</a></TD>
 </TR>
 <!--- desene si filme...-->
 <TR>
-<TD width="25%"><a href="filme/vezionline_main.php" target="_blank">vezionline</a></TD>
 <TD width="25%"><a href="filme/filmeserialehd_f.php?page=1&tip=release&title=filmeserialehd&link=" target="_blank">filmeserialehd</a></TD>
 <TD width="25%"><a href="filme/deseneledublate.php?page=1&tip=release&title=desenedublate&link=" target="_blank">deseneledublate</a></TD>
 <TD width="25%"><a href="filme/desenefaine_main.php" target="_blank">desenefaine.ro</a></TD>
+<TD width="25%"><a href="filme/123files.php?page=1&tip=release&title=123files&link=" target="_blank">123files</a></TD>
 </TR>
 
-<TR>
-<TD width="25%"><a href="filme/portalultautv_main.php" target="_blank">portalultautv</a></TD>
-<TD width="25%"><a href="filme/dozaanimata_f.php?page=1&tip=release&title=dozaanimata&link=" target="_blank">dozaanimata</a></TD>
-<TD width="25%"></TD>
-<TD width="25%"></TD>
-</TR>
 <!-- straine -->
 <TR>
 <TD width="25%"><a href="filme/tvseries_f.php?page=1&tip=release&title=tvseries&link=" target="_blank">tvseries</a></TD>
@@ -133,7 +126,7 @@ else
 <TR>
 <TD width="25%"><a href="filme/vikv.php?page=1&tip=release&title=vikv&link=" target="_blank">vikv</a></TD>
 <TD width="25%"><a href="filme/moviehdkh_f.php?page=1&tip=release&title=moviehdkh&link=" target="_blank">moviehdkh</a></TD>
-<TD width="25%"></TD>
+<TD width="25%"><a href="filme/flixgo_f.php?page=1&tip=release&title=flixgo&link=" target="_blank">flixgo</a></TD>
 <TD width="25%"><a href="filme/dailymotion_fav.php" target="_blank">dailymotion</a></TD>
 </TR>
 <TR>

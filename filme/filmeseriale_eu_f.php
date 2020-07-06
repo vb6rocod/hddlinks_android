@@ -207,7 +207,8 @@ foreach($videos as $video) {
    $t4 = explode('<', $t3[1]);
    $t5=explode(', film',$t4[0]);
    $title = trim($t5[0]);
-   $title=prep_tit($title);
+   $title=trim(preg_replace("/film online\:/i","",$title));
+   //$title=prep_tit($title);
   } else
     $title="";
   $year="";

@@ -236,6 +236,7 @@ foreach($videos as $video) {
   $t2 = explode('"', $t1[1]);
   $link = "https://porndoe.com".$t2[0];
   //$t1=explode('title="',$video);
+  $link=str_replace("/video/","/video/embed/",$link);
   $t3=explode('"',$video);
   $title=$t3[0];
   $title = trim(strip_tags($title));

@@ -232,8 +232,8 @@ $videos = explode('div class="video-box statisticBox', $html);
 unset($videos[0]);
 $videos = array_values($videos);
 foreach($videos as $video) {
-  $t1=explode('/video/',$video);
-  $t2 = explode('"', $video);
+  $t1=explode('href="',$video);
+  $t2 = explode('"', $t1[1]);
   $link = "http://fapbox.com".trim($t2[0]);
   $t3=explode('alt="',$video);
   $t4=explode('"',$t3[1]);

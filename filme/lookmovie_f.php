@@ -232,7 +232,7 @@ foreach($videos as $video) {
   $t1 = explode('data-src="', $video);
   $t2 = explode('"', $t1[1]);
   $image=$t2[0];
-  if (strpos($image,"http") === false && $image) $image="https:".$image;
+  if (strpos($image,"http") === false && $image) $image="https://".$host.$image;
   if (!$image) $image="blank.jpg";
   //$t1=explode('data-src="'
   //$image=str_replace("w342","w300",$image);

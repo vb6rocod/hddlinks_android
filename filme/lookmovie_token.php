@@ -32,7 +32,7 @@ $head=array('Accept: */*',
 'Origin: https://lookmovie.ag',
 'Connection: keep-alive',
 'Referer: https://lookmovie.ag/movies/view/6619188-the-favorite-2019');
-
+  /*
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $l);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
@@ -45,7 +45,17 @@ $head=array('Accept: */*',
   curl_setopt($ch, CURLOPT_TIMEOUT, 25);
   $h = curl_exec($ch);
   curl_close($ch);
+  */
   //echo $h;
+$opts = array(
+  'http'=>array(
+    'method'=>"GET",
+    'header'=> $head
+  )
+);
+
+$context = stream_context_create($opts);
+$h = @file_get_contents($l, false, $context);
   $r=json_decode($h,1);
   //print_r ($r);
   $time=$r['data']['expires'];
@@ -57,6 +67,7 @@ $head=array('Accept: */*',
   $l="https://lookmovie.ag/manifests/movies/json/".$id."/".$time."/".$token."/master.m3u8?extClient=false";
   }
   //echo $l;
+  /*
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $l);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
@@ -68,6 +79,16 @@ $head=array('Accept: */*',
   curl_setopt($ch, CURLOPT_TIMEOUT, 25);
   $h = curl_exec($ch);
   curl_close($ch);
+  */
+$opts = array(
+  'http'=>array(
+    'method'=>"GET",
+    'header'=> $head
+  )
+);
+
+$context = stream_context_create($opts);
+$h = @file_get_contents($l, false, $context);
   if (!$slug) {
   $r=json_decode($h,1);
   if (isset($r['1080p']))

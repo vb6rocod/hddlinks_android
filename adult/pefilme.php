@@ -12,7 +12,7 @@ $tip= $_GET["tip"];
 $tit=$_GET["title"];
 $link=$_GET["link"];
 $width="200px";
-$height=intval(200*(240/320))."px";
+$height=intval(200*(153/272))."px";
 /* ==================================================== */
 $has_main="yes";
 $has_fav="no";
@@ -23,7 +23,7 @@ $fav_target="adult_fav.php";
 $add_target="adult_add.php";
 $add_file="";
 $fs_target="filme_link.php";
-$target="anybunny.php";
+$target="pefilme.php";
 /* ==================================================== */
 $base=basename($_SERVER['SCRIPT_FILENAME']);
 $p=$_SERVER['QUERY_STRING'];
@@ -204,18 +204,13 @@ else
 echo '</TR>'."\r\n";
 
 if($tip=="release") {
-  if ($page>1)
-    $l = $link."?p=".$page;
-  else
-    $l = $link."?p=".$page;
+   $l = $link."page/".$page."/";
 } else {
-  $search=str_replace(" ","_",$tit);
-  if ($page > 1)
-    $l="http://anybunny.com/new/".$search."?p=".$page;
-  else
-    $l="http://anybunny.com/new/".$search;;
+  $search=str_replace(" ","%20",$tit);
+
 }
 $host=parse_url($l)['host'];
+if ($tip == "release") {
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $l);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
@@ -225,29 +220,52 @@ $host=parse_url($l)['host'];
   curl_setopt($ch, CURLOPT_TIMEOUT, 15);
   $html = curl_exec($ch);
   curl_close($ch);
-  
+} else {
+ $l="https://pefilme.info/";
+ $post="s=".$search;
+ $head=array('Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
+ 'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
+ 'Accept-Encoding: deflate',
+ 'Content-Type: application/x-www-form-urlencoded',
+ 'Content-Length: '.strlen($post).'',
+ 'Origin: https://pefilme.info',
+ 'Connection: keep-alive',
+ 'Referer: https://pefilme.info/');
+  $ch = curl_init();
+  curl_setopt($ch, CURLOPT_URL, $l);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+  curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 10.0; rv:55.0) Gecko/20100101 Firefox/55.0');
+  curl_setopt($ch, CURLOPT_HTTPHEADER,$head);
+  curl_setopt($ch, CURLOPT_POST,1);
+  curl_setopt($ch, CURLOPT_POSTFIELDS,$post);
+  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+  $html = curl_exec($ch);
+  curl_close($ch);
+
+}
+//echo $html;
 $r=array();
-$videos=explode('<li',$html);
+$videos = explode('id="post-', $html);
 unset($videos[0]);
 $videos = array_values($videos);
 foreach($videos as $video) {
-  $t1 = explode("href='",$video);
-  $t2 = explode("'", $t1[1]);
-  $link = $t2[0];
-  if (strpos($link,"http") === false) $link="https://".$host.$link;
-  $t1 = explode("class='clip'>", $video);
-  $t2 = explode('<', $t1[1]);
+  $t2 = explode('"', $video);
+  $link="https://pefilme.info/video.php?id=".$t2[0]."";
+  $t1 = explode('title="', $video);
+  $t2 = explode('"', $t1[1]);
   $title = trim(strip_tags($t2[0]));
-  $title = prep_tit($title);
-  $t1 = explode("src='", $video);
-  $t2 = explode("'", $t1[1]);
-  $image = $t2[0];
+  //$title = prep_tit($title);
+  $t1 = explode('timthumb.php?src=', $video);
+  $t2 = explode('&', $t1[1]);
+  $image = "r_m.php?file=".$t2[0];
   if (strpos($image,"http") === false) $image="https:".$image;
-  $durata="";
-  $durata = preg_replace("/\n|\r/"," ",strip_tags($durata));
+  $durata = "";
   if ($durata) $title=$title." (".$durata.')';
-  if ($title) array_push($r ,array($title,$link, $image));
+  array_push($r ,array($title,$link, $image));
 }
+
 $c=count($r);
 for ($k=0;$k<$c;$k++) {
   $title=$r[$k][0];

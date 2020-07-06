@@ -1,14 +1,15 @@
 <!DOCTYPE html>
 <?php
+error_reporting(0);
 function str_between($string, $start, $end){
 	$string = " ".$string; $ini = strpos($string,$start);
 	if ($ini == 0) return ""; $ini += strlen($start); $len = strpos($string,$end,$ini) - $ini;
 	return substr($string,$ini,$len);
 }
-$main_title="filmenoihd";
-$target="filmenoihd.php";
+$main_title="pefilme";
+$target="pefilme.php";
 $fav_target="";
-$recente="http://www.filmenoihd.biz/filme/";
+$recente="https://pefilme.info/";
 ?>
 <html>
 <head>
@@ -25,7 +26,7 @@ $recente="http://www.filmenoihd.biz/filme/";
     if (charCode == "53" && e.target.type != "text") {
       document.getElementById("send").click();
     } else if (charCode == "50" && e.target.type != "text") {
-      document.getElementById("fav").click();
+      window.open("adult_fav.php");
     }
    }
 document.onkeypress =  zx;
@@ -35,8 +36,8 @@ document.onkeypress =  zx;
 <?php
 include ("../common.php");
 
-if (file_exists($base_cookie."filme.dat"))
-  $val_search=file_get_contents($base_cookie."filme.dat");
+if (file_exists($base_cookie."adult.dat"))
+  $val_search=file_get_contents($base_cookie."adult.dat");
 else
   $val_search="";
 $form='<TD class="form" colspan="2">
@@ -54,8 +55,9 @@ echo '<TR><TD class="cat">'.'<a class ="nav" href="'.$target.'?page=1&tip=releas
 echo $form;
 echo '</TR>';
 $n=0;
-$l="http://www.filmenoihd.biz/filme/";
+$l="https://pefilme.info/";
 $ua = $_SERVER['HTTP_USER_AGENT'];
+$ua="Mozilla/5.0 (Windows NT 10.0; rv:68.0) Gecko/20100101 Firefox/68.0";
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $l);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
@@ -66,20 +68,21 @@ $ua = $_SERVER['HTTP_USER_AGENT'];
   curl_setopt($ch, CURLOPT_TIMEOUT, 15);
   $html = curl_exec($ch);
   curl_close($ch);
-
-$videos = explode('id="menu-item', $html);
+//$html = str_between($html,'Categories','</ul>');
+$videos = explode('li><a href="', $html);
 unset($videos[0]);
 $videos = array_values($videos);
 
 foreach($videos as $video) {
-    $t0 = explode('href="',$video);
-    $t1 = explode('"', $t0[1]);
-    $link = $t1[0];
-    $t2 = explode('>', $t0[1]);
-    $t3 = explode('<', $t2[1]);
-    $title = $t3[0];
+    $t1=explode('"',$video);
+    $link=$t1[0];
+
+    $t2=explode('>',$video);
+    $t3=explode('<',$t2[1]);
+  	$title=$t3[0];
+  	$title=prep_tit($title);
     $link=$target."?page=1&tip=release&link=".urlencode(fix_t($link))."&title=".urlencode(fix_t($title));
-    if (!preg_match("/IN CURAND|FILME SERIALE|Contact|TOP IMDb|Filme online/i",$title)) {
+    if ($title) {
 	if ($n == 0) echo "<TR>"."\r\n";
 	echo '<TD class="cat">'.'<a class ="cat" href="'.$link.'" target="_blank">'.$title.'</a></TD>';
     $n++;

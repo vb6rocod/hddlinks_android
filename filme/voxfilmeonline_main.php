@@ -56,6 +56,9 @@ echo '</TR>';
 $n=0;
 $l="https://voxfilmeonline.biz/";
 $cookie=$base_cookie."hdpopcorns.dat";
+//$cookie=$base_cookie."biz.dat";
+require( 'cryptoHelpers.php');
+require( 'aes_small.php');
 $ua = $_SERVER['HTTP_USER_AGENT'];
 //$ua="Mozilla/5.0 (Windows NT 10.0; rv:75.0) Gecko/20100101 Firefox/75.0";
 
@@ -64,22 +67,37 @@ $head=array('Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image
 'Accept-Encoding: deflate',
 'Connection: keep-alive',
 'Upgrade-Insecure-Requests: 1');
-  /*
+
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $l);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
   curl_setopt($ch, CURLOPT_USERAGENT, $ua);
   curl_setopt($ch, CURLOPT_HTTPHEADER,$head);
   curl_setopt($ch, CURLOPT_COOKIEFILE,$cookie);
-  curl_setopt($ch, CURLOPT_COOKIEJAR,$cookie);
   curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
   curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
   curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
   curl_setopt($ch, CURLOPT_TIMEOUT, 15);
-  //$html = curl_exec($ch);
-  curl_close($ch);
-  */
-$html=file_get_contents($l);
+  $html = curl_exec($ch);
+  //curl_close($ch);
+  if(preg_match_all('/toNumbers\(\"(\w+)\"/',$html,$m)) {
+   $a=cryptoHelpers::toNumbers($m[1][0]);
+   $b=cryptoHelpers::toNumbers($m[1][1]);
+   $c=cryptoHelpers::toNumbers($m[1][2]);
+   $d=AES::decrypt($c,16,2,$a,16,$b);
+   //print_r ($m);
+   $test=cryptoHelpers::toHex($d);
+   //echo $test;
+   $domain = 'voxfilmeonline.biz';
+   $expire = time() + 36000;
+   $name   = 'OHLALA';
+   $value = $test;
+   file_put_contents($cookie, "\n$domain\tTRUE\t/\tFALSE\t$expire\t$name\t$value\n", FILE_APPEND);
+   curl_setopt($ch, CURLOPT_COOKIEFILE,$cookie);
+   $html = curl_exec($ch);
+ }
+ curl_close($ch);
+//$html=file_get_contents($l);
 //echo $html;
 
 //$html=cf_pass($l,$cookie);

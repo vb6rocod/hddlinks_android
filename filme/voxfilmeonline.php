@@ -175,20 +175,21 @@ if($tip=="release") {
      $l="https://voxfilmeonline.biz/?s=".$search;
 }
 $ua = $_SERVER['HTTP_USER_AGENT'];
-/*
+$cookie=$base_cookie."hdpopcorns.dat";
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $l);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
   curl_setopt($ch, CURLOPT_USERAGENT, $ua);
+  curl_setopt($ch, CURLOPT_COOKIEFILE,$cookie);
   curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
   curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
   curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
   curl_setopt($ch, CURLOPT_TIMEOUT, 15);
   $html = curl_exec($ch);
   curl_close($ch);
-*/
+
 //echo $html;
-$html=file_get_contents($l);
+//$html=file_get_contents($l);
 $videos = explode('article id="post-', $html);
 
 unset($videos[0]);
