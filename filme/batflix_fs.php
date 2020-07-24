@@ -1,47 +1,13 @@
 <!doctype html>
 <?php
 include ("../common.php");
-include ("../util.php");
-//error_reporting(0);
+
+error_reporting(0);
 if (file_exists($base_pass."debug.txt"))
  $debug=true;
 else
  $debug=false;
-function loadsource($data_host, $data_id) {
-    $link_host = '';
-    switch ($data_host) {
-        case 0:
-            $link_host = 'https://openload.co/embed/' . $data_id;
-            break;
-        case 1:
-            $link_host = 'https://streamango.com/embed/' . $data_id;
-            break;
-        case 2:
-            $link_host = 'https://www.rapidvideo.com/e/' . $data_id;
-            break;
-        case 3:
-            $link_host = 'https://gounlimited.to/embed-' . $data_id . '.html';
-            break;
-        case 4:
-            $link_host = 'https://vidcloud.icu/load.php?id=' . $data_id;
-            break;
-        case 5:
-            $link_host = 'https://verystream.com/e/' . $data_id;
-            break;
-        case 6:
-            $link_host = 'https://flix555.com/embed-' . $data_id . '.html';
-            break;
-        case 7:
-            $link_host = 'https://vidlox.me/embed-' . $data_id . '.html';
-            break;
-        case 8:
-            $link_host = 'https://xstreamcdn.com/v/' . $data_id;
-            break;
-        default:
-            $link_host = 'https://openload.co/embed/' . $data_id;
-    }
-    return $link_host;
-}
+
 $list = glob($base_sub."*.srt");
    foreach ($list as $l) {
     str_replace(" ","%20",$l);
@@ -82,11 +48,6 @@ $tip="series";
 }
 $imdbid="";
 
-function str_between($string, $start, $end){
-	$string = " ".$string; $ini = strpos($string,$start);
-	if ($ini == 0) return ""; $ini += strlen($start); $len = strpos($string,$end,$ini) - $ini;
-	return substr($string,$ini,$len);
-}
 ?>
 <html>
 <head>
@@ -169,45 +130,31 @@ function off() {
 <?php
 echo '<h2>'.$tit.$tit2.'</H2>';
 echo '<BR>';
-$ua = $_SERVER['HTTP_USER_AGENT'];
-$cookie=$base_cookie."hdpopcorns.dat";
-
+$r=array();
 if ($tip=="movie") {
-$link=$link."watching/?ep=1";
-$link=str_replace("www0.spacemov.is","spacemov.cc",$link);
-//echo $link;
-$host=parse_url($link)["host"];
-  $ch = curl_init($link);
+  $ua="Mozilla/5.0 (Windows NT 10.0; rv:75.0) Gecko/20100101 Firefox/75.0";
+
+  $ch = curl_init();
+  curl_setopt($ch, CURLOPT_URL, $link);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
   curl_setopt($ch, CURLOPT_USERAGENT, $ua);
-  curl_setopt($ch,CURLOPT_REFERER,"https://www0.spacemov.is/");
   curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
-  curl_setopt($ch, CURLOPT_RETURNTRANSFER  ,1);  // RETURN THE CONTENTS OF THE CALL
   curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-  curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie);
-  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
-  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 25);
   $h = curl_exec($ch);
-  curl_close ($ch);
-//echo $h;
-  $r=array();
- $videos = explode('data-svv', $h);
-unset($videos[0]);
-$videos = array_values($videos);
-foreach($videos as $video) {
-  $t1=explode('="',$video);
-  $t2=explode('"',$t1[1]);
-  //$t3=explode('"',$t2[1]);
-  $openload=trim($t2[0]);
-  if (substr($openload, 0, 2)=="tt")
-   $openload="https://videospider.in/getvideo?key=FQuvG9srL0DO2euN&video_id=".$openload;
-  //echo $openload;
-  if (strpos($openload,"http") !== false)
-   $r[]=$openload;
-}
+  curl_close($ch);
+  if (!$h) $h=file_get_contents($link);
+  //echo $h;
+  if (preg_match("/\/tt(\d+)/",$h,$m))
+   $imdbid=$m[1];
+  else
+   $imdbid="";
+  $t1=explode('<iframe',$h);
+  $t2=explode('src="',$t1[1]);
+  $t3=explode('"',$t2[1]);
+  $r[]=str_replace("&#038;","&",$t3[0]);
 } else {
- $r=array();
- if (preg_match("/video\_id\=/",$link))
-  $link="https://videospider.in/getvideo?key=FQuvG9srL0DO2euN&tmdb=1&tv=1&".$link;
  $r[]=$link;
 }
 echo '<table border="1" width="100%">';
@@ -220,12 +167,8 @@ for ($i=0;$i<$k;$i++) {
   if ($x==0) echo '<TR>';
   $c_link=$r[$i];
   $openload=parse_url($r[$i])['host'];
-  $indirect = "/videospider\./";
   if (preg_match($indirect,$openload)) {
-  //echo '<TD class="mp"><a href="filme_link.php?file='.urlencode($c_link).'&title='.urlencode(unfix_t($tit.$tit2)).'" target="_blank">'.$openload.'</a></td>';
-  $fs_target="hulu_fs1.php";
-  $link_f=$fs_target.'?tip=movie&link='.urlencode($c_link).'&title='.urlencode(fix_t($tit.$tit2)).'&image='.$image."&sez=&ep=&ep_tit=&year=".$year;
-  echo '<TD class="mp"><a href="'.$link_f.'" target="_blank">'.$openload.'</a></td>';
+  echo '<TD class="mp"><a href="filme_link.php?file='.urlencode($c_link).'&title='.urlencode(unfix_t($tit.$tit2)).'" target="_blank">'.$openload.'</a></td>';
   } else
   echo '<TD class="mp"><a id="myLink" href="#" onclick="changeserver('."'".$openload."','".urlencode($c_link)."'".');return false;">'.$openload.'</a></td>';
   $x++;
@@ -246,14 +189,12 @@ if ($tip=="movie") {
   $tit2="";
   $sez="";
   $ep="";
-  $imdbid="";
   $from="";
   $link_page="";
 } else {
   $tit3=$tit;
   $sez=$sez;
   $ep=$ep;
-  $imdbid="";
   $from="";
   $link_page="";
 }
@@ -300,6 +241,10 @@ echo '<br>
 <BR>Scurtaturi: 7=opensubtitles, 8=titrari, 9=subs, 0=subtitrari (cauta imdb id)
 </b></font></TD></TR></TABLE>
 ';
+
+if (preg_match("/c\d?_file\=(http[\.\d\w\-\.\/\\\:\?\&\#\%\_\,]+)\&c\d?_label\=English/i",$r[0],$s)) {
+ echo 'Cu subtitrare in Engleza.<BR>';
+}
 include("../debug.html");
 echo '
 <div id="overlay">

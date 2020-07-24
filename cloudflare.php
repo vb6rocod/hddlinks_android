@@ -96,7 +96,7 @@
     return false;
   }
  }
-function cf_pass ($l,$cookie) {
+function cf_pass1 ($l,$cookie) {
  $DEFAULT_CIPHERS =array(
             "ECDHE+AESGCM",
             "ECDHE+CHACHA20",
@@ -179,9 +179,21 @@ function cf_pass ($l,$cookie) {
   curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
   curl_setopt($ch, CURLOPT_POSTFIELDS, $post);
   $page = curl_exec($ch);
+  $info = curl_getinfo($ch);
+  if (!preg_match("/200|302/",$page)) $page="";
   curl_close($ch);
  } else {
   curl_close($ch);
+ }
+ return $page;
+}
+function cf_pass ($l,$cookie) {
+ $try=0;
+ $page="";
+ while (true) {
+   $page=cf_pass1($l,$cookie);
+   if ($page || $try>3) break;
+   $try ++;
  }
  return $page;
 }

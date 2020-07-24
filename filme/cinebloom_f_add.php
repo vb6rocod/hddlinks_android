@@ -7,8 +7,7 @@ $mod=$_POST["mod"];
 $link=$_POST["link"];
 $title=$_POST["title"];
 $image=urldecode($_POST["image"]);
-
-$file=$base_fav."xmovies8_f.dat";
+$file=$base_fav."cinebloom_f.dat";
 $arr=array();
 $h="";
 if (file_exists($file)) {

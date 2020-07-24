@@ -1,8 +1,7 @@
 <!doctype html>
 <?php
 include ("../common.php");
-include ("../cloudflare.php");
-//error_reporting(0);
+error_reporting(0);
 $list = glob($base_sub."*.srt");
    foreach ($list as $l) {
     str_replace(" ","%20",$l);
@@ -36,8 +35,6 @@ $ep=$_GET["ep"];
 $ep_title=unfix_t(urldecode($_GET["ep_tit"]));
 $ep_title=prep_tit($ep_title);
 $year=$_GET["year"];
-$last_good=$_GET['last'];
-$host=parse_url($last_good)['host'];
 if ($tip=="movie") {
 $tit2="";
 } else {
@@ -136,99 +133,18 @@ function off() {
 <?php
 echo '<h2>'.$tit.$tit2.'</H2>';
 echo '<BR>';
-$r=array();
-$s=array();
 $ua = $_SERVER['HTTP_USER_AGENT'];
-$ua="Mozilla/5.0 (Windows NT 10.0; rv:70.0) Gecko/20100101 Firefox/70.0";
-$cookie=$base_cookie."xmovies8.txt";
-if ($tip=="movie") {
-$l="https://".$host."/ajax/movie_load_info/".$link;
-/*
-  $ch = curl_init($l);
-  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
-  curl_setopt($ch,CURLOPT_REFERER,$last_good);
-  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
-  curl_setopt($ch, CURLOPT_RETURNTRANSFER  ,1);  // RETURN THE CONTENTS OF THE CALL
-  curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie);
-  //curl_setopt($ch, CURLOPT_HTTPHEADER, $head);
-  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
-  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
-  $html = curl_exec($ch);
-  curl_close ($ch);
-  */
-  $html=cf_pass($l,$cookie);
+$r=array();
+  if (preg_match("/tt(\d+)/",$link,$y))
+   $imdbid=$y[1];
+  else
+   $imdbid="";
   //echo $html;
-  $t1=explode('class="jtip-bottom">',$html);
-  $t2=explode('href="',$t1[1]);
-  $t3=explode('"',$t2[1]);
-  $l=$t3[0];
-  /*
-  $ch = curl_init($l);
-  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
-  curl_setopt($ch,CURLOPT_REFERER,$last_good);
-  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
-  curl_setopt($ch, CURLOPT_RETURNTRANSFER  ,1);  // RETURN THE CONTENTS OF THE CALL
-  curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie);
-  //curl_setopt($ch, CURLOPT_HTTPHEADER, $head);
-  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
-  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
-  $h = curl_exec($ch);
-  curl_close ($ch);
-  */
-  $h=cf_pass($l,$cookie);
-  //echo $h;
-$videos = explode('option sv="', $h);
-unset($videos[0]);
-$videos = array_values($videos);
-foreach($videos as $video) {
- $t1=explode('"',$video);
- $s[]=$t1[0];
- $t2=explode('value="',$video);
- $t3=explode('"',$t2[1]);
- $l1=$last_good.$t3[0];
- $r[]=$l1;
-}
-} else {
-  /*
-  $ch = curl_init($link);
-  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
-  curl_setopt($ch,CURLOPT_REFERER,$last_good);
-  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
-  curl_setopt($ch, CURLOPT_RETURNTRANSFER  ,1);  // RETURN THE CONTENTS OF THE CALL
-  curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie);
-  //curl_setopt($ch, CURLOPT_HTTPHEADER, $head);
-  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
-  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
-  $h = curl_exec($ch);
-  curl_close ($ch);
-  */
-  //echo $h;
-  $h=cf_pass($link,$cookie);
-$videos = explode('option sv="', $h);
-unset($videos[0]);
-$videos = array_values($videos);
-foreach($videos as $video) {
- $t1=explode('"',$video);
- $s[]=$t1[0];
- $t2=explode('value="',$video);
- $t3=explode('"',$t2[1]);
- $l1=$last_good.$t3[0];
- $r[]=$l1;
-}
-}
-/*
-$r[]="https://xmovies8.tv?id=".$link."&server=hserver";
-$s[]="Hserver";
-$r[]="https://xmovies8.tv?id=".$link."&server=vserver";
-$s[]="Vserver";
-$r[]="https://xmovies8.tv?id=".$link."&server=oserver";
-$s[]="Oserver";
-*/
+
+  //print_r ($r);
+  $r[]=$link;
 echo '<table border="1" width="100%">';
-echo '<TR><TD class="mp">Alegeti un server: Server curent:<label id="server">'.$s[0].'</label>
+echo '<TR><TD class="mp">Alegeti un server: Server curent:<label id="server">'.parse_url($r[0])['host'].'</label>
 <input type="hidden" id="file" value="'.urlencode($r[0]).'"></td></TR></TABLE>';
 echo '<table border="1" width="100%"><TR>';
 $k=count($r);
@@ -236,7 +152,7 @@ $x=0;
 for ($i=0;$i<$k;$i++) {
   if ($x==0) echo '<TR>';
   $c_link=$r[$i];
-  $openload=$s[$i];
+  $openload=parse_url($r[$i])['host'];
   if (preg_match($indirect,$openload)) {
   echo '<TD class="mp"><a href="filme_link.php?file='.urlencode($c_link).'&title='.urlencode(unfix_t($tit.$tit2)).'" target="_blank">'.$openload.'</a></td>';
   } else
@@ -259,14 +175,14 @@ if ($tip=="movie") {
   $tit2="";
   $sez="";
   $ep="";
-  $imdbid="";
+  //$imdbid="";
   $from="";
   $link_page="";
 } else {
   $tit3=$tit;
   $sez=$sez;
   $ep=$ep;
-  $imdbid="";
+  //$imdbid="";
   $from="";
   $link_page="";
 }

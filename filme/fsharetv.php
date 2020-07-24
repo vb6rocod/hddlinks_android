@@ -1,15 +1,14 @@
 <!DOCTYPE html>
 <?php
+error_reporting(0);
 function str_between($string, $start, $end){
 	$string = " ".$string; $ini = strpos($string,$start);
 	if ($ini == 0) return ""; $ini += strlen($start); $len = strpos($string,$end,$ini) - $ini;
 	return substr($string,$ini,$len);
 }
 include ("../common.php");
-error_reporting(0);
 /* =================================================== */
-$l="https://www.foumovies.me";
-//http://www.stupiddrive.com
+$l="https://fsharetv.co";
 $host=parse_url($l)['host'];
 $page = $_GET["page"];
 $tip= $_GET["tip"];
@@ -22,11 +21,11 @@ $has_fav="yes";
 $has_search="yes";
 $has_add="yes";
 $has_fs="yes";
-$fav_target="foumovies_f_fav.php?host=https://".$host;
-$add_target="foumovies_f_add.php";
+$fav_target="fsharetv_fav.php?host=https://".$host;
+$add_target="fsharetv_add.php";
 $add_file="";
-$fs_target="foumovies_fs.php";
-$target="foumovies_f.php";
+$fs_target="fsharetv_fs.php";
+$target="fsharetv.php";
 /* ==================================================== */
 $base=basename($_SERVER['SCRIPT_FILENAME']);
 $p=$_SERVER['QUERY_STRING'];
@@ -170,20 +169,15 @@ if ($page==1) {
    echo '<TD class="nav" colspan="4" align="right"><a href="'.$prev.'">&nbsp;&lt;&lt;&nbsp;</a> | <a href="'.$next.'">&nbsp;&gt;&gt;&nbsp;</a></TD>'."\r\n";
 }
 echo '</TR>'."\r\n";
-
 if($tip=="release") {
-  if ($page > 1)
-  $l="https://".$host."/category/english-movies/page/".$page."/";
+  if ($page==1)
+   $l="https://fsharetv.co/category/new";
   else
-  $l="https://".$host."/category/english-movies/";
+   $l="https://fsharetv.co/category/new?page=".$page."&year=";
 } else {
   $search=str_replace(" ","+",$tit);
-  if ($page>1)
-  $l="https://".$host."/search/".$search."/page/".$page."/";
-  else
-  $l="https://".$host."/?s=".$search;
+  $l = "https://fsharetv.co/search?q=".$search;
 }
-
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $l);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
@@ -193,86 +187,50 @@ if($tip=="release") {
   curl_setopt($ch, CURLOPT_TIMEOUT, 15);
   $html = curl_exec($ch);
   curl_close($ch);
-  $r=array();
-if ($tip== "release") {
-$videos = explode('div id="mt-', $html);
+
+$videos = explode('class="card movie-', $html);
 unset($videos[0]);
 $videos = array_values($videos);
 foreach($videos as $video) {
   $t1=explode('href="',$video);
   $t2=explode('"',$t1[1]);
-  $link=$t2[0];
-  $t1 = explode('class="tt">', $video);
+  $link="https://fsharetv.co".$t2[0];
+  $t1 = explode('<b>', $video);
   $t3 = explode('<',$t1[1]);
   $title = $t3[0];
   $title = prep_tit($title);
-  $t1 = explode('data-lazy-src="', $video);
+  $t1 = explode('src="', $video);
   $t2 = explode('"', $t1[1]);
   $image = trim($t2[0]);
-  //if (strpos($image,"http") === false) $image="https:".$image;
-  $year="";
-  $imdb="";
-  $t1=explode('class="year">',$video);
-  $t2=explode("<",$t1[1]);
-  $year=$t2[0];
-  $r[]=array($link,$title,$image,$year);
-}
-} else {
-$videos = explode('div id="mt-', $html);
-unset($videos[0]);
-$videos = array_values($videos);
-foreach($videos as $video) {
-  $t1=explode('href="',$video);
-  $t2=explode('"',$t1[1]);
-  $link=$t2[0];
-  $t1 = explode('class="tt">', $video);
-  $t3 = explode('<',$t1[1]);
-  $title = $t3[0];
-  $title = prep_tit($title);
-  $t1 = explode('data-lazy-src="', $video);
-  $t2 = explode('"', $t1[1]);
-  $image = trim($t2[0]);
-  //if (strpos($image,"http") === false) $image="https:".$image;
-  $year="";
-  $imdb="";
-  $t1=explode('class="year">',$video);
-  $t2=explode("<",$t1[1]);
-  $year=$t2[0];
-  $r[]=array($link,$title,$image,$year);
-}
-}
-for ($k=0;$k<count($r);$k++) {
-  $link=$r[$k][0];
-  $title=$r[$k][1];
-  $title=trim(preg_replace("/((Free Download)|(Free Movie)|(Movie Free)|(Movie Download)|(Full Movie)).*/i","",$title));
-  $image=$r[$k][2];
-  $year=$r[$k][3];
+  if (strpos($image,"http") === false) $image="https:".$image;
   $rest = substr($title, -6);
-  if (preg_match("/\(?(\d{4})\)?/",$rest,$m)) {
-   $tit_imdb=trim(str_replace($m[0],"",$title));
+  if (preg_match("/\((\d+)\)/",$rest,$m)) {
    $year=$m[1];
-   $title=$tit_imdb;
+   $tit_imdb=trim(str_replace($m[0],"",$title));
   } else {
+   $year="";
    $tit_imdb=$title;
   }
-  //$tit_imdb=$title;
-  $tit_fav=$title." (".$year.")";
+  if (preg_match("/tt(\d+)/",$link,$m))
+   $imdb=$m[1];
+  else
+   $imdb="";
+  $tit_imdb=$title;
   $link_f=$fs_target.'?tip=movie&link='.urlencode($link).'&title='.urlencode(fix_t($title)).'&image='.$image."&sez=&ep=&ep_tit=&year=".$year;
   if ($title && strpos($link,"/show") === false) {
   if ($n==0) echo '<TR>'."\r\n";
   $val_imdb="tip=movie&title=".urlencode(fix_t($tit_imdb))."&year=".$year."&imdb=".$imdb;
-  $fav_link="mod=add&title=".urlencode(fix_t($tit_fav))."&link=".urlencode($link)."&image=".urlencode($image)."&year=".$year;
-  if (strpos($image,$host) !== false) $image="r_m.php?file=".$image;
+  $fav_link="mod=add&title=".urlencode(fix_t($title))."&link=".urlencode($link)."&image=".urlencode($image)."&year=".$year;
   if ($tast == "NU") {
     echo '<td class="mp" width="25%"><a href="'.$link_f.'" id="myLink'.$w.'" target="_blank" onmousedown="isKeyPressed(event)">
-    <img id="myLink'.$w.'" src="'.$image.'" width="'.$width.'" height="'.$height.'"><BR>'.$title.' ('.$year.')</a>
+    <img id="myLink'.$w.'" src="'.$image.'" width="'.$width.'" height="'.$height.'"><BR>'.$title.'</a>
     <input type="hidden" id="imdb_myLink'.$w.'" value="'.$val_imdb.'">'."\r\n";
     if ($has_add=="yes")
       echo '<a onclick="ajaxrequest('."'".$fav_link."'".')" style="cursor:pointer;">*</a>'."\r\n";
     echo '</TD>'."\r\n";
   } else {
     echo '<td class="mp" width="25%"><a class ="imdb" id="myLink'.$w.'" href="'.$link_f.'" target="_blank">
-    <img src="'.$image.'" width="'.$width.'" height="'.$height.'"><BR>'.$title.' ('.$year.')</a>
+    <img src="'.$image.'" width="'.$width.'" height="'.$height.'"><BR>'.$title.'</a>
     <input type="hidden" id="imdb_myLink'.$w.'" value="'.$val_imdb.'">'."\r\n";
     if ($has_add == "yes")
       echo '<input type="hidden" id="fav_myLink'.$w.'" value="'.$fav_link.'"></a>'."\r\n";

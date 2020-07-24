@@ -168,9 +168,9 @@ echo '</TR>'."\r\n";
 
 if($tip=="release") {
  if ($page>1)
-  $l ="https://filme-serialeonline.biz/movies/page/".$page."/";
+  $l ="https://filme-serialeonline.biz/filmeonline/page/".$page."/";
  else
-  $l="https://filme-serialeonline.biz/movies/";
+  $l="https://filme-serialeonline.biz/filmeonline/";
 } else {
   $search=str_replace(" ","+",$tit);
   if ($page > 1)
@@ -190,7 +190,7 @@ $ua = $_SERVER['HTTP_USER_AGENT'];
   $html = curl_exec($ch);
   curl_close($ch);
 
-$videos = explode('class="ml-item', $html);
+$videos = explode('div id="mt-', $html);
 
 unset($videos[0]);
 $videos = array_values($videos);
@@ -200,8 +200,8 @@ foreach($videos as $video) {
   $t2 = explode('"', $t1[1]);
   $link = $t2[0];
 
-  $t1=explode('oldtitle="',$video);
-  $t2_0=explode('"',$t1[1]);
+  $t1=explode('class="tt">',$video);
+  $t2_0=explode('<',$t1[1]);
   $t3=str_replace("Vizioneaza Film Online","",$t2_0[0]);
   $t4=explode("&#8211;",$t3);
   $title=trim($t4[0]);
@@ -215,7 +215,7 @@ foreach($videos as $video) {
   $t=$t1[0];
   $t=preg_replace("/\(?((1|2)\d{3})\)?/","",$t);
   $tit_imdb=trim($t);
-  $t1=explode('data-original="',$video);
+  $t1=explode('src="',$video);
   $t2=explode('"',$t1[1]);
   $image=trim($t2[0]);
   if (!preg_match("/\sezonul/",$link)) {

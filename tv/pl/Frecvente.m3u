@@ -6,6 +6,8 @@ https://livestream.realitatea.net/livestream/liverealitatea.stream/playlist.m3u8
 https://mn-nl.mncdn.com/tvr_moldova_live/tvr_moldova_live2/playlist.m3u8
 #EXTINF:-1, MD| ProTV Chisinau
 http://hls.protv.md/hls/protv.m3u8
+#EXTINF:-1, MD| ProTV Chisinau
+http://95.217.185.38/protvchisinau.m3u8
 #EXTINF:-1, Jurnal TV
 http://live.cdn.jurnaltv.md/JurnalTV_HD/index.m3u8?token=d3ff4ba3b0c33ac3e75c9d5268c0c170500cfc30
 #EXTINF:0 ,MD| MOLDOVA 1
@@ -50,3 +52,15 @@ http://encoder.inedittv.ro:9090/seconds4hls/live.m3u8
 http://89.38.8.130:39419
 #EXTINF:-1,Curier TV
 http://5.2.164.135:1935/live/curiertv/playlist.m3u8
+#EXTINF:-1,Dotto TV
+https://dotto.edvr.ro/index.m3u8
+#EXTINF:-1,A7 TV
+https://play.streamkit.tv/content/channel/aseventv/live/aseventv.player.m3u8
+#EXTINF:-1,Exclusiv TV
+https://www.youtube.com/watch?v=j97QeFTBtxY
+#EXTINF:-1,Arcadia TV
+https://www.youtube.com/watch?v=6AmYm9_HjxA
+#EXTINF:-1,HD365
+https://netstreaming.eu:8080/hls/hd365.m3u8
+#EXTINF:-1,Tele Nova
+https://www.youtube.com/watch?v=10qsdQrZzgE

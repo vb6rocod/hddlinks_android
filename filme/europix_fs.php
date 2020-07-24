@@ -145,6 +145,7 @@ echo '<BR>';
 //echo $link;
 //$link="https://europixhd.io/svop/srv2?search=dwm-angel-s01e04";
 //$link=$link."-s2";
+//echo $link;
 $host=parse_url($link)['host'];
 $r=array();
 $ua = $_SERVER['HTTP_USER_AGENT'];
@@ -155,7 +156,7 @@ $cookie=$base_cookie."hdpopcorns.dat";
 if ($tip=="series") {
   $ch = curl_init($link);
   curl_setopt($ch, CURLOPT_USERAGENT, $ua);
-  curl_setopt($ch, CURLOPT_REFERER, "https://europixhd.net");
+  curl_setopt($ch, CURLOPT_REFERER, "https://123europix.pro");
   curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER  ,1);  // RETURN THE CONTENTS OF THE CALL
   curl_setopt($ch, CURLOPT_ENCODING,"");
@@ -196,7 +197,8 @@ curl_setopt($ch, CURLOPT_URL, $link1);
 curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
 curl_setopt($ch, CURLOPT_USERAGENT, $ua);
 curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie);
-curl_setopt($ch, CURLOPT_REFERER, "https://europixhd.net");
+curl_setopt($ch, CURLOPT_COOKIEJAR, $cookie);
+curl_setopt($ch, CURLOPT_REFERER, "https://123europix.pro");
 curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
 curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
 curl_setopt($ch, CURLOPT_TIMEOUT, 15);
@@ -230,7 +232,8 @@ for ($k=0;$k<count($p[1]);$k++) {
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
   curl_setopt($ch, CURLOPT_USERAGENT, $ua);
   curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie);
-  curl_setopt($ch, CURLOPT_REFERER, "https://europixhd.net");
+  curl_setopt($ch, CURLOPT_COOKIEJAR, $cookie);
+  curl_setopt($ch, CURLOPT_REFERER, "https://123europix.pro");
   curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
   curl_setopt($ch, CURLOPT_HEADER,1);
   curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);

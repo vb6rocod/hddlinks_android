@@ -213,7 +213,7 @@ foreach($videos as $video) {
   $t=preg_replace("/\(?((1|2)\d{3})\)?/","",$t);
   $tit_imdb=trim($t);
   if ($tip == "release") {
-  $t1 = explode('src="', $video);
+  $t1 = explode('data-lazy-src="', $video);
   $t2 = explode('"', $t1[1]);
   if (strpos($t2[0],"http") !== false) {
     $image=$t2[0];

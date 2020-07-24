@@ -1,16 +1,18 @@
 <!doctype html>
 <?php
 include ("../common.php");
+
 error_reporting(0);
+if (file_exists($base_pass."debug.txt"))
+ $debug=true;
+else
+ $debug=false;
+
 $list = glob($base_sub."*.srt");
    foreach ($list as $l) {
     str_replace(" ","%20",$l);
     unlink($l);
 }
-if (file_exists($base_pass."debug.txt"))
- $debug=true;
-else
- $debug=false;
 if (file_exists($base_pass."player.txt")) {
 $flash=trim(file_get_contents($base_pass."player.txt"));
 } else {
@@ -46,11 +48,6 @@ $tip="series";
 }
 $imdbid="";
 
-function str_between($string, $start, $end){
-	$string = " ".$string; $ini = strpos($string,$start);
-	if ($ini == 0) return ""; $ini += strlen($start); $len = strpos($string,$end,$ini) - $ini;
-	return substr($string,$ini,$len);
-}
 ?>
 <html>
 <head>
@@ -133,32 +130,45 @@ function off() {
 <?php
 echo '<h2>'.$tit.$tit2.'</H2>';
 echo '<BR>';
-$ua = $_SERVER['HTTP_USER_AGENT'];
-$head=array('Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
-'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2');
-
 $r=array();
-$s=array();
+if ($tip=="movie") {
+  $ua="Mozilla/5.0 (Windows NT 10.0; rv:75.0) Gecko/20100101 Firefox/75.0";
+
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $link);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-  curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 10.0; rv:55.0) Gecko/20100101 Firefox/55.0');
+  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
   curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
-  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
-  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
-  $html = curl_exec($ch);
+  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 25);
+  $h = curl_exec($ch);
   curl_close($ch);
-$videos = explode('form action=', $html);
-unset($videos[0]);
-$videos = array_values($videos);
-foreach($videos as $video) {
- $t1=explode('value="',$video);
- $t2=explode('"',$t1[1]);
- $s[]=$t2[0];
- $r[]=$link."?file=".$t2[0];
+  //if (!$h) $h=file_get_contents($link);
+  //echo $h;
+  if (preg_match("/\/tt(\d+)/",$h,$m))
+   $imdbid=$m[1];
+  else
+   $imdbid="";
+  $videos=explode('span class="stream-name"',$h);
+  unset($videos[0]);
+  $videos = array_values($videos);
+  foreach($videos as $video) {
+    if (strpos($video,'data-src="') !== false) {
+     $t1=explode('data-src="',$video);
+     $t2=explode('"',$t1[1]);
+     $r[]=$t2[0];
+    } else {
+     $t1=explode('href="',$video);
+     $t2=explode('"',$t1[1]);
+     $r[]=$t2[0];
+    }
+  }
+} else {
+ $r[]=$link;
 }
 echo '<table border="1" width="100%">';
-echo '<TR><TD class="mp">Alegeti o varianta: Varianta:<label id="server">'.$s[0].'</label>
+echo '<TR><TD class="mp">Alegeti un server: Server curent:<label id="server">'.parse_url($r[0])['host'].'</label>
 <input type="hidden" id="file" value="'.urlencode($r[0]).'"></td></TR></TABLE>';
 echo '<table border="1" width="100%"><TR>';
 $k=count($r);
@@ -166,9 +176,13 @@ $x=0;
 for ($i=0;$i<$k;$i++) {
   if ($x==0) echo '<TR>';
   $c_link=$r[$i];
-  $openload=$s[$i];
-  if (preg_match($indirect,$openload)) {
-  echo '<TD class="mp"><a href="filme_link.php?file='.urlencode($c_link).'&title='.urlencode(unfix_t($tit.$tit2)).'" target="_blank">'.$openload.'</a></td>';
+  $openload=parse_url($r[$i])['host'];
+  $cinebloom="/cinebloom/";
+  if (preg_match($cinebloom,$openload)) {
+  $fs_target="cinebloom_fs1.php";
+  $link_f=$fs_target.'?tip=movie&link='.urlencode($c_link).'&title='.urlencode(fix_t($tit.$tit2)).'&image='.$image."&sez=&ep=&ep_tit=&year=".$year;
+
+  echo '<TD class="mp"><a href="'.$link_f.'" target="_blank">'.$openload.'</a></td>';
   } else
   echo '<TD class="mp"><a id="myLink" href="#" onclick="changeserver('."'".$openload."','".urlencode($c_link)."'".');return false;">'.$openload.'</a></td>';
   $x++;
@@ -189,20 +203,21 @@ if ($tip=="movie") {
   $tit2="";
   $sez="";
   $ep="";
-  $imdbid="";
   $from="";
   $link_page="";
 } else {
   $tit3=$tit;
   $sez=$sez;
   $ep=$ep;
-  $imdbid="";
   $from="";
   $link_page="";
 }
   $rest = substr($tit3, -6);
-  if (preg_match("/\(?(\d{4})\)?/",$rest,$m)) {
+  if (preg_match("/\((\d+)\)/",$rest,$m)) {
+   $year=$m[1];
    $tit3=trim(str_replace($m[0],"",$tit3));
+  } else {
+   $year="";
   }
 $sub_link ="from=".$from."&tip=".$tip."&sez=".$sez."&ep=".$ep."&imdb=".$imdbid."&title=".urlencode(fix_t($tit3))."&link=".$link_page."&ep_tit=".urlencode(fix_t($tit2))."&year=".$year;
 echo '<br>';
@@ -240,6 +255,10 @@ echo '<br>
 <BR>Scurtaturi: 7=opensubtitles, 8=titrari, 9=subs, 0=subtitrari (cauta imdb id)
 </b></font></TD></TR></TABLE>
 ';
+
+if (preg_match("/c\d?_file\=(http[\.\d\w\-\.\/\\\:\?\&\#\%\_\,]+)\&c\d?_label\=English/i",$r[0],$s)) {
+ echo 'Cu subtitrare in Engleza.<BR>';
+}
 include("../debug.html");
 echo '
 <div id="overlay">

@@ -6,9 +6,6 @@ function str_between($string, $start, $end){
 	return substr($string,$ini,$len);
 }
 include ("../common.php");
-include ("../cloudflare.php");
-$last_good="https://xmovies8.si";
-$host=parse_url($last_good)['host'];
 $page = $_GET["page"];
 $tip= $_GET["tip"];
 $tit=$_GET["title"];
@@ -16,15 +13,15 @@ $link=$_GET["link"];
 $width="200px";
 $height="278px";
 /* ==================================================== */
-$has_fav="yes";
-$has_search="yes";
+$has_fav="no";
+$has_search="no";
 $has_add="yes";
-$has_fs="yes";
-$fav_target="xmovies8_f_fav.php?host=".$last_good;
-$add_target="xmovies8_f_add.php";
+$has_fs="no";
+$fav_target="";
+$add_target="filme_add.php";
 $add_file="";
-$fs_target="xmovies8_fs.php";
-$target="xmovies8_f.php";
+$fs_target="";
+$target="topvideohd.php";
 /* ==================================================== */
 $base=basename($_SERVER['SCRIPT_FILENAME']);
 $p=$_SERVER['QUERY_STRING'];
@@ -146,7 +143,6 @@ echo '<H2>'.$page_title.'</H2>'."\r\n";
 echo '<table border="1px" width="100%" style="table-layout:fixed;">'."\r\n";
 echo '<TR>'."\r\n";
 if ($page==1) {
-   if ($tip == "release") {
    if ($has_fav=="yes" && $has_search=="yes") {
      echo '<TD class="nav"><a id="fav" href="'.$fav_target.'" target="_blank">Favorite</a></TD>'."\r\n";
      echo '<TD class="form" colspan="2">'.$form.'</TD>'."\r\n";
@@ -161,77 +157,72 @@ if ($page==1) {
    } else if ($has_fav=="no" && $has_search=="no") {
      echo '<TD class="nav" colspan="4" align="right"><a href="'.$next.'">&nbsp;&gt;&gt;&nbsp;</a></TD>'."\r\n";
    }
-   } else {
-     echo '<TD class="nav" colspan="4" align="right"><a href="'.$next.'">&nbsp;&gt;&gt;&nbsp;</a></TD>'."\r\n";
-   }
 } else {
    echo '<TD class="nav" colspan="4" align="right"><a href="'.$prev.'">&nbsp;&lt;&lt;&nbsp;</a> | <a href="'.$next.'">&nbsp;&gt;&gt;&nbsp;</a></TD>'."\r\n";
 }
 echo '</TR>'."\r\n";
-$ua = $_SERVER['HTTP_USER_AGENT'];
-$cookie=$base_cookie."xmovies8.txt";
 
-$ua="Mozilla/5.0 (Windows NT 10.0; rv:70.0) Gecko/20100101 Firefox/70.0";
 if($tip=="release") {
-  $l="https://".$host."/free-latest-movies-online/".$page;
+ if ($page>1)
+  $l=$link."page/".$page."/";
+ else
+  $l=$link;
 } else {
   $search=str_replace(" ","+",$tit);
-  $l="https://".$host."/movie/search/".$search."/".$page;
+  if ($page > 1)
+     $l="https://topvideohd.biz/page/".$page."/?s=".$search;
+  else
+     $l="https://topvideohd.biz/?s=".$search;
 }
-/*
-$host=parse_url($l)['host'];
-  $ch = curl_init($l);
+$ua = $_SERVER['HTTP_USER_AGENT'];
+//echo $l;
+  $ch = curl_init();
+  curl_setopt($ch, CURLOPT_URL, $l);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
   curl_setopt($ch, CURLOPT_USERAGENT, $ua);
-  curl_setopt($ch,CURLOPT_REFERER,$last_good);
   curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
-  curl_setopt($ch, CURLOPT_RETURNTRANSFER  ,1);  // RETURN THE CONTENTS OF THE CALL
-  curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie);
-  curl_setopt($ch, CURLOPT_HEADER,1);
-  //curl_setopt($ch, CURLOPT_HTTPHEADER, $head);
   curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
   curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
   curl_setopt($ch, CURLOPT_TIMEOUT, 15);
   $html = curl_exec($ch);
-  curl_close ($ch);
-if (strpos($html,"503 Service") !== false) {
-  if (file_exists($cookie)) unlink ($cookie);
-  if (file_exists($base_cookie."max_time_xx.txt")) unlink ($base_cookie."max_time_xx.txt");
-  if (file_exists($base_cookie."max_time_x.txt")) unlink ($base_cookie."max_time_x.txt");
-  echo '<H2>token expirat! GO Back and try again.</H2>';
-  die();
-}
-*/
-$html=cf_pass($l,$cookie);
-$videos = explode('div data-movie-id="', $html);
+  curl_close($ch);
+//echo $html;
+$videos = explode('div class="article-container', $html);
+
 unset($videos[0]);
 $videos = array_values($videos);
+
 foreach($videos as $video) {
-  $t1 = explode('"',$video);
-  //$t2=explode('"',$t1[1]);
-  $link = $t1[0];
-  //if (strpos($link,"http") === false) $link="https://".$host.$link;
-  $t3 = explode('title="', $video);
-  $t4 = explode('"', $t3[1]);
-  $title = $t4[0];
-  $title=prep_tit($title);
+  $year="";
+  $l1=trim(str_between($video,'href="','"'));
+  if (strpos($l1,"http") === false)
+  $link = "https://topvideohd.biz".$l1;
+  else
+  $link=$l1;
+  $t1=explode('title="',$video);
+  $t2=explode('"',$t1[1]);
+  $title=prep_tit($t2[0]);
+  $year="";
+  $imdb="";
+  if (preg_match("/\(?((1|2)\d{3})\)?/",$title,$r)) {
+     $year=$r[1];
+  }
+  $t1=explode(" - ",$title);
+  $t=$t1[0];
+  $t=preg_replace("/\(?((1|2)\d{3})\)?/","",$t);
+  $tit_imdb=trim($t);
   $t1 = explode('src="', $video);
   $t2 = explode('"', $t1[1]);
-  $image = $t2[0];
-  $rest = substr($title, -6);
-  if (preg_match("/\((\d+)\)/",$rest,$m)) {
-   $year=$m[1];
-   $tit_imdb=trim(str_replace($m[0],"",$title));
-  } else {
-   $year="";
-   $tit_imdb=$title;
-  }
-  $imdb="";
-  $link_f=$fs_target.'?tip=movie&link='.urlencode($link).'&title='.urlencode(fix_t($title)).'&image='.$image."&sez=&ep=&ep_tit=&year=".$year."&last=".$last_good;
-  if ($title) {
+  $image=$t2[0];
+  //$image=htmlentities($image,ENT_QUOTES,'UTF-8');
+  $image="r_m.php?file=".$image;
+  if ($has_fs == "no")
+    $link_f='filme_link.php?file='.urlencode($link).'&title='.urlencode(fix_t($title));
+  else
+    $link_f=$fs_target.'?tip=movie&link='.urlencode($link).'&title='.urlencode(fix_t($tit)).'&image='.$image."&sez=&ep=&ep_tit=&year=".$year;
   if ($n==0) echo '<TR>'."\r\n";
   $val_imdb="tip=movie&title=".urlencode(fix_t($tit_imdb))."&year=".$year."&imdb=".$imdb;
-  $fav_link="mod=add&title=".urlencode(fix_t($title))."&link=".urlencode($link)."&image=".urlencode($image)."&year=".$year;
-  $image="r_m.php?file=".$image;
+  $fav_link="file=".$add_file."&mod=add&title=".urlencode(fix_t($title))."&link=".urlencode($link)."&image=".urlencode($image)."&year=".$year;
   if ($tast == "NU") {
     echo '<td class="mp" width="25%"><a href="'.$link_f.'" id="myLink'.$w.'" target="_blank" onmousedown="isKeyPressed(event)">
     <img id="myLink'.$w.'" src="'.$image.'" width="'.$width.'" height="'.$height.'"><BR>'.$title.'</a>
@@ -253,10 +244,7 @@ foreach($videos as $video) {
   echo '</tr>'."\r\n";
   $n=0;
   }
-  }
- }
-
-/* bottom */
+}
   if ($n < 4 && $n > 0) {
     for ($k=0;$k<4-$n;$k++) {
       echo '<TD></TD>'."\r\n";
@@ -271,6 +259,6 @@ else
   echo '<a href="'.$next.'">&nbsp;&gt;&gt;&nbsp;</a></TD>'."\r\n";
 echo '</TR>'."\r\n";
 echo "</table>"."\r\n";
-echo "</table>";
-?></body>
+?>
+<br></body>
 </html>

@@ -706,6 +706,7 @@ $headers=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:71.0) Gecko/2010010
   curl_setopt($ch, CURLOPT_TIMEOUT, 25);
   $html = curl_exec($ch);
   curl_close ($ch);
+  //echo $html;
   $videos = explode("li id='player-option", $html);
   unset($videos[0]);
   $videos = array_values($videos);
@@ -736,7 +737,10 @@ $headers=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:71.0) Gecko/2010010
    curl_setopt($ch, CURLOPT_TIMEOUT, 25);
    $h = curl_exec($ch);
    curl_close ($ch);
-   $html .=$h;
+   $r=json_decode($h,1);
+   $l1=$r['embed_url'];
+   $html .=' "'.$l1.'" ';
+   //echo $h;
   }
 } elseif (strpos($filelink,"filmeserialeonline.biz") !== false) {
   $ch = curl_init($filelink);
@@ -1088,8 +1092,8 @@ $headers=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:71.0) Gecko/2010010
   curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 5.1; rv:14.0) Gecko/20100101 Firefox/14.0.1');
   curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
   curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
-  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 25);
   $html=curl_exec($ch);
   curl_close($ch);
   $html = urldecode(str_replace("@","%",$html));
@@ -1289,6 +1293,7 @@ for ($i=0;$i<count($links);$i++) {
   //echo $h2;
    if (preg_match("/location\:\s*(.+)/i",$h2,$m)) {
     $cur_link=trim($m[1]);
+    //echo html_entity_decode(urldecode($cur_link))."\n";
     if (strpos($cur_link,"database.serialeonline.to") !== false) {
      $cur_link="";
     }

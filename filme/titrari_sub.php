@@ -191,6 +191,7 @@ if (strpos($h,"WEBVTT") !== false) {
 }
 $ua="Mozilla/5.0 (Windows NT 10.0; rv:55.0) Gecko/20100101 Firefox/55.0";
 $l="https://www.titrari.ro/get.php?id=".$id_sub;
+$l="https://www.xn--titrri-l0a.ro/get.php?id=".$id_sub;
 //echo $l;
 //$l="https://www.titrari.ro/get.php?id=114012";
   $ch = curl_init();

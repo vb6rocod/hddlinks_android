@@ -83,7 +83,7 @@ document.onkeypress =  zx;
 </TR>
 <TR>
 <TD width="25%"><a href="filme/swatchseries_s.php?page=1&tip=release&title=swatchseries&link=" target="_blank">swatchseries</a></TD>
-<TD width="25%"><a href="filme/soap2day_s.php?page=1&tip=release&title=soap2day&link=" target="_blank">soap2day</a></TD>
+<TD width="25%"><a href="filme/yifymovies_s.php?page=1&tip=release&title=yifymovies&link=" target="_blank">yifymovies</a></TD>
 <TD width="25%"><a href="filme/moviesjoy_s.php?page=1&tip=release&title=moviesjoy&link=" target="_blank">moviesjoy</a></TD>
 <TD width="25%"><a href="filme/cineplex_s_main.php" target="_blank">cineplex (cont)</a></TD>
 </TR>
@@ -103,15 +103,9 @@ document.onkeypress =  zx;
 
 <TR>
 <TD width="25%"><a href="filme/subsmovies_s.php?page=1&tip=release&title=subsmovie&link=" target="_blank">subsmovies</a></TD>
-<TD width="25%"><a href="filme/xmovies8_s.php?page=1&tip=release&title=xmovies8&link=" target="_blank">xmovies8</a></TD>
+<TD width="25%"><a href="filme/5movies_s.php?page=1&tip=release&title=5movies&link=" target="_blank">5movies</a></TD>
 <TD width="25%"><a href="filme/hulu_s.php?page=1&tip=release&title=hulu&link=" target="_blank">hulu</a></TD>
 <TD width="25%"><a href="filme/flixtor_s.php?page=1&tip=release&title=flixtor&link=" target="_blank">flixtor</a></TD>
-</TR>
-<TR>
-<TD width="25%"><a href="filme/yifymovies_s.php?page=1&tip=release&title=yifymovies&link=" target="_blank">yifymovies</a></TD>
-<TD width="25%"><a href="filme/movs4u_s.php?page=1&tip=release&title=movs4u&link=" target="_blank">movs4u</a></TD>
-<TD width="25%"></TD>
-<TD width="25%"><a href="filme/5movies_s.php?page=1&tip=release&title=5movies&link=" target="_blank">5movies</a></TD>
 </TR>
 
 <?php

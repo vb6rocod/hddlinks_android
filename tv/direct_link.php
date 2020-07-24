@@ -83,6 +83,25 @@ if (strpos($link,"jurnaltv.md/JurnalTV") !== false) {
     curl_close($ch);
     $link=str_between($h,'source src="','"');
 }
+if ($from=="teleon") {
+$ua = $_SERVER['HTTP_USER_AGENT'];
+  $ch = curl_init();
+  curl_setopt($ch, CURLOPT_URL, $link);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
+  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+  $html = curl_exec($ch);
+  curl_close($ch);
+  $link="";
+  $t1=explode('source src="',$html);
+  $t2=explode('"',$t1[1]);
+  $l2=$t2[0];
+  if (strpos($l2,"http") !== false)
+   $link=$l2;
+}
 if ($from=="b1tv") {
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $link);
@@ -1000,6 +1019,7 @@ if(preg_match('/youtube\.com\/(v\/|watch\?v=|embed\/)([\w\-]+)/', $link, $match)
   $l1 = "https://www.youtube.com/watch?v=".$id;
   //$html   = file_get_contents($link);
 }
+/*
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $l1);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
@@ -1010,12 +1030,14 @@ if(preg_match('/youtube\.com\/(v\/|watch\?v=|embed\/)([\w\-]+)/', $link, $match)
   curl_setopt($ch, CURLOPT_TIMEOUT, 15);
   $html = curl_exec($ch);
   curl_close($ch);
+  //echo $html;
   $html = str_between($html,'ytplayer.config = ',';ytplayer.load');
   $parts = json_decode($html,1);
   //print_r ($parts['args']);
   //echo urldecode($parts['args']["adaptive_fmts"]);
 $link=$parts['args']['hlsvp'];
-
+*/
+$link=youtube($l1);
 }
 
 if (file_exists($base_pass."player.txt")) {

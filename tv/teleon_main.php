@@ -5,11 +5,10 @@ function str_between($string, $start, $end){
 	if ($ini == 0) return ""; $ini += strlen($start); $len = strpos($string,$end,$ini) - $ini;
 	return substr($string,$ini,$len);
 }
-$main_title="topfilmeonline";
-$target="topfilmeonline.php";
+$main_title="teleon.tv";
+$target="teleon.php";
 $fav_target="";
-$recente="https://topfilmeonline.net/";
-// https://topvideohd.biz
+$recente="http://player.teleon.tv/en/channels";
 ?>
 <html>
 <head>
@@ -36,26 +35,10 @@ document.onkeypress =  zx;
 <?php
 include ("../common.php");
 
-if (file_exists($base_cookie."filme.dat"))
-  $val_search=file_get_contents($base_cookie."filme.dat");
-else
-  $val_search="";
-$form='<TD class="form" colspan="2">
-<form action="'.$target.'" target="_blank">
-Cautare film:  <input type="text" id="title" name="title" value="'.$val_search.'">
-<input type="hidden" name="page" id="page" value="1">
-<input type="hidden" name="tip" id="tip" value="search">
-<input type="hidden" name="link" id="link" value="">
-<input type="submit" id="send" value="Cauta...">
-</form>
-</td>';
 echo '<table border="1px" width="100%" style="table-layout:fixed;">'."\r\n";
 echo '<TR><th class="cat" colspan="3">'.$main_title.'</th></TR>';
-echo '<TR><TD class="cat">'.'<a class ="nav" href="'.$target.'?page=1&tip=release&link='.urlencode(fix_t($recente)).'&title=Recente" target="_blank">Recente...</a></TD>';
-echo $form;
-echo '</TR>';
 $n=0;
-$l="https://topfilmeonline.net/";
+$l="http://player.teleon.tv/en/channels";
 $ua = $_SERVER['HTTP_USER_AGENT'];
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $l);
@@ -68,24 +51,20 @@ $ua = $_SERVER['HTTP_USER_AGENT'];
   $html = curl_exec($ch);
   curl_close($ch);
 
-$html = str_between($html,"<ul class='homepage-menu'>","</ul>" );
-
-$videos = explode('<li', $html);
+$videos = explode('div class="col-md-2', $html);
 unset($videos[0]);
 $videos = array_values($videos);
 
 foreach($videos as $video) {
     $t0 = explode('href="',$video);
     $t1 = explode('"', $t0[1]);
-    if (strpos($t1[0],"http") === false)
-       $link = "https://topfilmeonline.net/".$t1[0];
-    else
-       $link=$t1[0];
-    $t2 = explode('>', $t0[1]);
+    $link = "http:".$t1[0];
+    $t1 = explode('src="',$video);
+    $t2 = explode('>', $t1[1]);
     $t3 = explode('<', $t2[1]);
-    $title = $t3[0];
-    $link=$target."?page=1&tip=release&link=".urlencode(fix_t($link))."&title=".urlencode(fix_t($title));
-    if (!preg_match("/IN CURAND|FILME SERIALE/",$title)) {
+    $title = trim($t3[0]);
+    $link=$target."?page=1&show=&sez=&link=".urlencode(fix_t($link))."&title=".urlencode(fix_t($title));
+    if (!preg_match("/IN CURAND|FILME SERIALE|Contact|TOP IMDb|Filme online/i",$title)) {
 	if ($n == 0) echo "<TR>"."\r\n";
 	echo '<TD class="cat">'.'<a class ="cat" href="'.$link.'" target="_blank">'.$title.'</a></TD>';
     $n++;
