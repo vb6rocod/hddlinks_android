@@ -226,7 +226,7 @@ unset($videos[0]);
 $videos = array_values($videos);
 foreach($videos as $video) {
  $t1=explode('tooltip/',$video);
- $t2=explode('"',$t1[1]);
+ $t2=explode('?',$t1[1]);
  $link=$t2[0];
  $t1=explode('href="',$video);
  $t2=explode('"',$t1[1]);

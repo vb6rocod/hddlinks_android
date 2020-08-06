@@ -17,7 +17,7 @@ $has_fav="yes";
 $has_search="yes";
 $has_add="yes";
 $has_fs="yes";
-$fav_target="hdfull_s_fav.php?host=https://hdfull.io";
+$fav_target="hdfull_s_fav.php?host=https://hdfull.la";
 $add_target="hdfull_s_add.php";
 $add_file="";
 $fs_target="hdfull_s_ep.php";
@@ -167,7 +167,7 @@ if ($page==1) {
 echo '</TR></TABLE>'."\r\n";
 $ua     =   $_SERVER['HTTP_USER_AGENT'];
 if ($tip=="release") {
-  $requestLink="https://hdfull.io/tv-shows/list";
+  $requestLink="https://hdfull.la/tv-shows/list";
   $r=parse_url($requestLink);
   $host=$r["host"];
   $ch = curl_init($requestLink);

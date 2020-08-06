@@ -1,17 +1,28 @@
 <!DOCTYPE html>
 <?php
 include ("../common.php");
+//?token=
+//&id=UCANDAWMJQsxMlaDMGlCdKpg
+//&kind=youtube#channel
+//&title=%28channel%29+DanceTelevision
+//&image=https://yt3.ggpht.com/-K4rbFp56pRQ/AAAAAAAAAAI/AAAAAAAAAAA/UKcWkGWWeOU/s88-c-k-no-mo-rj-c0xffffff/photo.jpg
 $token = $_GET["token"];
-$search=$_GET["search"];
+$title = unfix_t(urldecode($_GET["title"]));
+$id=$_GET["id"];
+//echo $id;
+$kind=$_GET["kind"];
+$image=$_GET["image"];
 $next="";
 $prev="";
-$page_title="Cautare: ".$search;
+$page_title = $title;
+$key="AIzaSyDhpkA0op8Cyb_Yu1yQa1_aPSr7YtMacYU";
 if (file_exists($base_pass."youtube.txt"))
   $key=trim(file_get_contents($base_pass."youtube.txt"));
-if ($token)
-$l2="https://www.googleapis.com/youtube/v3/search?part=snippet&order=relevance&maxResults=25&pageToken=".$token."&q=".urlencode($search)."&key=".$key;
-else
-$l2="https://www.googleapis.com/youtube/v3/search?part=snippet&order=relevance&maxResults=25&q=".urlencode($search)."&key=".$key;
+ $pl=array();
+if (!$token){
+ // search for playlist
+
+ $l2="https://www.googleapis.com/youtube/v3/playlists?part=snippet&channelId=".$id."&key=".$key."&maxResults=50";
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $l2);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
@@ -24,7 +35,25 @@ $l2="https://www.googleapis.com/youtube/v3/search?part=snippet&order=relevance&m
   curl_close($ch);
   //echo $html;
   $p=json_decode($html,1);
-  //print_r ($p);
+  if (count($p['items']) > 0) $pl=$p['items'];
+}
+if ($token)
+$l2="https://www.googleapis.com/youtube/v3/search?part=snippet&channelId=".$id."&maxResults=25&order=date&key=".$key."&pageToken=".$token;
+else
+$l2="https://www.googleapis.com/youtube/v3/search?part=snippet&channelId=".$id."&maxResults=25&order=date&key=".$key;
+//echo $l2;
+  $ch = curl_init();
+  curl_setopt($ch, CURLOPT_URL, $l2);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+  curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows; U; Windows NT 6.1; en-US; rv:1.9.1.2) Gecko/20090729 Firefox/3.5.2 GTB5');
+  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+  $html = curl_exec($ch);
+  curl_close($ch);
+  //echo $html;
+  $p=json_decode($html,1);
   if (isset($p["nextPageToken"])) $next=$p["nextPageToken"];
   if (isset($p["prevPageToken"])) $prev=$p["prevPageToken"];
 
@@ -37,7 +66,9 @@ $l2="https://www.googleapis.com/youtube/v3/search?part=snippet&order=relevance&m
       <title><?php echo $page_title; ?></title>
 <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
 <link rel="stylesheet" type="text/css" href="../custom.css" />
+
 <script type="text/javascript">
+
 function ajaxrequest2(link) {
   var request =  new XMLHttpRequest();
   var the_data = link;
@@ -76,9 +107,9 @@ function ajaxrequest(link) {
   // If the response is received completely, will be transferred to the HTML tag with tagID
   request.onreadystatechange = function() {
     if (request.readyState == 4) {
-       off();
-       document.getElementById("mytest1").href=request.responseText;
-       document.getElementById("mytest1").click();
+      off();
+      document.getElementById("mytest1").href=request.responseText;
+      document.getElementById("mytest1").click();
     }
   }
 }
@@ -87,7 +118,7 @@ function ajaxrequest(link) {
 function isValid(evt) {
     var charCode = (evt.which) ? evt.which : evt.keyCode,
     self = evt.target;
-    if  (charCode == "51") {
+    if  (charCode == "99" || charCode == "51") {
       id = "fav_" + self.id;
       val_fav=document.getElementById(id).value;
       ajaxrequest2(val_fav);
@@ -134,8 +165,9 @@ if (preg_match("/android|ipad/i",$user_agent) && preg_match("/chrome|firefox|mob
 }
 $n=0;
 $w=0;
-$nextpage="youtube_search.php?token=".$next."&search=".$search;
-$prevpage="youtube_search.php?token=".$prev."&search=".$search;
+$nextpage="yt_channel.php?token=".$next."&id=".$id."&kind=".$kind."&title=".urlencode(fix_t($title))."&image=".$image;
+$prevpage="yt_channel.php?token=".$prev."&id=".$id."&kind=".$kind."&title=".urlencode(fix_t($title))."&image=".$image;
+
 echo '<h2>'.$page_title.'</H2>';
 $c="";
 echo "<a href='".$c."' id='mytest1'></a>".'<div id="mainnav">';
@@ -145,16 +177,48 @@ if ($prev)
 echo '<a href="'.$prevpage.'">&nbsp;&lt;&lt;&nbsp;</a> | <a href="'.$nextpage.'">&nbsp;&gt;&gt;&nbsp;</a></TD></TR>';
 else
 echo '<a href="'.$nextpage.'">&nbsp;&gt;&gt;&nbsp;</a></TD></TR>';
+if (!$token && $pl) {
+//
+//print_r ($pl);
+ for ($k=0;$k<count($pl);$k++) {
+  $title=$pl[$k]['snippet']['title'];
+  $title="(playlist) ".$title;
+  $kind=$pl[$k]['kind'];
+  $id=$pl[$k]['id'];
+  if (isset($pl[$k]["snippet"]["thumbnails"]["medium"]["url"]))
+     $image = $pl[$k]["snippet"]["thumbnails"]["medium"]["url"];
+  else
+     $image="blank.jpg";
+  $add_fav="mod=add&kind=".str_replace("youtube#","",$kind)."&id=".$id."&title=".urlencode(fix_t($title))."&image=".$image;
+  $playlist="yt_playlist.php?token=&id=".$id."&kind=".str_replace("youtube#","",$kind)."&title=".urlencode(fix_t($title))."&image=".$image;
+  if ($n==0) echo '<TR>';
+  if ($kind == "youtube#playlist") {
 
+  if ($tast == "NU")
+  echo '<td class="mp" align="center" width="20%"><a href="'.$playlist.'" target="_blank"><img src="'.$image.'" width="160px" height="90px"><BR>'.$title.'</a> <a onclick="ajaxrequest2('."'".$add_fav."'".')" style="cursor:pointer;">*</a></TD>';
+  else {
+  echo '<td class="mp" align="center" width="20%"><a class ="imdb" id="myLink'.($w*1).'" href="'.$playlist.'" target="_blank"><img src="'.$image.'" width="160px" height="90px"><BR>'.$title.'<input type="hidden" id="fav_myLink'.($w*1).'" value="'.$add_fav.'"></a></TD>';
+  $w++;
+  }
+  }
+  $n++;
+  if ($n == 5) {
+  echo '</tr>';
+  $n=0;
+  }
+}
+}
+echo '</TR>';
+$n=0;
 for ($k=0;$k<min(sizeof($p["items"]),25);$k++) {
 	//$id = str_between($video,"<id>http://gdata.youtube.com/feeds/api/videos/","</id>");
   $link = "";
   $tip="";
   $kind="";
   $id="";
-  	$title = $p["items"][$k]["snippet"]["title"];
-  	if (isset($p["items"][$k]["snippet"]["thumbnails"]["default"]["url"]))
-	  $image = $p["items"][$k]["snippet"]["thumbnails"]["default"]["url"];
+   $title = $p["items"][$k]["snippet"]["title"];
+  	if (isset($p["items"][$k]["snippet"]["thumbnails"]["medium"]["url"]))
+	  $image = $p["items"][$k]["snippet"]["thumbnails"]["medium"]["url"];
     else
       $image="blank.jpg";
 	$kind =$p["items"][$k]["id"]["kind"];
@@ -164,26 +228,8 @@ for ($k=0;$k<min(sizeof($p["items"]),25);$k++) {
 	$link = $id;
 	$tip="search";
   }
-  if ($kind=="youtube#playlist") {
-    if (isset($p["items"][$k]["id"]["playlistId"]))
-     $id=$p["items"][$k]["id"]["playlistId"];
-	$link = $id;
-	$title="(playlist) ".$title;
-	$tip="playlist";
-  }
-  if ($kind=="youtube#channel") {
-    if (isset($p["items"][$k]["snippet"]["channelId"]))
-      $id=$p["items"][$k]["snippet"]["channelId"];
-    $title="(channel) ".$title;
-	$link = $id;
-	$tip="channel";
-  }
   $add_fav="mod=add&kind=".str_replace("youtube#","",$kind)."&id=".$id."&title=".urlencode(fix_t($title))."&image=".$image;
-  if ($kind=="youtube#playlist")
   $playlist="yt_playlist.php?token=&id=".$id."&kind=".str_replace("youtube#","",$kind)."&title=".urlencode(fix_t($title))."&image=".$image;
-  elseif ($kind=="youtube#channel")
-  $playlist="yt_channel.php?token=&id=".$id."&kind=".str_replace("youtube#","",$kind)."&title=".urlencode(fix_t($title))."&image=".$image;
-
   $link1="".urlencode("http://www.youtube.com/watch?v=".$id)."&title=".urlencode($title);
   if ($id) {
   if ($n==0) echo '<TR>';

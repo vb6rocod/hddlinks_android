@@ -379,7 +379,7 @@ $out=$t2[0];
   $t2=explode('href="',$t1[1]);
   $t3=explode('"',$t2[1]);
   $out=$t3[0];
-} else if (preg_match("/mangovideo\.pw/",$host)) {
+} else if (preg_match("/mangovideo\./",$host)) {
   if (strpos($h,"license_code:") !== false) {
    $t1 = explode("license_code: '", $h);
    $t2 = explode("'", $t1[1]);
@@ -425,6 +425,9 @@ $out=$t2[0];
  } else {
  $out="";
  }
+ //echo $out;
+ if ($out && $flash <> "flash")
+  $out=$out."|Referer=".urlencode("https://mangovideo.club");
 } else if (preg_match("/milfzr\.com/",$host)) {
    $h = str_replace("\/","/",$h);
    if (preg_match('/((http|https)[\.\d\w\-\.\/\\\:\?\&\#\%\_\,]*(\.mp4))/', $h, $m))

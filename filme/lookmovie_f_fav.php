@@ -137,7 +137,7 @@ foreach($arr as $key => $value) {
     $image=urldecode($arr[$key]["image"]);
     // ="/images/b/w780/db88ada5d2083f50593d65b61d54d6a0.jpg"
     // https://lookmovie.ag/p/w300/05dee075be60af0893aa926c3977c38a.jpg
-    //$image=str_replace("image.lookmovie.ag/p","lookmovie.ag/images/b",$image);
+    $image=str_replace("image.lookmovie.ag/p","lookmovie.ag/images/p",$image);
     if (strpos($image,"http") === false) $image="https:".$image;
     if (preg_match("/tmdb\.org/",$image) && $fix=="yes" && $api_key) {
     $x=implode(",",get_headers($image));

@@ -40,22 +40,27 @@ $ua="Mozilla/5.0 (iPhone; CPU iPhone OS 5_0_1 like Mac OS X)";
       $h = curl_exec($ch);
       curl_close($ch);
       //$h=file_get_contents("http://localhost/mobile1/nou/w.html");
+      file_put_contents("w.html",$h);
 //echo $h;
 //$t1=explode('window.env =',$h);
-$t1=explode('window.__data=',$h);
+$t1=explode('window.__data=JSON.parse("',$h);
 //$t2=explode(';window.experience',$t1[1]);
-$t2=explode(';</script>',$t1[1]);
+$t2=explode('");</script>',$t1[1]);
 $h1=$t2[0];
+$h1=str_replace('\"','"',$h1);
 //echo $h1;
 $r=json_decode($h1,1);
+//print_r ($r);
 if (count($r) >1) {
  $tip=1;
 } else {
  $t2=explode(';window.experience',$t1[1]);
  $h1=$t2[0];
  $tip=2;
+ $r=json_decode($h1,1);
 }
-$r=json_decode($h1,1);
+
+
 //print_r ($r);
 foreach ($r as $key=>$value) {
  //echo $key."\n";

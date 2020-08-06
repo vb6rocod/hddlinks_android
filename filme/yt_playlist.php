@@ -43,6 +43,10 @@ if ($token)
 $l2="https://www.googleapis.com/youtube/v3/playlistItems?part=snippet&maxResults=25&pageToken=".$token."&playlistId=".$id."&key=".$key;
 else
 $l2="https://www.googleapis.com/youtube/v3/playlistItems?part=snippet&maxResults=25&playlistId=".$id."&key=".$key;
+//$l2="https://www.googleapis.com/youtube/v3/search?key=".$key."&channelId=UCGGIVRhyZZLdWTMeBEqX2Vg&part=snippet&order=date&maxResults=25";
+//$l2="https://www.googleapis.com/youtube/v3/playlists?part=id%2Csnippet%2CcontentDetails&channelId=UCGGIVRhyZZLdWTMeBEqX2Vg&key=".$key;
+//$l2="https://www.googleapis.com/youtube/v3/search?part=id%2Csnippet&channelId=UCGGIVRhyZZLdWTMeBEqX2Vg&maxResults=25&order=date&key=".$key;
+//echo $l2;
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $l2);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);

@@ -142,16 +142,49 @@ else
 $l=$link;
 $l_mhdk=$l;
 ///////////////////////////////////
-
-
-
+/*
+$html=file_get_contents($l);
+//echo $html;
+$t1=explode('<iframe',$html);
+$t2=explode('src="',$t1[1]);
+$t3=explode('"',$t2[1]);
+$l="https://www.moviehdkh.com".$t3[0];
+//$h=file_get_contents($l);
+*/
+$opts = array(
+  'http'=>array(
+    'method'=>"GET",
+    'header'=>array("Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8",
+                           "Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2",
+                           "Referer: https://www.moviehdkh.com")
+  )
+);
+/*
+$context = stream_context_create($opts);
+$h = @file_get_contents($l, false, $context);
+//echo $h;
+$t1=explode('var videos = [',$h);
+$t2=explode(']',$t1[1]);
+$h1=trim($t2[0]);
+$x=json_decode("[".$h1."]",1);
+//print_r ($x);
+$r=array();
+$s=array();
+for ($k=0;$k<count($x);$k++) {
+ $r[]="https://www.moviehdkh.com".$x[$k]['src'];
+ $s[]=$x[$k]['label'];
+}
+*/
+$r=array();
+$s=array();
 //$link=$link."|Referer=".urlencode("https://www.moviehdkh.com");
 //echo $link."<BR>";
 /////////////////////////////////////////
-$r=array();
+
 $r[]=$l;
+$s[]=parse_url($l)['host'];
 echo '<table border="1" width="100%">';
-echo '<TR><TD class="mp">Alegeti un server: Server curent:<label id="server">'.parse_url($r[0])['host'].'</label>
+echo '<TR><TD class="mp">Alegeti un server: Server curent:<label id="server">'.$s[0].'</label>
 <input type="hidden" id="file" value="'.urlencode($r[0]).'"></td></TR></TABLE>';
 echo '<table border="1" width="100%"><TR>';
 $k=count($r);
@@ -159,7 +192,7 @@ $x=0;
 for ($i=0;$i<$k;$i++) {
   if ($x==0) echo '<TR>';
   $c_link=urlencode($r[$i]);
-  $openload=parse_url($r[$i])['host'];
+  $openload=$s[$i];
   if (preg_match($indirect,$openload)) {
   echo '<TD class="mp"><a href="filme_link.php?file='.urlencode($c_link).'&title='.urlencode(unfix_t($tit.$tit2)).'" target="_blank">'.$openload.'</a></td>';
   } else

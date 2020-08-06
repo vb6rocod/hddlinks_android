@@ -103,7 +103,7 @@ else
 </TR>
 
 <TR>
-<TD width="25%"><a href="filme/ffmovies_f1.php?page=1&tip=release&title=ffmovies&link=" target="_blank">ffmovies</a></TD>
+<TD width="25%"><a href="filme/ffmovies_ff.php?page=1&tip=release&title=ffmovies&link=" target="_blank">ffmovies</a></TD>
 <TD width="25%"><a href="filme/gomovies_f.php?page=1&tip=release&title=gomovies&link=" target="_blank">gomovies</a></TD>
 <TD width="25%"><a href="filme/cinebloom_f.php?page=1&tip=release&title=cinebloom&link=" target="_blank">cinebloom</a></TD>
 <TD width="25%"><a href="filme/300mbmoviefree_f.php?page=1&tip=release&title=300mbmoviefree&link=" target="_blank">300mbmoviefree</a></TD>
@@ -133,6 +133,12 @@ else
 <TD width="25%"><a href="filme/europix_f.php?page=1&tip=release&title=europix&link=" target="_blank">europix</a></TD>
 <TD width="25%"><a href="filme/esubmovie.php?page=1&tip=release&title=esubmovie&link=" target="_blank">esubmovie</a></TD>
 <TD width="25%"><a href="filme/yifymovies_f.php?page=1&tip=release&title=yifymovies&link=" target="_blank">yifymovies</a></TD>
+<TD width="25%"><a href="filme/fmoviesarena.php?page=1&tip=release&title=fmoviesarena&link=" target="_blank">fmoviesarena</a></TD>
+</TR>
+<TR>
+<TD width="25%"><a href="filme/movies4u_f.php?page=1&tip=release&title=movies4u&link=" target="_blank">movies4u</a></TD>
+<TD width="25%"><a href="filme/ask4movie_f.php?page=1&tip=release&title=ask4movie&link=" target="_blank">ask4movie</a></TD>
+<TD width="25%"><a href="filme/moviehaat_f.php?page=1&tip=release&title=moviehaat&link=" target="_blank">moviehaat</a></TD>
 <TD width="25%"></TD>
 </TR>
 <?php
@@ -140,7 +146,7 @@ if (file_exists($base_pass."tvplay.txt")) {
 echo '
 <TR>
 <TD width="25%"><a href="filme/cineplex_f_main1.php" target="_blank">cineplex</a></TD>
-<TD width="25%"></TD>
+<TD width="25%"><a href="filme/soap2day_ff.php" target="_blank">soap2day</a></TD>
 <TD width="25%"></TD>
 <TD width="25%"></TD>';
 echo '</TR>';

@@ -170,6 +170,7 @@ echo '</TR>'."\r\n";
 
 if($tip=="release") {
   $l="https://".$host."/year/allmovies-page-".$page."?search=";
+  $l="https://123europix.pro/";
 } else {
   $search=str_replace(" ","+",$tit);
   $l="https://".$host."/search?search=".$search;

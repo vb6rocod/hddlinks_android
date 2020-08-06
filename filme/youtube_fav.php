@@ -143,7 +143,10 @@ echo '<table border="1px" width="100%">'."\n\r";
     }
 
   $add_fav="mod=del&kind=".str_replace("youtube#","",$kind)."&id=".$id."&title=".urlencode(fix_t($title))."&image=".$image;
+  if ($kind=="playlist")
   $playlist="yt_playlist.php?token=&id=".$id."&kind=".str_replace("youtube#","",$kind)."&title=".urlencode(fix_t($title))."&image=".$image;
+  elseif ($kind=="channel")
+  $playlist="yt_channel.php?token=&id=".$id."&kind=".str_replace("youtube#","",$kind)."&title=".urlencode(fix_t($title))."&image=".$image;
   $link1="".urlencode("http://www.youtube.com/watch?v=".$id)."&title=".urlencode($title);
   if ($id) {
   if ($n==0) echo '<TR>';

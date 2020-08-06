@@ -95,7 +95,7 @@ document.onkeypress =  zx;
 </TR>
 
 <TR>
-<TD width="25%"><a href="filme/ffmovies_s1.php?page=1&tip=release&title=ffmoviess&link=" target="_blank">ffmovies</a></TD>
+<TD width="25%"><a href="filme/ffmovies_ss.php?page=1&tip=release&title=ffmoviess&link=" target="_blank">ffmovies</a></TD>
 <TD width="25%"><a href="filme/go2watch_s.php?page=1&tip=release&title=go2watch&link=" target="_blank">go2watch</a></TD>
 <TD width="25%"><a href="filme/gerryreid_s.php?page=1&tip=release&title=gerryreid&link=" target="_blank">gerryreid</a></TD>
 <TD width="25%"><a href="filme/yesmovies_s.php?page=1&tip=release&title=yesmovies&link=" target="_blank">yesmovies</a></TD>

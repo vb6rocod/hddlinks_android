@@ -89,10 +89,9 @@ function openlink(link) {
     }
   }
 }
-function changeserver(s,t,x) {
+function changeserver(s,t) {
   document.getElementById('server').innerHTML = s;
   document.getElementById('file').value=t;
-  document.getElementById('server1').innerHTML = x;
 }
    function zx(e){
      var charCode = (typeof e.which == "number") ? e.which : e.keyCode
@@ -134,151 +133,53 @@ function off() {
 <?php
 echo '<h2>'.$tit.$tit2.'</H2>';
 echo '<BR>';
-// https://www.cinebloom.org/movies/multi/tt2831364
-if (preg_match("/\=tt(\d+)/",$link,$m))
- $imdbid=$m[1];
-else
- $imdbid="";
-$ua='Mozilla/5.0 (Windows NT 10.0; rv:78.0) Gecko/20100101 Firefox/78.0';
+$ua = $_SERVER['HTTP_USER_AGENT'];
+$head=array('Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2');
+
+$r=array();
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $link);
-  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
-  //curl_setopt($ch,CURLOPT_HTTPHEADER,$head);
-  curl_setopt($ch,CURLOPT_REFERER,"https://hulu.to");
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+  curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 10.0; rv:55.0) Gecko/20100101 Firefox/55.0');
   curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
-  //curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie);
-  //curl_setopt($ch, CURLOPT_COOKIEJAR, $cookie);
-  curl_setopt($ch, CURLOPT_HEADER,1);
-  //curl_setopt($ch, CURLOPT_NOBODY,1);
-  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
   curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
   curl_setopt($ch, CURLOPT_TIMEOUT, 15);
-  $h = curl_exec($ch);
-  curl_close($ch);
-  //echo $h;
-  preg_match("/location\:\s+(\S+)/i",$h,$m);
-  $l=trim($m[1]);
-  $l1=$l."&play=1&playref=";
-  //$l1=$link."&play=1&playref=";
-  //echo $l1;
-  $post="playID=917yH6LUv21JwaxZ0Eq8W29iamVjdCBNb3VzZUV2ZW50XSo2MzgqMzI5QBv4KPIq7c5Q2zumIs183";
-$head=array('Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
-'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
-'Accept-Encoding: deflate',
-'Content-Type: application/x-www-form-urlencoded',
-'Content-Length: '.strlen($post).'',
-'Origin: https://videospider.stream',
-'Connection: keep-alive',
-'Referer: '.$l.'',
-'Upgrade-Insecure-Requests: 1');
-  //die();
-/*
-  $ch = curl_init();
-  curl_setopt($ch, CURLOPT_URL, $l1);
-  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
-  curl_setopt($ch,CURLOPT_HTTPHEADER,$head);
-  //curl_setopt($ch,CURLOPT_REFERER,"https://www.cinebloom.org");
-  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
-  //curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie);
-  //curl_setopt($ch, CURLOPT_COOKIEJAR, $cookie);
-  curl_setopt($ch, CURLOPT_HEADER,1);
-  //curl_setopt($ch, CURLOPT_NOBODY,1);
-  curl_setopt($ch, CURLOPT_POST,1);
-  curl_setopt($ch, CURLOPT_POSTFIELDS,$post);
-  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
-  curl_setopt($ch, CURLOPT_TIMEOUT, 25);
-  $h = curl_exec($ch);
-  curl_close($ch);
-  //echo $h;
-  //die();
-  preg_match("/location\:\s+(\S+)/i",$h,$m);
-  $l2=trim($m[1]);
-*/
-  //echo $l2;
-$head=array('Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
-'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
-'Accept-Encoding: deflate',
-'Referer: '.$l.'',
-'Connection: keep-alive',
-'Upgrade-Insecure-Requests: 1');
-/*
-  $ch = curl_init();
-  curl_setopt($ch, CURLOPT_URL, $l2);
-  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
-  curl_setopt($ch,CURLOPT_HTTPHEADER,$head);
-  //curl_setopt($ch,CURLOPT_REFERER,"https://www.cinebloom.org");
-  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
-  //curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie);
-  //curl_setopt($ch, CURLOPT_COOKIEJAR, $cookie);
-  curl_setopt($ch, CURLOPT_HEADER,1);
-  //curl_setopt($ch, CURLOPT_NOBODY,1);
-  //curl_setopt($ch, CURLOPT_POST,1);
-  //curl_setopt($ch, CURLOPT_POSTFIELDS,$post);
-  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
-  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
-  $h = curl_exec($ch);
-  curl_close($ch);
-  //echo $h;
-  */
-  $ch = curl_init();
-  //curl_setopt($ch, CURLOPT_URL, $l2);
-  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
-  //curl_setopt($ch,CURLOPT_HTTPHEADER,$head);
-  //curl_setopt($ch,CURLOPT_REFERER,"https://www.cinebloom.org");
-  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
-  //curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie);
-  //curl_setopt($ch, CURLOPT_COOKIEJAR, $cookie);
-  curl_setopt($ch, CURLOPT_HEADER,1);
-  //curl_setopt($ch, CURLOPT_NOBODY,1);
-  //curl_setopt($ch, CURLOPT_POST,1);
-  //curl_setopt($ch, CURLOPT_POSTFIELDS,$post);
-  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
-  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+  $html = curl_exec($ch);
 
-  $t1=explode('var token = "',$h);
-  $t2=explode('"',$t1[1]);
-  $token=$t2[0];
-  $serv1=array();
-  $name=array();
-  $videos=explode('data-server="',$h);
-  unset($videos[0]);
-  $videos = array_values($videos);
-  foreach($videos as $video) {
-    $t1=explode('"',$video);
-    $server=$t1[0];
-    $t1=explode('data-server-id="',$video);
-    $t2=explode('"',$t1[1]);
-    $id=$t2[0];
-    $t1=explode('title="',$video);
-    $t2=explode('"',$t1[1]);
-    $name[]=$t2[0];
-    $serv1[]=array('serv' => $server,'id' => $id);
-  }
-  $r=array();
-  for ($k=0;$k<count($serv1);$k++) {
-  $server=$serv1[$k]['serv'];
-  $id=$serv1[$k]['id'];
-  $l1="https://oload.party/loadsource.php?server=".$server."&id=".$id."&token=".$token;
-  curl_setopt($ch, CURLOPT_URL, $l1);
-  $h = curl_exec($ch);
-  //echo $h;
-  //$h=file_get_contents($l1);
-  $t1=explode('iframe src="',$h);
-  $t2=explode('"',$t1[1]);
-  $r[]=urlencode($t2[0]);
-  }
+  $t1=explode('<iframe',$html);
+  $t2=explode('src="',$t1[1]);
+  $t3=explode('"',$t2[1]);
+  $l=$t3[0];
+  if (strpos($l,"http") === false) $l="https:".$l;
+  $r[]=$l;
+  $t1=explode('div class="video-sources',$html);
+  $t2=explode('<div',$t1[1]);
+  $h1=$t2[0];
+$videos = explode('<li', $h1);
+unset($videos[0]);
+$videos = array_values($videos);
+foreach($videos as $video) {
+ $l="";
+ $t1=explode('href="',$video);
+ $t2=explode('"',$t1[1]);
+ $l=$t2[0];
+ if ($l) {
+ if (strpos($l,"http") === false) $l="https:".$l;
+ curl_setopt($ch, CURLOPT_URL, $l);
+ $html = curl_exec($ch);
+  $t1=explode('<iframe',$html);
+  $t2=explode('src="',$t1[1]);
+  $t3=explode('"',$t2[1]);
+  $l=$t3[0];
+  if (strpos($l,"http") === false) $l="https:".$l;
+  $r[]=$l;
+ }
+}
   curl_close($ch);
-/////////////////////////////////////////////////////////////////////////////////////////
-
+  //echo $html;
 echo '<table border="1" width="100%">';
-echo '<TR><TD class="mp">Alegeti un server: Server curent:<label id="server">'.parse_url(urldecode($r[0]))['host'].'</label>
+echo '<TR><TD class="mp">Alegeti un server: Server curent:<label id="server">'.parse_url($r[0])['host'].'</label>
 <input type="hidden" id="file" value="'.urlencode($r[0]).'"></td></TR></TABLE>';
 echo '<table border="1" width="100%"><TR>';
 $k=count($r);
@@ -286,11 +187,11 @@ $x=0;
 for ($i=0;$i<$k;$i++) {
   if ($x==0) echo '<TR>';
   $c_link=$r[$i];
-  $openload=parse_url(urldecode($r[$i]))['host'];
+  $openload=parse_url($r[$i])['host'];
   if (preg_match($indirect,$openload)) {
   echo '<TD class="mp"><a href="filme_link.php?file='.urlencode($c_link).'&title='.urlencode(unfix_t($tit.$tit2)).'" target="_blank">'.$openload.'</a></td>';
   } else
-  echo '<TD class="mp"><a id="myLink" href="#" onclick="changeserver('."'".$openload."','".urlencode($c_link)."','".$name[$i]."'".');return false;">'.$openload.'</a></td>';
+  echo '<TD class="mp"><a id="myLink" href="#" onclick="changeserver('."'".$openload."','".urlencode($c_link)."'".');return false;">'.$openload.'</a></td>';
   $x++;
   if ($x==6) {
     echo '</TR>';
@@ -309,13 +210,14 @@ if ($tip=="movie") {
   $tit2="";
   $sez="";
   $ep="";
-
+  $imdbid="";
   $from="";
   $link_page="";
 } else {
   $tit3=$tit;
   $sez=$sez;
   $ep=$ep;
+  $imdbid="";
   $from="";
   $link_page="";
 }
@@ -351,7 +253,6 @@ else
  else
    echo '<TD align="center" colspan="4"><a id="viz" onclick="'."openlink('".$openlink."')".'"'." style='cursor:pointer;'>".'VIZIONEAZA !</a></td>';
 echo '</tr>';
-echo '<TR><TD class="mp" colspan="4" style="text-align:left">Nume release:<label id="server1" style="color: #e6e600;">'.$name[0].'</label></TD></TR>';
 echo '</table>';
 echo '<br>
 <table border="0px" width="100%">

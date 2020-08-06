@@ -5,9 +5,9 @@ $host=$_GET['host'];
 $page_title="Seriale favorite";
 $width="200px";
 $height="278px";
-$add_target="lookmovie_s_add.php";
-$fs_target="lookmovie_s_ep.php";
-$file=$base_fav."lookmovie_s.dat";
+$add_target="moviehaat_s_add.php";
+$fs_target="moviehaat_s_ep.php";
+$file=$base_fav."moviehaat_s.dat";
 ?>
 <html><head>
 <meta http-equiv="content-type" content="text/html; charset=UTF-8">
@@ -126,10 +126,10 @@ foreach($arr as $key => $value) {
 	$link = urldecode($arr[$key]["link"]);
     $title = unfix_t(urldecode($key));
     $image=urldecode($arr[$key]["image"]);
-    //$image=$host.parse_url($image)['path'];
-    $image=str_replace("image.lookmovie.ag/p","lookmovie.ag/images/p",$image);
+    $image=$host.parse_url($image)['path'];
+    $image="blank.jpg";
     $year="";
-    $link=$host.parse_url($link)['path'];
+    //$link=$host.parse_url($link)['path'];
     $link_f=$fs_target.'?tip=series&link='.urlencode($link).'&title='.urlencode(fix_t($title)).'&image='.$image."&sez=&ep=&ep_tit=&year=".$year;
   if ($n==0) echo '<TR>'."\r\n";
   $val_imdb="tip=series&title=".urlencode(fix_t($title))."&year=".$year."&imdb=".$imdb;

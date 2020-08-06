@@ -41,6 +41,15 @@ echo '<TD style="text-align:center"><font size="4">'.'<a href="'.$link.'" target
 
 
  echo "</TR>"."\n\r";
+$n=0;
+if ($n == 0) echo "<TR>"."\n\r";
+$title="moviehaat";
+$link="moviehaat_s.php?page=1&tip=release&title=moviehaat&link=";
+echo '<TD style="text-align:center"><font size="4">'.'<a href="'.$link.'" target="_blank">'.$title.'</a></font></TD>';
+echo '<TD style="text-align:center"></TD>';
+echo '<TD style="text-align:center"></TD>';
+echo '<TD style="text-align:center"></TD>';
+echo "</TR>"."\n\r";
  echo '</table>';
 ?>
 </body>

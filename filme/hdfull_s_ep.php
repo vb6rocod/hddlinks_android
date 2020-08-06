@@ -118,7 +118,7 @@ foreach($videos as $video) {
   $season=$r[$p]["season"];
   $episod=$r[$p]["episode"];
   if (isset($r[$p]["thumbnail"]))
-     $img_ep="https://hdfull.me/tthumb/220x124/".$r[$p]["thumbnail"];
+     $img_ep="https://".$host."/tthumb/220x124/".$r[$p]["thumbnail"];
   else
      $img_ep=$image;
   $ep_tit=$r[$p]["title"]["en"];

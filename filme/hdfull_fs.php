@@ -174,7 +174,7 @@ for ($i=0;$i<strlen($ad1);$i++) {
  }
 }
 //////////////////////////////////////////////////////////////
-$l="https://hdfull.io/js/providers.js";
+$l="https://".$host."/js/providers.js";
   $ch = curl_init($l);
   curl_setopt($ch, CURLOPT_USERAGENT, $ua);
   curl_setopt($ch,CURLOPT_REFERER,"https://hdfull.me/");

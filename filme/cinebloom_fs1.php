@@ -139,23 +139,26 @@ if (preg_match("/\/tt(\d+)/",$link,$m))
  $imdbid=$m[1];
 else
  $imdbid="";
-$ua='Mozilla/5.0 (Windows NT 10.0; rv:78.0) Gecko/20100101 Firefox/78.0';
+$cookie=$base_cookie."cinebloom.txt";
+$ua=file_get_contents($base_pass."firefox.txt");
+$host=parse_url($l)['host'];
+$head=array('Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2');
+
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $link);
-  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
-  //curl_setopt($ch,CURLOPT_HTTPHEADER,$head);
-  curl_setopt($ch,CURLOPT_REFERER,"https://www.cinebloom.org");
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
-  //curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie);
-  //curl_setopt($ch, CURLOPT_COOKIEJAR, $cookie);
+  curl_setopt($ch,CURLOPT_REFERER,"https://".$host);
+  curl_setopt($ch,CURLOPT_HTTPHEADER,$head);
+  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
   curl_setopt($ch, CURLOPT_HEADER,1);
-  //curl_setopt($ch, CURLOPT_NOBODY,1);
-  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+  curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie);
+  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
   curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
   curl_setopt($ch, CURLOPT_TIMEOUT, 15);
   $h = curl_exec($ch);
   curl_close($ch);
+
   //echo $h;
   preg_match("/location\:\s+(\S+)/i",$h,$m);
   $l=trim($m[1]);

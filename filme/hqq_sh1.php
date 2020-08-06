@@ -37,6 +37,7 @@ $time_exp=file_get_contents($base_cookie."max_time_hqq.txt");
 }
 $vid=$_GET['vid'];
 $l="https://hqq.tv/e/".$vid;
+//echo $l."\n";
 $l="https://hqq.tv/player/embed_player.php?vid=".$vid."&autoplay=no";
 $ua     =   $_SERVER['HTTP_USER_AGENT'];
 $ua="Mozilla/5.0 (Windows NT 10.0; rv:75.0) Gecko/20100101 Firefox/75.0";
@@ -53,8 +54,12 @@ $h = curl_exec($ch);
 curl_close($ch);
 //echo $h;
 //$h=urldecode($h);
-if (preg_match("/get_md5\.php\?(\w+)\=\"\+(\w+)/",$h,$m)) {
-if (strpos($h,$m[2]."=''") !== false) {
+if (preg_match("/userid\s*\=\s*\"(\w+)\"/",$h,$n)) {
+
+//if (!preg_match("/get_md5\.php\?(\w+)\=\"\+(\w+)/",$h,$m)) {
+//$m[2]="sh";
+$sh="shh";
+//if (strpos($h,$m[2]."=''") !== false) {
 $t1=explode("var ddomain",$h);
 $t2=explode('<script',$t1[1]);
 
@@ -66,7 +71,7 @@ $h="<script".trim($t2[1]);
 //$msg_captcha="OK";
 $out="";
 $out .= '
-var '.$m[2].'="";'.$h.'';
+var '.$sh.'="";'.$h.'';
 $out .= '
 //alert (shh);
 var request = new XMLHttpRequest();
@@ -79,9 +84,9 @@ document.getElementById("hqq_msg").innerHTML = "'.$msg_captcha.'";
 $out=str_replace("<script>","",$out);
 $out=str_replace("</script>","",$out);
 echo $out;
-} else {
-echo '';
-}
+//} else {
+//echo '';
+//}
 } else {
 echo '';
 }

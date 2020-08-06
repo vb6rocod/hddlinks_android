@@ -181,17 +181,28 @@ if($tip=="release") {
   else
    $l="https://www.cinebloom.org/searched/movies?q=".$search."&page=".$page;
 }
+//$l="https://www.cinebloom.org/movies?page=2";
+$cookie=$base_cookie."cinebloom.txt";
+$ua=file_get_contents($base_pass."firefox.txt");
+$host=parse_url($l)['host'];
+$head=array('Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2');
 
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $l);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-  curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 10.0; rv:55.0) Gecko/20100101 Firefox/55.0');
+  curl_setopt($ch,CURLOPT_REFERER,"https://".$host);
+  curl_setopt($ch,CURLOPT_HTTPHEADER,$head);
+  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
+  curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie);
   curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
   curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
   curl_setopt($ch, CURLOPT_TIMEOUT, 15);
   $html = curl_exec($ch);
   curl_close($ch);
-
+//echo $html;
+//$html=file_get_contents($l);
+//echo $html;
 $videos = explode('li class="grid-item', $html);
 unset($videos[0]);
 $videos = array_values($videos);

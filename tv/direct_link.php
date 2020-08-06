@@ -50,6 +50,23 @@ $flash="direct";
 //$link="http://89.136.209.30:1935/liveedge/TVRMOLDOVA.stream/playlist.m3u8";
 //$link=urldecode("https%3A%2F%2Fwww.youtube.com%2Fwatch%3Fv%3Dr_d4ryn9UsA&title=Gaming%20Music%20Radio%20%E2%9A%A1%2024/7%20NCS%20Live%20Stream%20%E2%9A%A1%20Trap,%20Chill,%20Electro,%20Dubstep,%20Future%20Bass,%20EDM");
 //$mod="direct";
+if (preg_match("/www\.exclusivtv\.ro/",$link)) {
+ $l="https://www.exclusivtv.ro/";
+ $h=file_get_contents($l);
+ // https://www.youtube.com/watch?v=YOlHZXwpL10
+if(preg_match('/youtube\.com\/(v\/|watch\?v=|embed\/)([\w\-]+)/', $h, $match)) {
+  $id = $match[2];
+  $link = "https://www.youtube.com/watch?v=".$id;
+} else {
+  $link="";
+}
+}
+if (preg_match("/albacarolinatv\.ro/",$link)) {
+ $h=file_get_contents($link);
+ $t1=explode('<iframe src="',$h);
+ $t2=explode('"',$t1[1]);
+ $link=str_replace("&#038;","&",$t2[0]);
+}
 if (strpos($link,"live1.cdn.tv8.md/TV7") !== false) {
     $l="https://tv8.md/wp-json/tv8/v1/live-url";
     $ch = curl_init();
@@ -589,6 +606,7 @@ $head=array("X-Requested-With: XMLHttpRequest",
    $link="";
   $link=str_replace("https","http",$link);
 }
+
 if ($from=="libertatea") {
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, urldecode($link));
@@ -1013,31 +1031,32 @@ $link="http://iptvmac.cf:8080/live".$dev."/".$link.".m3u8";
 $out2="http://iptvmac.cf:8080/live".$dev."/".$link.".ts";
 if (!$dev) $link="";
 }
-if (strpos($link,"watch?v=") !== false) {
+if (preg_match("/vk\.com|vkontakte\.ru/",$link)) {
+  $ua="Mozilla/5.0 (Windows NT 10.0; rv:63.0) Gecko/20100101 Firefox/63.0";
+  $ch = curl_init($link);
+  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
+  curl_setopt($ch,CURLOPT_REFERER,"https://vk.com/");
+  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER  ,1);  // RETURN THE CONTENTS OF THE CALL
+  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+  //curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie);
+  curl_setopt($ch, CURLOPT_HEADER,1);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+  $html = curl_exec($ch);
+  curl_close ($ch);
+  $html=str_replace("\\","",$html);
+  if (preg_match_all("/hls\":\"([http|https][\.\d\w\-\.\/\\\:\=\?\&\#\%\_\,]*)\"/",$html,$m))   {
+    $link=$m[1][count($m[1])-1];
+    //print_r ($m);
+  } else
+    $link="";
+}
 if(preg_match('/youtube\.com\/(v\/|watch\?v=|embed\/)([\w\-]+)/', $link, $match)) {
   $id = $match[2];
   $l1 = "https://www.youtube.com/watch?v=".$id;
   //$html   = file_get_contents($link);
-}
-/*
-  $ch = curl_init();
-  curl_setopt($ch, CURLOPT_URL, $l1);
-  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-  curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 5.1; rv:22.0) Gecko/20100101 Firefox/22.0');
-  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
-  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
-  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
-  $html = curl_exec($ch);
-  curl_close($ch);
-  //echo $html;
-  $html = str_between($html,'ytplayer.config = ',';ytplayer.load');
-  $parts = json_decode($html,1);
-  //print_r ($parts['args']);
-  //echo urldecode($parts['args']["adaptive_fmts"]);
-$link=$parts['args']['hlsvp'];
-*/
-$link=youtube($l1);
+  $link=youtube($l1);
 }
 
 if (file_exists($base_pass."player.txt")) {
@@ -1074,6 +1093,7 @@ $mod="direct";
 if (preg_match("/\.m3u8/",$out)) {
 $ua="Mozilla/5.0 (iPhone; CPU iPhone OS 5_0_1 like Mac OS X)";
 $l=$out;
+//echo $out."\n";
 $base1=str_replace(strrchr($l, "/"),"/",$l);
 $base2=getSiteHost($l);
 $ch = curl_init();
@@ -1103,12 +1123,18 @@ if (count($pl) > 1) {
     preg_match_all("/RESOLUTION\=(\d+)/i",$h,$m);
   else
     preg_match_all("/BANDWIDTH\=(\d+)/i",$h,$m);
+  //print_r ($m);
+  if (isset($m[1][0])) {
   $max_res=max($m[1]);
   $arr_max=array_keys($m[1], $max_res);
   $key_max=$arr_max[0];
   $out=$base.$pl[$key_max];
+  }
 }
 }
+if (preg_match("/dotto\.edvr\.ro/",$link))
+  $out=$out."|User-Agent=".urlencode("Mozilla/5.0 (Windows NT 10.0; rv:78.0) Gecko/20100101 Firefox/78.0");
+//echo $out;
 }
 if (strpos($out,"cmn.digitalcable.ro") !== false && $out)
  $out=$out."|User-Agent=".urlencode("Mozilla/5.0 (Windows NT 10.0; rv:75.0) Gecko/20100101 Firefox/75.0")."&Origin=".urlencode("https://www.akta.ro")."&Referer=".urlencode("https://www.akta.ro");
