@@ -1,4 +1,7 @@
 # hddlinks_android
+<h2>NOU: Server_for_PHP_7.3.3_HD4ALL.apk</h2>
+Descarcati <a href="https://www.mediafire.com/file/bcw65ycm3wwp6ad/Server_for_PHP_7.3.3_HD4ALL.apk/file">Server_for_PHP_7.3.3_HD4ALL.apk</a>.
+
 <h2>NOU: INSTALARE ANDROID</h2>
 Descarcati <a href="https://www.mediafire.com/file/6mnyumjp0e9xhqj/Server_for_PHP_HD4ALL_nou.apk/file">Server_for_PHP_HD4ALL_nou.apk</a>
 Deoarece aplicatia originala nu mai ofera suport, nu mai puteti descarca versiunea 5.6.35 pentru serverul php.
