@@ -154,6 +154,72 @@ if (strpos($filelink,"https://www.google.com/search") !== false) {
   else
     $filelink="";
 }
+if (preg_match("/anilist1\.ir|animdl\.cf/",$filelink)) {
+  $link=$filelink;
+}
+if (preg_match("/123stream\.be/",$filelink)) {
+  $host=parse_url($filelink)['host'];
+  parse_str(parse_url($filelink)['query'],$q);
+  $id=$q['episode_id'];
+  $serv=$q['s'];
+  $l="https://123stream.be/ajax/v4_get_sources?s=".$serv."&id=".$id."&_=".(time()*1000);
+  $ua="Mozilla/5.0 (Windows NT 10.0; rv:63.0) Gecko/20100101 Firefox/63.0";
+  $ch = curl_init($l);
+  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
+  curl_setopt($ch,CURLOPT_REFERER,"https://".$host);
+  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER  ,1);  // RETURN THE CONTENTS OF THE CALL
+  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+  $html = curl_exec($ch);
+  curl_close ($ch);
+  $l=json_decode($html,1)['value'];
+  $ch = curl_init($l);
+  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
+  curl_setopt($ch,CURLOPT_REFERER,"https://".$host);
+  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER  ,1);  // RETURN THE CONTENTS OF THE CALL
+  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+  $h = curl_exec($ch);
+  curl_close ($ch);
+  if (preg_match("/tracks:\s*\[(.*?)\]/",$h,$n)) {
+   $t1=explode(",{",$n[1]);
+   $x=json_decode($t1[0],1);
+   $srt=$x['file'];
+   if (strpos($srt,"http") === false) $srt="https:".$srt;
+  }
+  if (preg_match("/slug\"\,\"value\":\"(.*?)\"/",$h,$s)) {   // vserver
+   $filelink="https://playhydrax.com/?v=".$n[1];
+  } elseif (preg_match("/sources:\s*\[(.*?)\]/",$h,$m)) {
+   $t1=explode(",{",$m[1]);
+   $x=json_decode($t1[0],1);
+   $link=$x['file'];
+  }
+}
+if (preg_match("/m4ufree\.yt/",$filelink)) {  // cinebloom
+  parse_str(parse_url($filelink)['query'],$q);
+  $id=$q['id'];
+  if (isset($q['sub']))
+   $srt=$q['sub'];
+  $link="https://m4ufree.yt/playlist/".$id."/".(time()*1000);
+  if ($flash=="flash") {
+   $ch = curl_init();
+   curl_setopt($ch, CURLOPT_URL, $link);
+   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+   curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 10.0; rv:72.0) Gecko/20100101 Firefox/72.0');
+   curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,0);
+   curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+   curl_setopt($ch,CURLOPT_REFERER,$filelink);
+   curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+   curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+   $h = curl_exec($ch);
+   curl_close($ch);
+   if (preg_match ("/^(?!#).+/m",$h,$m)) $link="https://m4ufree.yt".trim($m[0]);
+  }
+}
 if (preg_match("/vid215\.xyz/",$filelink)) {  // cinebloom
    $ch = curl_init();
    curl_setopt($ch, CURLOPT_URL, $filelink);
@@ -4358,7 +4424,8 @@ if (count($pl) > 1) {
   curl_setopt($ch, CURLOPT_TIMEOUT, 15);
   $h=curl_exec($ch);
   curl_close($ch);
-  curl_close($ch);
+  //echo $h;
+  //curl_close($ch);
   $srt="";
   if (preg_match("/([http|https][\.\d\w\-\.\/\\\:\?\&\#\%\_\,]*(\.(srt|vtt)))/",$filelink,$m)) {
    $srt=$m[1];
@@ -8425,7 +8492,7 @@ if (strpos($movie,"http") === false) $movie="";
 $hw="/hqq\.|hindipix\.|pajalusta\.|lavacdn\.xyz|mcloud\.to|putload\.|thevideobee\.";
 $hw .="|flixtor\.|0123netflix|mangovideo|waaw1?|lookmovie\.ag|onlystream\.|archive\.org|videomega\.|moviehdkh";
 $hw .="|hxload.|jetload\.net|azm\.to|movie4k\.ag|hlsplay\.com|videobin\.|moonline\.|dood(stream)?\.|dailymotion\.com|flowyourvideo\.com|streamtape\.|okstream\.|easyload\.io|youdbox\.com";
-$hw .="|abcvideo\.|hdm\.|evoload\./";
+$hw .="|abcvideo\.|hdm\.|evoload\.|m4ufree\.yt|anilist1\.ir|animdl\.cf/";
 if ($flash== "mpc") {
   $mpc=trim(file_get_contents($base_pass."mpc.txt"));
   $c='"'.$mpc.'" /fullscreen "'.$movie.'"';

@@ -139,6 +139,13 @@ else
 <TD width="25%"><a href="filme/movies4u_f.php?page=1&tip=release&title=movies4u&link=" target="_blank">movies4u</a></TD>
 <TD width="25%"><a href="filme/ask4movie_f.php?page=1&tip=release&title=ask4movie&link=" target="_blank">ask4movie</a></TD>
 <TD width="25%"><a href="filme/moviehaat_f.php?page=1&tip=release&title=moviehaat&link=" target="_blank">moviehaat</a></TD>
+<TD width="25%"><a href="filme/9movies_f.php?page=1&tip=release&title=9movies&link=" target="_blank">9movies</a></TD>
+</TR>
+
+<TR>
+<TD width="25%"><a href="filme/123stream_f.php?page=1&tip=release&title=123stream&link=" target="_blank">123stream</a></TD>
+<TD width="25%"></TD>
+<TD width="25%"></TD>
 <TD width="25%"></TD>
 </TR>
 <?php
@@ -147,7 +154,7 @@ echo '
 <TR>
 <TD width="25%"><a href="filme/cineplex_f_main1.php" target="_blank">cineplex</a></TD>
 <TD width="25%"><a href="filme/soap2day_ff.php" target="_blank">soap2day</a></TD>
-<TD width="25%"></TD>
+<TD width="25%"><a href="filme/anilist1_main.php" target="_blank">anilist1</a></TD>
 <TD width="25%"></TD>';
 echo '</TR>';
 } else {
