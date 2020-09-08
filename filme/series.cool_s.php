@@ -6,7 +6,8 @@ function str_between($string, $start, $end){
 	return substr($string,$ini,$len);
 }
 include ("../common.php");
-include ("../util.php");
+$last_good="https://series.cool";
+$host=parse_url($last_good)['host'];
 $page = $_GET["page"];
 $tip= $_GET["tip"];
 $tit=$_GET["title"];
@@ -18,11 +19,11 @@ $has_fav="yes";
 $has_search="no";
 $has_add="yes";
 $has_fs="yes";
-$fav_target="vezifs_s_fav.php?host=https://vezifs.com";
-$add_target="vezifs_s_add.php";
+$fav_target="series.cool_s_fav.php?host=".$last_good;
+$add_target="series.cool_s_add.php";
 $add_file="";
-$fs_target="vezifs_s_ep.php";
-$target="vezifs_s.php";
+$fs_target="series.cool_sez.php";
+$target="series.cool_s.php";
 /* ==================================================== */
 $base=basename($_SERVER['SCRIPT_FILENAME']);
 $p=$_SERVER['QUERY_STRING'];
@@ -165,71 +166,69 @@ if ($page==1) {
 } else {
    echo '<TD class="nav" colspan="4" align="right"><a href="'.$prev.'">&nbsp;&lt;&lt;&nbsp;</a> | <a href="'.$next.'">&nbsp;&gt;&gt;&nbsp;</a></TD>'."\r\n";
 }
-echo '</TR></TABLE>'."\r\n";
-$l="https://vezifs.com/seriale/";
-$r=array();
-$ua = $_SERVER['HTTP_USER_AGENT'];
-  $ch = curl_init();
-  curl_setopt($ch, CURLOPT_URL, $l);
-  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-  curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 10.0; rv:55.0) Gecko/20100101 Firefox/55.0');
+echo '</TR>'."\r\n";
+
+$l="https://series.cool/category.php?cat=watch-tv-series-video";
+  $ua="Mozilla/5.0 (Windows NT 10.0; rv:63.0) Gecko/20100101 Firefox/63.0";
+  $ch = curl_init($l);
+  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
+  curl_setopt($ch,CURLOPT_REFERER,"https://series.cool");
   curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
-  curl_setopt($ch, CURLOPT_ENCODING, "");
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER  ,1);  // RETURN THE CONTENTS OF THE CALL
   curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
   curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
   curl_setopt($ch, CURLOPT_TIMEOUT, 15);
   $html = curl_exec($ch);
-  curl_close($ch);
-  $videos = explode('div class="movie-show', $html);
-  unset($videos[0]);
-  $videos = array_values($videos);
-  foreach($videos as $video) {
-    $t1=explode('href="',$video);
-    $t2=explode('"',$t1[1]);
-    $link=$t2[0];
-    $t1 = explode('title="', $video);
-    $t2 = explode('"', $t1[1]);
-    $title=trim($t2[0]);
-    $t1=explode('src="',$video);
-    $t2=explode('"',$t1[1]);
-    $image=$t2[0];
-    array_push($r ,array($title,$link, $image));
-  }
-$c=count($r);
-$p=0;
-$k=intval($c/15) + 1;
-echo '<table border="1px" width="100%"><tr>'."\n\r";
-for ($m=1;$m<$k;$m++) {
-   echo '<TD class="nav" align="center"><a href="#myLink'.($m*15).'">Salt:'.($m*15).'</a></td>';
-   $p++;
-   if ($p >9) {
-    $p=0;
-    echo '</TR>';
-   }
-}
-echo '</TR></table>';
+  curl_close ($ch);
+  $t1=explode('<div id="movies"',$html);
+  $t2=explode('</div',$t1[1]);
+  $html=$t2[0];
+$videos = explode('href="', $html);
+unset($videos[0]);
+$videos = array_values($videos);
+$s=array();
+foreach($videos as $video) {
+  $t1 = explode('"', $video);
+  $link = $t1[0];
+  if (strpos($link,"http") === false) $link="https://".$host.$link;
+  $t1 = explode('title="', $video);
+  $t2 = explode('"', $t1[1]);
+  $title = $t2[0];
+  $title=trim(preg_replace("/watch|online/i","",$title));
+  //$title = prep_tit($title);
 
-echo '<table border="1px" width="100%">'."\n\r";
-for ($k=0;$k<$c;$k++) {
-  $title=$r[$k][0];
-  $title=prep_tit($title);
-  $link=$r[$k][1];
-  $image=$r[$k][2];
+  $t1 = explode('src="', $video);
+  $t2 = explode('"', $t1[1]);
+  $image = $t2[0];
+  if (strpos($image,"http") === false) $image="https:".$image;
+  $s[$title]=array($link,$image);
+}
+ksort($s);
+  foreach ($s as $key=>$value) {
+  $year="";
+  $imdb="";
+  $sez="";
+  $link=$value[0];
+  $image=$value[1];
+  $title=$key;
+  $tit_imdb=$title;
+  $year="";
+  $sez="";
   $rest = substr($title, -6);
   if (preg_match("/\(?(\d+)\)?/",$rest,$m)) {
    $year=$m[1];
    $tit_imdb=trim(str_replace($m[0],"",$title));
+   $title=$tit_imdb;
   } else {
    $year="";
    $tit_imdb=$title;
   }
-
-  $imdb="";
-  $link_f=$fs_target.'?tip=series&link='.urlencode($link).'&title='.urlencode(fix_t($title)).'&image='.$image."&sez=&ep=&ep_tit=&year=".$year;
+  $link_f=$fs_target.'?tip=series&link='.urlencode($link).'&title='.urlencode(fix_t($title)).'&image='.$image."&sez=".$sez."&ep=&ep_tit=&year=".$year;
   if ($title) {
   if ($n==0) echo '<TR>'."\r\n";
   $val_imdb="tip=series&title=".urlencode(fix_t($tit_imdb))."&year=".$year."&imdb=".$imdb;
   $fav_link="mod=add&title=".urlencode(fix_t($title))."&link=".urlencode($link)."&image=".urlencode($image)."&year=".$year;
+
   if ($tast == "NU") {
     echo '<td class="mp" width="25%"><a href="'.$link_f.'" id="myLink'.$w.'" target="_blank" onmousedown="isKeyPressed(event)">
     '.$title.'</a>

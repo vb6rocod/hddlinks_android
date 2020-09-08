@@ -13,13 +13,15 @@ $tit=$_GET["title"];
 $link=$_GET["link"];
 $width="200px";
 $height="278px";
+$last_good="https://serialeonline.io";
+$host=parse_url($last_good)['host'];
 /* ==================================================== */
 $has_fav="yes";
 $has_search="yes";
 $has_add="yes";
 $has_fs="yes";
-$fav_target="serialeonline_fav.php?host=https://serialeonline.to";
-$fav_target_fix="serialeonline_fav.php?host=https://serialeonline.to&fix=yes";
+$fav_target="serialeonline_fav.php?host=".$last_good;
+$fav_target_fix="serialeonline_fav.php?host=".$last_good."&fix=yes";
 $add_target="serialeonline_add.php";
 $add_file="";
 $fs_target="serialeonline_ep.php";
@@ -170,15 +172,15 @@ if ($page==1) {
 echo '</TR>'."\r\n";
 if ($tip == "release") {
    if ($page > 1)
-    $l="https://serialeonline.to/seriale/page/".$page."/";
+    $l="https://".$host."/seriale/page/".$page."/";
    else
-    $l="https://serialeonline.to/seriale/";
+    $l="https://".$host."/seriale/";
 } else {
   $search=str_replace(" ","+",$tit);
   if ($page == 1)
-    $l="https://serialeonline.to/?s=".$search;
+    $l="https://".$host."/?s=".$search;
   else
-    $l="https://serialeonline.to/page/".$page."/?s=".$search;
+    $l="https://".$host."/page/".$page."/?s=".$search;
 }
 $r=array();
 $ua = $_SERVER['HTTP_USER_AGENT'];

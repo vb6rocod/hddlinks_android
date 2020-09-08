@@ -17,7 +17,7 @@ $has_fav="yes";
 $has_search="yes";
 $has_add="yes";
 $has_fs="yes";
-$fav_target="hdfull_f_fav.php?host=https://hdfull.la";
+$fav_target="hdfull_f_fav.php?host=https://hdfull.lv";
 $add_target="hdfull_f_add.php";
 $add_file="";
 $fs_target="hdfull_fs.php";
@@ -167,7 +167,7 @@ if ($page==1) {
 echo '</TR>'."\r\n";
 $ua     =   $_SERVER['HTTP_USER_AGENT'];
 if ($tip=="search") {
- $l="https://hdfull.la/ajax/search.php";
+ $l="https://hdfull.lv/ajax/search.php";
  $post="q=".str_replace(" ","+",$tit)."&limit=500&timestamp=1234567890&verifiedCheck=";
   $ch = curl_init($l);
   curl_setopt($ch, CURLOPT_USERAGENT, $ua);
@@ -182,7 +182,7 @@ if ($tip=="search") {
   $html = curl_exec($ch);
   curl_close ($ch);
 } else {
-$l="https://hdfull.la/movies/date/".$page;
+$l="https://hdfull.lv/movies/date/".$page;
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $l);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);

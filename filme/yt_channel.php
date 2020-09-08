@@ -38,9 +38,9 @@ if (!$token){
   if (count($p['items']) > 0) $pl=$p['items'];
 }
 if ($token)
-$l2="https://www.googleapis.com/youtube/v3/search?part=snippet&channelId=".$id."&maxResults=25&order=date&key=".$key."&pageToken=".$token;
+$l2="https://www.googleapis.com/youtube/v3/search?part=snippet&channelId=".$id."&maxResults=25&order=date&key=".$key."&pageToken=".$token."&type=video";
 else
-$l2="https://www.googleapis.com/youtube/v3/search?part=snippet&channelId=".$id."&maxResults=25&order=date&key=".$key;
+$l2="https://www.googleapis.com/youtube/v3/search?part=snippet&channelId=".$id."&maxResults=25&order=date&key=".$key."&type=video";
 //echo $l2;
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $l2);

@@ -12,7 +12,8 @@ $tit=$_GET["title"];
 $link=$_GET["link"];
 $width="200px";
 $height="278px";
-$last_good="https://fmovies.solar";
+$last_good="https://ffmovies.io";
+$last_good="https://ffmovies.co";
 $host=parse_url($last_good)['host'];
 /* ==================================================== */
 $has_fav="yes";

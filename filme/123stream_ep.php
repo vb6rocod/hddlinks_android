@@ -37,6 +37,9 @@ echo '<h2>'.$tit.'</h2>';
 if (preg_match("/(.*?) - Season\s+(\d+)/",$tit,$m)) {   //Nancy Drew - Season 1 (2019)
   $season=round($m[2]);
   $tit=trim($m[1]);
+} elseif (preg_match("/(.*?)\:\s*Season\s+(\d+)/",$tit,$m)) {   //Gilmore Girls: Season 2 (2001)
+  $season=round($m[2]);
+  $tit=trim($m[1]);
 } elseif (preg_match("/(.*?) - S\s*(\d+)/",$tit,$m)) {   // Angel - S02
   $season=round($m[2]);
   $tit=trim($m[1]);

@@ -7,10 +7,11 @@ $image=$_GET["image"];
 $link=urldecode($_GET["link"]);
 $tip=$_GET["tip"];
 $year=$_GET['year'];
+$sez=$_GET['sez'];
 /* ======================================= */
 $width="200px";
 $height="100px";
-$fs_target="seriesfreetv_fs.php";
+$fs_target="series.cool_ep.php";
 $has_img="no";
 ?>
 <html>
@@ -29,92 +30,48 @@ function str_between($string, $start, $end){
 	if ($ini == 0) return ""; $ini += strlen($start); $len = strpos($string,$end,$ini) - $ini;
 	return substr($string,$ini,$len);
 }
+
 echo '<h2>'.$tit.'</h2>';
-$requestLink=$link;
-$ua = $_SERVER['HTTP_USER_AGENT'];
-$cookie=$base_cookie."hdpopcorns.dat";
-  $ch = curl_init($requestLink);
-  curl_setopt($ch, CURLOPT_USERAGENT,$ua);
-  curl_setopt($ch, CURLOPT_REFERER, "https://seriesfreetv.com");
+  $ua="Mozilla/5.0 (Windows NT 10.0; rv:63.0) Gecko/20100101 Firefox/63.0";
+  $ch = curl_init($link);
+  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
+  curl_setopt($ch,CURLOPT_REFERER,"https://series.cool");
   curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER  ,1);  // RETURN THE CONTENTS OF THE CALL
   curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-  curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie);
   curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
   curl_setopt($ch, CURLOPT_TIMEOUT, 15);
-  $h = curl_exec($ch);
+  $html = curl_exec($ch);
   curl_close ($ch);
+  $t1=explode('<div id="movies"',$html);
+  $t2=explode('</div',$t1[1]);
+  $html=$t2[0];
 
 $n=0;
-$videos = explode('class="bcolor_blue">', $h);
-$sezoane=array();
+
+echo '<table border="1" width="100%">'."\n\r";
+//echo '<TR><td class="sez" style="color:black;background-color:#0a6996;color:#64c8ff;text-align:center" colspan="3">Sezonul '.($sez).'</TD></TR>';
+
+$videos = explode('href="', $html);
 unset($videos[0]);
 //$videos = array_values($videos);
 $videos = array_reverse($videos);
 foreach($videos as $video) {
-  $t2=explode("<",$video);
-  preg_match("/season\s+(\d+)/i",$t2[0],$m);
-  $sezoane[]=trim($m[1]);
-}
-echo '<table border="1" width="100%">'."\n\r";
-
-$p=0;
-$c=count($sezoane);
-for ($k=0;$k<$c;$k++) {
-if ($p==0) echo '<TR>';
-echo '<td class="sez" style="color:black;text-align:center"><a href="#sez'.($sezoane[$k]).'">Sezonul '.($sezoane[$k]).'</a></TD>';
-$p++;
-if ($p == 10) {
- echo '</tr>';
- $p=0;
- }
-}
-if ($p < 10 && $p > 0 && $k > 9) {
- for ($x=0;$x<10-$p;$x++) {
-   echo '<TD></TD>'."\r\n";
- }
- echo '</TR>'."\r\n";
-}
-echo '</TABLE>';
-
-foreach($videos as $video) {
-  $t2=explode("<",$video);
-  preg_match("/season\s+(\d+)/i",$t2[0],$m);
-  $season=trim($m[1]);
-  $sez = $season;
-  echo '<table border="1" width="100%">'."\n\r";
-  echo '<TR><td class="sez" style="color:black;background-color:#0a6996;color:#64c8ff;text-align:center" colspan="3">Sezonul '.($sez).'</TD></TR>';
-  $n=0;
-  $vids = explode('class="video_title">', $video);
-  unset($vids[0]);
-  $vids = array_values($vids);
-  //$vids = array_reverse($vids);
-  foreach($vids as $vid) {
-  $img_ep="";
-  $episod="";
-  $ep_tit="";
-  $t1=explode('href="',$vid);
-  $t2=explode('"',$t1[1]);
-  $link=$t2[0];
-  $t1=explode('episode-',$vid);
-  $t2=explode('/',$t1[1]);
-  $episod=trim($t2[0]);;
-
-  $img_ep=$image;
-  $t0=explode('isode_title"',$vid);
-  $t1=explode('>',$t0[1]);
-  $t2=explode('<',$t1[1]);
-  $title=$t2[0];
-  //$ep_tit=html_entity_decode($t2[0]);
-  $title=str_replace("&nbsp;"," ",$title);
-  $title=prep_tit($title);
-
-  $ep_tit=trim(preg_replace("/Episode\s+\d+/","",$title));
-  if ($ep_tit)
-   $ep_tit_d=$season."x".$episod." ".$ep_tit;
+  $t1 = explode('"', $video);
+  $link = $t1[0];
+  $t3 = explode('title="', $t1[1]);
+  $t4 = explode('"', $t3[1]);
+  if (preg_match("/season\s*(\d+)/i",$video,$m))
+   $sez=$m[1];
   else
-   $ep_tit_d=$season."x".$episod;
+   $sez="1";
 
+  $episod="";
+  $img_ep=$image;
+  $season=$sez;
+  $ep_tit="";
+
+  $ep_tit_d = "Season ".$sez;
   $link_f=$fs_target.'?tip=series&link='.urlencode($link).'&title='.urlencode(fix_t($tit)).'&image='.$img_ep."&sez=".$season."&ep=".$episod."&ep_tit=".urlencode(fix_t($ep_tit))."&year=".$year;
    if ($n == 0) echo "<TR>"."\n\r";
    if ($has_img == "yes")
@@ -134,7 +91,6 @@ foreach($videos as $video) {
     echo '</TR>'."\r\n";
   }
 echo '</table>';
-}
 ?>
 </body>
 </html>

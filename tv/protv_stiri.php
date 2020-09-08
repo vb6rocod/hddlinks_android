@@ -115,6 +115,9 @@ foreach($videos as $video) {
     $t1 = explode('src="', $video);
     $t2 = explode('"', $t1[1]);
     $image = $t2[0];
+    $t1=explode('srcset="',$video);
+    $t2=explode(',',$t1[1]);
+    $image=trim($t2[0]);
     //$image=str_replace("https","http",$image);
 
     $t1 = explode('class="title">', $video);

@@ -14,7 +14,7 @@ $pg="";
 // hqq
 if (file_exists("/storage/emulated/0/Download/cookies.txt")) {
 $h1=file_get_contents("/storage/emulated/0/Download/cookies.txt");
-if (preg_match("/hqq\.tv	FALSE	\/	FALSE	(\d+)	gt	([a-zA-Z0-9]+)/",$h1,$m)) {
+if (preg_match("/hqq\.tv	\w+	\/	\w+	(\d+)	gt	([a-zA-Z0-9]+)/",$h1,$m)) {
   $t= $m[1]-time();
   if ($t>0) {
     file_put_contents($base_cookie."max_time_hqq.txt",$m[1]);
@@ -26,7 +26,7 @@ unlink ("/storage/emulated/0/Download/cookies.txt");
 //
 if (file_exists($base_cookie."cookies.txt")) {
 $h1=file_get_contents($base_cookie."cookies.txt");
-if (preg_match("/hqq\.tv	FALSE	\/	FALSE	(\d+)	gt	([a-zA-Z0-9]+)/",$h1,$m)) {
+if (preg_match("/hqq\.tv	\w+	\/	\w+	(\d+)	gt	([a-zA-Z0-9]+)/",$h1,$m)) {
   $t= $m[1]-time();
   if ($t>0) {
     file_put_contents($base_cookie."max_time_hqq.txt",$m[1]);
@@ -127,8 +127,8 @@ $sub_link ="from=".$from."&tip=".$tip."&sez=".$sez."&ep=".$ep."&imdb=".$imdbid."
 //echo $sub_link;
 /**####################################**/
 /** Here we start.......**/
-
-if (strpos($filelink,"filmeonlinegratis.org") !== false) {
+if (preg_match("/filmeonlinegratis\.org/",$filelink)) {
+//if (strpos($filelink,"filmeonlinegratis.org") !== false) {
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $filelink);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
@@ -142,7 +142,8 @@ if (strpos($filelink,"filmeonlinegratis.org") !== false) {
   $html = curl_exec($ch);
   curl_close($ch);
   $html = urldecode(str_replace("@","%",$html));
-} elseif (strpos($filelink,"fsgratis.") !== false) {
+//} elseif (strpos($filelink,"fsgratis.") !== false) {
+} elseif (preg_match("/fsgratis\.|filmeserialegratis\.org/",$filelink)) {
   //https://fsgratis.com/miss-me-this-christmas/
   $host=parse_url($filelink)['host'];
   $ch = curl_init();
@@ -157,7 +158,7 @@ if (strpos($filelink,"filmeonlinegratis.org") !== false) {
   curl_setopt($ch, CURLOPT_TIMEOUT, 15);
   $h = htmlspecialchars_decode(curl_exec($ch));
   curl_close($ch);
-  //$html=$h;
+  $html=$h;
   //echo $h;
   //preg_match_all("/trembed(\S+)\"/msi",$h,$m);
   $r=array();
@@ -528,26 +529,57 @@ $headers=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:71.0) Gecko/2010010
     }
   }
   //echo $html;
+} elseif (strpos($filelink,"filmehd.to") !== false) {
+  $ch = curl_init();
+  curl_setopt($ch, CURLOPT_URL,$filelink);
+  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
+  curl_setopt($ch,CURLOPT_REFERER,$filelink);
+  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER  ,1);  // RETURN THE CONTENTS OF THE CALL
+  //curl_setopt($ch, CURLOPT_HEADER, true);
+  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+  $h = curl_exec($ch);
+  //curl_close ($ch);
+  $videos=explode('data-vs="',$h);
+  unset($videos[0]);
+  $videos = array_values($videos);
+  foreach($videos as $video) {
+    $t1=explode('"',$video);
+    $l=$t1[0];
+    curl_setopt($ch, CURLOPT_URL,$l);
+    curl_setopt($ch, CURLOPT_HEADER, true);
+    curl_setopt($ch, CURLOPT_NOBODY, true);
+    curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,0);
+    $h1 = curl_exec($ch);
+    //echo $h1;
+  if (preg_match("/Location\:\s+(.+)/i",$h1,$m)) {
+  $h .='<iframe src="'.trim($m[1]).'"> ';
+  }
+  }
+  curl_close ($ch);
+  $html=$h;
+  //echo $html;
 } elseif (strpos($filelink,"filmehd.se") !== false) {
-  include ("../cloudflare1.php");
-  $ua = $_SERVER['HTTP_USER_AGENT'];
-  $html="";
-  $ua = $_SERVER['HTTP_USER_AGENT'];
-  //$ua="Mozilla/5.0 (Windows NT 10.0; rv:71.0) Gecko/20100101 Firefox/71.0";
-  $cookie=$base_cookie."hdpopcorns.dat";
-  $html=cf_pass($filelink,$cookie);
+$ua="Mozilla/5.0 (Windows NT 10.0; rv:80.0) Gecko/20100101 Firefox/80.0";
+//$ua="Mozilla/5.0 (Windows NT 10.0; rv:71.0) Gecko/20100101 Firefox/71.0";
+$head=array('Cookie: cf_clearance=fbbe8f9c57520019735eaa5525d4a3d03c74eb0b-1598774324-0-1z49401450z1b78c8d4z7a4b72cc-150');
+$cookie=$base_cookie."hdpopcorns.dat";
+  $ch = curl_init();
+  curl_setopt($ch, CURLOPT_URL, $filelink);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+  curl_setopt($ch,CURLOPT_HTTPHEADER,$head);
+  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
+  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+  $html = curl_exec($ch);
+
 
   if (preg_match_all("/data\-src\=\"(.*?)\"/ms",$html,$m)) {
    $n=array_unique($m[1]);
    //print_r ($n);
-   $ch = curl_init();
-   curl_setopt($ch, CURLOPT_USERAGENT,"IE6");
-   curl_setopt($ch,CURLOPT_REFERER,"http://filmehd.se/");
-   curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
-   curl_setopt($ch, CURLOPT_RETURNTRANSFER  ,1);  // RETURN THE CONTENTS OF THE CALL
-   curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
-   curl_setopt($ch, CURLOPT_TIMEOUT, 15);
-   curl_setopt($ch, CURLOPT_COOKIEFILE,$cookie);
    foreach ($n as $key => $value) {
     curl_setopt($ch, CURLOPT_URL, "https://filmehd.se".$value);
     $h = curl_exec($ch);
@@ -1128,7 +1160,7 @@ $s=$s."fastplay\.cc|watchers\.to|fastplay\.to";
 $s=$s."|trilulilu|proplayer\/playlist-controller.php|viki\.com|modovideo\.com|roshare|rosharing|ishared\.eu|";
 $s=$s."stagevu\.com|vidup\.me|vidup\.io";
 $s=$s."|filebox\.com|glumbouploads\.com|uploadc\.com|sharefiles4u\.com|zixshare\.com|uploadboost\.com|";
-$s=$s."hqq\.tv|hqq\.watch|waaw1?\.|waaws|hindipix\.in|pajalusta\.club|vidtodo\.com|vshare\.eu|bit\.ly";
+$s=$s."hqq\.tv|hqq\.to|hqq\.watch|waaw1?\.|waaws|hindipix\.in|pajalusta\.club|vidtodo\.com|vshare\.eu|bit\.ly";
 $s=$s."|nowvideo\.eu|nowvideo\.co|vreer\.com|180upload\.com|dailymotion\.com|nosvideo\.com|vidbull\.com|";
 $s=$s."purevid\.com|videobam\.com|streamcloud\.eu|donevideo\.com|upafile\.com|docs\.google|mail\.ru|";
 $s=$s."superweb|moviki\.ru|entervideos\.com";
@@ -1282,6 +1314,7 @@ for ($i=0;$i<count($links);$i++) {
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
   curl_setopt($ch, CURLOPT_USERAGENT, $ua);
   curl_setopt($ch,CURLOPT_REFERER,"https://serialeonline.to");
+  //curl_setopt($ch,CURLOPT_REFERER,"https://filmehd.to");
   curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
   curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
   curl_setopt($ch, CURLOPT_HEADER,1);

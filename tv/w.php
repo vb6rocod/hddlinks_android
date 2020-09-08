@@ -40,14 +40,17 @@ $ua="Mozilla/5.0 (iPhone; CPU iPhone OS 5_0_1 like Mac OS X)";
       $h = curl_exec($ch);
       curl_close($ch);
       //$h=file_get_contents("http://localhost/mobile1/nou/w.html");
-      file_put_contents("w.html",$h);
+      //file_put_contents("w.html",$h);
 //echo $h;
 //$t1=explode('window.env =',$h);
 $t1=explode('window.__data=JSON.parse("',$h);
+//$t1=explode('window.__data=JSON.parse("',$h);
 //$t2=explode(';window.experience',$t1[1]);
 $t2=explode('");</script>',$t1[1]);
-$h1=$t2[0];
+$h1=trim($t2[0]);
 $h1=str_replace('\"','"',$h1);
+$h1=str_replace('\"','"',$h1);
+//$h1=str_replace('\"','"',$h1);
 //echo $h1;
 $r=json_decode($h1,1);
 //print_r ($r);
@@ -181,7 +184,8 @@ echo '<TR><TD class="cat">'.$acum_text.'</TD>';
 $prog_text="<b>Prognoza pe urmatoarele zile:</b><BR>";
 
 if ($tip == 1) {
-  $d=$r["dal"]["getSunV3DailyForecastUrlConfig"];
+  //$d=$r["dal"]["getSunV3DailyForecastUrlConfig"];
+  $d=$r["dal"]["getSunV3DailyForecastWithHeadersUrlConfig"];
   $key = key($d);
   $prog=$d[$key]["data"];
   for ($k=0;$k<8;$k++) {

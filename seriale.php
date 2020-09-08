@@ -62,10 +62,10 @@ document.onkeypress =  zx;
 <TD width="25%"><a href="filme/serialeonlinesubtitrate_s.php?page=1&tip=release&title=serialeonlinesubtitrate&link=" target="_blank">serialeonlinesubtitrate</a></TD>
 </TR>
 <TR>
-<TD width="25%"><a href="filme/vezifs_s.php?page=1&tip=release&title=vezifs&link=" target="_blank">vezifs</a></TD>
 <TD width="25%"><a href="filme/serialeonline.php?page=1&tip=release&title=serialeonline&link=" target="_blank">serialeonline</a></TD>
 <TD width="25%"><a href="filme/rovideo.php?page=1&tip=release&title=rovideo&link=" target="_blank">rovideo</a></TD>
-<TD width="25%"><a href="filme/bmovies_s.php?page=1&tip=release&title=bmovies&link=" target="_blank">bmovies</a></TD>
+<TD width="25%"></TD>
+<TD width="25%"><a href="filme/soap2day_ss.php" target="_blank">soap2day</a></TD>
 </TR>
 
 <TR>
@@ -88,17 +88,17 @@ document.onkeypress =  zx;
 <TD width="25%"><a href="filme/cineplex_s_main.php" target="_blank">cineplex (cont)</a></TD>
 </TR>
 <TR>
-<TD width="25%"><a href="filme/seriesfreetv_s.php?page=1&tip=release&title=seriesfreetv&link=" target="_blank">seriesfreetv</a></TD>
 <TD width="25%"><a href="filme/vumoo_s.php?page=1&tip=release&title=vumoo&link=" target="_blank">vumoo</a></TD>
 <TD width="25%"><a href="filme/ling_s.php?page=1&tip=release&title=ling.online&link=" target="_blank">ling.online</a></TD>
 <TD width="25%"><a href="filme/vidcloud9_s.php?page=1&tip=release&title=vidcloud9&link=" target="_blank">vidcloud9</a></TD>
+<TD width="25%"><a href="filme/bmovies_s.php?page=1&tip=release&title=bmovies&link=" target="_blank">bmovies</a></TD>
 </TR>
 
 <TR>
 <TD width="25%"><a href="filme/ffmovies_ss.php?page=1&tip=release&title=ffmoviess&link=" target="_blank">ffmovies</a></TD>
-<TD width="25%"><a href="filme/go2watch_s.php?page=1&tip=release&title=go2watch&link=" target="_blank">go2watch</a></TD>
 <TD width="25%"><a href="filme/gerryreid_s.php?page=1&tip=release&title=gerryreid&link=" target="_blank">gerryreid</a></TD>
 <TD width="25%"><a href="filme/yesmovies_s.php?page=1&tip=release&title=yesmovies&link=" target="_blank">yesmovies</a></TD>
+<TD width="25%"><a href="filme/anilist1_s_main.php" target="_blank">anilist1</a></TD>
 </TR>
 
 <TR>
@@ -110,14 +110,14 @@ document.onkeypress =  zx;
 <TR>
 <TD width="25%"><a href="filme/9movies_s.php?page=1&tip=release&title=9movies&link=" target="_blank">9movies</a></TD>
 <TD width="25%"><a href="filme/123stream_s.php?page=1&tip=release&title=123stream&link=" target="_blank">123stream</a></TD>
-<TD width="25%"></TD>
-<TD width="25%"></TD>
+<TD width="25%"><a href="filme/series.cool_s.php?page=1&tip=release&title=series.cool&link=" target="_blank">series.cool</a></TD>
+<TD width="25%"><a href="filme/noxx_s.php?page=1&tip=release&title=noxx&link=" target="_blank">noxx</a></TD>
 </TR>
 <?php
 if (file_exists($base_pass."tvplay.txt")) {
 echo '<TR>';
 echo '<TD width="25%"><a href="filme/cineplex_s_main1.php" target="_blank">cineplex</a></TD>';
-echo '<TD width="25%"><a href="filme/anilist1_s_main.php" target="_blank">anilist1</a></TD>';
+echo '<TD width="25%"></TD>';
 echo '<TD width="25%"></TD>';
 echo '<TD width="25%"></TD>';
 echo '</TR>';

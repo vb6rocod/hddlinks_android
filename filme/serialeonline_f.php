@@ -12,6 +12,8 @@ $tit=$_GET["title"];
 $link=$_GET["link"];
 $width="200px";
 $height="278px";
+$last_good="https://serialeonline.io";
+$host=parse_url($last_good)['host'];
 /* ==================================================== */
 $has_fav="no";
 $has_search="yes";
@@ -168,15 +170,15 @@ echo '</TR>'."\r\n";
 //https://www.filmeseriale.eu/filme/page/2/
 if($tip=="release") {
  if ($page>1)
-  $l ="https://serialeonline.to/filme/page/".$page."/";
+  $l ="https://".$host."/filme/page/".$page."/";
  else
-  $l="https://serialeonline.to/filme/";
+  $l="https://".$host."/filme/";
 } else {
   $search=str_replace(" ","+",$tit);
   if ($page > 1)
-    $l="https://serialeonline.to/?s=".$search;
+    $l="https://".$host."/?s=".$search;
   else
-    $l="https://serialeonline.to/page/".$page."/?s=".$search;
+    $l="https://".$host."/page/".$page."/?s=".$search;
 }
 $r=array();
 $ua = $_SERVER['HTTP_USER_AGENT'];

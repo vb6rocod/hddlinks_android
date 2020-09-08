@@ -200,7 +200,7 @@ foreach($videos as $video) {
   $t2 = explode('"', $t1[1]);
   $link = $t2[0];
 
-  $t1=explode('class="tt">',$video);
+  $t1=explode('h2>',$video);
   $t2_0=explode('<',$t1[1]);
   $t3=str_replace("Vizioneaza Film Online","",$t2_0[0]);
   $t4=explode("&#8211;",$t3);

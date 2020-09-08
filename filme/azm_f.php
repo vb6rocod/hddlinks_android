@@ -6,9 +6,6 @@ function str_between($string, $start, $end){
 	return substr($string,$ini,$len);
 }
 include ("../common.php");
-/* =================================================== */
-$l="http://moviehaat.net";
-$host=parse_url($l)['host'];
 $page = $_GET["page"];
 $tip= $_GET["tip"];
 $tit=$_GET["title"];
@@ -20,11 +17,11 @@ $has_fav="yes";
 $has_search="yes";
 $has_add="yes";
 $has_fs="yes";
-$fav_target="moviehaat_f_fav.php?host=https://".$host;
-$add_target="moviehaat_f_add.php";
+$fav_target="azm_f_fav.php";
+$add_target="azm_f_add.php";
 $add_file="";
-$fs_target="moviehaat_fs.php";
-$target="moviehaat_f.php";
+$fs_target="azm_fs.php";
+$target="azm_f.php";
 /* ==================================================== */
 $base=basename($_SERVER['SCRIPT_FILENAME']);
 $p=$_SERVER['QUERY_STRING'];
@@ -168,50 +165,162 @@ if ($page==1) {
    echo '<TD class="nav" colspan="4" align="right"><a href="'.$prev.'">&nbsp;&lt;&lt;&nbsp;</a> | <a href="'.$next.'">&nbsp;&gt;&gt;&nbsp;</a></TD>'."\r\n";
 }
 echo '</TR>'."\r\n";
-// https://www.300mbmoviefree.com/language/english/
-if($tip=="release") {
-  $l="http://moviehaat.net/movies?category%5B0%5D=Hollywood&category%5B1%5D=Franch&start_imdb=0.0&end_imdb=10.0&start_release_date=1900&end_release_date=2020&page=".$page;
-} else {
-  $search=str_replace(" ","+",$tit);
-  $l = "http://moviehaat.net/search?q=".$search;
-}
+$ua="Mozilla/5.0 (Windows NT 10.0; rv:55.0) Gecko/20100101 Firefox/55.0";
+$ua = $_SERVER['HTTP_USER_AGENT'];
+$cookie=$base_cookie."azm.dat";
+if ($page==1 && $tip=="release") {
+if (file_exists($cookie)) unlink($cookie);
+$l="https://azm.to/src/captcha-request.php";
+$post="cID=0&rT=1&tM=light";
+$head=array('Accept: application/json, text/javascript, */*; q=0.01',
+'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
+'Accept-Encoding: deflate',
+'Content-Type: application/x-www-form-urlencoded; charset=UTF-8',
+'X-Requested-With: XMLHttpRequest',
+'Content-Length: 19',
+'Origin: https://azm.to',
+'Connection: keep-alive',
+'Referer: https://azm.to/check/https://azm.to/all');
+  $ch = curl_init($l);
+  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
+  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER  ,1);  // RETURN THE CONTENTS OF THE CALL
+  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+  curl_setopt($ch, CURLOPT_COOKIEJAR, $cookie);
+  curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie);
+  curl_setopt($ch, CURLOPT_HTTPHEADER,$head);
+  curl_setopt($ch, CURLOPT_POST,1);
+  curl_setopt($ch, CURLOPT_POSTFIELDS,$post);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+  $html = curl_exec($ch);
+  curl_close ($ch);
+  $r=json_decode($html,1);
+$l="https://azm.to/src/captcha-request.php";
+$ch = curl_init($l);
+for ($k=0;$k<count($r);$k++) {
+$post="cID=0&pC=".$r[$k]."&rT=2";
+//echo $post;
+$head=array('Accept: application/json, text/javascript, */*; q=0.01',
+'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
+'Accept-Encoding: deflate',
+'Content-Type: application/x-www-form-urlencoded; charset=UTF-8',
+'X-Requested-With: XMLHttpRequest',
+'Content-Length: '.strlen($post).'',
+'Origin: https://azm.to',
+'Connection: keep-alive',
+'Referer: https://azm.to/check/https://azm.to/all');
 
+
+  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
+  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER  ,1);  // RETURN THE CONTENTS OF THE CALL
+  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+  curl_setopt($ch, CURLOPT_COOKIEJAR, $cookie);
+  curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie);
+  curl_setopt($ch, CURLOPT_HTTPHEADER,$head);
+  curl_setopt($ch, CURLOPT_POST,1);
+  curl_setopt($ch, CURLOPT_POSTFIELDS,$post);
+  //curl_setopt($ch, CURLOPT_HEADER,1);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+  $html = curl_exec($ch);
+  $info = curl_getinfo($ch);
+  if ($info['http_code'] === 200) break;
+}
+  curl_close ($ch);
+$l="https://azm.to/ajax/captcha.php";
+$post="captcha-hf=".$r[$k]."&captcha-idhf=0";
+$head=array('Accept: application/json, text/javascript, */*; q=0.01',
+'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
+'Accept-Encoding: deflate',
+'Content-Type: application/x-www-form-urlencoded; charset=UTF-8',
+'X-Requested-With: XMLHttpRequest',
+'Content-Length: '.strlen($post).'',
+'Origin: https://azm.to',
+'Connection: keep-alive',
+'Referer: https://azm.to/check/https://azm.to/all');
+  $ch = curl_init($l);
+  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
+  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER  ,1);  // RETURN THE CONTENTS OF THE CALL
+  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+  curl_setopt($ch, CURLOPT_COOKIEJAR, $cookie);
+  curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie);
+  curl_setopt($ch, CURLOPT_HTTPHEADER,$head);
+  curl_setopt($ch, CURLOPT_POST,1);
+  curl_setopt($ch, CURLOPT_POSTFIELDS,$post);
+  curl_setopt($ch, CURLOPT_HEADER,1);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+  $html = curl_exec($ch);
+  curl_close ($ch);
+}
+if($tip=="release") {
+  $l="https://azm.to/all";
+  $l="https://azm.to/loadmore.php";
+  $post="page=".$page."&featured=0";
+} else {
+  $search=str_replace(" ","%20",$tit);
+  $l="https://azm.to/search/".$search;
+}
+$host=parse_url($l)['host'];
+if ($tip=="search") {
+$head=array('Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2');
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $l);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-  curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 10.0; rv:55.0) Gecko/20100101 Firefox/55.0');
+  curl_setopt($ch,CURLOPT_REFERER,"https://azm.to/all");
+  curl_setopt($ch,CURLOPT_HTTPHEADER,$head);
+  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
+  curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie);
   curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
   curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
   curl_setopt($ch, CURLOPT_TIMEOUT, 15);
   $html = curl_exec($ch);
   curl_close($ch);
+  //echo $html;
+} else {
 
-$videos = explode('<div class="card"', $html);
+$head=array('Accept: */*',
+'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
+'Accept-Encoding: deflate',
+'Content-Type: application/x-www-form-urlencoded; charset=UTF-8',
+'X-Requested-With: XMLHttpRequest',
+'Content-Length: '.strlen($post).'',
+'Origin: https://azm.to',
+'Connection: keep-alive',
+'Referer: https://azm.to/all');
+$ch = curl_init();
+curl_setopt($ch, CURLOPT_URL, $l);
+curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+curl_setopt($ch, CURLOPT_USERAGENT, $ua);
+curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 0);
+curl_setopt($ch, CURLOPT_HTTPHEADER, $head);
+curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie);
+curl_setopt ($ch, CURLOPT_POST, 1);
+curl_setopt ($ch, CURLOPT_POSTFIELDS, $post);
+$html = curl_exec($ch);
+curl_close($ch);
+//echo $html;
+}
+//echo $html;
+$videos = explode('div class="col', $html);
 unset($videos[0]);
 $videos = array_values($videos);
 foreach($videos as $video) {
-  $t1=explode('href="',$video);
+  $t1 = explode('href="',$video);
   $t2=explode('"',$t1[1]);
-  $link="http://moviehaat.net".$t2[0];
-  if (preg_match("/\/tt(\d+)/",$link,$m))
-   $imdb=$m[1];
-  else
-   $imdb="";
-  if ($tip=="release") {
-  $t1 = explode('title="', $video);
-  $t3 = explode('"',$t1[1]);
-  $title = $t3[0];
-  } else {
-   $t3=explode(">",$t1[2]);
-   $t4=explode("<",$t3[1]);
-   $title=$t4[0];
-  }
-  $title = prep_tit($title);
-  $t1 = explode('src="', $video);
+  $link = $t2[0];
+  if (strpos($link,"http") === false) $link="https://".$host.$link;
+  $t3 = explode('class="title">', $video);
+  $t5 = explode('<', $t3[1]);
+  $title = $t5[0];
+  $title=prep_tit($title);
+  $t1 = explode('data-src="', $video);
   $t2 = explode('"', $t1[1]);
-  $image = trim($t2[0]);
-  if (strpos($image,"http") === false) $image="http://moviehaat.net/".$image;
-  $year="";
+  $image = $t2[0];
   $rest = substr($title, -6);
   if (preg_match("/\((\d+)\)/",$rest,$m)) {
    $year=$m[1];
@@ -220,12 +329,12 @@ foreach($videos as $video) {
    $year="";
    $tit_imdb=$title;
   }
+  $imdb="";
   $link_f=$fs_target.'?tip=movie&link='.urlencode($link).'&title='.urlencode(fix_t($title)).'&image='.$image."&sez=&ep=&ep_tit=&year=".$year;
-  if ($title && strpos($link,"/movies") !== false) {
+  if ($title) {
   if ($n==0) echo '<TR>'."\r\n";
   $val_imdb="tip=movie&title=".urlencode(fix_t($tit_imdb))."&year=".$year."&imdb=".$imdb;
   $fav_link="mod=add&title=".urlencode(fix_t($title))."&link=".urlencode($link)."&image=".urlencode($image)."&year=".$year;
-  //$image="r_m.php?file=".$image;
   if ($tast == "NU") {
     echo '<td class="mp" width="25%"><a href="'.$link_f.'" id="myLink'.$w.'" target="_blank" onmousedown="isKeyPressed(event)">
     <img id="myLink'.$w.'" src="'.$image.'" width="'.$width.'" height="'.$height.'"><BR>'.$title.'</a>

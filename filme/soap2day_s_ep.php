@@ -10,7 +10,7 @@ $year=$_GET['year'];
 /* ======================================= */
 $width="200px";
 $height="100px";
-$fs_target="go2watch_fs.php";
+$fs_target="soap2day_fs.php";
 $has_img="no";
 ?>
 <html>
@@ -30,28 +30,33 @@ function str_between($string, $start, $end){
 	return substr($string,$ini,$len);
 }
 echo '<h2>'.$tit.'</h2>';
-$requestLink=$link;
-  $ch = curl_init($requestLink);
-  curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows; U; Windows NT 6.1; en-US; rv:1.9.1.2) Gecko/20090729 Firefox/3.5.2 GTB5');
-  curl_setopt($ch, CURLOPT_REFERER, "http://go2watch.net");
+$host=parse_url($link)['host'];
+$cookie=$base_cookie."soap2day.dat";
+$ua=file_get_contents($base_pass."firefox.txt");
+$head=array('Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2');
+
+  $ch = curl_init();
+  curl_setopt($ch, CURLOPT_URL, $link);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+  curl_setopt($ch,CURLOPT_REFERER,"https://".$host);
+  curl_setopt($ch,CURLOPT_HTTPHEADER,$head);
+  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
+  curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie);
   curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
-  curl_setopt($ch, CURLOPT_RETURNTRANSFER  ,1);  // RETURN THE CONTENTS OF THE CALL
-  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
   curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
   curl_setopt($ch, CURLOPT_TIMEOUT, 15);
   $h = curl_exec($ch);
-  curl_close ($ch);
-
+  curl_close($ch);
 $n=0;
-$videos = explode('class="fa fa-video-camera mr5', $h);
+$videos = explode("<h4>Season", $h);
 $sezoane=array();
 unset($videos[0]);
-$videos = array_values($videos);
-//$videos = array_reverse($videos);
+//$videos = array_values($videos);
+$videos = array_reverse($videos);
 foreach($videos as $video) {
-  $t1=explode('Season',$video);
-  $t2=explode("<",$t1[1]);
-  $sezoane[]=trim($t2[0]);
+  $t1=explode(':',$video);
+  $sezoane[]=trim($t1[0]);
 }
 echo '<table border="1" width="100%">'."\n\r";
 
@@ -75,38 +80,36 @@ if ($p < 10 && $p > 0 && $k > 9) {
 echo '</TABLE>';
 
 foreach($videos as $video) {
-  $t1=explode('Season',$video);
-  $t2=explode("<",$t1[1]);
-  $season=trim($t2[0]);
+  $t1=explode(':',$video);
+  $season=trim($t1[0]);
   $sez = $season;
   echo '<table border="1" width="100%">'."\n\r";
   echo '<TR><td class="sez" style="color:black;background-color:#0a6996;color:#64c8ff;text-align:center" colspan="3">Sezonul '.($sez).'</TD></TR>';
   $n=0;
-  $vids = explode('<a title', $video);
+  $vids = explode('href="/episode_', $video);
   unset($vids[0]);
-  $vids = array_values($vids);
-  //$vids = array_reverse($vids);
+  //$vids = array_values($vids);
+  $vids = array_reverse($vids);
   foreach($vids as $vid) {
   $img_ep="";
   $episod="";
   $ep_tit="";
-  $t1=explode('href="',$vid);
-  $t2=explode('"',$t1[1]);
-  $link="http://free2watch.net".$t2[0];
+  $t1=explode('"',$vid);
+  $link="https://".$host."/episode_".$t1[0];
 
-  $img_ep=$image;
-  $t2=explode('>',$t1[1]);
+  $t2=explode('>',$vid);
   $t3=explode('<',$t2[1]);
   $title=$t3[0];
+  $img_ep=$image;
+  // 7.Foam Party
+  preg_match("/\d+/",$title,$m);
+  $episod=$m[0];
   //$ep_tit=html_entity_decode($t2[0]);
   $title=str_replace("&nbsp;"," ",$title);
   $title=prep_tit($title);
-  if (preg_match("/s\d+e(\d+)/",$link,$m)) {
-  //print_r ($m);
-  $episod=$m[1];
-  $ep_tit=trim(preg_replace("/Episode\s+\d+/","",$title));;
+  $ep_tit=$title;
   if ($ep_tit)
-   $ep_tit_d=$season."x".$episod." ".$ep_tit;
+   $ep_tit_d=$ep_tit;
   else
    $ep_tit_d=$season."x".$episod;
 
@@ -120,7 +123,6 @@ foreach($videos as $video) {
    if ($n == 3) {
     echo '</TR>'."\n\r";
     $n=0;
-   }
    }
 }  
   if ($n < 3 && $n > 0) {

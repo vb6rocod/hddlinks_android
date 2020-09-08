@@ -54,6 +54,7 @@ else
 <TD width="25%"><a href="filme/topfilmeonline_main.php" target="_blank">topfilmeonline</a></TD>
 <TD width="25%"><a href="filme/tvhub_f.php?page=1&tip=release&title=tvhub&link=" target="_blank">tvhub</a></TD>
 <TD width="25%"><a href="filme/filmehd_main.php" target="_blank">filmehd</a></TD>
+
 </TR>
 <TR>
 <TD width="25%"><a href="filme/filmeseriale_filme.php?page=1&tip=release&title=filmeseriale&link=" target="_blank">filmeseriale.online</a></TD>
@@ -76,10 +77,10 @@ else
 </TR>
 <!--- desene si filme...-->
 <TR>
+<TD width="25%"><a href="filme/filmehd_f.php?page=1&tip=release&title=filmehd&link=" target="_blank">filmehd.to</a></TD>
 <TD width="25%"><a href="filme/filmeserialehd_f.php?page=1&tip=release&title=filmeserialehd&link=" target="_blank">filmeserialehd</a></TD>
 <TD width="25%"><a href="filme/deseneledublate.php?page=1&tip=release&title=desenedublate&link=" target="_blank">deseneledublate</a></TD>
 <TD width="25%"><a href="filme/desenefaine_main.php" target="_blank">desenefaine.ro</a></TD>
-<TD width="25%"><a href="filme/123files.php?page=1&tip=release&title=123files&link=" target="_blank">123files</a></TD>
 </TR>
 
 <!-- straine -->
@@ -124,8 +125,9 @@ else
 </TR>
 
 <TR>
-<TD width="25%"><a href="filme/vikv.php?page=1&tip=release&title=vikv&link=" target="_blank">vikv</a></TD>
-<TD width="25%"><a href="filme/moviehdkh_f.php?page=1&tip=release&title=moviehdkh&link=" target="_blank">moviehdkh</a></TD>
+<TD width="25%"></TD>
+<!--<TD width="25%"><a href="filme/moviehdkh_f.php?page=1&tip=release&title=moviehdkh&link=" target="_blank">moviehdkh</a></TD>-->
+<TD width="25%"><a href="filme/cff.php?loc=https://www.moviehdkh.com&cookie=moviehdkh.txt&dest=moviehdkh_f.php%3Fpage%3D1%26tip%3Drelease%26title%3Dmoviehdkh%26link%3D" target="_blank">moviehdkh</a></TD>
 <TD width="25%"><a href="filme/flixgo_f.php?page=1&tip=release&title=flixgo&link=" target="_blank">flixgo</a></TD>
 <TD width="25%"><a href="filme/dailymotion_fav.php" target="_blank">dailymotion</a></TD>
 </TR>
@@ -138,23 +140,23 @@ else
 <TR>
 <TD width="25%"><a href="filme/movies4u_f.php?page=1&tip=release&title=movies4u&link=" target="_blank">movies4u</a></TD>
 <TD width="25%"><a href="filme/ask4movie_f.php?page=1&tip=release&title=ask4movie&link=" target="_blank">ask4movie</a></TD>
-<TD width="25%"><a href="filme/moviehaat_f.php?page=1&tip=release&title=moviehaat&link=" target="_blank">moviehaat</a></TD>
 <TD width="25%"><a href="filme/9movies_f.php?page=1&tip=release&title=9movies&link=" target="_blank">9movies</a></TD>
+<TD width="25%"><a href="filme/soap2day_ff.php" target="_blank">soap2day</a></TD>
 </TR>
 
 <TR>
 <TD width="25%"><a href="filme/123stream_f.php?page=1&tip=release&title=123stream&link=" target="_blank">123stream</a></TD>
-<TD width="25%"></TD>
-<TD width="25%"></TD>
-<TD width="25%"></TD>
+<TD width="25%"><a href="filme/azm_f.php?page=1&tip=release&title=azm&link=" target="_blank">azm</a></TD>
+<TD width="25%"><a href="filme/123files.php?page=1&tip=release&title=123files&link=" target="_blank">123files</a></TD>
+<TD width="25%"><a href="filme/anilist1_main.php" target="_blank">anilist1</a></TD>
 </TR>
 <?php
 if (file_exists($base_pass."tvplay.txt")) {
 echo '
 <TR>
 <TD width="25%"><a href="filme/cineplex_f_main1.php" target="_blank">cineplex</a></TD>
-<TD width="25%"><a href="filme/soap2day_ff.php" target="_blank">soap2day</a></TD>
-<TD width="25%"><a href="filme/anilist1_main.php" target="_blank">anilist1</a></TD>
+<TD width="25%"></TD>
+<TD width="25%"></TD>
 <TD width="25%"></TD>';
 echo '</TR>';
 } else {

@@ -1,7 +1,7 @@
 <!doctype html>
 <?php
 include ("../common.php");
-//error_reporting(0);
+error_reporting(0);
 $list = glob($base_sub."*.srt");
    foreach ($list as $l) {
     str_replace(" ","%20",$l);
@@ -57,9 +57,7 @@ function str_between($string, $start, $end){
 <meta http-equiv="content-type" content="text/html; charset=UTF-8">
 <title><?php echo $tit.$tit2; ?></title>
 <link rel="stylesheet" type="text/css" href="../custom.css" />
-<script type="text/javascript" src="//code.jquery.com/jquery-3.2.1.min.js"></script>
-<script src="../jquery.fancybox.min.js"></script>
-<link rel="stylesheet" type="text/css" href="../jquery.fancybox.min.css">
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.0/jquery.min.js"></script>
 <script type="text/javascript">
 function openlink1(link) {
   link1=document.getElementById('file').value;
@@ -94,12 +92,6 @@ function openlink(link) {
 function changeserver(s,t) {
   document.getElementById('server').innerHTML = s;
   document.getElementById('file').value=t;
-  var dec=decodeURI(t);
-  if (dec.match(/streamplay|powvideo|povvideo/)) {  // rezerva in caz ca nu mai merge....
-    msg="ptlink.php?file="+t;
-    document.getElementById("fancy").href=msg;
-    document.getElementById("fancy").click();
-  }
 }
    function zx(e){
      var charCode = (typeof e.which == "number") ? e.which : e.keyCode
@@ -137,37 +129,36 @@ function off() {
 </script>
 </head>
 <body>
-<a id="fancy" data-fancybox data-type="iframe" href=""></a>
 <a href='' id='mytest1'></a>
 <?php
 echo '<h2>'.$tit.$tit2.'</H2>';
 echo '<BR>';
-$ua = $_SERVER['HTTP_USER_AGENT'];
-$cookie=$base_cookie."hdpopcorns.dat";
+  $ua="Mozilla/5.0 (Windows NT 10.0; rv:63.0) Gecko/20100101 Firefox/63.0";
   $ch = curl_init($link);
   curl_setopt($ch, CURLOPT_USERAGENT, $ua);
-  curl_setopt($ch, CURLOPT_REFERER, "https://seriesfreetv.com");
+  curl_setopt($ch,CURLOPT_REFERER,"https://series.cool");
   curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER  ,1);  // RETURN THE CONTENTS OF THE CALL
-  curl_setopt($ch, CURLOPT_ENCODING,"");
-  curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie);
   curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
   curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
   curl_setopt($ch, CURLOPT_TIMEOUT, 15);
-  $h3 = curl_exec($ch);
+  $html = curl_exec($ch);
   curl_close ($ch);
-
+//echo $html;
 $r=array();
-$videos = explode('a class="tblimg', $h3);
+$s=array();
+$videos = explode('data-embed="', $html);
 unset($videos[0]);
 $videos = array_values($videos);
 foreach($videos as $video) {
-   $t1=explode('href="',$video);
-   $t2=explode('"',$t1[1]);
-   $r[]=$t2[0];
+   $t1=explode('"',$video);
+   $r[]=$t1[0];
+   $t2=explode('>',$t1[1]);
+   $t3=explode('<',$t2[1]);
+   $s[]=$t3[0];
 }
 echo '<table border="1" width="100%">';
-echo '<TR><TD class="mp">Alegeti un server: Server curent:<label id="server">'.parse_url($r[0])['host'].'</label>
+echo '<TR><TD class="mp">Alegeti un server: Server curent:<label id="server">'.$s[0].'</label>
 <input type="hidden" id="file" value="'.urlencode($r[0]).'"></td></TR></TABLE>';
 echo '<table border="1" width="100%"><TR>';
 $k=count($r);
@@ -175,7 +166,7 @@ $x=0;
 for ($i=0;$i<$k;$i++) {
   if ($x==0) echo '<TR>';
   $c_link=$r[$i];
-  $openload=parse_url($r[$i])['host'];
+  $openload=$s[$i];
   if (preg_match($indirect,$openload)) {
   echo '<TD class="mp"><a href="filme_link.php?file='.urlencode($c_link).'&title='.urlencode(unfix_t($tit.$tit2)).'" target="_blank">'.$openload.'</a></td>';
   } else

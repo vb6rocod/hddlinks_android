@@ -17,11 +17,11 @@ $has_fav="yes";
 $has_search="yes";
 $has_add="yes";
 $has_fs="yes";
-$fav_target="go2watch_s_fav.php?host=http://free2watch.net";
-$add_target="go2watch_s_add.php";
+$fav_target="noxx_s_fav.php?host=https://noxx.to";
+$add_target="noxx_s_add.php";
 $add_file="";
-$fs_target="go2watch_s_ep.php";
-$target="go2watch_s.php";
+$fs_target="noxx_s_ep.php";
+$target="noxx_s.php";
 /* ==================================================== */
 $base=basename($_SERVER['SCRIPT_FILENAME']);
 $p=$_SERVER['QUERY_STRING'];
@@ -165,80 +165,162 @@ if ($page==1) {
    echo '<TD class="nav" colspan="4" align="right"><a href="'.$prev.'">&nbsp;&lt;&lt;&nbsp;</a> | <a href="'.$next.'">&nbsp;&gt;&gt;&nbsp;</a></TD>'."\r\n";
 }
 echo '</TR>'."\r\n";
-$r=array();
-//http://free2watch.net/tvseries/sort/latest/all/all/all
-if ($tip=="release") {
-  $l="http://free2watch.net/tvseries/sort/latest/all/all/all/".$page;
-  $ch = curl_init();
-  curl_setopt($ch, CURLOPT_URL, $l);
-  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-  curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 10.0; rv:55.0) Gecko/20100101 Firefox/55.0');
+$ua="Mozilla/5.0 (Windows NT 10.0; rv:55.0) Gecko/20100101 Firefox/55.0";
+$ua = $_SERVER['HTTP_USER_AGENT'];
+$cookie=$base_cookie."noxx.dat";
+if ($page==1 && $tip=="release") {
+if (file_exists($cookie)) unlink($cookie);
+$l="https://noxx.to/src/captcha-request.php";
+$post="cID=0&rT=1&tM=light";
+$head=array('Accept: application/json, text/javascript, */*; q=0.01',
+'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
+'Accept-Encoding: deflate',
+'Content-Type: application/x-www-form-urlencoded; charset=UTF-8',
+'X-Requested-With: XMLHttpRequest',
+'Content-Length: 19',
+'Origin: https://noxx.to',
+'Connection: keep-alive',
+'Referer: https://noxx.to/check/https://noxx.to/browse');
+  $ch = curl_init($l);
+  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
   curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
-  curl_setopt($ch, CURLOPT_ENCODING, "");
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER  ,1);  // RETURN THE CONTENTS OF THE CALL
   curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+  curl_setopt($ch, CURLOPT_COOKIEJAR, $cookie);
+  curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie);
+  curl_setopt($ch, CURLOPT_HTTPHEADER,$head);
+  curl_setopt($ch, CURLOPT_POST,1);
+  curl_setopt($ch, CURLOPT_POSTFIELDS,$post);
   curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
   curl_setopt($ch, CURLOPT_TIMEOUT, 15);
   $html = curl_exec($ch);
-  curl_close($ch);
+  curl_close ($ch);
+  $r=json_decode($html,1);
+$l="https://noxx.to/src/captcha-request.php";
+$ch = curl_init($l);
+for ($k=0;$k<count($r);$k++) {
+$post="cID=0&pC=".$r[$k]."&rT=2";
+//echo $post;
+$head=array('Accept: application/json, text/javascript, */*; q=0.01',
+'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
+'Accept-Encoding: deflate',
+'Content-Type: application/x-www-form-urlencoded; charset=UTF-8',
+'X-Requested-With: XMLHttpRequest',
+'Content-Length: '.strlen($post).'',
+'Origin: https://azm.to',
+'Connection: keep-alive',
+'Referer: https://noxx.to/check/https://noxx.to/browse');
 
+
+  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
+  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER  ,1);  // RETURN THE CONTENTS OF THE CALL
+  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+  curl_setopt($ch, CURLOPT_COOKIEJAR, $cookie);
+  curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie);
+  curl_setopt($ch, CURLOPT_HTTPHEADER,$head);
+  curl_setopt($ch, CURLOPT_POST,1);
+  curl_setopt($ch, CURLOPT_POSTFIELDS,$post);
+  //curl_setopt($ch, CURLOPT_HEADER,1);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+  $html = curl_exec($ch);
+  $info = curl_getinfo($ch);
+  if ($info['http_code'] === 200) break;
+}
+  curl_close ($ch);
+$l="https://noxx.to/ajax/captcha.php";
+$post="captcha-hf=".$r[$k]."&captcha-idhf=0";
+$head=array('Accept: application/json, text/javascript, */*; q=0.01',
+'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
+'Accept-Encoding: deflate',
+'Content-Type: application/x-www-form-urlencoded; charset=UTF-8',
+'X-Requested-With: XMLHttpRequest',
+'Content-Length: '.strlen($post).'',
+'Origin: https://azm.to',
+'Connection: keep-alive',
+'Referer: https://noxx.to/check/https://noxx.to/browse');
+  $ch = curl_init($l);
+  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
+  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER  ,1);  // RETURN THE CONTENTS OF THE CALL
+  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+  curl_setopt($ch, CURLOPT_COOKIEJAR, $cookie);
+  curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie);
+  curl_setopt($ch, CURLOPT_HTTPHEADER,$head);
+  curl_setopt($ch, CURLOPT_POST,1);
+  curl_setopt($ch, CURLOPT_POSTFIELDS,$post);
+  curl_setopt($ch, CURLOPT_HEADER,1);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+  $html = curl_exec($ch);
+  curl_close ($ch);
+}
+$r=array();
+///////////////////////////////////////////////////////////////////////////
+if ($tip=="release") {
+ $l="https://noxx.to/fetch.php";
+ $post="no=".(24*($page-1))."&gpar=&qpar=&spar=date%20desc";
+ $head=array('Accept: */*',
+ 'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
+ 'Accept-Encoding: deflate',
+ 'Content-Type: application/x-www-form-urlencoded; charset=UTF-8',
+ 'X-Requested-With: XMLHttpRequest',
+ 'Content-Length: '.strlen($post).'',
+ 'Origin: https://noxx.to',
+ 'Connection: keep-alive',
+ 'Referer: https://noxx.to/browse');
+  $ch = curl_init($l);
+  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
+  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER  ,1);  // RETURN THE CONTENTS OF THE CALL
+  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+  curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie);
+  curl_setopt($ch, CURLOPT_HTTPHEADER,$head);
+  curl_setopt($ch, CURLOPT_POST,1);
+  curl_setopt($ch, CURLOPT_POSTFIELDS,$post);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+  $html = curl_exec($ch);
+  curl_close ($ch);
 } else {
   $search=str_replace(" ","+",$tit);
-  $l="http://free2watch.net/search/".$search;
-  $ch = curl_init();
-  curl_setopt($ch, CURLOPT_URL, $l);
-  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-  curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 10.0; rv:55.0) Gecko/20100101 Firefox/55.0');
+  $l="https://noxx.to/browse?q=".$search;
+  $ch = curl_init($l);
+  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
   curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
-  curl_setopt($ch, CURLOPT_REFERER, "http://go2watch.net");
-  curl_setopt($ch, CURLOPT_ENCODING, "");
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER  ,1);  // RETURN THE CONTENTS OF THE CALL
   curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+  curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie);
   curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
   curl_setopt($ch, CURLOPT_TIMEOUT, 15);
   $html = curl_exec($ch);
-  curl_close($ch);
-
+  curl_close ($ch);
 }
-  //echo $html;
-  if ($tip=="release") {
-  $videos = explode('data-movie-id="', $html);
+///////////////////////////////////////////////////////////////////////////
+$r=array();
+  $videos = explode('div class="col-1',$html);
   unset($videos[0]);
   $videos = array_values($videos);
   foreach($videos as $video) {
-    $t1=explode('href="',$video);
-    $t2=explode('"',$t1[1]);
-    $link="http://free2watch.net".$t2[0];
-    $t1=explode('title="',$video);
-    $t2=explode('"',$t1[1]);
-    $title=$t2[0];
-    $t1=explode('data-original="',$video);
-    $t2=explode('"',$t1[1]);
-    $image=$t2[0];
-    if (strpos($link,"/series") !== false) array_push($r ,array($title,$link, $image));
-  }
-  } else {
-  //echo $html;
-  $videos = explode('data-movie-id="', $html);
-  unset($videos[0]);
-  $videos = array_values($videos);
-  //print_r ($videos);
-  foreach($videos as $video) {
-    $t1=explode('href="',$video);
-    $t2=explode('"',$t1[1]);
-    $link="http://free2watch.net".$t2[0];
-    $t1=explode('title="',$video);
-    $t2=explode('"',$t1[1]);
-    $title=$t2[0];
-    $t1=explode('data-original="',$video);
-    $t2=explode('"',$t1[1]);
-    $image=$t2[0];
-    if (strpos($link,"/series") !== false) array_push($r ,array($title,$link, $image));
-  }
+   $t1 = explode('href="',$video);
+   $t2=explode('"',$t1[1]);
+   $link = "https://noxx.to".$t2[0];
+
+   $t3 = explode('class="title">', $video);
+   $t4 = explode('<', $t3[1]);
+   $title = $t4[0];
+   $title=prep_tit($title);
+   $t1 = explode('data-src="', $video);
+   $t2 = explode('"', $t1[1]);
+   $image = $t2[0];
+   if (preg_match("/\/tv/",$link)) $r[]=array($link,$title,$image);
   }
 $c=count($r);
 for ($k=0;$k<$c;$k++) {
-  $title=$r[$k][0];
+  $title=$r[$k][1];
   $title=prep_tit($title);
-  $link=$r[$k][1];
+  $link=$r[$k][0];
   $image=$r[$k][2];
   $rest = substr($title, -6);
   if (preg_match("/\((\d+)\)/",$rest,$m)) {
@@ -251,7 +333,7 @@ for ($k=0;$k<$c;$k++) {
 
   $imdb="";
   $link_f=$fs_target.'?tip=series&link='.urlencode($link).'&title='.urlencode(fix_t($title)).'&image='.$image."&sez=&ep=&ep_tit=&year=".$year;
-  if ($title && strpos($link,"/serie") !== false) {
+  if ($title) {
   if ($n==0) echo '<TR>'."\r\n";
   $val_imdb="tip=series&title=".urlencode(fix_t($tit_imdb))."&year=".$year."&imdb=".$imdb;
   $fav_link="mod=add&title=".urlencode(fix_t($title))."&link=".urlencode($link)."&image=".urlencode($image)."&year=".$year;

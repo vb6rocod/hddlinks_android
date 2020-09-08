@@ -78,3 +78,5 @@ http://cdn.metropolatv.ro:9090/seconds3hls/live.m3u8
 http://95.77.16.67:8080/
 #EXTINF:-1,LINK PRESS TV
 http://x1.imcr.ro:9090/seconds6hls/live.m3u8
+#EXTINF:-1,Aleph News
+https://stream-aleph.m.ro/Aleph/ngrp:Alephnewsmain.stream_all/playlist.m3u8

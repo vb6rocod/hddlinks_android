@@ -12,16 +12,18 @@ $tit=$_GET["title"];
 $link=$_GET["link"];
 $width="200px";
 $height="278px";
+$last_good="https://filmehd.to";
+$host=parse_url($last_good)['host'];
 /* ==================================================== */
-$has_fav="yes";
+$has_fav="no";
 $has_search="yes";
 $has_add="yes";
-$has_fs="yes";
-$fav_target="vikv_fav.php?host=https://vikv.net";
-$add_target="vikv_add.php";
+$has_fs="no";
+$fav_target="";
+$add_target="filme_add.php";
 $add_file="";
-$fs_target="vikv_fs.php";
-$target="vikv.php";
+$fs_target="";
+$target="filmehd_f.php";
 /* ==================================================== */
 $base=basename($_SERVER['SCRIPT_FILENAME']);
 $p=$_SERVER['QUERY_STRING'];
@@ -165,59 +167,78 @@ if ($page==1) {
    echo '<TD class="nav" colspan="4" align="right"><a href="'.$prev.'">&nbsp;&lt;&lt;&nbsp;</a> | <a href="'.$next.'">&nbsp;&gt;&gt;&nbsp;</a></TD>'."\r\n";
 }
 echo '</TR>'."\r\n";
-//https://hdbest.net/genre
-//https://hdbest.net/genre/page/2
+//https://www.filmeseriale.eu/filme/page/2/
 if($tip=="release") {
-  $l="https://vikv.net/page/".$page."/";
+ if ($page>1)
+  $l ="https://".$host."/filme/page/".$page."/";
+ else
+  $l="https://".$host."/filme/";
 } else {
   $search=str_replace(" ","+",$tit);
-  $l = "https://vikv.net/page/".$page."/?s=".str_replace(" ","+",$tit);
+  if ($page == 1)
+    $l="https://".$host."/?s=".$search;
+  else
+    $l="https://".$host."/page/".$page."/?s=".$search;
 }
-$host=parse_url($l)['host'];
+// https://filmehd.to/page/2/?s=star
+$r=array();
+$ua = $_SERVER['HTTP_USER_AGENT'];
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $l);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
   curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 10.0; rv:55.0) Gecko/20100101 Firefox/55.0');
   curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+  curl_setopt($ch, CURLOPT_ENCODING, "");
+  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
   curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
   curl_setopt($ch, CURLOPT_TIMEOUT, 15);
   $html = curl_exec($ch);
   curl_close($ch);
+  //echo $html;
+  $videos = explode('article id="post', $html);
+  unset($videos[0]);
+  $videos = array_values($videos);
+  foreach($videos as $video) {
+    $t1=explode('href="',$video);
+    $t2=explode('"',$t1[1]);
+    $link=$t2[0];
+    $t1=explode('alt="',$video);
+    $t2=explode('"',$t1[1]);
+    $title=trim($t2[0]);
+    if (preg_match("/[\'|\"](http[\w\/\.\_\:\-\@]+\.jpg)[\'|\"]/",$video,$m))
+     $image=trim($m[1]);
+    else
+     $image="blank.jpg";
+    if (strpos($link,"/filme") !== false) array_push($r ,array($title,$link, $image));
+  }
 
-$videos = explode('div class="thumb', $html);
-unset($videos[0]);
-$videos = array_values($videos);
-foreach($videos as $video) {
-  $t1 = explode('href="',$video);
-  $t2 = explode('"', $t1[1]);
-  $link = $t2[0];
-  if (strpos($link,"http") === false) $link="https://".$host.$link;
-  $t1 = explode('title="', $video);
-  $t2 = explode('"', $t1[1]);
-  $title = $t2[0];
-  $title = prep_tit($title);
-  $t1 = explode('src="', $video);
-  $t2 = explode('"', $t1[1]);
-  $image = $t2[0];
-  if (strpos($image,"http") === false) $image="https:".$image;
-  $year="";
-  $imdb="";
-  preg_match("/(tt\d+)\./",$image,$m);
-  $imdb=$m[1];
-  $link=$imdb;
-  $rest = substr($title, -5);
-  if (preg_match("/\-(\d+)/",$rest,$m)) {
+$c=count($r);
+for ($k=0;$k<$c;$k++) {
+  $title=$r[$k][0];
+  $title=str_replace("&#8211;","-",$title);
+  $title=prep_tit($title);
+  $link=$r[$k][1];
+  $image=$r[$k][2];
+  $rest = substr($title, -2);
+  //echo urlencode($rest);
+  if ($rest == " -") $title = substr($title, 0, -2);
+  $rest = substr($title, -6);
+  if (preg_match("/\((\d+)\)/",$rest,$m)) {
    $year=$m[1];
    $tit_imdb=trim(str_replace($m[0],"",$title));
   } else {
    $year="";
    $tit_imdb=$title;
   }
-  $link_f=$fs_target.'?tip=movie&link='.urlencode($link).'&title='.urlencode(fix_t($title)).'&image='.$image."&sez=&ep=&ep_tit=&year=".$year;
-  if ($title && strpos($link,"/show") === false) {
+  $imdb="";
+  if (strpos($link,"filme") !== false && $title <> "DMCA") {
+  if ($has_fs == "no")
+    $link_f='filme_link.php?file='.urlencode($link).'&title='.urlencode(fix_t($title));
+  else
+    $link_f=$fs_target.'?tip=movie&link='.urlencode($link).'&title='.urlencode(fix_t($tit)).'&image='.$image."&sez=&ep=&ep_tit=&year=".$year;
   if ($n==0) echo '<TR>'."\r\n";
   $val_imdb="tip=movie&title=".urlencode(fix_t($tit_imdb))."&year=".$year."&imdb=".$imdb;
-  $fav_link="mod=add&title=".urlencode(fix_t($title))."&link=".urlencode($link)."&image=".urlencode($image)."&year=".$year;
+  $fav_link="file=".$add_file."&mod=add&title=".urlencode(fix_t($title))."&link=".urlencode($link)."&image=".urlencode($image)."&year=".$year;
   if ($tast == "NU") {
     echo '<td class="mp" width="25%"><a href="'.$link_f.'" id="myLink'.$w.'" target="_blank" onmousedown="isKeyPressed(event)">
     <img id="myLink'.$w.'" src="'.$image.'" width="'.$width.'" height="'.$height.'"><BR>'.$title.'</a>
@@ -240,9 +261,7 @@ foreach($videos as $video) {
   $n=0;
   }
   }
- }
-
-/* bottom */
+}
   if ($n < 4 && $n > 0) {
     for ($k=0;$k<4-$n;$k++) {
       echo '<TD></TD>'."\r\n";
@@ -257,6 +276,6 @@ else
   echo '<a href="'.$next.'">&nbsp;&gt;&gt;&nbsp;</a></TD>'."\r\n";
 echo '</TR>'."\r\n";
 echo "</table>"."\r\n";
-echo "</table>";
-?></body>
+?>
+<br></body>
 </html>

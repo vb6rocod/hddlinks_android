@@ -20,14 +20,14 @@ abc
 abc';
 $b=json_encode($out);
 echo $b;
-die();
+//die();
 $a="abc";
 $b=json_encode($a);
 $b='"a\u0083b\u0098c"';
 $c=json_decode($b);
 $d=urlencode($c);
 echo $d;
-die();
+//die();
 $list = glob("*.srt");
 $contents=file_get_contents($list[0]);
 //$h=urlencode($contents);

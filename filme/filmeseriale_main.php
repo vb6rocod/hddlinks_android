@@ -195,7 +195,7 @@ $ua = $_SERVER['HTTP_USER_AGENT'];
     $t1=explode('href="',$video);
     $t2=explode('"',$t1[1]);
     $link=$t2[0];
-    $t1=explode('class="tt">',$video);
+    $t1=explode('h2>',$video);
     $t2=explode('<',$t1[1]);
     $title=trim($t2[0]);
     $t1=explode('src="',$video);

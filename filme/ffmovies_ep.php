@@ -41,6 +41,7 @@ if (preg_match("/(.*?)(\d+)$/",$tit,$m)) {
 $ua     =   $_SERVER['HTTP_USER_AGENT'];
 $cookie=$base_cookie."ffmovies.dat";
 $host="fmovies.solar";
+$host="ffmovies.co";
 $time=round(time()/100)*100;
   $l1="https://".$host."/user/ajax/menu-bar?ts=".$time."&_=744";
 $head=array('Accept: application/json, text/javascript, */*; q=0.01',
