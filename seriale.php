@@ -64,7 +64,7 @@ document.onkeypress =  zx;
 <TR>
 <TD width="25%"><a href="filme/serialeonline.php?page=1&tip=release&title=serialeonline&link=" target="_blank">serialeonline</a></TD>
 <TD width="25%"><a href="filme/rovideo.php?page=1&tip=release&title=rovideo&link=" target="_blank">rovideo</a></TD>
-<TD width="25%"></TD>
+<TD width="25%"><a href="filme/seriescool_s.php?page=1&tip=release&title=seriescool&link=" target="_blank">seriescool</a></TD>
 <TD width="25%"><a href="filme/soap2day_ss.php" target="_blank">soap2day</a></TD>
 </TR>
 
@@ -102,7 +102,7 @@ document.onkeypress =  zx;
 </TR>
 
 <TR>
-<TD width="25%"><a href="filme/subsmovies_s.php?page=1&tip=release&title=subsmovie&link=" target="_blank">subsmovies</a></TD>
+<TD width="25%"><a href="filme/uniquestream_s.php?page=1&tip=release&title=uniquestream&link=" target="_blank">uniquestream</a></TD>
 <TD width="25%"><a href="filme/5movies_s.php?page=1&tip=release&title=5movies&link=" target="_blank">5movies</a></TD>
 <TD width="25%"><a href="filme/hulu_s.php?page=1&tip=release&title=hulu&link=" target="_blank">hulu</a></TD>
 <TD width="25%"><a href="filme/flixtor_s.php?page=1&tip=release&title=flixtor&link=" target="_blank">flixtor</a></TD>
@@ -110,8 +110,8 @@ document.onkeypress =  zx;
 <TR>
 <TD width="25%"><a href="filme/9movies_s.php?page=1&tip=release&title=9movies&link=" target="_blank">9movies</a></TD>
 <TD width="25%"><a href="filme/123stream_s.php?page=1&tip=release&title=123stream&link=" target="_blank">123stream</a></TD>
-<TD width="25%"><a href="filme/series.cool_s.php?page=1&tip=release&title=series.cool&link=" target="_blank">series.cool</a></TD>
-<TD width="25%"><a href="filme/noxx_s.php?page=1&tip=release&title=noxx&link=" target="_blank">noxx</a></TD>
+<TD width="25%"><a href="filme/streamlord_s.php?page=1&tip=release&title=streamlord&link=" target="_blank">streamlord</a></TD>
+<TD width="25%"></TD>
 </TR>
 <?php
 if (file_exists($base_pass."tvplay.txt")) {

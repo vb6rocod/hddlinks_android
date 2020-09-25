@@ -99,6 +99,11 @@ $(document).on('keyup', '.imdb', isValid);
 </TR>
 <?php
 include ("common.php");
+$list = glob($base_sub."*.srt");
+foreach ($list as $l) {
+    str_replace(" ","%20",$l);
+     unlink($l);
+}
 if (file_exists($base_pass."tvplay.txt")) {
 
 echo '

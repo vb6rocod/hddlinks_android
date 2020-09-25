@@ -1,8 +1,7 @@
 <!doctype html>
 <?php
 include ("../common.php");
-//error_reporting(0);
-//echo time();
+error_reporting(0);
 $list = glob($base_sub."*.srt");
    foreach ($list as $l) {
     str_replace(" ","%20",$l);
@@ -12,20 +11,6 @@ if (file_exists($base_pass."debug.txt"))
  $debug=true;
 else
  $debug=false;
-if (file_exists("../../cookie/max_time_ffmovies.txt")) {
-   //$time_exp=file_get_contents($base_cookie."max_time_hqq.txt");
-   $time_exp=file_get_contents("../../cookie/max_time_ffmovies.txt");
-   $time_now=time();
-   if ($time_exp > $time_now) {
-     $minutes = intval(($time_exp-$time_now)/60);
-     $seconds= ($time_exp-$time_now) - $minutes*60;
-     if ($seconds < 10) $seconds = "0".$seconds;
-     $msg_captcha="Token expira in ".$minutes.":".$seconds." min.";
-   } else
-     $msg_captcha="Token Expirat";
-} else {
-   $msg_captcha="Token Expirat";
-}
 if (file_exists($base_pass."player.txt")) {
 $flash=trim(file_get_contents($base_pass."player.txt"));
 } else {
@@ -40,7 +25,6 @@ $user_agent     =   $_SERVER['HTTP_USER_AGENT'];
 if ($flash != "mp") {
 if (preg_match("/android|ipad/i",$user_agent) && preg_match("/chrome|firefox|mobile/i",$user_agent)) $flash="chrome";
 }
-$qs=$_SERVER['QUERY_STRING'];
 $tit=unfix_t(urldecode($_GET["title"]));
 $tit=prep_tit($tit);
 $image=$_GET["image"];
@@ -149,112 +133,91 @@ function off() {
 <?php
 echo '<h2>'.$tit.$tit2.'</H2>';
 echo '<BR>';
-$ua = $_SERVER['HTTP_USER_AGENT'];
-$cookie=$base_cookie."ffmovies.dat";
-$s=array();
-$r=array();
-$host="ffmovies.io";
-$host="ffmovies.co";
-$host="www12.fmovies.to";
-$host=file_get_contents($base_fav."ffmovies_f.txt");
-//echo $link;
-//echo $qs;
-$time=round(time()/100)*100;
-  $l1="https://".$host."/user/ajax/menu-bar?ts=".$time."&_=744";
-$head=array('Accept: application/json, text/javascript, */*; q=0.01',
-'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
-'Accept-Encoding: deflate',
-'Connection: keep-alive',
-'Upgrade-Insecure-Requests: 1');
-  $ch = curl_init();
-  curl_setopt($ch, CURLOPT_URL, $l1);
-  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+$ua="Mozilla/5.0 (Windows NT 10.0; rv:80.0) Gecko/20100101 Firefox/80.0";
+  $ch = curl_init($link);
   curl_setopt($ch, CURLOPT_USERAGENT, $ua);
-  curl_setopt($ch,CURLOPT_REFERER,"https://".$host."/tv-series");
   curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
-  curl_setopt($ch, CURLOPT_HEADER,1);
-  curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie);
-  curl_setopt($ch, CURLOPT_COOKIEJAR, $cookie);
-  curl_setopt($ch, CURLOPT_HTTPHEADER, $head);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER  ,1);  // RETURN THE CONTENTS OF THE CALL
   curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
   curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
   curl_setopt($ch, CURLOPT_TIMEOUT, 15);
-  $h = curl_exec($ch);
-  curl_close($ch);
-if ($tip=="series")
-$l1="https://".$host."/ajax/film/servers?id=".$link."&_=840&ts=".$time;
-else
-$l1="https://".$host."/ajax/film/servers?id=".$link."&_=840&ts=".$time;
-//$l1="https://ffmovies.to/ajax/film/servers/".$link;
-///////////////////////////////////////////////////////////////////
-//echo $l1;
-//die();
-$head=array('Accept: application/json, text/javascript, */*; q=0.01',
+  $html = curl_exec($ch);
+  curl_close ($ch);
+  $t1=explode("data-post='",$html);
+  $t2=explode("'",$t1[1]);
+  $id=$t2[0];
+$l="https://onionplay.co/wp-admin/admin-ajax.php";
+$post="action=doo_player_ajax&post=".$id."&nume=1&type=movie";
+$head=array('Accept: */*',
 'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
 'Accept-Encoding: deflate',
+'Content-Type: application/x-www-form-urlencoded; charset=UTF-8',
 'X-Requested-With: XMLHttpRequest',
+'Content-Length: '.strlen($post).'',
+'Origin: https://onionplay.co',
 'Connection: keep-alive',
-'Referer: https://'.$host.'/film/in-the-tall-grass.'.$link);
-  $ch = curl_init();
-  curl_setopt($ch, CURLOPT_URL, $l1);
-  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+'Referer: https://onionplay.co/');
+
+  $ch = curl_init($l);
   curl_setopt($ch, CURLOPT_USERAGENT, $ua);
-  //curl_setopt($ch,CURLOPT_REFERER,"https://ffmovies.to");
   curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
-  //curl_setopt($ch, CURLOPT_HEADER,1);
-  curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie);
-  curl_setopt($ch, CURLOPT_COOKIEJAR, $cookie);
-  curl_setopt($ch, CURLOPT_HTTPHEADER, $head);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER  ,1);  // RETURN THE CONTENTS OF THE CALL
   curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+  curl_setopt($ch, CURLOPT_HTTPHEADER,$head);
+  curl_setopt($ch, CURLOPT_POST, 1);
+  curl_setopt($ch, CURLOPT_POSTFIELDS, $post);
+  //curl_setopt($ch, CURLOPT_HEADER,1);
   curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
   curl_setopt($ch, CURLOPT_TIMEOUT, 15);
   $h = curl_exec($ch);
-  curl_close($ch);
-$x=json_decode($h,1);
-$h=$x['html'];
-//echo $h;
-if ($tip=="movie") {
-$videos=explode('<li><a',$h);
-unset($videos[0]);
-$videos = array_values($videos);
-foreach($videos as $video) {
- $t1=explode('href="',$video);
- $t2=explode('"',$t1[1]);
- $link=$t2[0];
- $t3=explode(">",$t1[1]);
- $t4=explode("<",$t3[1]);
- $s[]=trim($t4[0]);
- $r[]="https://".$host."?".$qs."&href=".$link;
-}
-} else {
-$z=1;
-$videos=explode('<li><a',$h);
-unset($videos[0]);
-$videos = array_values($videos);
-foreach($videos as $video) {
- $t1=explode('href="',$video);
- $t2=explode('"',$t1[1]);
- $link=$t2[0];
- $t3=explode(">",$t1[1]);
- $t4=explode("<",$t3[1]);
- $t1=explode('data-kname="',$video);
- $t2=explode('"',$t1[1]);
- $t3=explode(":",$t2[0]);
- $episod=$t3[1];
- $season=$t3[0];
- if ($episod == $ep && $season==$sez) {
- $s[]="Server ".$z;;
- $r[]="https://".$host."?".$qs."&href=".$link;
- $z++;
- }
-}
-}
-//echo $h;
-//die();
-//$s[]="MyCloud";
-//$r[]="https://ffmovies.to?".$qs;
+  curl_close ($ch);
+  //echo $h;
+  $t1=explode("src='",$h);
+  $t2=explode("'",$t1[1]);
+  $l=$t2[0];
+$head=array('Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
+'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
+'Accept-Encoding: deflate',
+'Connection: keep-alive',
+'Referer: https://onionplay.co/');
+
+  $ch = curl_init($l);
+  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
+  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER  ,1);  // RETURN THE CONTENTS OF THE CALL
+  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+  curl_setopt($ch, CURLOPT_HTTPHEADER,$head);
+  //curl_setopt($ch, CURLOPT_COOKIEJAR, $cookie);
+  //curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie);
+  //curl_setopt($ch, CURLOPT_HEADER,1);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+  $h = curl_exec($ch);
+  curl_close ($ch);
+  //echo $h;
+  $t1=explode("= [",$h);
+  $t2=explode("]",$t1[1]);
+  $e="\$c=array(".$t2[0].");";
+  eval ($e);
+  //print_r ($c);
+  $t1=explode("parseInt(value) -",$h);
+  $t2=explode(")",$t1[1]);
+  $d=$t2[0];
+  //echo $d;
+  //die();
+  $out="";
+  for ($k=0;$k<count($c);$k++) {
+   $out .=chr($c[$k]-$d);
+  }
+  //echo $out;
+  $t1=explode('redirect").attr("href","',$out);
+  $t2=explode('"',$t1[2]);
+  $l=$t2[0];
+  $r=array();
+  $r[]=$l;
+  //echo $html;
 echo '<table border="1" width="100%">';
-echo '<TR><TD class="mp">Alegeti un server: Server curent:<label id="server">'.$s[0].'</label>
+echo '<TR><TD class="mp">Alegeti un server: Server curent:<label id="server">'.parse_url($r[0])['host'].'</label>
 <input type="hidden" id="file" value="'.urlencode($r[0]).'"></td></TR></TABLE>';
 echo '<table border="1" width="100%"><TR>';
 $k=count($r);
@@ -262,7 +225,7 @@ $x=0;
 for ($i=0;$i<$k;$i++) {
   if ($x==0) echo '<TR>';
   $c_link=$r[$i];
-  $openload=$s[$i];
+  $openload=parse_url($r[$i])['host'];
   if (preg_match($indirect,$openload)) {
   echo '<TD class="mp"><a href="filme_link.php?file='.urlencode($c_link).'&title='.urlencode(unfix_t($tit.$tit2)).'" target="_blank">'.$openload.'</a></td>';
   } else
@@ -296,6 +259,10 @@ if ($tip=="movie") {
   $from="";
   $link_page="";
 }
+  $rest = substr($tit3, -6);
+  if (preg_match("/\((\d+)\)/",$rest,$m)) {
+   $tit3=trim(str_replace($m[0],"",$tit3));
+  }
 $sub_link ="from=".$from."&tip=".$tip."&sez=".$sez."&ep=".$ep."&imdb=".$imdbid."&title=".urlencode(fix_t($tit3))."&link=".$link_page."&ep_tit=".urlencode(fix_t($tit2))."&year=".$year;
 echo '<br>';
 echo '<table border="1" width="100%">';
@@ -328,8 +295,7 @@ echo '</table>';
 echo '<br>
 <table border="0px" width="100%">
 <TR>
-<TD><font size="4"><b>
-Scurtaturi: 1=opensubtitles, 2=titrari, 3=subs, 4=subtitrari, 5=vizioneaza
+<TD><font size="4"><b>Scurtaturi: 1=opensubtitles, 2=titrari, 3=subs, 4=subtitrari, 5=vizioneaza
 <BR>Scurtaturi: 7=opensubtitles, 8=titrari, 9=subs, 0=subtitrari (cauta imdb id)
 </b></font></TD></TR></TABLE>
 ';

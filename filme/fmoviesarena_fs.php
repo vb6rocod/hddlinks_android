@@ -136,7 +136,7 @@ echo '<BR>';
 $ua = $_SERVER['HTTP_USER_AGENT'];
 $head=array('Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
 'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2');
-
+//echo $link;
 $r=array();
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $link);
@@ -146,10 +146,9 @@ $r=array();
   curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
   curl_setopt($ch, CURLOPT_TIMEOUT, 15);
   $html = curl_exec($ch);
-
-  $t1=explode('<iframe',$html);
-  $t2=explode('src="',$t1[1]);
-  $t3=explode('"',$t2[1]);
+//echo $html;
+  $t1=explode('<iframe src="',$html);
+  $t3=explode('"',$t1[1]);
   $l=$t3[0];
   if (strpos($l,"http") === false) $l="https:".$l;
   $r[]=$l;
@@ -168,9 +167,8 @@ foreach($videos as $video) {
  if (strpos($l,"http") === false) $l="https:".$l;
  curl_setopt($ch, CURLOPT_URL, $l);
  $html = curl_exec($ch);
-  $t1=explode('<iframe',$html);
-  $t2=explode('src="',$t1[1]);
-  $t3=explode('"',$t2[1]);
+  $t1=explode('<iframe src="',$html);
+  $t3=explode('"',$t1[1]);
   $l=$t3[0];
   if (strpos($l,"http") === false) $l="https:".$l;
   $r[]=$l;

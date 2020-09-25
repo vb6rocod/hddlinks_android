@@ -65,15 +65,15 @@ else
 
 <TR>
 <TD width="25%"><a href="filme/fsgratis_main.php" target="_blank">fsgratis</a></TD>
-<TD width="25%"><a href="filme/topvideohd_main.php" target="_blank">topvideohd</a></TD>
+<TD width="25%"><a href="filme/filmele-online.php?page=1&tip=release&title=filmele-online&link=" target="_blank">filmele-online</a></TD>
 <TD width="25%"><a href="filme/serialeonline_f.php?page=1&tip=release&title=serialeonline&link=" target="_blank">serialeonline</a></TD>
 <TD width="25%"><a href="filme/portalultautv_main.php" target="_blank">portalultautv</a></TD>
 </TR>
 <TR>
-<TD width="25%"><a href="filme/topfilmenoi_main.php" target="_blank">topfilmenoi</a></TD>
 <TD width="25%"><a href="filme/divxfilmeonline.php?page=1&tip=release&title=divxfilmeonline&link=" target="_blank">divxfilmeonline</a></TD>
 <TD width="25%"><a href="filme/filmeseriale_eu_f.php?page=1&tip=release&title=filmeseriale.eu&link=" target="_blank">filmeseriale.eu</a></TD>
 <TD width="25%"><a href="filme/vezionline_main.php" target="_blank">vezionline</a></TD>
+<TD width="25%"></TD>
 </TR>
 <!--- desene si filme...-->
 <TR>
@@ -106,12 +106,12 @@ else
 <TR>
 <TD width="25%"><a href="filme/ffmovies_ff.php?page=1&tip=release&title=ffmovies&link=" target="_blank">ffmovies</a></TD>
 <TD width="25%"><a href="filme/gomovies_f.php?page=1&tip=release&title=gomovies&link=" target="_blank">gomovies</a></TD>
-<TD width="25%"><a href="filme/cinebloom_f.php?page=1&tip=release&title=cinebloom&link=" target="_blank">cinebloom</a></TD>
-<TD width="25%"><a href="filme/300mbmoviefree_f.php?page=1&tip=release&title=300mbmoviefree&link=" target="_blank">300mbmoviefree</a></TD>
+<TD width="25%"><a href="filme/onionplay_f.php?page=1&tip=release&title=onionplay&link=" target="_blank">onionplay</a></TD>
+<TD width="25%"><a href="filme/streamlord_f.php?page=1&tip=release&title=streamlord&link=" target="_blank">streamlord</a></TD>
 </TR>
 
 <TR>
-<TD width="25%"><a href="filme/subsmovies_f.php?page=1&tip=release&title=subsmovie&link=" target="_blank">subsmovies</a></TD>
+<TD width="25%"><a href="filme/uniquestream_f.php?page=1&tip=release&title=uniquestream&link=" target="_blank">uniquestream</a></TD>
 <TD width="25%"><a href="filme/hdm_f.php?page=1&tip=release&title=hdm&link=" target="_blank">hdm</a></TD>
 <TD width="25%"><a href="filme/fsharetv.php?page=1&tip=release&title=fsharetv&link=" target="_blank">fsharetv</a></TD>
 <TD width="25%"><a href="filme/videospider.php?page=1&tip=release&title=videospider&link=" target="_blank">videospider</a></TD>
@@ -146,7 +146,7 @@ else
 
 <TR>
 <TD width="25%"><a href="filme/123stream_f.php?page=1&tip=release&title=123stream&link=" target="_blank">123stream</a></TD>
-<TD width="25%"><a href="filme/azm_f.php?page=1&tip=release&title=azm&link=" target="_blank">azm</a></TD>
+<TD width="25%"></TD>
 <TD width="25%"><a href="filme/123files.php?page=1&tip=release&title=123files&link=" target="_blank">123files</a></TD>
 <TD width="25%"><a href="filme/anilist1_main.php" target="_blank">anilist1</a></TD>
 </TR>

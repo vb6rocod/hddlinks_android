@@ -15,7 +15,9 @@ $width="200px";
 $height="278px";
 $last_good="https://ffmovies.io";
 $last_good="https://ffmovies.co";
+$last_good="https://www12.fmovies.to";
 $host=parse_url($last_good)['host'];
+file_put_contents($base_fav."ffmovies_f.txt",$host);
 /* ==================================================== */
 $has_fav="yes";
 $has_search="yes";
@@ -226,7 +228,7 @@ $videos = explode('<div class="item', $html);
 unset($videos[0]);
 $videos = array_values($videos);
 foreach($videos as $video) {
- $t1=explode('tooltip/',$video);
+ $t1=explode('data-tip="',$video);
  $t2=explode('?',$t1[1]);
  $link=$t2[0];
  $t1=explode('href="',$video);
@@ -234,7 +236,13 @@ foreach($videos as $video) {
  if (strpos($video,'class="eps">') !== false)
   $movie=true;
  else
-  $movie=false;
+  $movie=true;
+ $t1=explode('class="type">',$video);
+ $t2=explode('<',$t1[1]);
+ if (preg_match("/TV/i",$t2[0]))
+   $movie=true;
+ else
+   $movie=false;
  /*
  if (strpos($t2[0],"/film/") !== false)
    $movie=true;
@@ -244,9 +252,9 @@ foreach($videos as $video) {
  $t1=explode('src="',$video);
  $t2=explode('"',$t1[1]);
  $image=$t2[0];
- $t1=explode('class="name"',$video);
- $t2=explode(">",$t1[1]);
- $t3=explode("<",$t2[1]);
+ $t1=explode('title="',$video);
+ //$t2=explode(">",$t1[1]);
+ $t3=explode('"',$t1[1]);
  $title=$t3[0];
   if ($title && $movie) $f[] = array($title,$link,$image);
 }

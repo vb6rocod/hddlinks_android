@@ -12,22 +12,18 @@ $tit=$_GET["title"];
 $link=$_GET["link"];
 $width="200px";
 $height="278px";
-$last_good="https://ffmovies.io";
-$last_good="https://ffmovies.co";
-$last_good="https://www12.fmovies.to";
+$last_good="https://filmele-online.com";
 $host=parse_url($last_good)['host'];
-file_put_contents($base_fav."ffmovies_f.txt",$host);
 /* ==================================================== */
-$has_fav="yes";
+$has_fav="no";
 $has_search="yes";
 $has_add="yes";
-$has_fs="yes";
-$fav_target="ffmovies_f_fav.php?host=".$last_good;
-$add_target="ffmovies_f_add.php";
+$has_fs="no";
+$fav_target="";
+$add_target="filme_add.php";
 $add_file="";
-$fs_target="ffmovies_fs.php";
-$target="ffmovies_ff.php";
-
+$fs_target="";
+$target="serialeonline_f.php";
 /* ==================================================== */
 $base=basename($_SERVER['SCRIPT_FILENAME']);
 $p=$_SERVER['QUERY_STRING'];
@@ -171,108 +167,74 @@ if ($page==1) {
    echo '<TD class="nav" colspan="4" align="right"><a href="'.$prev.'">&nbsp;&lt;&lt;&nbsp;</a> | <a href="'.$next.'">&nbsp;&gt;&gt;&nbsp;</a></TD>'."\r\n";
 }
 echo '</TR>'."\r\n";
-$ua     =   $_SERVER['HTTP_USER_AGENT'];
-//$ua="Mozilla/5.0 (Windows NT 10.0; rv:75.0) Gecko/20100101 Firefox/75.0";
-$cookie=$base_cookie."ffmovies.dat";
-$r=array();
-if ($tip=="search") {
- $l="https://".$host."/search?keyword=".str_replace(" ","+",$tit)."&page=".$page;
+//https://www.filmeseriale.eu/filme/page/2/
+if($tip=="release") {
+ if ($page>1)
+  $l ="https://".$host."/movies/page/".$page."/";
+ else
+  $l="https://".$host."/movies/";
 } else {
- $l="https://".$host."/movies?page=".$page;
+  $search=str_replace(" ","+",$tit);
+  if ($page > 1)
+    $l="https://".$host."/?s=".$search;
+  else
+    $l="https://".$host."/page/".$page."/?s=".$search;
 }
-$head=array('Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
-'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
-'Accept-Encoding: deflate',
-'Connection: keep-alive',
-'Upgrade-Insecure-Requests: 1');
-
+$r=array();
+$ua = $_SERVER['HTTP_USER_AGENT'];
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $l);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
-  //curl_setopt($ch,CURLOPT_REFERER,"https://ffmovies.to");
+  curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 10.0; rv:55.0) Gecko/20100101 Firefox/55.0');
   curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
-  //curl_setopt($ch, CURLOPT_HEADER,1);
-  curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie);
-  curl_setopt($ch, CURLOPT_COOKIEJAR, $cookie);
-  curl_setopt($ch, CURLOPT_HTTPHEADER, $head);
+  curl_setopt($ch, CURLOPT_ENCODING, "");
   curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
   curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
   curl_setopt($ch, CURLOPT_TIMEOUT, 15);
   $html = curl_exec($ch);
   curl_close($ch);
-  $time=round(time()/100)*100;
-  $l1="https://".$host."/user/ajax/menu-bar?ts=".$time."&_=744";
-$head=array('Accept: application/json, text/javascript, */*; q=0.01',
-'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
-'Accept-Encoding: deflate',
-'Connection: keep-alive',
-'Upgrade-Insecure-Requests: 1');
-  $ch = curl_init();
-  curl_setopt($ch, CURLOPT_URL, $l1);
-  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
-  curl_setopt($ch,CURLOPT_REFERER,"https://".$host."/movies");
-  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
-  curl_setopt($ch, CURLOPT_HEADER,1);
-  curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie);
-  curl_setopt($ch, CURLOPT_COOKIEJAR, $cookie);
-  curl_setopt($ch, CURLOPT_HTTPHEADER, $head);
-  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
-  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
-  $h = curl_exec($ch);
-  curl_close($ch);
-//echo $html;
-$host=parse_url($l)['host'];
-$videos = explode('<div class="item', $html);
-unset($videos[0]);
-$videos = array_values($videos);
-foreach($videos as $video) {
- $t1=explode('data-tip="',$video);
- $t2=explode('?',$t1[1]);
- $link=$t2[0];
- //$t1=explode('href="',$video);
- //$t2=explode('"',$t1[1]);
- /*
- if (strpos($t2[0],"/film/") !== false)
-   $movie=true;
- else
-   $movie=false;
- */
- if (strpos($video,'class="eps">') === false)
-  $movie=true;
- else
-  $movie=false;
- $t1=explode('class="type">',$video);
- $t2=explode('<',$t1[1]);
- if (!preg_match("/TV/i",$t2[0]))
-   $movie=true;
- else
-   $movie=false;
- $t1=explode('src="',$video);
- $t2=explode('"',$t1[1]);
- $image=$t2[0];
- $t1=explode('title="',$video);
- //$t2=explode(">",$t1[1]);
- $t3=explode('"',$t1[1]);
- $title=$t3[0];
-  if ($title && $movie) $f[] = array($title,$link,$image);
-}
-
-
-foreach($f as $key => $value) {
-  $title=$value[0];
+  //echo $html;
+  $videos = explode('data-movie-id="', $html);
+  unset($videos[0]);
+  $videos = array_values($videos);
+  foreach($videos as $video) {
+    $t1=explode('"',$video);
+    $link="https://filmele-online.com/embed/".$t1[0].".html";
+    $t1=explode('oldtitle="',$video);
+    $t2=explode('"',$t1[1]);
+    $title=trim($t2[0]);
+    $t1=explode('data-original="',$video);
+    $t2=explode('"',$t1[1]);
+    $image=$t2[0];
+    if ($title) array_push($r ,array($title,$link, $image));
+  }
+$c=count($r);
+for ($k=0;$k<$c;$k++) {
+  $title=$r[$k][0];
+  $title=str_replace("&#8211;","-",$title);
   $title=prep_tit($title);
-  $link=$value[1];
-  $image=$value[2];
-  $year="";
+  $link=$r[$k][1];
+  $image=$r[$k][2];
+  $rest = substr($title, -2);
+  //echo urlencode($rest);
+  if ($rest == " -") $title = substr($title, 0, -2);
+  $rest = substr($title, -6);
+  if (preg_match("/\((\d+)\)/",$rest,$m)) {
+   $year=$m[1];
+   $tit_imdb=trim(str_replace($m[0],"",$title));
+  } else {
+   $year="";
+   $tit_imdb=$title;
+  }
   $imdb="";
-  $link_f=$fs_target.'?tip=movie&link='.urlencode($link).'&title='.urlencode(fix_t($title)).'&image='.$image."&sez=&ep=&ep_tit=&year=".$year;
-  if ($title && strpos($link,"/show") === false) {
+  if (strpos($link,"filme") !== false && $title <> "DMCA") {
+  if ($has_fs == "no")
+    $link_f='filme_link.php?file='.urlencode($link).'&title='.urlencode(fix_t($title));
+  else
+    $link_f=$fs_target.'?tip=movie&link='.urlencode($link).'&title='.urlencode(fix_t($tit)).'&image='.$image."&sez=&ep=&ep_tit=&year=".$year;
   if ($n==0) echo '<TR>'."\r\n";
-  $val_imdb="tip=movie&title=".urlencode(fix_t($title))."&year=".$year."&imdb=".$imdb;
-  $fav_link="mod=add&title=".urlencode(fix_t($title))."&link=".urlencode($link)."&image=".urlencode($image)."&year=".$year;
+  $val_imdb="tip=movie&title=".urlencode(fix_t($tit_imdb))."&year=".$year."&imdb=".$imdb;
+  $fav_link="file=".$add_file."&mod=add&title=".urlencode(fix_t($title))."&link=".urlencode($link)."&image=".urlencode($image)."&year=".$year;
   if ($tast == "NU") {
     echo '<td class="mp" width="25%"><a href="'.$link_f.'" id="myLink'.$w.'" target="_blank" onmousedown="isKeyPressed(event)">
     <img id="myLink'.$w.'" src="'.$image.'" width="'.$width.'" height="'.$height.'"><BR>'.$title.'</a>
@@ -295,9 +257,7 @@ foreach($f as $key => $value) {
   $n=0;
   }
   }
- }
-
-/* bottom */
+}
   if ($n < 4 && $n > 0) {
     for ($k=0;$k<4-$n;$k++) {
       echo '<TD></TD>'."\r\n";
@@ -312,6 +272,6 @@ else
   echo '<a href="'.$next.'">&nbsp;&gt;&gt;&nbsp;</a></TD>'."\r\n";
 echo '</TR>'."\r\n";
 echo "</table>"."\r\n";
-echo "</table>";
-?></body>
+?>
+<br></body>
 </html>

@@ -66,7 +66,7 @@ echo '
 <TR>
 <TD width="25%"><a href="adult/pornjam_main.php" target="_blank">pornjam</a></TD>
 <TD width="25%"><a href="adult/pornburst_main.php" target="_blank">pornburst</a></TD>
-<TD width="25%"></TD>
+<TD width="25%"><a href="tv/playlist.php?title=LxKBAFM2.m3u8" target="_blank">playlist xxx</a></TD>
 <TD width="25%"><a href="adult/incestvidz_main.php" target="_blank">incestvidz</a></TD>
 </TR>
 

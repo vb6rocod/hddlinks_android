@@ -3,7 +3,7 @@ https://stream.adunity.com/b1/b1_640-.m3u8
 #EXTINF:-1, Realitatea Plus
 https://livestream.realitatea.net/livestream/liverealitatea.stream/playlist.m3u8
 #EXTINF:-1, TVR Moldova
-https://mn-nl.mncdn.com/tvr_moldova_live/tvr_moldova_live2/playlist.m3u8
+http://89.136.209.30:1935/liveedge/TVRMOLDOVA.stream/playlist.m3u8
 #EXTINF:-1, MD| ProTV Chisinau
 http://hls.protv.md/hls/protv.m3u8
 #EXTINF:-1, MD| ProTV Chisinau

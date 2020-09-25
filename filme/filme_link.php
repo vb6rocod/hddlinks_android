@@ -1103,6 +1103,8 @@ $cookie=$base_cookie."hdpopcorns.dat";
    curl_close ($ch);
    //echo $h;
    $html =$h;
+} elseif (strpos($filelink,"filmele-online.com") !== false) {
+  $html='<iframe src="'.$filelink.'">';
 } elseif (preg_match($indirect,$filelink)) {
   $html='<iframe src="'.$filelink.'">';
 } elseif (preg_match("/gomostream\.com|gomo\.to\/movie/",$filelink)) {
@@ -1181,7 +1183,7 @@ $s=$s."|prostream\.to|videobin\.co|upstream\.to|playtvid\.com|jetload\.net|vidfa
 $s=$s."|(video|player)\.filmeserialeonline\.org|streamwire\.|cloudvid\.icu|mstream\.xyz|streamhoe\.online|videyo\.";
 $s=$s."|fastvid\.co|vidload\.net|rovideo\.net\/embed|eplayvid\.com|dood\.|mediashore\.org|uptostream\.com";
 $s=$s."|movcloud\.net|dogestream\.|streamtape\.|jawcloud\.|evoload\.|sendvid\.|easyload\.io|okstream\.";
-$s=$s."|youdbox\.com/i";
+$s=$s."|youdbox\.com|filmele-online\.com/i";
 /////////////////////////////////////////////
 //$x=preg_grep($s,$links);
 //print_r ($x);

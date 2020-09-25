@@ -235,7 +235,7 @@ foreach($videos as $video) {
   $t1=explode('href="',$video);
   $t2 = explode('"', $t1[1]);
   $link = "http://pornmaki.com".trim($t2[0]);
-  $t1=explode('class="pic-name">',$video);
+  $t1=explode('class="pic-name"',$video);
   $t2=explode('>',$t1[1]);
   $t3=explode('<',$t2[1]);
   $title=$t3[0];

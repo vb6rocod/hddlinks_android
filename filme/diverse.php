@@ -12,6 +12,7 @@
 <body>
 <H2></H2>
 <?php
+include ("../common.php");
 function str_between($string, $start, $end){
 	$string = " ".$string; $ini = strpos($string,$start);
 	if ($ini == 0) return ""; $ini += strlen($start); $len = strpos($string,$end,$ini) - $ini;
@@ -19,7 +20,11 @@ function str_between($string, $start, $end){
 }
 echo '<table border="1px" width="100%">'."\n\r";
 echo '<TR><td style="color:black;background-color:#0a6996;color:#64c8ff;text-align:center" colspan="4"><font size="6"><b>Diverse...</b></font></TD></TR>';
-
+$list = glob($base_sub."*.srt");
+foreach ($list as $l) {
+    str_replace(" ","%20",$l);
+     unlink($l);
+}
 $n=0;
 if ($n == 0) echo "<TR>"."\n\r";
 

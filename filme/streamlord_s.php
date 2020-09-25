@@ -12,22 +12,16 @@ $tit=$_GET["title"];
 $link=$_GET["link"];
 $width="200px";
 $height="278px";
-$last_good="https://ffmovies.io";
-$last_good="https://ffmovies.co";
-$last_good="https://www12.fmovies.to";
-$host=parse_url($last_good)['host'];
-file_put_contents($base_fav."ffmovies_f.txt",$host);
 /* ==================================================== */
 $has_fav="yes";
 $has_search="yes";
 $has_add="yes";
 $has_fs="yes";
-$fav_target="ffmovies_f_fav.php?host=".$last_good;
-$add_target="ffmovies_f_add.php";
+$fav_target="streamlord_s_fav.php?host=http://www.streamlord.com";
+$add_target="streamlord_s_add.php";
 $add_file="";
-$fs_target="ffmovies_fs.php";
-$target="ffmovies_ff.php";
-
+$fs_target="streamlord_s_ep.php";
+$target="streamlord_s.php";
 /* ==================================================== */
 $base=basename($_SERVER['SCRIPT_FILENAME']);
 $p=$_SERVER['QUERY_STRING'];
@@ -45,12 +39,12 @@ $prev=$base."?page=".($page-1)."&".$p;
 $tit=unfix_t(urldecode($tit));
 $link=unfix_t(urldecode($link));
 /* ==================================================== */
-if (file_exists($base_cookie."filme.dat"))
-  $val_search=file_get_contents($base_cookie."filme.dat");
+if (file_exists($base_cookie."seriale.dat"))
+  $val_search=file_get_contents($base_cookie."seriale.dat");
 else
   $val_search="";
 $form='<form action="'.$target.'" target="_blank">
-Cautare film:  <input type="text" id="title" name="title" value="'.$val_search.'">
+Cautare serial:  <input type="text" id="title" name="title" value="'.$val_search.'">
 <input type="hidden" name="page" id="page" value="1">
 <input type="hidden" name="tip" id="tip" value="search">
 <input type="hidden" name="link" id="link" value="">
@@ -59,7 +53,7 @@ Cautare film:  <input type="text" id="title" name="title" value="'.$val_search.'
 /* ==================================================== */
 if ($tip=="search") {
   $page_title = "Cautare: ".$tit;
-  if ($page == 1) file_put_contents($base_cookie."filme.dat",$tit);
+  if ($page == 1) file_put_contents($base_cookie."seriale.dat",$tit);
 } else
   $page_title=$tit;
 /* ==================================================== */
@@ -171,107 +165,92 @@ if ($page==1) {
    echo '<TD class="nav" colspan="4" align="right"><a href="'.$prev.'">&nbsp;&lt;&lt;&nbsp;</a> | <a href="'.$next.'">&nbsp;&gt;&gt;&nbsp;</a></TD>'."\r\n";
 }
 echo '</TR>'."\r\n";
-$ua     =   $_SERVER['HTTP_USER_AGENT'];
-//$ua="Mozilla/5.0 (Windows NT 10.0; rv:75.0) Gecko/20100101 Firefox/75.0";
-$cookie=$base_cookie."ffmovies.dat";
 $r=array();
-if ($tip=="search") {
- $l="https://".$host."/search?keyword=".str_replace(" ","+",$tit)."&page=".$page;
+if($tip=="release") {
+  if ($page==1)
+   $l="http://www.streamlord.com/tvshows.html";
+  else
+   $l="http://www.streamlord.com/series.php?page=".$page;
 } else {
- $l="https://".$host."/movies?page=".$page;
+  $search=str_replace(" ","%20",$tit);
+  $l="http://www.streamlord.com/searchtest.php";
+  $post="searchapi2=".$search;
 }
-$head=array('Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+$host=parse_url($l)['host'];
+
+$ua="Mozilla/5.0 (Windows NT 10.0; rv:80.0) Gecko/20100101 Firefox/80.0";
+
+$head=array('Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
 'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
 'Accept-Encoding: deflate',
-'Connection: keep-alive',
-'Upgrade-Insecure-Requests: 1');
+'Connection: keep-alive');
 
-  $ch = curl_init();
-  curl_setopt($ch, CURLOPT_URL, $l);
-  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+  $ch = curl_init($l);
   curl_setopt($ch, CURLOPT_USERAGENT, $ua);
-  //curl_setopt($ch,CURLOPT_REFERER,"https://ffmovies.to");
   curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
-  //curl_setopt($ch, CURLOPT_HEADER,1);
-  curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie);
-  curl_setopt($ch, CURLOPT_COOKIEJAR, $cookie);
-  curl_setopt($ch, CURLOPT_HTTPHEADER, $head);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER  ,1);  // RETURN THE CONTENTS OF THE CALL
   curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+  curl_setopt($ch, CURLOPT_HTTPHEADER,$head);
+  //curl_setopt($ch, CURLOPT_COOKIEJAR, $cookie);
+  //curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie);
+  //curl_setopt($ch, CURLOPT_HEADER,1);
   curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
   curl_setopt($ch, CURLOPT_TIMEOUT, 15);
   $html = curl_exec($ch);
-  curl_close($ch);
-  $time=round(time()/100)*100;
-  $l1="https://".$host."/user/ajax/menu-bar?ts=".$time."&_=744";
-$head=array('Accept: application/json, text/javascript, */*; q=0.01',
-'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
-'Accept-Encoding: deflate',
-'Connection: keep-alive',
-'Upgrade-Insecure-Requests: 1');
-  $ch = curl_init();
-  curl_setopt($ch, CURLOPT_URL, $l1);
-  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
-  curl_setopt($ch,CURLOPT_REFERER,"https://".$host."/movies");
-  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
-  curl_setopt($ch, CURLOPT_HEADER,1);
-  curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie);
-  curl_setopt($ch, CURLOPT_COOKIEJAR, $cookie);
-  curl_setopt($ch, CURLOPT_HTTPHEADER, $head);
-  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
-  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
-  $h = curl_exec($ch);
-  curl_close($ch);
-//echo $html;
-$host=parse_url($l)['host'];
-$videos = explode('<div class="item', $html);
-unset($videos[0]);
-$videos = array_values($videos);
-foreach($videos as $video) {
- $t1=explode('data-tip="',$video);
- $t2=explode('?',$t1[1]);
- $link=$t2[0];
- //$t1=explode('href="',$video);
- //$t2=explode('"',$t1[1]);
- /*
- if (strpos($t2[0],"/film/") !== false)
-   $movie=true;
- else
-   $movie=false;
- */
- if (strpos($video,'class="eps">') === false)
-  $movie=true;
- else
-  $movie=false;
- $t1=explode('class="type">',$video);
- $t2=explode('<',$t1[1]);
- if (!preg_match("/TV/i",$t2[0]))
-   $movie=true;
- else
-   $movie=false;
- $t1=explode('src="',$video);
- $t2=explode('"',$t1[1]);
- $image=$t2[0];
- $t1=explode('title="',$video);
- //$t2=explode(">",$t1[1]);
- $t3=explode('"',$t1[1]);
- $title=$t3[0];
-  if ($title && $movie) $f[] = array($title,$link,$image);
+  curl_close ($ch);
+///////////////////////////////////////////////////////////////////////////
+$r=array();
+if ($tip=="release") {
+  $videos = explode('<li id="sw"',$html);
+  unset($videos[0]);
+  $videos = array_values($videos);
+  foreach($videos as $video) {
+   $t1=explode('href="',$video);
+   $t2=explode('"',$t1[1]);
+   $link="http://www.streamlord.com/".$t2[0];
+   $t3 = explode('movie-grid-title">', $video);
+   $t4 = explode('<', $t3[1]);
+   $title = trim($t4[0]);
+   $title=prep_tit($title);
+   $t1 = explode("src='", $video);
+   $t2 = explode("'", $t1[1]);
+   $image = "http://www.streamlord.com/".$t2[0];
+   $t1=explode('movie-grid-year">',$video);
+   $t2=explode('<',$t1[1]);
+   $year=trim($t2[0]);
+   if (strpos($link,"watch-tvshow") !== false) $r[]=array($link,$title,$image,$year);
+  }
+} else {
+  $videos = explode('class="result-item',$h);
+  unset($videos[0]);
+  $videos = array_values($videos);
+  foreach($videos as $video) {
+   $t1 = explode('href="',$video);
+   $t2=explode('"',$t1[1]);
+   $link = $t2[0];
+   if (strpos($link,"http") === false) $link="https://".$host.$link;
+   $t3 = explode('alt="', $video);
+   $t4 = explode('"', $t3[1]);
+   $title = $t4[0];
+   $title=prep_tit($title);
+   $t1 = explode('src="', $video);
+   $t2 = explode('"', $t1[1]);
+   $image = $t2[0];
+   if (strpos($link,"/series") !== false) $r[]=array($link,$title,$image,$year);
+  }
 }
-
-
-foreach($f as $key => $value) {
-  $title=$value[0];
-  $title=prep_tit($title);
-  $link=$value[1];
-  $image=$value[2];
-  $year="";
+$c=count($r);
+for ($k=0;$k<$c;$k++) {
+  $link=$r[$k][0];
+  $title=$r[$k][1];
+  $image=$r[$k][2];
+  $year=$r[$k][3];
+  $tit_imdb=$title;
   $imdb="";
-  $link_f=$fs_target.'?tip=movie&link='.urlencode($link).'&title='.urlencode(fix_t($title)).'&image='.$image."&sez=&ep=&ep_tit=&year=".$year;
-  if ($title && strpos($link,"/show") === false) {
+  $link_f=$fs_target.'?tip=series&link='.urlencode($link).'&title='.urlencode(fix_t($title)).'&image='.$image."&sez=&ep=&ep_tit=&year=".$year;
+  if ($title) {
   if ($n==0) echo '<TR>'."\r\n";
-  $val_imdb="tip=movie&title=".urlencode(fix_t($title))."&year=".$year."&imdb=".$imdb;
+  $val_imdb="tip=series&title=".urlencode(fix_t($tit_imdb))."&year=".$year."&imdb=".$imdb;
   $fav_link="mod=add&title=".urlencode(fix_t($title))."&link=".urlencode($link)."&image=".urlencode($image)."&year=".$year;
   if ($tast == "NU") {
     echo '<td class="mp" width="25%"><a href="'.$link_f.'" id="myLink'.$w.'" target="_blank" onmousedown="isKeyPressed(event)">

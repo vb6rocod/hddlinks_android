@@ -38,6 +38,7 @@ echo '<TR><th class="cat" colspan="3">'.$main_title.'</th></TR>';
 echo '<TR><TD class="nav" colspan="3"><a id="fav" href="'.$fav_target.'" target="_blank">Favorite</a></TD>'."\r\n";
 echo '</TR>';
 $n=0;
+/*
 $link="http://animdl.cf/?dir=Movie/2020";
 $title="Animedl";
     if ($n == 0) echo "<TR>"."\r\n";
@@ -45,6 +46,7 @@ $title="Animedl";
 	if ($n == 0) echo "<TR>"."\r\n";
 	echo '<TD class="cat">'.'<a class ="cat" href="'.$link.'" target="_blank">'.$title.'</a></TD>';
     $n++;
+ */
 $l="https://anilist1.ir/?dir=Movie";
 $ua="Mozilla/5.0 (Windows NT 10.0; rv:63.0) Gecko/20100101 Firefox/63.0";
   $ch = curl_init();

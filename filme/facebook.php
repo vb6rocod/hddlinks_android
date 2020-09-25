@@ -44,6 +44,7 @@ if (file_exists($base_pass."facebook.txt")) {
 }
 $ceva="14159";
 $ua="Mozilla/5.0 (Windows NT 10.0; rv:74.0) Gecko/20100101 Firefox/74.0";
+$ua="Mozilla/5.0 (Windows NT 10.0; rv:80.0) Gecko/20100101 Firefox/80.0";
 $page=$_GET['page'];
 $search=$_GET["search"];
 $doc_id=$_GET['doc_id'];
@@ -51,12 +52,13 @@ $token=$_GET['next'];
 $token_prev=$token;
 if ($page==1) {
 $ref="https://www.facebook.com/pg/".$search."/videos/?ref=page_internal";
-$ref="https://www.facebook.com/".$search;
+//$ref="https://www.facebook.com/".$search;
 $head=array('Accept: */*',
 'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
 'Accept-Encoding: deflate',
 'Origin: https://www.facebook.com',
 'Connection: keep-alive',
+'Cookie: c_user='.$c_user.'; xs='.urlencode("145:MQRpz_9AbGBtpw:2:1565597893:".$ceva.":7283").';'
 );
 
 //echo $href;
@@ -72,16 +74,38 @@ curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
 curl_setopt($ch, CURLOPT_TIMEOUT, 15);
 $h = curl_exec($ch);
 curl_close($ch);
+//echo $h;
+//die();
 $t1=explode('pageID":"',$h);
 $t2=explode('"',$t1[1]);
 $doc_id=$t2[0];
-$t1=explode('pageName":"',$h);
-$t2=explode('"',$t1[1]);
-$pg=$t2[0];
+//$t1=explode('pageName":"',$h);
+//$t2=explode('"',$t1[1]);
+//$pg=$t2[0];
 }
 //echo "\n".$doc_id."\n";
 
+//2838671786243895
+$p=array('av' => $c_user,
+    '__user' => $c_user,
+    '__a' => '1',
+    '__csr' => '',
+    '__beoa' => '1',
+    '__pc' => 'EXP2:comet_pkg',
+    'dpr' => '1',
+    '__rev' => '1002694184',
+    '__comet_req' => '0',
+    'fb_dtsg' => $fb_dtsg,
+    '__spin_r' => '1002694184',
+    '__spin_b' => 'trunk',
+    '__spin_t' => time(),
+    'fb_api_caller_class' => 'RelayModern',
+    'fb_api_req_friendly_name' => 'PagesCometChannelTabAllVideosCardImplPaginationQuery',
+    'variables' => '{"count":25,"cursor":"'.$token.'","useDefaultActor":false,"id":"'.$doc_id.'"}',
+    'doc_id' => '3356141697781815'
+);
 
+if (!$token) {
 $p=array('av' => $c_user,
     '__user' => $c_user,
     '__a' => '1',
@@ -89,19 +113,40 @@ $p=array('av' => $c_user,
     '__beoa' => '0',
     '__pc' => 'PHASED:DEFAULT',
     'dpr' => '1',
-    '__rev' => '1001841741',
+    '__rev' => '1002694184',
     '__comet_req' => '0',
     'fb_dtsg' => $fb_dtsg,
-    '__spin_r' => '1001841741',
+    '__spin_r' => '1002694184',
+    '__spin_b' => 'trunk',
+    '__spin_t' => time(),
+    'fb_api_caller_class' => 'RelayModern',
+    'fb_api_req_friendly_name' => 'PagesCometChannelTabAllVideosCardImplPaginationQuery',
+    'variables' => '{"count":25,"useDefaultActor":false,"id":"'.$doc_id.'"}',
+    'doc_id' => '3356141697781815'
+);
+} else {
+$p=array('av' => $c_user,
+    '__user' => $c_user,
+    '__a' => '1',
+    '__csr' => '',
+    '__beoa' => '0',
+    '__pc' => 'PHASED:DEFAULT',
+    'dpr' => '1',
+    '__rev' => '1002694184',
+    '__comet_req' => '0',
+    'fb_dtsg' => $fb_dtsg,
+    '__spin_r' => '1002694184',
     '__spin_b' => 'trunk',
     '__spin_t' => time(),
     'fb_api_caller_class' => 'RelayModern',
     'fb_api_req_friendly_name' => 'PagesCometChannelTabAllVideosCardImplPaginationQuery',
     'variables' => '{"count":25,"cursor":"'.$token.'","useDefaultActor":false,"id":"'.$doc_id.'"}',
-    'doc_id' => '2730244443691106'
+    'doc_id' => '3356141697781815'
 );
+}
+// ,"cursor":"'.$token.'"
+//print_r ($p);
 $post=http_build_query($p);
-
 $l="https://www.facebook.com/api/graphql/";
 $head=array('Accept: */*',
 'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
@@ -127,8 +172,9 @@ $h1 = curl_exec($ch);
 curl_close($ch);
 //echo $h1;
 $r=json_decode($h1,1);
+//print_r ($r);
 $token=$r['data']['node']['all_videos']['page_info']['end_cursor'];
-
+//echo $token;
 $x=$r['data']['node']['all_videos']['edges'];
 $page_title=$search;
 $width="200px";
