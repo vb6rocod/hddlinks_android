@@ -143,6 +143,40 @@ if (preg_match("/filmeonlinegratis\.org/",$filelink)) {
   curl_close($ch);
   $html = urldecode(str_replace("@","%",$html));
 //} elseif (strpos($filelink,"fsgratis.") !== false) {
+} elseif (preg_match("/serialeturcesti\.biz/",$filelink)) {
+  $ua="Mozilla/5.0 (Windows NT 10.0; rv:81.0) Gecko/20100101 Firefox/81.0";
+  $ch = curl_init();
+  curl_setopt($ch, CURLOPT_URL, $filelink);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
+  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+  $html = curl_exec($ch);
+
+  $t1=explode('name="content-protector-token',$html);
+  $t2=explode('value="',$t1[1]);
+  $t3=explode('"',$t2[1]);
+  $token=$t3[0];
+  $t1=explode('name="content-protector-ident',$html);
+  $t2=explode('value="',$t1[1]);
+  $t3=explode('"',$t2[1]);
+  $ident=$t3[0];
+  $post="content-protector-captcha=1&content-protector-token=".$token."&content-protector-ident=".$ident."&content-protector-submit.x=338&content-protector-submit.y=206&content-protector-password=...";
+  $head=array('Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
+  'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
+  'Accept-Encoding: deflate',
+  'Content-Type: application/x-www-form-urlencoded',
+  'Content-Length: '.strlen($post).'',
+  'Origin: https://serialeturcesti.biz',
+  'Connection: keep-alive',
+  'Referer: https://serialeturcesti.biz');
+  curl_setopt($ch, CURLOPT_HTTPHEADER,$head);
+  curl_setopt($ch, CURLOPT_POST,1);
+  curl_setopt($ch, CURLOPT_POSTFIELDS,$post);
+  $html = curl_exec($ch);
+  curl_close($ch);
 } elseif (preg_match("/fsgratis\.|filmeserialegratis\.org/",$filelink)) {
   //https://fsgratis.com/miss-me-this-christmas/
   $host=parse_url($filelink)['host'];

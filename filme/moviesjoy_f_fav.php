@@ -8,6 +8,7 @@ $height="278px";
 $add_target="moviesjoy_f_add.php";
 $fs_target="moviesjoy_fs.php";
 $file=$base_fav."moviesjoy_f1.dat";
+$host1=parse_url($host)['host'];
 ?>
 <html><head>
 <meta http-equiv="content-type" content="text/html; charset=UTF-8">
@@ -137,7 +138,8 @@ foreach($arr as $key => $value) {
      $year="";
      $tit_imdb=$title;
   }
-    $link_f=$fs_target.'?tip=movie&link='.urlencode($link).'&title='.urlencode(fix_t($title)).'&image='.$image."&sez=&ep=&ep_tit=&year=".$year;
+  //$image=str_replace(".to",".net",$image);
+    $link_f=$fs_target.'?tip=movie&link='.urlencode($link).'&title='.urlencode(fix_t($title)).'&image='.$image."&sez=&ep=&ep_tit=&year=".$year."&host=".$host1;
   if ($n==0) echo '<TR>'."\r\n";
   $val_imdb="tip=movie&title=".urlencode(fix_t($tit_imdb))."&year=".$year."&imdb=".$imdb;
   $fav_link="file=&mod=del&title=".urlencode(fix_t($title))."&link=".urlencode($link)."&image=".urlencode($image)."&year=".$year;

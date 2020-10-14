@@ -42,6 +42,7 @@ if (file_exists($base_pass."facebook.txt")) {
  $c_user="";
  $fb_dtsg="";
 }
+//$fb_dtsg="AQG_R0c7LTPA:AQEmPBYcZOmk";
 $ceva="14159";
 $ua="Mozilla/5.0 (Windows NT 10.0; rv:74.0) Gecko/20100101 Firefox/74.0";
 $ua="Mozilla/5.0 (Windows NT 10.0; rv:80.0) Gecko/20100101 Firefox/80.0";
@@ -53,12 +54,14 @@ $token_prev=$token;
 if ($page==1) {
 $ref="https://www.facebook.com/pg/".$search."/videos/?ref=page_internal";
 //$ref="https://www.facebook.com/".$search;
+// xs=20%3AfQI15ChkptQZhg%3A2%3A1602057974%3A17452%3A7640
+$xs="96%3AxaMdChPa0V4_qw%3A2%3A1602577436%3A17452%3A7640";
 $head=array('Accept: */*',
 'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
 'Accept-Encoding: deflate',
 'Origin: https://www.facebook.com',
 'Connection: keep-alive',
-'Cookie: c_user='.$c_user.'; xs='.urlencode("145:MQRpz_9AbGBtpw:2:1565597893:".$ceva.":7283").';'
+'Cookie: c_user='.$c_user.'; xs='.$xs.';'
 );
 
 //echo $href;
@@ -155,7 +158,7 @@ $head=array('Accept: */*',
 'Content-Length: '.strlen($post).'',
 'Origin: https://www.facebook.com',
 'Connection: keep-alive',
-'Cookie: c_user='.$c_user.'; xs='.urlencode("145:MQRpz_9AbGBtpw:2:1565597893:".$ceva.":7283").';'
+'Cookie: c_user='.$c_user.'; xs='.$xs.';'
 );
 $ch = curl_init();
 curl_setopt($ch, CURLOPT_URL, $l);

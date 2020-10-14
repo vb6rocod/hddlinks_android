@@ -1,18 +1,16 @@
 <!doctype html>
 <?php
 include ("../common.php");
-
 error_reporting(0);
-if (file_exists($base_pass."debug.txt"))
- $debug=true;
-else
- $debug=false;
-
 $list = glob($base_sub."*.srt");
    foreach ($list as $l) {
     str_replace(" ","%20",$l);
     unlink($l);
 }
+if (file_exists($base_pass."debug.txt"))
+ $debug=true;
+else
+ $debug=false;
 if (file_exists($base_pass."player.txt")) {
 $flash=trim(file_get_contents($base_pass."player.txt"));
 } else {
@@ -48,6 +46,11 @@ $tip="series";
 }
 $imdbid="";
 
+function str_between($string, $start, $end){
+	$string = " ".$string; $ini = strpos($string,$start);
+	if ($ini == 0) return ""; $ini += strlen($start); $len = strpos($string,$end,$ini) - $ini;
+	return substr($string,$ini,$len);
+}
 ?>
 <html>
 <head>
@@ -103,6 +106,14 @@ function changeserver(s,t) {
       document.getElementById("subtitrari").click();
      } else if (charCode == "53") {
       document.getElementById("viz").click();
+     } else if (charCode == "55") {
+      document.getElementById("opensub1").click();
+     } else if (charCode == "56") {
+      document.getElementById("titrari1").click();
+     } else if (charCode == "57") {
+      document.getElementById("subs1").click();
+     } else if (charCode == "48") {
+      document.getElementById("subtitrari1").click();
      }
    }
 document.onkeypress =  zx;
@@ -124,45 +135,131 @@ echo '<h2>'.$tit.$tit2.'</H2>';
 echo '<BR>';
 $r=array();
 $s=array();
-if ($tip=="movie") {
-  $l="https://123files.club/imdb/play/?id=".$link;
-  $l="https://play.123files.club/movie.php?imdb=".$link;
-} else {
-  $l="https://123files.club/imdb/tv/?id=".$link."&s=".$sez."&e=".$ep;
-  $l="https://play.123files.club/tv.php?imdb=".$link."&s=".$sez."&e=".$ep;
-}
-  $ua="Mozilla/5.0 (Windows NT 10.0; rv:75.0) Gecko/20100101 Firefox/75.0";
-
-$post="referer=123files.club&SubmitButtoncolors=917dWlUdvmbJ9uYEZBbtW29iamVjdCBNb3VzZUV2ZW50XSo2MjkqMzM1slkR3tXJhDDA6zjh9176";
-$post="referer=123files.club&play=010UDuas4H0RBW29iamVjdCBNb3VzZUV2ZW50XSoyNjcqMTQxrajGmal3bUMnf132";
-  $ch = curl_init();
-  curl_setopt($ch, CURLOPT_URL, $l);
-  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+$ua="Mozilla/5.0 (Windows NT 10.0; rv:80.0) Gecko/20100101 Firefox/80.0";
+  $ch = curl_init($link);
   curl_setopt($ch, CURLOPT_USERAGENT, $ua);
-  curl_setopt($ch,CURLOPT_REFERER,"https://123files.club");
   curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
-  curl_setopt($ch, CURLOPT_POST,1);
-  curl_setopt($ch, CURLOPT_POSTFIELDS,$post);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER  ,1);  // RETURN THE CONTENTS OF THE CALL
   curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
   curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
   curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+  $html = curl_exec($ch);
+  curl_close ($ch);
+  //echo $html;
+  $t1=explode("data-post='",$html);
+  $t2=explode("'",$t1[1]);
+  $id=$t2[0];
+$l="https://topmoviesonline.org/wp-admin/admin-ajax.php";
+$post="action=doo_player_ajax&post=".$id."&nume=1&type=movie";
+//echo $post;
+$head=array('Accept: */*',
+'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
+'Accept-Encoding: deflate',
+'Content-Type: application/x-www-form-urlencoded; charset=UTF-8',
+'X-Requested-With: XMLHttpRequest',
+'Content-Length: '.strlen($post).'',
+'Origin: https://topmoviesonline.org',
+'Connection: keep-alive',
+'Referer: https://topmoviesonline.org');
+
+  $ch = curl_init($l);
+  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
+  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER  ,1);  // RETURN THE CONTENTS OF THE CALL
+  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+  curl_setopt($ch, CURLOPT_HTTPHEADER,$head);
+  curl_setopt($ch, CURLOPT_POST, 1);
+  curl_setopt($ch, CURLOPT_POSTFIELDS, $post);
+  //curl_setopt($ch, CURLOPT_HEADER,1);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
   $h = curl_exec($ch);
+  curl_close ($ch);
   //echo $h;
-  curl_close($ch);
-  if (preg_match_all("/data\-id\=\"(.*?)\"\>\<i class\=\"fas fa\-play\"\>\<\/i\>(.*?)\<\/div/",$h,$m)) {
-  $r=$m[1];
-  $s=$m[2];
+  $t1=explode("src='",$h);
+  $t2=explode("'",$t1[1]);
+  $l=$t2[0];
+  //echo $l;
+$head=array('Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
+'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
+'Accept-Encoding: deflate',
+'Connection: keep-alive',
+'Referer: https://topmoviesonline.org');
+
+  $ch = curl_init($l);
+  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
+  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,0);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER  ,1);  // RETURN THE CONTENTS OF THE CALL
+  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+  curl_setopt($ch, CURLOPT_HTTPHEADER,$head);
+  //curl_setopt($ch, CURLOPT_COOKIEJAR, $cookie);
+  //curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie);
+  curl_setopt($ch, CURLOPT_HEADER,1);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+  $h = curl_exec($ch);
+  curl_close ($ch);
+  //echo $h;
+  if (preg_match("/location: (.+)/i",$h,$m)) {
+  $l=trim($m[1]);
+  $l=str_replace(" ","%20",$l);
+//echo $l;
+  $ch = curl_init($l);
+  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
+  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER  ,1);  // RETURN THE CONTENTS OF THE CALL
+  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+  curl_setopt($ch, CURLOPT_HTTPHEADER,$head);
+  //curl_setopt($ch, CURLOPT_COOKIEJAR, $cookie);
+  //curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie);
+  curl_setopt($ch, CURLOPT_HEADER,1);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+  $h = curl_exec($ch);
+  curl_close ($ch);
+  //echo $h;
+  $videos = explode("GetVideoSource('",$h);
+  unset($videos[0]);
+  $videos = array_values($videos);
+  foreach($videos as $video) {
+   $t1=explode("'",$video);
+   $r[] = "https://player.ezylink.co/".$t1[0];
+   $t1=explode(">",$video);
+   $t2=explode("<",$t1[1]);
+   $s[]=$t2[0];
   }
-//die();
+  } else {
+   $r[]=$l;
+   $s[]=parse_url($l)['host'];
+  }
+  /*
+  echo $r[0];
+  $ch = curl_init($r[1]);
+  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
+  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER  ,1);  // RETURN THE CONTENTS OF THE CALL
+  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+  curl_setopt($ch, CURLOPT_HTTPHEADER,$head);
+  curl_setopt($ch, CURLOPT_REFERER,"https://ezylink.co");
+  //curl_setopt($ch, CURLOPT_COOKIEJAR, $cookie);
+  //curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie);
+  curl_setopt($ch, CURLOPT_HEADER,1);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+  $h = curl_exec($ch);
+  curl_close ($ch);
+  //echo $h;
+  //echo $html;
+  */
 echo '<table border="1" width="100%">';
 echo '<TR><TD class="mp">Alegeti un server: Server curent:<label id="server">'.$s[0].'</label>
-<input type="hidden" id="file" value="'.urlencode("https:".$r[0]).'"></td></TR></TABLE>';
+<input type="hidden" id="file" value="'.urlencode($r[0]).'"></td></TR></TABLE>';
 echo '<table border="1" width="100%"><TR>';
 $k=count($r);
 $x=0;
 for ($i=0;$i<$k;$i++) {
   if ($x==0) echo '<TR>';
-  $c_link="https:".$r[$i];
+  $c_link=$r[$i];
   $openload=$s[$i];
   if (preg_match($indirect,$openload)) {
   echo '<TD class="mp"><a href="filme_link.php?file='.urlencode($c_link).'&title='.urlencode(unfix_t($tit.$tit2)).'" target="_blank">'.$openload.'</a></td>';
@@ -186,16 +283,21 @@ if ($tip=="movie") {
   $tit2="";
   $sez="";
   $ep="";
+  $imdbid="";
   $from="";
   $link_page="";
 } else {
   $tit3=$tit;
   $sez=$sez;
   $ep=$ep;
+  $imdbid="";
   $from="";
   $link_page="";
 }
-$imdbid=str_replace("tt","",$link);
+  $rest = substr($tit3, -6);
+  if (preg_match("/\((\d+)\)/",$rest,$m)) {
+   $tit3=trim(str_replace($m[0],"",$tit3));
+  }
 $sub_link ="from=".$from."&tip=".$tip."&sez=".$sez."&ep=".$ep."&imdb=".$imdbid."&title=".urlencode(fix_t($tit3))."&link=".$link_page."&ep_tit=".urlencode(fix_t($tit2))."&year=".$year;
 echo '<br>';
 echo '<table border="1" width="100%">';
@@ -205,6 +307,14 @@ echo '<TD class="mp"><a id="opensub" href="opensubtitles.php?'.$sub_link.'">open
 echo '<TD class="mp"><a id="titrari" href="titrari_main.php?page=1&'.$sub_link.'&page=1">titrari.ro</a></td>';
 echo '<TD class="mp"><a id="subs" href="subs_main.php?'.$sub_link.'">subs.ro</a></td>';
 echo '<TD class="mp"><a id="subtitrari" href="subtitrari_main.php?'.$sub_link.'">subtitrari_noi.ro</a></td>';
+echo '</TR></TABLE>';
+echo '<table border="1" width="100%">';
+echo '<TR><TD style="background-color:#0a6996;color:#64c8ff;font-weight: bold;font-size: 1.5em" align="center" colspan="4">Alegeti o subtitrare (cauta imdb id)</td></TR>';
+echo '<TR>';
+echo '<TD class="mp"><a id="opensub1" href="opensubtitles1.php?'.$sub_link.'">opensubtitles</a></td>';
+echo '<TD class="mp"><a id="titrari1" href="titrari_main1.php?page=1&'.$sub_link.'&page=1">titrari.ro</a></td>';
+echo '<TD class="mp"><a id="subs1" href="subs_main1.php?'.$sub_link.'">subs.ro</a></td>';
+echo '<TD class="mp"><a id="subtitrari1" href="subtitrari_main1.php?'.$sub_link.'">subtitrari_noi.ro</a></td>';
 echo '</TR></TABLE>';
 echo '<table border="1" width="100%"><TR>';
 if ($tip=="movie")
@@ -221,9 +331,9 @@ echo '<br>
 <table border="0px" width="100%">
 <TR>
 <TD><font size="4"><b>Scurtaturi: 1=opensubtitles, 2=titrari, 3=subs, 4=subtitrari, 5=vizioneaza
+<BR>Scurtaturi: 7=opensubtitles, 8=titrari, 9=subs, 0=subtitrari (cauta imdb id)
 </b></font></TD></TR></TABLE>
 ';
-
 include("../debug.html");
 echo '
 <div id="overlay">

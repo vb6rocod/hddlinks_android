@@ -35,6 +35,7 @@ $ep=$_GET["ep"];
 $ep_title=unfix_t(urldecode($_GET["ep_tit"]));
 $ep_title=prep_tit($ep_title);
 $year=$_GET["year"];
+$host=$_GET['host'];
 if ($tip=="movie") {
 $tit2="";
 } else {
@@ -160,7 +161,8 @@ if ($tip=="movie") {
   //https://www1.moviesjoy.net/ajax/movie/episodes/58758
   $l="https://www1.moviesjoy.net/ajax/v4_movie_episodes/".$id."/".$movie_id;
   */
-  $l="https://www1.moviesjoy.net/ajax/movie/episodes/".$link;
+  $l="https://".$host."/ajax/movie/episodes/".$link;
+  //echo $l;
   $ch = curl_init($l);
   curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
   curl_setopt($ch, CURLOPT_REFERER, $l);
@@ -169,7 +171,7 @@ if ($tip=="movie") {
   curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
   $h = curl_exec($ch);
   curl_close($ch);
-
+  //echo $h;
   //$x=json_decode($h,1);
   //$h=$x['html'];
   $r=array();
@@ -178,11 +180,11 @@ if ($tip=="movie") {
   unset($videos[0]);
   $videos = array_values($videos);
   foreach($videos as $video) {
-    $t1=explode('</i>',$video);
+    $t1=explode('span>',$video);
     $t2=explode('<',$t1[1]);
     $svr_name=trim($t2[0]);
     $t3=explode('"',$video);
-    $l="https://www1.moviesjoy.net/movie/".$t3[0];
+    $l="https://".$host."/movie/".$t3[0];
     $r[]=$l;
     $s[]=$svr_name;
   }
@@ -190,7 +192,7 @@ if ($tip=="movie") {
   $r=array();
   $s=array();
   $svr_name=array();
-  $l="https://www1.moviesjoy.net/ajax/season/episodes/".$link;
+  $l="https://".$host."/ajax/season/episodes/".$link;
   $ch = curl_init($l);
   curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
   curl_setopt($ch, CURLOPT_REFERER, $link);
@@ -230,7 +232,7 @@ if ($tip=="movie") {
       preg_match("/\d+/",$t2[0],$p);
       $episod=$p[0];
       if ($episod == $ep) {
-        $l="https://www1.moviesjoy.net/movie/".$id_link;
+        $l="https://".$host."/movie/".$id_link;
         $r[]=$l;
         $s[]=$svr_name[$id_serv];
       }

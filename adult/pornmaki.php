@@ -241,7 +241,7 @@ foreach($videos as $video) {
   $title=$t3[0];
   $title = trim(strip_tags($title));
   $title = prep_tit($title);
-  $t1 = explode('src="', $video);
+  $t1 = explode('data-src="', $video);
   $t2 = explode('"', $t1[1]);
   $image = $t2[0];
   $t1=explode('video-length"',$video);

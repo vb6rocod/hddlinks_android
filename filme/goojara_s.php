@@ -12,19 +12,16 @@ $tit=$_GET["title"];
 $link=$_GET["link"];
 $width="200px";
 $height="278px";
-$last_good="https://moviesjoy.to";
-//$last_good="https://moviesjoy.net";
-$host=parse_url($last_good)['host'];
 /* ==================================================== */
 $has_fav="yes";
 $has_search="yes";
 $has_add="yes";
 $has_fs="yes";
-$fav_target="moviesjoy_s_fav.php?host=".$last_good;
-$add_target="moviesjoy_s_add.php";
+$fav_target="goojara_s_fav.php?host=https://www.goojara.to";
+$add_target="goojara_s_add.php";
 $add_file="";
-$fs_target="moviesjoy_s_ep.php";
-$target="moviesjoy_s.php";
+$fs_target="goojara_s_ep.php";
+$target="goojara_s.php";
 /* ==================================================== */
 $base=basename($_SERVER['SCRIPT_FILENAME']);
 $p=$_SERVER['QUERY_STRING'];
@@ -168,58 +165,111 @@ if ($page==1) {
    echo '<TD class="nav" colspan="4" align="right"><a href="'.$prev.'">&nbsp;&lt;&lt;&nbsp;</a> | <a href="'.$next.'">&nbsp;&gt;&gt;&nbsp;</a></TD>'."\r\n";
 }
 echo '</TR>'."\r\n";
-
+$r=array();
 if($tip=="release") {
-  $l="https://www1.moviesjoy.net/movie/filter/series/latest/all/all/all/all/all/page-".$page.".html";
-  $l="https://".$host."/tv-show?page=".$page;
+  if ($page==1)
+   $l="https://www.goojara.to/watch-series";
+  else
+   $l="https://www.goojara.to/watch-series?p=".$page;
 } else {
-  $search=str_replace(" ","-",$tit);
-  //$l="https://www1.moviesjoy.net/search/".str_replace(" ","+",$tit)."/page-".$page.".html";
-  $l="https://".$host."/search/".$search."?page=".$page;
+  $search=str_replace(" ","%20",$tit);
+  $l="https://www.goojara.to/xhrr.php";
+  $post="q=".$search;
 }
 $host=parse_url($l)['host'];
-  $ch = curl_init();
-  curl_setopt($ch, CURLOPT_URL, $l);
-  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-  curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 10.0; rv:55.0) Gecko/20100101 Firefox/55.0');
+
+$ua="Mozilla/5.0 (Windows NT 10.0; rv:80.0) Gecko/20100101 Firefox/80.0";
+if ($tip=="release") {
+$head=array('Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
+'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
+'Accept-Encoding: deflate',
+'Connection: keep-alive');
+
+  $ch = curl_init($l);
+  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
   curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER  ,1);  // RETURN THE CONTENTS OF THE CALL
+  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+  curl_setopt($ch, CURLOPT_HTTPHEADER,$head);
+  //curl_setopt($ch, CURLOPT_COOKIEJAR, $cookie);
+  //curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie);
+  //curl_setopt($ch, CURLOPT_HEADER,1);
   curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
   curl_setopt($ch, CURLOPT_TIMEOUT, 15);
   $html = curl_exec($ch);
-  curl_close($ch);
+  curl_close ($ch);
+  $t1=explode('div id="subdiv">',$html);
+  $t2=explode('<div id="pgs',$t1[1]);
+  $html=$t2[0];
+} else {
+  $head=array('Accept: */*',
+  'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
+  'Accept-Encoding: deflate',
+  'Content-type: application/x-www-form-urlencoded',
+  'Content-Length: '.strlen($post).'',
+  'Origin: https://www.goojara.to',
+  'Connection: keep-alive',
+  'Referer: https://www.goojara.to/watch-series');
 
-$videos = explode('class="flw-item', $html);
-unset($videos[0]);
-$videos = array_values($videos);
-foreach($videos as $video) {
-  $t1 = explode('href="',$video);
-  $t2 = explode('"', $t1[1]);
-  $link = substr(strrchr($t2[0], "-"), 1);
-  //$link = str_replace("/movie/","/watch-movie/",$t2[0]);
-  //if (strpos($link,"http") === false) $link="https://".$host.$link;
-  //$t1 = explode('title="', $video);
-  //$t2 = explode('"', $t1[1]);
-  //$title = $t2[0];
-  //if (!$title) {
-  $t1=explode('title="',$video);
-  $t4=explode('"',$t1[1]);
-  $title=$t4[0];
-  //}
-  $title = prep_tit($title);
-  $t1 = explode('data-src="', $video);
-  $t2 = explode('"', $t1[1]);
-  $image = $t2[0];
-  if (strpos($image,"http") === false) $image="blank.jpg";
-  $rest = substr($title, -6);
-  if (preg_match("/\((\d+)\)/",$rest,$m)) {
-   $year=$m[1];
-   $tit_imdb=trim(str_replace($m[0],"",$title));
-  } else {
-   $year="";
-   $tit_imdb=$title;
+  $ch = curl_init($l);
+  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
+  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER  ,1);  // RETURN THE CONTENTS OF THE CALL
+  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+  curl_setopt($ch, CURLOPT_HTTPHEADER,$head);
+  curl_setopt($ch, CURLOPT_POST,1);
+  curl_setopt($ch, CURLOPT_POSTFIELDS, $post);
+  //curl_setopt($ch, CURLOPT_HEADER,1);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+  $html = curl_exec($ch);
+  curl_close ($ch);
+  //echo $html;
+}
+///////////////////////////////////////////////////////////////////////////
+$r=array();
+if ($tip=="release") {
+  $videos = explode('a href="',$html);
+  unset($videos[0]);
+  $videos = array_values($videos);
+  foreach($videos as $video) {
+   $t1=explode('"',$video);
+   $link="https://www.goojara.to".$t1[0];
+   $t3 = explode('span class="mtl">', $video);
+   $t4 = explode('<', $t3[1]);
+   $title = trim($t4[0]);
+   $title=prep_tit($title);
+   $t1 = explode('data-src="', $video);
+   $t2 = explode('"', $t1[1]);
+   $image = $t2[0];
+   if ($title) $r[$title]=array($link,$image);
   }
+} else {
+  $videos = explode('a href="',$html);
+  unset($videos[0]);
+  $videos = array_values($videos);
+  foreach($videos as $video) {
+   $t1=explode('"',$video);
+   $link="https://www.goojara.to".$t1[0];
+   $t3 = explode('strong>', $video);
+   $t4 = explode('<', $t3[1]);
+   $title = trim($t4[0]);
+   $title=prep_tit($title);
+   $image = "blank.jpg";
+   $t1=explode('div class="',$video);
+   $t2=explode('"',$t1[1]);
+   $s=$t2[0];
+   if ($title && $s=="it") $r[$title]=array($link,$image);
+  }
+}
+foreach ($r as $key => $value) {
+  $link=$value[0];
+  $title=$key;
+  $image=$value[1];
+  $year="";
+  $tit_imdb=$title;
   $imdb="";
-  $link_f=$fs_target.'?tip=series&link='.urlencode($link).'&title='.urlencode(fix_t($title)).'&image='.$image."&sez=&ep=&ep_tit=&year=".$year."&host=".$host;
+  $link_f=$fs_target.'?tip=series&link='.urlencode($link).'&title='.urlencode(fix_t($title)).'&image='.$image."&sez=&ep=&ep_tit=&year=".$year;
   if ($title) {
   if ($n==0) echo '<TR>'."\r\n";
   $val_imdb="tip=series&title=".urlencode(fix_t($tit_imdb))."&year=".$year."&imdb=".$imdb;

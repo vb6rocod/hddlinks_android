@@ -111,13 +111,13 @@ document.onkeypress =  zx;
 <TD width="25%"><a href="filme/9movies_s.php?page=1&tip=release&title=9movies&link=" target="_blank">9movies</a></TD>
 <TD width="25%"><a href="filme/123stream_s.php?page=1&tip=release&title=123stream&link=" target="_blank">123stream</a></TD>
 <TD width="25%"><a href="filme/streamlord_s.php?page=1&tip=release&title=streamlord&link=" target="_blank">streamlord</a></TD>
-<TD width="25%"></TD>
+<TD width="25%"><a href="filme/goojara_s.php?page=1&tip=release&title=goojara&link=" target="_blank">goojara</a></TD>
 </TR>
 <?php
 if (file_exists($base_pass."tvplay.txt")) {
 echo '<TR>';
 echo '<TD width="25%"><a href="filme/cineplex_s_main1.php" target="_blank">cineplex</a></TD>';
-echo '<TD width="25%"></TD>';
+echo '<TD width="25%"><a href="filme/lightdl_s.php" target="_blank">lightdl</a></TD>';
 echo '<TD width="25%"></TD>';
 echo '<TD width="25%"></TD>';
 echo '</TR>';

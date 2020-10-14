@@ -12,12 +12,15 @@ $tit=$_GET["title"];
 $link=$_GET["link"];
 $width="200px";
 $height="278px";
+$last_good="https://moviesjoy.to";
+//$last_good="https://moviesjoy.net";
+$host=parse_url($last_good)['host'];
 /* ==================================================== */
 $has_fav="yes";
 $has_search="yes";
 $has_add="yes";
 $has_fs="yes";
-$fav_target="moviesjoy_f_fav.php?host=https://www1.moviesjoy.net";
+$fav_target="moviesjoy_f_fav.php?host=".$last_good;
 $add_target="moviesjoy_f_add.php";
 $add_file="";
 $fs_target="moviesjoy_fs.php";
@@ -168,11 +171,11 @@ echo '</TR>'."\r\n";
 
 if($tip=="release") {
   $l="https://www1.moviesjoy.net/movie/filter/movie/all/all/all/all/all/all/page-".$page.".html";
-  $l="https://www1.moviesjoy.net/movie?page=".$page;
+  $l="https://".$host."/movie?page=".$page;
 } else {
   $search=str_replace(" ","-",$tit);
   //$l="https://www1.moviesjoy.net/search/".str_replace(" ","+",$tit)."/page-".$page.".html";
-  $l="https://www1.moviesjoy.net/search/".$search."?page=".$page;
+  $l="https://".$host."/search/".$search."?page=".$page;
 }
 $host=parse_url($l)['host'];
   $ch = curl_init();
@@ -218,7 +221,7 @@ foreach($videos as $video) {
    $tit_imdb=$title;
   }
   $imdb="";
-  $link_f=$fs_target.'?tip=movie&link='.urlencode($link).'&title='.urlencode(fix_t($title)).'&image='.$image."&sez=&ep=&ep_tit=&year=".$year;
+  $link_f=$fs_target.'?tip=movie&link='.urlencode($link).'&title='.urlencode(fix_t($title)).'&image='.$image."&sez=&ep=&ep_tit=&year=".$year."&host=".$host;
   if ($title && strpos($link,"-season") === false) {
   if ($n==0) echo '<TR>'."\r\n";
   $val_imdb="tip=movie&title=".urlencode(fix_t($tit_imdb))."&year=".$year."&imdb=".$imdb;

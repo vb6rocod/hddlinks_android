@@ -11,6 +11,7 @@ $ep=$_GET["ep"];
 $ep_title=unfix_t(urldecode($_GET["ep_tit"]));
 $ep_title=prep_tit($ep_title);
 $year=$_GET["year"];
+$host=$_GET['host'];
 /* ====================== */
 $fs_target = "moviesjoy_fs.php";
 $width="200px";
@@ -37,7 +38,7 @@ echo '<h2>'.$tit.'</h2><BR>';
 echo '<table border="1" width="100%">'."\n\r";
 //echo '<TR><td style="color:#000000;background-color:deepskyblue;text-align:center" colspan="3" align="center">'.$tit.'</TD></TR>';
 
-  $l="https://www1.moviesjoy.net/ajax/tv/seasons/".$link;
+  $l="https://".$host."/ajax/tv/seasons/".$link;
   //$l="https://www1.moviesjoy.net/ajax/season/episodes/59790";
   //https://www.moviesjoy.net/ajax/v4_movie_episodes/28491/XpX0
   $ch = curl_init($l);
@@ -101,7 +102,7 @@ foreach($videos as $video) {
   echo '<table border="1" width="100%">'."\n\r";
   echo '<TR><td class="sez" style="color:black;background-color:#0a6996;color:#64c8ff;text-align:center" colspan="3">Sezonul '.($sez).'</TD></TR>';
   $n=0;
-  $l="https://www1.moviesjoy.net/ajax/season/episodes/".$id_sez;
+  $l="https://".$host."/ajax/season/episodes/".$id_sez;
   $ch = curl_init($l);
   curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
   curl_setopt($ch, CURLOPT_REFERER, $l);
@@ -150,7 +151,7 @@ foreach($videos as $video) {
   else
    $ep_tit_d=$season."x".$episod;
   //$link="moviesjoy_fs.php?tip=series&link=".urlencode($l)."&title=".urlencode(fix_t($tit))."&ep_tit=".urlencode(fix_t($ep_tit1))."&ep=".$epNr."&sez=".$sez."&image=".$image;
-  $link_f=$fs_target.'?tip=series&link='.urlencode($id_sez).'&title='.urlencode(fix_t($tit)).'&image='.$image."&sez=".$sez."&ep=".$epNr."&ep_tit=".urlencode(fix_t($ep_tit))."&year=".$year;
+  $link_f=$fs_target.'?tip=series&link='.urlencode($id_sez).'&title='.urlencode(fix_t($tit)).'&image='.$image."&sez=".$sez."&ep=".$epNr."&ep_tit=".urlencode(fix_t($ep_tit))."&year=".$year."&host=".$host;
    if ($n == 0) echo "<TR>"."\n\r";
    if ($has_img == "yes")
     echo '<TD class="mp" width="33%">'.'<a id="sez'.$sez.'" href="'.$link_f.'" target="_blank"><img width="'.$width.'" height="'.$height.'" src="'.$img_ep.'"><BR>'.$ep_tit_d.'</a></TD>'."\r\n";
