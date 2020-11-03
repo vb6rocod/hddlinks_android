@@ -7,6 +7,7 @@ function str_between($string, $start, $end){
 }
 include ("../common.php");
 $last_good="https://123stream.be";
+$last_good="https://emovies.io";
 $host=parse_url($last_good)['host'];
 $page = $_GET["page"];
 $tip= $_GET["tip"];
@@ -172,7 +173,7 @@ $cookie=$base_cookie."xmovies8.txt";
 
 $ua="Mozilla/5.0 (Windows NT 10.0; rv:70.0) Gecko/20100101 Firefox/70.0";
 if($tip=="release") {
-  $l="https://".$host."/tv-series/".$page;
+  $l="https://".$host."/free-latest-tv-series-online/".$page;
 } else {
   $search=str_replace(" ","+",$tit);
   $l="https://".$host."/movie/search/".$search."/".$page;

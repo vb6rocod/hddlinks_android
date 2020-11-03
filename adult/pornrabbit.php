@@ -226,7 +226,7 @@ $host=parse_url($l)['host'];
   curl_setopt($ch, CURLOPT_TIMEOUT, 15);
   $html = curl_exec($ch);
   curl_close($ch);
-
+//echo $html;
 $r=array();
 $videos = explode('data-video="',$html);
 unset($videos[0]);

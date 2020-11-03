@@ -132,6 +132,7 @@ echo '<h2>'.$tit.$tit2.'</H2>';
 echo '<BR>';
 $r=array();
 if ($tip=="movie") {
+  /*
   $ua="Mozilla/5.0 (Windows NT 10.0; rv:75.0) Gecko/20100101 Firefox/75.0";
 
   $ch = curl_init();
@@ -144,7 +145,25 @@ if ($tip=="movie") {
   curl_setopt($ch, CURLOPT_TIMEOUT, 25);
   $h = curl_exec($ch);
   curl_close($ch);
-  if (!$h) $h=file_get_contents($link);
+  */
+$cookie=$base_cookie."batflix.txt";
+$ua=file_get_contents($base_pass."firefox.txt");
+$host=parse_url($link)['host'];
+$head=array('Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2');
+
+  $ch = curl_init();
+  curl_setopt($ch, CURLOPT_URL, $link);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+  curl_setopt($ch,CURLOPT_REFERER,"https://".$host);
+  curl_setopt($ch,CURLOPT_HTTPHEADER,$head);
+  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
+  curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie);
+  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 25);
+  $h = curl_exec($ch);
+  curl_close($ch);
   //echo $h;
   if (preg_match("/\/tt(\d+)/",$h,$m))
    $imdbid=$m[1];

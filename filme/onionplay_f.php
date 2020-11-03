@@ -17,7 +17,7 @@ $has_fav="yes";
 $has_search="yes";
 $has_add="yes";
 $has_fs="yes";
-$ref="https://onionplay.co";
+$ref="https://www.onionplay.co";
 $host=parse_url($ref)['host'];
 $fav_target="onionplay_f_fav.php?host=".$ref;
 $add_target="onionplay_f_add.php";

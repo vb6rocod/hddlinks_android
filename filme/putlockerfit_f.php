@@ -17,7 +17,9 @@ $has_fav="yes";
 $has_search="yes";
 $has_add="yes";
 $has_fs="yes";
-$fav_target="putlockerfit_f_fav.php?host=https://www.putlocker.fyi";
+$last_good="https://putlocker.today";
+$host=parse_url($last_good)['host'];
+$fav_target="putlockerfit_f_fav.php?host=".$last_good;
 $add_target="putlockerfit_f_add.php";
 $add_file="";
 $fs_target="putlockerfit_fs.php";
@@ -167,26 +169,26 @@ if ($page==1) {
 echo '</TR>'."\r\n";
 
 if($tip=="release") {
-  $l="https://www.putlocker.fyi/a-z-movies/page/".$page."/";
+  $l="https://".$host."/movies/page/".$page."/";
 } else {
   $search=str_replace(" ","+",$tit);
   if ($page==1)
-   $l="https://www.putlocker.fyi/?s=".$search;
+   $l="https://".$host."/?s=".$search;
   else
-   $l="https://www.putlocker.fyi/page/".$page."/?s=".$search;
+   $l="https://".$host."/page/".$page."/?s=".$search;
 }
-$host=parse_url($l)['host'];
+$ua="Mozilla/5.0 (Windows NT 10.0; rv:81.0) Gecko/20100101 Firefox/81.0";
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $l);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-  curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 10.0; rv:55.0) Gecko/20100101 Firefox/55.0');
+  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
   curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
   curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
   curl_setopt($ch, CURLOPT_TIMEOUT, 15);
   $html = curl_exec($ch);
   curl_close($ch);
 
-$videos = explode('<a class="thumbnail', $html);
+$videos = explode('class="ml-item">', $html);
 unset($videos[0]);
 $videos = array_values($videos);
 foreach($videos as $video) {

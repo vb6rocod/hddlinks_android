@@ -159,10 +159,14 @@ $l1=$link;
   curl_setopt($ch, CURLOPT_TIMEOUT, 15);
   $h3 = curl_exec($ch);
   curl_close ($ch);
+//echo $h3;
 $t1=explode("var ad =",$h3);
 $t2=explode("'",$t1[1]);
 $ad1=base64_decode($t2[1]);
+//echo $ad1;
 $key=111;
+$key=112;
+//for ($key=64;$key<128;$key++) {
 $n=126;
 $out="";
 for ($i=0;$i<strlen($ad1);$i++) {
@@ -173,6 +177,9 @@ for ($i=0;$i<strlen($ad1);$i++) {
   $out=$out.$ad1[$i];
  }
 }
+//echo $key."\n".$out."\n";
+//}
+//die();
 //////////////////////////////////////////////////////////////
 $l="https://".$host."/js/providers.js";
   $ch = curl_init($l);

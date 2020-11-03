@@ -1,0 +1,83 @@
+#EXTINF:0 tvg-logo="https://www.b1.ro/static/images/b1.jpg",B1 (rds)
+http://edge76.rcs-rds.ro/digiedge2/b1tvehq.stream/index.m3u8?is=29&src=app&t=00000000000000000000000000000000
+#EXTINF:0 tvg-logo="http://stvron.com/canale/512/rtv.png",ROMANIA TV (rds)
+http://82.76.40.76/digiedge2/romaniatvehq.stream/index.m3u8?is=27&src=app&t=00000000000000000000000000000000
+#EXTINF:0 tvg-logo="http://stvron.com/canale/512/realitatea-tv-plus.png",REALITATEA PLUS (rds)
+http://edge76.rcs-rds.ro/digiedge2/realitateatvehq.stream/index.m3u8?is=26&src=app&t=00000000000000000000000000000000
+
+    #EXTINF:-1 tvg-logo="http://static.manutv.net/canale/mari/axn.png" ,■AXN HD (rds)
+    http://edge76.rcs-rds.ro/digiedge2/axnehd.stream/index.m3u8?is=44&src=digi-online.ro&t=00000000000000000000000000000000
+    #EXTINF:-1 tvg-logo="http://static.manutv.net/canale/mari/axn-black.png" ,■AXN Black (rds)
+    http://edge76.rcs-rds.ro/digiedge2/axnblackehq.stream/index.m3u8?is=45&src=digi-online.ro&t=00000000000000000000000000000000
+    #EXTINF:-1 tvg-logo="http://static.manutv.net/canale/mari/axn-spin.png" ,■AXN Spin (rds)
+    http://edge76.rcs-rds.ro/digiedge2/axnspinehq.stream/index.m3u8?is=57&src=digi-online.ro&t=00000000000000000000000000000000
+    #EXTINF:-1 tvg-logo="http://static.manutv.net/canale/mari/axn-white.png" ,■AXN White (rds)
+    http://edge76.rcs-rds.ro/digiedge2/axnwhiteehq.stream/chunklist_w608025685.m3u8?is=46&src=digi-online.ro&t=00000000000000000000000000000000
+    #EXTINF:-1 tvg-logo="http://static.manutv.net/canale/mari/tv1000.png" ,■Tv 1000 (rds)
+    http://edge76.rcs-rds.ro/digiedge2/tv1000ehq.stream/index.m3u8?is=43&src=app&t=00000000000000000000000000000000
+        #EXTINF:-1 tvg-logo="https://iptv.live/images/logo/channel/crops/276e39cde3b18b92ce1b22ce681db872.png",▲Digi Animal World (rds)
+        http://edge76.rcs-rds.ro/digiedge2/digianimalworldehd.stream/index.m3u8?is=16&src=app&t=00000000000000000000000000000000
+        #EXTINF:-1 tvg-logo="https://iptv.live/images/logo/channel/crops/045351bfc4fcb687e632ecf45122dc66.png",▲Digi Life (rds)
+        http://edge76.rcs-rds.ro/digiedge2/digilifeehd.stream/index.m3u8?is=6&src=app&t=00000000000000000000000000000000
+        #EXTINF:-1 tvg-logo="https://iptv.live/images/logo/channel/crops/2381394478ba90e0cfa2eaf5586a6584.png",▲Digi World (rds)
+        http://edge76.rcs-rds.ro/digiedge2/digiworldehd.stream/index.m3u8?is=5&src=app&t=00000000000000000000000000000000
+        #EXTINF:-1 tvg-logo="http://stvron.com/canale/512/discovery-channel.png" ,▲DISCOVERY (rds)
+        http://82.76.40.76/digiedge2/discoveryehq.stream/index.m3u8?is=71&src=app&t=00000000000000000000000000000000
+        #EXTINF:-1 tvg-logo="http://stvron.com/canale/512/history.png",▲History (rds)
+        http://edge76.rcs-rds.ro/digiedge2/historychannelehd.stream/index.m3u8?is=20&src=app&t=00000000000000000000000000000000
+        #EXTINF:-1 tvg-logo="http://stvron.com/canale/512/travel-channel.png",▲Travel Channel (rds)
+        http://edge76.rcs-rds.ro/digiedge2/travelchannelehd.stream/index.m3u8?is=21&src=app&t=00000000000000000000000000000000
+        #EXTINF:-1 tvg-logo="http://static.epg.best/de/TLC.de.png" ,▲TLC (rds)
+        http://82.76.40.76/digiedge2/tlcehq.stream/index.m3u8?is=72&src=app&t=00000000000000000000000000000000
+        #EXTINF:-1 tvg-logo="http://stvron.com/canale/512/e-entertainment.png" ,▲E (rds)
+        #EXTINF:-1 tvg-logo="http://static.epg.best/gb/NatGeo.uk.png",▲National Geographic (rds)
+        http://edge76.rcs-rds.ro/digiedge2/nationalgeographicehd.stream/index.m3u8?is=19&src=app&t=00000000000000000000000000000000
+        #EXTINF:-1 tvg-logo="https://static.epg.best/id/NatGeoWild.id.png",▲Nat Geo Wild (rds)
+        http://edge76.rcs-rds.ro/digiedge2/nationalgeographicwildehd.stream/index.m3u8?is=33&src=app&t=00000000000000000000000000000000
+        #EXTINF:-1 tvg-logo="http://stvron.com/canale/512/viasat-history.png" ,▲VIASAT HISTORY (rds)
+        http://82.76.40.76/digiedge2/viasathistoryehq.stream/index.m3u8?is=41&src=app&t=00000000000000000000000000000000
+        #EXTINF:-1 tvg-logo="http://stvron.com/canale/512/viasat-explore.png" ,▲VIASAT EXPLORER (rds)
+        http://edge76.rcs-rds.ro/digiedge2/viasatexplorerehq.stream/index.m3u8?is=40&src=app&t=00000000000000000000000000000000
+        #EXTINF:-1 tvg-logo="http://stvron.com/canale/512/viasat-nature.png" ,▲VIASAT NATURE (rds)
+        http://edge76.rcs-rds.ro/digiedge2/viasatnatureehq.stream/index.m3u8?is=42&src=app&t=00000000000000000000000000000000
+        #EXTINF:-1 tvg-logo="https://static.epg.best/kr/BBCEarth.kr.png",▲BBC Earth (rds)
+        http://edge76.rcs-rds.ro/digiedge2/bbcearthehq.stream/index.m3u8?is=67&src=app&t=00000000000000000000000000000000
+        #EXTINF:-1 tvg-logo="http://stvron.com/canale/512/tv-paprika.png",▲Tv Paprika (rds)
+        http://edge76.rcs-rds.ro/digiedge2/tvpaprikaehq.stream/index.m3u8?is=39&src=app&t=00000000000000000000000000000000
+        #EXTINF:-1 tvg-logo="http://stvron.com/canale/512/travel-mix.png",▲TRAVEL MIX (rds)
+        http://82.76.40.76/digiedge2/travelmixchannelehq.stream/index.m3u8?is=74&src=digi-online.ro&t=00000000000000000000000000000000
+        #EXTINF:-1 tvg-logo="http://stvron.com/canale/512/disney-channel.png" ,◈Disney Channel (rds)
+        http://edge76.rcs-rds.ro/digiedge2/disneychannelehq.stream/index.m3u8?is=17&src=app&t=00000000000000000000000000000000
+        #EXTINF:-1 tvg-logo="http://stvron.com/canale/512/disney-junior.png" ,◈Disney Junior (rds)
+        http://edge76.rcs-rds.ro/digiedge2/disneyjuniorehq.stream/index.m3u8?is=18&src=app&t=00000000000000000000000000000000
+        #EXTINF:-1 tvg-logo="http://stvron.com/canale/512/minimax.png" ,◈Minimax (rds)
+        http://edge76.rcs-rds.ro/digiedge2/minimaxehq.stream/index.m3u8?is=37&src=app&t=00000000000000000000000000000000
+        #EXTINF:-1 tvg-logo="http://stvron.com/canale/512/nickelodeon.png" ,◈Nickelodeon (rds)
+        http://edge76.rcs-rds.ro/digiedge2/nickelodeonehq.stream/index.m3u8?is=28&src=app&t=00000000000000000000000000000000
+        #EXTINF:-1 tvg-logo="https://static.epg.best/ua/DaVinciLearningEurope.ua.png",◈DA VINCI (rds)
+        http://82.76.40.76/digiedge2/davincilearningehq.stream/index.m3u8?is=66&src=digi-online.ro&t=00000000000000000000000000000000
+        #EXTINF:0 tvg-logo="http://my-hd.tv/shared/img/channels/TV5Monde.gif",TV5 MONDE EUROPE (rds)
+        http://82.76.40.76/digiedge2/tv5mondeehq.stream/index.m3u8?is=75&src=digi-online.ro&t=00000000000000000000000000000000
+        #EXTINF:0 tvg-logo="https://www.utv.ro/static/theme-repo/bin/images/logo-utv.png" ,★UTV
+        http://82.76.40.76:80/utvedge/utvlive/playlist.m3u8
+        #EXTINF:0 tvg-logo="https://www.utv.ro/static/theme-repo/bin/images/logo-utv.png" ,★UTV (rds)
+        http://edge76.rcs-rds.ro/utvedge/utvlivehls/playlist.m3u8
+        #EXTINF:0 tvg-logo="https://www.utv.ro/static/theme-repo/bin/images/logo-utv.png" ,★UTV.
+        http://81.196.0.126/utvedge/utvlive/playlist.m3u8
+        # =========
+        #EXTINF:0 tvg-logo="https://static.epg.best/ro/MusicChannel.ro.png",★MUSIC CHANNEL
+        https://edge126.rcs-rds.ro/utvedge/musicchannelhq.stream/playlist.m3u8
+        #EXTINF:0 tvg-logo="https://static.epg.best/ro/MusicChannel.ro.png",★MUSIC CHANNEL (rds)
+        http://edge76.rcs-rds.ro/digiedge2/musicchannelehq.stream/index.m3u8?is=25&src=app&t=00000000000000000000000000000000
+        # =========
+        #EXTINF:0 tvg-logo="https://www.residentadvisor.net/images/promoter/ro-kissfmkisstv.jpg",★KISS TV (rds)
+        http://82.76.40.76/digiedge2/kisstvehq.stream/index.m3u8?is=34&src=digi-online.ro&t=00000000000000000000000000000000
+        # =========
+        #EXTINF:0 tvg-logo="http://stvron.com/canale/512/hit-music-channel.png",★HIT MUSIC (rds)
+        http://82.76.40.76/digiedge2/hitmusicchannelehq.stream/index.m3u8?is=35&src=digi-online.ro&t=00000000000000000000000000000000
+#EXTINF:-1 tvg-id="EPG N/A" tvg-name="EUROSPORT 1 (rds)" tvg-logo="Logo N/A" group-title="Romania RCS",EUROSPORT 1 (rds)
+http://edge76.rcs-rds.ro/digiedge2/eurosportehq.stream/index.m3u8?is=31&src=app&t=00000000000000000000000000000000
+#EXTINF:-1 tvg-id="EPG N/A" tvg-name="EUROSPORT 2 (rds)" tvg-logo="Logo N/A" group-title="Romania RCS",EUROSPORT 2 (rds)
+http://edge76.rcs-rds.ro/digiedge2/eurosport2ehq.stream/index.m3u8?is=32&src=app&t=00000000000000000000000000000000
+#EXTINF:-1 tvg-id="EPG N/A" tvg-name="E (rds)" tvg-logo="Logo N/A" group-title="Romania RCS",E (rds)
+http://edge76.rcs-rds.ro/digiedge2/eentertainmentehq.stream/index.m3u8?is=73&src=app&t=00000000000000000000000000000000 

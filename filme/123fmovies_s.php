@@ -6,7 +6,7 @@ function str_between($string, $start, $end){
 	return substr($string,$ini,$len);
 }
 include ("../common.php");
-$last_good="https://123europix.pro";
+$last_good="https://123fmovies.best";
 $host=parse_url($last_good)['host'];
 $page = $_GET["page"];
 $tip= $_GET["tip"];
@@ -14,16 +14,17 @@ $tit=$_GET["title"];
 $link=$_GET["link"];
 $width="200px";
 $height="278px";
+// https://123fmovies.best
 /* ==================================================== */
 $has_fav="yes";
-$has_search="yes";
+$has_search="no";
 $has_add="yes";
 $has_fs="yes";
-$fav_target="europix_f_fav.php?host=".$last_good;
-$add_target="europix_f_add.php";
+$fav_target="123fmovies_s_fav.php?host=".$last_good;
+$add_target="123fmovies_s_add.php";
 $add_file="";
-$fs_target="europix_fs.php";
-$target="europix_f.php";
+$fs_target="123fmovies_sez.php";
+$target="123fmovies_s.php";
 /* ==================================================== */
 $base=basename($_SERVER['SCRIPT_FILENAME']);
 $p=$_SERVER['QUERY_STRING'];
@@ -41,12 +42,12 @@ $prev=$base."?page=".($page-1)."&".$p;
 $tit=unfix_t(urldecode($tit));
 $link=unfix_t(urldecode($link));
 /* ==================================================== */
-if (file_exists($base_cookie."filme.dat"))
-  $val_search=file_get_contents($base_cookie."filme.dat");
+if (file_exists($base_cookie."seriale.dat"))
+  $val_search=file_get_contents($base_cookie."seriale.dat");
 else
   $val_search="";
 $form='<form action="'.$target.'" target="_blank">
-Cautare film:  <input type="text" id="title" name="title" value="'.$val_search.'">
+Cautare serial:  <input type="text" id="title" name="title" value="'.$val_search.'">
 <input type="hidden" name="page" id="page" value="1">
 <input type="hidden" name="tip" id="tip" value="search">
 <input type="hidden" name="link" id="link" value="">
@@ -55,7 +56,7 @@ Cautare film:  <input type="text" id="title" name="title" value="'.$val_search.'
 /* ==================================================== */
 if ($tip=="search") {
   $page_title = "Cautare: ".$tit;
-  if ($page == 1) file_put_contents($base_cookie."filme.dat",$tit);
+  if ($page == 1) file_put_contents($base_cookie."seriale.dat",$tit);
 } else
   $page_title=$tit;
 /* ==================================================== */
@@ -167,61 +168,82 @@ if ($page==1) {
    echo '<TD class="nav" colspan="4" align="right"><a href="'.$prev.'">&nbsp;&lt;&lt;&nbsp;</a> | <a href="'.$next.'">&nbsp;&gt;&gt;&nbsp;</a></TD>'."\r\n";
 }
 echo '</TR>'."\r\n";
-
-if($tip=="release") {
-  $l="https://".$host."/year/allmovies-page-".$page."?search=";
-  $l="https://123europix.pro/";
-  $l="https://123europix.pro/genre/movies?page=".$page;
-} else {
-  $search=str_replace(" ","+",$tit);
-  $l="https://".$host."/search?search=".$search;
-}
-///////////////////////////////////////////////////////////////////////////
-
-$ua = $_SERVER['HTTP_USER_AGENT'];
-  $ch = curl_init();
-  curl_setopt($ch, CURLOPT_URL, $l);
-  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+// https://coolseries.best
+$l="https://series.cool/category.php?cat=watch-tv-series-video";
+$l="https://coolseries.best/browse-watch-series-free-online-go-stream-download-completed-tv-series-videos-1-date.html";
+$l="https://123fmovies.best/browse-watch-tv-series-video-123movies-gostream-videos-1-date.html";
+  $ua="Mozilla/5.0 (Windows NT 10.0; rv:63.0) Gecko/20100101 Firefox/63.0";
+  $ch = curl_init($l);
   curl_setopt($ch, CURLOPT_USERAGENT, $ua);
+  curl_setopt($ch,CURLOPT_REFERER,"https://series.cool");
   curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER  ,1);  // RETURN THE CONTENTS OF THE CALL
   curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
   curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
   curl_setopt($ch, CURLOPT_TIMEOUT, 15);
-  $h = curl_exec($ch);
-  //echo $h;
- $videos = explode('class="img__wrap">', $h);
- unset($videos[0]);
- $videos = array_values($videos);
- foreach($videos as $video) {
-  preg_match("/href\=(\'|\")(.*?)(\'|\")/msi",$video,$m);
-  $link=$m[2];
-  $link="https://".$host."/".str_replace("../","",$link);
-  //echo $link1;
-  $t1 = explode('br />', $video);
-  $t2 = explode('<', $t1[1]);
-  $title = trim($t2[0]);
-  preg_match("/src\=(\'|\")(.*?)(\'|\")/msi",$video,$m);
-  $image = $m[2];
-  if (strpos($image,"../") !== false)
-  $image="https://".$host."/".str_replace("../","",$image);
+  $html = curl_exec($ch);
+  curl_close ($ch);
+  //$t1=explode('<div id="movies"',$html);
+  //$t2=explode('</div',$t1[1]);
+  //$html=$t2[0];
+  //echo $html;
+$videos = explode('li class=""', $html);
+unset($videos[0]);
+$videos = array_values($videos);
+$s=array();
+foreach($videos as $video) {
+  $t1 = explode('href="', $video);
+  $t2=explode('"',$t1[1]);
+  $link = $t2[0];
+  if (strpos($link,"http") === false) $link="https://".$host.$link;
+  $t3 = explode('>', $t1[1]);
+  $t4 = explode('<', $t3[1]);
+  $title = $t4[0];
+  if (preg_match("/123movies/i",$title)) {
+  $title=trim(preg_replace("/123movies|Watch/i","",$title));
+  //$title = prep_tit($title);
+
+  $image = "";
+  if (strpos($image,"http") === false) $image="https:".$image;
+  $s[$title]=array($link,$image);
+  }
+}
+ksort($s);
+  foreach ($s as $key=>$value) {
   $year="";
   $imdb="";
-  $link_f=$fs_target.'?tip=movie&link='.urlencode($link).'&title='.urlencode(fix_t($title)).'&image='.$image."&sez=&ep=&ep_tit=&year=".$year;
-  if ($title && strpos($link,"/mov") !== false) {
+  $sez="";
+  $link=$value[0];
+  $image=$value[1];
+  $title=$key;
+  $tit_imdb=$title;
+  $year="";
+  $sez="";
+  $rest = substr($title, -6);
+  if (preg_match("/\(?(\d+)\)?/",$rest,$m)) {
+   $year=$m[1];
+   $tit_imdb=trim(str_replace($m[0],"",$title));
+   $title=$tit_imdb;
+  } else {
+   $year="";
+   $tit_imdb=$title;
+  }
+  $link_f=$fs_target.'?tip=series&link='.urlencode($link).'&title='.urlencode(fix_t($title)).'&image='.$image."&sez=".$sez."&ep=&ep_tit=&year=".$year;
+  if ($title) {
   if ($n==0) echo '<TR>'."\r\n";
-  $val_imdb="tip=movie&title=".urlencode(fix_t($title))."&year=".$year."&imdb=".$imdb;
+  $val_imdb="tip=series&title=".urlencode(fix_t($tit_imdb))."&year=".$year."&imdb=".$imdb;
   $fav_link="mod=add&title=".urlencode(fix_t($title))."&link=".urlencode($link)."&image=".urlencode($image)."&year=".$year;
-  //$image="r_m.php?file=".$image;
+
   if ($tast == "NU") {
     echo '<td class="mp" width="25%"><a href="'.$link_f.'" id="myLink'.$w.'" target="_blank" onmousedown="isKeyPressed(event)">
-    <img id="myLink'.$w.'" src="'.$image.'" width="'.$width.'" height="'.$height.'"><BR>'.$title.'</a>
+    '.$title.'</a>
     <input type="hidden" id="imdb_myLink'.$w.'" value="'.$val_imdb.'">'."\r\n";
     if ($has_add=="yes")
       echo '<a onclick="ajaxrequest('."'".$fav_link."'".')" style="cursor:pointer;">*</a>'."\r\n";
     echo '</TD>'."\r\n";
   } else {
     echo '<td class="mp" width="25%"><a class ="imdb" id="myLink'.$w.'" href="'.$link_f.'" target="_blank">
-    <img src="'.$image.'" width="'.$width.'" height="'.$height.'"><BR>'.$title.'</a>
+    '.$title.'</a>
     <input type="hidden" id="imdb_myLink'.$w.'" value="'.$val_imdb.'">'."\r\n";
     if ($has_add == "yes")
       echo '<input type="hidden" id="fav_myLink'.$w.'" value="'.$fav_link.'"></a>'."\r\n";
@@ -235,6 +257,7 @@ $ua = $_SERVER['HTTP_USER_AGENT'];
   }
   }
  }
+
 /* bottom */
   if ($n < 4 && $n > 0) {
     for ($k=0;$k<4-$n;$k++) {

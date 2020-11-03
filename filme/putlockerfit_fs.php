@@ -134,59 +134,116 @@ function off() {
 <?php
 echo '<h2>'.$tit.$tit2.'</H2>';
 echo '<BR>';
+$r=array();
 $ua = $_SERVER['HTTP_USER_AGENT'];
 //echo $link;
 $host=parse_url($link)['host'];
+$ua="Mozilla/5.0 (Windows NT 10.0; rv:81.0) Gecko/20100101 Firefox/81.0";
   $ch = curl_init($link);
-  curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows; U; Windows NT 6.1; en-US; rv:1.9.1.2) Gecko/20090729 Firefox/3.5.2 GTB5');
-  curl_setopt($ch,CURLOPT_REFERER,"https://putlocker0.com/");
+  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
+  curl_setopt($ch,CURLOPT_REFERER,$link);
   curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER  ,1);  // RETURN THE CONTENTS OF THE CALL
   curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
-  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 25);
   $html = curl_exec($ch);
   curl_close ($ch);
   //echo $html;
-  $t1=explode("shortlink",$html);
-  $t2=explode("p=",$t1[1]);
-  $t3=explode("'",$t2[1]);
-  $id_post=$t3[0];
-  $id_post="6".strrev($id_post);
-  $l="https://".$host."/wp-admin/admin-ajax.php";
-  $post="action=get_oload_gs&post_id=".$id_post;
-   //echo $post;
-  //https://www5.putlocker.fyi/wp-content/themes/putlocker/script.js?ver=2.5.6
-  $head=array('Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8','Accept-Language: ro-ro,ro;q=0.8,en-us;q=0.6,en-gb;q=0.4,en;q=0.2','Accept-Encoding: deflate','Content-Type: application/x-www-form-urlencoded','Content-Length: '.strlen($post));
-  $l="https://".$host."/embed-src/".$id_post;
-  $l="https://".$host."/embed-src-v2/".base64_encode($id_post);
-  //$l="https://www3.putlocker.fyi/embed-src-v2/NjIwNTc2NA==";
-  //$l="https://www5.putlocker.fyi/embed-src-v2/NDY3NTAy";
-  //https://www5.putlocker.fyi/embed-src-v2/NjU3NTc2NA==
+  $t1=explode('<iframe src="',$html);
+  $t2=explode('"',$t1[1]);
+  $l=$t2[0]; // https://playerhost.net/movie/seberg?watching=hOwPoLogyEG3zGi7nxlmaSCIH
   $ch = curl_init($l);
+  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
+  curl_setopt($ch,CURLOPT_REFERER,$link);
   curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
-  curl_setopt($ch, CURLOPT_REFERER, "https://putlockerfit.net/show/lois-clark-the-new-adventures-of-superman/season-4/episode-22/");
-  curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 5.1; rv:49.0) Gecko/20100101 Firefox/49.0');
   curl_setopt($ch, CURLOPT_RETURNTRANSFER  ,1);  // RETURN THE CONTENTS OF THE CALL
   curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
-  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 25);
+  curl_setopt($ch, CURLOPT_HEADER,1);
+  $h = curl_exec($ch);
+  curl_close ($ch);
+  //echo $h;
+preg_match("/var\s+tc\s+\=\s+\'(\S+)\'/msi",$h,$m);
+//print_r ($m);
+$tc=$m[1];
+preg_match("/\_token\"\: \"(\S+)\"/msi",$h,$o);
+//print_r ($o);
+$token=$o[1];
+$t1=explode("slice(",$h);
+$h1=$t1[1];
+//echo $h1;
+preg_match("/(\d+)\,\s*(\d+)/msi",$h1,$n);
+//print_r ($n);
+$a=$n[1];
+$b=$n[2];
+preg_match("/return.*?\"(\d+)\".*?\"(\d+)/msi",$h1,$p);
+//print_r ($p);
+$c=$p[1];
+$d=$p[2];
+$e=substr($tc,$a,$b-$a);
+$f=strrev($e);
+$j=$f.$c.$d;
+//echo $j."\n";
+$l="https://playerhost.net/decoding_v3.php";
+$post="tokenCode=".$tc."&_token=".$token;
+//echo $post."\n";
+$head=array('Accept: */*',
+'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
+'Accept-Encoding: deflate',
+'Content-Type: application/x-www-form-urlencoded; charset=UTF-8',
+'x-token: '.$j.'',
+'X-Requested-With: XMLHttpRequest',
+'Content-Length: '.strlen($post).'',
+'Origin: https://playerhost.net',
+'Connection: keep-alive',
+'Referer: https://playerhost.net');
+  $ch = curl_init();
+  curl_setopt($ch, CURLOPT_URL, $l);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
+  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+  curl_setopt ($ch, CURLOPT_POST, 1);
+  curl_setopt ($ch, CURLOPT_POSTFIELDS, $post);
+  curl_setopt($ch, CURLOPT_HTTPHEADER, $head);
+  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 25);
   $h = curl_exec($ch);
   curl_close($ch);
-  //echo $h;
-  $t1=explode('name="v"',$h);
-  $t2=explode('value="',$t1[1]);
-  $t3=explode('"',$t2[1]);
-  //echo $t3[0]."\n";
-  $enc=trim($t3[0]);
-  $pass="3FE2C050FE9CC411BE34440A8730E8C0";
-
-  $r=array();
-
+//echo $h;
+$r=json_decode($h,1);
 //print_r ($r);
 echo '<table border="1" width="100%">';
-echo '<TR><TD class="mp">Server :<label id="server">'.'Wait..'.'</label>
-<input type="hidden" id="file" value="'.urlencode("").'"></td></TR></TABLE>';
+echo '<TR><TD class="mp">Alegeti un server: Server curent:<label id="server">'.parse_url($r[0])['host'].'</label>
+<input type="hidden" id="file" value="'.urlencode($r[0]).'"></td></TR></TABLE>';
+echo '<table border="1" width="100%"><TR>';
+$k=count($r);
+$x=0;
+for ($i=0;$i<$k;$i++) {
+  if ($x==0) echo '<TR>';
+  $c_link=$r[$i];
+  if ($c_link) {
+  $openload=parse_url($r[$i])['host'];
+  if (preg_match($indirect,$openload)) {
+  echo '<TD class="mp"><a href="filme_link.php?file='.urlencode($c_link).'&title='.urlencode(unfix_t($tit.$tit2)).'" target="_blank">'.$openload.'</a></td>';
+  } else
+  echo '<TD class="mp"><a id="myLink" href="#" onclick="changeserver('."'".$openload."','".urlencode($c_link)."'".');return false;">'.$openload.'</a></td>';
+  $x++;
+  if ($x==6) {
+    echo '</TR>';
+    $x=0;
+  }
+  }
+}
+if ($x < 6 && $x > 0 & $k>6) {
+ for ($k=0;$k<6-$x;$k++) {
+   echo '<TD></TD>'."\r\n";
+ }
+ echo '</TR>'."\r\n";
+}
+echo '</TABLE>';
 
 if ($tip=="movie") {
   $tit3=$tit;
@@ -205,7 +262,7 @@ if ($tip=="movie") {
   $link_page="";
 }
   $rest = substr($tit3, -6);
-  if (preg_match("/\((\d+)\)/",$rest,$m)) {
+  if (preg_match("/\((\d{4})\)/",$rest,$m)) {
    $year=$m[1];
    $tit3=trim(str_replace($m[0],"",$tit3));
   } else {
@@ -246,18 +303,6 @@ echo '<br>
 <TD><font size="4"><b>Scurtaturi: 1=opensubtitles, 2=titrari, 3=subs, 4=subtitrari, 5=vizioneaza
 <BR>Scurtaturi: 7=opensubtitles, 8=titrari, 9=subs, 0=subtitrari (cauta imdb id)
 </b></font></TD></TR></TABLE>
-';
-echo '<script>
-var val=Aes.Ctr.decrypt("'.$enc.'","3FE2C050FE9CC411BE34440A8730E8C0",256);
-var parser = document.createElement("a");
-parser.href = val;
-if (!val.match(/http/g)) {
-val="https:" + val;
-parser.href = val;
-}
-document.getElementById("server").innerHTML = parser.hostname;
-document.getElementById("file").value= val;
-</script>
 ';
 include("../debug.html");
 echo '

@@ -225,13 +225,13 @@ $host=parse_url($l)['host'];
   curl_setopt($ch, CURLOPT_TIMEOUT, 15);
   $html = curl_exec($ch);
   curl_close($ch);
-
+//echo $html;
 $r=array();
 $videos = explode('videoblock', $html);
 unset($videos[0]);
 $videos = array_values($videos);
 foreach($videos as $video) {
-  $t1 = explode('_vkey="', $video);
+  $t1 = explode('data-video-vkey="', $video);
   $t2 = explode('"', $t1[1]);
   $id = $t2[0];
   $link="https://www.pornhub.com/embed/".$id;

@@ -48,13 +48,16 @@ echo '<TD style="text-align:center"><font size="4">'.'<a href="'.$link.'" target
  echo "</TR>"."\n\r";
 $n=0;
 if ($n == 0) echo "<TR>"."\n\r";
-$title="FILME HD Romanesti, Teatru Tv si Filme Straine";
-$link="yt_channel.php?token=&id=UCCWc5wm3Tkc_QD7K2WatWXw&kind=channel&title=%28channel%29+FILME+HD+Romanesti%23virgula+Teatru+Tv+si+Filme+Straine&image=https://yt3.ggpht.com/-C-ZhAnaML8I/AAAAAAAAAAI/AAAAAAAAAAA/WwUsCIA-nLI/s88-c-k-no-mo-rj-c0xffffff/photo.jpg";
+$title="clicksud";
+$link="clicksud_main.php";
 echo '<TD style="text-align:center"><font size="4">'.'<a href="'.$link.'" target="_blank">'.$title.'</a></font></TD>';
 $title="Seriale Turcesti";
 $link="serialeturcesti.php?page=1&tip=release&title=serialeturcesti&link=";
 echo '<TD style="text-align:center"><font size="4">'.'<a href="'.$link.'" target="_blank">'.$title.'</a></font></TD>';
-echo '<TD style="text-align:center"></TD>';
+$title="Filme";
+$link="../tv/filme_main.php";
+echo '<TD style="text-align:center"><font size="4">'.'<a href="'.$link.'" target="_blank">'.$title.'</a></font></TD>';
+
 echo '<TD style="text-align:center"></TD>';
 echo "</TR>"."\n\r";
  echo '</table>';

@@ -565,7 +565,7 @@ $out=$t2[0];
   $out=str_replace("\\","",$out);
   if (strpos($out,"http") === false && $out) $out="https:".$out;
 } else if (preg_match("/pornrabbit\.com/",$host)) {
-  if(preg_match("/source src\=\"(.*?)\"/",$h,$m)) {
+  if(preg_match("/desktopFile \= \'(.*?)\'/",$h,$m)) {
    $out=$m[1];
    if (strpos($out,"http") === false && $out) $out="https:".$out;
   }
@@ -727,10 +727,15 @@ $out=$t2[0];
      if (strpos($out,"http") === false && $out) $out="https:".$out;
   }
 } else if (preg_match("/xhamster\.com/",$host)) {
-  $h=str_replace("\\","",$h);
-  if (preg_match_all("/(144|240|360|480|720|1080)p\"\:\"(.*?)\"/",$h,$m)) {
-    $out=$m[2][0];
-  }
+  //$h=str_replace("\\","",$h);
+  $t1=explode("window.initials=",$h);
+  $t2=explode(";</script>",$t1[1]);
+  $x=json_decode($t2[0],1);
+  //print_r ($x);
+  $out=$x['videoModel']['mp4File'];
+  //if (preg_match_all("/(144|240|360|480|720|1080)p\"\:\"(.*?)\"/",$h,$m)) {
+  //  $out=$m[2][0];
+  //}
   if ($out && $flash <> "flash")
     $out=$out."|Referer=".urlencode("https://xhamster.com");
 } else if (preg_match("/xozilla\.com/",$host)) {

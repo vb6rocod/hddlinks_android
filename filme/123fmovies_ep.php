@@ -36,7 +36,7 @@ echo '<h2>'.$tit.'</h2>';
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $link);
   curl_setopt($ch, CURLOPT_USERAGENT, $ua);
-  curl_setopt($ch,CURLOPT_REFERER,"https://series.cool");
+  curl_setopt($ch,CURLOPT_REFERER,"https://123fmovies.best");
   curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER  ,1);  // RETURN THE CONTENTS OF THE CALL
   curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
@@ -49,7 +49,7 @@ $link=str_replace("videos-1","videos-2",$link);
   //echo $html;
 
   curl_close ($ch);
-
+// https://123fmovies.best/browse-watch-series-gilmore-girls-video-season-4-123movies-gostream-videos-2-date.html
 $n=0;
 
 echo '<table border="1" width="100%">'."\n\r";

@@ -34,14 +34,18 @@ if (file_exists($base_pass."facebook.txt")) {
   curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
   $h = curl_exec($ch);
   curl_close($ch);
+  //echo $h;
   $dec=my_simple_crypt(trim($h),$key,$IV,"d");
   $t2=explode("|",$dec);
   $c_user=$t2[0];
   $fb_dtsg=$t2[1];
+  $xs=$t2[2];
 } else {
  $c_user="";
  $fb_dtsg="";
+ $xs="";
 }
+//echo $xs;
 //$fb_dtsg="AQG_R0c7LTPA:AQEmPBYcZOmk";
 $ceva="14159";
 $ua="Mozilla/5.0 (Windows NT 10.0; rv:74.0) Gecko/20100101 Firefox/74.0";
@@ -55,7 +59,9 @@ if ($page==1) {
 $ref="https://www.facebook.com/pg/".$search."/videos/?ref=page_internal";
 //$ref="https://www.facebook.com/".$search;
 // xs=20%3AfQI15ChkptQZhg%3A2%3A1602057974%3A17452%3A7640
-$xs="96%3AxaMdChPa0V4_qw%3A2%3A1602577436%3A17452%3A7640";
+//$xs="96%3AxaMdChPa0V4_qw%3A2%3A1602577436%3A17452%3A7640";
+//$xs="40%3AO1tmP6WsDUKRfA%3A2%3A1602787422%3A17452%3A7640";
+//$xs="40%3AO1tmP6WsDUKRfA%3A2%3A1602787422%3A17452%3A7640%3A%3AAcUA_bgxUKEYs-etMTSoAFUdbS39deq8tss1FVZdmg";
 $head=array('Accept: */*',
 'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
 'Accept-Encoding: deflate',

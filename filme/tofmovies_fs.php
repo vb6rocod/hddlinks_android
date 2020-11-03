@@ -134,131 +134,108 @@ function off() {
 echo '<h2>'.$tit.$tit2.'</H2>';
 echo '<BR>';
 $r=array();
-$s=array();
-//echo $link;
 $ua="Mozilla/5.0 (Windows NT 10.0; rv:80.0) Gecko/20100101 Firefox/80.0";
   $ch = curl_init($link);
   curl_setopt($ch, CURLOPT_USERAGENT, $ua);
   curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER  ,1);  // RETURN THE CONTENTS OF THE CALL
   curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
-  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
-  $html = curl_exec($ch);
-  curl_close ($ch);
-  //echo $html;
-  $t1=explode("data-post='",$html);
-  $t2=explode("'",$t1[1]);
-  $id=$t2[0];
-$l="https://topmoviesonline.org/wp-admin/admin-ajax.php";
-$post="action=doo_player_ajax&post=".$id."&nume=1&type=movie";
-//echo $post;
-$head=array('Accept: */*',
-'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
-'Accept-Encoding: deflate',
-'Content-Type: application/x-www-form-urlencoded; charset=UTF-8',
-'X-Requested-With: XMLHttpRequest',
-'Content-Length: '.strlen($post).'',
-'Origin: https://topmoviesonline.org',
-'Connection: keep-alive',
-'Referer: https://topmoviesonline.org');
-
-  $ch = curl_init($l);
-  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
-  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
-  curl_setopt($ch, CURLOPT_RETURNTRANSFER  ,1);  // RETURN THE CONTENTS OF THE CALL
-  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-  curl_setopt($ch, CURLOPT_HTTPHEADER,$head);
-  curl_setopt($ch, CURLOPT_POST, 1);
-  curl_setopt($ch, CURLOPT_POSTFIELDS, $post);
-  //curl_setopt($ch, CURLOPT_HEADER,1);
-  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
-  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
-  $h = curl_exec($ch);
-  curl_close ($ch);
-  //echo $h;
-  //die();
-  $t1=explode("src='",$h);
-  $t2=explode("'",$t1[1]);
-  $l=$t2[0];
-  //echo $l;
-  //$l="https://ezylink.co/lXg5";
-$head=array('Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
-'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
-'Connection: keep-alive',
-'Referer: https://topmoviesonline.org');
-
-  $ch = curl_init($l);
-  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
-  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,0);
-  curl_setopt($ch, CURLOPT_RETURNTRANSFER  ,1);  // RETURN THE CONTENTS OF THE CALL
-  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-  curl_setopt($ch, CURLOPT_HTTPHEADER,$head);
-  //curl_setopt($ch, CURLOPT_COOKIEJAR, $cookie);
-  //curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie);
-  curl_setopt($ch, CURLOPT_ENCODING, "");
-  curl_setopt($ch, CURLOPT_HEADER,1);
+  curl_setopt($ch, CURLOPT_REFERER,"https://tofmovies.net");
   curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
   curl_setopt($ch, CURLOPT_TIMEOUT, 25);
   $h = curl_exec($ch);
   curl_close ($ch);
-  //echo $h;
-  if (preg_match("/location: (.+)/i",$h,$m)) {
-  $l=trim($m[1]);
-  $l=str_replace(" ","%20",$l);
-//echo $l;
-
-  $ch = curl_init($l);
-  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
-  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
-  curl_setopt($ch, CURLOPT_RETURNTRANSFER  ,1);  // RETURN THE CONTENTS OF THE CALL
-  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-  curl_setopt($ch, CURLOPT_HTTPHEADER,$head);
-  curl_setopt($ch, CURLOPT_ENCODING, "");
-  //curl_setopt($ch, CURLOPT_COOKIEJAR, $cookie);
-  //curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie);
-  curl_setopt($ch, CURLOPT_HEADER,1);
-  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
-  curl_setopt($ch, CURLOPT_TIMEOUT, 25);
-  $h = curl_exec($ch);
-  curl_close ($ch);
-  //echo $h;
-
-  $videos = explode("GetVideoSource('",$h);
+  if (preg_match("/onlystream\=\"([\w|\-|\_]+)\"/",$h,$v)) // Vidoo.tv
+   $r[]="https://vidoo.tv/e/".$v[1];
+  if (preg_match("/server\_e\=\"https\:\/\/mystream\.streamango\.to\/([\w|\-|\_]+)\"/",$h,$v))
+   $r[]="https://mstream.xyz/".$v[1];
+  if (preg_match("/action\: \"fkingyrfather\"\, id\: (\d+)\, annoying\: s/",$h,$v)) {
+    $id=$v[1];
+    $post="action=fkingyrfather&id=".$id."&annoying=videospider";
+    $l="https://tofmovies.net/wp-admin/admin-ajax.php";
+    $ua="Mozilla/5.0 (Windows NT 10.0; rv:82.0) Gecko/20100101 Firefox/82.0";
+    $head=array('Accept: application/json, text/javascript, */*; q=0.01',
+    'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
+    'Accept-Encoding: deflate',
+    'Content-Type: application/x-www-form-urlencoded; charset=UTF-8',
+    'X-Requested-With: XMLHttpRequest',
+    'Content-Length: '.strlen($post).'',
+    'Origin: https://tofmovies.net',
+    'Connection: keep-alive',
+    'Referer: https://tofmovies.net/');
+    $ch = curl_init();
+    curl_setopt($ch, CURLOPT_URL, $l);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+    curl_setopt($ch, CURLOPT_HTTPHEADER,$head);
+    curl_setopt($ch, CURLOPT_POST,1);
+    curl_setopt($ch, CURLOPT_POSTFIELDS,$post);
+    curl_setopt($ch, CURLOPT_USERAGENT, $ua);
+    curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+    curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+    curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+    $h = curl_exec($ch);
+    curl_close($ch);
+    $x=json_decode($h,1);
+    //print_r ($x);
+    $l=$x['url'];
+    $head=array('Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
+    'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
+    'Accept-Encoding: deflate',
+    'Connection: keep-alive',
+    'Referer: https://tofmovies.net/',
+    'Upgrade-Insecure-Requests: 1');
+    $ch = curl_init();
+    curl_setopt($ch, CURLOPT_URL, $l);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+    curl_setopt($ch, CURLOPT_HTTPHEADER,$head);
+    curl_setopt($ch, CURLOPT_USERAGENT, $ua);
+    curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+    curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
+    curl_setopt($ch, CURLOPT_TIMEOUT, 25);
+    $h = curl_exec($ch);
+    //echo $h;
+  $t1=explode('var token = "',$h);
+  $t2=explode('"',$t1[1]);
+  $token=$t2[0];
+  $serv1=array();
+  $name=array();
+  $videos=explode('data-server="',$h);
   unset($videos[0]);
   $videos = array_values($videos);
   foreach($videos as $video) {
-   $t1=explode("'",$video);
-   $r[] = "https://player.ezylink.co/".$t1[0];
-   $t1=explode(">",$video);
-   $t2=explode("<",$t1[1]);
-   $s[]=$t2[0];
+    $t1=explode('"',$video);
+    $server=$t1[0];
+    $t1=explode('data-server-id="',$video);
+    $t2=explode('"',$t1[1]);
+    $id=$t2[0];
+    $t1=explode('title="',$video);
+    $t2=explode('"',$t1[1]);
+    $name[]=$t2[0];
+    $serv1[]=array('serv' => $server,'id' => $id);
   }
-  } else {
-   $r[]=$l;
-   $s[]=parse_url($l)['host'];
-  }
-  /*
-  echo $r[0];
-  $ch = curl_init($r[1]);
-  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
-  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
-  curl_setopt($ch, CURLOPT_RETURNTRANSFER  ,1);  // RETURN THE CONTENTS OF THE CALL
-  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-  curl_setopt($ch, CURLOPT_HTTPHEADER,$head);
-  curl_setopt($ch, CURLOPT_REFERER,"https://ezylink.co");
-  //curl_setopt($ch, CURLOPT_COOKIEJAR, $cookie);
-  //curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie);
-  curl_setopt($ch, CURLOPT_HEADER,1);
-  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
-  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+  //$r=array();
+  for ($k=0;$k<count($serv1);$k++) {
+  $server=$serv1[$k]['serv'];
+  $id=$serv1[$k]['id'];
+  $l1="https://oload.party/loadsource.php?server=".$server."&id=".$id."&token=".$token;
+  curl_setopt($ch, CURLOPT_URL, $l1);
   $h = curl_exec($ch);
-  curl_close ($ch);
   //echo $h;
+  //$h=file_get_contents($l1);
+  $t1=explode('iframe src="',$h);
+  $t2=explode('"',$t1[1]);
+  $r[]=$t2[0];
+  }
+  curl_close($ch);
+  }
+////////////////////////////////////////////
+
+
   //echo $html;
-  */
 echo '<table border="1" width="100%">';
-echo '<TR><TD class="mp">Alegeti un server: Server curent:<label id="server">'.$s[0].'</label>
+echo '<TR><TD class="mp">Alegeti un server: Server curent:<label id="server">'.parse_url($r[0])['host'].'</label>
 <input type="hidden" id="file" value="'.urlencode($r[0]).'"></td></TR></TABLE>';
 echo '<table border="1" width="100%"><TR>';
 $k=count($r);
@@ -266,7 +243,7 @@ $x=0;
 for ($i=0;$i<$k;$i++) {
   if ($x==0) echo '<TR>';
   $c_link=$r[$i];
-  $openload=$s[$i];
+  $openload=parse_url($r[$i])['host'];
   if (preg_match($indirect,$openload)) {
   echo '<TD class="mp"><a href="filme_link.php?file='.urlencode($c_link).'&title='.urlencode(unfix_t($tit.$tit2)).'" target="_blank">'.$openload.'</a></td>';
   } else
@@ -289,14 +266,12 @@ if ($tip=="movie") {
   $tit2="";
   $sez="";
   $ep="";
-  $imdbid="";
   $from="";
   $link_page="";
 } else {
   $tit3=$tit;
   $sez=$sez;
   $ep=$ep;
-  $imdbid="";
   $from="";
   $link_page="";
 }

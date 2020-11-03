@@ -213,7 +213,7 @@ foreach($f as $key => $value) {
   $imdb="";
   $year="";
   $rest = substr($title, -6);
-  if (preg_match("/\((\d+)\)/",$rest,$m)) {
+  if (preg_match("/\((\d{4})\)/",$rest,$m)) {
    $year=$m[1];
    $tit_imdb=trim(str_replace($m[0],"",$title));
   } else {

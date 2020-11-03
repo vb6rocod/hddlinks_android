@@ -146,6 +146,7 @@ if (isset($_GET['link'])) {
 $m3uFile = file($m3uFile);
 }
 foreach($m3uFile as $key => $line) {
+  $line=trim($line);
   if(strtoupper(substr($line, 0, 7)) === "#EXTINF") {
     if (preg_match("/tvg\-name\=\"(.*?)\"/i",$line,$m)) {
       $title=$m[1];

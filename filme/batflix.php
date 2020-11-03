@@ -174,6 +174,7 @@ if ($tip=="search") {
  $l="https://".$host."/movies?page=".$page;
 }
 //https://ww2.batflix.org/movies?page=2
+/*
 $ua="Mozilla/5.0 (Windows NT 10.0; rv:75.0) Gecko/20100101 Firefox/75.0";
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $l);
@@ -186,8 +187,26 @@ $ua="Mozilla/5.0 (Windows NT 10.0; rv:75.0) Gecko/20100101 Firefox/75.0";
   $h = curl_exec($ch);
   curl_close($ch);
   if (!$h) $h=file_get_contents($l);
-
+*/
+$cookie=$base_cookie."batflix.txt";
+$ua=file_get_contents($base_pass."firefox.txt");
 $host=parse_url($l)['host'];
+$head=array('Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2');
+
+  $ch = curl_init();
+  curl_setopt($ch, CURLOPT_URL, $l);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+  curl_setopt($ch,CURLOPT_REFERER,"https://".$host);
+  curl_setopt($ch,CURLOPT_HTTPHEADER,$head);
+  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
+  curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie);
+  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 25);
+  $h = curl_exec($ch);
+  curl_close($ch);
+
 $videos = explode('itemprop="itemListElement', $h);
 unset($videos[0]);
 $videos = array_values($videos);
@@ -213,7 +232,7 @@ foreach($f as $key => $value) {
   $imdb="";
   $year="";
   $rest = substr($title, -6);
-  if (preg_match("/\((\d+)\)/",$rest,$m)) {
+  if (preg_match("/\((\d{4})\)/",$rest,$m)) {
    $year=$m[1];
    $tit_imdb=trim(str_replace($m[0],"",$title));
   } else {
@@ -225,6 +244,7 @@ foreach($f as $key => $value) {
   if ($n==0) echo '<TR>'."\r\n";
   $val_imdb="tip=movie&title=".urlencode(fix_t($tit_imdb))."&year=".$year."&imdb=".$imdb;
   $fav_link="mod=add&title=".urlencode(fix_t($title))."&link=".urlencode($link)."&image=".urlencode($image)."&year=".$year;
+  $image="r_m.php?file=".$image;
   if ($tast == "NU") {
     echo '<td class="mp" width="25%"><a href="'.$link_f.'" id="myLink'.$w.'" target="_blank" onmousedown="isKeyPressed(event)">
     <img id="myLink'.$w.'" src="'.$image.'" width="'.$width.'" height="'.$height.'"><BR>'.$title.'</a>

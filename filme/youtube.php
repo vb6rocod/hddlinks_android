@@ -34,7 +34,6 @@ if(preg_match('/youtube\.com\/(v\/|watch\?v=|embed\/)([\w\-]+)/', $file, $match)
   $l = "https://www.youtube.com/watch?v=".$id;
   $html="";
   $p=0;
-
   while($html == "" && $p<10) {
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $l);

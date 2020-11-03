@@ -7,6 +7,7 @@ function str_between($string, $start, $end){
 }
 include ("../common.php");
 $last_good="https://123stream.be";
+$last_good="https://emovies.io";
 $host=parse_url($last_good)['host'];
 $page = $_GET["page"];
 $tip= $_GET["tip"];
@@ -168,15 +169,16 @@ if ($page==1) {
 }
 echo '</TR>'."\r\n";
 $ua = $_SERVER['HTTP_USER_AGENT'];
-
+// https://emovies.io/free-latest-movies-online/2
 $ua="Mozilla/5.0 (Windows NT 10.0; rv:70.0) Gecko/20100101 Firefox/70.0";
 if($tip=="release") {
-  $l="https://".$host."/movie/filter/movie/".$page;
+  $l="https://".$host."/free-latest-movies-online/".$page;
 } else {
   $search=str_replace(" ","+",$tit);
   $l="https://".$host."/movie/search/".$search."/".$page;
 }
-
+// https://emovies.io/movie/search/star/2
+//$l="https://emovies.io/free-latest-movies-online/2";
 $host=parse_url($l)['host'];
   $ch = curl_init($l);
   curl_setopt($ch, CURLOPT_USERAGENT, $ua);

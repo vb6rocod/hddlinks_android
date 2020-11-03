@@ -73,7 +73,7 @@ else
 <TD width="25%"><a href="filme/divxfilmeonline.php?page=1&tip=release&title=divxfilmeonline&link=" target="_blank">divxfilmeonline</a></TD>
 <TD width="25%"><a href="filme/filmeseriale_eu_f.php?page=1&tip=release&title=filmeseriale.eu&link=" target="_blank">filmeseriale.eu</a></TD>
 <TD width="25%"><a href="filme/vezionline_main.php" target="_blank">vezionline</a></TD>
-<TD width="25%"></TD>
+<TD width="25%"><a href="filme/tofmovies_f.php?page=1&tip=release&title=tofmovies&link=" target="_blank">tofmovies</a></TD>
 </TR>
 <!--- desene si filme...-->
 <TR>
@@ -93,7 +93,8 @@ else
 <TR>
 <TD width="25%"><a href="filme/hdfull_f.php?page=1&tip=release&title=hdfull&link=" target="_blank">hdfull</a></TD>
 <TD width="25%"><a href="filme/cineplex_f_main.php" target="_blank">cineplex (cont)</a></TD>
-<TD width="25%"><a href="filme/batflix.php?page=1&tip=release&title=batflix&link=" target="_blank">batflix</a></TD>
+<!--<TD width="25%"><a href="filme/batflix.php?page=1&tip=release&title=batflix&link=" target="_blank">batflix</a></TD>-->
+<TD width="25%"><a href="filme/cfff.php?loc=https://ww2.batflix.org&cookie=batflix.txt&dest=batflix.php%3Fpage%3D1%26tip%3Drelease%26title%3Dbatflix%26link%3D" target="_blank">batflix</a></TD>
 <TD width="25%"><a href="filme/lookmovie_f.php?page=1&tip=release&title=lookmovie&link=" target="_blank">lookmovie</a></TD>
 </TR>
 <TR>

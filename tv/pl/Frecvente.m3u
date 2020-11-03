@@ -1,9 +1,21 @@
+#EXTINF:-1, Digi 24
+http://d-e-02.cdn.rdsnet.ro/DVR/digi24hdb.stream/mono.m3u8
+#EXTINF:-1, Digi 24
+http://d-e-02.cdn.rdsnet.ro/DVR/digi24hdb.stream/playlit.m3u8
+#EXTINF:-1, Digi Sport 1
+http://d-e-02.cdn.rdsnet.ro/DVR/digisport1hdb.stream/playlit.m3u8
+#EXTINF:-1, Digi Sport 2
+http://d-e-02.cdn.rdsnet.ro/DVR/digisport2hdb.stream/playlit.m3u8
+#EXTINF:-1, Digi Sport 3
+http://d-e-02.cdn.rdsnet.ro/DVR/digisport3hdb.stream/playlit.m3u8
+#EXTINF:-1, Digi Sport 4
+http://d-e-02.cdn.rdsnet.ro/DVR/digisport4hdb.stream/playlit.m3u8
 #EXTINF:-1, B1
 https://stream.adunity.com/b1/b1_640-.m3u8
 #EXTINF:-1, Realitatea Plus
 https://livestream.realitatea.net/livestream/liverealitatea.stream/playlist.m3u8
 #EXTINF:-1, TVR Moldova
-http://89.136.209.30:1935/liveedge/TVRMOLDOVA.stream/playlist.m3u8
+https://mn-nl.mncdn.com/tvrmoldova_new/smil:tvrmoldova_new.smil/index.m3u8
 #EXTINF:-1, MD| ProTV Chisinau
 http://hls.protv.md/hls/protv.m3u8
 #EXTINF:-1, MD| ProTV Chisinau
@@ -19,7 +31,7 @@ https://livebeta.publika.md/LIVE/P/6810.m3u8
 #EXTINF:0 ,MD| TV8 
 https://live1.cdn.tv8.md/TV7/index.m3u8?token=1
 #EXTINF:0 ,MD| N4
-http://web.sats.gstv.tech/cpl11/00987101-cd36-49ed-a5e1-bcfaa25d0d85/N4web.m3u8
+http://web.sats.gstv.tech/cpl11/da8df281-1165-440a-8c86-959f71b695b6/N4web.m3u8
 #EXTINF:0 ,MD| 10TV
 http://212.0.215.115/10TVHD/playlist.m3u8
 #EXTINF:0 ,MD| Vocea Basarabiei

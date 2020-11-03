@@ -14,6 +14,7 @@ $tit=$_GET["title"];
 $link=$_GET["link"];
 $width="200px";
 $height="278px";
+// https://123fmovies.best
 /* ==================================================== */
 $has_fav="yes";
 $has_search="no";
@@ -170,6 +171,7 @@ echo '</TR>'."\r\n";
 // https://coolseries.best
 $l="https://series.cool/category.php?cat=watch-tv-series-video";
 $l="https://coolseries.best/browse-watch-series-free-online-go-stream-download-completed-tv-series-videos-1-date.html";
+//$l="https://123fmovies.best/browse-watch-tv-series-video-123movies-gostream-videos-1-date.html";
   $ua="Mozilla/5.0 (Windows NT 10.0; rv:63.0) Gecko/20100101 Firefox/63.0";
   $ch = curl_init($l);
   curl_setopt($ch, CURLOPT_USERAGENT, $ua);

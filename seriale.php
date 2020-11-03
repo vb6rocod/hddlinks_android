@@ -70,7 +70,7 @@ document.onkeypress =  zx;
 
 <TR>
 <TD width="25%"><a href="filme/fsgratis_s.php?page=1&tip=release&title=fsgratis&link=" target="_blank">fsgratis</a></TD>
-<TD width="25%"><a href="filme/clicksud_main.php" target="_blank">clicksud (seriale romanesti)</a></TD>
+<TD width="25%"></TD>
 <TD width="25%"><a href="filme/diverse.php" target="_blank">diverse</a></TD>
 <TD width="25%"><a href="filme/cartoonhd_s.php?page=1&tip=release&title=cartoonhd&link=" target="_blank">cartoonhd</a></TD>
 </TR>
@@ -113,11 +113,17 @@ document.onkeypress =  zx;
 <TD width="25%"><a href="filme/streamlord_s.php?page=1&tip=release&title=streamlord&link=" target="_blank">streamlord</a></TD>
 <TD width="25%"><a href="filme/goojara_s.php?page=1&tip=release&title=goojara&link=" target="_blank">goojara</a></TD>
 </TR>
+<TR>
+<TD width="25%"><a href="filme/lightdl_s.php" target="_blank">lightdl</a></TD>
+<TD width="25%"><a href="filme/123fmovies_s.php?page=1&tip=release&title=123fmovies&link=" target="_blank">123fmovies</a></TD>
+<TD width="25%"></TD>
+<TD width="25%"></TD>
+</TR>
 <?php
 if (file_exists($base_pass."tvplay.txt")) {
 echo '<TR>';
 echo '<TD width="25%"><a href="filme/cineplex_s_main1.php" target="_blank">cineplex</a></TD>';
-echo '<TD width="25%"><a href="filme/lightdl_s.php" target="_blank">lightdl</a></TD>';
+echo '<TD width="25%"></TD>';
 echo '<TD width="25%"></TD>';
 echo '<TD width="25%"></TD>';
 echo '</TR>';

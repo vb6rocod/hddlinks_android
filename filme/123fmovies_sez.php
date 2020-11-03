@@ -11,7 +11,7 @@ $sez=$_GET['sez'];
 /* ======================================= */
 $width="200px";
 $height="100px";
-$fs_target="seriescool_fs.php";
+$fs_target="123fmovies_ep.php";
 $has_img="no";
 ?>
 <html>
@@ -33,47 +33,47 @@ function str_between($string, $start, $end){
 
 echo '<h2>'.$tit.'</h2>';
   $ua="Mozilla/5.0 (Windows NT 10.0; rv:63.0) Gecko/20100101 Firefox/63.0";
-  $ch = curl_init();
-  curl_setopt($ch, CURLOPT_URL, $link);
+  $ch = curl_init($link);
   curl_setopt($ch, CURLOPT_USERAGENT, $ua);
-  curl_setopt($ch,CURLOPT_REFERER,"https://series.cool");
+  curl_setopt($ch,CURLOPT_REFERER,"https://123fmovies.best");
   curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER  ,1);  // RETURN THE CONTENTS OF THE CALL
   curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
   curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
   curl_setopt($ch, CURLOPT_TIMEOUT, 15);
   $html = curl_exec($ch);
-$link=str_replace("videos-1","videos-2",$link);
-  curl_setopt($ch, CURLOPT_URL, $link);
-  $html .= curl_exec($ch);
-  //echo $html;
-
   curl_close ($ch);
+  //echo $html;
+  //$t1=explode('<div id="movies"',$html);
+  //$t2=explode('</div',$t1[1]);
+  //$html=$t2[0];
 
 $n=0;
 
 echo '<table border="1" width="100%">'."\n\r";
-echo '<TR><td class="sez" style="color:black;background-color:#0a6996;color:#64c8ff;text-align:center" colspan="3">Sezonul '.($sez).'</TD></TR>';
+//echo '<TR><td class="sez" style="color:black;background-color:#0a6996;color:#64c8ff;text-align:center" colspan="3">Sezonul '.($sez).'</TD></TR>';
 
-$videos = explode('a class="pm-watch-later', $html);
+$videos = explode('<div class="block-item"', $html);
 unset($videos[0]);
 //$videos = array_values($videos);
 $videos = array_reverse($videos);
 foreach($videos as $video) {
   $t1 = explode('href="', $video);
-  $t2=explode('"',$t1[2]);
+  $t2=explode('"',$t1[1]);
   $link = $t2[0];
-  $t3 = explode('title="', $video);
-  $t4 = explode('"', $t3[2]);
-  if (preg_match("/episode\s*(\d+)/i",$t4[0],$m))
-   $episod=$m[1];
+  $t3 = explode('class="title">', $t1[1]);
+  $t4 = explode('<', $t3[1]);
+  if (preg_match("/season\s*(\d+)/i",$video,$m))
+   $sez=$m[1];
   else
-   $episod="1";
+   $sez="1";
+
+  $episod="";
   $img_ep=$image;
   $season=$sez;
   $ep_tit="";
 
-  $ep_tit_d = $sez."x".$episod;
+  $ep_tit_d = "Season ".$sez;
   $link_f=$fs_target.'?tip=series&link='.urlencode($link).'&title='.urlencode(fix_t($tit)).'&image='.$img_ep."&sez=".$season."&ep=".$episod."&ep_tit=".urlencode(fix_t($ep_tit))."&year=".$year;
    if ($n == 0) echo "<TR>"."\n\r";
    if ($has_img == "yes")

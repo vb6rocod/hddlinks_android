@@ -57,6 +57,9 @@ if (preg_match("/www\.exclusivtv\.ro/",$link)) {
 if(preg_match('/youtube\.com\/(v\/|watch\?v=|embed\/)([\w\-]+)/', $h, $match)) {
   $id = $match[2];
   $link = "https://www.youtube.com/watch?v=".$id;
+} elseif (preg_match("/videoId:\s*\'([\w\-]+)\'/",$h,$match)) {
+  $id = $match[1];
+  $link = "https://www.youtube.com/watch?v=".$id;
 } else {
   $link="";
 }
@@ -99,6 +102,63 @@ if (strpos($link,"jurnaltv.md/JurnalTV") !== false) {
     $h = curl_exec($ch);
     curl_close($ch);
     $link=str_between($h,'source src="','"');
+}
+if ($from=="tvrlive") {
+    $ch = curl_init();
+    curl_setopt($ch, CURLOPT_URL, $link);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+    curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 10.0; rv:64.0) Gecko/20100101 Firefox/64.0');
+    curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+    //curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
+    //curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
+    curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+    curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+    $h = curl_exec($ch);
+    curl_close($ch);
+    if (preg_match("/http.+\.m3u8/",$h,$m))
+     $l=trim($m[0]);
+     //echo $l;
+  $ch = curl_init();
+  curl_setopt($ch, CURLOPT_URL, $l);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+  curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 10.0; rv:64.0) Gecko/20100101 Firefox/64.0');
+  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+  curl_setopt($ch, CURLOPT_ENCODING, "");
+  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+  $h = curl_exec($ch);
+  curl_close($ch);
+  //echo $h;
+$base1=str_replace(strrchr($l, "/"),"/",$l);
+$base2=getSiteHost($l);
+if (preg_match("/\.m3u8/",$h)) {
+$a1=explode("\n",$h);
+for ($k=0;$k<count($a1);$k++) {
+  if ($a1[$k][0] !="#" && $a1[$k]) $pl[]=trim($a1[$k]);
+}
+if ($pl[0][0] == "/")
+  $base=$base2;
+elseif (preg_match("/http(s)?:/",$pl[0]))
+  $base="";
+else
+  $base=$base1;
+if (count($pl) > 1) {
+  if (preg_match_all("/RESOLUTION\=(\d+)/i",$h))
+    preg_match_all("/RESOLUTION\=(\d+)/i",$h,$m);
+  else
+    preg_match_all("/BANDWIDTH\=(\d+)/i",$h,$m);
+  $max_res=max($m[1]);
+  $arr_max=array_keys($m[1], $max_res);
+  $key_max=$arr_max[0];
+  $link=$base.$pl[$key_max];
+} else {
+  $link=$l;
+}
+} else {
+  $link=$l;
+}
 }
 if ($from=="teleon") {
 $ua = $_SERVER['HTTP_USER_AGENT'];

@@ -117,7 +117,7 @@ foreach($videos as $video) {
   $t2=explode("<div>",$t1[1]);
   $t3=explode("</",$t2[1]);
   $desc=$t3[0];
-  $desc = preg_replace("/(<\/?)(\w+)([^>]*>)/e","",$desc);
+  $desc = preg_replace("/(<\/?)(\w+)([^>]*>)/","",$desc);
   $t1=explode('class="buton">',$video);
   $t2=explode('href="',$t1[1]);
   $t3=explode('"',$t2[1]);

@@ -133,6 +133,7 @@ function off() {
 <?php
 echo '<h2>'.$tit.$tit2.'</H2>';
 echo '<BR>';
+$host=parse_url($link)['host'];
 $ua="Mozilla/5.0 (Windows NT 10.0; rv:80.0) Gecko/20100101 Firefox/80.0";
   $ch = curl_init($link);
   curl_setopt($ch, CURLOPT_USERAGENT, $ua);
@@ -146,7 +147,7 @@ $ua="Mozilla/5.0 (Windows NT 10.0; rv:80.0) Gecko/20100101 Firefox/80.0";
   $t1=explode("data-post='",$html);
   $t2=explode("'",$t1[1]);
   $id=$t2[0];
-$l="https://onionplay.co/wp-admin/admin-ajax.php";
+$l="https://".$host."/wp-admin/admin-ajax.php";
 $post="action=doo_player_ajax&post=".$id."&nume=1&type=movie";
 $head=array('Accept: */*',
 'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
@@ -154,9 +155,9 @@ $head=array('Accept: */*',
 'Content-Type: application/x-www-form-urlencoded; charset=UTF-8',
 'X-Requested-With: XMLHttpRequest',
 'Content-Length: '.strlen($post).'',
-'Origin: https://onionplay.co',
+'Origin: https://'.$host,
 'Connection: keep-alive',
-'Referer: https://onionplay.co/');
+'Referer: https://'.$host.'/');
 
   $ch = curl_init($l);
   curl_setopt($ch, CURLOPT_USERAGENT, $ua);
@@ -179,7 +180,7 @@ $head=array('Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image
 'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
 'Accept-Encoding: deflate',
 'Connection: keep-alive',
-'Referer: https://onionplay.co/');
+'Referer: https://'.$host.'/');
 
   $ch = curl_init($l);
   curl_setopt($ch, CURLOPT_USERAGENT, $ua);

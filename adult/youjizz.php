@@ -242,7 +242,7 @@ foreach($videos as $video) {
   $title = trim(strip_tags($title));
   $title = prep_tit($title);
   $t0=explode('class="img-responsive',$video);
-  $t1 = explode('src="', $t0[1]);
+  $t1 = explode('data-original="', $t0[1]);
   $t2 = explode('"', $t1[1]);
   $image = $t2[0];
   if (strpos($image,"http") === false) $image="https:".$image;

@@ -5,9 +5,9 @@ $host=$_GET['host'];
 $page_title="Filme favorite";
 $width="200px";
 $height="278px";
-$add_target="batflix_add.php";
-$fs_target="batflix_fs.php";
-$file=$base_fav."batflix.dat";
+$add_target="tofmovies_f_add.php";
+$fs_target="tofmovies_fs.php";
+$file=$base_fav."tofmovies_f.dat";
 ?>
 <html><head>
 <meta http-equiv="content-type" content="text/html; charset=UTF-8">
@@ -94,7 +94,6 @@ function str_between($string, $start, $end){
 $w=0;
 $n=0;
 echo '<H2>'.$page_title.'</H2>';
-$arr=array();
 $h="";
 if (file_exists($file)) {
   $h=file_get_contents($file);
@@ -127,8 +126,6 @@ foreach($arr as $key => $value) {
     $title = unfix_t(urldecode($key));
     $image=urldecode($arr[$key]["image"]);
     //$image=$host.parse_url($image)['path'];
-    $year="";
-    $link=$host.parse_url($link)['path'];
   $rest = substr($title, -6);
   if (preg_match("/\((\d{4})\)/",$rest,$m)) {
    $year=$m[1];
@@ -137,11 +134,12 @@ foreach($arr as $key => $value) {
    $year="";
    $tit_imdb=$title;
   }
-    $link_f=$fs_target.'?tip=movie&link='.urlencode($link).'&title='.urlencode(fix_t($title)).'&image='.$image."&sez=&ep=&ep_tit=&year=".$year;
+    $link=$host.parse_url($link)['path'];
+    $last_good="https://".$host;
+    $link_f=$fs_target.'?tip=movie&link='.urlencode($link).'&title='.urlencode(fix_t($title)).'&image='.$image."&sez=&ep=&ep_tit=&year=".$year."&last=".$last_good;
   if ($n==0) echo '<TR>'."\r\n";
   $val_imdb="tip=movie&title=".urlencode(fix_t($tit_imdb))."&year=".$year."&imdb=".$imdb;
   $fav_link="file=&mod=del&title=".urlencode(fix_t($title))."&link=".urlencode($link)."&image=".urlencode($image)."&year=".$year;
-  $image="r_m.php?file=".$image;
   if ($tast == "NU") {
     echo '<td class="mp" width="25%"><a href="'.$link_f.'" id="myLink'.$w.'" target="_blank" onmousedown="isKeyPressed(event)">
     <img id="myLink'.$w.'" src="'.$image.'" width="'.$width.'" height="'.$height.'"><BR>'.$title.'</a>
