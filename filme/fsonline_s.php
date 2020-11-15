@@ -6,24 +6,26 @@ function str_between($string, $start, $end){
 	return substr($string,$ini,$len);
 }
 include ("../common.php");
+include ("../util.php");
 $page = $_GET["page"];
 $tip= $_GET["tip"];
 $tit=$_GET["title"];
 $link=$_GET["link"];
 $width="200px";
 $height="278px";
+$last_good="https://fsonline.to";
+$host=parse_url($last_good)['host'];
 /* ==================================================== */
 $has_fav="yes";
 $has_search="yes";
 $has_add="yes";
 $has_fs="yes";
-$last_good="https://hdfull.la";
-$host=parse_url($last_good)['host'];
-$fav_target="hdfull_s_fav.php?host=".$last_good;
-$add_target="hdfull_s_add.php";
+$fav_target="fsonline_s_fav.php?host=".$last_good;
+$fav_target_fix="fsonline_s_fav.php?host=".$last_good."&fix=yes";
+$add_target="fsonline_s_add.php";
 $add_file="";
-$fs_target="hdfull_s_ep.php";
-$target="hdfull_s.php";
+$fs_target="fsonline_s_ep.php";
+$target="fsonline_s.php";
 /* ==================================================== */
 $base=basename($_SERVER['SCRIPT_FILENAME']);
 $p=$_SERVER['QUERY_STRING'];
@@ -147,7 +149,8 @@ echo '<TR>'."\r\n";
 if ($page==1) {
    if ($tip == "release") {
    if ($has_fav=="yes" && $has_search=="yes") {
-     echo '<TD class="nav"><a id="fav" href="'.$fav_target.'" target="_blank">Favorite</a></TD>'."\r\n";
+     echo '<TD class="nav"><a id="fav" href="'.$fav_target.'" target="_blank">Favorite</a>
+     </TD>'."\r\n";
      echo '<TD class="form" colspan="2">'.$form.'</TD>'."\r\n";
      echo '<TD class="nav" align="right"><a href="'.$next.'">&nbsp;&gt;&gt;&nbsp;</a></TD>'."\r\n";
    } else if ($has_fav=="no" && $has_search=="yes") {
@@ -166,54 +169,98 @@ if ($page==1) {
 } else {
    echo '<TD class="nav" colspan="4" align="right"><a href="'.$prev.'">&nbsp;&lt;&lt;&nbsp;</a> | <a href="'.$next.'">&nbsp;&gt;&gt;&nbsp;</a></TD>'."\r\n";
 }
-echo '</TR></TABLE>'."\r\n";
-$ua     =   $_SERVER['HTTP_USER_AGENT'];
-if ($tip=="release") {
-  $requestLink="https://".$host."/tv-shows/list";
-  $r=parse_url($requestLink);
-  $host=$r["host"];
-  $ch = curl_init($requestLink);
-  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
-  curl_setopt($ch,CURLOPT_REFERER,"https://hdfull.me/tv-shows/list");
-  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
-  curl_setopt($ch, CURLOPT_RETURNTRANSFER  ,1);  // RETURN THE CONTENTS OF THE CALL
-  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
-  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
-  $html = curl_exec($ch);
-  curl_close ($ch);
+echo '</TR>'."\r\n";
+if ($tip == "release") {
+   if ($page > 1)
+    $l="https://".$host."/seriale/page/".$page."/";
+   else
+    $l="https://".$host."/seriale/";
 } else {
- $l="https://".$host."/ajax/search.php";
- $post="q=".str_replace(" ","+",$tit)."&limit=500&timestamp=1234567890&verifiedCheck=";
-  $ch = curl_init($l);
-  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
-  curl_setopt($ch,CURLOPT_REFERER,"https://hdfull.me/tv-shows/list");
+  $search=str_replace(" ","+",$tit);
+  if ($page == 1)
+    $l="https://".$host."/?s=".$search;
+  else
+    $l="https://".$host."/page/".$page."/?s=".$search;
+}
+$r=array();
+$ua = $_SERVER['HTTP_USER_AGENT'];
+  $ch = curl_init();
+  curl_setopt($ch, CURLOPT_URL, $l);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+  curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 10.0; rv:55.0) Gecko/20100101 Firefox/55.0');
   curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
-  curl_setopt($ch, CURLOPT_RETURNTRANSFER  ,1);  // RETURN THE CONTENTS OF THE CALL
+  curl_setopt($ch, CURLOPT_ENCODING, "");
   curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-  curl_setopt ($ch, CURLOPT_POST, 1);
-  curl_setopt ($ch, CURLOPT_POSTFIELDS, $post);
   curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
   curl_setopt($ch, CURLOPT_TIMEOUT, 15);
   $html = curl_exec($ch);
-  curl_close ($ch);
-}
-if ($tip == "search") {
-echo '<table border="1px" width="100%" style="table-layout:fixed;">'."\r\n";
-  $r=json_decode($html,1);
-  //print_r ($r);
- for ($k=0;$k<count($r);$k++) {
-  $link = $r[$k]["permalink"];
-  $title = $r[$k]["title"];
-  $title = prep_tit($title);
-  $imdb=$r[$k]["imdb_id"];
-  $image = $r[$k]["image"];
-  $year = $r[$k]["year"];
-  //echo $r[$k]["meta"];
-  if ($title && strpos($r[$k]["meta"],"show") !== false) {
+  curl_close($ch);
+  //echo $html;
+  if ($tip=="release") {
+  $videos = explode('article id="post-', $html);
+  unset($videos[0]);
+  $videos = array_values($videos);
+  foreach($videos as $video) {
+    $t1=explode('"',$video);
+    $id=$t1[0];
+
+    $t1=explode('href="',$video);
+    $t2=explode('"',$t1[1]);
+    $link=$t2[0];
+    $t1=explode('alt="',$video);
+    $t2=explode('"',$t1[1]);
+    $title=trim($t2[0]);
+    if (preg_match("/[\'|\"](http[\w\/\.\_\:\-\@]+\.jpg)[\'|\"]/",$video,$m))
+     $image=trim($m[1]);
+    else
+     $image="blank.jpg";
+    if (strpos($link,"/serial") !== false) array_push($r ,array($title,$link, $image));
+  }
+  } else {
+  $videos = explode('article id="post-', $html);
+  unset($videos[0]);
+  $videos = array_values($videos);
+  foreach($videos as $video) {
+    $t1=explode('"',$video);
+    $id=$t1[0];
+
+    $t1=explode('href="',$video);
+    $t2=explode('"',$t1[1]);
+    $link=$t2[0];
+    $t1=explode('alt="',$video);
+    $t2=explode('"',$t1[1]);
+    $title=trim($t2[0]);
+    if (preg_match("/[\'|\"](http[\w\/\.\_\:\-\@]+\.jpg)[\'|\"]/",$video,$m))
+     $image=trim($m[1]);
+    else
+     $image="blank.jpg";
+    if (strpos($link1,"/serial") !== false) array_push($r ,array($title,$link, $image));
+  }
+  }
+$c=count($r);
+for ($k=0;$k<$c;$k++) {
+  $title=$r[$k][0];
+  $title=str_replace("&#8211;","-",$title);
+  $title=prep_tit($title);
+  $link=$r[$k][1];
+  $image=$r[$k][2];
+  $rest = substr($title, -2);
+  //echo urlencode($rest);
+  if ($rest == " -") $title = substr($title, 0, -2);
+  $rest = substr($title, -6);
+  if (preg_match("/\((\d{4})\)/",$rest,$m)) {
+   $year=$m[1];
+   $tit_imdb=trim(str_replace($m[0],"",$title));
+  } else {
+   $year="";
+   $tit_imdb=$title;
+  }
+
+  $imdb="";
   $link_f=$fs_target.'?tip=series&link='.urlencode($link).'&title='.urlencode(fix_t($title)).'&image='.$image."&sez=&ep=&ep_tit=&year=".$year;
+  if ($title && strpos($link,"/serial") !== false) {
   if ($n==0) echo '<TR>'."\r\n";
-  $val_imdb="tip=series&title=".urlencode(fix_t($title))."&year=".$year."&imdb=".$imdb;
+  $val_imdb="tip=series&title=".urlencode(fix_t($tit_imdb))."&year=".$year."&imdb=".$imdb;
   $fav_link="mod=add&title=".urlencode(fix_t($title))."&link=".urlencode($link)."&image=".urlencode($image)."&year=".$year;
   if ($tast == "NU") {
     echo '<td class="mp" width="25%"><a href="'.$link_f.'" id="myLink'.$w.'" target="_blank" onmousedown="isKeyPressed(event)">
@@ -246,90 +293,7 @@ echo '<table border="1px" width="100%" style="table-layout:fixed;">'."\r\n";
     }
     echo '</TR>'."\r\n";
   }
-  echo '</TABLE>'."\r\n";
-} else {
-$image="";
-$year="";
-$imdb="";
-//echo $html;
-echo '<table border="1px" width="100%"><TR>'."\n\r";
-$h1=str_between($html,'class="left filter-title myfilter">','</div');
-$videos = explode('href="', $h1);
-unset($videos[0]);
-$videos = array_values($videos);
-foreach($videos as $video) {
-  $t1=explode('>',$video);
-  $t2=explode('<',$t1[1]);
-  $tit=$t2[0];
-  $t1=explode('>',$video);
-  $t2=explode('<',$t1[1]);
-  $ref=$t2[0];
-  echo '<TD align="center"><a href="#'.$ref.'"'.'>'.$tit.'</a></TD>';
-}
-echo '</TR></TABLE>';
-echo '<table border="1px" width="100%">'."\n\r";
-$videos=explode('section-title">',$html);
-unset($videos[0]);
-$videos = array_values($videos);
-foreach($videos as $video) {
-$t1=explode('<',$video);
-$ref=$t1[0];
-echo '<table border="1px" width="100%">'."\n\r";
-//echo '<th><a name="'.$ref.'">'.$ref.'</a></TH>';
-$videos1=explode('class="list-item"',$video);
-$first=true;
-unset($videos1[0]);
-$videos1 = array_values($videos1);
-$n=0;
-foreach($videos1 as $video1) {
-
-  $t1=explode('href="',$video1);
-  $t2=explode('"',$t1[1]);
-  $link=$t2[0];
-  $t3=explode(">",$t1[1]);
-  $t4=explode('<',$t3[1]);
-  $title=trim($t4[0]);
-  $title=prep_tit($title);
-  $link_f=$fs_target.'?tip=series&link='.urlencode($link).'&title='.urlencode(fix_t($title)).'&image='.$image."&sez=&ep=&ep_tit=&year=".$year;
-  if ($title && strpos($link,"show/") !== false) {
-  if ($n==0) echo '<TR>'."\r\n";
-  $val_imdb="tip=series&title=".urlencode(fix_t($title))."&year=".$year."&imdb=".$imdb;
-  $fav_link="mod=add&title=".urlencode(fix_t($title))."&link=".urlencode($link)."&image=".urlencode($image)."&year=".$year;
-  if ($tast == "NU") {
-    echo '<td class="mp" width="25%"><a name="'.$ref.'" href="'.$link_f.'" id="myLink'.$w.'" target="_blank" onmousedown="isKeyPressed(event)">
-    '.$title.'</a>
-    <input type="hidden" id="imdb_myLink'.$w.'" value="'.$val_imdb.'">'."\r\n";
-    if ($has_add=="yes")
-      echo '<a onclick="ajaxrequest('."'".$fav_link."'".')" style="cursor:pointer;">*</a>'."\r\n";
-    echo '</TD>'."\r\n";
-  } else {
-    echo '<td class="mp" width="25%"><a name="'.$ref.'" class ="imdb" id="myLink'.$w.'" href="'.$link_f.'" target="_blank">
-    '.$title.'</a>
-    <input type="hidden" id="imdb_myLink'.$w.'" value="'.$val_imdb.'">'."\r\n";
-    if ($has_add == "yes")
-      echo '<input type="hidden" id="fav_myLink'.$w.'" value="'.$fav_link.'"></a>'."\r\n";
-    echo '</TD>'."\r\n";
-  }
-  $w++;
-  $n++;
-  if ($n == 4) {
-  echo '</tr>'."\r\n";
-  $n=0;
-  }
-  }
- }
-
-/* bottom */
-  if ($n < 4 && $n > 0) {
-    for ($k=0;$k<4-$n;$k++) {
-      echo '<TD></TD>'."\r\n";
-    }
-    echo '</TR>'."\r\n";
-  }
-  echo '</TABLE>'."\r\n";
-}
-}
-echo '<table border="1px" width="100%"><tr>
+echo '<tr>
 <TD class="nav" colspan="4" align="right">'."\r\n";
 if ($page > 1)
   echo '<a href="'.$prev.'">&nbsp;&lt;&lt;&nbsp;</a> | <a href="'.$next.'">&nbsp;&gt;&gt;&nbsp;</a></TD>'."\r\n";

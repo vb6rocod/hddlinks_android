@@ -84,7 +84,7 @@ foreach($videos as $video) {
   echo '<table border="1" width="100%">'."\n\r";
   echo '<TR><td class="sez" style="color:black;background-color:#0a6996;color:#64c8ff;text-align:center" colspan="3">Sezonul '.($sez).'</TD></TR>';
   $n=0;
-  $vids = explode('class="Num">', $video);
+  $vids = explode('span class="Num', $video);
   unset($vids[0]);
   $vids = array_values($vids);
   //$vids = array_reverse($vids);
@@ -92,8 +92,9 @@ foreach($videos as $video) {
   $img_ep="";
   $episod="";
   $ep_tit="";
-  $t1=explode("<",$vid);
-  $episod=$t1[0];
+  $t1=explode(">",$vid);
+  $t2=explode("<",$t1[1]);
+  $episod=$t2[0];
   $t1=explode('href="',$vid);
   $t2=explode('"',$t1[1]);
   $link=$t2[0];

@@ -143,6 +143,73 @@ if (preg_match("/filmeonlinegratis\.org/",$filelink)) {
   curl_close($ch);
   $html = urldecode(str_replace("@","%",$html));
 //} elseif (strpos($filelink,"fsgratis.") !== false) {
+} elseif (preg_match("/fsonline\.to/",$filelink)) {
+  $ua="Mozilla/5.0 (Windows NT 10.0; rv:82.0) Gecko/20100101 Firefox/82.0";
+  if (preg_match("/id\=/",$filelink)) {
+  $t1=explode("id=",$filelink);
+  $id=$t1[1];
+  } else {
+  $ch = curl_init();
+  curl_setopt($ch, CURLOPT_URL, $filelink);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
+  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+  $html = curl_exec($ch);
+  curl_close($ch);
+  //echo $html;
+  $t1=explode('postid-',$html);
+  $t2=explode('"',$t1[1]);
+  $id=$t2[0];
+  }
+  $l="https://fsonline.to/wp-admin/admin-ajax.php";
+  $post="action=lazy_player&movieID=".$id;
+  //echo $post;
+  $head=array('Accept: */*',
+  'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
+  'Accept-Encoding: deflate',
+  'Content-Type: application/x-www-form-urlencoded; charset=UTF-8',
+  'X-Requested-With: XMLHttpRequest',
+  'Content-Length: '.strlen($post).'',
+  'Origin: https://fsonline.to',
+  'Connection: keep-alive',
+  'Referer: https://fsonline.to/');
+  $ch = curl_init();
+  curl_setopt($ch, CURLOPT_URL, $l);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
+  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+  curl_setopt($ch, CURLOPT_HTTPHEADER,$head);
+  curl_setopt($ch, CURLOPT_POST,1);
+  curl_setopt($ch, CURLOPT_POSTFIELDS,$post);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 25);
+  $h = curl_exec($ch);
+  $videos=explode('data-vs="',$h);
+  unset($videos[0]);
+  $ch = curl_init();
+  curl_setopt($ch, CURLOPT_HEADER, true);
+  curl_setopt($ch, CURLOPT_NOBODY, true);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,0);
+  curl_setopt($ch, CURLOPT_REFERER,$filelink);
+  $videos = array_values($videos);
+  foreach($videos as $video) {
+    $t1=explode('"',$video);
+    $l=$t1[0];
+    curl_setopt($ch, CURLOPT_URL,$l);
+
+    $h1 = curl_exec($ch);
+    //echo $h1;
+  if (preg_match("/Location\:\s+(.+)/i",$h1,$m)) {
+  $h .='<iframe src="'.trim($m[1]).'"> ';
+  }
+  }
+  curl_close ($ch);
+  $html=$h;
 } elseif (preg_match("/serialeturcesti\.biz/",$filelink)) {
   $ua="Mozilla/5.0 (Windows NT 10.0; rv:81.0) Gecko/20100101 Firefox/81.0";
   $ch = curl_init();
