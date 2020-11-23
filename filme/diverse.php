@@ -58,7 +58,10 @@ $title="Filme";
 $link="../tv/filme_main.php";
 echo '<TD style="text-align:center"><font size="4">'.'<a href="'.$link.'" target="_blank">'.$title.'</a></font></TD>';
 
-echo '<TD style="text-align:center"></TD>';
+$title="CINEMATOGRAFIA ROMANEASCA";
+$link="yt_channel.php?token=&id=UC7612aZQ9llm_nR_3wDDqGA&kind=channel&title=(channel)+CINEMATOGRAFIA+ROMANEASCA&image=https://yt3.ggpht.com/a/AATXAJynQBFCnYb0qbwYGXKMFwnDYSiH1-izNKHu-5DW=s88-c-k-c0x00ffffff-no-rj";
+echo '<TD style="text-align:center"><font size="4">'.'<a href="'.$link.'" target="_blank">'.$title.'</a></font></TD>';
+
 echo "</TR>"."\n\r";
  echo '</table>';
 ?>

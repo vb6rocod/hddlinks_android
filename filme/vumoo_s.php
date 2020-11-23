@@ -18,7 +18,10 @@ $has_fav="yes";
 $has_search="yes";
 $has_add="yes";
 $has_fs="yes";
-$fav_target="vumoo_s_fav.php?host=http://vumoo.to";
+$last_good="https://vumoo.to";
+$last_good="https://9pm.to";
+$host=parse_url($last_good)['host'];
+$fav_target="vumoo_s_fav.php?host=".$last_good;
 $add_target="vumoo_s_add.php";
 $add_file="";
 $fs_target="vumoo_ep.php";
@@ -168,16 +171,18 @@ if ($page==1) {
 echo '</TR>'."\r\n";
 
 if($tip=="release") {
-  $l="http://vumoo.to/tv-series/page/".$page;
+  $l="https://".$host."/tv-series/page/".$page;
 } else {
   $search=str_replace(" ","+",$tit);
   //http://vumoo.to/javascripts/vumoo-v1.0.0.min.js
   $t="/search?t=2018BC65S4359XSMloz2HpQU2bXW4T_cTmTZFKx_zfeb1NAvH2OpqEK-aJloawZL-xo426IMAVLtpWZ3SK1d==";
-  $l="http://vumoo.to".$t."&q=".$search;
+  $t="/search?t=2018BC65S4359XSMloz2HpQU2bXW4T_cTmTZFKx_zfeb1NAvH2OpqEK-aJloaWZL-xo426IMAVLtpWZ3SK1d==";
+  $l="https://".$host.$t."&q=".$search;
 }
 $host=parse_url($l)['host'];
 $head=array('Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
 'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2');
+
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $l);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
@@ -211,6 +216,7 @@ if ($tip=="release") {
   }
 } else {
  $x=json_decode($html,1)['suggestions'];
+ //print_r ($x);
  for ($k=0;$k<count($x);$k++) {
   if ($x[$k]['data']['type'] != "movies") {
    $link=$x[$k]['data']['href'];

@@ -38,7 +38,7 @@ if(preg_match('/youtube\.com\/(v\/|watch\?v=|embed\/)([\w\-]+)/', $file, $match)
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $l);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-  curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 10.0; rv:61.0) Gecko/20100101 Firefox/61.0');
+  curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 10.0; rv:82.0) Gecko/20100101 Firefox/82.0');
   curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
   curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
   curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
@@ -48,16 +48,21 @@ if(preg_match('/youtube\.com\/(v\/|watch\?v=|embed\/)([\w\-]+)/', $file, $match)
   $p++;
   }
   //echo $html;
+  $t1=explode('jsUrl":"',$html);
+  $t2=explode('"',$t1[1]);
+  $js_url="https://www.youtube.com".$t2[0];
   $html = str_between($html,'ytplayer.config = ',';ytplayer.web_player_context_config');
   //echo "\n"."========================".$html;
+
   $parts = json_decode($html,1);
   //print_r ($parts);
 
   $r1=json_decode($parts['args']['player_response'],1);
   //print_r ($r1);
+  //die();
   if (isset($r1['streamingData']["hlsManifestUrl"])) {
       $url=$r1['streamingData']["hlsManifestUrl"];
-      $ua="Mozilla/5.0 (Windows NT 5.1; rv:22.0) Gecko/20100101 Firefox/22.0";
+      $ua="Mozilla/5.0 (Windows NT 10.0; rv:82.0) Gecko/20100101 Firefox/82.0";
       $ch = curl_init();
       curl_setopt($ch, CURLOPT_URL, $url);
       curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
@@ -115,12 +120,15 @@ if(preg_match('/youtube\.com\/(v\/|watch\?v=|embed\/)([\w\-]+)/', $file, $match)
   $sA="";
   $s=$output["s"];
   $tip=$output["sp"];
-  $l = "https://s.ytimg.com".$parts['assets']['js'];
-  $l = "https://www.youtube.com".$parts['assets']['js'];
+  //$l = "https://s.ytimg.com".$parts['assets']['js'];
+  //$l = "https://www.youtube.com".$parts['assets']['js'];
+  //echo "===========".$l;
+  $l=$js_url;
+  //echo $l;
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $l);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-  curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 5.1; rv:52.0) Gecko/20100101 Firefox/52.0');
+  curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 10.0; rv:82.0) Gecko/20100101 Firefox/82.0');
   curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
   curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
   curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
@@ -145,9 +153,12 @@ if(preg_match('/youtube\.com\/(v\/|watch\?v=|embed\/)([\w\-]+)/', $file, $match)
     },
     $code
   );
+  //echo $s."\n";
   $sA = str_split($s);
+  //echo $code;
   eval ($code);
   $sA = implode($sA);
+  //echo $sA;
   $signature = $sA;
   $r=$video."&".$tip."=".$signature;
   }

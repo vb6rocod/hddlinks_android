@@ -89,7 +89,7 @@ $(document).on('keyup', '.imdb', isValid);
 <TD width="25%"><a href="tv/tvrplus_youtube.php?page=1,,TVR+" target="_blank">TVR+ (youtube)</a></TD>
 <TD width="25%"><a href="filme/starea_natiei.php" target="_blank">Starea Natiei</a></TD>
 <TD width="25%"><a href="filme/yt_playlist.php?token=&id=UC6Sn1XzRBCBl8UMyAb8_5PA&kind=channel&title=%28channel%29+PrimaTV+Romania&image=https://yt3.ggpht.com/-hMQUv-XEccM/AAAAAAAAAAI/AAAAAAAAAAA/Tek8sw-tzhU/s88-c-k-no-mo-rj-c0xffffff/photo.jpg" target="_blank">PrimaTV</a></TD>
-<TD width="25%"></TD>
+<TD width="25%"><a href="tv/tvhd-online.php" target="_blank">tvhd-online</a></TD>
 </TR>
 
 <TR>

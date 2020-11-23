@@ -80,8 +80,8 @@ if (strpos($link,"live1.cdn.tv8.md/TV7") !== false) {
     curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
     //curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
     //curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
-    curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
-    curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+    curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
+    curl_setopt($ch, CURLOPT_TIMEOUT, 25);
     $h = curl_exec($ch);
     curl_close($ch);
     $p=json_decode($h,1);
@@ -159,6 +159,25 @@ if (count($pl) > 1) {
 } else {
   $link=$l;
 }
+}
+if ($from=="tvhd-online") {
+$ua = $_SERVER['HTTP_USER_AGENT'];
+  $ch = curl_init();
+  curl_setopt($ch, CURLOPT_URL, $link);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
+  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+  $html = curl_exec($ch);
+  curl_close($ch);
+  $link="";
+  $t1=explode("source: '",$html);
+  $t2=explode("'",$t1[1]);
+  $l2=$t2[0];
+  if (strpos($l2,"http") !== false)
+   $link=$l2;
 }
 if ($from=="teleon") {
 $ua = $_SERVER['HTTP_USER_AGENT'];

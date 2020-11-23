@@ -92,7 +92,7 @@ else
 <TD width="25%"><a href="filme/ling_f.php?page=1&tip=release&title=ling.online&link=" target="_blank">ling.online</a></TD>
 </TR>
 <TR>
-<TD width="25%"></TD>
+<TD width="25%"><a href="filme/lunchflix_f.php?page=1&tip=release&title=lunchflix&link=" target="_blank">lunchflix</a></TD>
 <TD width="25%"><a href="filme/cineplex_f_main.php" target="_blank">cineplex (cont)</a></TD>
 <TD width="25%"></TD>
 <TD width="25%"><a href="filme/lookmovie_f.php?page=1&tip=release&title=lookmovie&link=" target="_blank">lookmovie</a></TD>

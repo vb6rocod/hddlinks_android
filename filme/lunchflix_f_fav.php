@@ -4,10 +4,10 @@ include ("../common.php");
 $host=$_GET['host'];
 $page_title="Filme favorite";
 $width="200px";
-$height=intval(200*(253/450))."px";
-$add_target="ask4movie_f_add.php";
-$fs_target="ask4movie_fs.php";
-$file=$base_fav."ask4movie_f.dat";
+$height=intval(200*(1080/1920))."px";
+$add_target="lunchflix_f_add.php";
+$fs_target="lunchflix_fs.php";
+$file=$base_fav."lunchflix_f.dat";
 ?>
 <html><head>
 <meta http-equiv="content-type" content="text/html; charset=UTF-8">

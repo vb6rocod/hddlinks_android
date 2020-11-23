@@ -18,7 +18,10 @@ $has_fav="yes";
 $has_search="yes";
 $has_add="yes";
 $has_fs="yes";
-$fav_target="vumoo_f_fav.php?host=http://vumoo.to";
+$last_good="https://vumoo.to";
+$last_good="https://9pm.to";
+$host=parse_url($last_good)['host'];
+$fav_target="vumoo_f_fav.php?host=".$last_good;
 $add_target="vumoo_f_add.php";
 $add_file="";
 $fs_target="vumoo_fs.php";
@@ -168,12 +171,13 @@ if ($page==1) {
 echo '</TR>'."\r\n";
 
 if($tip=="release") {
-  $l="http://vumoo.to/movies/page/".$page;
+  $l="https://".$host."/movies/page/".$page;
 } else {
   $search=str_replace(" ","+",$tit);
   //http://vumoo.to/javascripts/vumoo-v1.0.0.min.js
   $t="/search?t=2018BC65S4359XSMloz2HpQU2bXW4T_cTmTZFKx_zfeb1NAvH2OpqEK-aJloawZL-xo426IMAVLtpWZ3SK1d==";
-  $l="http://vumoo.to".$t."&q=".$search;
+  $t="/search?t=2018BC65S4359XSMloz2HpQU2bXW4T_cTmTZFKx_zfeb1NAvH2OpqEK-aJloaWZL-xo426IMAVLtpWZ3SK1d==";
+  $l="https://".$host."".$t."&q=".$search;
 }
 $host=parse_url($l)['host'];
 $head=array('Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',

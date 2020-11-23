@@ -12,18 +12,19 @@ $tit=$_GET["title"];
 $link=$_GET["link"];
 $width="200px";
 $height="278px";
-$last_good="https://ww2.9movies.yt";
+$height=intval(200*(1080/1920))."px";
+$last_good="https://www.lunchflix.com";
 $host=parse_url($last_good)['host'];
 /* ==================================================== */
 $has_fav="yes";
 $has_search="yes";
 $has_add="yes";
 $has_fs="yes";
-$fav_target="9movies_f_fav.php?host=".$last_good;
-$add_target="9movies_f_add.php";
+$fav_target="lunchflix_f_fav.php?host=".$last_good;
+$add_target="lunchflix_f_add.php";
 $add_file="";
-$fs_target="9movies_fs.php";
-$target="9movies_f.php";
+$fs_target="lunchflix_fs.php";
+$target="lunchflix_f.php";
 /* ==================================================== */
 $base=basename($_SERVER['SCRIPT_FILENAME']);
 $p=$_SERVER['QUERY_STRING'];
@@ -170,11 +171,11 @@ echo '</TR>'."\r\n";
 $f=array();
 if ($tip=="search") {
  $search=str_replace(" ","+",$tit);
- $l="https://".$host."/movie/search?keyword=".$search."&p=".$page;
+ //$l="https://".$host."/?s=".$search;
+ $l="https://".$host."/page/".$page."?s=".$search;
 } else {
- $l="https://".$host."/latest/movies?p=".$page;
+ $l="https://".$host."/browse/page/".$page;
 }
-//https://ww2.batflix.org/movies?page=2
 $ua="Mozilla/5.0 (Windows NT 10.0; rv:75.0) Gecko/20100101 Firefox/75.0";
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $l);
@@ -186,26 +187,23 @@ $ua="Mozilla/5.0 (Windows NT 10.0; rv:75.0) Gecko/20100101 Firefox/75.0";
   curl_setopt($ch, CURLOPT_TIMEOUT, 25);
   $h = curl_exec($ch);
   curl_close($ch);
-  if (!$h) $h=file_get_contents($l);
 
 $host=parse_url($l)['host'];
-$videos = explode('div class="item', $h);
+$videos = explode('<div id="post-', $h);
 unset($videos[0]);
 $videos = array_values($videos);
 foreach($videos as $video) {
- $t1=explode('movie_load_info/',$video);
+ $t1=explode('href="',$video);
  $t2=explode('"',$t1[1]);
  $link=$t2[0];
  $t1=explode('src="',$video);
  $t2=explode('"',$t1[1]);
  $image=$t2[0];
- $t1=explode('alt="',$video);
+ $t1=explode('title="',$video);
  $t3=explode('"',$t1[1]);
  $title=$t3[0];
- $t1=explode('href="',$video);
- $t2=explode('"',$t1[1]);
- $l1=$t2[0];
-  if ($title && strpos($l1,"/film") !== false) $f[] = array($title,$link,$image);
+
+  if ($title) $f[] = array($title,$link,$image);
 }
 //echo $html;
 foreach($f as $key => $value) {
