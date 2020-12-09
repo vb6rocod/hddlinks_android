@@ -17,7 +17,7 @@ $has_fav="yes";
 $has_search="yes";
 $has_add="yes";
 $has_fs="yes";
-$ref="https://www.onionplay.co";
+$ref="https://ww1.onionplay.to";
 $host=parse_url($ref)['host'];
 $fav_target="onionplay_f_fav.php?host=".$ref;
 $add_target="onionplay_f_add.php";
@@ -179,15 +179,15 @@ echo '</TR>'."\r\n";
 
 if($tip=="release") {
   if ($page==1)
-   $l="https://onionplay.co/movies/";
+   $l="https://".$host."/movies/";
   else
-   $l="https://onionplay.co/movies/page/".$page."/";
+   $l="https://".$host."/movies/page/".$page."/";
 } else {
   $search=str_replace(" ","+",$tit);
   if ($page==1)
-  $l="https://onionplay.co/search/".$search;
+  $l="https://".$host."/search/".$search;
   else
-  $l="https://onionplay.co/search/".$search."/page/".$page."/";
+  $l="https://".$host."/search/".$search."/page/".$page."/";
 }
 $host=parse_url($l)['host'];
 $firefox = $base_pass."firefox.txt";
@@ -205,18 +205,19 @@ $cc="";
 if (file_exists($cookie)) {
 $x=file_get_contents($cookie);
 //unlink ($cookie);
-if (preg_match("/onionplay\.co	\w+	\/	\w+	\d+	cf_clearance	([\w|\-]+)/",$x,$m))
+if (preg_match("/onionplay\.to	\w+	\/	\w+	\d+	cf_clearance	([\w|\-]+)/",$x,$m))
  $cc=trim($m[1]);
 else
  $cc="";
 }
+//echo $cc;
 if ($tip=="release") {
 $head=array('Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
 'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
 'Accept-Encoding: deflate',
 'Connection: keep-alive',
 'Cookie: cf_clearance='.$cc,
-'Referer: https://onionplay.co/');
+'Referer: https://onionplay.to/');
 
   $ch = curl_init($l);
   curl_setopt($ch, CURLOPT_USERAGENT, $ua);
@@ -241,7 +242,7 @@ $opts = array(
               "Accept-Encoding: deflate\r\n" .
               "Connection: keep-alive\r\n" .
               "Cookie: cf_clearance=".$cc."\r\n".
-              "Referer: https://onionplay.co"."\r\n"
+              "Referer: https://onionplay.to"."\r\n"
   )
 );
 $context = stream_context_create($opts);

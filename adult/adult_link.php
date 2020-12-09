@@ -73,7 +73,12 @@ $type="mp4";
 $cookie=$base_cookie."adultc.dat";
 if (preg_match("/jizzbunker\.com|familyporn\.tv|zbporn\.com|trannytube\.net/",$host)) {
   $h=@file_get_contents($l);
-} else {
+} elseif (preg_match("/pefilme\.info/",$l)) {
+  //$l="https://pefilme.info/video.php?id=159035";
+  //echo $l;
+  $host=parse_url($l)['host'];
+  $head=array ('Origin: https//'.$host);
+  $ua="Mozilla/5.0 (Windows NT 10.0; rv:83.0) Gecko/20100101 Firefox/83.0";
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $l);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
@@ -81,12 +86,37 @@ if (preg_match("/jizzbunker\.com|familyporn\.tv|zbporn\.com|trannytube\.net/",$h
   curl_setopt($ch, CURLOPT_USERAGENT, $ua);
   curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
   curl_setopt($ch, CURLOPT_REFERER, $l);
+  curl_setopt($ch, CURLOPT_HTTPHEADER,$head);
+  curl_setopt($ch, CURLOPT_POST,1);
   curl_setopt($ch, CURLOPT_COOKIEJAR, $cookie);
   curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie);
   curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
   curl_setopt($ch, CURLOPT_TIMEOUT, 25);
   $h = curl_exec($ch);
   curl_close($ch);
+  //echo $h;
+} else {
+  //$l="https://pefilme.info/video.php?id=159035";
+  //echo $l;
+  $host=parse_url($l)['host'];
+  $head=array ('Origin: https//'.$host);
+  $ua="Mozilla/5.0 (Windows NT 10.0; rv:83.0) Gecko/20100101 Firefox/83.0";
+  $ch = curl_init();
+  curl_setopt($ch, CURLOPT_URL, $l);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
+  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+  curl_setopt($ch, CURLOPT_REFERER, $l);
+  curl_setopt($ch, CURLOPT_HTTPHEADER,$head);
+  //curl_setopt($ch, CURLOPT_HEADER,1);
+  curl_setopt($ch, CURLOPT_COOKIEJAR, $cookie);
+  curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 25);
+  $h = curl_exec($ch);
+  curl_close($ch);
+  //echo $h;
 }
 //echo $h;
 if (strpos($l,"porndbs.com") !== false) {
@@ -471,9 +501,10 @@ $out=$t2[0];
      $out=$m[2][$maxs[0]];
   }
 } else if (preg_match("/pefilme\.info/",$host)) {
-  $t1=explode('source src="',$h);
-  $t2=explode('"',$t1[1]);
-  $out=$t2[0];
+//echo $h;
+  $r=json_decode($h,1);
+  //print_r ($r);
+  $out=$r['videoUrl'];
 } else if (preg_match("/porn300\.com/",$host)) {
   $t1=explode('source src="',$h);
   $t2=explode('"',$t1[1]);

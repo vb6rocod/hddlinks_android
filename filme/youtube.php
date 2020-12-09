@@ -29,40 +29,58 @@ function length($a,$b) {
 function splice($a,$b) {
 	return  array_slice($a,$b);
 }
+$ua="Mozilla/5.0 (Windows NT 10.0; rv:82.0) Gecko/20100101 Firefox/82.0";
+//$ua = $_SERVER['HTTP_USER_AGENT'];
 if(preg_match('/youtube\.com\/(v\/|watch\?v=|embed\/)([\w\-]+)/', $file, $match)) {
   $id = $match[2];
   $l = "https://www.youtube.com/watch?v=".$id;
   $html="";
   $p=0;
   while($html == "" && $p<10) {
+
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $l);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-  curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 10.0; rv:82.0) Gecko/20100101 Firefox/82.0');
+  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
   curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
   curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
   curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
   curl_setopt($ch, CURLOPT_TIMEOUT, 15);
   $html = curl_exec($ch);
   curl_close($ch);
+
+  //$html=file_get_contents($l);
   $p++;
   }
   //echo $html;
   $t1=explode('jsUrl":"',$html);
   $t2=explode('"',$t1[1]);
   $js_url="https://www.youtube.com".$t2[0];
-  $html = str_between($html,'ytplayer.config = ',';ytplayer.web_player_context_config');
-  //echo "\n"."========================".$html;
+  //echo $js_url."\n";
+  //die();
+  $parts=array();
+  $r1=array();
+  if (strpos($html,"ytplayer.config =") !== false) {
+    $html = str_between($html,'ytplayer.config = ',';ytplayer.web_player_context_config');
+    $parts = json_decode($html,1);
+    $r1=json_decode($parts['args']['player_response'],1);
+  } else {
+    $html=trim(str_between($html,'var ytInitialPlayerResponse = ','}}}};'))."}}}}";
+    $parts = json_decode($html,1);
+    $r1=$parts;
+  }
+  //echo $html;
+  //$parts = json_decode($html,1);
 
-  $parts = json_decode($html,1);
-  //print_r ($parts);
 
-  $r1=json_decode($parts['args']['player_response'],1);
+
   //print_r ($r1);
   //die();
+  //$r1=json_decode($parts[streamingData]
+
   if (isset($r1['streamingData']["hlsManifestUrl"])) {
       $url=$r1['streamingData']["hlsManifestUrl"];
-      $ua="Mozilla/5.0 (Windows NT 10.0; rv:82.0) Gecko/20100101 Firefox/82.0";
+
       $ch = curl_init();
       curl_setopt($ch, CURLOPT_URL, $url);
       curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);

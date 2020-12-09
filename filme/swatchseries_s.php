@@ -17,7 +17,10 @@ $has_fav="yes";
 $has_search="yes";
 $has_add="yes";
 $has_fs="yes";
-$fav_target="swatchseries_s_fav.php?host=https://www1.swatchseries.to";
+$last_good="https://www1.swatchseries.to";
+$last_good="https://www1.watch-series.la";
+$host=parse_url($last_good)['host'];
+$fav_target="swatchseries_s_fav.php?host=".$last_good;
 $add_target="swatchseries_s_add.php";
 $add_file="";
 $fs_target="swatchseries_s_ep.php";
@@ -167,7 +170,7 @@ if ($page==1) {
 echo '</TR>'."\r\n";
 $r=array();
 if ($tip=="release") {
-  $l="https://www1.swatchseries.to/series/".$page;
+  $l=$last_good."/series/".$page;
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $l);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
@@ -182,7 +185,7 @@ if ($tip=="release") {
 
 } else {
   $search=str_replace(" ","+",$tit);
-  $l="https://www1.swatchseries.to/search/".$search."/page/".$page."/sortby/MATCH";
+  $l=$last_good."/search/".$search."/page/".$page."/sortby/MATCH";
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $l);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
@@ -241,7 +244,7 @@ for ($k=0;$k<$c;$k++) {
   $link=$r[$k][1];
   $image=$r[$k][2];
   $rest = substr($title, -6);
-  if (preg_match("/\((\d+)\)/",$rest,$m)) {
+  if (preg_match("/\((\d{4})\)/",$rest,$m)) {
    $year=$m[1];
    $tit_imdb=trim(str_replace($m[0],"",$title));
   } else {

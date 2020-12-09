@@ -50,6 +50,7 @@ if (file_exists($base_pass."facebook.txt")) {
 $ceva="14159";
 $ua="Mozilla/5.0 (Windows NT 10.0; rv:74.0) Gecko/20100101 Firefox/74.0";
 $ua="Mozilla/5.0 (Windows NT 10.0; rv:80.0) Gecko/20100101 Firefox/80.0";
+$ua="Mozilla/5.0 (Windows NT 10.0; rv:83.0) Gecko/20100101 Firefox/83.0";
 $page=$_GET['page'];
 $search=$_GET["search"];
 $doc_id=$_GET['doc_id'];
@@ -102,16 +103,16 @@ $p=array('av' => $c_user,
     '__beoa' => '1',
     '__pc' => 'EXP2:comet_pkg',
     'dpr' => '1',
-    '__rev' => '1002694184',
+    '__rev' => '1003024827',
     '__comet_req' => '0',
     'fb_dtsg' => $fb_dtsg,
-    '__spin_r' => '1002694184',
+    '__spin_r' => '1003024827',
     '__spin_b' => 'trunk',
     '__spin_t' => time(),
     'fb_api_caller_class' => 'RelayModern',
     'fb_api_req_friendly_name' => 'PagesCometChannelTabAllVideosCardImplPaginationQuery',
     'variables' => '{"count":25,"cursor":"'.$token.'","useDefaultActor":false,"id":"'.$doc_id.'"}',
-    'doc_id' => '3356141697781815'
+    'doc_id' => '3329998450459232'
 );
 
 if (!$token) {
@@ -120,18 +121,18 @@ $p=array('av' => $c_user,
     '__a' => '1',
     '__csr' => '',
     '__beoa' => '0',
-    '__pc' => 'PHASED:DEFAULT',
+    '__pc' => 'EXP2:comet_pkg',
     'dpr' => '1',
-    '__rev' => '1002694184',
+    '__rev' => '1003024827',
     '__comet_req' => '0',
     'fb_dtsg' => $fb_dtsg,
-    '__spin_r' => '1002694184',
+    '__spin_r' => '1003024827',
     '__spin_b' => 'trunk',
     '__spin_t' => time(),
     'fb_api_caller_class' => 'RelayModern',
     'fb_api_req_friendly_name' => 'PagesCometChannelTabAllVideosCardImplPaginationQuery',
     'variables' => '{"count":25,"useDefaultActor":false,"id":"'.$doc_id.'"}',
-    'doc_id' => '3356141697781815'
+    'doc_id' => '3329998450459232'
 );
 } else {
 $p=array('av' => $c_user,
@@ -139,18 +140,18 @@ $p=array('av' => $c_user,
     '__a' => '1',
     '__csr' => '',
     '__beoa' => '0',
-    '__pc' => 'PHASED:DEFAULT',
+    '__pc' => 'EXP2:comet_pkg',
     'dpr' => '1',
-    '__rev' => '1002694184',
+    '__rev' => '1003024827',
     '__comet_req' => '0',
     'fb_dtsg' => $fb_dtsg,
-    '__spin_r' => '1002694184',
+    '__spin_r' => '1003024827',
     '__spin_b' => 'trunk',
     '__spin_t' => time(),
     'fb_api_caller_class' => 'RelayModern',
     'fb_api_req_friendly_name' => 'PagesCometChannelTabAllVideosCardImplPaginationQuery',
     'variables' => '{"count":25,"cursor":"'.$token.'","useDefaultActor":false,"id":"'.$doc_id.'"}',
-    'doc_id' => '3356141697781815'
+    'doc_id' => '3329998450459232'
 );
 }
 // ,"cursor":"'.$token.'"

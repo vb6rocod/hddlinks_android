@@ -127,14 +127,17 @@ $s=array();
 if ($tip=="movie") {
   $l="https://123files.club/imdb/play/?id=".$link;
   $l="https://play.123files.club/movie.php?imdb=".$link;
+  $l="https://player.apimdb.net/e/movie/".$link;
 } else {
   $l="https://123files.club/imdb/tv/?id=".$link."&s=".$sez."&e=".$ep;
   $l="https://play.123files.club/tv.php?imdb=".$link."&s=".$sez."&e=".$ep;
+  $l="https://player.apimdb.net/e/tv/".$link."/".$sez."/".$ep;
 }
   $ua="Mozilla/5.0 (Windows NT 10.0; rv:75.0) Gecko/20100101 Firefox/75.0";
-
+//$l="https://player.apimdb.net/e/movie/tt6806448";
 $post="referer=123files.club&SubmitButtoncolors=917dWlUdvmbJ9uYEZBbtW29iamVjdCBNb3VzZUV2ZW50XSo2MjkqMzM1slkR3tXJhDDA6zjh9176";
 $post="referer=123files.club&play=010UDuas4H0RBW29iamVjdCBNb3VzZUV2ZW50XSoyNjcqMTQxrajGmal3bUMnf132";
+$post="domain_r=apimdb.net&play=315McdwEKd4LIkcdYjW29iamVjdCBNb3VzZUV2ZW50XSoyNjkqMTQ4sNKcx1778A102";
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $l);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
@@ -150,6 +153,7 @@ $post="referer=123files.club&play=010UDuas4H0RBW29iamVjdCBNb3VzZUV2ZW50XSoyNjcqM
   //echo $h;
   curl_close($ch);
   if (preg_match_all("/data\-id\=\"(.*?)\"\>\<i class\=\"fas fa\-play\"\>\<\/i\>(.*?)\<\/div/",$h,$m)) {
+  //print_r ($m);
   $r=$m[1];
   $s=$m[2];
   }
@@ -162,7 +166,7 @@ $k=count($r);
 $x=0;
 for ($i=0;$i<$k;$i++) {
   if ($x==0) echo '<TR>';
-  $c_link="https:".$r[$i];
+  $c_link="https://player.apimdb.net".$r[$i];
   $openload=$s[$i];
   if (preg_match($indirect,$openload)) {
   echo '<TD class="mp"><a href="filme_link.php?file='.urlencode($c_link).'&title='.urlencode(unfix_t($tit.$tit2)).'" target="_blank">'.$openload.'</a></td>';

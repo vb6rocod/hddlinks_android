@@ -62,12 +62,14 @@ $sh="shh";
 //if (strpos($h,$m[2]."=''") !== false) {
 $t1=explode("var ddomain",$h);
 $t2=explode('<script',$t1[1]);
-
-$h="<script".trim($t2[1]);
+$t3=explode(">",$t2[1]);
+$t4=explode('</script',$t3[1]);
+$h=trim($t4[0]);
 //$h=json_encode($h);
 //$h=str_replace("\u03","\u00",$h);
 //$h=json_decode($h);
 //echo $h;
+//die();
 //$msg_captcha="OK";
 $out="";
 $out .= '
@@ -81,8 +83,9 @@ request.open("GET", php_file, true);
 request.send(the_data);
 document.getElementById("hqq_msg").innerHTML = "'.$msg_captcha.'";
 ';
-$out=str_replace("<script>","",$out);
-$out=str_replace("</script>","",$out);
+$out='<script data-cfasync="false">'.$out."</script>";
+//$out=str_replace("<script>","",$out);
+//$out=str_replace("</script>","",$out);
 echo $out;
 //} else {
 //echo '';

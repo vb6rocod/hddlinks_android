@@ -221,7 +221,7 @@ if ($tip=="release") {
    $t4 = explode('"', $t3[1]);
    $title = trim($t4[0]);
    $title=prep_tit($title);
-   $t1 = explode('src="', $video);
+   $t1 = explode('data-lazy-src="', $video);
    $t2 = explode('"', $t1[1]);
    $image = $t2[0];
   $rest = substr($title, -6);
@@ -251,7 +251,7 @@ if ($tip=="release") {
    $t2 = explode('"', $t1[1]);
    $image = $t2[0];
   $rest = substr($title, -6);
-  if (preg_match("/\(?(\d+)\)?/",$rest,$m)) {
+  if (preg_match("/\(?(\d{4})\)?/",$rest,$m)) {
    $year=$m[1];
    $title=trim(str_replace($m[0],"",$title));
   } else {

@@ -50,6 +50,10 @@ $flash="direct";
 //$link="http://89.136.209.30:1935/liveedge/TVRMOLDOVA.stream/playlist.m3u8";
 //$link=urldecode("https%3A%2F%2Fwww.youtube.com%2Fwatch%3Fv%3Dr_d4ryn9UsA&title=Gaming%20Music%20Radio%20%E2%9A%A1%2024/7%20NCS%20Live%20Stream%20%E2%9A%A1%20Trap,%20Chill,%20Electro,%20Dubstep,%20Future%20Bass,%20EDM");
 //$mod="direct";
+if (preg_match("/bypassiptv\.eu/",$link)) {
+  if ($flash <> "flash")
+  $link=$link."|Referer=".urlencode("https://romanialive.online")."&Origin=".urlencode("https://romanialive.online");
+}
 if (preg_match("/www\.exclusivtv\.ro/",$link)) {
  $l="https://www.exclusivtv.ro/";
  $h=file_get_contents($l);
@@ -63,6 +67,22 @@ if(preg_match('/youtube\.com\/(v\/|watch\?v=|embed\/)([\w\-]+)/', $h, $match)) {
 } else {
   $link="";
 }
+}
+if (preg_match("/tvhd-online\.com/",$link)) {
+    $ch = curl_init();
+    curl_setopt($ch, CURLOPT_URL, $link);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+    curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 10.0; rv:64.0) Gecko/20100101 Firefox/64.0');
+    curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+    curl_setopt($ch, CURLOPT_REFERER,"https://tvhd-online.com");
+    curl_setopt($ch, CURLOPT_HEADER,1);
+    curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
+    curl_setopt($ch, CURLOPT_TIMEOUT, 25);
+    $h = curl_exec($ch);
+    curl_close($ch);
+    if (preg_match("/location\:\s*(.+)/i",$h,$m))
+     $link=trim($m[1]);
 }
 if (preg_match("/albacarolinatv\.ro/",$link)) {
  $h=file_get_contents($link);

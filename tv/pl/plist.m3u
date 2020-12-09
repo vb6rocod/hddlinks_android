@@ -1,0 +1,196 @@
+#EXTM3U
+#EXTINF:-1 tvg-id="Digi24" tvg-name="Digi24" tvg-language="Romania" tvg-logo="https://i1.wp.com/do-static-03.cdn.rcs-rds.ro/digionline/mobile-content/v11/images/droid/bt_lg_tv_channel_stiri_digi24.png?resize=400,250" group-title="Stiri",Digi24
+https://tvhd-online.com/livehd/4.m3u8
+#EXTINF:-1 tvg-id="Realitatea TV" tvg-name="Realitatea TV" tvg-language="Romania" tvg-logo="https://i1.wp.com/do-static-03.cdn.rcs-rds.ro/digionline/mobile-content/v11/images/droid/bt_lg_tv_channel_stiri_realitateatv.png?resize=400,250" group-title="Stiri",Realitatea TV
+https://tvhd-online.com/livehd/26.m3u8
+#EXTINF:-1 tvg-id="Romania TV" tvg-name="Romania TV" tvg-language="Romania" tvg-logo="https://i1.wp.com/do-static-03.cdn.rcs-rds.ro/digionline/mobile-content/v11/images/droid/bt_lg_tv_channel_stiri_romaniatv.png?resize=400,250" group-title="Stiri",Romania TV
+https://tvhd-online.com/livehd/27.m3u8
+#EXTINF:-1 tvg-id="B1TV" tvg-name="B1TV" tvg-language="Romania" tvg-logo="https://i1.wp.com/do-static-03.cdn.rcs-rds.ro/digionline/mobile-content/v11/images/droid/bt_lg_tv_channel_stiri_b1tv.png?resize=400,250" group-title="Stiri",B1TV
+https://tvhd-online.com/livehd/29.m3u8
+#EXTINF:-1 tvg-id="Pro TV News" tvg-name="Pro TV News" tvg-language="Romania" tvg-logo="https://i1.wp.com/assets.yoda.ro/assets/yoda/2012/07/25/image_galleries/11805/voyo-news-devine-canalul-de-stiri-online-protv-news_size1.jpg?resize=400,250" group-title="Stiri",Pro TV News
+https://vid.hls.protv.ro/protvnews/protvnews.m3u8?1
+#EXTINF:-1 tvg-id="Nasu" tvg-name="Nasu" tvg-language="Romania" tvg-logo="https://i1.wp.com/pbs.twimg.com/profile_images/477832638325981184/Ih-7_GXU_400x400.jpeg?resize=400,250" group-title="Stiri",Nasu
+https://5ab29cc78f681.streamlock.net/NasulTV/livestream/playlist.m3u8
+#EXTINF:-1 tvg-id="DigiSport 1" tvg-name="DigiSport 1" tvg-language="Romania" tvg-logo="https://i1.wp.com/do-static-03.cdn.rcs-rds.ro/digionline/mobile-content/v11/images/droid/bt_lg_tv_channel_sport_digisport1.png?resize=400,250" group-title="Sport",DigiSport 1
+https://tvhd-online.com/livehd/1.m3u8
+#EXTINF:-1 tvg-id="DigiSport 2" tvg-name="DigiSport 2" tvg-language="Romania" tvg-logo="https://i1.wp.com/do-static-03.cdn.rcs-rds.ro/digionline/mobile-content/v11/images/droid/bt_lg_tv_channel_sport_digisport2.png?resize=400,250" group-title="Sport",DigiSport 2
+https://tvhd-online.com/livehd/2.m3u8
+#EXTINF:-1 tvg-id="DigiSport 3" tvg-name="DigiSport 3" tvg-language="Romania" tvg-logo="https://i1.wp.com/do-static-03.cdn.rcs-rds.ro/digionline/mobile-content/v11/images/droid/bt_lg_tv_channel_sport_digisport3.png?resize=400,250" group-title="Sport",DigiSport 3
+https://tvhd-online.com/livehd/3.m3u8
+#EXTINF:-1 tvg-id="DigiSport 4" tvg-name="DigiSport 4" tvg-language="Romania" tvg-logo="https://i1.wp.com/do-static-03.cdn.rcs-rds.ro/digionline/mobile-content/v11/images/droid/bt_lg_tv_channel_sport_digisport4.png?resize=400,250" group-title="Sport",DigiSport 4
+https://tvhd-online.com/livehd/49.m3u8
+#EXTINF:-1 tvg-id="EuroSport" tvg-name="EuroSport" tvg-language="Romania" tvg-logo="https://i1.wp.com/do-static-03.cdn.rcs-rds.ro/digionline/mobile-content/v11/images/droid/bt_lg_tv_channel_sport_eurosport_2.png?resize=400,250" group-title="Sport",EuroSport
+https://tvhd-online.com/livehd/31.m3u8
+#EXTINF:-1 tvg-id="EuroSport2" tvg-name="EuroSport2" tvg-language="Romania" tvg-logo="https://i1.wp.com/do-static-03.cdn.rcs-rds.ro/digionline/mobile-content/v11/images/droid/bt_lg_tv_channel_sport_eurosport2_2.png?resize=400,250" group-title="Sport",EuroSport2
+https://tvhd-online.com/livehd/32.m3u8
+#EXTINF:-1 tvg-id="LookSport" tvg-name="LookSport" tvg-language="Romania" tvg-logo="https://i1.wp.com/i0.1616.ro/media/2/2621/33222/19118245/2/ls.jpg?resize=400,250" group-title="Sport",LookSport
+https://stream1.1616.ro:1945/look/livestream/playlist.m3u8?
+#EXTINF:-1 tvg-id="Digi World" tvg-name="Digi World" tvg-language="Romania" tvg-logo="https://i1.wp.com/do-static-03.cdn.rcs-rds.ro/digionline/mobile-content/v11/images/droid/bt_lg_tv_channel_tematice_digiworld.png?resize=400,250" group-title="Tematice",Digi World
+https://tvhd-online.com/livehd/5.m3u8
+#EXTINF:-1 tvg-id="Digi Life" tvg-name="Digi Life" tvg-language="Romania" tvg-logo="https://i1.wp.com/do-static-03.cdn.rcs-rds.ro/digionline/mobile-content/v11/images/droid/bt_lg_tv_channel_tematice_digilife.png?resize=400,250" group-title="Tematice",Digi Life
+https://tvhd-online.com/livehd/6.m3u8
+#EXTINF:-1 tvg-id="Digi Animal World" tvg-name="Digi Animal World" tvg-language="Romania" tvg-logo="https://i1.wp.com/do-static-03.cdn.rcs-rds.ro/digionline/mobile-content/v11/images/droid/bt_lg_tv_channel_tematice_digianimalworld.png?resize=400,250" group-title="Tematice",Digi Animal World
+https://tvhd-online.com/livehd/16.m3u8
+#EXTINF:-1 tvg-id="National Geographic" tvg-name="National Geographic" tvg-language="Romania" tvg-logo="https://i1.wp.com/do-static-03.cdn.rcs-rds.ro/digionline/mobile-content/v11/images/droid/bt_lg_tv_channel_tematice_nationalgeographic.png?resize=400,250" group-title="Tematice",National Geographic
+https://tvhd-online.com/livehd/19.m3u8
+#EXTINF:-1 tvg-id="History Channel" tvg-name="History Channel" tvg-language="Romania" tvg-logo="https://i1.wp.com/do-static-03.cdn.rcs-rds.ro/digionline/mobile-content/v11/images/droid/bt_lg_tv_channel_tematice_historychannel.png?resize=400,250" group-title="Tematice",History Channel
+https://tvhd-online.com/livehd/20.m3u8
+#EXTINF:-1 tvg-id="National Geographic Wild" tvg-name="National Geographic Wild" tvg-language="Romania" tvg-logo="https://i1.wp.com/do-static-03.cdn.rcs-rds.ro/digionline/mobile-content/v11/images/droid/bt_lg_tv_channel_tematice_nationalgeographicwild.png?resize=400,250" group-title="Tematice",National Geographic Wild
+https://tvhd-online.com/livehd/33.m3u8
+#EXTINF:-1 tvg-id="Viasat Explorer" tvg-name="Viasat Explorer" tvg-language="Romania" tvg-logo="https://i1.wp.com/do-static-03.cdn.rcs-rds.ro/digionline/mobile-content/v11/images/droid/bt_lg_tv_channel_tematice_viasatexplorer_2.png?resize=400,250" group-title="Tematice",Viasat Explorer
+https://tvhd-online.com/livehd/40.m3u8
+#EXTINF:-1 tvg-id="Viasat History" tvg-name="Viasat History" tvg-language="Romania" tvg-logo="https://i1.wp.com/do-static-03.cdn.rcs-rds.ro/digionline/mobile-content/v11/images/droid/bt_lg_tv_channel_tematice_viasathistory_2.png?resize=400,250" group-title="Tematice",Viasat History
+https://tvhd-online.com/livehd/41.m3u8
+#EXTINF:-1 tvg-id="Viasat Nature" tvg-name="Viasat Nature" tvg-language="Romania" tvg-logo="https://i1.wp.com/do-static-03.cdn.rcs-rds.ro/digionline/mobile-content/v11/images/droid/bt_lg_tv_channel_tematice_viasatnature_2.png?resize=400,250" group-title="Tematice",Viasat Nature
+https://tvhd-online.com/livehd/42.m3u8
+#EXTINF:-1 tvg-id="BBC Earth" tvg-name="BBC Earth" tvg-language="Romania" tvg-logo="https://i1.wp.com/do-static-03.cdn.rcs-rds.ro/digionline/mobile-content/v11/images/droid/bt_lg_tv_channel_tematice_bbcearth.png?resize=400,250" group-title="Tematice",BBC Earth
+https://tvhd-online.com/livehd/67.m3u8
+#EXTINF:-1 tvg-id="Discovery Channel" tvg-name="Discovery Channel" tvg-language="Romania" tvg-logo="https://i1.wp.com/do-static-03.cdn.rcs-rds.ro/digionline/mobile-content/v11/images/droid/bt_lg_tv_channel_tematice_discovery.png?resize=400,250" group-title="Tematice",Discovery Channel
+https://tvhd-online.com/livehd/71.m3u8
+#EXTINF:-1 tvg-id="TLC" tvg-name="TLC" tvg-language="Romania" tvg-logo="https://i1.wp.com/do-static-03.cdn.rcs-rds.ro/digionline/mobile-content/v11/images/droid/bt_lg_tv_channel_tematice_tlc.png?resize=400,250" group-title="Tematice",TLC
+https://tvhd-online.com/livehd/72.m3u8
+#EXTINF:-1 tvg-id="Cinethronix" tvg-name="Cinethronix" tvg-language="Romania" tvg-logo="https://i1.wp.com/s.iw.ro/gateway/g/ZmlsZVNvdXJjZT1odHRwcyUzQSUyRiUy/RmRvLXN0YXRpYy0wMy1jZG4ucmNzLXJk/cy5ybyUyRmRpZ2lvbmxpbmUlMkZtb2Jp/bGUtY29udGVudCUyRnYxMiUyRmltYWdl/cyUyRnNpdGUlMkZsb2dvX3R2X2NoYW5u/ZWxfdGVtYXRpY2VfY2luZXRocm9uaXgu/cG5nJmhhc2g9YmJmZWVkNDA1NTliYzM1MTkyOWE2ZTk2YjNkMmM2YWY=.png?resize=400,250" group-title="Tematice",Cinethronix
+https://tvhd-online.com/livehd/101.m3u8
+#EXTINF:-1 tvg-id="TV 1000" tvg-name="TV 1000" tvg-language="Romania" tvg-logo="https://i1.wp.com/do-static-03.cdn.rcs-rds.ro/digionline/mobile-content/v11/images/droid/bt_lg_tv_channel_film_tv1000.png?resize=400,250" group-title="Filme",TV 1000
+https://tvhd-online.com/livehd/43.m3u8
+#EXTINF:-1 tvg-id="Bollywood" tvg-name="Bollywood" tvg-language="Romania" tvg-logo="https://i1.wp.com/s.iw.ro/gateway/g/ZmlsZVNvdXJjZT1odHRwcyUzQSUyRiUy/RmRvLXN0YXRpYy0wMy1jZG4ucmNzLXJk/cy5ybyUyRmRpZ2lvbmxpbmUlMkZtb2Jp/bGUtY29udGVudCUyRnYxMiUyRmltYWdl/cyUyRnNpdGUlMkZsb2dvX3R2X2NoYW5u/ZWxfZmlsbV9ib2xseXdvb2R0di5wbmcm/aGFzaD1iY2YyNzBlYmIxYjJiZGM2YWVkMDhjNGQ1NTYxODU4Zg==.png?resize=400,250" group-title="Filme",Bollywoodhttps://tvhd-online.com/livehd/96.m3u8
+#EXTINF:-1 tvg-id="HBO" tvg-name="HBO" tvg-language="Romania" tvg-logo="https://i1.wp.com/do-static-03.cdn.rcs-rds.ro/digionline/mobile-content/v11/images/droid/bt_lg_tv_channel_film_hbo.png?resize=400,250" group-title="Filme",HBO
+https://tvhd-online.com/monden.m3u8
+#EXTINF:-1 tvg-id="Diva" tvg-name="Diva" tvg-language="Romania" tvg-logo="https://i1.wp.com/s.iw.ro/gateway/g/ZmlsZVNvdXJjZT1odHRwcyUzQSUyRiUy/RmRvLXN0YXRpYy0wMy1jZG4ucmNzLXJk/cy5ybyUyRmRpZ2lvbmxpbmUlMkZtb2Jp/bGUtY29udGVudCUyRnYxMiUyRmltYWdl/cyUyRnNpdGUlMkZsb2dvX3R2X2NoYW5u/ZWxfZmlsbV9kaXZhLnBuZyZoYXNoPWIy/NmFhMzA5NGI5YzdlZWEzZDFmZjJlMTFhOGUwY2Y0.png?resize=400,250" group-title="Filme",Diva
+https://tvhd-online.com/livehd/106.m3u8
+#EXTINF:-1 tvg-id="Paramount" tvg-name="Paramount" tvg-language="Romania" tvg-logo="https://i1.wp.com/s.iw.ro/gateway/g/ZmlsZVNvdXJjZT1odHRwcyUzQSUyRiUy/RmRvLXN0YXRpYy0wMy1jZG4ucmNzLXJk/cy5ybyUyRmRpZ2lvbmxpbmUlMkZtb2Jp/bGUtY29udGVudCUyRnYxMiUyRmltYWdl/cyUyRnNpdGUlMkZsb2dvX3R2X2NoYW5u/ZWxfZmlsbV9wYXJhbW91bnRjaGFubmVs/LnBuZyZoYXNoPTAyMzJhNWZlYWU5ZTIyNTY3ZWI0MDdmMGM1YzgxY2M3.png?resize=400,250" group-title="Filme",Paramount
+https://tvhd-online.com/livehd/111.m3u8
+#EXTINF:-1 tvg-id="Cinemaraton" tvg-name="Cinemaraton" tvg-language="Romania" tvg-logo="https://i1.wp.com/s.iw.ro/gateway/g/ZmlsZVNvdXJjZT1odHRwcyUzQSUyRiUy/RmRvLXN0YXRpYy0wMy1jZG4ucmNzLXJk/cy5ybyUyRmRpZ2lvbmxpbmUlMkZtb2Jp/bGUtY29udGVudCUyRnYxMiUyRmltYWdl/cyUyRnNpdGUlMkZsb2dvX3R2X2NoYW5u/ZWxfZmlsbV9jaW5lbWFyYXRvbi5wbmcm/aGFzaD04Yzg0ZmE3YWNjMWIyZDdiNjA4ZTJkYmRlNjJlOWM5Nw==.png?resize=400,250" group-title="Filme",Cinemaraton
+https://tvhd-online.com/livehd/99.m3u8
+#EXTINF:-1 tvg-id="Comedy est" tvg-name="Comedy est" tvg-language="Romania" tvg-logo="https://i1.wp.com/s.iw.ro/gateway/g/ZmlsZVNvdXJjZT1odHRwcyUzQSUyRiUy/RmRvLXN0YXRpYy0wMy1jZG4ucmNzLXJk/cy5ybyUyRmRpZ2lvbmxpbmUlMkZtb2Jp/bGUtY29udGVudCUyRnYxMiUyRmltYWdl/cyUyRnNpdGUlMkZsb2dvX3R2X2NoYW5u/ZWxfZmlsbV9jb21lZHllc3QucG5nJmhh/c2g9M2VmZmNlZGY5ZDJkYzdiNGJkMzM1NWNkYTNiZTJiYTQ=.png?resize=400,250" group-title="Filme",Comedy est
+https://tvhd-online.com/livehd/100.m3u8
+#EXTINF:-1 tvg-id="AXN" tvg-name="AXN" tvg-language="Romania" tvg-logo="https://i1.wp.com/do-static-03.cdn.rcs-rds.ro/digionline/mobile-content/v11/images/droid/bt_lg_tv_channel_film_axn.png?resize=400,250" group-title="Filme",AXN
+https://tvhd-online.com/livehd/44.m3u8
+#EXTINF:-1 tvg-id="AXN Black" tvg-name="AXN Black" tvg-language="Romania" tvg-logo="https://i1.wp.com/do-static-03.cdn.rcs-rds.ro/digionline/mobile-content/v11/images/droid/bt_lg_tv_channel_film_axnblack.png?resize=400,250" group-title="Filme",AXN Black
+https://tvhd-online.com/livehd/45.m3u8
+#EXTINF:-1 tvg-id="AXN White" tvg-name="AXN White" tvg-language="Romania" tvg-logo="https://i1.wp.com/do-static-03.cdn.rcs-rds.ro/digionline/mobile-content/v11/images/droid/bt_lg_tv_channel_film_axnwhite.png?resize=400,250" group-title="Filme",AXN White
+https://tvhd-online.com/livehd/46.m3u8
+#EXTINF:-1 tvg-id="AXN Spin" tvg-name="AXN Spin" tvg-language="Romania" tvg-logo="https://i1.wp.com/do-static-03.cdn.rcs-rds.ro/digionline/mobile-content/v11/images/droid/bt_lg_tv_channel_film_axnspin.png?resize=400,250" group-title="Filme",AXN Spin
+https://tvhd-online.com/livehd/57.m3u8
+#EXTINF:-1 tvg-id="TNT" tvg-name="TNT" tvg-language="Romania" tvg-logo="https://i1.wp.com/do-static-03.cdn.rcs-rds.ro/digionline/mobile-content/v11/images/droid/bt_lg_tv_channel_film_tnt.png?resize=400,250" group-title="Filme",TNT
+https://tvhd-online.com/livehd/91.m3u8
+#EXTINF:-1 tvg-id="Film Cafe" tvg-name="Film Cafe" tvg-language="Romania" tvg-logo="https://i1.wp.com/do-static-03.cdn.rcs-rds.ro/digionline/mobile-content/v11/images/droid/bt_lg_tv_channel_film_filmcafe.png?resize=400,250" group-title="Filme",Film Cafe
+https://tvhd-online.com/livehd/94.m3u8
+#EXTINF:-1 tvg-id="Comedy Central" tvg-name="Comedy Central" tvg-language="Romania" tvg-logo="https://i1.wp.com/do-static-03.cdn.rcs-rds.ro/digionline/mobile-content/v11/images/droid/bt_lg_tv_channel_film_comedycentral.png?resize=400,250" group-title="Filme",Comedy Central
+https://tvhd-online.com/livehd/58.m3u8
+#EXTINF:-1 tvg-id="Epic Drama" tvg-name="Epic Drama" tvg-language="Romania" tvg-logo="https://i1.wp.com/do-static-03.cdn.rcs-rds.ro/digionline/mobile-content/v11/images/droid/bt_lg_tv_channel_film_epicdrama.png?resize=400,250" group-title="Filme",Epic Drama
+https://tvhd-online.com/livehd/95.m3u8
+#EXTINF:-1 tvg-id="Nickelodeon" tvg-name="Nickelodeon" tvg-language="Romania" tvg-logo="https://i1.wp.com/do-static-03.cdn.rcs-rds.ro/digionline/mobile-content/v11/images/droid/bt_lg_tv_channel_copii_nickelodeon.png?resize=400,250" group-title="Copii",Nickelodeon
+https://tvhd-online.com/livehd/28.m3u8
+#EXTINF:-1 tvg-id="Minimax" tvg-name="Minimax" tvg-language="Romania" tvg-logo="https://i1.wp.com/do-static-03.cdn.rcs-rds.ro/digionline/mobile-content/v11/images/droid/bt_lg_tv_channel_copii_minimax.png?resize=400,250" group-title="Copii",Minimax
+https://tvhd-online.com/livehd/37.m3u8
+#EXTINF:-1 tvg-id="Nick jr." tvg-name="Nick jr." tvg-language="Romania" tvg-logo="https://i1.wp.com/s.iw.ro/gateway/g/ZmlsZVNvdXJjZT1odHRwcyUzQSUyRiUy/RmRvLXN0YXRpYy0wMy1jZG4ucmNzLXJk/cy5ybyUyRmRpZ2lvbmxpbmUlMkZtb2Jp/bGUtY29udGVudCUyRnYxMiUyRmltYWdl/cyUyRnNpdGUlMkZsb2dvX3R2X2NoYW5u/ZWxfY29waWlfbmlja2pyLnBuZyZoYXNo/PTdlZjdlNTkwNmJlNjUyOTk4ZTQwNTllYzRjOGZlY2M3.png?resize=400,250" group-title="Copii",Nick jr.
+https://tvhd-online.com/livehd/108.m3u8
+#EXTINF:-1 tvg-id="Nick toons" tvg-name="Nick toons" tvg-language="Romania" tvg-logo="https://i1.wp.com/s.iw.ro/gateway/g/ZmlsZVNvdXJjZT1odHRwcyUzQSUyRiUy/RmRvLXN0YXRpYy0wMy1jZG4ucmNzLXJk/cy5ybyUyRmRpZ2lvbmxpbmUlMkZtb2Jp/bGUtY29udGVudCUyRnYxMiUyRmltYWdl/cyUyRnNpdGUlMkZsb2dvX3R2X2NoYW5u/ZWxfY29waWlfbmlja3Rvb25zLnBuZyZo/YXNoPTA5YzY2MWJhOGYyYmJiZTA3NzFmMjNiOWIxZTdjN2Ey.png?resize=400,250" group-title="Copii",Nick toons
+https://tvhd-online.com/livehd/109.m3u8
+#EXTINF:-1 tvg-id="Jim Jam" tvg-name="Jim Jam" tvg-language="Romania" tvg-logo="https://i1.wp.com/s.iw.ro/gateway/g/ZmlsZVNvdXJjZT1odHRwcyUzQSUyRiUy/RmRvLXN0YXRpYy0wMy1jZG4ucmNzLXJk/cy5ybyUyRmRpZ2lvbmxpbmUlMkZtb2Jp/bGUtY29udGVudCUyRnYxMiUyRmltYWdl/cyUyRnNpdGUlMkZsb2dvX3R2X2NoYW5u/ZWxfY29waWlfamltamFtLnBuZyZoYXNo/PTZmYTdhMjkwNDA1OThiMTA2YzY2OWQyNzk0ZWUxNzg3.png?resize=400,250" group-title="Copii",Jim Jam
+https://tvhd-online.com/livehd/105.m3u8
+#EXTINF:-1 tvg-id="Disney Junior" tvg-name="Disney Junior" tvg-language="Romania" tvg-logo="https://i1.wp.com/do-static-03.cdn.rcs-rds.ro/digionline/mobile-content/v11/images/droid/bt_lg_tv_channel_copii_disneyjunior.png?resize=400,250" group-title="Copii",Disney Junior
+https://tvhd-online.com/livehd/18.m3u8
+#EXTINF:-1 tvg-id="Disney Channel" tvg-name="Disney Channel" tvg-language="Romania" tvg-logo="https://i1.wp.com/do-static-03.cdn.rcs-rds.ro/digionline/mobile-content/v11/images/droid/bt_lg_tv_channel_copii_disneychannel.png?resize=400,250" group-title="Copii",Disney Channel
+https://tvhd-online.com/livehd/17.m3u8
+#EXTINF:-1 tvg-id="DaVinci Learning" tvg-name="DaVinci Learning" tvg-language="Romania" tvg-logo="https://i1.wp.com/do-static-03.cdn.rcs-rds.ro/digionline/mobile-content/v11/images/droid/bt_lg_tv_channel_copii_davincilearning.png?resize=400,250" group-title="Copii",DaVinci Learning
+https://tvhd-online.com/livehd/66.m3u8
+#EXTINF:-1 tvg-id="Boomerang" tvg-name="Boomerang" tvg-language="Romania" tvg-logo="https://i1.wp.com/do-static-03.cdn.rcs-rds.ro/digionline/mobile-content/v11/images/droid/bt_lg_tv_channel_copii_boomerang.png?resize=400,250" group-title="Copii",Boomerang
+https://tvhd-online.com/livehd/90.m3u8
+#EXTINF:-1 tvg-id="Cartoon Network" tvg-name="Cartoon Network" tvg-language="Romania" tvg-logo="https://i1.wp.com/do-static-03.cdn.rcs-rds.ro/digionline/mobile-content/v11/images/droid/bt_lg_tv_channel_copii_cartoonnetwork.png?resize=400,250" group-title="Copii",Cartoon Network
+https://tvhd-online.com/livehd/89.m3u8
+#EXTINF:-1 tvg-id="TVR1" tvg-name="TVR1" tvg-language="Romania" tvg-logo="https://i1.wp.com/do-static-03.cdn.rcs-rds.ro/digionline/mobile-content/v11/images/droid/bt_lg_tv_channel_general_tvr1.png?resize=400,250" group-title="General",TVR1
+https://tvhd-online.com/livehd/24.m3u8
+#EXTINF:-1 tvg-id="TVR2" tvg-name="TVR2" tvg-language="Romania" tvg-logo="https://i1.wp.com/do-static-03.cdn.rcs-rds.ro/digionline/mobile-content/v11/images/droid/bt_lg_tv_channel_general_tvr2.png?resize=400,250" group-title="General",TVR2
+https://tvhd-online.com/livehd/38.m3u8
+#EXTINF:-1 tvg-id="TVR 3" tvg-name="TVR 3" tvg-language="Romania" tvg-logo="https://i1.wp.com/p.kindpng.com/picc/s/699-6992561_tvr-3-logo-hd-png-download.png?resize=400,250" group-title="General",TVR 3
+https://mn-nl.mncdn.com/tvr3_test/smil:tvr3_test.smil/index.m3u8
+#EXTINF:-1 tvg-id="TVR i" tvg-name="TVR i" tvg-language="Romania" tvg-logo="https://i1.wp.com/www.media-max.ro/wp-content/uploads/2020/04/TVR-International-prima-televiziune-destinata-romanilor.jpg?resize=400,250" group-title="General",TVR i
+https://mn-nl.mncdn.com/tvri_test/smil:tvri_test.smil/index.m3u8
+#EXTINF:-1 tvg-id="Kanal D" tvg-name="Kanal D" tvg-language="Romania" tvg-logo="https://i1.wp.com/s.iw.ro/gateway/g/ZmlsZVNvdXJjZT1odHRwcyUzQSUyRiUy/RmRvLXN0YXRpYy0wMy1jZG4ucmNzLXJk/cy5ybyUyRmRpZ2lvbmxpbmUlMkZtb2Jp/bGUtY29udGVudCUyRnYxMiUyRmltYWdl/cyUyRnNpdGUlMkZsb2dvX3R2X2NoYW5u/ZWxfZ2VuZXJhbF9rYW5hbGQucG5nJmhh/c2g9ODQ3NGE5NWZhY2I5NjUxMjExZjIwMzc5Mzg3YTg5Njc=.png?resize=400,250" group-title="General",Kanal D
+https://tvhd-online.com/livehd/30.m3u8
+#EXTINF:-1 tvg-id="ProTV" tvg-name="ProTV" tvg-language="Romania" tvg-logo="https://i1.wp.com/www.forbes.ro/wp-content/uploads/2017/07/pro-tv-logo-mare-560x350.png?resize=400,250" group-title="General",ProTV
+https://vid.hls.protv.ro/protvhdn/protvhd_2_34/index.m3u8?1
+#EXTINF:-1 tvg-id="Pro 2" tvg-name="Pro 2" tvg-language="Romania" tvg-logo="https://i1.wp.com/stvron.com/canale/512/pro-2.png?resize=400,250" group-title="General",Pro 2
+https://vid.hls.protv.ro/pro2n/pro2_3_34/index.m3u8?1
+#EXTINF:-1 tvg-id="Pro X" tvg-name="Pro X" tvg-language="Romania" tvg-logo="https://i1.wp.com/static.wikia.nocookie.net/logopedia/images/e/e4/Pro_X_HD_logo_2017.png/revision/latest/top-crop/width/500/height/260?resize=400,250" group-title="General",Pro X
+https://vid.hls.protv.ro/proxhdn/proxhd_1_34/index.m3u8?1
+#EXTINF:-1 tvg-id="Pro Cinema" tvg-name="Pro Cinema" tvg-language="Romania" tvg-logo="https://i1.wp.com/stvron.com/canale/512/pro-cinema.png?resize=400,250" group-title="General",Pro Cinema
+https://vid.hls.protv.ro/procineman/procinema_3_34/index.m3u8?1
+#EXTINF:-1 tvg-id="Pro Gold" tvg-name="Pro Gold" tvg-language="Romania" tvg-logo="https://i1.wp.com/stvron.com/canale/512/pro-gold.png?resize=400,250" group-title="General",Pro Gold
+https://vid.hls.protv.ro/progoldn/progold_1_34/index.m3u8?1
+#EXTINF:-1 tvg-id="Antena 3" tvg-name="Antena 3" tvg-language="Romania" tvg-logo="https://i1.wp.com/upload.wikimedia.org/wikipedia/ro/2/23/Antena_3.jpg?resize=400,250" group-title="General",Antena 3
+https://tvhd-online.com/a3.m3u8
+#EXTINF:-1 tvg-id="Antena 1" tvg-name="Antena 1" tvg-language="Romania" tvg-logo="https://i1.wp.com/infinityevents.ro/wp-content/uploads/2017/06/logo_antena1.jpg?resize=400,250" group-title="General",Antena 1
+https://tvhd-online.com/a1.m3u8
+#EXTINF:-1 tvg-id="Antena Stars" tvg-name="Antena Stars" tvg-language="Romania" tvg-logo="https://i1.wp.com/assets.antenaplay.ro/2019/02/08/F0FMkw51SP3drLck8hiU.png?resize=400,250" group-title="General",Antena Stars
+https://tvhd-online.com/astar.m3u8
+#EXTINF:-1 tvg-id="Happy Channel" tvg-name="Happy Channel" tvg-language="Romania" tvg-logo="https://i1.wp.com/assets.antenaplay.ro/2019/02/08/9SSgoKptZEYwkqb4SQ3f.png?resize=400,250" group-title="General",Happy Channel
+https://tvhd-online.com/happy.m3u8
+#EXTINF:-1 tvg-id="Antena Monden" tvg-name="Antena Monden" tvg-language="Romania" tvg-logo="https://i1.wp.com/assets.antenaplay.ro/2019/02/08/ASCEI8MhBY2ItX0av7KS.png?resize=400,250" group-title="General",Antena Monden
+https://stream1.antenaplay.ro/live/smil:AntenaMonden.smil/playlist.m3u8
+#EXTINF:-1 tvg-id="Antena Cook and Play" tvg-name="Antena Cook and Play" tvg-language="Romania" tvg-logo="https://i1.wp.com/assets.antenaplay.ro/2019/02/08/PhgtAH0UAOLwl6MEpKbT.png?resize=400,250" group-title="General",Antena Cook and Play
+https://stream1.antenaplay.ro/live/smil:CookPlay.smil/playlist.m3u8
+#EXTINF:-1 tvg-id="Antena Comedy" tvg-name="Antena Comedy" tvg-language="Romania" tvg-logo="https://i1.wp.com/assets.antenaplay.ro/2019/02/08/fsBW8DJnT3KdTKAcTVxS.png?resize=400,250" group-title="General",Antena Comedy
+https://stream1.antenaplay.ro/live/smil:ComedyPlay.smil/playlist.m3u8
+#EXTINF:-1 tvg-id="Prima TV" tvg-name="Prima TV" tvg-language="Romania" tvg-logo="https://i1.wp.com/www.criteriul.ro/wp-content/uploads/2015/08/prima-tv-logo.jpg?resize=400,250" group-title="General",Prima TV
+https://stream1.1616.ro:1945/prima/livestream/playlist.m3u8?
+#EXTINF:-1 tvg-id="U TV" tvg-name="U TV" tvg-language="Romania" tvg-logo="https://i1.wp.com/do-static-03.cdn.rcs-rds.ro/digionline/mobile-content/v11/images/droid/bt_lg_tv_channel_muzica_utv.png?resize=400,250" group-title="Muzica",U TV
+https://tvhd-online.com/livehd/9.m3u8
+#EXTINF:-1 tvg-id="Music Channel" tvg-name="Music Channel" tvg-language="Romania" tvg-logo="https://i1.wp.com/do-static-03.cdn.rcs-rds.ro/digionline/mobile-content/v11/images/droid/bt_lg_tv_channel_muzica_musicchannel.png?resize=400,250" group-title="Muzica",Music Channel
+https://tvhd-online.com/livehd/25.m3u8
+#EXTINF:-1 tvg-id="Kiss TV" tvg-name="Kiss TV" tvg-language="Romania" tvg-logo="https://i1.wp.com/do-static-03.cdn.rcs-rds.ro/digionline/mobile-content/v11/images/droid/bt_lg_tv_channel_muzica_kisstv.png?resize=400,250" group-title="Muzica",Kiss TV
+https://tvhd-online.com/livehd/34.m3u8
+#EXTINF:-1 tvg-id="Hit Music Channel" tvg-name="Hit Music Channel" tvg-language="Romania" tvg-logo="https://i1.wp.com/do-static-03.cdn.rcs-rds.ro/digionline/mobile-content/v11/images/droid/bt_lg_tv_channel_muzica_hitmusicchannel.png?resize=400,250" group-title="Muzica",Hit Music Channel
+https://tvhd-online.com/livehd/35.m3u8
+#EXTINF:-1 tvg-id="Slager TV" tvg-name="Slager TV" tvg-language="Romania" tvg-logo="https://i1.wp.com/do-static-03.cdn.rcs-rds.ro/digionline/mobile-content/v11/images/droid/bt_lg_tv_channel_muzica_slagertv.png?resize=400,250" group-title="Muzica",Slager TV
+https://tvhd-online.com/livehd/93.m3u8
+#EXTINF:-1 tvg-id="Mezzo" tvg-name="Mezzo" tvg-language="Romania" tvg-logo="https://i1.wp.com/do-static-03.cdn.rcs-rds.ro/digionline/mobile-content/v11/images/droid/bt_lg_tv_channel_muzica_mezzo.png?resize=400,250" group-title="Muzica",Mezzo
+https://tvhd-online.com/livehd/36.m3u8
+#EXTINF:-1 tvg-id="Vh+1" tvg-name="Vh+1" tvg-language="Romania" tvg-logo="https://i1.wp.com/s.iw.ro/gateway/g/ZmlsZVNvdXJjZT1odHRwcyUzQSUyRiUy/RmRvLXN0YXRpYy0wMy1jZG4ucmNzLXJk/cy5ybyUyRmRpZ2lvbmxpbmUlMkZtb2Jp/bGUtY29udGVudCUyRnYxMiUyRmltYWdl/cyUyRnNpdGUlMkZsb2dvX3R2X2NoYW5u/ZWxfbXV6aWNhX3ZoMS5wbmcmaGFzaD1j/MGQyY2EzODlhNGJmOTNhNDFjMDliMTM0Zjk4YjQ3NQ==.png?resize=400,250" group-title="Muzica",Vh+1
+https://tvhd-online.com/livehd/110.m3u8
+#EXTINF:-1 tvg-id="Slager" tvg-name="Slager" tvg-language="Romania" tvg-logo="https://i1.wp.com/s.iw.ro/gateway/g/ZmlsZVNvdXJjZT1odHRwcyUzQSUyRiUy/RmRvLXN0YXRpYy0wMy1jZG4ucmNzLXJk/cy5ybyUyRmRpZ2lvbmxpbmUlMkZtb2Jp/bGUtY29udGVudCUyRnYxMiUyRmltYWdl/cyUyRnNpdGUlMkZsb2dvX3R2X2NoYW5u/ZWxfbXV6aWNhX3NsYWdlcnR2LnBuZyZo/YXNoPTExNDhjODhiZjMzZWRjYmRkN2Y5NmVkZmVlOGFlZjMz.png?resize=400,250" group-title="Muzica",Slager
+https://tvhd-online.com/livehd/93.m3u8
+#EXTINF:-1 tvg-id="Mtv" tvg-name="Mtv" tvg-language="Romania" tvg-logo="https://i1.wp.com/www.aiga.org/globalassets/aiga/content/inspiration/corporate-awards/2006-mtv/mtv_header.png?resize=400,250" group-title="Muzica",Mtv
+https://tvhd-online.com/livehd/104.m3u8
+#EXTINF:-1 tvg-id="Dibi TV" tvg-name="Dibi TV" tvg-language="Romania" tvg-logo="https://i1.wp.com/www.dibitv.ro/galerii/articole/mari/4.jpg?resize=400,250" group-title="Muzica",Dibi TV
+http://tv.dibitv.ro:1935/dibitv/live/chunklist_w371806004.m3u8
+#EXTINF:-1 tvg-id="Tezaur TV" tvg-name="Tezaur TV" tvg-language="Romania" tvg-logo="https://i1.wp.com/www.incomod.info/wp-content/uploads/2020/04/Tezaur-TV-HD-Online-Live-GRATUIT-pe-Android-iPhone-laptop-sau-Smart-TV.jpg?resize=400,250" group-title="Muzica",Tezaur TV
+https://netstreaming.eu:8080/hls/tezaurtv.m3u8
+#EXTINF:-1 tvg-id="France 24" tvg-name="France 24" tvg-language="Romania" tvg-logo="https://i1.wp.com/do-static-03.cdn.rcs-rds.ro/digionline/mobile-content/v11/images/droid/bt_lg_tv_channel_extern_france24.png?resize=400,250" group-title="Extern",France 24
+https://tvhd-online.com/livehd/48.m3u8
+#EXTINF:-1 tvg-id="TV5 Monde" tvg-name="TV5 Monde" tvg-language="Romania" tvg-logo="https://i1.wp.com/do-static-03.cdn.rcs-rds.ro/digionline/mobile-content/v11/images/droid/bt_lg_tv_channel_extern_tv5monde.png?resize=400,250" group-title="Extern",TV5 Monde
+https://tvhd-online.com/livehd/75.m3u8
+#EXTINF:-1 tvg-id="CNN" tvg-name="CNN" tvg-language="Romania" tvg-logo="https://i1.wp.com/do-static-03.cdn.rcs-rds.ro/digionline/mobile-content/v11/images/droid/bt_lg_tv_channel_extern_cnn_2.png?resize=400,250" group-title="Extern",CNN
+https://tvhd-online.com/livehd/63.m3u8
+#EXTINF:-1 tvg-id="Digi24 Iasi" tvg-name="Digi24 Iasi" tvg-language="Romania" tvg-logo="https://i1.wp.com/do-static-03.cdn.rcs-rds.ro/digionline/mobile-content/v11/images/droid/bt_lg_tv_channel_stiri_digi24iasi.png?resize=400,250" group-title="Local",Digi24 Iasi
+https://tvhd-online.com/livehd/10.m3u8
+#EXTINF:-1 tvg-id="Digi24 Timisoara" tvg-name="Digi24 Timisoara" tvg-language="Romania" tvg-logo="https://i1.wp.com/do-static-03.cdn.rcs-rds.ro/digionline/mobile-content/v11/images/droid/bt_lg_tv_channel_stiri_digi24timisoara.png?resize=400,250" group-title="Local",Digi24 Timisoara
+https://tvhd-online.com/livehd/11.m3u8
+#EXTINF:-1 tvg-id="Digi24 Oradea" tvg-name="Digi24 Oradea" tvg-language="Romania" tvg-logo="https://i1.wp.com/do-static-03.cdn.rcs-rds.ro/digionline/mobile-content/v11/images/droid/bt_lg_tv_channel_stiri_digi24oradea.png?resize=400,250" group-title="Local",Digi24 Oradea
+https://tvhd-online.com/livehd/12.m3u8
+#EXTINF:-1 tvg-id="Digi24 Constanta" tvg-name="Digi24 Constanta" tvg-language="Romania" tvg-logo="https://i1.wp.com/do-static-03.cdn.rcs-rds.ro/digionline/mobile-content/v11/images/droid/bt_lg_tv_channel_stiri_digi24constanta.png?resize=400,250" group-title="Local",Digi24 Constanta
+https://tvhd-online.com/livehd/13.m3u8
+#EXTINF:-1 tvg-id="Digi24 Craiova" tvg-name="Digi24 Craiova" tvg-language="Romania" tvg-logo="https://i1.wp.com/do-static-03.cdn.rcs-rds.ro/digionline/mobile-content/v11/images/droid/bt_lg_tv_channel_stiri_digi24craiova.png?resize=400,250" group-title="Local",Digi24 Craiova
+https://tvhd-online.com/livehd/14.m3u8
+#EXTINF:-1 tvg-id="Digi24 Brasov" tvg-name="Digi24 Brasov" tvg-language="Romania" tvg-logo="https://i1.wp.com/do-static-03.cdn.rcs-rds.ro/digionline/mobile-content/v11/images/droid/bt_lg_tv_channel_stiri_digi24brasov.png?resize=400,250" group-title="Local",Digi24 Brasov
+https://tvhd-online.com/livehd/15.m3u8
+#EXTINF:-1 tvg-id="Digi24 Cluj-Napoca" tvg-name="Digi24 Cluj-Napoca" tvg-language="Romania" tvg-logo="https://i1.wp.com/do-static-03.cdn.rcs-rds.ro/digionline/mobile-content/v11/images/droid/bt_lg_tv_channel_stiri_digi24clujnapoca.png?resize=400,250" group-title="Local",Digi24 Cluj-Napoca
+https://tvhd-online.com/livehd/50.m3u8
+#EXTINF:-1 tvg-id="Digi24 Galati" tvg-name="Digi24 Galati" tvg-language="Romania" tvg-logo="https://i1.wp.com/do-static-03.cdn.rcs-rds.ro/digionline/mobile-content/v11/images/droid/bt_lg_tv_channel_stiri_digi24galati.png?resize=400,250" group-title="Local",Digi24 Galati
+https://tvhd-online.com/livehd/51.m3u8
+#EXTINF:-1 tvg-id="Travel Channel" tvg-name="Travel Channel" tvg-language="Romania" tvg-logo="https://i1.wp.com/do-static-03.cdn.rcs-rds.ro/digionline/mobile-content/v11/images/droid/bt_lg_tv_channel_tematice_travelchannel.png?resize=400,250" group-title="Lifestyle",Travel Channel
+https://tvhd-online.com/livehd/21.m3u8
+#EXTINF:-1 tvg-id="TV Paprika" tvg-name="TV Paprika" tvg-language="Romania" tvg-logo="https://i1.wp.com/do-static-03.cdn.rcs-rds.ro/digionline/mobile-content/v11/images/droid/bt_lg_tv_channel_tematice_tvpaprika.png?resize=400,250" group-title="Lifestyle",TV Paprika
+https://tvhd-online.com/livehd/39.m3u8
+#EXTINF:-1 tvg-id="E Entertainment" tvg-name="E Entertainment" tvg-language="Romania" tvg-logo="https://i1.wp.com/do-static-03.cdn.rcs-rds.ro/digionline/mobile-content/v11/images/droid/bt_lg_tv_channel_lifestyle_eentertainment.png?resize=400,250" group-title="Lifestyle",E Entertainment
+https://tvhd-online.com/livehd/73.m3u8
+#EXTINF:-1 tvg-id="Travel Mix Channel" tvg-name="Travel Mix Channel" tvg-language="Romania" tvg-logo="https://i1.wp.com/do-static-03.cdn.rcs-rds.ro/digionline/mobile-content/v11/images/droid/bt_lg_tv_channel_lifestyle_travelmixchannel.png?resize=400,250" group-title="Lifestyle",Travel Mix Channel
+https://tvhd-online.com/livehd/74.m3u8
+#EXTINF:-1 tvg-id="Fishing and Hunting" tvg-name="Fishing and Hunting" tvg-language="Romania" tvg-logo="https://i1.wp.com/do-static-03.cdn.rcs-rds.ro/digionline/mobile-content/v11/images/droid/bt_lg_tv_channel_tematice_fishingandhunting.png?resize=400,250" group-title="Lifestyle",Fishing and Hunting
+https://tvhd-online.com/livehd/92.m3u8
+#EXTINF:-1 tvg-id="CBS reality" tvg-name="CBS reality" tvg-language="Romania" tvg-logo="https://i1.wp.com/do-static-03.cdn.rcs-rds.ro/digionline/mobile-content/v11/images/droid/bt_lg_tv_channel_tematice_cbsreality.png?resize=400,250" group-title="Lifestyle",CBS reality
+https://tvhd-online.com/livehd/65.m3u8
+#EXTINF:-1 tvg-id="Hgv" tvg-name="Hgv" tvg-language="Romania" tvg-logo="https://i1.wp.com/s.iw.ro/gateway/g/ZmlsZVNvdXJjZT1odHRwcyUzQSUyRiUy/RmRvLXN0YXRpYy0wMy1jZG4ucmNzLXJk/cy5ybyUyRmRpZ2lvbmxpbmUlMkZtb2Jp/bGUtY29udGVudCUyRnYxMiUyRmltYWdl/cyUyRnNpdGUlMkZsb2dvX3R2X2NoYW5u/ZWxfbGlmZXN0eWxlX2hndHYucG5nJmhh/c2g9ZjJkOWJlZTAxMzhhNWIzMDFjZmNlYjY5NDg1OTkxY2U=.png?resize=400,250" group-title="Lifestyle",Hgv
+https://tvhd-online.com/livehd/103.m3u8

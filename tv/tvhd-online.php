@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <?php
+error_reporting(0);
 include ("../common.php");
 $page_title="tvhd-online";
 $width="200px";
@@ -116,7 +117,10 @@ $w=0;
 echo '<h2>'.$page_title.'</H2>';
 echo '<table border="1px" width="100%">'."\n\r";
 $l="https://tvhd-online.com/";
-
+// https://realiptv.eu/digidata.php?id=1
+// https://bypassiptv.eu/panel/watch.php
+// https://romanialive.online
+$l= "https://bypassiptv.eu/panel/plist.m3u";
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $l);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
@@ -129,26 +133,42 @@ $l="https://tvhd-online.com/";
   //curl_setopt($ch,CURLOPT_HTTPHEADER,$head);
   $html = curl_exec($ch);
   curl_close($ch);
+  //file_put_contents("1111.txt",$html);
   //echo $html;
-$videos = explode('li class="item', $html);
-unset($videos[0]);
+preg_match_all('/(?P<tag>#EXTINF:-1)|(?:(?P<prop_key>[-a-z]+)=\"(?P<prop_val>[^"]+)")|(?<something>,[^\r\n]+)|(?<url>http[^\s]+)/', $html, $match );
+
+$count = count( $match[0] );
+
+$result = [];
+$index = -1;
+
+for( $i =0; $i < $count; $i++ ){
+    $item = $match[0][$i];
+
+    if( !empty($match['tag'][$i])){
+        //is a tag increment the result index
+        ++$index;
+    }elseif( !empty($match['prop_key'][$i])){
+        //is a prop - split item
+        $result[$index][$match['prop_key'][$i]] = $match['prop_val'][$i];
+    }elseif( !empty($match['something'][$i])){
+        //is a prop - split item
+        $result[$index]['something'] = $item;
+    }elseif( !empty($match['url'][$i])){
+        $result[$index]['url'] = $item ;
+    }
+}
+
+//print_r( $result );
 $n=0;
-$videos = array_values($videos);
-  foreach($videos as $video) {
-  $t1=explode('a class="title',$video);
-  $t2=explode('>',$t1[1]);
-  $t3=explode('<',$t2[1]);
-  $title=$t3[0];
-  $t1=explode('href="',$video);
-  $t2=explode('"',$t1[1]);
-  $link="https://tvhd-online.com".$t2[0];
-  $t1=explode('src="',$video);
-  $t2=explode('"',$t1[1]);
-  $image=$t2[0];
+for ($k=0;$k<count($result);$k++) {
+  $title=$result[$k]['tvg-name'];
+  $link=$result[$k]['url'];
+  $image=$result[$k]['tvg-logo'];
     $val_prog="link=".urlencode(fix_t($title));
-    $link1="direct_link.php?link=".$link."&title=".urlencode($title)."&from=tvhd-online&mod=direct";
-    $l="link=".urlencode(fix_t($link))."&title=".urlencode(fix_t($title))."&from=tvhd-online&mod=direct";
-  if ($link <> "") {
+    $link1="direct_link.php?link=".$link."&title=".urlencode($title)."&from=&mod=direct";
+    $l="link=".urlencode(fix_t($link))."&title=".urlencode(fix_t($title))."&from=&mod=direct";
+  //if (preg_match("/player\.php/",$link) ) {
   if ($n==0) echo '<TR>';
   if ($flash != "mp") {
   echo '<td class="mp" align="center" width="25%"><a class ="imdb" id="myLink'.($w*1).'" href="'.$link1.'" target="_blank" onmousedown="isKeyPressed(event)">
@@ -163,7 +183,7 @@ $videos = array_values($videos);
   echo '</tr>';
   $n=0;
   }
-  }
+  //}
 }
 echo "</table>";
 ?>
