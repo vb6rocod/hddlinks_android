@@ -50,6 +50,69 @@ $flash="direct";
 //$link="http://89.136.209.30:1935/liveedge/TVRMOLDOVA.stream/playlist.m3u8";
 //$link=urldecode("https%3A%2F%2Fwww.youtube.com%2Fwatch%3Fv%3Dr_d4ryn9UsA&title=Gaming%20Music%20Radio%20%E2%9A%A1%2024/7%20NCS%20Live%20Stream%20%E2%9A%A1%20Trap,%20Chill,%20Electro,%20Dubstep,%20Future%20Bass,%20EDM");
 //$mod="direct";
+if (preg_match("/media\.cms\.protvplus\.ro/",$link)) {
+  $ua = $_SERVER['HTTP_USER_AGENT'];
+  $head = array('Accept: */*',
+   'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
+   'Accept-Encoding: deflate',
+   'Origin: http://protvplus.ro'
+  );
+
+  $ch = curl_init();
+  curl_setopt($ch, CURLOPT_URL, $link);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
+  curl_setopt($ch,CURLOPT_HTTPHEADER,$head);
+  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+  $h = curl_exec($ch);
+  curl_close($ch);
+  $h=str_replace("\\","",$h);
+  $t1=explode('src":"',$h);
+  $t2=explode('"',$t1[1]);
+  $l=$t2[0];
+  $ch = curl_init();
+  curl_setopt($ch, CURLOPT_URL, $l);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
+  curl_setopt($ch,CURLOPT_HTTPHEADER,$head);
+  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+  curl_setopt($ch, CURLOPT_ENCODING, "");
+  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+  $h = curl_exec($ch);
+  curl_close($ch);
+  //echo $h;
+$base1=str_replace(strrchr($l, "/"),"/",$l);
+$base2=getSiteHost($l);
+if (preg_match("/\.m3u8/",$h)) {
+$a1=explode("\n",$h);
+for ($k=0;$k<count($a1);$k++) {
+  if ($a1[$k][0] !="#" && $a1[$k]) $pl[]=trim($a1[$k]);
+}
+if ($pl[0][0] == "/")
+  $base=$base2;
+elseif (preg_match("/http(s)?:/",$pl[0]))
+  $base="";
+else
+  $base=$base1;
+if (count($pl) > 1) {
+  if (preg_match_all("/RESOLUTION\=(\d+)/i",$h))
+    preg_match_all("/RESOLUTION\=(\d+)/i",$h,$m);
+  else
+    preg_match_all("/BANDWIDTH\=(\d+)/i",$h,$m);
+  $max_res=max($m[1]);
+  $arr_max=array_keys($m[1], $max_res);
+  $key_max=$arr_max[0];
+  $link=$base.$pl[$key_max];
+}
+} else {
+  $link=$l;
+}
+}
 if (preg_match("/bypassiptv\.eu/",$link)) {
   if ($flash <> "flash")
   $link=$link."|Referer=".urlencode("https://romanialive.online")."&Origin=".urlencode("https://romanialive.online");
@@ -68,7 +131,7 @@ if(preg_match('/youtube\.com\/(v\/|watch\?v=|embed\/)([\w\-]+)/', $h, $match)) {
   $link="";
 }
 }
-if (preg_match("/tvhd-online\.com/",$link)) {
+if (preg_match("/tvhd-online1\.com/",$link)) {
     $ch = curl_init();
     curl_setopt($ch, CURLOPT_URL, $link);
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
@@ -81,6 +144,7 @@ if (preg_match("/tvhd-online\.com/",$link)) {
     curl_setopt($ch, CURLOPT_TIMEOUT, 25);
     $h = curl_exec($ch);
     curl_close($ch);
+    //echo $h;
     if (preg_match("/location\:\s*(.+)/i",$h,$m))
      $link=trim($m[1]);
 }
@@ -182,22 +246,50 @@ if (count($pl) > 1) {
 }
 if ($from=="tvhd-online") {
 $ua = $_SERVER['HTTP_USER_AGENT'];
+$ua="Mozilla/5.0 (Windows NT 10.0; rv:84.0) Gecko/20100101 Firefox/84.0";
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $link);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
   curl_setopt($ch, CURLOPT_USERAGENT, $ua);
+  curl_setopt($ch, CURLOPT_REFERER,"https://tvhd-online.com");
   curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
   curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
   curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
   curl_setopt($ch, CURLOPT_TIMEOUT, 15);
   $html = curl_exec($ch);
   curl_close($ch);
-  $link="";
+  //echo $html;
+  $out="";
   $t1=explode("source: '",$html);
   $t2=explode("'",$t1[1]);
   $l2=$t2[0];
   if (strpos($l2,"http") !== false)
-   $link=$l2;
+   $out=$l2;
+  if (preg_match("/rcs\-rds\.ro/",$out)) {
+  $t1=explode("id=",$link);
+  $id=$t1[1];
+  $l="https://realiptv.eu/digidata.php?id=".$id;
+  $ch = curl_init();
+  curl_setopt($ch, CURLOPT_URL, $l);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
+  curl_setopt($ch, CURLOPT_REFERER,"https://realiptv.eu");
+  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+  $h = curl_exec($ch);
+  curl_close($ch);
+  $t1=explode("<div",$h);
+  $t2=explode(">",$t1[1]);
+  $t3=explode("<",$t2[1]);
+  $out=$t3[0];
+  }
+  $link=$out;
+  if ($flash <> "flash") {
+   if (preg_match("/cmero\-ott\-live\-sec\.ssl\.cdn\.cra\.cz/",$link))
+    $link=$link."|Origin=".urlencode("https://media.cms.protvplus.ro")."&Referer=".urlencode("https://media.cms.protvplus.ro");
+  }
 }
 if ($from=="teleon") {
 $ua = $_SERVER['HTTP_USER_AGENT'];
@@ -333,7 +425,8 @@ if ($from=="protvplus") {
   curl_setopt($ch, CURLOPT_TIMEOUT, 15);
   $h = curl_exec($ch);
   curl_close($ch);
-  $t1=explode('hls": "',$h);
+  $h=str_replace("\\","",$h);
+  $t1=explode('src":"',$h);
   $t2=explode('"',$t1[1]);
   $l=$t2[0];
   $ch = curl_init();

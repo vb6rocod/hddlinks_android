@@ -135,12 +135,13 @@ $ua="Mozilla/5.0 (Windows NT 10.0; rv:75.0) Gecko/20100101 Firefox/75.0";
 if ($tip=="movie") {
 
 $l="https://ww2.9movies.yt/ajax/movie_episodes/".$link;
+$l="https://ww3.9movies.yt/ajax/movie_episodes/".$link;
 $head=array('Accept: application/json, text/javascript, */*; q=0.01',
 'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
 'Accept-Encoding: deflate',
 'X-Requested-With: XMLHttpRequest',
 'Connection: keep-alive',
-'Referer: https://ww2.9movies.yt/');
+'Referer: https://ww3.9movies.yt');
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $l);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
@@ -159,7 +160,7 @@ $head=array('Accept: application/json, text/javascript, */*; q=0.01',
   $t1=explode('id="ep-',$x);
   $t2=explode('"',$t1[1]);
   $id=$t2[0];
-$l="https://ww2.9movies.yt/ajax/movie_sources/";
+$l="https://ww3.9movies.yt/ajax/movie_sources/";
 $post="eid=".$id;
 //echo $post;
 $head=array('Accept: application/json, text/javascript, */*; q=0.01',
@@ -168,9 +169,9 @@ $head=array('Accept: application/json, text/javascript, */*; q=0.01',
 'Content-Type: application/x-www-form-urlencoded; charset=UTF-8',
 'X-Requested-With: XMLHttpRequest',
 'Content-Length: '.strlen($post).'',
-'Origin: https://ww2.9movies.yt',
+'Origin: https://ww3.9movies.yt',
 'Connection: keep-alive',
-'Referer: https://ww2.9movies.yt/');
+'Referer: https://ww3.9movies.yt/');
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $l);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
@@ -192,7 +193,7 @@ $head=array('Accept: application/json, text/javascript, */*; q=0.01',
   $l2=$rr['embed'];
   $r[]=$l2;
 } else {
-$l="https://ww2.9movies.yt/ajax/movie_sources/";
+$l="https://ww3.9movies.yt/ajax/movie_sources/";
 $post="eid=".$link;
 //echo $post;
 $head=array('Accept: application/json, text/javascript, */*; q=0.01',
@@ -201,9 +202,9 @@ $head=array('Accept: application/json, text/javascript, */*; q=0.01',
 'Content-Type: application/x-www-form-urlencoded; charset=UTF-8',
 'X-Requested-With: XMLHttpRequest',
 'Content-Length: '.strlen($post).'',
-'Origin: https://ww2.9movies.yt',
+'Origin: https://ww3.9movies.yt',
 'Connection: keep-alive',
-'Referer: https://ww2.9movies.yt/');
+'Referer: https://ww3.9movies.yt/');
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $l);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);

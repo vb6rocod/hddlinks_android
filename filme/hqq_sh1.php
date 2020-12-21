@@ -83,7 +83,7 @@ request.open("GET", php_file, true);
 request.send(the_data);
 document.getElementById("hqq_msg").innerHTML = "'.$msg_captcha.'";
 ';
-$out='<script data-cfasync="false">'.$out."</script>";
+//$out='<script data-cfasync="false">'.$out."</script>";
 //$out=str_replace("<script>","",$out);
 //$out=str_replace("</script>","",$out);
 echo $out;

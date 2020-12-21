@@ -175,6 +175,8 @@ if ($tip=="search") {
 } else {
   $post="action=load_categories&category_offset=0&last_row_number=0&page=0&vars[error]=&vars[m]=&vars[p]=2003&vars[post_parent]=&vars[subpost]=&vars[subpost_id]=&vars[attachment]=&vars[attachment_id]=0&vars[name]=&vars[pagename]=&vars[page_id]=2003&vars[second]=&vars[minute]=&vars[hour]=&vars[day]=0&vars[monthnum]=0&vars[year]=0&vars[w]=0&vars[category_name]=&vars[tag]=&vars[cat]=&vars[tag_id]=&vars[author]=&vars[author_name]=&vars[feed]=&vars[tb]=&vars[paged]=0&vars[meta_key]=&vars[meta_value]=&vars[preview]=&vars[s]=&vars[sentence]=&vars[title]=&vars[fields]=&vars[menu_order]=&vars[embed]=&vars[ignore_sticky_posts]=false&vars[suppress_filters]=false&vars[cache_results]=false&vars[update_post_term_cache]=true&vars[lazy_load_term_meta]=true&vars[update_post_meta_cache]=true&vars[post_type]=&vars[posts_per_page]=300&vars[nopaging]=false&vars[comments_per_page]=50&vars[no_found_rows]=false&vars[order]=DESC";
   $l="https://".$host."/wp-admin/admin-ajax.php";
+  //$l="https://ask4movie.co/wp-admin/admin-ajax.php";
+  //$post="action=load_categories&category_offset=6&last_row_number=6&hidden_categories[]=4,5,6,7,8,9,10,12,13,14,15,16,17,18,19,97,99,89,96,91,1&page=0&vars[error]=&vars[m]=&vars[p]=2003&vars[post_parent]=&vars[subpost]=&vars[subpost_id]=&vars[attachment]=&vars[attachment_id]=0&vars[name]=&vars[pagename]=&vars[page_id]=2003&vars[second]=&vars[minute]=&vars[hour]=&vars[day]=0&vars[monthnum]=0&vars[year]=0&vars[w]=0&vars[category_name]=&vars[tag]=&vars[cat]=&vars[tag_id]=&vars[author]=&vars[author_name]=&vars[feed]=&vars[tb]=&vars[paged]=0&vars[meta_key]=&vars[meta_value]=&vars[preview]=&vars[s]=&vars[sentence]=&vars[title]=&vars[fields]=&vars[menu_order]=&vars[embed]=&vars[ignore_sticky_posts]=false&vars[suppress_filters]=false&vars[cache_results]=false&vars[update_post_term_cache]=true&vars[lazy_load_term_meta]=true&vars[update_post_meta_cache]=true&vars[post_type]=&vars[posts_per_page]=300&vars[nopaging]=false&vars[comments_per_page]=50&vars[no_found_rows]=false&vars[order]=DESC";
 }
 $ua="Mozilla/5.0 (Windows NT 10.0; rv:79.0) Gecko/20100101 Firefox/79.0";
 if ($tip=="release") {
@@ -186,6 +188,7 @@ $head=array('Accept: text/plain, */*; q=0.01',
 'Content-Length: '.strlen($post).'',
 'Origin: https://ask4movie.co',
 'Connection: keep-alive',
+'Cookie: a1=uqg2dKT6biKoDW7Lyk5DHHo4dW74b61s; token_QpUJAAAAAAAAGu98Hdz1l_lcSZ2rY60Ajjk9U1c=BAoAX-B03AFf4HVVgAGBAsAAICjp96898j_nB14OPYLoqD3iLjC997M_w7tEzvmxpkd-wQBGMEQCIGej65gMODhW-D1A0ORK3siU4eWoUAYN3F5-NbUDp_PmAiBn-uLgGmOEWuU8wMIUkNnJU11JXau3KGJBx6qudbKhVsIAIGUyA4WGPL3lFEOzjw-_UZ1yoHb7cVS64FjE_TzQbjp2xAAQKgQkEQJAuYD5hA1RVxI9e8UAELevwj4MHg9M_yZffKb1va_DAEYwRAIgVN91lVmH1bRZtmYVreL6C4s8F8jSe0W-MzHEkH6Zi08CIH6JImYXpirQkN_tk8g9Ns2BU9guTA4HtiXUU4kp9GTR; _popfired=2; _popfired_expires=Invalid%20Date; lastOpenAt_=1608545618341; 6US=1',
 'Referer: https://ask4movie.co/');
 //$l="https://ask4movie.co/?s=Instant+Family";
   $ch = curl_init();
@@ -200,8 +203,10 @@ $head=array('Accept: text/plain, */*; q=0.01',
   curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
   curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
   curl_setopt($ch, CURLOPT_TIMEOUT, 25);
+  //curl_setopt($ch, CURLOPT_HEADER,1);
   $html = curl_exec($ch);
   curl_close($ch);
+  //echo $html;
   $h=json_decode($html,1)['data'];
 } else {
   $ch = curl_init();

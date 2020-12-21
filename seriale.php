@@ -64,7 +64,7 @@ document.onkeypress =  zx;
 <TR>
 <TD width="25%"><a href="filme/serialeonline.php?page=1&tip=release&title=serialeonline&link=" target="_blank">serialeonline</a></TD>
 <TD width="25%"><a href="filme/rovideo.php?page=1&tip=release&title=rovideo&link=" target="_blank">rovideo</a></TD>
-<TD width="25%"><a href="filme/seriescool_s.php?page=1&tip=release&title=seriescool&link=" target="_blank">seriescool</a></TD>
+<TD width="25%"></TD>
 <TD width="25%"><a href="filme/soap2day_ss.php" target="_blank">soap2day</a></TD>
 </TR>
 
@@ -84,7 +84,7 @@ document.onkeypress =  zx;
 <TR>
 <TD width="25%"><a href="filme/swatchseries_s.php?page=1&tip=release&title=swatchseries&link=" target="_blank">swatchseries</a></TD>
 <TD width="25%"><a href="filme/yifymovies_s.php?page=1&tip=release&title=yifymovies&link=" target="_blank">yifymovies</a></TD>
-<TD width="25%"><a href="filme/moviesjoy_s.php?page=1&tip=release&title=moviesjoy&link=" target="_blank">moviesjoy</a></TD>
+<TD width="25%"></TD>
 <TD width="25%"><a href="filme/cineplex_s_main.php" target="_blank">cineplex (cont)</a></TD>
 </TR>
 <TR>
@@ -95,7 +95,7 @@ document.onkeypress =  zx;
 </TR>
 
 <TR>
-<TD width="25%"><a href="filme/lightdl_s.php" target="_blank">lightdl</a></TD>
+<TD width="25%"></TD>
 <TD width="25%"><a href="filme/gerryreid_s.php?page=1&tip=release&title=gerryreid&link=" target="_blank">gerryreid</a></TD>
 <TD width="25%"><a href="filme/yesmovies_s.php?page=1&tip=release&title=yesmovies&link=" target="_blank">yesmovies</a></TD>
 <TD width="25%"><a href="filme/anilist1_s_main.php" target="_blank">anilist1</a></TD>

@@ -37,13 +37,13 @@ echo '<h2>'.$tit.'</h2><BR>';
 echo '<table border="1" width="100%">'."\n\r";
 //echo '<TR><td style="color:#000000;background-color:deepskyblue;text-align:center" colspan="3" align="center">'.$tit.'</TD></TR>';
 $ua="Mozilla/5.0 (Windows NT 10.0; rv:79.0) Gecko/20100101 Firefox/79.0";
-$l="https://ww2.9movies.yt/ajax/movie_episodes/".$link;
+$l="https://ww3.9movies.yt/ajax/movie_episodes/".$link;
 $head=array('Accept: application/json, text/javascript, */*; q=0.01',
 'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
 'Accept-Encoding: deflate',
 'X-Requested-With: XMLHttpRequest',
 'Connection: keep-alive',
-'Referer: https://ww2.9movies.yt/');
+'Referer: https://ww3.9movies.yt/');
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $l);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);

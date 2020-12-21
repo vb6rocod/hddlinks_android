@@ -125,6 +125,7 @@ $tit_serial=$tit; // ?????????   %3F
 $link_page="";
 $sub_link ="from=".$from."&tip=".$tip."&sez=".$sez."&ep=".$ep."&imdb=".$imdbid."&title=".urlencode(fix_t($tit_serial))."&link=".$link_page."&ep_tit=".$ep_tit."&year=".$year;
 //echo $sub_link;
+//echo $filelink;
 /**####################################**/
 /** Here we start.......**/
 if (preg_match("/filmeonlinegratis\.org/",$filelink)) {
@@ -327,7 +328,7 @@ if (preg_match("/filmeonlinegratis\.org/",$filelink)) {
     $t1=explode("&",$video);
     $html .='<iframe src="'.base64_decode($t1[0]).'"> ';
   }
-} elseif (strpos($filelink,"desenefaine.ro") !== false) {
+} elseif (strpos($filelink,"desenefaine.") !== false) {
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $filelink);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
@@ -340,7 +341,9 @@ if (preg_match("/filmeonlinegratis\.org/",$filelink)) {
   $h = curl_exec($ch);
   curl_close($ch);
   $html = urldecode(str_replace("@","%",$h));
+  $html=str_replace("player.desenefaine.io","hqq.tv",$html);
   //echo $html;
+  /*
   $t1=explode('embed_url: "',$html);
   $t2=explode('"',$t1[1]);
   $l=$t2[0];
@@ -358,6 +361,7 @@ if (preg_match("/filmeonlinegratis\.org/",$filelink)) {
   $html = urldecode(str_replace("@","%",$h));
   //$html=str_replace("https://desenefaine.ro/embed.php?vid=","https://hqq.tv/embed.php?vid=",$html);
   $html=str_replace("https://desenedublate.xyz/player/embed_player.php?vid=","https://hqq.tv/player/embed_player.php?vid=",$html);
+  */
 } elseif (strpos($filelink,"pornhdo.com") !== false || strpos($filelink,"porndbs.com") !== false) {
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $filelink);
@@ -1560,7 +1564,7 @@ for ($i=0;$i<count($links);$i++) {
    $pat="/hqq\.watch|xopenload\.me|hqq\.tv\/player\/script\.php|top\.mail\.ru|facebook|twitter|player\.swf";
    $pat .="|img\.youtube|youtube\.com\/user|radioarad|\.jpg|\.png|\.gif|jq\/(js|css)";
    $pat .="|fsplay\.net\?s|changejplayer\.js|validateemb\.php|restore_google\.php|";
-   $pat .="ExoLoader.addZone|js\/api\/share\.js|hindipix\.in\/(js|style)|share\.php\?/i";
+   $pat .="ExoLoader.addZone|js\/api\/share\.js|hindipix\.in\/(js|style)|share\.php\?|brave\.com/i";
    if (!preg_match($pat,$cur_link)) {
      $cur_link=str_replace(urldecode("%0A"),"",$cur_link);
      if ($cur_link) $link_f[]=$cur_link;

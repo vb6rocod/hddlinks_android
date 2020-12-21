@@ -147,9 +147,9 @@ $flash="direct";
 }
 
 if ($flash=="mp")
-    $cf = '<a href="intent:http://127.0.0.1:8080/scripts/filme/cf.php?site=https://onionplay.co/search/dune#Intent;package=org.mozilla.firefox;S.title=Cloudflare;end">*</a>';
+    $cf = '<a href="intent:http://127.0.0.1:8080/scripts/filme/cf.php?site='.$ref.'/search/dune#Intent;package=org.mozilla.firefox;S.title=Cloudflare;end">*</a>';
 else
-    $cf = '<a href="cf.php?site=https://onionplay.co/search/dune" target="_blank">*</a>';
+    $cf = '<a href="cf.php?site='.$ref.'/search/dune" target="_blank">*</a>';
 echo '<H2>'.$page_title.' ('.$cf.')</H2>'."\r\n";
 echo '<table border="1px" width="100%" style="table-layout:fixed;">'."\r\n";
 echo '<TR>'."\r\n";
@@ -228,6 +228,7 @@ $head=array('Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image
   //curl_setopt($ch, CURLOPT_COOKIEJAR, $cookie);
   //curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie);
   //curl_setopt($ch, CURLOPT_HEADER,1);
+  curl_setopt($ch, CURLOPT_ENCODING,"");
   curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
   curl_setopt($ch, CURLOPT_TIMEOUT, 15);
   $html = curl_exec($ch);
@@ -246,7 +247,28 @@ $opts = array(
   )
 );
 $context = stream_context_create($opts);
-$html=@file_get_contents($l,false,$context);
+//$html=@file_get_contents($l,false,$context);
+$head=array('Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
+'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
+'Accept-Encoding: deflate',
+'Connection: keep-alive',
+'Cookie: cf_clearance='.$cc,
+'Referer: https://onionplay.to/');
+
+  $ch = curl_init($l);
+  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
+  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER  ,1);  // RETURN THE CONTENTS OF THE CALL
+  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+  curl_setopt($ch, CURLOPT_HTTPHEADER,$head);
+  //curl_setopt($ch, CURLOPT_COOKIEJAR, $cookie);
+  //curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie);
+  //curl_setopt($ch, CURLOPT_HEADER,1);
+  curl_setopt($ch, CURLOPT_ENCODING,"");
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+  $html = curl_exec($ch);
+  curl_close ($ch);
 }
 //echo $html;
 $r=array();

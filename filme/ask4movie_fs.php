@@ -136,7 +136,7 @@ echo '<BR>';
 $ua = $_SERVER['HTTP_USER_AGENT'];
 $head=array('Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
 'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2');
-
+//echo $link;
 $r=array();
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $link);
@@ -147,6 +147,20 @@ $r=array();
   curl_setopt($ch, CURLOPT_TIMEOUT, 15);
   $html = curl_exec($ch);
   curl_close($ch);
+  preg_match_all("/data\:text\/javascript\;base64\,(.*?)\"/",$html,$m);
+  $html=preg_replace_callback(
+    "/data\:text\/javascript\;base64\,(.*?)\"/",  // "num" + num
+    function ($m) {
+      return base64_decode($m[1]);
+    },
+    $html
+  );
+  //print_r ($m);
+  //echo $html;
+
+  $t1=explode('dir","',$html);
+  $t2=explode('"',$t1[1]);
+  $html=base64_decode($t2[0]);
   //echo $html;
   $t1=explode('<iframe',$html);
   $t2=explode('src="',$t1[1]);

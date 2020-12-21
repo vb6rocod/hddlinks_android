@@ -20,6 +20,8 @@ https://mn-nl.mncdn.com/tvrmoldova_new/smil:tvrmoldova_new.smil/index.m3u8
 http://hls.protv.md/hls/protv.m3u8
 #EXTINF:-1, MD| ProTV Chisinau
 http://95.217.185.38/protvchisinau.m3u8
+#EXTINF:-1, MD| ProTV Chisinau
+http://135.181.95.64:8080/hls/live.stream.m3u8
 #EXTINF:-1, Jurnal TV
 http://live.cdn.jurnaltv.md/JurnalTV_HD/index.m3u8?token=d3ff4ba3b0c33ac3e75c9d5268c0c170500cfc30
 #EXTINF:0 ,MD| MOLDOVA 1
@@ -37,23 +39,17 @@ http://212.0.215.115/10TVHD/playlist.m3u8
 #EXTINF:0 ,MD| Vocea Basarabiei
 http://hls.voceabasarabiei.md/hls/vocea_basarabiei.m3u8
 #EXTINF:-1,PRO TV HD
-https://vid.hls.protv.ro/protvhdn/protvhd_3_34/index.m3u8?1
+https://media.cms.protvplus.ro/embed/9w1VHN18dnM
 #EXTINF:-1,PRO X HD
-https://vid.hls.protv.ro/proxhdn/proxhd.m3u8?1
+https://media.cms.protvplus.ro/embed/EA35ksayQlh
 #EXTINF:-1,PRO 2 HD
-https://vid.hls.protv.ro/pro2n/pro2.m3u8?1
+https://media.cms.protvplus.ro/embed/2VSOSFKBz5U
 #EXTINF:-1,Pro Cinema
-https://vid.hls.protv.ro/procineman/procinema.m3u8?1
+https://media.cms.protvplus.ro/embed/HfSJSh7gYft
 #EXTINF:-1,PRO Gold
-https://vid.hls.protv.ro/progoldn/progold_3_34/index.m3u8?1
+https://media.cms.protvplus.ro/embed/GwaggeoLdS1
 #EXTINF:-1,PRO TV NEWS
 http://vid.hls.protv.ro/protvnews/protvnews.m3u8?1
-#EXTINF:-1,Cinemaraton
-https://cmn.digitalcable.ro/free/cm/playlist.m3u8
-#EXTINF:-1,Comedy Est
-https://cmn.digitalcable.ro/free/comedyest/playlist.m3u8
-#EXTINF:-1,6TV
-https://stream.chrominance.ro/clients/6tv/playlist.m3u8
 #EXTINF:-1,Iasi TV
 http://82.208.151.107:8088/high/tvriasi/index.m3u8
 #EXTINF:-1,Media Regional

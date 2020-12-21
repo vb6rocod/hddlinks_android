@@ -23,7 +23,7 @@ $fav_target="";
 $add_target="filme_add.php";
 $add_file="";
 $fs_target="";
-$target="serialeonline_f.php";
+$target="filmele-online.php";
 /* ==================================================== */
 $base=basename($_SERVER['SCRIPT_FILENAME']);
 $p=$_SERVER['QUERY_STRING'];
@@ -198,8 +198,9 @@ $ua = $_SERVER['HTTP_USER_AGENT'];
   unset($videos[0]);
   $videos = array_values($videos);
   foreach($videos as $video) {
-    $t1=explode('"',$video);
-    $link="https://filmele-online.com/embed/".$t1[0].".html";
+    $t1=explode('href="',$video);
+    $t2=explode('"',$t1[1]);
+    $link=substr("https://filmele-online.com/server".$t2[0], 0, -1).".html";
     $t1=explode('oldtitle="',$video);
     $t2=explode('"',$t1[1]);
     $title=trim($t2[0]);

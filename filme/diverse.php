@@ -36,28 +36,17 @@ $title="Stan si Bran";
 $link="latimp.php?tip=release&page=1&link=stan&title=Stan+si+Bran";
 echo '<TD style="text-align:center"><font size="4">'.'<a href="'.$link.'" target="_blank">'.$title.'</a></font></TD>';
 
-$title="The Visitors";
-$link='archive_ep.php?title='.urlencode("The Visitors").'&link=https://archive.org/embed/TheVisitors&sezon=1&imdb=tt0085106';
-echo '<TD style="text-align:center"><font size="4">'.'<a href="'.$link.'" target="_blank">'.$title.'</a></font></TD>';
-
-$title="Sliders";
-$link='archive_ep.php?title='.urlencode("Sliders").'&link=https://archive.org/embed/sliders1x011x02pilot&sezon=1&imdb=tt0112167';
-echo '<TD style="text-align:center"><font size="4">'.'<a href="'.$link.'" target="_blank">'.$title.'</a></font></TD>';
 
 
- echo "</TR>"."\n\r";
-$n=0;
-if ($n == 0) echo "<TR>"."\n\r";
 $title="clicksud";
 $link="clicksud_main.php";
 echo '<TD style="text-align:center"><font size="4">'.'<a href="'.$link.'" target="_blank">'.$title.'</a></font></TD>';
 $title="Seriale Turcesti";
 $link="serialeturcesti.php?page=1&tip=release&title=serialeturcesti&link=";
 echo '<TD style="text-align:center"><font size="4">'.'<a href="'.$link.'" target="_blank">'.$title.'</a></font></TD>';
-$title="Filme";
-$link="../tv/filme_main.php";
-echo '<TD style="text-align:center"><font size="4">'.'<a href="'.$link.'" target="_blank">'.$title.'</a></font></TD>';
-
+echo "</TR>"."\n\r";
+$n=0;
+if ($n == 0) echo "<TR>"."\n\r";
 $title="CINEMATOGRAFIA ROMANEASCA";
 $link="yt_channel.php?token=&id=UC7612aZQ9llm_nR_3wDDqGA&kind=channel&title=(channel)+CINEMATOGRAFIA+ROMANEASCA&image=https://yt3.ggpht.com/a/AATXAJynQBFCnYb0qbwYGXKMFwnDYSiH1-izNKHu-5DW=s88-c-k-c0x00ffffff-no-rj";
 echo '<TD style="text-align:center"><font size="4">'.'<a href="'.$link.'" target="_blank">'.$title.'</a></font></TD>';

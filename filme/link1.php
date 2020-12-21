@@ -184,6 +184,19 @@ if (preg_match("/cdn\.jwplayer\.com/",$filelink)) {  // from https://www.lunchfl
   $link=$x['playlist'][0]['sources'][0]['file'];
   $srt=$x['playlist'][0]['tracks'][0]['file'];
 }
+if (preg_match("/vikv\.net/",$filelink)) {
+ $x=parse_url($filelink);
+ $q=$x['query'];
+ parse_str($q,$r);
+ $s=$r['sub'];
+ if ($s) $srt="https://sub1.hdv.fun/vtt1/".$s.".vtt";
+ //print_r ($r);
+ $a1="ghl";
+ $a3=time()*1000;
+ $a4=base64_encode(strrev($a1.$a3));
+ $a5=base64_encode(strrev($a4));
+ $link="https://hls.hdv.fun/m3u8/".$r['id'].".m3u8?u=".$a5;
+}
 if (preg_match("/playerhost\.net/",$filelink)) {
   $ua="Mozilla/5.0 (Windows NT 10.0; rv:80.0) Gecko/20100101 Firefox/80.0";
   $ch = curl_init();
@@ -486,17 +499,21 @@ if (preg_match("/123stream\.be|emovies\.io/",$filelink)) {
   }
 }
 if (preg_match("/filmele-online\.com/",$filelink)) {
+//echo $filelink;
+//$filelink="https://filmele-online.com/server/an-unremarkable-christmas-2020.html";
+// https://filmele-online.com/server/an-unremarkable-christmas-2020.html
+//$l="http://filmele-online.com/embed/10050.html";
 $head=array('Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
 'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
 'Accept-Encoding: deflate',
 'Content-Type: application/x-www-form-urlencoded',
-'Content-Length: 71',
+'Content-Length: 75',
 'Origin: https://filmele-online.com',
 'Connection: keep-alive',
 'Referer: '.$filelink,
 'Cookie: domain-alert=1',
 'Upgrade-Insecure-Requests: 1');
-$post="film=film&content-protector-submit.x=572&content-protector-submit.y=232";
+$post="filmul=filmul&content-protector-submit.x=572&content-protector-submit.y=232";
 $ua = $_SERVER['HTTP_USER_AGENT'];
 $ua="Mozilla/5.0 (Windows NT 10.0; rv:80.0) Gecko/20100101 Firefox/80.0";
   $ch = curl_init();
@@ -512,10 +529,12 @@ $ua="Mozilla/5.0 (Windows NT 10.0; rv:80.0) Gecko/20100101 Firefox/80.0";
   curl_setopt($ch, CURLOPT_TIMEOUT, 15);
   $h = curl_exec($ch);
   curl_close($ch);
-  $t1=explode('file": "..',$h);
-  $t2=explode('"',$t1[1]);
-  if (preg_match("/srt|vtt/",$t2[0]))
-   $srt="https://filmele-online.com".$t2[0];
+  //echo $h;
+  $t1=explode('tracks:',$h);
+  $t2=explode('file": "',$t1[1]);
+  $t3=explode('"',$t2[1]);
+  if (preg_match("/srt|vtt/",$t3[0]))
+   $srt=$t3[0];
   $t1=explode('file": "',$h);
   $t2=explode('"',$t1[1]);
   $l2=$t2[0];
@@ -3361,6 +3380,7 @@ if (count($pl) > 1) {
   //}
 } elseif (strpos($filelink,"segavid.") !== false) {
    //echo $filelink;
+   include ("AADecoder.php");
   // https://segavid.com/embed-pcqorra827hk.html?Drivename=Garrows.Law.S02E03.DVDRip.XviD-HAGGIS.[123fmovies.best].mp4
    $ua="Mozilla/5.0 (Windows NT 10.0; rv:81.0) Gecko/20100101 Firefox/81.0";
    $ch = curl_init();
@@ -3374,10 +3394,13 @@ if (count($pl) > 1) {
    curl_setopt($ch, CURLOPT_TIMEOUT, 25);
    $h = curl_exec($ch);
    curl_close($ch);
-   //echo $h;
-  if (preg_match('/(\/\/[\.\d\w\-\.\/\\\:\?\&\#\%\_\,]*(\.(srt|vtt)))/', $h, $s))
+   $out="";
+   $jsu=new AADecoder();
+   $out = $jsu->decode($h);
+   //echo $out;
+  if (preg_match('/(\/\/[\.\d\w\-\.\/\\\:\?\&\#\%\_\,]*(\.(srt|vtt)))/', $h.$out, $s))
     $srt="https:".$s[1];
-  if (preg_match('/([http|https][\.\d\w\-\.\/\\\:\?\&\#\%\_\,]*(\.(mp4|m3u8)))/', $h, $m))
+  if (preg_match('/([http|https][\.\d\w\-\.\/\\\:\?\&\#\%\_\,]*(\.(mp4|m3u8)))/', $h.$out, $m))
   $link=$m[1];
   if ($link && $flash <> "flash")
    $link=$link."|Referer=".urlencode("https://segavid.com");
@@ -3443,6 +3466,8 @@ if (count($pl) > 1) {
   //https://streamtape.com/e/jOdpLk1kBQhJ7v/tt0061389.mp4?c1_file=https://serialeonline.io/subtitrarifilme/tt0061389.vtt&c1_label=Romanahttps://serialeonline.io/subtitrarifilme/tt0061389.vtt
   //echo $filelink;
   $ua="Mozilla/5.0 (Windows NT 10.0; WOW64; rv:46.0) Gecko/20100101 Firefox/46.0";
+  $ua="Mozilla/5.0 (Windows NT 10.0; rv:83.0) Gecko/20100101 Firefox/83.0";
+  $ua = $_SERVER['HTTP_USER_AGENT'];
   if (preg_match("/subtitle_json\=(.+)/",$filelink,$s)) {
     $srt_json=trim($s[1]);
    $ch = curl_init();
@@ -3476,19 +3501,31 @@ if (count($pl) > 1) {
     $srt="https:".$s[1];
   }
   //$head=array('Cookie: _ym_uid=1589208140640745946; _ym_d=1589208140; _b=kube12; _ym_visorc_61426822=b; _ym_isad=2');
-  $ch = curl_init();
-  curl_setopt($ch, CURLOPT_URL, $filelink);
-  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
-  //curl_setopt($ch, CURLOPT_HTTPHEADER,$head);
-  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
-  curl_setopt($ch,CURLOPT_REFERER,$filelink);
-  curl_setopt($ch, CURLOPT_ENCODING, "");
-  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
-  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
-  $h = curl_exec($ch);
-  curl_close($ch);
+ $cookie=$base_cookie."streamtape.dat";
+$head=array('Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
+'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
+'Accept-Encoding: deflate',
+'Referer: https://serialeonline.io/episoade/magnum-p-i-sezonul-3-episodul-2/',
+'Connection: keep-alive',
+'Upgrade-Insecure-Requests: 1');
+ $ch = curl_init();
+ curl_setopt($ch, CURLOPT_URL, $filelink);
+ curl_setopt($ch, CURLOPT_COOKIEJAR, $cookie);
+ curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie);
+ curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+ curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+ curl_setopt($ch, CURLOPT_USERAGENT, $ua);
+ curl_setopt($ch, CURLOPT_HTTPHEADER,$head);
+ curl_setopt($ch, CURLOPT_ENCODING, "");
+ curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
+ curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
+ curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
+ curl_setopt($ch, CURLOPT_TIMEOUT, 25);
+ curl_setopt($ch, CURLINFO_HEADER_OUT, true);
+ $h = curl_exec($ch);
+ $info = curl_getinfo($ch);
+ curl_close($ch);
+ //print_r ($info);
   $h=str_replace("\\","",$h);
   if (preg_match_all("/streamtape\.com\/get\_video\?id\=([\w\_\&\=\-]+)[\'|\"|\<]/",$h,$m)) {
    $link="https://streamtape.com/get_video?id=".$m[1][count($m[1])-1]."&stream=1";
@@ -4468,6 +4505,7 @@ if (count($pl) > 0) {
 } elseif (strpos($filelink,"vidfast.co") !== false) {
   //https://go.vidfast.co/embed-5chhcimx6whs.html
   //https://sp.vidfast.co/embed-5chhcimx6whs.html
+  //echo $filelink;
   $ua = $_SERVER['HTTP_USER_AGENT'];
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $filelink);
@@ -4718,7 +4756,7 @@ if (count($pl) > 0) {
   $filelink=$t1[0];
   $ref=$t1[1];
   $link=$filelink;
-
+  //$link="https://hls.hdv.fun/imdb/tt2165859";
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $link);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);

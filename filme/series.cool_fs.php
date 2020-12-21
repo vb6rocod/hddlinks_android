@@ -1,18 +1,16 @@
 <!doctype html>
 <?php
 include ("../common.php");
-
 error_reporting(0);
-if (file_exists($base_pass."debug.txt"))
- $debug=true;
-else
- $debug=false;
-
 $list = glob($base_sub."*.srt");
    foreach ($list as $l) {
     str_replace(" ","%20",$l);
     unlink($l);
 }
+if (file_exists($base_pass."debug.txt"))
+ $debug=true;
+else
+ $debug=false;
 if (file_exists($base_pass."player.txt")) {
 $flash=trim(file_get_contents($base_pass."player.txt"));
 } else {
@@ -48,6 +46,11 @@ $tip="series";
 }
 $imdbid="";
 
+function str_between($string, $start, $end){
+	$string = " ".$string; $ini = strpos($string,$start);
+	if ($ini == 0) return ""; $ini += strlen($start); $len = strpos($string,$end,$ini) - $ini;
+	return substr($string,$ini,$len);
+}
 ?>
 <html>
 <head>
@@ -130,12 +133,32 @@ function off() {
 <?php
 echo '<h2>'.$tit.$tit2.'</H2>';
 echo '<BR>';
+  $ua="Mozilla/5.0 (Windows NT 10.0; rv:63.0) Gecko/20100101 Firefox/63.0";
+  $ch = curl_init($link);
+  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
+  curl_setopt($ch,CURLOPT_REFERER,"https://series.cool");
+  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER  ,1);  // RETURN THE CONTENTS OF THE CALL
+  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+  $html = curl_exec($ch);
+  curl_close ($ch);
+//echo $html;
 $r=array();
-
- $r[]="https://www.lightdl.xyz?file=".urlencode($link);
-
+$s=array();
+$videos = explode('data-embed="', $html);
+unset($videos[0]);
+$videos = array_values($videos);
+foreach($videos as $video) {
+   $t1=explode('"',$video);
+   $r[]=$t1[0];
+   $t2=explode('>',$t1[1]);
+   $t3=explode('<',$t2[1]);
+   $s[]=$t3[0];
+}
 echo '<table border="1" width="100%">';
-echo '<TR><TD class="mp">Alegeti un server: Server curent:<label id="server">'.parse_url($r[0])['host'].'</label>
+echo '<TR><TD class="mp">Alegeti un server: Server curent:<label id="server">'.$s[0].'</label>
 <input type="hidden" id="file" value="'.urlencode($r[0]).'"></td></TR></TABLE>';
 echo '<table border="1" width="100%"><TR>';
 $k=count($r);
@@ -143,7 +166,7 @@ $x=0;
 for ($i=0;$i<$k;$i++) {
   if ($x==0) echo '<TR>';
   $c_link=$r[$i];
-  $openload=parse_url($r[$i])['host'];
+  $openload=$s[$i];
   if (preg_match($indirect,$openload)) {
   echo '<TD class="mp"><a href="filme_link.php?file='.urlencode($c_link).'&title='.urlencode(unfix_t($tit.$tit2)).'" target="_blank">'.$openload.'</a></td>';
   } else
@@ -177,13 +200,6 @@ if ($tip=="movie") {
   $from="";
   $link_page="";
 }
-  $rest = substr($tit3, -6);
-  if (preg_match("/\((\d+)\)/",$rest,$m)) {
-   $year=$m[1];
-   $tit3=trim(str_replace($m[0],"",$tit3));
-  } else {
-   $year="";
-  }
 $sub_link ="from=".$from."&tip=".$tip."&sez=".$sez."&ep=".$ep."&imdb=".$imdbid."&title=".urlencode(fix_t($tit3))."&link=".$link_page."&ep_tit=".urlencode(fix_t($tit2))."&year=".$year;
 echo '<br>';
 echo '<table border="1" width="100%">';
@@ -220,10 +236,6 @@ echo '<br>
 <BR>Scurtaturi: 7=opensubtitles, 8=titrari, 9=subs, 0=subtitrari (cauta imdb id)
 </b></font></TD></TR></TABLE>
 ';
-
-if (preg_match("/c\d?_file\=(http[\.\d\w\-\.\/\\\:\?\&\#\%\_\,]+)\&c\d?_label\=English/i",$r[0],$s)) {
- echo 'Cu subtitrare in Engleza.<BR>';
-}
 include("../debug.html");
 echo '
 <div id="overlay">
