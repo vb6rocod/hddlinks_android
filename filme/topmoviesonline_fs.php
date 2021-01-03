@@ -178,11 +178,17 @@ $head=array('Accept: */*',
   curl_close ($ch);
   //echo $h;
   //die();
+  $x=json_decode($h,1);
+  if (isset($x['embed_url'])) {
+   $l=$x['embed_url'];
+  } else {
   $t1=explode("src='",$h);
   $t2=explode("'",$t1[1]);
   $l=$t2[0];
+  }
   //echo $l;
   //$l="https://ezylink.co/lXg5";
+  // https://newslink.club/AdOz
 $head=array('Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
 'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
 'Connection: keep-alive',
@@ -223,7 +229,7 @@ $head=array('Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image
   $h = curl_exec($ch);
   curl_close ($ch);
   //echo $h;
-
+  if (preg_match("/GetVideoSource\(/",$h)) {
   $videos = explode("GetVideoSource('",$h);
   unset($videos[0]);
   $videos = array_values($videos);
@@ -233,6 +239,10 @@ $head=array('Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image
    $t1=explode(">",$video);
    $t2=explode("<",$t1[1]);
    $s[]=$t2[0];
+  }
+  } else {
+   $r[]=$l;
+   $s[]=parse_url($l)['host'];
   }
   } else {
    $r[]=$l;

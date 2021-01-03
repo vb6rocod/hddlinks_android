@@ -114,7 +114,7 @@ if (preg_match("/android|ipad/i",$user_agent) && preg_match("/chrome|firefox|mob
 }
 $n=0;
 $w=0;
-echo '<h2>'.$page_title.'</H2>';
+echo "<h2><a href='#' onclick='location.reload(true); return false;'>".$page_title.'</a></H2>';
 echo '<table border="1px" width="100%">'."\n\r";
 $l="https://tvhd-online.com/";
 // https://realiptv.eu/digidata.php?id=1
@@ -156,7 +156,7 @@ foreach($videos as $video) {
     $val_prog="link=".urlencode(fix_t($title));
     $link1="direct_link.php?link=".$link."&title=".urlencode($title)."&from=tvhd-online&mod=direct";
     $l="link=".urlencode(fix_t($link))."&title=".urlencode(fix_t($title))."&from=tvhd-online&mod=direct";
-  if (preg_match("/player\.php/",$link) ) {
+  if (preg_match("/player\.php|playertv/",$link) ) {
   if ($n==0) echo '<TR>';
   if ($flash != "mp") {
   echo '<td class="mp" align="center" width="25%"><a class ="imdb" id="myLink'.($w*1).'" href="'.$link1.'" target="_blank" onmousedown="isKeyPressed(event)">

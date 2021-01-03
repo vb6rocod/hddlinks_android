@@ -175,9 +175,17 @@ $head=array('Accept: */*',
   $h = curl_exec($ch);
   curl_close ($ch);
   //echo $h;
-  $t1=explode("src='",$h);
-  $t2=explode("'",$t1[1]);
-  $l=$t2[0];
+  $x=json_decode($h,1);
+  if (isset($x["embed_url"])) {
+    $l=$x["embed_url"];
+  } else {
+    $t1=explode("src='",$h);
+    $t2=explode("'",$t1[1]);
+    $l=$t2[0];
+  }
+  //$l="https://go.onionplay.is/iAt";
+
+  //$l="https://go.onionplay.is/nNY";
 $head=array('Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
 'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
 'Accept-Encoding: deflate',
@@ -199,6 +207,7 @@ $head=array('Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image
   $h = curl_exec($ch);
   curl_close ($ch);
   //echo $h;
+
   $t1=explode("= [",$h);
   $t2=explode("]",$t1[1]);
   $e="\$c=array(".$t2[0].");";
@@ -217,6 +226,14 @@ $head=array('Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image
   $t1=explode('redirect").attr("href","',$out);
   $t2=explode('"',$t1[2]);
   $l=$t2[0];
+
+  $t1=explode("window.location.replace('",$h);
+  $t2=explode("'",$t1[1]);
+  $l=$t2[0];
+  $t1=explode('<section>',$out);
+  $t2=explode('href="',$t1[1]);
+  $t3=explode('"',$t2[1]);
+  $l=$t3[0];
   $r=array();
   if (preg_match("/2embed.ru/",$l)) {
   $ua="Mozilla/5.0 (Windows NT 10.0; rv:80.0) Gecko/20100101 Firefox/80.0";

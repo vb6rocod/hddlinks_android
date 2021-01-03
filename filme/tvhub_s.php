@@ -8,6 +8,7 @@ function str_between($string, $start, $end){
 include ("../common.php");
 include ("../cloudflare.php");
 $last_good="https://www1.tvhub.ro";
+$last_good="https://tvhub.org";
 $host=parse_url($last_good)['host'];
 $page = $_GET["page"];
 $tip= $_GET["tip"];
@@ -171,6 +172,7 @@ echo '</TR>'."\r\n";
 $ua = $_SERVER['HTTP_USER_AGENT'];
 $cookie=$base_cookie."hdpopcorns.dat";
 if ($tip=="search") {
+  // https://tvhub.org/?s=star
   if ($page == 1)
     $requestLink = "https://".$host."/?s=".str_replace(" ","+",$tit);
   else
@@ -188,7 +190,7 @@ if ($tip=="search") {
   $html = curl_exec($ch);
   curl_close($ch);
 } else {
-  if ($page==1) $html=cf_pass("https://".$host,$cookie);
+  //if ($page==1) $html=cf_pass("https://".$host,$cookie);
   $requestLink="https://".$host."/wp-admin/admin-ajax.php"; // e o problema la ei
   $post="action=load_more&page=".($page-1)."&template=cactus-channel%2Fcontent-listing&vars%5Bpost_type%5D=ct_channel&vars%5Bposts_per_page%5D=20&vars%5Bpost_status%5D=publish&vars%5Bignore_sticky_posts%5D=1&vars%5Bpaged%5D=1&id_playlist=";
   $ch = curl_init($requestLink);
@@ -226,7 +228,7 @@ $r=array();
   }
   } else {
   //echo $html;
-  $videos = explode('div id="post', $html);
+  $videos = explode('<div id="mt-', $html);
   unset($videos[0]);
   $videos = array_values($videos);
   //print_r ($videos);
@@ -235,7 +237,7 @@ $r=array();
     $t2 = explode('"', $t1[1]);
     $link = $t2[0];
 
-    $t1 = explode('title="', $video);
+    $t1 = explode('alt="', $video);
     $t2 = explode('"', $t1[1]);
     $title=$t2[0];
     $t1=explode('src="',$video);

@@ -202,7 +202,7 @@ else
   echo '<TD class="nav" colspan="4" align="right"><a href="'.$prev.'">&nbsp;&lt;&lt;&nbsp;</a> | <a href="'.$next.'">&nbsp;&gt;&gt;&nbsp;</a></TD>'."\r\n";
 }
 echo '</TR>'."\r\n";
-
+// https://filmeleporno.xxx/page/2
 if($tip=="release") {
    $l = $link."page/".$page."/";
 } else {
@@ -221,7 +221,7 @@ if ($tip == "release") {
   $html = curl_exec($ch);
   curl_close($ch);
 } else {
- $l="https://pefilme.info/";
+ $l="https://filmeleporno.xxx/";
  $post="s=".$search;
  $head=array('Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
  'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
@@ -230,7 +230,7 @@ if ($tip == "release") {
  'Content-Length: '.strlen($post).'',
  'Origin: https://pefilme.info',
  'Connection: keep-alive',
- 'Referer: https://pefilme.info/');
+ 'Referer: https://filmeleporno.xxx/');
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $l);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
@@ -247,22 +247,27 @@ if ($tip == "release") {
 }
 //echo $html;
 $r=array();
-$videos = explode('id="post-', $html);
+$videos = explode('<div class="post"', $html);
 unset($videos[0]);
 $videos = array_values($videos);
 foreach($videos as $video) {
-  $t2 = explode('"', $video);
+  $t1=explode('href="/porn_',$video);
+  $t2 = explode('"', $t1[1]);
   $link="https://pefilme.info/video.php?id=".$t2[0]."";
+  $link="https://filmeleporno.xxx/fvd.php?id=".$t2[0]."";
+  //$link="https://filmeleporno.xxx".$t2[0];
   $t1 = explode('title="', $video);
   $t2 = explode('"', $t1[1]);
   $title = trim(strip_tags($t2[0]));
   //$title = prep_tit($title);
   $t1 = explode('src="', $video);
   $t2 = explode('"', $t1[1]);
-  //$image=$t2[0];
-  $image = "r_m.php?file=".$t2[0];
+  $image=$t2[0];
+  //$image = "r_m.php?file=".$t2[0];
   if (strpos($image,"http") === false) $image="https:".$image;
-  $durata = "";
+  $t1=explode('class="hdxx">',$video);
+  $t2=explode('<',$t1[1]);
+  $durata = trim($t2[0]);;
   if ($durata) $title=$title." (".$durata.')';
   array_push($r ,array($title,$link, $image));
 }

@@ -47,8 +47,21 @@ echo '<TD style="text-align:center"><font size="4">'.'<a href="'.$link.'" target
 echo "</TR>"."\n\r";
 $n=0;
 if ($n == 0) echo "<TR>"."\n\r";
+$title="rovideo";
+$link="rovideo.php?page=1&tip=release&title=rovideo&link=";
+echo '<TD style="text-align:center"><font size="4">'.'<a href="'.$link.'" target="_blank">'.$title.'</a></font></TD>';
+
+
+$title="peserialehd";
+$link="peserialehd_main.php";
+echo '<TD style="text-align:center"><font size="4">'.'<a href="'.$link.'" target="_blank">'.$title.'</a></font></TD>';
+
 $title="CINEMATOGRAFIA ROMANEASCA";
 $link="yt_channel.php?token=&id=UC7612aZQ9llm_nR_3wDDqGA&kind=channel&title=(channel)+CINEMATOGRAFIA+ROMANEASCA&image=https://yt3.ggpht.com/a/AATXAJynQBFCnYb0qbwYGXKMFwnDYSiH1-izNKHu-5DW=s88-c-k-c0x00ffffff-no-rj";
+echo '<TD style="text-align:center"><font size="4">'.'<a href="'.$link.'" target="_blank">'.$title.'</a></font></TD>';
+
+$title="(channel) FILME HD Romanesti, Teatru Tv si Filme Straine";
+$link="yt_channel.php?token=&id=UCCWc5wm3Tkc_QD7K2WatWXw&kind=channel&title=%28channel%29+FILME+HD+Romanesti%23virgula+Teatru+Tv+si+Filme+Straine&image=https://yt3.ggpht.com/-C-ZhAnaML8I/AAAAAAAAAAI/AAAAAAAAAAA/WwUsCIA-nLI/s88-c-k-no-mo-rj-c0xffffff/photo.jpg";
 echo '<TD style="text-align:center"><font size="4">'.'<a href="'.$link.'" target="_blank">'.$title.'</a></font></TD>';
 
 echo "</TR>"."\n\r";

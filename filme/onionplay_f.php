@@ -18,6 +18,7 @@ $has_search="yes";
 $has_add="yes";
 $has_fs="yes";
 $ref="https://ww1.onionplay.to";
+$ref="https://onionplay.is";
 $host=parse_url($ref)['host'];
 $fav_target="onionplay_f_fav.php?host=".$ref;
 $add_target="onionplay_f_add.php";
@@ -205,7 +206,7 @@ $cc="";
 if (file_exists($cookie)) {
 $x=file_get_contents($cookie);
 //unlink ($cookie);
-if (preg_match("/onionplay\.to	\w+	\/	\w+	\d+	cf_clearance	([\w|\-]+)/",$x,$m))
+if (preg_match("/onionplay\.is	\w+	\/	\w+	\d+	cf_clearance	([\w|\-]+)/",$x,$m))
  $cc=trim($m[1]);
 else
  $cc="";
@@ -340,6 +341,7 @@ for ($k=0; $k<count($r);$k++) {
   if ($n==0) echo '<TR>'."\r\n";
   $val_imdb="tip=movie&title=".urlencode(fix_t($tit_imdb))."&year=".$year."&imdb=".$imdb;
   $fav_link="mod=add&title=".urlencode(fix_t($title))."&link=".urlencode($link)."&image=".urlencode($image)."&year=".$year;
+  $image="r_m.php?file=".$image;
   if ($tast == "NU") {
     echo '<td class="mp" width="25%"><a href="'.$link_f.'" id="myLink'.$w.'" target="_blank" onmousedown="isKeyPressed(event)">
     <img id="myLink'.$w.'" src="'.$image.'" width="'.$width.'" height="'.$height.'"><BR>'.$title.'</a>

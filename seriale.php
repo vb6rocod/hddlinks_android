@@ -57,22 +57,19 @@ document.onkeypress =  zx;
 </TR>
 <TR>
 <TD width="25%"><a href="filme/veziseriale_s.php?page=1&tip=release&title=veziseriale.info&link=" target="_blank">veziseriale.info</a></TD>
-<TD width="25%"><a href="filme/filme--online.php?page=1&tip=release&title=filme--online&link=" target="_blank">filme--online</a></TD>
+<TD width="25%"><a href="filme/diverse.php" target="_blank">diverse</a></TD>
 <TD width="25%"><a href="filme/divxfilmeonline_s.php?page=1&tip=release&title=divxfilmeonline&link=" target="_blank">divxfilmeonline</a></TD>
 <TD width="25%"><a href="filme/serialeonlinesubtitrate_s.php?page=1&tip=release&title=serialeonlinesubtitrate&link=" target="_blank">serialeonlinesubtitrate</a></TD>
 </TR>
 <TR>
 <TD width="25%"><a href="filme/serialeonline.php?page=1&tip=release&title=serialeonline&link=" target="_blank">serialeonline</a></TD>
-<TD width="25%"><a href="filme/rovideo.php?page=1&tip=release&title=rovideo&link=" target="_blank">rovideo</a></TD>
-<TD width="25%"></TD>
+<TD width="25%"><a href="filme/fsgratis_s.php?page=1&tip=release&title=fsgratis&link=" target="_blank">fsgratis</a></TD>
+<TD width="25%"><a href="filme/fsonline_s.php?page=1&tip=release&title=fsonline&link=" target="_blank">fsonline</a></TD>
 <TD width="25%"><a href="filme/soap2day_ss.php" target="_blank">soap2day</a></TD>
 </TR>
 
 <TR>
-<TD width="25%"><a href="filme/fsgratis_s.php?page=1&tip=release&title=fsgratis&link=" target="_blank">fsgratis</a></TD>
-<TD width="25%"><a href="filme/fsonline_s.php?page=1&tip=release&title=fsonline&link=" target="_blank">fsonline</a></TD>
-<TD width="25%"><a href="filme/diverse.php" target="_blank">diverse</a></TD>
-<TD width="25%"><a href="filme/cartoonhd_s.php?page=1&tip=release&title=cartoonhd&link=" target="_blank">cartoonhd</a></TD>
+
 </TR>
 <!-- straine -->
 <TR>
@@ -84,7 +81,7 @@ document.onkeypress =  zx;
 <TR>
 <TD width="25%"><a href="filme/swatchseries_s.php?page=1&tip=release&title=swatchseries&link=" target="_blank">swatchseries</a></TD>
 <TD width="25%"><a href="filme/yifymovies_s.php?page=1&tip=release&title=yifymovies&link=" target="_blank">yifymovies</a></TD>
-<TD width="25%"></TD>
+<TD width="25%"><a href="filme/cartoonhd_s.php?page=1&tip=release&title=cartoonhd&link=" target="_blank">cartoonhd</a></TD>
 <TD width="25%"><a href="filme/cineplex_s_main.php" target="_blank">cineplex (cont)</a></TD>
 </TR>
 <TR>

@@ -1,13 +1,13 @@
 <!DOCTYPE html>
 <?php
 include ("../common.php");
-$host=$_GET['host'];
-$page_title="Seriale favorite";
+$page_title="Favorite";
 $width="200px";
-$height="107px";
-$add_target="filme--online_add.php";
-$fs_target="filme--online_ep.php";
-$file=$base_fav."filme--online.dat";
+$height=intval(200*(351/851))."px";
+$add_target="peserialehd_add.php";
+$fs_target1="filme_link.php";
+$fs_target2="peserialehd_ep.php";
+$file=$base_fav."peserialehd_fav.dat";
 ?>
 <html><head>
 <meta http-equiv="content-type" content="text/html; charset=UTF-8">
@@ -105,8 +105,10 @@ if (file_exists($file)) {
       $tit=trim($a[0]);
       $l=trim($a[1]);
       $img=trim($a[2]);
+      $tip=trim($a[3]);
       $arr[$tit]["link"]=$l;
       $arr[$tit]["image"]=$img;
+      $arr[$tit]["tip"]=$tip;
     }
   }
 }
@@ -122,27 +124,25 @@ for ($m=1;$m<$k;$m++) {
 echo '</TR></table>';
 echo '<table border="1px" width="100%">'."\n\r";
 foreach($arr as $key => $value) {
-    $imdb="";
 	$link = urldecode($arr[$key]["link"]);
     $title = unfix_t(urldecode($key));
     $image=urldecode($arr[$key]["image"]);
-    //$image=$host.parse_url($image)['path'];
-    $year="";
-    $link=$host.parse_url($link)['path'];
-    $link_f=$fs_target.'?tip=series&link='.urlencode($link).'&title='.urlencode(fix_t($title)).'&image='.$image."&sez=&ep=&ep_tit=&year=".$year;
-  if ($n==0) echo '<TR>'."\r\n";
-  $val_imdb="tip=series&title=".urlencode(fix_t($title))."&year=".$year."&imdb=".$imdb;
-  $fav_link="file=&mod=del&title=".urlencode(fix_t($title))."&link=".urlencode($link)."&image=".urlencode($image)."&year=".$year;
+    $tip=urldecode($arr[$key]["tip"]);
+  if ($tip=="movie")
+    $link_f='filme_link.php?file='.urlencode($link).'&title='.urlencode(fix_t($title));
+  else
+    $link_f='peserialehd_ep.php?file='.urlencode($link).'&title='.urlencode(fix_t($title));
+    if ($n==0) echo '<TR>'."\r\n";
+  $fav_link="tip=".$tip."&mod=del&title=".urlencode(fix_t($title))."&link=".urlencode($link)."&image=".urlencode($image);
+  $image="r_m.php?file=".$image;
   if ($tast == "NU") {
     echo '<td class="mp" width="25%"><a href="'.$link_f.'" id="myLink'.$w.'" target="_blank" onmousedown="isKeyPressed(event)">
-    <img id="myLink'.$w.'" src="'.$image.'" width="'.$width.'" height="'.$height.'"><BR>'.$title.'</a>
-    <input type="hidden" id="imdb_myLink'.$w.'" value="'.$val_imdb.'">'."\r\n";
+    <img id="myLink'.$w.'" src="'.$image.'" width="'.$width.'" height="'.$height.'"><BR>'.$title.'</a>';
     echo '<a onclick="ajaxrequest('."'".$fav_link."'".')" style="cursor:pointer;">*</a>'."\r\n";
     echo '</TD>'."\r\n";
   } else {
     echo '<td class="mp" width="25%"><a class ="imdb" id="myLink'.$w.'" href="'.$link_f.'" target="_blank">
-    <img src="'.$image.'" width="'.$width.'" height="'.$height.'"><BR>'.$title.'</a>
-    <input type="hidden" id="imdb_myLink'.$w.'" value="'.$val_imdb.'">'."\r\n";
+    <img src="'.$image.'" width="'.$width.'" height="'.$height.'"><BR>'.$title.'</a>';
     echo '<input type="hidden" id="fav_myLink'.$w.'" value="'.$fav_link.'"></a>'."\r\n";
     echo '</TD>'."\r\n";
   }

@@ -725,7 +725,12 @@ $cookie=$base_cookie."hdpopcorns.dat";
   else
    $url="/wp-content/themes/vizer/inc/parts/single/field-ajax.php";
   $l=$scheme."://".$host.$url;
-
+  if (preg_match("/tvhub/",$host))
+   $l="https://".$host."/wp-content/themes/grifus/loop/field-ajax.php";
+  else if (preg_match("/serialeonlinesubtitrate/",$host))
+   $l="https://serialeonlinesubtitrate.ro/wp-content/themes/hdvix/field-ajax.php";
+  //echo $post;
+  //$post="post_id=2869118";
   $headers=array('Origin: '.$scheme.'://'.$host.'');
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL,$l);
@@ -743,6 +748,8 @@ $cookie=$base_cookie."hdpopcorns.dat";
   curl_setopt($ch, CURLOPT_TIMEOUT, 15);
   $h = curl_exec($ch);
   //curl_close ($ch);
+  //echo $h;
+  //die();
   $videos=explode('data-server="',$h);
   unset($videos[0]);
   $videos = array_values($videos);
@@ -750,12 +757,15 @@ $cookie=$base_cookie."hdpopcorns.dat";
     $t1=explode('"',$video);
     $id_s=$t1[0];
     $post="post_id=".$id."&server_nr=".$id_s;
+    //echo $post;
     curl_setopt ($ch, CURLOPT_POST, 1);
     curl_setopt ($ch, CURLOPT_POSTFIELDS, $post);
     $h .= curl_exec($ch);
+    //echo $h;
   }
   curl_close ($ch);
   $html=$h;
+  //echo $html;
   //echo $h;
 } elseif (strpos($filelink,"filme--online.") !== false) {
 //echo $filelink;
@@ -1347,11 +1357,13 @@ for ($i=0;$i<count($links);$i++) {
    curl_setopt($ch, CURLOPT_TIMEOUT, 15);
    $h2 = curl_exec($ch);
    curl_close($ch);
+   //echo $h2;
    if (preg_match("/location\:\s*(.+)/i",$h2,$m))
     $cur_link=trim($m[1]);
    else
     $cur_link="";
   }
+  //echo $cur_link;
   if (strpos($links[$i],"fastvid.co") !== false) {
    $l=trim("https:".$links[$i]);
    //echo $filelink;
@@ -1765,7 +1777,7 @@ $pattern = "@(?:\/\/|\.)((?:waaw1?|netu|hqq|hindipix)\.(?:tv|watch|in))\/(?:watc
     <!--<a id="fancy" data-fancybox data-type="iframe" href="hqq_sh.php?vid='.$vid.'">| get sh!</a>-->
     <a href="hqq.html" target="_blank"><font color="lightblue"> | Captcha</font></a>
     <a href="http://hqq.tv/sec/player/embed_player.php?gtoken=03&vid=1" target="_blank"><font color="lightblue"> | Captcha (cookie.txt add-onn)</font></a>
-    <script type="application/javascript" src="hqq_sh1.php?vid='.$vid.'"></script>
+    <!--<script type="application/javascript" src="hqq_sh1.php?vid='.$vid.'"></script>-->
     ';
 if ($cap == 1)  echo '<label id="hqq_msg">'.$msg_captcha."</label>";
     echo '</TD></TR>';
@@ -1783,7 +1795,7 @@ if ($cap == 1)  echo '<label id="hqq_msg">'.$msg_captcha."</label>";
    <!--<a href="intent:http://127.0.0.1:8080/scripts/filme/hqq_captcha.php#Intent;package=org.mozilla.firefox;S.title=Captcha;end" target="_blank"><font color="lightblue"> | Captcha (firefox)</font></a>-->
    <a href="intent:http://hqq.tv/sec/player/embed_player.php?gtoken=03&vid=1#Intent;package=org.mozilla.firefox;S.title=Captcha;end" target="_blank"><font color="lightblue"> | Captcha</font></a>
    <!--<a href="intent:http://127.0.0.1:8080/scripts/filme/hqq.html#Intent;package=org.mozilla.firefox;S.title=Captcha;end" target="_blank"><font color="lightblue"> | Captcha (v2)</font></a>-->
-   <script type="application/javascript" src="hqq_sh1.php?vid='.$vid.'"></script>
+   <!--<script type="application/javascript" src="hqq_sh1.php?vid='.$vid.'"></script>-->
    ';
 if ($cap == 1)  echo '<label id="hqq_msg">'.$msg_captcha."</label>";
     echo '</TD></TR>';

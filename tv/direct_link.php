@@ -247,6 +247,14 @@ if (count($pl) > 1) {
 if ($from=="tvhd-online") {
 $ua = $_SERVER['HTTP_USER_AGENT'];
 $ua="Mozilla/5.0 (Windows NT 10.0; rv:84.0) Gecko/20100101 Firefox/84.0";
+//echo $link;
+//echo time();
+// 1609488001
+// 1609531716
+//$link = preg_replace("/\d{10}/",time(),$link);
+//echo $link;
+  //$link="https://tvhd-online.com/playertv/1609488001/progold.html";
+  // https://tvhd-online.com/playertv/1609484401/progold.html
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $link);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
@@ -263,9 +271,14 @@ $ua="Mozilla/5.0 (Windows NT 10.0; rv:84.0) Gecko/20100101 Firefox/84.0";
   $t1=explode("source: '",$html);
   $t2=explode("'",$t1[1]);
   $l2=$t2[0];
+  if (!$l2) {
+   $t1=explode('source: "',$html);
+   $t2=explode('"',$t1[1]);
+   $l2=$t2[0];
+  }
   if (strpos($l2,"http") !== false)
    $out=$l2;
-  if (preg_match("/rcs\-rds\.ro/",$out)) {
+  if (preg_match("/rcs\-rds\.ro1/",$out)) {
   $t1=explode("id=",$link);
   $id=$t1[1];
   $l="https://realiptv.eu/digidata.php?id=".$id;
@@ -286,6 +299,7 @@ $ua="Mozilla/5.0 (Windows NT 10.0; rv:84.0) Gecko/20100101 Firefox/84.0";
   $out=$t3[0];
   }
   $link=$out;
+  //$link="https://v-e-00-cdn.rcs-rds.ro/dash/68/68.mpd";
   if ($flash <> "flash") {
    if (preg_match("/cmero\-ott\-live\-sec\.ssl\.cdn\.cra\.cz/",$link))
     $link=$link."|Origin=".urlencode("https://media.cms.protvplus.ro")."&Referer=".urlencode("https://media.cms.protvplus.ro");

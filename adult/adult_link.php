@@ -73,7 +73,7 @@ $type="mp4";
 $cookie=$base_cookie."adultc.dat";
 if (preg_match("/jizzbunker\.com|familyporn\.tv|zbporn\.com|trannytube\.net/",$host)) {
   $h=@file_get_contents($l);
-} elseif (preg_match("/pefilme\.info/",$l)) {
+} elseif (preg_match("/pefilme\.info|filmeleporno\.xxx/",$l)) {
   //$l="https://pefilme.info/video.php?id=159035";
   //echo $l;
   $ua="Mozilla/5.0 (Windows NT 10.0; rv:83.0) Gecko/20100101 Firefox/83.0";
@@ -83,9 +83,9 @@ if (preg_match("/jizzbunker\.com|familyporn\.tv|zbporn\.com|trannytube\.net/",$h
   $head=array('Accept: */*',
   'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
   'Accept-Encoding: deflate',
-  'Origin: https://pefilme.info',
+  'Origin: https://filmeleporno.xxx',
   'Connection: keep-alive',
-  'Referer: https://pefilme.info/');
+  'Referer: https://filmeleporno.xxx');
 
   //$ua = $_SERVER['HTTP_USER_AGENT'];
 
@@ -109,7 +109,7 @@ if (preg_match("/jizzbunker\.com|familyporn\.tv|zbporn\.com|trannytube\.net/",$h
   $h = curl_exec($ch);
   curl_close($ch);
 
-
+ //echo $h;
 ///////////////////////
 
 } else {
@@ -522,7 +522,7 @@ $out=$t2[0];
      $maxs = array_keys($m[1], max($m[1]));
      $out=$m[2][$maxs[0]];
   }
-} else if (preg_match("/pefilme\.info/",$host)) {
+} else if (preg_match("/pefilme\.info|filmeleporno\.xxx/",$host)) {
 //echo $h;
   $r=json_decode($h,1);
   //print_r ($r);
