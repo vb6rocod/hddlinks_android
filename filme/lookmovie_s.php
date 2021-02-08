@@ -18,7 +18,9 @@ $has_fav="yes";
 $has_search="yes";
 $has_add="yes";
 $has_fs="yes";
-$fav_target="lookmovie_s_fav.php?host=https://lookmovie.ag";
+$last_good="https://lookmovie.ag";
+$last_good="https://lookmovie.io";
+$fav_target="lookmovie_s_fav.php?host=".$last_good;
 $add_target="lookmovie_s_add.php";
 $add_file="";
 $fs_target="lookmovie_s_ep.php";
@@ -170,10 +172,10 @@ $ua="Mozilla/5.0 (Windows NT 10.0; rv:55.0) Gecko/20100101 Firefox/55.0";
 $r=array();
 //http://free2watch.net/tvseries/sort/latest/all/all/all
 if($tip=="release") {
-  $l="https://lookmovie.ag/shows/filter/?p=".$page;
+  $l=$last_good."/shows/filter/?p=".$page;
 } else {
   $search=str_replace(" ","%20",$tit);
-  $l="https://lookmovie.ag/shows/search/?p=".$page."&q=".$search;
+  $l=$last_good."/shows/search/?p=".$page."&q=".$search;
 }
 $host=parse_url($l)['host'];
 $head=array('Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
@@ -182,12 +184,12 @@ $head=array('Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $l);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-  curl_setopt($ch,CURLOPT_REFERER,"https://lookmovie.ag");
+  curl_setopt($ch,CURLOPT_REFERER,$last_good);
   curl_setopt($ch, CURLOPT_USERAGENT, $ua);
   //curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie);
   curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
-  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
-  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 25);
   $html = curl_exec($ch);
   curl_close($ch);
 //echo $html;

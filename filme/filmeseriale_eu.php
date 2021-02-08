@@ -167,14 +167,15 @@ if ($page==1) {
 }
 echo '</TR>'."\r\n";
 if ($tip == "release")
-  $l="https://vezi-online.eu/seriale/page/".$page."/";
+  $l="https://www.vezi-online.eu/seriale/page/".$page."/";
 else {
   $search=str_replace(" ","+",$tit);
   if ($page == 1)
-    $l="https://vezi-online.eu/?s=".$search;
+    $l="https://www.vezi-online.eu/?s=".$search;
   else
-    $l="https://vezi-online.eu/page/".$page."/?s=".$search;
+    $l="https://www.vezi-online.eu/page/".$page."/?s=".$search;
 }
+// https://www.vezi-online.eu/seriale/page/2/
 $r=array();
 $ua = $_SERVER['HTTP_USER_AGENT'];
 $host=parse_url($l)['host'];
@@ -191,26 +192,28 @@ $host=parse_url($l)['host'];
   curl_close($ch);
   //echo $html;
   if ($tip=="release") {
-  $videos = explode('article id="post-', $html);
+  $videos = explode('id="post-', $html);
   unset($videos[0]);
   $videos = array_values($videos);
   foreach($videos as $video) {
+    $t1=explode('"',$video);
+    $tip1=$t1[0];
     $t1=explode('href="',$video);
     $t2=explode('"',$t1[1]);
     $link=$t2[0];
     if (strpos($link,"http") === false) $link="https://".$host.$link;
-    $t3 = explode('>', $t1[2]);
-    $t4 = explode('<', $t3[1]);
+    $t3 = explode('alt="', $video);
+    $t4 = explode('"', $t3[1]);
     $t5=explode(', serial',$t4[0]);
     $title=trim($t5[0]);
     if (preg_match("/[\'|\"](http[\w\/\.\_\:\-\@]+\.jpg)[\'|\"]/",$video,$m))
      $image=trim($m[1]);
     else
      $image="blank.jpg";
-    if (strpos($link,"seriale") !== false && $title <> "DMCA") array_push($r ,array($title,$link, $image));
+    if (strpos($link,"seriale") !== false && $title <> "DMCA" && !preg_match("/featured/",$tip1)) array_push($r ,array($title,$link, $image));
   }
   } else {
-  $videos = explode('<article', $html);
+  $videos = explode('class="result-item', $html);
   unset($videos[0]);
   $videos = array_values($videos);
   foreach($videos as $video) {

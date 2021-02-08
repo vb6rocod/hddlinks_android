@@ -9,6 +9,7 @@ include ("../common.php");
 include ("../cloudflare.php");
 $last_good="https://www1.tvhub.ro";
 $last_good="https://tvhub.org";
+$last_good="https://tvhub.pro";
 $host=parse_url($last_good)['host'];
 $page = $_GET["page"];
 $tip= $_GET["tip"];
@@ -181,7 +182,7 @@ if ($tip=="search") {
    $l = "https://".$host."/page/".$page."/?s=".str_replace(" ","+",$tit);
 } else {
   $l="https://".$host."/category/film/page/".$page."/";
-  $l= "https://tvhub.org/filme-online-subtitrate/".$page."/";
+  //$l= "https://tvhub.org/filme-online-subtitrate/".$page."/";
 }
 $ua = $_SERVER['HTTP_USER_AGENT'];
   $ch = curl_init();
@@ -196,8 +197,10 @@ $ua = $_SERVER['HTTP_USER_AGENT'];
   curl_setopt($ch, CURLOPT_TIMEOUT, 15);
   $html = curl_exec($ch);
   curl_close($ch);
-$videos = explode('div id="mt-', $html);
-
+  $html=str_replace("<center>","",$html);
+  //echo $html;
+//$videos = explode('div id="mt-', $html);
+$videos=explode('div id="post-',$html);
 unset($videos[0]);
 $videos = array_values($videos);
 
@@ -206,10 +209,10 @@ foreach($videos as $video) {
   $t2 = explode('"', $t1[1]);
   $link = $t2[0];
 
-  $t1=explode('alt="',$video);
-  $t2_0=explode('"',$t1[1]);
-  $t3=str_replace("Vizioneaza Film Online","",$t2_0[0]);
-  $t4=explode("&#8211;",$t3);
+  $t3=explode('>',$t1[2]);
+  $t4=explode('<',$t3[1]);
+  $t5=str_replace("Vizioneaza Film Online","",$t4[0]);
+  $t4=explode("&#8211;",$t5);
   $title=trim($t4[0]);
   $title=prep_tit($title);
   $year="";

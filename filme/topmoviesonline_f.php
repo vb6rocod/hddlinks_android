@@ -18,6 +18,7 @@ $has_search="yes";
 $has_add="yes";
 $has_fs="yes";
 $ref="https://topmoviesonline.org";
+$ref="https://movieforfree.co";
 $host=parse_url($ref)['host'];
 $fav_target="topmoviesonline_f_fav.php?host=".$ref;
 $add_target="topmoviesonline_f_add.php";
@@ -175,15 +176,15 @@ echo '</TR>'."\r\n";
 
 if($tip=="release") {
   if ($page==1)
-   $l="https://topmoviesonline.org/movies/";
+   $l="https://".$host."/movies/";
   else
-   $l="https://topmoviesonline.org/movies/page/".$page."/";
+   $l="https://".$host."/movies/page/".$page."/";
 } else {
   $search=str_replace(" ","+",$tit);
   if ($page==1)
-  $l="https://topmoviesonline.org/?s=".$search;
+  $l="https://".$host."/?s=".$search;
   else
-  $l="https://topmoviesonline.org/page/".$page."/?s=".$search;
+  $l="https://".$host."/page/".$page."/?s=".$search;
 }
 $host=parse_url($l)['host'];
 
@@ -221,7 +222,7 @@ if ($tip=="release") {
    $t4 = explode('<', $t3[1]);
    $title = trim($t4[0]);
    $title=prep_tit($title);
-   $t1 = explode('src="', $video);
+   $t1 = explode('lazy-src="', $video);
    $t2 = explode('"', $t1[1]);
    $image = $t2[0];
   $rest = substr($title, -6);
@@ -248,7 +249,7 @@ if ($tip=="release") {
    $t5=explode('<',$t4[1]);
    $title = trim($t5[0]);
    $title=prep_tit($title);
-   $t1 = explode('src="', $video);
+   $t1 = explode('lazy-src="', $video);
    $t2 = explode('"', $t1[1]);
    $image = $t2[0];
   $rest = substr($title, -6);

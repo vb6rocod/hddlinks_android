@@ -89,14 +89,14 @@ $(document).on('keyup', '.imdb', isValid);
 <TD width="25%"><a href="tv/tvrplus_youtube.php?page=1,,TVR+" target="_blank">TVR+ (youtube)</a></TD>
 <TD width="25%"><a href="filme/starea_natiei.php" target="_blank">Starea Natiei</a></TD>
 <TD width="25%"><a href="filme/yt_playlist.php?token=&id=UC6Sn1XzRBCBl8UMyAb8_5PA&kind=channel&title=%28channel%29+PrimaTV+Romania&image=https://yt3.ggpht.com/-hMQUv-XEccM/AAAAAAAAAAI/AAAAAAAAAAA/Tek8sw-tzhU/s88-c-k-no-mo-rj-c0xffffff/photo.jpg" target="_blank">PrimaTV</a></TD>
-<TD width="25%"><a href="tv/tvhd-online.php" target="_blank">tvhd-online</a></TD>
+<TD width="25%"></TD>
 </TR>
 
 <TR>
 <TD width="25%"><a href="tv/iptv.php" target="_blank">IPTV International</a></TD>
 <TD width="25%"><a href="tv/playlist.php?title=Sport+IPTV&link=https://iptv-org.github.io/iptv/categories/sport.m3u" target="_blank">Sport IPTV</a></TD>
 <TD width="25%"><a href="tv/digifree.php" target="_blank">Digi Sport (Live)</a></TD>
-<TD width="25%"><a href="tv/tvhd-online1.php" target="_blank">tvhd-online</a></TD>
+<TD width="25%"></TD>
 </TR>
 <?php
 include ("common.php");

@@ -26,6 +26,8 @@ $l="https://false-promise.lookmovie.ag/api/v1/storage/shows/?slug=".$slug."&toke
 else
 $l="https://false-promise.lookmovie.ag/api/v1/storage/movies?id_movie=".$id."&token=".$token."&sk=null&step=1";
   //echo $l;
+// https://lookmovie.io/api/v1/security/movie-access?id_movie=55903&token=1&sk=&step=1
+// https://lookmovie.io/manifests/movies/json/55903/1612701882/MsWQp6FUROOY0aydGUxv9Q/master.m3u8
 $head=array('Accept: */*',
 'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
 'Accept-Encoding: deflate',
@@ -133,5 +135,5 @@ $h = @file_get_contents($l, false, $context);
   }
   }
 file_put_contents($base_cookie."look_token.txt",$link);
-echo '<font style="color:#64c8ff;font-size: 1em;">'.$link.'</font>';
+//echo '<font style="color:#64c8ff;font-size: 1em;">'.$link.'</font>';
 ?>

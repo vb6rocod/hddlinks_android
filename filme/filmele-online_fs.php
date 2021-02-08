@@ -1,7 +1,7 @@
 <!doctype html>
 <?php
 include ("../common.php");
-//error_reporting(0);
+error_reporting(0);
 $list = glob($base_sub."*.srt");
    foreach ($list as $l) {
     str_replace(" ","%20",$l);
@@ -158,6 +158,28 @@ $r=array();
 $s=array();
 $s_l=array();
 $ua = $_SERVER['HTTP_USER_AGENT'];
+//echo $filelink;
+  $ch = curl_init();
+  curl_setopt($ch, CURLOPT_URL, $link);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+  curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 10.0; rv:55.0) Gecko/20100101 Firefox/55.0');
+  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+  curl_setopt($ch, CURLOPT_ENCODING, "");
+  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+  $h = curl_exec($ch);
+  curl_close($ch);
+  //echo $h;
+  $t1=explode('class="movieplay"><iframe src="',$h);
+  $t2=explode('"',$t1[1]);
+  $filelink=$t2[0];
+  if (preg_match("/tt(\d+)/",$filelink,$m)) {
+    $imdbid=$m[1];
+    $link=$m[0];
+  }
+//echo $filelink;
+//die();
 $cookie=$base_cookie."vikv.dat";
 $ua = $_SERVER['HTTP_USER_AGENT'];
 $l="https://hls.hdv.fun/imdb/".$link;

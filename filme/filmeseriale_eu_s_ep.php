@@ -42,9 +42,9 @@ $ua = $_SERVER['HTTP_USER_AGENT'];
   curl_setopt($ch, CURLOPT_TIMEOUT, 25);
   $h = curl_exec($ch);
   curl_close($ch);
-
+//echo $h;
 $n=0;
-$videos = explode("<span class='se-t", $h);
+$videos = explode("class='se-t", $h);
 $sezoane=array();
 unset($videos[0]);
 //$videos = array_values($videos);
@@ -83,7 +83,7 @@ foreach($videos as $video) {
   echo '<table border="1" width="100%">'."\n\r";
   echo '<TR><td class="sez" style="color:black;background-color:#0a6996;color:#64c8ff;text-align:center" colspan="3">Sezonul '.($sez).'</TD></TR>';
   $n=0;
-  $vids = explode("div class='imagen", $video);
+  $vids = explode("class='imagen", $video);
   unset($vids[0]);
   //$vids = array_values($vids);
   $vids = array_reverse($vids);

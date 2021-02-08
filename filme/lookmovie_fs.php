@@ -137,6 +137,9 @@ function off() {
 <?php
 echo '<h2>'.$tit.$tit2.'</H2>';
 echo '<BR>';
+$r=array();
+$s=array();
+$srt="";
 if ($tip=="movie") {
 $ua = $_SERVER['HTTP_USER_AGENT'];
 $cookie=$base_cookie."hdpopcorns.dat";
@@ -154,24 +157,93 @@ $l=$link;
   curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
   $h = curl_exec($ch);
   curl_close($ch);
-  if (preg_match("/file\"\:\s*\"((.*?)Romanian\.vtt)/",$h,$s))
-    $sub="https://lookmovie.ag".$s[1];
-  elseif (preg_match("/file\"\:\s*\"((.*?)English\.vtt)/",$h,$s))
-    $sub="https://lookmovie.ag".$s[1];
+  $h=str_replace('" + window.location.host + "',"lookmovie.io",$h);
+  if (preg_match("/file\"\:\s*\"((.*?)(Romanian|ro)\.vtt)/",$h,$p))
+    $srt=$p[1];
+  elseif (preg_match("/file\"\:\s*\"((.*?)(English|en)\.vtt)/",$h,$p))
+    $srt=$p[1];
   else
-    $sub="";
-  //echo $h;
+    $srt="";
+  //print_r ($s);
+  //echo $srt;
   //$t1=explode("id_movie='",$h);
   //$t2=explode("'",$t1[1]);
   //$id=$t2[0];
   if (preg_match("/id_movie\:?\s*\'?(\d+)/",$h,$m))
    $id=$m[1];
-   $l="https://lookmovie.ag?sub=".$sub;
+  $l="https://lookmovie.io/api/v1/security/movie-access?id_movie=".$id."&token=1&sk=&step=1";
+  $opts = array(
+  'http'=>array(
+    'method'=>"GET",
+    'header'=> $head
+  )
+  );
+
+  $context = stream_context_create($opts);
+  $h = @file_get_contents($l, false, $context);
+  $x=json_decode($h,1);
+  //print_r ($r);
+  $time=$x['data']['expires'];
+  $token=$x['data']['accessToken'];
+  $l="https://lookmovie.io/manifests/movies/json/".$id."/".$time."/".$token."/master.m3u8";
+$opts = array(
+  'http'=>array(
+    'method'=>"GET",
+    'header'=> $head
+  )
+);
+
+$context = stream_context_create($opts);
+$h = @file_get_contents($l, false, $context);
+  if (!$slug) {
+  $x=json_decode($h,1);
+  //print_r ($r);
+  foreach ($x as $key => $value) {
+   if ($key <> "auto") {
+    $r[]=$value;
+    $s[]=$key;
+   }
+  }
+  } else {
+  //echo $h;
+   $base1=str_replace(strrchr($l, "/"),"/",$l);
+   $base2=getSiteHost($l);
+   if (preg_match("/\.m3u8/",$h)) {
+    $a1=explode("\n",$h);
+    for ($k=0;$k<count($a1)-1;$k++) {
+     if ($a1[$k][0] !="#" && $a1[$k]) $pl[]=trim($a1[$k]);
+    }
+    if ($pl[0][0] == "/")
+     $base=$base2;
+    elseif (preg_match("/http(s)?:/",$pl[0]))
+     $base="";
+    else
+     $base=$base1;
+    if (count($pl) > 1) {
+    if (preg_match_all("/RESOLUTION\=(\d+)/i",$h))
+     preg_match_all("/RESOLUTION\=(\d+)/i",$h,$m);
+    else
+     preg_match_all("/BANDWIDTH\=(\d+)/i",$h,$m);
+    $max_res=max($m[1]);
+    $arr_max=array_keys($m[1], $max_res);
+    $key_max=$arr_max[0];
+    $link=$base.$pl[$key_max];
+   } else {
+    $link=$base.$pl[0];
+   }
+  } else {
+   $link=$l;
+  }
+   $r[]=$link;
+   $s[]="auto";
+  }
+////////////////////////////////////////////////////////////////////////////////////////
 } else {
   $id=$link;
   $sub="";
   $ua = $_SERVER['HTTP_USER_AGENT'];
-  $l="https://lookmovie.ag/api/v1/shows/episode-subtitles/?id_episode=".$id;
+  $l="https://lookmovie.io/api/v1/shows/episode-subtitles/?id_episode=".$id;
+  //$l="https://lookmovie.io/api/v1/shows/episode-subtitles/?id_episode=119775";
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $l);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
@@ -183,33 +255,77 @@ $l=$link;
   $h = curl_exec($ch);
   curl_close($ch);
   $s=json_decode($h,1);
-  $srt=array();
+  //print_r ($s);
+  // https://lookmovie.io/storage2/shows/8134470-the-undoing-2020/9676-S1-E6-1610711843/subtitles/en.vtt
+  // shows/8134470-the-undoing-2020/9676-S1-E1-1610132346/subtitles/
+  $srt1=array();
+  $srt="";
   for ($k=0;$k<count($s);$k++) {
-    $srt[$s[$k]["languageName"]]="https://lookmovie.ag/".$s[$k]["shard"]."/".(time()*1000)."/".$s[$k]["storagePath"].$s[$k]["isoCode"].".vtt";
+    $srt1[$s[$k]["languageName"]]="https://lookmovie.io/".$s[$k]["shard"]."/".$s[$k]["storagePath"].$s[$k]["isoCode"].".vtt";
   }
-  if (isset($srt["Romanian"]))
-    $sub=$srt["Romanian"];
-  elseif (isset($srt["English"]))
-    $sub=$srt["English"];
+  if (isset($srt1["Romanian"]))
+    $srt=$srt1["Romanian"];
+  elseif (isset($srt1["English"]))
+    $srt=$srt1["English"];
   else
-    $sub="";
+    $srt="";
+$r=array();
+$s=array();
+$head=array('Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2');
+  $l="https://lookmovie.io/api/v1/security/show-access?slug=".$slug."&token=&step=2";
+  $opts = array(
+  'http'=>array(
+    'method'=>"GET",
+    'header'=> $head
+  )
+  );
+
+  $context = stream_context_create($opts);
+  $h = @file_get_contents($l, false, $context);
+  $x=json_decode($h,1);
+  //print_r ($r);
+  $time=$x['data']['expires'];
+  $token=$x['data']['accessToken'];
+  $l="https://lookmovie.io/manifests/movies/json/".$id."/".$time."/".$token."/master.m3u8";
+  $l="https://lookmovie.io/manifests/shows/json/".$token."/".$time."/".$id."/master.m3u8";
+$opts = array(
+  'http'=>array(
+    'method'=>"GET",
+    'header'=> $head
+  )
+);
+
+$context = stream_context_create($opts);
+$h = @file_get_contents($l, false, $context);
+//echo $h;
+  //if ($slug) {
+  $x=json_decode($h,1);
+  //print_r ($x);
+  foreach ($x as $key => $value) {
+   if ($key <> "auto") {
+    $r[]=$value;
+    $s[]=$key;
+   }
+  }
+  //}
   //echo $sub;
   //echo 'lookmovie_token.html?id='.$id.'&slug='.$slug;
-  $l="https://lookmovie.ag?sub=".$sub;
   // https://lookmovie.ag/api/v1/shows/episode-subtitles/?id_episode=96036
 }
-$r=array();
-$r[]=$l;
+// https://lookmovie.io/storage2/1612680271/movies/9028784-christmas-at-grand-valley-2018-1612657873/subtitles/en.vtt
+
+//$r[]=$l;
 echo '<table border="1" width="100%">';
-echo '<TR><TD class="mp">Alegeti un server: Server curent:<label id="server">'.parse_url($r[0])['host'].'</label>
-<input type="hidden" id="file" value="'.urlencode($r[0]).'"></td></TR></TABLE>';
+echo '<TR><TD class="mp">Alegeti un server: Server curent:<label id="server">'.$s[0].'</label>
+<input type="hidden" id="file" value="'.urlencode("https://lookmovie.ag?link=".$r[0]."&sub=".$srt).'"></td></TR></TABLE>';
 echo '<table border="1" width="100%"><TR>';
 $k=count($r);
 $x=0;
 for ($i=0;$i<$k;$i++) {
   if ($x==0) echo '<TR>';
-  $c_link=$r[$i];
-  $openload=parse_url($r[$i])['host'];
+  $c_link="https://lookmovie.ag?link=".$r[$i]."&sub=".$srt;
+  $openload=$s[$i];
   if (preg_match($indirect,$openload)) {
   echo '<TD class="mp"><a href="filme_link.php?file='.urlencode($c_link).'&title='.urlencode(unfix_t($tit.$tit2)).'" target="_blank">'.$openload.'</a></td>';
   } else
@@ -278,10 +394,10 @@ echo '</tr>';
 echo '</table>';
 echo '<br>';
 if ($tip=="movie") {
-if (preg_match("/English|Romanian/",$sub,$z))
+if (preg_match("/English|Romanian|en|ro/",$srt,$z))
  echo '<b>Subtitles: '.$z[0]."</b><BR>";
 } else {
-if (preg_match("/(en|ro)\.vtt/",$sub,$z))
+if (preg_match("/(en|ro)\.vtt/",$srt,$z))
  echo '<b>Subtitles: '.$z[1]."</b><BR>";
 }
 echo '<table border="0px" width="100%">
@@ -289,7 +405,7 @@ echo '<table border="0px" width="100%">
 <TD><font size="4"><b>Scurtaturi: 1=opensubtitles, 2=titrari, 3=subs, 4=subtitrari, 5=vizioneaza
 <BR>Scurtaturi: 7=opensubtitles, 8=titrari, 9=subs, 0=subtitrari (cauta imdb id)
 </b></font></TD></TR></TABLE>
-<iframe src="lookmovie_token.html?id='.$id.'&slug='.$slug.'"></iframe>
+<!--<iframe src="lookmovie_token.html?id='.$id.'&slug='.$slug.'"></iframe>-->
 ';
 include("../debug.html");
 echo '

@@ -22,7 +22,7 @@ $has_fs="no";
 $fav_target="";
 $add_target="filme_add.php";
 $add_file="";
-$fs_target="";
+$fs_target="filmele-online_fs.php";
 $target="filmele-online.php";
 /* ==================================================== */
 $base=basename($_SERVER['SCRIPT_FILENAME']);
@@ -200,7 +200,8 @@ $ua = $_SERVER['HTTP_USER_AGENT'];
   foreach($videos as $video) {
     $t1=explode('href="',$video);
     $t2=explode('"',$t1[1]);
-    $link=substr("https://filmele-online.com/server".$t2[0], 0, -1).".html";
+    //$link=substr("https://filmele-online.com/server".$t2[0], 0, -1).".html";
+    $link= "https://filmele-online.com".$t2[0];
     $t1=explode('oldtitle="',$video);
     $t2=explode('"',$t1[1]);
     $title=trim($t2[0]);
@@ -233,6 +234,8 @@ for ($k=0;$k<$c;$k++) {
     $link_f='filme_link.php?file='.urlencode($link).'&title='.urlencode(fix_t($title));
   else
     $link_f=$fs_target.'?tip=movie&link='.urlencode($link).'&title='.urlencode(fix_t($tit)).'&image='.$image."&sez=&ep=&ep_tit=&year=".$year;
+  $link_f=$fs_target.'?tip=movie&link='.urlencode($link).'&title='.urlencode(fix_t($title)).'&image='.$image."&sez=&ep=&ep_tit=&year=".$year;
+
   if ($n==0) echo '<TR>'."\r\n";
   $val_imdb="tip=movie&title=".urlencode(fix_t($tit_imdb))."&year=".$year."&imdb=".$imdb;
   $fav_link="file=".$add_file."&mod=add&title=".urlencode(fix_t($title))."&link=".urlencode($link)."&image=".urlencode($image)."&year=".$year;

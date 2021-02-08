@@ -9,6 +9,7 @@ include ("../common.php");
 include ("../cloudflare.php");
 $last_good="https://www1.tvhub.ro";
 $last_good="https://tvhub.org";
+$last_good="https://tvhub.pro";
 $host=parse_url($last_good)['host'];
 $page = $_GET["page"];
 $tip= $_GET["tip"];
@@ -189,6 +190,7 @@ if ($tip=="search") {
   curl_setopt($ch, CURLOPT_TIMEOUT, 15);
   $html = curl_exec($ch);
   curl_close($ch);
+  $html=str_replace("<center>","",$html);
 } else {
   //if ($page==1) $html=cf_pass("https://".$host,$cookie);
   $requestLink="https://".$host."/wp-admin/admin-ajax.php"; // e o problema la ei
@@ -206,6 +208,7 @@ if ($tip=="search") {
   curl_setopt($ch, CURLOPT_TIMEOUT, 15);
   $html = curl_exec($ch);
   curl_close ($ch);
+  $html=str_replace("<center>","",$html);
 }
 //echo $html;
 $r=array();
@@ -228,18 +231,21 @@ $r=array();
   }
   } else {
   //echo $html;
-  $videos = explode('<div id="mt-', $html);
+  $videos=explode('div id="post-',$html);
   unset($videos[0]);
   $videos = array_values($videos);
   //print_r ($videos);
   foreach($videos as $video) {
-    $t1 = explode('href="',$video);
-    $t2 = explode('"', $t1[1]);
-    $link = $t2[0];
+  $t1 = explode('href="', $video);
+  $t2 = explode('"', $t1[1]);
+  $link = $t2[0];
 
-    $t1 = explode('alt="', $video);
-    $t2 = explode('"', $t1[1]);
-    $title=$t2[0];
+  $t3=explode('>',$t1[2]);
+  $t4=explode('<',$t3[1]);
+  $t5=str_replace("Vizioneaza Film Online","",$t4[0]);
+  $t4=explode("&#8211;",$t5);
+  $title=trim($t4[0]);
+  $title=prep_tit($title);
     $t1=explode('src="',$video);
     $t2=explode('"',$t1[1]);
     $image=$t2[0];

@@ -136,6 +136,7 @@ echo '<BR>';
 $r=array();
 $s=array();
 //echo $link;
+$host=parse_url($link)['host'];
 $ua="Mozilla/5.0 (Windows NT 10.0; rv:80.0) Gecko/20100101 Firefox/80.0";
   $ch = curl_init($link);
   curl_setopt($ch, CURLOPT_USERAGENT, $ua);
@@ -150,7 +151,7 @@ $ua="Mozilla/5.0 (Windows NT 10.0; rv:80.0) Gecko/20100101 Firefox/80.0";
   $t1=explode("data-post='",$html);
   $t2=explode("'",$t1[1]);
   $id=$t2[0];
-$l="https://topmoviesonline.org/wp-admin/admin-ajax.php";
+$l="https://".$host."/wp-admin/admin-ajax.php";
 $post="action=doo_player_ajax&post=".$id."&nume=1&type=movie";
 //echo $post;
 $head=array('Accept: */*',
@@ -159,9 +160,9 @@ $head=array('Accept: */*',
 'Content-Type: application/x-www-form-urlencoded; charset=UTF-8',
 'X-Requested-With: XMLHttpRequest',
 'Content-Length: '.strlen($post).'',
-'Origin: https://topmoviesonline.org',
+'Origin: https://'.$host.'',
 'Connection: keep-alive',
-'Referer: https://topmoviesonline.org');
+'Referer: https://'.$host.'');
 
   $ch = curl_init($l);
   curl_setopt($ch, CURLOPT_USERAGENT, $ua);
@@ -192,7 +193,7 @@ $head=array('Accept: */*',
 $head=array('Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
 'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
 'Connection: keep-alive',
-'Referer: https://topmoviesonline.org');
+'Referer: https://'.$host.'');
 
   $ch = curl_init($l);
   curl_setopt($ch, CURLOPT_USERAGENT, $ua);
@@ -235,7 +236,7 @@ $head=array('Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image
   $videos = array_values($videos);
   foreach($videos as $video) {
    $t1=explode("'",$video);
-   $r[] = "https://player.ezylink.co/".$t1[0];
+   $r[] = $t1[0];
    $t1=explode(">",$video);
    $t2=explode("<",$t1[1]);
    $s[]=$t2[0];
@@ -267,6 +268,7 @@ $head=array('Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image
   //echo $h;
   //echo $html;
   */
+  //print_r ($r);
 echo '<table border="1" width="100%">';
 echo '<TR><TD class="mp">Alegeti un server: Server curent:<label id="server">'.$s[0].'</label>
 <input type="hidden" id="file" value="'.urlencode($r[0]).'"></td></TR></TABLE>';

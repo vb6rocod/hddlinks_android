@@ -711,6 +711,7 @@ $cookie=$base_cookie."hdpopcorns.dat";
   curl_setopt($ch, CURLOPT_TIMEOUT, 15);
   $h1 = curl_exec($ch);
   curl_close ($ch);
+  //echo $h1;
   $id=str_between($h1,"post_ID' value='","'");
   $id=str_between($h1,'data-id="','"');
   $t1=explode('eval(function(p,a,c,k,e,d)',$h1);
@@ -726,7 +727,7 @@ $cookie=$base_cookie."hdpopcorns.dat";
    $url="/wp-content/themes/vizer/inc/parts/single/field-ajax.php";
   $l=$scheme."://".$host.$url;
   if (preg_match("/tvhub/",$host))
-   $l="https://".$host."/wp-content/themes/grifus/loop/field-ajax.php";
+   $l="https://".$host."/wp-content/themes/serialenoi/field-ajax.php";
   else if (preg_match("/serialeonlinesubtitrate/",$host))
    $l="https://serialeonlinesubtitrate.ro/wp-content/themes/hdvix/field-ajax.php";
   //echo $post;
@@ -854,7 +855,7 @@ $cookie=$base_cookie."hdpopcorns.dat";
   $html = curl_exec($ch);
   curl_close ($ch);
   //echo $html;
-  $videos = explode("li id='player-option", $html);
+  $videos = explode("id='player-option-", $html);
   unset($videos[0]);
   $videos = array_values($videos);
   foreach($videos as $video) {
@@ -1090,7 +1091,7 @@ $cookie=$base_cookie."hdpopcorns.dat";
    curl_close ($ch);
    $html .=$h;
   }
-} elseif (strpos($filelink,"filmeserialehd.ro") !== false) {
+} elseif (strpos($filelink,"filmeserialehd.") !== false) {
   require_once("JavaScriptUnpacker.php");
   $cookie=$base_cookie."hdpopcorns.dat";
   $host=parse_url($filelink)['host'];
@@ -1219,6 +1220,23 @@ $cookie=$base_cookie."hdpopcorns.dat";
    //echo $h;
    $html =$h;
 } elseif (strpos($filelink,"filmele-online.com") !== false) {
+$ua = $_SERVER['HTTP_USER_AGENT'];
+//echo $filelink;
+  $ch = curl_init();
+  curl_setopt($ch, CURLOPT_URL, $filelink);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+  curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 10.0; rv:55.0) Gecko/20100101 Firefox/55.0');
+  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+  curl_setopt($ch, CURLOPT_ENCODING, "");
+  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+  $h = curl_exec($ch);
+  curl_close($ch);
+  //echo $h;
+  $t1=explode('class="movieplay"><iframe src="',$h);
+  $t2=explode('"',$t1[1]);
+  $filelink="https://filmele-online.com".$t2[0];
   $html='<iframe src="'.$filelink.'">';
 } elseif (preg_match($indirect,$filelink)) {
   $html='<iframe src="'.$filelink.'">';
@@ -1298,7 +1316,7 @@ $s=$s."|prostream\.to|videobin\.co|upstream\.to|playtvid\.com|jetload\.net|vidfa
 $s=$s."|(video|player)\.filmeserialeonline\.org|streamwire\.|cloudvid\.icu|mstream\.xyz|streamhoe\.online|videyo\.";
 $s=$s."|fastvid\.co|vidload\.net|rovideo\.net\/embed|eplayvid\.com|dood\.|mediashore\.org|uptostream\.com";
 $s=$s."|movcloud\.net|dogestream\.|streamtape\.|jawcloud\.|evoload\.|sendvid\.|easyload\.io|okstream\.";
-$s=$s."|youdbox\.com|filmele-online\.com|playtube\.|ninjastream\.to/i";
+$s=$s."|youdbox\.com|filmele-online\.com|playtube\.|ninjastream\.to|userload\.co|goplayer\.online/i";
 /////////////////////////////////////////////
 //$x=preg_grep($s,$links);
 //print_r ($x);
@@ -1732,7 +1750,7 @@ $cap=0;
 foreach($link_f as $k=>$val) {
 $server="";
 $server = parse_url($link_f[$k])["host"];
-if (preg_match("/hqq\.|waaw1?|netu|pajalusta|hindipix\./",$link_f[$k])) {
+if (preg_match("/hqq\.|waaw1?|netu|pajalusta|hindipix\.|goplayer\.online/",$link_f[$k])) {
   if (preg_match("/\?vid\=http/",$link_f[$k])) {
    $t1=explode("?vid",$link_f[$k]);
    $link_f[$k]=$t1[1];

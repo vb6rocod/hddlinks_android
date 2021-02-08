@@ -73,6 +73,7 @@ if (preg_match("/media\.cms\.protvplus\.ro/",$link)) {
   $t1=explode('src":"',$h);
   $t2=explode('"',$t1[1]);
   $l=$t2[0];
+  //echo $l;
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $l);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
@@ -108,10 +109,28 @@ if (count($pl) > 1) {
   $arr_max=array_keys($m[1], $max_res);
   $key_max=$arr_max[0];
   $link=$base.$pl[$key_max];
+} else {
+  $link=$l;
 }
 } else {
   $link=$l;
 }
+}
+if (preg_match("/looksport\.1616\.ro/",$link)) {
+  $ua="Mozilla/5.0 (Windows NT 10.0; rv:80.0) Gecko/20100101 Firefox/80.0";
+  $ch = curl_init();
+  curl_setopt($ch, CURLOPT_URL, $link);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
+  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 25);
+  $h = curl_exec($ch);
+  curl_close($ch);
+  $t1=explode('source src="',$h);
+  $t2=explode('"',$t1[1]);
+  $link=$t2[0];
 }
 if (preg_match("/bypassiptv\.eu/",$link)) {
   if ($flash <> "flash")
@@ -130,6 +149,52 @@ if(preg_match('/youtube\.com\/(v\/|watch\?v=|embed\/)([\w\-]+)/', $h, $match)) {
 } else {
   $link="";
 }
+}
+if (preg_match("/realiptv\.eu/",$link)) {
+    $ch = curl_init();
+    curl_setopt($ch, CURLOPT_URL, $link);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+    curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 10.0; rv:64.0) Gecko/20100101 Firefox/64.0');
+    curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+    curl_setopt($ch, CURLOPT_REFERER,"https://realiptv.eu");
+    curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
+    curl_setopt($ch, CURLOPT_TIMEOUT, 25);
+    $h = curl_exec($ch);
+    curl_close($ch);
+    $t1=explode(">",$h);
+    $t2=explode("<",$t1[1]);
+    $link=$t2[0];
+}
+if (preg_match("/canale\.live/",$link)) {
+    $ua="Mozilla/5.0 (Windows NT 10.0; rv:64.0) Gecko/20100101 Firefox/64.0";
+    $ch = curl_init();
+    curl_setopt($ch, CURLOPT_URL, $link);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+    curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 10.0; rv:64.0) Gecko/20100101 Firefox/64.0');
+    curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+    curl_setopt($ch, CURLOPT_REFERER,"https://canale.live");
+    curl_setopt($ch, CURLOPT_HEADER,1);
+    curl_setopt($ch, CURLOPT_NOBODY,0);
+    curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
+    curl_setopt($ch, CURLOPT_TIMEOUT, 25);
+    $h = curl_exec($ch);
+    curl_close($ch);
+    //echo $h;
+    //$h=file_get_contents($link);
+    if (preg_match_all("/location\:\s*(.+)/i",$h,$m))
+     $link=trim($m[1][count($m[1])-1]);
+    else {
+     $t1=explode("source: '",$h);
+     $t2=explode("'",$t1[1]);
+     $link=$t2[0];
+    }
+    if ($flash <> "flash") {
+     $link=$link."|Origin=".urlencode("https://canale.live")."&Referer=".urlencode("https://canale.live");
+     $link=$link."&User-Agent=".urlencode($ua);
+    }
+     //$link=trim($m[1]);
 }
 if (preg_match("/tvhd-online1\.com/",$link)) {
     $ch = curl_init();
@@ -255,12 +320,32 @@ $ua="Mozilla/5.0 (Windows NT 10.0; rv:84.0) Gecko/20100101 Firefox/84.0";
 //echo $link;
   //$link="https://tvhd-online.com/playertv/1609488001/progold.html";
   // https://tvhd-online.com/playertv/1609484401/progold.html
+  $l="https://tvhd-online.com";
+  $ch = curl_init();
+  curl_setopt($ch, CURLOPT_URL, $l);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
+  curl_setopt($ch, CURLOPT_REFERER,"https://tvhd-online.com");
+  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+  curl_setopt($ch, CURLOPT_HEADER,1);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+  $h = curl_exec($ch);
+  curl_close($ch);
+      $t1=explode("PHPSESSID=",$h);
+      $t2=explode(";",$t1[1]);
+      $ses=$t2[0];
+$head=array('Origin: https://tvhd-online.com',
+'Cookie: PHPSESSID='.$ses);
+//print_r ($head);
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $link);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
   curl_setopt($ch, CURLOPT_USERAGENT, $ua);
   curl_setopt($ch, CURLOPT_REFERER,"https://tvhd-online.com");
   curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+curl_setopt($ch, CURLOPT_HTTPHEADER,$head);
   curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
   curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
   curl_setopt($ch, CURLOPT_TIMEOUT, 15);
@@ -303,6 +388,8 @@ $ua="Mozilla/5.0 (Windows NT 10.0; rv:84.0) Gecko/20100101 Firefox/84.0";
   if ($flash <> "flash") {
    if (preg_match("/cmero\-ott\-live\-sec\.ssl\.cdn\.cra\.cz/",$link))
     $link=$link."|Origin=".urlencode("https://media.cms.protvplus.ro")."&Referer=".urlencode("https://media.cms.protvplus.ro");
+   if (preg_match("/tvhd\-online\.com\/iptvlive/",$link))
+    $link=$link."|Cookie=".urlencode("PHPSESSID=".$ses)."&Referer=".urlencode("https://tvhd-online.com")."&Origin=".urlencode("https://tvhd-online.com")."&User-Agent=".urlencode($ua);
   }
 }
 if ($from=="teleon") {

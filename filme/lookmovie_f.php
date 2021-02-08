@@ -19,7 +19,9 @@ $has_fav="yes";
 $has_search="yes";
 $has_add="yes";
 $has_fs="yes";
-$fav_target="lookmovie_f_fav.php?host=https://lookmovie.ag";
+$last_good="https://lookmovie.ag";
+$last_good="https://lookmovie.io";
+$fav_target="lookmovie_f_fav.php?host=".$last_good;
 $add_target="lookmovie_f_add.php";
 $add_file="";
 $fs_target="lookmovie_fs.php";
@@ -171,20 +173,16 @@ $ua = $_SERVER['HTTP_USER_AGENT'];
 $ua="Mozilla/5.0 (Windows NT 10.0; rv:55.0) Gecko/20100101 Firefox/55.0";
 if($tip=="release") {
  if (strpos($ua,"Windows") !== false)
-  $l="https://lookmovie.ag/?p=".$page."&r=1";
+  $l=$last_good."/?p=".$page."&r=1";
  else
-  $l="https://lookmovie.ag/page/".$page;
+  $l=$last_good."/page/".$page;
 } else {
   $search=str_replace(" ","%20",$tit);
-  $l="https://lookmovie.ag/movies/search/?p=".$page."&q=".$search;
+  $l=$last_good."/movies/search/?p=".$page."&q=".$search;
 }
 $host=parse_url($l)['host'];
 $cookie=$base_cookie."hdpopcorns.dat";
-if ($page==10000 && $tip=="release") {
- $l1="https://lookmovie.ag";
- $h=cf_pass($l1,$cookie);
- //$h=cf_pass($l1,$cookie);
-}
+
 //echo $h;
 
 $head=array('Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
@@ -193,7 +191,7 @@ $head=array('Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $l);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-  curl_setopt($ch,CURLOPT_REFERER,"https://lookmovie.ag");
+  curl_setopt($ch,CURLOPT_REFERER,$last_good);
   curl_setopt($ch, CURLOPT_USERAGENT, $ua);
   curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie);
   curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);

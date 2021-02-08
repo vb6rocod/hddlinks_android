@@ -133,6 +133,29 @@ function off() {
 <?php
 echo '<h2>'.$tit.$tit2.'</H2>';
 echo '<BR>';
+function unjuice($source) {
+  $juice = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=";
+  $pat='@JuicyCodes.Run\(([^\)]+)@';
+  if (preg_match($pat,$source,$m)) {
+  $e=preg_replace('/\"\s*\+\s*\"/',"",$m[1]);
+  $e=preg_replace('/[^A-Za-z0-9+\\/=]/',"",$e);
+  $t = "";
+  $n=$r=$i=$s=$o=$u=$a=$f=0;
+  while ($f < strlen($e)) {
+    $s = strpos($juice,$e[$f]);$f+=1;
+    $o = strpos($juice,$e[$f]);$f+=1;
+    $u = strpos($juice,$e[$f]);$f+=1;
+    $a = strpos($juice,$e[$f]);$f+=1;
+    $n = $s << 2 | $o >> 4; $r = (15 & $o) << 4 | $u >> 2; $i = (3 & $u) << 6 | $a;
+    $t .= chr($n);
+    if (64 != $u) $t .= chr($r);
+    if (64 != $a) $t .= chr($i);
+  }
+  return $t;
+  }
+  return $source;
+}
+//echo $link;
 $host=parse_url($link)['host'];
 $ua="Mozilla/5.0 (Windows NT 10.0; rv:80.0) Gecko/20100101 Firefox/80.0";
   $ch = curl_init($link);
@@ -186,6 +209,7 @@ $head=array('Accept: */*',
   //$l="https://go.onionplay.is/iAt";
 
   //$l="https://go.onionplay.is/nNY";
+  //echo $l;
 $head=array('Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
 'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
 'Accept-Encoding: deflate',
@@ -207,6 +231,13 @@ $head=array('Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image
   $h = curl_exec($ch);
   curl_close ($ch);
   //echo $h;
+  $out="";
+  $h1=unjuice($h);
+  require_once("JavaScriptUnpacker.php");
+  $jsu = new JavaScriptUnpacker();
+  $out = $jsu->Unpack($h1);
+  //echo $out;
+//echo $h;
 
   $t1=explode("= [",$h);
   $t2=explode("]",$t1[1]);
@@ -218,7 +249,7 @@ $head=array('Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image
   $d=$t2[0];
   //echo $d;
   //die();
-  $out="";
+
   for ($k=0;$k<count($c);$k++) {
    $out .=chr($c[$k]-$d);
   }
@@ -226,14 +257,23 @@ $head=array('Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image
   $t1=explode('redirect").attr("href","',$out);
   $t2=explode('"',$t1[2]);
   $l=$t2[0];
-
+  if (!$l) {
   $t1=explode("window.location.replace('",$h);
   $t2=explode("'",$t1[1]);
   $l=$t2[0];
+  }
+  if (!$l) {
   $t1=explode('<section>',$out);
   $t2=explode('href="',$t1[1]);
   $t3=explode('"',$t2[1]);
   $l=$t3[0];
+  }
+  if (!$l) {
+  $t1=explode('file":"',$out);
+  $t2=explode('"',$t1[1]);
+  $l=$t2[0];
+  }
+  //echo $l;
   $r=array();
   if (preg_match("/2embed.ru/",$l)) {
   $ua="Mozilla/5.0 (Windows NT 10.0; rv:80.0) Gecko/20100101 Firefox/80.0";
