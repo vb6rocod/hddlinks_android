@@ -125,7 +125,12 @@ foreach($arr as $key => $value) {
 	$link = urldecode($arr[$key]["link"]);
     $title = unfix_t(urldecode($key));
     $image=urldecode($arr[$key]["image"]);
-    $image=$host.parse_url($image)['path'];
+    //$image=$host.parse_url($image)['path'];
+    // content/uploads/2020/09/eD1YeAGlYvdxab3PZV66wAyd2Dx-185x278.jpg
+    // zeroneplus.stream/2021/02/gKnhEsjNefpKnUdAkn7INzIFLSu-185x278.jpg
+    $image=str_replace("content/uploads/","",$image);
+    $image=str_replace(parse_url($host)['host'],"zeroneplus.stream",$image);
+    $image=str_replace("onionplay.co","zeroneplus.stream",$image);
   $rest = substr($title, -6);
   if (preg_match("/\((\d{4})\)/",$rest,$m)) {
    $year=$m[1];
@@ -140,7 +145,7 @@ foreach($arr as $key => $value) {
   if ($n==0) echo '<TR>'."\r\n";
   $val_imdb="tip=movie&title=".urlencode(fix_t($tit_imdb))."&year=".$year."&imdb=".$imdb;
   $fav_link="file=&mod=del&title=".urlencode(fix_t($title))."&link=".urlencode($link)."&image=".urlencode($image)."&year=".$year;
-  $image="r_m.php?file=".$image;
+  //$image="r_m.php?file=".$image;
   if ($tast == "NU") {
     echo '<td class="mp" width="25%"><a href="'.$link_f.'" id="myLink'.$w.'" target="_blank" onmousedown="isKeyPressed(event)">
     <img id="myLink'.$w.'" src="'.$image.'" width="'.$width.'" height="'.$height.'"><BR>'.$title.'</a>

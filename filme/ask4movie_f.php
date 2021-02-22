@@ -14,6 +14,7 @@ $width="200px";
 //$height="200*(450/253";
 $height=intval(200*(253/450))."px";
 $last_good="https://ask4movie.co";
+$last_good="https://ask4movie.cc";
 $host=parse_url($last_good)['host'];
 /* ==================================================== */
 $has_fav="yes";

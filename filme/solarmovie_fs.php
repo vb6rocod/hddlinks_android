@@ -1,7 +1,7 @@
 <!doctype html>
 <?php
 include ("../common.php");
-error_reporting(0);
+//error_reporting(0);
 $list = glob($base_sub."*.srt");
    foreach ($list as $l) {
     str_replace(" ","%20",$l);
@@ -38,6 +38,8 @@ $year=$_GET["year"];
 if ($tip=="movie") {
 $tit2="";
 } else {
+$t1=explode("- Season",$tit);
+$tit=trim($t1[0]);
 if ($ep_title)
    $tit2=" - ".$sez."x".$ep." ".$ep_title;
 else
@@ -90,7 +92,7 @@ function openlink(link) {
   }
 }
 function changeserver(s,t) {
-  document.getElementById('server').innerHTML = decodeURI(s);
+  document.getElementById('server').innerHTML = s;
   document.getElementById('file').value=t;
 }
    function zx(e){
@@ -133,56 +135,56 @@ function off() {
 <?php
 echo '<h2>'.$tit.$tit2.'</H2>';
 echo '<BR>';
-$r=array();
-$s=array();
-//echo $link;
-//$link="https://anilist1.ir/?dir=Movie/2017/A%20Doggone%20Hollywood";
-$ua="Mozilla/5.0 (Windows NT 10.0; rv:63.0) Gecko/20100101 Firefox/63.0";
-if ($tip=="movie") {
+$ua = $_SERVER['HTTP_USER_AGENT'];
+$ua="Mozilla/5.0 (Windows NT 10.0; rv:80.0) Gecko/20100101 Firefox/80.0";
 $host=parse_url($link)['host'];
-$scheme=parse_url($link)['scheme'];
-$link=str_replace(" ","%20",$link);
-$link=prep_tit($link);
-  $ch = curl_init();
-  curl_setopt($ch, CURLOPT_URL, $link);
-  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+//echo $host;
+//echo $link;
+if ($tip=="movie") {
+  preg_match("/(\d+)\.html/",$link,$m);
+  $id=$m[1];
+  $id_ep="1";
+  $l="https://".$host."/movie_episodes/".$id;
+  $ch = curl_init($l);
   curl_setopt($ch, CURLOPT_USERAGENT, $ua);
   curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER  ,1);  // RETURN THE CONTENTS OF THE CALL
+  //curl_setopt($ch, CURLOPT_HTTPHEADER, $head);
   curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
-  curl_setopt($ch, CURLOPT_TIMEOUT, 25);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
   $html = curl_exec($ch);
-  curl_close($ch);
-$t1=explode("<ul",$html);
-$t2=explode("</ul",$t1[1]);
-$html=$t2[0];
-
-$videos = explode('href="', $html);
-unset($videos[0]);
-$videos = array_values($videos);
-
-foreach($videos as $video) {
-    $t1 = explode('"', $video);
-    $link = $scheme."://".$host."/".$t1[0];
-    $t2 = explode('flex-1 truncate">', $video);
-    $t3 = explode('<', $t2[1]);
-    $title = trim($t3[0]);
-    $title=prep_tit($title);
-    //$title=prep_tit($title);
-    if ($title <> "..") {
-     $r[]=prep_tit($link);
-     //$s[]=$title;
-     $s[]=urlencode(substr(strrchr($link, "/"), 1));
-    }
-}
+  curl_close ($ch);
+  $x=json_decode($html,1);
+  //print_r ($x);
+  $h=$x['html'];
+  $r=array();
+  $s=array();
+  $videos=explode('li class="ep-item',$h);
+  unset($videos[0]);
+  $videos = array_values($videos);
+  foreach($videos as $video) {
+    $t1=explode('data-server="',$video);
+    $t2=explode('"',$t1[1]);
+    $id_serv=$t2[0];
+    $l="https://".$host."/movie_embed/".$id."/".$id_ep."/".$id_serv;
+    $t1=explode('</i>',$video);
+    $t2=explode('<',$t1[1]);
+    $svr_name="Server ".$id_serv." - ".trim($t2[0]);
+    $r[]=$l;
+    $s[]=$svr_name;
+  }
 } else {
- $r[]=prep_tit($link);
- $s[]=urlencode(substr(strrchr($link, "/"), 1));
-
+  $r=array();
+  $s=array();
+  $svr_name=array();
+  for ($k=1;$k<4;$k++) {
+    $r[]=$link.$k;
+    $s[]="Server ".$k;
+  }
 }
-//print_r ($r);
 echo '<table border="1" width="100%">';
-echo '<TR><TD class="mp">Alegeti o varianta :<label id="server">'.urldecode($s[0]).'</label>
+echo '<TR><TD class="mp">Alegeti un server: Server curent:<label id="server">'.$s[0].'</label>
 <input type="hidden" id="file" value="'.urlencode($r[0]).'"></td></TR></TABLE>';
 echo '<table border="1" width="100%"><TR>';
 $k=count($r);
@@ -190,11 +192,11 @@ $x=0;
 for ($i=0;$i<$k;$i++) {
   if ($x==0) echo '<TR>';
   $c_link=$r[$i];
-  $openload=$s[$i];
+  $openload=parse_url($r[$i])['host'];
   if (preg_match($indirect,$openload)) {
-  echo '<TD class="mp"><a href="filme_link.php?file='.urlencode($c_link).'&title='.urlencode(unfix_t($tit.$tit2)).'" target="_blank">'.urldecode($openload).'</a></td>';
+  echo '<TD class="mp"><a href="filme_link.php?file='.urlencode($c_link).'&title='.urlencode(unfix_t($tit.$tit2)).'" target="_blank">'.$s[$i].'</a></td>';
   } else
-  echo '<TD class="mp"><a id="myLink" href="#" onclick="changeserver('."'".$openload."','".urlencode($c_link)."'".');return false;">'.urldecode($openload).'</a></td>';
+  echo '<TD class="mp"><a id="myLink" href="#" onclick="changeserver('."'".$s[$i]."','".urlencode($c_link)."'".');return false;">'.$s[$i].'</a></td>';
   $x++;
   if ($x==6) {
     echo '</TR>';
@@ -224,10 +226,6 @@ if ($tip=="movie") {
   $from="";
   $link_page="";
 }
-  $rest = substr($tit3, -6);
-  if (preg_match("/\((\d+)\)/",$rest,$m)) {
-   $tit3=trim(str_replace($m[0],"",$tit3));
-  }
 $sub_link ="from=".$from."&tip=".$tip."&sez=".$sez."&ep=".$ep."&imdb=".$imdbid."&title=".urlencode(fix_t($tit3))."&link=".$link_page."&ep_tit=".urlencode(fix_t($tit2))."&year=".$year;
 echo '<br>';
 echo '<table border="1" width="100%">';

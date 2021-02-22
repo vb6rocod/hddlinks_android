@@ -10,8 +10,8 @@ $year=$_GET['year'];
 /* ======================================= */
 $width="200px";
 $height="100px";
-$fs_target="swatchseries_fs.php";
-$has_img="no";
+$fs_target="topmoviesonline_fs.php";
+$has_img="yes";
 ?>
 <html>
 <head>
@@ -30,26 +30,35 @@ function str_between($string, $start, $end){
 	return substr($string,$ini,$len);
 }
 echo '<h2>'.$tit.'</h2>';
-$requestLink=$link;
-  $ch = curl_init($requestLink);
-  curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows; U; Windows NT 6.1; en-US; rv:1.9.1.2) Gecko/20090729 Firefox/3.5.2 GTB5');
-  curl_setopt($ch, CURLOPT_REFERER, "https://www1.swatchseries.to");
+$ua="Mozilla/5.0 (Windows NT 10.0; rv:80.0) Gecko/20100101 Firefox/80.0";
+
+$head=array('Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
+'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
+'Accept-Encoding: deflate',
+'Connection: keep-alive');
+//echo $link;
+  $ch = curl_init($link);
+  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
   curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER  ,1);  // RETURN THE CONTENTS OF THE CALL
   curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+  curl_setopt($ch, CURLOPT_HTTPHEADER,$head);
+  //curl_setopt($ch, CURLOPT_COOKIEJAR, $cookie);
+  //curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie);
+  //curl_setopt($ch, CURLOPT_HEADER,1);
   curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
   curl_setopt($ch, CURLOPT_TIMEOUT, 15);
   $h = curl_exec($ch);
   curl_close ($ch);
-
+//echo $h;
 $n=0;
-$videos = explode('div  itemprop="season', $h);
+$videos = explode("<span class='se-t", $h);
 $sezoane=array();
 unset($videos[0]);
 //$videos = array_values($videos);
 $videos = array_reverse($videos);
 foreach($videos as $video) {
-  $t1=explode('itemprop="name">Season',$video);
+  $t1=explode(">",$video);
   $t2=explode("<",$t1[1]);
   $sezoane[]=trim($t2[0]);
 }
@@ -75,38 +84,39 @@ if ($p < 10 && $p > 0 && $k > 9) {
 echo '</TABLE>';
 
 foreach($videos as $video) {
-  $t1=explode('itemprop="name">Season',$video);
+  $t1=explode(">",$video);
   $t2=explode("<",$t1[1]);
   $season=trim($t2[0]);
   $sez = $season;
   echo '<table border="1" width="100%">'."\n\r";
   echo '<TR><td class="sez" style="color:black;background-color:#0a6996;color:#64c8ff;text-align:center" colspan="3">Sezonul '.($sez).'</TD></TR>';
   $n=0;
-  $vids = explode('li id="episode', $video);
+  $vids = explode("<li class='mark", $video);
   unset($vids[0]);
-  //$videos = array_values($videos);
+  //$vids = array_values($vids);
   $vids = array_reverse($vids);
   foreach($vids as $vid) {
   $img_ep="";
   $episod="";
   $ep_tit="";
-  $t1=explode('href="',$vid);
-  $t2=explode('"',$t1[1]);
+  $t1=explode("href='",$vid);
+  $t2=explode("'",$t1[1]);
   $link=$t2[0];
-  $t1=explode('episodenumber" content="',$vid);
-  $t2=explode('"',$t1[1]);
-  $episod=trim($t2[0]);;
-
-  $img_ep=$image;
-  $t0=explode('itemprop="name"',$vid);
-  $t1=explode('>',$t0[1]);
-  $t2=explode('<',$t1[1]);
-  $title=$t2[0];
-  //$ep_tit=html_entity_decode($t2[0]);
-  $title=str_replace("&nbsp;"," ",$title);
-  $title=prep_tit($title);
-
-  $ep_tit=trim(preg_replace("/Episode\s+\d+/","",$title));;
+  $t3=explode(">",$t1[1]);
+  $t4=explode("<",$t3[1]);
+  $ep_tit=$t4[0];
+  $t1=explode("src='",$vid);
+  $t2=explode("'",$t1[1]);
+  $img_ep=$t2[0];
+  if (preg_match("/\.png/",$img_ep)) $img_ep=$image;
+  $t1=explode("numerando'>",$vid);
+  $t2=explode("<",$t1[1]);
+  $num=$t2[0];
+  if (preg_match("/\d+\s*\-\s*(\d+)/",$num,$m)) {
+    $episod=$m[1];
+  } else {
+    $episod="";
+  }
   if ($ep_tit)
    $ep_tit_d=$season."x".$episod." ".$ep_tit;
   else

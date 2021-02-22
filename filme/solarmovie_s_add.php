@@ -7,7 +7,7 @@ $mod=$_POST["mod"];
 $link=$_POST["link"];
 $title=$_POST["title"];
 $image=urldecode($_POST["image"]);
-$file=$base_fav."123fmovies_s.dat";
+$file=$base_fav."solarmovie_s.dat";
 $arr=array();
 $h="";
 if (file_exists($file)) {
@@ -37,42 +37,12 @@ if ($mod=="add") {
   if (!$found) {
     $arr[$title]["link"]=$link;
     $arr[$title]["image"]=$image;
-  $ua="Mozilla/5.0 (Windows NT 10.0; rv:63.0) Gecko/20100101 Firefox/63.0";
-  $ch = curl_init($link);
-  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
-  curl_setopt($ch,CURLOPT_REFERER,"https://123fmovies.best");
-  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
-  curl_setopt($ch, CURLOPT_RETURNTRANSFER  ,1);  // RETURN THE CONTENTS OF THE CALL
-  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
-  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
-  $html = curl_exec($ch);
-  curl_close ($ch);
-  if (preg_match("/img\s*src\=\"(.*?)\"/",$html,$m)) {
-  $image=$m[1];
-  $arr[$title]["image"]=$image;
-  }
     echo "Am adaugat serialul ".unfix_t(urldecode($title));
   }
   ksort($arr);
   } else {
     $arr[$title]["link"]=$link;
     $arr[$title]["image"]=$image;
-  $ua="Mozilla/5.0 (Windows NT 10.0; rv:63.0) Gecko/20100101 Firefox/63.0";
-  $ch = curl_init($link);
-  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
-  curl_setopt($ch,CURLOPT_REFERER,"https://123fmovies.best");
-  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
-  curl_setopt($ch, CURLOPT_RETURNTRANSFER  ,1);  // RETURN THE CONTENTS OF THE CALL
-  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
-  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
-  $html = curl_exec($ch);
-  curl_close ($ch);
-  if (preg_match("/img\s*src\=\"(.*?)\"/",$html,$m)) {
-  $image=$m[1];
-  $arr[$title]["image"]=$image;
-  }
     echo "Am adaugat serialul ".unfix_t(urldecode($title));
   }
   $out="";

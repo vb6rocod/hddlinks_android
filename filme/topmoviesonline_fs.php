@@ -152,7 +152,10 @@ $ua="Mozilla/5.0 (Windows NT 10.0; rv:80.0) Gecko/20100101 Firefox/80.0";
   $t2=explode("'",$t1[1]);
   $id=$t2[0];
 $l="https://".$host."/wp-admin/admin-ajax.php";
+if ($tip == "movie")
 $post="action=doo_player_ajax&post=".$id."&nume=1&type=movie";
+else
+$post="action=doo_player_ajax&post=".$id."&nume=1&type=tv";
 //echo $post;
 $head=array('Accept: */*',
 'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
@@ -187,7 +190,7 @@ $head=array('Accept: */*',
   $t2=explode("'",$t1[1]);
   $l=$t2[0];
   }
-  //echo $l;
+  $l=trim($l);
   //$l="https://ezylink.co/lXg5";
   // https://newslink.club/AdOz
 $head=array('Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',

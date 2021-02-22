@@ -405,11 +405,51 @@ $ua = $_SERVER['HTTP_USER_AGENT'];
   $html = curl_exec($ch);
   curl_close($ch);
   $link="";
-  $t1=explode('source src="',$html);
-  $t2=explode('"',$t1[1]);
-  $l2=$t2[0];
+  //echo $html;
+  $t1=explode('<source',$html);
+  $t2=explode('src="',$t1[1]);
+  $t3=explode('"',$t2[1]);
+  $l2=$t3[0];
   if (strpos($l2,"http") !== false)
    $link=$l2;
+}
+if ($from=="ustream") {
+  $t1=explode("id=",$link);
+  $id=$t1[1];
+  $l="https://www.ustream.to/stream_original.php?id=".$id."&";
+  $ua="Mozilla/5.0 (Windows NT 10.0; rv:85.0) Gecko/20100101 Firefox/85.0";
+  $head=array('Accept: */*',
+  'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
+  'Accept-Encoding: deflate',
+  'Origin: https://beef1999.blogspot.com',
+  'Connection: keep-alive',
+  'Referer: https://beef1999.blogspot.com');
+
+  $ch = curl_init();
+  curl_setopt($ch, CURLOPT_URL, $l);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
+  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+  curl_setopt($ch, CURLOPT_HTTPHEADER, $head);
+  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 25);
+  $h = curl_exec($ch);
+  curl_close($ch);
+  require_once("../filme/JavaScriptUnpacker.php");
+  $t1=explode("var x_first_ua",$h);
+  $jsu = new JavaScriptUnpacker();
+  $out = $jsu->Unpack($t1[1]);
+  $t1=explode('var file_name="',$out);
+  $t2=explode('"',$t1[1]);
+  $fn=$t2[0];
+  $t1=explode('var jdtk="',$out);
+  $t2=explode('"',$t1[1]);
+  $token=$t2[0];
+  // https://hls.ustream.to/Antena-1-Romania.m3u8?token=e5b-52f-f5f-f97-973-5fc-342-f0c-25b-f20-88d-8bd-d6a-113-7d3-62a-6a9-6f8-6c1-09c-039-4
+  $link = "https://hls.ustream.to/".$fn."?token=".$token;
+  if ($token && $flash <> "flash")
+   $link=$link."|Referer=".urlencode("https://beef1999.blogspot.com")."&Origin=".urlencode("https://beef1999.blogspot.com");
 }
 if ($from=="b1tv") {
   $ch = curl_init();
@@ -490,6 +530,7 @@ if ($from=="digilive") {
   curl_setopt($ch, CURLOPT_TIMEOUT, 15);
   $h = curl_exec($ch);
   curl_close($ch);
+  //echo $h;
   $t1=explode("videoLink = '",$h);
   $t2=explode("'",$t1[1]);
   $link=$t2[0];
@@ -676,7 +717,7 @@ if ($from=="moldova") {
     curl_close($ch);
     $t1=explode("loadSource('",$h);
     $t2=explode("'",$t1[1]);
-    $link="http://trm.md".$t2[0];
+    $link="http://www.trm.md".$t2[0];
     //$h=file_get_contents($cookie);
     //preg_match("/cf_clearance\s+(\S+)/",$h,$m);
     //print_r ($m);
@@ -737,13 +778,21 @@ if ($from=="flc1") {
 if ($from=="digifree") {
   $l="http://balancer2.digi24.ro/?scope=".$link."&type=hls&quality=hq&outputFormat=jsonp&callback=jsonp_callback_1";
   //echo $l;
+$head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:85.0) Gecko/20100101 Firefox/85.0',
+'Accept: */*',
+'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
+'Accept-Encoding: deflate',
+'Referer: https://digiapis.rcs-rds.ro',
+'Origin: https://digiapis.rcs-rds.ro',
+'Connection: keep-alive');
   $l="http://balancer2.digi24.ro/streamer/make_key.php";
+$proxy="86.120.79.84:4145";
+
   $key=file_get_contents($l);
-  //echo $h;                    // abr
-  $l="http://balancer2.digi24.ro/streamer.php?&scope=".$link."&key=".$key."&outputFormat=json&type=abr&quality=hq";  //&is=4&ns=digi24&pe=site&s=site&sn=digi24.ro&p=browser&pd=windows
-  $proxy="79.115.245.227:8080";
-  $proxy="188.27.137.163:30987";
-  //$proxy="86.124.162.105:9090";
+  //echo $h;
+  $proxy="86.123.166.109:8080";
+
+/*
     $ch = curl_init();
     curl_setopt($ch, CURLOPT_URL, $l);
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
@@ -752,12 +801,48 @@ if ($from=="digifree") {
     curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
     //curl_setopt($ch, CURLOPT_REFERER, "http://207.180.233.100:2539");
     //curl_setopt($ch, CURLOPT_PROXY, $proxy);
+    curl_setopt($ch, CURLOPT_HTTPHEADER,$head);
     //curl_setopt($ch, CURLOPT_PROXYTYPE, CURLPROXY_SOCKS5);
     //curl_setopt($ch, CURLOPT_HEADER,1);
     //curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
     //curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
     //curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
     //curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+    $key = curl_exec($ch);
+    curl_close($ch);
+    */
+    //echo $h;
+    //die();
+    //echo $key;
+    //die();                 // abr
+  $l="http://balancer2.digi24.ro/streamer.php?&scope=".$link."&key=".$key."&outputFormat=json&type=abr&quality=hq";  //&is=4&ns=digi24&pe=site&s=site&sn=digi24.ro&p=browser&pd=windows
+  //$l="https://balancer2.digi24.ro/streamer.php?&scope=digisport1desk&key=".$key."&outputFormat=json&type=abr&quality=hq&is=1&ns=digisport1&pe=site&s=site&sn=digisport.ro&p=browser&pd=windows";
+//$l="http://balancer2.digi24.ro/streamer.php?&scope=digisport1&key=a16112d32a5dbc53267fadd3a70f2c4f&outputFormat=json&type=abr&quality=hq";
+  $proxy="79.115.245.227:8080";
+  $proxy="86.123.166.109:8080";
+  $proxy="86.120.79.84:4145";
+  $proxy="86.120.79.84:4145";
+  //$proxy="5.15.52.65:8080";
+  //$proxy="5.12.136.46:8080";
+  //$proxy="86.125.112.230:57373";
+  //$l="https://balancer2.digi24.ro/streamer.php?&scope=digisport1desk&key=".$key."&outputFormat=json&type=abr&quality=hq&is=1&ns=digisport1&pe=site&s=site&sn=digisport.ro&p=browser&pd=windows";
+  //$proxy="86.124.162.105:9090";
+    $ch = curl_init();
+    curl_setopt($ch, CURLOPT_URL, $l);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+    curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 10.0; rv:85.0) Gecko/20100101 Firefox/85.0');
+    curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+    //curl_setopt($ch, CURLOPT_REFERER, "http://207.180.233.100:2539");
+    if ($link <> "digi24") {
+    //curl_setopt($ch, CURLOPT_PROXY, $proxy);
+    //curl_setopt($ch, CURLOPT_PROXYTYPE, CURLPROXY_SOCKS4);
+    }
+    //curl_setopt($ch, CURLOPT_HEADER,1);
+    //curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
+    //curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
+    curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
+    curl_setopt($ch, CURLOPT_TIMEOUT, 25);
     $h = curl_exec($ch);
     curl_close($ch);
     //echo $h;
@@ -767,6 +852,28 @@ if ($from=="digifree") {
     //$link=str_between($h,'file":"','"');
     $link=$r['file'];
     $host=parse_url($link)['host'];
+
+    //echo $link;
+    /*
+    $ch = curl_init();
+    curl_setopt($ch, CURLOPT_URL, $link);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+    curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 10.0; rv:64.0) Gecko/20100101 Firefox/64.0');
+    curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+    //curl_setopt($ch, CURLOPT_REFERER, "http://207.180.233.100:2539");
+    //curl_setopt($ch, CURLOPT_PROXY, $proxy);
+    curl_setopt($ch, CURLOPT_HTTPHEADER,$head);
+    //curl_setopt($ch, CURLOPT_PROXYTYPE, CURLPROXY_SOCKS5);
+    curl_setopt($ch, CURLOPT_HEADER,1);
+    //curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
+    //curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
+    //curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+    //curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+    $x = curl_exec($ch);
+    curl_close($ch);
+    echo $x;
+    */
     //$link=preg_replace("/edge\d+\.rcs\-rds\.ro/","82.76.40.81",$link);
     //$link=preg_replace("/edge\d+\.rdsnet\.ro/","82.76.40.81",$link);
     //$link=str_replace($host,"edge30.rcs-rds.ro",$link);

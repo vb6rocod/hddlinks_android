@@ -156,6 +156,10 @@ function unjuice($source) {
   return $source;
 }
 //echo $link;
+ $link=str_replace("/watch-","/",$link);
+ $link=str_replace("-onionplay","",$link);
+// https://onionplay.is/movies/star-wars-the-rise-of-skywalker-2019/
+// https://onionplay.is/movies/watch-star-wars-the-rise-of-skywalker-2019-onionplay/
 $host=parse_url($link)['host'];
 $ua="Mozilla/5.0 (Windows NT 10.0; rv:80.0) Gecko/20100101 Firefox/80.0";
   $ch = curl_init($link);

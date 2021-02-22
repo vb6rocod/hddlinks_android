@@ -233,17 +233,17 @@ $html=@file_get_contents($l,false,$context);
 $r=array();
 if ($tip=="release") {
   $t1=explode("Daily Update",$html);
-  $html=$t1[1];
-  $videos = explode('div class="ml-item',$html);
+  $html=$t1[2];
+  $videos = explode('<a class="tooltips-container',$html);
   unset($videos[0]);
   $videos = array_values($videos);
   foreach($videos as $video) {
    $t1 = explode('href="',$video);
-   $t2=explode('"',$t1[1]);
+   $t2=explode('?',$t1[1]);
    $link = $t2[0];
    if (strpos($link,"http") === false) $link="https://".$host.$link;
-   $t3 = explode('title="', $video);
-   $t4 = explode('"', $t3[1]);
+   $t3 = explode('elipsis tooltips-title">', $video);
+   $t4 = explode('<', $t3[1]);
    $title = $t4[0];
    $title=prep_tit($title);
    $t1 = explode('data-original="', $video);
@@ -252,12 +252,12 @@ if ($tip=="release") {
    $r[]=array($link,$title,$image);
   }
 } else {
-  $videos = explode('div class="ml-item',$html);
+  $videos = explode('<a class="movie-item',$html);
   unset($videos[0]);
   $videos = array_values($videos);
   foreach($videos as $video) {
    $t1 = explode('href="',$video);
-   $t2=explode('"',$t1[1]);
+   $t2=explode('?',$t1[1]);
    $link = $t2[0];
    if (strpos($link,"http") === false) $link="https://".$host.$link;
    $t3 = explode('title="', $video);

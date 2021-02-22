@@ -132,6 +132,7 @@ function off() {
 echo '<h2>'.$tit.' '.$tit2.'</H2>';
 echo '<BR>';
 $ua = $_SERVER['HTTP_USER_AGENT'];
+//echo $link;
 if ($tip=="movie") {
   $t1=explode("/",$link);
   $id1=$t1[5];
@@ -162,7 +163,7 @@ curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
 //curl_setopt($ch, CURLOPT_HTTPHEADER, $head);
 $h = curl_exec($ch);
 curl_close($ch);
-
+//echo $h;
 $r=array();
 $videos = explode('data-value="', $h);
 unset($videos[0]);

@@ -98,14 +98,14 @@ else
 <TD width="25%"><a href="filme/lookmovie_f.php?page=1&tip=release&title=lookmovie&link=" target="_blank">lookmovie</a></TD>
 </TR>
 <TR>
-<TD width="25%"><a href="filme/spacemov.php?page=1&tip=release&title=spacemov&link=" target="_blank">spacemov</a></TD>
+<TD width="25%"></TD>
 <TD width="25%"><a href="filme/bmovies_f.php?page=1&tip=release&title=bmovies&link=" target="_blank">bmovies</a></TD>
 <TD width="25%"><a href="filme/vidcloud9_f.php?page=1&tip=release&title=vidcloud9&link=" target="_blank">vidcloud9</a></TD>
-<TD width="25%"></TD>
+<TD width="25%"><a href="filme/solarmovie_f.php?page=1&tip=release&title=solarmovie&link=" target="_blank">solarmovie</a></TD>
 </TR>
 
 <TR>
-<TD width="25%"></TD>
+<TD width="25%"><a href="filme/zoechip_f.php?page=1&tip=release&title=zoechip&link=" target="_blank">zoechip</a></TD>
 <TD width="25%"><a href="filme/gomovies_f.php?page=1&tip=release&title=gomovies&link=" target="_blank">gomovies</a></TD>
 <TD width="25%"><a href="filme/onionplay_f.php?page=1&tip=release&title=onionplay&link=" target="_blank">onionplay</a></TD>
 <TD width="25%"><a href="filme/streamlord_f.php?page=1&tip=release&title=streamlord&link=" target="_blank">streamlord</a></TD>
@@ -113,7 +113,7 @@ else
 
 <TR>
 <TD width="25%"><a href="filme/uniquestream_f.php?page=1&tip=release&title=uniquestream&link=" target="_blank">uniquestream</a></TD>
-<TD width="25%"><a href="filme/hdm_f.php?page=1&tip=release&title=hdm&link=" target="_blank">hdm</a></TD>
+<TD width="25%"><a href="filme/hdm_f.php?page=0&tip=release&title=hdm&link=" target="_blank">hdm</a></TD>
 <TD width="25%"><a href="filme/fsharetv.php?page=1&tip=release&title=fsharetv&link=" target="_blank">fsharetv</a></TD>
 <TD width="25%"><a href="filme/videospider.php?page=1&tip=release&title=videospider&link=" target="_blank">videospider</a></TD>
 </TR>
@@ -135,7 +135,7 @@ else
 <TR>
 <TD width="25%"><a href="filme/europix_f.php?page=1&tip=release&title=europix&link=" target="_blank">europix</a></TD>
 <TD width="25%"><a href="filme/esubmovie.php?page=1&tip=release&title=esubmovie&link=" target="_blank">esubmovie</a></TD>
-<TD width="25%"><a href="filme/yifymovies_f.php?page=1&tip=release&title=yifymovies&link=" target="_blank">yifymovies</a></TD>
+<TD width="25%"></TD>
 <TD width="25%"><a href="filme/fmoviesarena.php?page=1&tip=release&title=fmoviesarena&link=" target="_blank">fmoviesarena</a></TD>
 </TR>
 <TR>
@@ -149,7 +149,7 @@ else
 <TD width="25%"><a href="filme/tofmovies_f.php?page=1&tip=release&title=tofmovies&link=" target="_blank">tofmovies</a></TD>
 <TD width="25%"><a href="filme/topmoviesonline_f.php?page=1&tip=release&title=topmoviesonline&link=" target="_blank">topmoviesonline</a></TD>
 <TD width="25%"><a href="filme/123files.php?page=1&tip=release&title=123files&link=" target="_blank">123files</a></TD>
-<TD width="25%"><a href="filme/anilist1_main.php" target="_blank">anilist1</a></TD>
+<TD width="25%"></TD>
 </TR>
 <?php
 if (file_exists($base_pass."tvplay.txt")) {

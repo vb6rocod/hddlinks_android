@@ -143,7 +143,7 @@ echo '<H2>'.$page_title.'</H2>'."\r\n";
 
 echo '<table border="1px" width="100%" style="table-layout:fixed;">'."\r\n";
 echo '<TR>'."\r\n";
-if ($page==1) {
+if ($page==0) {
    if ($tip == "release") {
    if ($has_fav=="yes" && $has_search=="yes") {
      echo '<TD class="nav"><a id="fav" href="'.$fav_target.'" target="_blank">Favorite</a></TD>'."\r\n";
@@ -176,6 +176,8 @@ if($tip=="release") {
   $search=str_replace(" ","+",$tit);
   $l="https://hdm.to/search/".$search;
 }
+if ($tip=="release" && $page=="0")
+ $l="https://hdm.to";
 $host=parse_url($l)['host'];
 $head=array('Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
 'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2');
@@ -191,7 +193,7 @@ $head=array('Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q
   curl_close($ch);
 //echo $html;
 $r=array();
-if ($tip=="release") {
+if ($tip=="release" && $page > 0) {
 $videos = explode('div class="shadow', $html);
 unset($videos[0]);
 $videos = array_values($videos);
@@ -209,7 +211,25 @@ foreach($videos as $video) {
   $image=$t2[0];
   $r[]=array($link,$title,$image);
 }
-} else {
+} elseif ($tip=="release" && $page==0) {
+$videos = explode('div class="col-md-2', $html);
+unset($videos[0]);
+$videos = array_values($videos);
+foreach($videos as $video) {
+  $t1 = explode('href="',$video);
+  $t2=explode('"',$t1[1]);
+  $link = $t2[0];
+  if (strpos($link,"http") === false) $link="https://".$host.$link;
+  $t3 = explode('movie-title">', $video);
+  $t4 = explode('<', $t3[1]);
+  $title = trim($t4[0]);
+  $title=prep_tit($title);
+  $t1 = explode('src="', $video);
+  $t2 = explode('"', $t1[2]);
+  $image=$t2[0];
+  $r[]=array($link,$title,$image);
+}
+} elseif ($tip=="search") {
 $videos = explode('id="post-', $html);
 unset($videos[0]);
 $videos = array_values($videos);

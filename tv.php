@@ -86,10 +86,10 @@ $(document).on('keyup', '.imdb', isValid);
 <TD width="25%"><a href="filme/facebook1_fav.php" target="_blank">facebook</a></TD>
 </TR>
 <TR>
-<TD width="25%"><a href="tv/tvrplus_youtube.php?page=1,,TVR+" target="_blank">TVR+ (youtube)</a></TD>
+<TD width="25%"><a href="filme/yt_channel.php?token=&id=UChdrIsYOHZXgEyCLaOHc2Ew&kind=channel&title=(channel)+TVR&image=https://yt3.ggpht.com/ytc/AAUvwnj2psS6y8NO4ze0BR7gSRJ2OcpwzEWxJOY_m0cj=s88-c-k-c0xffffffff-no-rj-mo" target="_blank">TVR+ (youtube)</a></TD>
 <TD width="25%"><a href="filme/starea_natiei.php" target="_blank">Starea Natiei</a></TD>
 <TD width="25%"><a href="filme/yt_playlist.php?token=&id=UC6Sn1XzRBCBl8UMyAb8_5PA&kind=channel&title=%28channel%29+PrimaTV+Romania&image=https://yt3.ggpht.com/-hMQUv-XEccM/AAAAAAAAAAI/AAAAAAAAAAA/Tek8sw-tzhU/s88-c-k-no-mo-rj-c0xffffff/photo.jpg" target="_blank">PrimaTV</a></TD>
-<TD width="25%"></TD>
+<TD width="25%"><a href="tv/ustream_main.php" target="_blank">ustream</TD>
 </TR>
 
 <TR>

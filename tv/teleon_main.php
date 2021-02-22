@@ -1,10 +1,12 @@
 <!DOCTYPE html>
 <?php
+error_reporting(0);
 function str_between($string, $start, $end){
 	$string = " ".$string; $ini = strpos($string,$start);
 	if ($ini == 0) return ""; $ini += strlen($start); $len = strpos($string,$end,$ini) - $ini;
 	return substr($string,$ini,$len);
 }
+
 $main_title="teleon.tv";
 $target="teleon.php";
 $fav_target="";
@@ -39,6 +41,7 @@ echo '<table border="1px" width="100%" style="table-layout:fixed;">'."\r\n";
 echo '<TR><th class="cat" colspan="3">'.$main_title.'</th></TR>';
 $n=0;
 $l="http://player.teleon.tv/en/channels";
+$l="http://teleon.tv/en/channel/index.html";
 $ua = $_SERVER['HTTP_USER_AGENT'];
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $l);
@@ -50,21 +53,25 @@ $ua = $_SERVER['HTTP_USER_AGENT'];
   curl_setopt($ch, CURLOPT_TIMEOUT, 15);
   $html = curl_exec($ch);
   curl_close($ch);
-
-$videos = explode('div class="col-md-2', $html);
+$t1=explode('div class="list-country',$html);
+$t2=explode('</ul',$t1[1]);
+$html=$t2[0];
+$m=0;
+$videos = explode('<li', $html);
 unset($videos[0]);
 $videos = array_values($videos);
 
 foreach($videos as $video) {
     $t0 = explode('href="',$video);
     $t1 = explode('"', $t0[1]);
-    $link = "http:".$t1[0];
-    $t1 = explode('src="',$video);
-    $t2 = explode('>', $t1[1]);
-    $t3 = explode('<', $t2[1]);
-    $title = trim($t3[0]);
+    $link = $m;
+    $t1 = explode('alt="',$video);
+    $t2 = explode('"', $t1[1]);
+    //$t3 = explode('<', $t2[1]);
+    $title = trim($t2[0]);
+    $m++;
     $link=$target."?page=1&show=&sez=&link=".urlencode(fix_t($link))."&title=".urlencode(fix_t($title));
-    if (!preg_match("/IN CURAND|FILME SERIALE|Contact|TOP IMDb|Filme online/i",$title)) {
+    if ($title) {
 	if ($n == 0) echo "<TR>"."\r\n";
 	echo '<TD class="cat">'.'<a class ="cat" href="'.$link.'" target="_blank">'.$title.'</a></TD>';
     $n++;

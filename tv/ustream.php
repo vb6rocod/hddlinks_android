@@ -71,36 +71,38 @@ $user_agent     =   $_SERVER['HTTP_USER_AGENT'];
 if ($flash != "mp") {
 if (preg_match("/android|ipad/i",$user_agent) && preg_match("/chrome|firefox|mobile/i",$user_agent)) $flash="chrome";
 }
-// https://player.teleon.tv/api/json-channels.php?country=14
 $n=0;
 echo '<h2>'.$page_title.'</h2>';
 echo '<table border="1px" width="100%">'."\n\r";
 $title="";
 $l=$search;
-$l="https://player.teleon.tv/api/json-channels.php?country=".$search;
-//echo $l;
-$ua = $_SERVER['HTTP_USER_AGENT'];
+$ua="Mozilla/5.0 (Windows NT 10.0; rv:85.0) Gecko/20100101 Firefox/85.0";
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $l);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
   curl_setopt($ch, CURLOPT_USERAGENT, $ua);
   curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
   curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
-  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 25);
   $html = curl_exec($ch);
   curl_close($ch);
-$x=json_decode($html,1);
-//print_r ($x);
 
+$videos = explode('<a class="ch_numz"', $html);
 
-for($k=0;$k<count($x);$k++) {
- $link="https://player.teleon.tv/channel/".$x[$k]['slug'];
+unset($videos[0]);
+$videos = array_values($videos);
 
- $title = trim($x[$k]['title']);
+foreach($videos as $video) {
+ $t1=explode('href="',$video);
+ $t2=explode('"',$t1[1]);
+ $link=$t2[0];
+ $t3=explode('>',$t1[1]);
+ $t4=explode('<',$t3[1]);
+ $title = trim($t4[0]);
  $descriere=$title;
- $l="link=".urlencode(fix_t($link))."&title=".urlencode(fix_t($title))."&from=teleon&mod=direct";
- $link1="direct_link.php?link=".$link."&title=".urlencode($title)."&from=teleon&mod=direct";
+ $l="link=".urlencode(fix_t($link))."&title=".urlencode(fix_t($title))."&from=ustream&mod=direct";
+ $link1="direct_link.php?link=".$link."&title=".urlencode($title)."&from=ustream&mod=direct";
 
   if ($n == 0) echo "<TR>"."\n\r";
   if ($flash != "mp")
