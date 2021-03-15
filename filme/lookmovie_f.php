@@ -7,7 +7,6 @@ function str_between($string, $start, $end){
 	return substr($string,$ini,$len);
 }
 include ("../common.php");
-include ("../cloudflare.php");
 $page = $_GET["page"];
 $tip= $_GET["tip"];
 $tit=$_GET["title"];
@@ -170,7 +169,7 @@ if ($page==1) {
 }
 echo '</TR>'."\r\n";
 $ua = $_SERVER['HTTP_USER_AGENT'];
-$ua="Mozilla/5.0 (Windows NT 10.0; rv:55.0) Gecko/20100101 Firefox/55.0";
+$ua="Mozilla/5.0 (Windows NT 10.0; rv:86.0) Gecko/20100101 Firefox/86.0";
 if($tip=="release") {
  if (strpos($ua,"Windows") !== false)
   $l=$last_good."/?p=".$page."&r=1";
@@ -181,8 +180,11 @@ if($tip=="release") {
   $l=$last_good."/movies/search/?p=".$page."&q=".$search;
 }
 $host=parse_url($l)['host'];
-$cookie=$base_cookie."hdpopcorns.dat";
-
+$cookie=$base_cookie."lookmovie.dat";
+if (file_exists($base_pass."firefox.txt"))
+ $ua=file_get_contents($base_pass."firefox.txt");
+else
+ $ua="Mozilla/5.0 (Windows NT 10.0; rv:75.0) Gecko/20100101 Firefox/75.0";
 //echo $h;
 
 $head=array('Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
@@ -257,6 +259,7 @@ foreach($videos as $video) {
   if ($n==0) echo '<TR>'."\r\n";
   $val_imdb="tip=movie&title=".urlencode(fix_t($tit_imdb))."&year=".$year."&imdb=".$imdb;
   $fav_link="mod=add&title=".urlencode(fix_t($title))."&link=".urlencode($link)."&image=".urlencode($image)."&year=".$year;
+  //$image="r_m.php?file=".$image;
   if ($tast == "NU") {
     echo '<td class="mp" width="25%"><a href="'.$link_f.'" id="myLink'.$w.'" target="_blank" onmousedown="isKeyPressed(event)">
     <img id="myLink'.$w.'" src="'.$image.'" width="'.$width.'" height="'.$height.'"><BR>'.$title.'</a>

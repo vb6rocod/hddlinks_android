@@ -171,17 +171,20 @@ echo '</TR>'."\r\n";
 
 if($tip=="release") {
   if ($page>1)
-   $l="https://".$host."/en/video/films/?page=".$page;
+   $l="https://".$host."/en/videos/films/?page=".$page;
   else
-   $l="https://".$host."/en/video/films/";
+   $l="https://".$host."/en/videos/films/";
 } else {
   $search=str_replace(" ","+",$tit);
   if ($page > 1)
-   $l="https://".$host."/en/video/films/?genre=&country=&order_by=-rating&page=".$page."&title=".$search;
+   $l="https://".$host."/en/videos/films/?genre=&country=&order_by=-rating&page=".$page."&title=".$search;
   else
-   $l = "https://".$host."/en/video/films/?title=".$search."&genre=&country=&order_by=-rating";
+   $l = "https://".$host."/en/videos/films/?title=".$search."&genre=&country=&order_by=-rating";
 
 }
+// https://ling.online/en/videos/films/?page=2
+// https://ling.online/en/video/films/?page=2
+//echo $l;
   $ua = $_SERVER['HTTP_USER_AGENT'];
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $l);

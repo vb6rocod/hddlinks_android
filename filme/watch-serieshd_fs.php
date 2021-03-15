@@ -1,18 +1,16 @@
 <!doctype html>
 <?php
 include ("../common.php");
-
 error_reporting(0);
-if (file_exists($base_pass."debug.txt"))
- $debug=true;
-else
- $debug=false;
-
 $list = glob($base_sub."*.srt");
    foreach ($list as $l) {
     str_replace(" ","%20",$l);
     unlink($l);
 }
+if (file_exists($base_pass."debug.txt"))
+ $debug=true;
+else
+ $debug=false;
 if (file_exists($base_pass."player.txt")) {
 $flash=trim(file_get_contents($base_pass."player.txt"));
 } else {
@@ -48,6 +46,11 @@ $tip="series";
 }
 $imdbid="";
 
+function str_between($string, $start, $end){
+	$string = " ".$string; $ini = strpos($string,$start);
+	if ($ini == 0) return ""; $ini += strlen($start); $len = strpos($string,$end,$ini) - $ini;
+	return substr($string,$ini,$len);
+}
 ?>
 <html>
 <head>
@@ -130,181 +133,51 @@ function off() {
 <?php
 echo '<h2>'.$tit.$tit2.'</H2>';
 echo '<BR>';
-$r=array();
-$cookie=$base_cookie."9movies.dat";
-if (file_exists($base_pass."firefox.txt"))
- $ua=file_get_contents($base_pass."firefox.txt");
-else
- $ua="Mozilla/5.0 (Windows NT 10.0; rv:75.0) Gecko/20100101 Firefox/75.0";
-if (file_exists($cookie)) {
- $x=file_get_contents($cookie);
- if (preg_match("/9movies\.yt	\w+	\/	\w+	\d+	cf_clearance	([\w|\-]+)/",$x,$m))
-  $cc=trim($m[1]);
- else
-  $cc="";
-} else {
-  $cc="";
-}
 
+  $r=array();
+$ua="Mozilla/5.0 (Windows NT 10.0; rv:80.0) Gecko/20100101 Firefox/80.0";
 
-if ($tip=="movie") {
-$cookie=$base_cookie."9movies.dat";
-$l="https://ww2.9movies.yt/ajax/movie_episodes/".$link;
-$l="https://ww4.9movies.yt/ajax/movie_episodes/".$link;
-$head=array('Accept: application/json, text/javascript, */*; q=0.01',
+$head=array('Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
 'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
 'Accept-Encoding: deflate',
-'X-Requested-With: XMLHttpRequest',
-'Connection: keep-alive',
-'Referer: https://ww3.9movies.yt');
-/*
-  $ch = curl_init();
-  curl_setopt($ch, CURLOPT_URL, $l);
-  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+'Connection: keep-alive');
+
+  $ch = curl_init($link);
   curl_setopt($ch, CURLOPT_USERAGENT, $ua);
   curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
-  //curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie);
-  //curl_setopt($ch, CURLOPT_COOKIEJAR, $cookie);
-  curl_setopt($ch, CURLOPT_HTTPHEADER, $head);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER  ,1);  // RETURN THE CONTENTS OF THE CALL
   curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
-  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
-  //curl_setopt($ch, CURLOPT_HEADER,1);
-  $h = curl_exec($ch);
-  curl_close($ch);
-  */
-
-$opts = array(
-  'http'=>array(
-    'method'=>"GET",
-    'header'=>"User-Agent: ".$ua."\r\n".
-              "Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\r\n" .
-              "Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2\r\n" .
-              "Accept-Encoding: deflate\r\n" .
-              "X-Requested-With: XMLHttpRequest\r\n" .
-              "Connection: keep-alive\r\n" .
-              "Cookie: cf_clearance=".$cc."\r\n".
-              "Referer: https://ww3.9movies.yt/"."\r\n"
-  )
-);
-$context = stream_context_create($opts);
-$h=@file_get_contents($l,false,$context);
-//echo $h;
-  $x=json_decode($h,1)['html'];
-  $t1=explode('id="ep-',$x);
-  $t2=explode('"',$t1[1]);
-  $id=$t2[0];
-$l="https://ww4.9movies.yt/ajax/movie_sources/";
-$post="eid=".$id;
-$l="https://ww4.9movies.yt/ajax/movie_sources/";
-$post="eid=".$link;
-	$data = array(
-		'eid' => $id
-	);
-//echo $post;
-	$opts = array(
-		'http' => array(
-			'header' => array(
-                        "User-Agent: ".$ua."",
-                        "Content-type: application/x-www-form-urlencoded",
-                        "Cookie: cf_clearance=".$cc."",
-                        "X-Requested-With: XMLHttpRequest",
-                        "Referer: https://ww4.9movies.yt/",
-                        "Origin: https://ww4.9movies.yt"),
-			'method' => 'POST',
-			'content' => http_build_query($data) ,
-		)
-	);
-$context = stream_context_create($opts);
-$h=@file_get_contents($l,false,$context);
-
-$head=array('Accept: application/json, text/javascript, */*; q=0.01',
-'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
-'Accept-Encoding: deflate',
-'Content-Type: application/x-www-form-urlencoded; charset=UTF-8',
-'X-Requested-With: XMLHttpRequest',
-'Content-Length: '.strlen($post).'',
-'Origin: https://ww4.9movies.yt',
-'Connection: keep-alive',
-'Referer: https://ww4.9movies.yt/');
-/*
+  curl_setopt($ch, CURLOPT_HTTPHEADER,$head);
+  curl_setopt($ch,CURLOPT_REFERER,"https://watch-serieshd.cc");
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 25);
+  $html = curl_exec($ch);
+  curl_close ($ch);
+  //echo $html;
   $ch = curl_init();
-  curl_setopt($ch, CURLOPT_URL, $l);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
   curl_setopt($ch, CURLOPT_USERAGENT, $ua);
-  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
-  //curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie);
-  //curl_setopt($ch, CURLOPT_COOKIEJAR, $cookie);
-  curl_setopt($ch, CURLOPT_HTTPHEADER, $head);
-  curl_setopt($ch, CURLOPT_POST,1);
-  curl_setopt($ch, CURLOPT_POSTFIELDS,$post);
+  curl_setopt($ch,CURLOPT_REFERER,"https://watch-serieshd.cc");
+  curl_setopt($ch, CURLOPT_HEADER,1);
+  curl_setopt($ch, CURLOPT_NOBODY,0);
+  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,0);
   curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
-  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
-  //curl_setopt($ch, CURLOPT_HEADER,1);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 25);
+  $videos = explode('data-vs="', $html);
+  unset($videos[0]);
+  $videos = array_values($videos);
+
+  foreach($videos as $video) {
+  $t1=explode('"',$video);
+  curl_setopt($ch, CURLOPT_URL, $t1[0]);
   $h = curl_exec($ch);
-  curl_close($ch);
-  */
   //echo $h;
-  $rr=json_decode($h,1);
-  $l2=$rr['embed'];
-  $r[]=$l2;
-} else {
-$l="https://ww4.9movies.yt/ajax/movie_sources/";
-$post="eid=".$link;
-	$data = array(
-		'eid' => $link
-	);
-//echo $post;
-	$opts = array(
-		'http' => array(
-			'header' => array(
-                        "User-Agent: ".$ua."",
-                        "Content-type: application/x-www-form-urlencoded",
-                        "Cookie: cf_clearance=".$cc."",
-                        "X-Requested-With: XMLHttpRequest",
-                        "Referer: https://ww4.9movies.yt/",
-                        "Origin: https://ww4.9movies.yt"),
-			'method' => 'POST',
-			'content' => http_build_query($data) ,
-		)
-	);
-//print_r ($opts);
-$context = stream_context_create($opts);
-$h=@file_get_contents($l,false,$context);
-$head=array('Accept: application/json, text/javascript, */*; q=0.01',
-'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
-'Accept-Encoding: deflate',
-'Content-Type: application/x-www-form-urlencoded; charset=UTF-8',
-'X-Requested-With: XMLHttpRequest',
-'Content-Length: '.strlen($post).'',
-'Origin: https://ww4.9movies.yt',
-'Connection: keep-alive',
-'Referer: https://ww4.9movies.yt/');
-/*
-  $ch = curl_init();
-  curl_setopt($ch, CURLOPT_URL, $l);
-  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
-  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
-  curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie);
-  //curl_setopt($ch, CURLOPT_COOKIEJAR, $cookie);
-  curl_setopt($ch, CURLOPT_HTTPHEADER, $head);
-  curl_setopt($ch, CURLOPT_POST,1);
-  curl_setopt($ch, CURLOPT_POSTFIELDS,$post);
-  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
-  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
-  //curl_setopt($ch, CURLOPT_HEADER,1);
-  $h = curl_exec($ch);
-  curl_close($ch);
-
-*/
-  $rr=json_decode($h,1);
-  $l2=$rr['embed'];
-  $r[]=$l2;
-}
-//print_r ($r);
+  if (preg_match("/location\:\s*(.+)/i",$h,$m))
+  $r[]=trim($m[1]);
+  }
+  curl_close ($ch);
+  //echo $html;
 echo '<table border="1" width="100%">';
 echo '<TR><TD class="mp">Alegeti un server: Server curent:<label id="server">'.parse_url($r[0])['host'].'</label>
 <input type="hidden" id="file" value="'.urlencode($r[0]).'"></td></TR></TABLE>';
@@ -337,21 +210,20 @@ if ($tip=="movie") {
   $tit2="";
   $sez="";
   $ep="";
+  $imdbid="";
   $from="";
   $link_page="";
 } else {
   $tit3=$tit;
   $sez=$sez;
   $ep=$ep;
+  $imdbid="";
   $from="";
   $link_page="";
 }
   $rest = substr($tit3, -6);
   if (preg_match("/\((\d+)\)/",$rest,$m)) {
-   $year=$m[1];
    $tit3=trim(str_replace($m[0],"",$tit3));
-  } else {
-   $year="";
   }
 $sub_link ="from=".$from."&tip=".$tip."&sez=".$sez."&ep=".$ep."&imdb=".$imdbid."&title=".urlencode(fix_t($tit3))."&link=".$link_page."&ep_tit=".urlencode(fix_t($tit2))."&year=".$year;
 echo '<br>';
@@ -389,10 +261,6 @@ echo '<br>
 <BR>Scurtaturi: 7=opensubtitles, 8=titrari, 9=subs, 0=subtitrari (cauta imdb id)
 </b></font></TD></TR></TABLE>
 ';
-
-if (preg_match("/c\d?_file\=(http[\.\d\w\-\.\/\\\:\?\&\#\%\_\,]+)\&c\d?_label\=English/i",$r[0],$s)) {
- echo 'Cu subtitrare in Engleza.<BR>';
-}
 include("../debug.html");
 echo '
 <div id="overlay">

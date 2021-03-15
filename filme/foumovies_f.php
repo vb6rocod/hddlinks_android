@@ -7,6 +7,11 @@ function str_between($string, $start, $end){
 }
 include ("../common.php");
 error_reporting(0);
+/* =================================================== */
+$l="https://www.foumovies.me";
+//http://www.stupiddrive.com
+$l="https://www.foumovies.se";
+$host=parse_url($l)['host'];
 $page = $_GET["page"];
 $tip= $_GET["tip"];
 $tit=$_GET["title"];
@@ -18,11 +23,11 @@ $has_fav="yes";
 $has_search="yes";
 $has_add="yes";
 $has_fs="yes";
-$fav_target="gomovies_f_fav.php?host=https://ww1.gomovies.digital";
-$add_target="gomovies_f_add.php";
-$add_file="gomovies_f.dat";
-$fs_target="gomovies_fs.php";
-$target="gomovies_f.php";
+$fav_target="foumovies_f_fav.php?host=https://".$host;
+$add_target="foumovies_f_add.php";
+$add_file="";
+$fs_target="foumovies_fs.php";
+$target="foumovies_f.php";
 /* ==================================================== */
 $base=basename($_SERVER['SCRIPT_FILENAME']);
 $p=$_SERVER['QUERY_STRING'];
@@ -168,63 +173,97 @@ if ($page==1) {
 echo '</TR>'."\r\n";
 
 if($tip=="release") {
-  $l = "https://ww1.gomovies.digital/all-movies/".$page;
+  if ($page > 1)
+  $l="https://".$host."/category/english-movies/page/".$page."/";
+  else
+  $l="https://".$host."/category/english-movies/";
 } else {
   $search=str_replace(" ","+",$tit);
-  $l = "https://ww1.gomovies.digital/search/".$search."/movies/".$page;
+  if ($page>1)
+  $l="https://".$host."/search/".$search."/page/".$page."/";
+  else
+  $l="https://".$host."/?s=".$search;
 }
-$r=parse_url($l);
-$host=$r["host"];
-$ua = $_SERVER['HTTP_USER_AGENT'];
+
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $l);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
-  curl_setopt($ch,CURLOPT_REFERER,"https://gomovies.tube");
+  curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 10.0; rv:55.0) Gecko/20100101 Firefox/55.0');
   curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
-  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
   curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
   curl_setopt($ch, CURLOPT_TIMEOUT, 15);
   $html = curl_exec($ch);
   curl_close($ch);
-
-$videos = explode('class="item"', $html);
-
+  $r=array();
+if ($tip== "release") {
+$videos = explode('div id="mt-', $html);
 unset($videos[0]);
 $videos = array_values($videos);
-
 foreach($videos as $video) {
-  $t1 = explode('href="', $video);
+  $t1=explode('href="',$video);
+  $t2=explode('"',$t1[1]);
+  $link=$t2[0];
+  $t1 = explode('class="tt">', $video);
+  $t3 = explode('<',$t1[1]);
+  $title = $t3[0];
+  $title = prep_tit($title);
+  $t1 = explode('data-lazy-src="', $video);
   $t2 = explode('"', $t1[1]);
-  $link = $t2[0];
-  if (preg_match("/\/movie\//",$link)) {
-  if (strpos($link,"http") === false) $link="https://".$host.$link;
-  $t1 = explode('data-filmName="', $video);
-  $t2_0=explode('"',$t1[1]);
-  $t3=str_replace("Vizioneaza Film Online","",$t2_0[0]);
-  $t4=explode("&#8211;",$t3);
-  $title=trim($t4[0]);
-  $title=prep_tit($title);
+  $image = trim($t2[0]);
+  //if (strpos($image,"http") === false) $image="https:".$image;
   $year="";
   $imdb="";
-  $t1=explode('data-year="',$video);
-  $t2=explode('"',$t1[1]);
+  $t1=explode('class="year">',$video);
+  $t2=explode("<",$t1[1]);
   $year=$t2[0];
-  $t1=explode(" - ",$title);
-  $t=$t1[0];
-  $t=preg_replace("/\(?((1|2)\d{3})\)?/","",$t);
-  $tit_imdb=trim($t);
-  $t1=explode('data-src="',$video);
+  $r[]=array($link,$title,$image,$year);
+}
+} else {
+$videos = explode('div id="mt-', $html);
+unset($videos[0]);
+$videos = array_values($videos);
+foreach($videos as $video) {
+  $t1=explode('href="',$video);
   $t2=explode('"',$t1[1]);
-  $image=$t2[0];
-
-  if ($has_fs == "no")
-    $link_f='filme_link.php?file='.urlencode($link).'&title='.urlencode(fix_t($title));
-  else
-    $link_f=$fs_target.'?tip=movie&link='.urlencode($link).'&title='.urlencode(fix_t($title)).'&image='.$image."&sez=&ep=&ep_tit=&year=".$year;
+  $link=$t2[0];
+  $t1 = explode('class="tt">', $video);
+  $t3 = explode('<',$t1[1]);
+  $title = $t3[0];
+  $title = prep_tit($title);
+  $t1 = explode('data-lazy-src="', $video);
+  $t2 = explode('"', $t1[1]);
+  $image = trim($t2[0]);
+  //if (strpos($image,"http") === false) $image="https:".$image;
+  $year="";
+  $imdb="";
+  $t1=explode('class="year">',$video);
+  $t2=explode("<",$t1[1]);
+  $year=$t2[0];
+  $r[]=array($link,$title,$image,$year);
+}
+}
+for ($k=0;$k<count($r);$k++) {
+  $link=$r[$k][0];
+  $title=$r[$k][1];
+  $title=trim(preg_replace("/((Free Download)|(Free Movie)|(Movie Free)|(Movie Download)|(Full Movie)).*/i","",$title));
+  $image=$r[$k][2];
+  $year=$r[$k][3];
+  $rest = substr($title, -6);
+  if (preg_match("/\(?(\d{4})\)?/",$rest,$m)) {
+   $tit_imdb=trim(str_replace($m[0],"",$title));
+   $year=$m[1];
+   $title=$tit_imdb;
+  } else {
+   $tit_imdb=$title;
+  }
+  //$tit_imdb=$title;
+  $tit_fav=$title." (".$year.")";
+  $link_f=$fs_target.'?tip=movie&link='.urlencode($link).'&title='.urlencode(fix_t($title)).'&image='.$image."&sez=&ep=&ep_tit=&year=".$year;
+  if ($title && strpos($link,"/show") === false) {
   if ($n==0) echo '<TR>'."\r\n";
   $val_imdb="tip=movie&title=".urlencode(fix_t($tit_imdb))."&year=".$year."&imdb=".$imdb;
-  $fav_link="file=".$add_file."&mod=add&title=".urlencode(fix_t($title))."&link=".urlencode($link)."&image=".urlencode($image)."&year=".$year;
+  $fav_link="mod=add&title=".urlencode(fix_t($tit_fav))."&link=".urlencode($link)."&image=".urlencode($image)."&year=".$year;
+  if (strpos($image,$host) !== false) $image="r_m.php?file=".$image;
   if ($tast == "NU") {
     echo '<td class="mp" width="25%"><a href="'.$link_f.'" id="myLink'.$w.'" target="_blank" onmousedown="isKeyPressed(event)">
     <img id="myLink'.$w.'" src="'.$image.'" width="'.$width.'" height="'.$height.'"><BR>'.$title.' ('.$year.')</a>
@@ -247,7 +286,9 @@ foreach($videos as $video) {
   $n=0;
   }
   }
-}
+ }
+
+/* bottom */
   if ($n < 4 && $n > 0) {
     for ($k=0;$k<4-$n;$k++) {
       echo '<TD></TD>'."\r\n";
@@ -262,6 +303,6 @@ else
   echo '<a href="'.$next.'">&nbsp;&gt;&gt;&nbsp;</a></TD>'."\r\n";
 echo '</TR>'."\r\n";
 echo "</table>"."\r\n";
-?>
-<br></body>
+echo "</table>";
+?></body>
 </html>

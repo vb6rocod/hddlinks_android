@@ -35,12 +35,36 @@ if (preg_match("/(:|-)?\s+Season\s+(\d+)/i",$tit,$m)) {
   $tit=trim(str_replace($m[0],"",$tit));
 }
 echo '<h2>'.$tit.'</h2>';
-$ua = $_SERVER['HTTP_USER_AGENT'];
-//$ua="Mozilla/5.0 (Windows NT 10.0; rv:71.0) Gecko/20100101 Firefox/71.0";
-$cookie=$base_cookie."hdpopcorns.dat";
-
-$html=cf_pass($link,$cookie);
-
+$cookie=$base_cookie."5movies.dat";
+if (file_exists($base_pass."firefox.txt"))
+ $ua=file_get_contents($base_pass."firefox.txt");
+else
+ $ua="Mozilla/5.0 (Windows NT 10.0; rv:75.0) Gecko/20100101 Firefox/75.0";
+if (file_exists($cookie)) {
+ $x=file_get_contents($cookie);
+ if (preg_match("/5movies\.fm	\w+	\/	\w+	\d+	cf_clearance	([\w|\-]+)/",$x,$m))
+  $cc=trim($m[1]);
+ else
+  $cc="";
+} else {
+  $cc="";
+}
+$opts = array(
+  'http'=>array(
+    'method'=>"GET",
+    'header'=>"User-Agent: ".$ua."\r\n".
+              "Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\r\n" .
+              "Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2\r\n" .
+              "Accept-Encoding: deflate\r\n" .
+              "Connection: keep-alive\r\n" .
+              "Cookie: cf_clearance=".$cc."\r\n".
+              "Referer: https://5movies.fm\r\n"
+  )
+);
+//print_r ($opts);
+$context = stream_context_create($opts);
+$html=@file_get_contents($link,false,$context);
+//echo $html;
 $n=0;
 
 echo '<table border="1" width="100%">'."\n\r";

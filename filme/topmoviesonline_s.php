@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <?php
+error_reporting(0);
 function str_between($string, $start, $end){
 	$string = " ".$string; $ini = strpos($string,$start);
 	if ($ini == 0) return ""; $ini += strlen($start); $len = strpos($string,$end,$ini) - $ini;
@@ -223,8 +224,8 @@ if ($tip=="release") {
    $title = trim($t4[0]);
    $title=preg_replace("/^Watch\s+/i","",$title);
    $title=prep_tit($title);
-   $t1 = explode('lazy-src="', $video);
-   $t2 = explode('"', $t1[1]);
+   $t1 = explode('?url=', $video);
+   $t2 = explode('&', $t1[1]);
    $image = $t2[0];
   $rest = substr($title, -6);
   if (preg_match("/\(?(\d{4})\)?/",$rest,$m)) {
@@ -251,8 +252,8 @@ if ($tip=="release") {
    $title = trim($t5[0]);
    $title=preg_replace("/^Watch\s+/i","",$title);
    $title=prep_tit($title);
-   $t1 = explode('lazy-src="', $video);
-   $t2 = explode('"', $t1[1]);
+   $t1 = explode('?url=', $video);
+   $t2 = explode('&', $t1[1]);
    $image = $t2[0];
   $rest = substr($title, -6);
   if (preg_match("/\(?(\d{4})\)?/",$rest,$m)) {

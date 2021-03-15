@@ -217,6 +217,54 @@ foreach($videos as $video) {
   }
   }
 }
+//echo "</table>";
+
+$n=0;
+$link="http://www.trm.md/ro/buna-seara";
+  $ch = curl_init();
+  curl_setopt($ch, CURLOPT_URL, $link);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
+  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+  curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+  $html = curl_exec($ch);
+  curl_close($ch);
+//$html = file_get_contents($link);
+$videos = explode('div class="_dq-news-read-more', $html);
+unset($videos[0]);
+$videos = array_values($videos);
+foreach($videos as $video) {
+    $t1=explode('alt="',$video);
+    $t2=explode('"',$t1[1]);
+    $title=$t2[0];
+
+    $t1=explode('src="',$video);
+    //$t2=explode('value="',$t1[1]);
+    $t3=explode('"',$t1[1]);
+    $image="http://www.trm.md".$t3[0];
+    $t1=explode('href="',$video);
+    $t2=explode('"',$t1[1]);
+    $link="http://www.trm.md".$t2[0];
+    //$link=str_replace("tiny-","",$image);
+    //$link=str_replace("jpg","mp4",$link);
+    $link1="direct_link.php?link=".$link."&title=".urlencode(fix_t($title))."&from=moldova&mod=direct";
+    $l="link=".urlencode(fix_t($link))."&title=".urlencode(fix_t($title))."&from=moldova&mod=direct";
+  if ($link && $title) {
+  if ($n==0) echo '<TR>';
+  if ($flash != "mp")
+  echo '<td class="mp" align="center" width="25%"><a href="'.$link1.'" target="_blank"><img src="'.$image.'" width="'.$width.'" height="'.$height.'"><BR>'.$title.'</a></TD>';
+    else
+  echo '<td class="mp" align="center" width="25%">'.'<a onclick="ajaxrequest('."'".$l."')".'"'." style='cursor:pointer;'>".'<img src="'.$image.'" width="'.$width.'" height="'.$height.'"><BR>'.$title.'</a></TD>';
+
+  $n++;
+  if ($n == 4) {
+  echo '</tr>';
+  $n=0;
+  }
+  }
+}
 echo "</table>";
 ?>
 <div id="overlay"">

@@ -38,8 +38,6 @@ $year=$_GET["year"];
 if ($tip=="movie") {
 $tit2="";
 } else {
-$t1=explode("- Season",$tit);
-$tit=trim($t1[0]);
 if ($ep_title)
    $tit2=" - ".$sez."x".$ep." ".$ep_title;
 else
@@ -108,14 +106,6 @@ function changeserver(s,t) {
       document.getElementById("subtitrari").click();
      } else if (charCode == "53") {
       document.getElementById("viz").click();
-     } else if (charCode == "55") {
-      document.getElementById("opensub1").click();
-     } else if (charCode == "56") {
-      document.getElementById("titrari1").click();
-     } else if (charCode == "57") {
-      document.getElementById("subs1").click();
-     } else if (charCode == "48") {
-      document.getElementById("subtitrari1").click();
      }
    }
 document.onkeypress =  zx;
@@ -133,35 +123,47 @@ function off() {
 <body>
 <a href='' id='mytest1'></a>
 <?php
+$cookie=$base_cookie."azm.dat";
+//if (file_exists($cookie)) unlink($cookie);
+
+//echo '<iframe src="'.$captcha.'" style="display: none;"></iframe>';
 echo '<h2>'.$tit.$tit2.'</H2>';
 echo '<BR>';
-$ua = $_SERVER['HTTP_USER_AGENT'];
-//$host=parse_url($link)['host'];
-//echo $link;
-  $r=array();
-  $s=array();
+$cookie=$base_cookie."azm.dat";
+$cookie1=$base_cookie."azm.txt";
+$c1=file_get_contents($cookie1);
+$ua="Mozilla/5.0 (Windows NT 10.0; rv:55.0) Gecko/20100101 Firefox/55.0";
+$head=array('Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
+$c1);
 
-$ua = $_SERVER['HTTP_USER_AGENT'];
-$ua="Mozilla/5.0 (Windows NT 10.0; rv:71.0) Gecko/20100101 Firefox/71.0";
-  $ch = curl_init($link);
+$l=$link;
+
+  $ch = curl_init();
+  curl_setopt($ch, CURLOPT_URL, $l);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+  curl_setopt($ch,CURLOPT_REFERER,"https://azm.to/all");
+  curl_setopt($ch,CURLOPT_HTTPHEADER,$head);
   curl_setopt($ch, CURLOPT_USERAGENT, $ua);
+  curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie);
   curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
-  curl_setopt($ch, CURLOPT_RETURNTRANSFER  ,1);  // RETURN THE CONTENTS OF THE CALL
-  //curl_setopt($ch, CURLOPT_HTTPHEADER, $head);
-  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
-  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 25);
   $html = curl_exec($ch);
-  curl_close ($ch);
-  $t1=explode('playlist: "',$html);
-  $t2=explode('"',$t1[1]);
-  $r[]=$t2[0];
-  $s[]=parse_url($t2[0])['host'];
-  //$x=json_decode($html,1);
-  //print_r ($x);
-
+  curl_close($ch);
+//echo $html;
+$r=array();
+$videos = explode('<option value="', $html);
+unset($videos[0]);
+$videos = array_values($videos);
+foreach($videos as $video) {
+  $t1=explode('"',$video);
+  $l1=$t1[0];
+  if (strpos($l1,"adhdf.php") !== false) $l1= "https://azm.to".$l1;
+  $r[]=$l1;
+}
 echo '<table border="1" width="100%">';
-echo '<TR><TD class="mp">Alegeti un server: Server curent:<label id="server">'.$s[0].'</label>
+echo '<TR><TD class="mp">Alegeti un server: Server curent:<label id="server">'.parse_url($r[0])['host'].'</label>
 <input type="hidden" id="file" value="'.urlencode($r[0]).'"></td></TR></TABLE>';
 echo '<table border="1" width="100%"><TR>';
 $k=count($r);
@@ -171,9 +173,9 @@ for ($i=0;$i<$k;$i++) {
   $c_link=$r[$i];
   $openload=parse_url($r[$i])['host'];
   if (preg_match($indirect,$openload)) {
-  echo '<TD class="mp"><a href="filme_link.php?file='.urlencode($c_link).'&title='.urlencode(unfix_t($tit.$tit2)).'" target="_blank">'.$s[$i].'</a></td>';
+  echo '<TD class="mp"><a href="filme_link.php?file='.urlencode($c_link).'&title='.urlencode(unfix_t($tit.$tit2)).'" target="_blank">'.$openload.'</a></td>';
   } else
-  echo '<TD class="mp"><a id="myLink" href="#" onclick="changeserver('."'".$s[$i]."','".urlencode($c_link)."'".');return false;">'.$s[$i].'</a></td>';
+  echo '<TD class="mp"><a id="myLink" href="#" onclick="changeserver('."'".$openload."','".urlencode($c_link)."'".');return false;">'.$openload.'</a></td>';
   $x++;
   if ($x==6) {
     echo '</TR>';
@@ -203,6 +205,10 @@ if ($tip=="movie") {
   $from="";
   $link_page="";
 }
+  $rest = substr($tit3, -6);
+  if (preg_match("/\((\d+)\)/",$rest,$m)) {
+   $tit3=trim(str_replace($m[0],"",$tit3));
+  }
 $sub_link ="from=".$from."&tip=".$tip."&sez=".$sez."&ep=".$ep."&imdb=".$imdbid."&title=".urlencode(fix_t($tit3))."&link=".$link_page."&ep_tit=".urlencode(fix_t($tit2))."&year=".$year;
 echo '<br>';
 echo '<table border="1" width="100%">';
@@ -212,14 +218,6 @@ echo '<TD class="mp"><a id="opensub" href="opensubtitles.php?'.$sub_link.'">open
 echo '<TD class="mp"><a id="titrari" href="titrari_main.php?page=1&'.$sub_link.'&page=1">titrari.ro</a></td>';
 echo '<TD class="mp"><a id="subs" href="subs_main.php?'.$sub_link.'">subs.ro</a></td>';
 echo '<TD class="mp"><a id="subtitrari" href="subtitrari_main.php?'.$sub_link.'">subtitrari_noi.ro</a></td>';
-echo '</TR></TABLE>';
-echo '<table border="1" width="100%">';
-echo '<TR><TD style="background-color:#0a6996;color:#64c8ff;font-weight: bold;font-size: 1.5em" align="center" colspan="4">Alegeti o subtitrare (cauta imdb id)</td></TR>';
-echo '<TR>';
-echo '<TD class="mp"><a id="opensub1" href="opensubtitles1.php?'.$sub_link.'">opensubtitles</a></td>';
-echo '<TD class="mp"><a id="titrari1" href="titrari_main1.php?page=1&'.$sub_link.'&page=1">titrari.ro</a></td>';
-echo '<TD class="mp"><a id="subs1" href="subs_main1.php?'.$sub_link.'">subs.ro</a></td>';
-echo '<TD class="mp"><a id="subtitrari1" href="subtitrari_main1.php?'.$sub_link.'">subtitrari_noi.ro</a></td>';
 echo '</TR></TABLE>';
 echo '<table border="1" width="100%"><TR>';
 if ($tip=="movie")
@@ -235,14 +233,17 @@ echo '</table>';
 echo '<br>
 <table border="0px" width="100%">
 <TR>
-<TD><font size="4"><b>Scurtaturi: 1=opensubtitles, 2=titrari, 3=subs, 4=subtitrari, 5=vizioneaza
-<BR>Scurtaturi: 7=opensubtitles, 8=titrari, 9=subs, 0=subtitrari (cauta imdb id)
-</b></font></TD></TR></TABLE>
+<TD><font size="4"><b>Scurtaturi: 1=opensubtitles, 2=titrari, 3=subs, 4=subtitrari, 5=vizioneaza</b></font></TD></TR></TABLE>
 ';
 include("../debug.html");
 echo '
 <div id="overlay">
   <div id="text">Wait....</div>
 </div>
+<BR>';
+////////////////////////////////////////////
+
+////////////////////////////////////////////
+echo '
 </body>
 </html>';

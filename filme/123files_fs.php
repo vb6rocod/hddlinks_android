@@ -146,29 +146,35 @@ $post="domain_r=apimdb.net&play=315McdwEKd4LIkcdYjW29iamVjdCBNb3VzZUV2ZW50XSoyNj
   curl_setopt($ch, CURLOPT_USERAGENT, $ua);
   curl_setopt($ch,CURLOPT_REFERER,"https://123files.club");
   curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
-  curl_setopt($ch, CURLOPT_POST,1);
-  curl_setopt($ch, CURLOPT_POSTFIELDS,$post);
+  //curl_setopt($ch, CURLOPT_POST,1);
+  //curl_setopt($ch, CURLOPT_POSTFIELDS,$post);
   curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
   curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
   curl_setopt($ch, CURLOPT_TIMEOUT, 15);
   $h = curl_exec($ch);
   //echo $h;
   curl_close($ch);
-  if (preg_match_all("/data\-id\=\"(.*?)\"\>\<i class\=\"fas fa\-play\"\>\<\/i\>(.*?)\<\/div/",$h,$m)) {
+  //if (preg_match_all("/data\-id\=\"(.*?)\"\>\<i class\=\"fas fa\-play\"\>\<\/i\>(.*?)\<\/div/",$h,$m)) {
+  if (preg_match_all("/data\-src\=\"(.*?)\"\>(.*?)\</",$h,$m)) {
   //print_r ($m);
   $r=$m[1];
   $s=$m[2];
   }
 //die();
+if (strpos($r[0],"https://apimdb.net") === false)
+$r[0]="https://apimdb.net".$r[0];
 echo '<table border="1" width="100%">';
 echo '<TR><TD class="mp">Alegeti un server: Server curent:<label id="server">'.$s[0].'</label>
-<input type="hidden" id="file" value="'.urlencode("https:".$r[0]).'"></td></TR></TABLE>';
+<input type="hidden" id="file" value="'.urlencode($r[0]).'"></td></TR></TABLE>';
 echo '<table border="1" width="100%"><TR>';
 $k=count($r);
 $x=0;
 for ($i=0;$i<$k;$i++) {
   if ($x==0) echo '<TR>';
-  $c_link="https://player.apimdb.net".$r[$i];
+  if (strpos($r[$i],"https://apimdb.net") === false)
+  $c_link="https://apimdb.net".$r[$i];
+  else
+  $c_link=$r[$i];
   $openload=$s[$i];
   if (preg_match($indirect,$openload)) {
   echo '<TD class="mp"><a href="filme_link.php?file='.urlencode($c_link).'&title='.urlencode(unfix_t($tit.$tit2)).'" target="_blank">'.$openload.'</a></td>';

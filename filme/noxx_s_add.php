@@ -7,9 +7,7 @@ $mod=$_POST["mod"];
 $link=$_POST["link"];
 $title=$_POST["title"];
 $image=urldecode($_POST["image"]);
-$year=$_POST["year"];
-
-$file=$base_fav."gomovies_s.dat";
+$file=$base_fav."noxx_s.dat";
 $arr=array();
 $h="";
 if (file_exists($file)) {
@@ -21,10 +19,8 @@ if (file_exists($file)) {
       $tit=trim($a[0]);
       $l=trim($a[1]);
       $img=trim($a[2]);
-      $y=trim($a[3]);
       $arr[$tit]["link"]=$l;
       $arr[$tit]["image"]=$img;
-      $arr[$tit]["year"]=$y;
     }
   }
 }
@@ -41,20 +37,18 @@ if ($mod=="add") {
   if (!$found) {
     $arr[$title]["link"]=$link;
     $arr[$title]["image"]=$image;
-    $arr[$title]["year"]=$year;
     echo "Am adaugat serialul ".unfix_t(urldecode($title));
   }
   ksort($arr);
   } else {
     $arr[$title]["link"]=$link;
     $arr[$title]["image"]=$image;
-    $arr[$title]["year"]=$year;
     echo "Am adaugat serialul ".unfix_t(urldecode($title));
   }
   $out="";
   //print_r ($arr);
   foreach($arr as $key => $value) {
-    $out =$out.$key."#separator".$arr[$key]["link"]."#separator".$arr[$key]["image"]."#separator".$arr[$key]["year"]."\r\n";
+    $out =$out.$key."#separator".$arr[$key]["link"]."#separator".$arr[$key]["image"]."\r\n";
   }
   //echo $out;
   if ($found) echo "Serialul a fost adaugat deja!";
@@ -78,7 +72,7 @@ if ($mod=="add") {
     $out="";
     //print_r ($arr);
     foreach($arr as $key => $value) {
-      $out =$out.$key."#separator".$arr[$key]["link"]."#separator".$arr[$key]["image"]."#separator".$arr[$key]["year"]."\r\n";
+      $out =$out.$key."#separator".$arr[$key]["link"]."#separator".$arr[$key]["image"]."\r\n";
     }
     file_put_contents($file,$out);
    }

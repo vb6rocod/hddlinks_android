@@ -12,7 +12,7 @@ $tit=$_GET["title"];
 $link=$_GET["link"];
 $width="200px";
 $height="278px";
-$last_good="https://ww3.9movies.yt";
+$last_good="https://ww4.9movies.yt";
 $host=parse_url($last_good)['host'];
 /* ==================================================== */
 $has_fav="yes";
@@ -175,6 +175,7 @@ if ($tip=="search") {
 } else {
  $l="https://".$host."/latest/series?p=".$page;
 }
+/*
 $ua="Mozilla/5.0 (Windows NT 10.0; rv:75.0) Gecko/20100101 Firefox/75.0";
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $l);
@@ -187,7 +188,37 @@ $ua="Mozilla/5.0 (Windows NT 10.0; rv:75.0) Gecko/20100101 Firefox/75.0";
   $h = curl_exec($ch);
   curl_close($ch);
   if (!$h) $h=file_get_contents($l);
+*/
+$ua = $_SERVER['HTTP_USER_AGENT'];
+$cookie=$base_cookie."9movies.dat";
+if (file_exists($base_pass."firefox.txt"))
+ $ua=file_get_contents($base_pass."firefox.txt");
+else
+ $ua="Mozilla/5.0 (Windows NT 10.0; rv:75.0) Gecko/20100101 Firefox/75.0";
+if (file_exists($cookie)) {
+ $x=file_get_contents($cookie);
+ if (preg_match("/9movies\.yt	\w+	\/	\w+	\d+	cf_clearance	([\w|\-]+)/",$x,$m))
+  $cc=trim($m[1]);
+ else
+  $cc="";
+} else {
+  $cc="";
+}
 
+$opts = array(
+  'http'=>array(
+    'method'=>"GET",
+    'header'=>"User-Agent: ".$ua."\r\n".
+              "Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\r\n" .
+              "Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2\r\n" .
+              "Accept-Encoding: deflate\r\n" .
+              "Connection: keep-alive\r\n" .
+              "Cookie: cf_clearance=".$cc."\r\n".
+              "Referer: https://ww3.9movies.yt/"."\r\n"
+  )
+);
+$context = stream_context_create($opts);
+$h=@file_get_contents($l,false,$context);
 $host=parse_url($l)['host'];
 $videos = explode('div class="item', $h);
 unset($videos[0]);

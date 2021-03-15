@@ -92,13 +92,14 @@ else
 <TD width="25%"><a href="filme/ling_f.php?page=1&tip=release&title=ling.online&link=" target="_blank">ling.online</a></TD>
 </TR>
 <TR>
-<TD width="25%"><a href="filme/lunchflix_f.php?page=1&tip=release&title=lunchflix&link=" target="_blank">lunchflix</a></TD>
+<TD width="25%"><a href="filme/classicmovies_f.php?page=1&tip=release&title=classicmovies&link=" target="_blank">classicmovies</a></TD>
 <TD width="25%"><a href="filme/cineplex_f_main.php" target="_blank">cineplex (cont)</a></TD>
 <TD width="25%"><a href="filme/vikv.php?page=1&tip=release&title=vikv&link=" target="_blank">vikv</a></TD>
-<TD width="25%"><a href="filme/lookmovie_f.php?page=1&tip=release&title=lookmovie&link=" target="_blank">lookmovie</a></TD>
+<!--<TD width="25%"><a href="filme/lookmovie_f.php?page=1&tip=release&title=lookmovie&link=" target="_blank">lookmovie</a></TD>-->
+<TD width="25%"><a href="filme/cl.php?host=https://lookmovie.io&cookie=lookmovie.dat&target=lookmovie_f.php&title=lookmovie" target="_blank">lookmovie</a></TD>
 </TR>
 <TR>
-<TD width="25%"></TD>
+<TD width="25%"><a href="filme/azm_f.php?page=1&tip=release&title=azm&link=" target="_blank">azm</a></TD>
 <TD width="25%"><a href="filme/bmovies_f.php?page=1&tip=release&title=bmovies&link=" target="_blank">bmovies</a></TD>
 <TD width="25%"><a href="filme/vidcloud9_f.php?page=1&tip=release&title=vidcloud9&link=" target="_blank">vidcloud9</a></TD>
 <TD width="25%"><a href="filme/solarmovie_f.php?page=1&tip=release&title=solarmovie&link=" target="_blank">solarmovie</a></TD>
@@ -106,7 +107,7 @@ else
 
 <TR>
 <TD width="25%"><a href="filme/zoechip_f.php?page=1&tip=release&title=zoechip&link=" target="_blank">zoechip</a></TD>
-<TD width="25%"><a href="filme/gomovies_f.php?page=1&tip=release&title=gomovies&link=" target="_blank">gomovies</a></TD>
+<TD width="25%"><a href="filme/foumovies_f.php?page=1&tip=release&title=foumovies&link=" target="_blank">foumovies</a></TD>
 <TD width="25%"><a href="filme/onionplay_f.php?page=1&tip=release&title=onionplay&link=" target="_blank">onionplay</a></TD>
 <TD width="25%"><a href="filme/streamlord_f.php?page=1&tip=release&title=streamlord&link=" target="_blank">streamlord</a></TD>
 </TR>
@@ -141,7 +142,9 @@ else
 <TR>
 <TD width="25%"><a href="filme/movies4u_f.php?page=1&tip=release&title=movies4u&link=" target="_blank">movies4u</a></TD>
 <TD width="25%"><a href="filme/ask4movie_f.php?page=1&tip=release&title=ask4movie&link=" target="_blank">ask4movie</a></TD>
-<TD width="25%"><a href="filme/9movies_f.php?page=1&tip=release&title=9movies&link=" target="_blank">9movies</a></TD>
+<!--<TD width="25%"><a href="filme/9movies_f.php?page=1&tip=release&title=9movies&link=" target="_blank">9movies</a></TD>-->
+<!--<TD width="25%"><a href="filme/9movies_ff.php" target="_blank">9movies</a></TD>-->
+<TD width="25%"><a href="filme/cl.php?host=https://ww4.9movies.yt&cookie=9movies.dat&target=9movies_f.php&title=9movies" target="_blank">9movies</a></TD>
 <TD width="25%"><a href="filme/soap2day_ff.php" target="_blank">soap2day</a></TD>
 </TR>
 

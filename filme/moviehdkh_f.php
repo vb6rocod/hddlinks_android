@@ -246,9 +246,9 @@ if ($tip=="release") {
    $t4 = explode('<', $t3[1]);
    $title = $t4[0];
    $title=prep_tit($title);
-   $t1 = explode('data-original="', $video);
-   $t2 = explode('"', $t1[1]);
-   $image = $t2[0];
+   $t1 = explode('data-background-image="', $video);
+   $t2 = explode('jpg', $t1[1]);
+   $image = $t2[0]."jpg";
    $r[]=array($link,$title,$image);
   }
 } else {
@@ -264,9 +264,10 @@ if ($tip=="release") {
    $t4 = explode('"', $t3[1]);
    $title = $t4[0];
    $title=prep_tit($title);
-   $t1 = explode('data-original="', $video);
-   $t2 = explode('"', $t1[1]);
-   $image = $t2[0];
+   $t1 = explode('data-background-image="', $video);
+   $t2 = explode('jpg', $t1[1]);
+   $t3=explode(",",$t2[0]);
+   $image = $t2[0]."jpg";
    $r[]=array($link,$title,$image);
   }
 }

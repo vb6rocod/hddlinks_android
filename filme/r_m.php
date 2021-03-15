@@ -8,9 +8,21 @@ elseif (strpos($file,"cinebloom") !== false)
  $cookie=$base_cookie."cinebloom.txt";
 elseif (strpos($file,"batflix") !== false)
  $cookie=$base_cookie."batflix.txt";
-else
+elseif (strpos($file,"5movies") !== false) {
+ $cookie=$base_cookie."5movies.dat";
+ if (file_exists($base_pass."firefox.txt"))
+   $ua=file_get_contents($base_pass."firefox.txt");
+ else
+   $ua="Mozilla/5.0 (Windows NT 10.0; rv:75.0) Gecko/20100101 Firefox/75.0";
+} elseif (strpos($file,"lookmovie") !== false) {
+ $cookie=$base_cookie."lookmovie.dat";
+ if (file_exists($base_pass."firefox.txt"))
+   $ua=file_get_contents($base_pass."firefox.txt");
+ else
+   $ua="Mozilla/5.0 (Windows NT 10.0; rv:75.0) Gecko/20100101 Firefox/75.0";
+} else
  $cookie=$base_cookie."hdpopcorns.dat";
-if (!preg_match("/5movies|filmehd\.|cinebloom\.|batflix\./",$file)) {
+if (!preg_match("/5movies|filmehd\.|cinebloom\.|batflix\.|lookmovie\./",$file)) {
 $ch = curl_init();
 curl_setopt($ch, CURLOPT_URL, $file);
 curl_setopt($ch, CURLOPT_REFERER,$file);

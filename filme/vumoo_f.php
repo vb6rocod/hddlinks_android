@@ -20,6 +20,8 @@ $has_add="yes";
 $has_fs="yes";
 $last_good="https://vumoo.to";
 $last_good="https://9pm.to";
+$last_good="https://vumoo.life";
+$last_good="https://vumoo.to";
 $host=parse_url($last_good)['host'];
 $fav_target="vumoo_f_fav.php?host=".$last_good;
 $add_target="vumoo_f_add.php";

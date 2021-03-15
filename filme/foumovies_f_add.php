@@ -1,13 +1,13 @@
 <?php
 //error_reporting(0);
+//62
 include ("../common.php");
+//$fav_link="mod=add&title=".urlencode(fix_t($title11))."&link=".$link1."&image=".$image;
 $mod=$_POST["mod"];
 $link=$_POST["link"];
 $title=$_POST["title"];
-$image=$_POST["image"];
-$year=$_POST["year"];
-
-$file=$base_fav."gomovies_f.dat";
+$image=urldecode($_POST["image"]);
+$file=$base_fav."foumovies_f.dat";
 $arr=array();
 $h="";
 if (file_exists($file)) {
@@ -19,10 +19,8 @@ if (file_exists($file)) {
       $tit=trim($a[0]);
       $l=trim($a[1]);
       $img=trim($a[2]);
-      $y=trim($a[3]);
       $arr[$tit]["link"]=$l;
       $arr[$tit]["image"]=$img;
-      $arr[$tit]["year"]=$y;
     }
   }
 }
@@ -39,29 +37,31 @@ if ($mod=="add") {
   if (!$found) {
     $arr[$title]["link"]=$link;
     $arr[$title]["image"]=$image;
-    $arr[$title]["year"]=$year;
     echo "Am adaugat filmul ".unfix_t(urldecode($title));
   }
   ksort($arr);
   } else {
     $arr[$title]["link"]=$link;
     $arr[$title]["image"]=$image;
-    $arr[$title]["year"]=$year;
     echo "Am adaugat filmul ".unfix_t(urldecode($title));
   }
   $out="";
+  //print_r ($arr);
   foreach($arr as $key => $value) {
-    $out =$out.$key."#separator".$arr[$key]["link"]."#separator".$arr[$key]["image"]."#separator".$arr[$key]["year"]."\r\n";
+    $out =$out.$key."#separator".$arr[$key]["link"]."#separator".$arr[$key]["image"]."\r\n";
   }
+  //echo $out;
   if ($found) echo "Filmul a fost adaugat deja!";
   file_put_contents($file,$out);
 } else {
   $found=false;
+  //echo $title;
   if ($arr) {
   $found=false;
   foreach($arr as $key => $value) {
     if ($title == $key) {
       $found=true;
+      //echo $title;
       unset ($arr[$key]);
       echo "Am sters filmul ".unfix_t(urldecode($title));
       break;
@@ -70,8 +70,9 @@ if ($mod=="add") {
   if ($arr) {
     ksort($arr);
     $out="";
+    //print_r ($arr);
     foreach($arr as $key => $value) {
-      $out =$out.$key."#separator".$arr[$key]["link"]."#separator".$arr[$key]["image"]."#separator".$arr[$key]["year"]."\r\n";
+      $out =$out.$key."#separator".$arr[$key]["link"]."#separator".$arr[$key]["image"]."\r\n";
     }
     file_put_contents($file,$out);
    }

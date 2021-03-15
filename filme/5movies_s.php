@@ -6,7 +6,6 @@ function str_between($string, $start, $end){
 	return substr($string,$ini,$len);
 }
 include ("../common.php");
-include ("../cloudflare1.php");
 $last_good="https://5movies.fm";
 $host=parse_url($last_good)['host'];
 $page = $_GET["page"];
@@ -182,11 +181,36 @@ if($tip=="release") {
    $l="https://".$host."/search-movies/".$search.".html";
   }
 //echo $l;
-$ua = $_SERVER['HTTP_USER_AGENT'];
-//$ua="Mozilla/5.0 (Windows NT 10.0; rv:71.0) Gecko/20100101 Firefox/71.0";
-$cookie=$base_cookie."hdpopcorns.dat";
-//$l="https://5movies.fm";
-$html=cf_pass($l,$cookie);
+// 5movies.fm
+$cookie=$base_cookie."5movies.dat";
+if (file_exists($base_pass."firefox.txt"))
+ $ua=file_get_contents($base_pass."firefox.txt");
+else
+ $ua="Mozilla/5.0 (Windows NT 10.0; rv:75.0) Gecko/20100101 Firefox/75.0";
+if (file_exists($cookie)) {
+ $x=file_get_contents($cookie);
+ if (preg_match("/5movies\.fm	\w+	\/	\w+	\d+	cf_clearance	([\w|\-]+)/",$x,$m))
+  $cc=trim($m[1]);
+ else
+  $cc="";
+} else {
+  $cc="";
+}
+$opts = array(
+  'http'=>array(
+    'method'=>"GET",
+    'header'=>"User-Agent: ".$ua."\r\n".
+              "Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\r\n" .
+              "Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2\r\n" .
+              "Accept-Encoding: deflate\r\n" .
+              "Connection: keep-alive\r\n" .
+              "Cookie: cf_clearance=".$cc."\r\n".
+              "Referer: ".$last_good."\r\n"
+  )
+);
+//print_r ($opts);
+$context = stream_context_create($opts);
+$html=@file_get_contents($l,false,$context);
 //echo $html;
 $videos = explode('div class="ml-item"', $html);
 unset($videos[0]);
@@ -228,6 +252,7 @@ foreach($videos as $video) {
   $val_imdb="tip=series&title=".urlencode(fix_t($tit_imdb))."&year=".$year."&imdb=".$imdb;
   $fav_link="mod=add&title=".urlencode(fix_t($title))."&link=".urlencode($link)."&image=".urlencode($image)."&year=".$year;
   $image="r_m.php?file=".str_replace("http:","https:",$image);
+  $image="blank.jpg";
   if ($tast == "NU") {
     echo '<td class="mp" width="25%"><a href="'.$link_f.'" id="myLink'.$w.'" target="_blank" onmousedown="isKeyPressed(event)">
     <img id="myLink'.$w.'" src="'.$image.'" width="'.$width.'" height="'.$height.'"><BR>'.$title.'</a>

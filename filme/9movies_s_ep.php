@@ -37,13 +37,43 @@ echo '<h2>'.$tit.'</h2><BR>';
 echo '<table border="1" width="100%">'."\n\r";
 //echo '<TR><td style="color:#000000;background-color:deepskyblue;text-align:center" colspan="3" align="center">'.$tit.'</TD></TR>';
 $ua="Mozilla/5.0 (Windows NT 10.0; rv:79.0) Gecko/20100101 Firefox/79.0";
-$l="https://ww3.9movies.yt/ajax/movie_episodes/".$link;
+$l="https://ww4.9movies.yt/ajax/movie_episodes/".$link;
+$cookie=$base_cookie."9movies.dat";
+if (file_exists($base_pass."firefox.txt"))
+ $ua=file_get_contents($base_pass."firefox.txt");
+else
+ $ua="Mozilla/5.0 (Windows NT 10.0; rv:75.0) Gecko/20100101 Firefox/75.0";
+if (file_exists($cookie)) {
+ $x=file_get_contents($cookie);
+ if (preg_match("/9movies\.yt	\w+	\/	\w+	\d+	cf_clearance	([\w|\-]+)/",$x,$m))
+  $cc=trim($m[1]);
+ else
+  $cc="";
+} else {
+  $cc="";
+}
+
+$opts = array(
+  'http'=>array(
+    'method'=>"GET",
+    'header'=>"User-Agent: ".$ua."\r\n".
+              "Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\r\n" .
+              "Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2\r\n" .
+              "Accept-Encoding: deflate\r\n" .
+              "Connection: keep-alive\r\n" .
+              "Cookie: cf_clearance=".$cc."\r\n".
+              "Referer: https://ww4.9movies.yt/"."\r\n"
+  )
+);
+$context = stream_context_create($opts);
+$h=@file_get_contents($l,false,$context);
 $head=array('Accept: application/json, text/javascript, */*; q=0.01',
 'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
 'Accept-Encoding: deflate',
 'X-Requested-With: XMLHttpRequest',
 'Connection: keep-alive',
-'Referer: https://ww3.9movies.yt/');
+'Referer: https://ww4.9movies.yt/');
+  /*
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $l);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
@@ -58,6 +88,7 @@ $head=array('Accept: application/json, text/javascript, */*; q=0.01',
   //curl_setopt($ch, CURLOPT_HEADER,1);
   $h = curl_exec($ch);
   curl_close($ch);
+  */
   $x=json_decode($h,1)['html'];
   //echo $x;
 $n=0;

@@ -74,13 +74,14 @@ document.onkeypress =  zx;
 <!-- straine -->
 <TR>
 <TD width="25%"><a href="filme/tvseries_s.php?page=1&tip=release&title=tvseries&link=" target="_blank">tvseries</a></TD>
-<TD width="25%"><a href="filme/gomovies_s.php?page=1&tip=release&title=gomovies&link=" target="_blank">gomovies</a></TD>
+<TD width="25%"></TD>
 <TD width="25%"><a href="filme/solarmovie_s.php?page=1&tip=release&title=solarmovie&link=" target="_blank">solarmovie</a></TD>
-<TD width="25%"><a href="filme/lookmovie_s.php?page=1&tip=release&title=lookmovie&link=" target="_blank">lookmovie</a></TD>
+<!--<TD width="25%"><a href="filme/lookmovie_s.php?page=1&tip=release&title=lookmovie&link=" target="_blank">lookmovie</a></TD>-->
+<TD width="25%"><a href="filme/cl.php?host=https://lookmovie.io&cookie=lookmovie.dat&target=lookmovie_s.php&title=lookmovie" target="_blank">lookmovie</a></TD>
 </TR>
 <TR>
 <TD width="25%"><a href="filme/zoechip_s.php?page=1&tip=release&title=zoechip&link=" target="_blank">zoechip</a></TD>
-<TD width="25%"></TD>
+<TD width="25%"><a href="filme/watch-serieshd_s.php?page=1&tip=release&title=watch-serieshd&link=" target="_blank">watch-serieshd</a></TD>
 <TD width="25%"><a href="filme/cartoonhd_s.php?page=1&tip=release&title=cartoonhd&link=" target="_blank">cartoonhd</a></TD>
 <TD width="25%"><a href="filme/cineplex_s_main.php" target="_blank">cineplex (cont)</a></TD>
 </TR>
@@ -92,7 +93,7 @@ document.onkeypress =  zx;
 </TR>
 
 <TR>
-<TD width="25%"></TD>
+<TD width="25%"><a href="filme/noxx_s.php?page=1&tip=release&title=noxx&link=" target="_blank">noxx</a></TD>
 <TD width="25%"><a href="filme/gerryreid_s.php?page=1&tip=release&title=gerryreid&link=" target="_blank">gerryreid</a></TD>
 <TD width="25%"><a href="filme/yesmovies_s.php?page=1&tip=release&title=yesmovies&link=" target="_blank">yesmovies</a></TD>
 <TD width="25%"></TD>
@@ -100,12 +101,15 @@ document.onkeypress =  zx;
 
 <TR>
 <TD width="25%"><a href="filme/uniquestream_s.php?page=1&tip=release&title=uniquestream&link=" target="_blank">uniquestream</a></TD>
-<TD width="25%"><a href="filme/5movies_s.php?page=1&tip=release&title=5movies&link=" target="_blank">5movies</a></TD>
+<!--<TD width="25%"><a href="filme/5movies_s.php?page=1&tip=release&title=5movies&link=" target="_blank">5movies</a></TD>-->
+<TD width="25%"><a href="filme/cl.php?host=https://5movies.fm&cookie=5movies.dat&target=5movies_s.php&title=5movies" target="_blank">5movies</a></TD>
 <TD width="25%"></TD>
 <TD width="25%"><a href="filme/flixtor_s.php?page=1&tip=release&title=flixtor&link=" target="_blank">flixtor</a></TD>
 </TR>
 <TR>
-<TD width="25%"><a href="filme/9movies_s.php?page=1&tip=release&title=9movies&link=" target="_blank">9movies</a></TD>
+<!--<TD width="25%"><a href="filme/9movies_s.php?page=1&tip=release&title=9movies&link=" target="_blank">9movies</a></TD>-->
+<!--<TD width="25%"><a href="filme/9movies_ss.php" target="_blank">9movies</a></TD>-->
+<TD width="25%"><a href="filme/cl.php?host=https://ww3.9movies.yt&cookie=9movies.dat&target=9movies_s.php&title=9movies" target="_blank">9movies</a></TD>
 <TD width="25%"><a href="filme/topmoviesonline_s.php?page=1&tip=release&title=topmoviesonline&link=" target="_blank">topmoviesonline</a></TD>
 <TD width="25%"><a href="filme/streamlord_s.php?page=1&tip=release&title=streamlord&link=" target="_blank">streamlord</a></TD>
 <TD width="25%"><a href="filme/goojara_s.php?page=1&tip=release&title=goojara&link=" target="_blank">goojara</a></TD>

@@ -6,7 +6,7 @@ $page_title="Seriale favorite";
 $width="200px";
 $height="278px";
 $add_target="zoechip_s_add.php";
-$fs_target="zoechip_s_ep.php";
+$fs_target="zoechip_ep.php";
 $file=$base_fav."zoechip_s.dat";
 ?>
 <html><head>

@@ -26,20 +26,22 @@ if ($flash != "mp") {
 if (preg_match("/android|ipad/i",$user_agent) && preg_match("/chrome|firefox|mobile/i",$user_agent)) $flash="chrome";
 }
 $tit=unfix_t(urldecode($_GET["title"]));
+$tit=prep_tit($tit);
 $image=$_GET["image"];
 $link=urldecode($_GET["link"]);
 $tip=$_GET["tip"];
 $sez=$_GET["sez"];
 $ep=$_GET["ep"];
 $ep_title=unfix_t(urldecode($_GET["ep_tit"]));
+$ep_title=prep_tit($ep_title);
 $year=$_GET["year"];
 if ($tip=="movie") {
 $tit2="";
 } else {
 if ($ep_title)
-$tit2=" - ".$sez."x".$ep." ".$ep_title;
+   $tit2=" - ".$sez."x".$ep." ".$ep_title;
 else
-$tit2=" - ".$sez."x".$ep;
+   $tit2=" - ".$sez."x".$ep;
 $tip="series";
 }
 $imdbid="";
@@ -104,14 +106,6 @@ function changeserver(s,t) {
       document.getElementById("subtitrari").click();
      } else if (charCode == "53") {
       document.getElementById("viz").click();
-     } else if (charCode == "55") {
-      document.getElementById("opensub1").click();
-     } else if (charCode == "56") {
-      document.getElementById("titrari1").click();
-     } else if (charCode == "57") {
-      document.getElementById("subs1").click();
-     } else if (charCode == "48") {
-      document.getElementById("subtitrari1").click();
      }
    }
 document.onkeypress =  zx;
@@ -129,66 +123,76 @@ function off() {
 <body>
 <a href='' id='mytest1'></a>
 <?php
-echo '<h2>'.$tit.' '.$tit2.'</H2>';
+$cookie=$base_cookie."noxx.dat";
+//if (file_exists($cookie)) unlink($cookie);
+
+//echo '<iframe src="'.$captcha.'" style="display: none;"></iframe>';
+echo '<h2>'.$tit.$tit2.'</H2>';
 echo '<BR>';
-$ua = $_SERVER['HTTP_USER_AGENT'];
-//echo $link;
-if ($tip=="movie") {
-  $t1=explode("/",$link);
-  $id1=$t1[5];
-  $id2=0;
-  $l1=$link."/Gomovies-watch-online-free.html";
-} else {
-  $l1=$link;
-  $t1=explode("/",$link);
-  $id1=$t1[5];
-  $t2=explode("-",$t1[6]);
-  $id2=$t2[0];
-}
-//echo $link;
-$head=array(
-'Accept: application/json, text/javascript, */*; q=0.01',
-'Accept-Language: en-US,en;q=0.5',
-'Accept-Encoding: deflate',
-'X-Requested-With: XMLHttpRequest'
-);
-$l="https://ww2.gomovies.digital/user/servers/".$id1."?ep=".$id2;
+$cookie=$base_cookie."noxx.dat";
+$cookie1=$base_cookie."noxx.txt";
+$ua="Mozilla/5.0 (Windows NT 10.0; rv:55.0) Gecko/20100101 Firefox/55.0";
+$c1=file_get_contents($cookie1);
+  $head=array('Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+  'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
+  $c1);
+$l=$link;
 //echo $l;
-$ch = curl_init();
-curl_setopt($ch, CURLOPT_URL, $l);
-curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-curl_setopt($ch, CURLOPT_USERAGENT, $ua);
-curl_setopt($ch, CURLOPT_REFERER, "https://gomovies.tube");
-curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
-//curl_setopt($ch, CURLOPT_HTTPHEADER, $head);
-$h = curl_exec($ch);
-curl_close($ch);
-//echo $h;
+  $ch = curl_init();
+  curl_setopt($ch, CURLOPT_URL, $l);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+  curl_setopt($ch,CURLOPT_REFERER,"https://noxx.is");
+  curl_setopt($ch,CURLOPT_HTTPHEADER,$head);
+  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
+  curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie);
+  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 25);
+  $html = curl_exec($ch);
+  curl_close($ch);
+//echo $html;
 $r=array();
-$videos = explode('data-value="', $h);
+$s=array();
+$videos = explode('<option value="', $html);
 unset($videos[0]);
 $videos = array_values($videos);
 foreach($videos as $video) {
-  //$t1=explode('href="',$video);
-  $t2=explode('"',$video);
-  //$t3=explode('"',$t2[1]);
-  $openload=trim($t2[0]);
-  $r[]=$openload;
-  $c_link=$l1."?server=".$r[0];
+  $t1=explode('"',$video);
+  $l1=$t1[0];
+  if (strpos($l1,"getlink.php") !== false) $l1= "https://noxx.is".$l1;
+  $l1=preg_replace("/\n|\r|\t/","",$l1);
+  $r[]=$l1;
+  $t2=explode(">",$video);
+  $t3=explode("<",$t2[1]);
+  $s[]=trim($t3[0]);
 }
-//print_r ($r);
 echo '<table border="1" width="100%">';
-echo '<TR><TD class="mp">Alegeti un server: Server curent:<label id="server">'.$r[0].'</label>
-<input type="hidden" id="file" value="'.urlencode($c_link).'"></td></TR></TABLE>';
+echo '<TR><TD class="mp">Alegeti un server: Server curent:<label id="server">'.$s[0].'</label>
+<input type="hidden" id="file" value="'.urlencode($r[0]).'"></td></TR></TABLE>';
 echo '<table border="1" width="100%"><TR>';
 $k=count($r);
-echo '<TR>';
+$x=0;
 for ($i=0;$i<$k;$i++) {
-  $openload=$r[$i];
-  $c_link=$l1."?server=".$r[$i];
+  if ($x==0) echo '<TR>';
+  $c_link=$r[$i];
+  $openload=$s[$i];
+  if (preg_match($indirect,$openload)) {
+  echo '<TD class="mp"><a href="filme_link.php?file='.urlencode($c_link).'&title='.urlencode(unfix_t($tit.$tit2)).'" target="_blank">'.$openload.'</a></td>';
+  } else
   echo '<TD class="mp"><a id="myLink" href="#" onclick="changeserver('."'".$openload."','".urlencode($c_link)."'".');return false;">'.$openload.'</a></td>';
+  $x++;
+  if ($x==6) {
+    echo '</TR>';
+    $x=0;
+  }
 }
-echo '</TR></TABLE>';
+if ($x < 6 && $x > 0 & $k>6) {
+ for ($k=0;$k<6-$x;$k++) {
+   echo '<TD></TD>'."\r\n";
+ }
+ echo '</TR>'."\r\n";
+}
+echo '</TABLE>';
 if ($tip=="movie") {
   $tit3=$tit;
   $tit2="";
@@ -205,6 +209,10 @@ if ($tip=="movie") {
   $from="";
   $link_page="";
 }
+  $rest = substr($tit3, -6);
+  if (preg_match("/\((\d+)\)/",$rest,$m)) {
+   $tit3=trim(str_replace($m[0],"",$tit3));
+  }
 $sub_link ="from=".$from."&tip=".$tip."&sez=".$sez."&ep=".$ep."&imdb=".$imdbid."&title=".urlencode(fix_t($tit3))."&link=".$link_page."&ep_tit=".urlencode(fix_t($tit2))."&year=".$year;
 echo '<br>';
 echo '<table border="1" width="100%">';
@@ -214,14 +222,6 @@ echo '<TD class="mp"><a id="opensub" href="opensubtitles.php?'.$sub_link.'">open
 echo '<TD class="mp"><a id="titrari" href="titrari_main.php?page=1&'.$sub_link.'&page=1">titrari.ro</a></td>';
 echo '<TD class="mp"><a id="subs" href="subs_main.php?'.$sub_link.'">subs.ro</a></td>';
 echo '<TD class="mp"><a id="subtitrari" href="subtitrari_main.php?'.$sub_link.'">subtitrari_noi.ro</a></td>';
-echo '</TR></TABLE>';
-echo '<table border="1" width="100%">';
-echo '<TR><TD style="background-color:#0a6996;color:#64c8ff;font-weight: bold;font-size: 1.5em" align="center" colspan="4">Alegeti o subtitrare (cauta imdb id)</td></TR>';
-echo '<TR>';
-echo '<TD class="mp"><a id="opensub1" href="opensubtitles1.php?'.$sub_link.'">opensubtitles</a></td>';
-echo '<TD class="mp"><a id="titrari1" href="titrari_main1.php?page=1&'.$sub_link.'&page=1">titrari.ro</a></td>';
-echo '<TD class="mp"><a id="subs1" href="subs_main1.php?'.$sub_link.'">subs.ro</a></td>';
-echo '<TD class="mp"><a id="subtitrari1" href="subtitrari_main1.php?'.$sub_link.'">subtitrari_noi.ro</a></td>';
 echo '</TR></TABLE>';
 echo '<table border="1" width="100%"><TR>';
 if ($tip=="movie")
@@ -237,14 +237,17 @@ echo '</table>';
 echo '<br>
 <table border="0px" width="100%">
 <TR>
-<TD><font size="4"><b>Scurtaturi: 1=opensubtitles, 2=titrari, 3=subs, 4=subtitrari, 5=vizioneaza
-<BR>Scurtaturi: 7=opensubtitles, 8=titrari, 9=subs, 0=subtitrari (cauta imdb id)
-</b></font></TD></TR></TABLE>
+<TD><font size="4"><b>Scurtaturi: 1=opensubtitles, 2=titrari, 3=subs, 4=subtitrari, 5=vizioneaza</b></font></TD></TR></TABLE>
 ';
 include("../debug.html");
 echo '
 <div id="overlay">
   <div id="text">Wait....</div>
 </div>
+<BR>';
+////////////////////////////////////////////
+
+////////////////////////////////////////////
+echo '
 </body>
 </html>';

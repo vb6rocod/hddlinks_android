@@ -50,6 +50,42 @@ $flash="direct";
 //$link="http://89.136.209.30:1935/liveedge/TVRMOLDOVA.stream/playlist.m3u8";
 //$link=urldecode("https%3A%2F%2Fwww.youtube.com%2Fwatch%3Fv%3Dr_d4ryn9UsA&title=Gaming%20Music%20Radio%20%E2%9A%A1%2024/7%20NCS%20Live%20Stream%20%E2%9A%A1%20Trap,%20Chill,%20Electro,%20Dubstep,%20Future%20Bass,%20EDM");
 //$mod="direct";
+if (strpos($link,"facebook") !== false) {
+function decode_code1($code){
+    return preg_replace_callback(
+        "@\\\\(u)([0-9a-f]{4})@",
+        function($m){
+            return mb_convert_encoding(chr($m[1]?hexdec($m[2]):octdec($m[2])),'UTF-8');
+        },
+        $code
+    );
+}
+$pattern = '/(video_id=|videos\/)([0-9a-zA-Z]+)/';
+preg_match($pattern,$link,$m);
+$filelink="https://www.facebook.com/video/embed?video_id=".$m[2];
+//echo $filelink;
+// https://www.facebook.com/134093565449/videos/342521610130689/
+// https://www.facebook.com/watch/live/?v=342521610130689&ref=watch_permalink
+$filelink="https://www.facebook.com/watch/live/?v=".$m[2]."&ref=watch_permalink";
+      $ua="Mozilla/5.0 (Windows NT 10.0; WOW64; rv:46.0) Gecko/20100101 Firefox/46.0";
+      $ua="Mozilla/5.0 (Windows NT 10.0; rv:81.0) Gecko/20100101 Firefox/81.0";
+      $ch = curl_init();
+      curl_setopt($ch, CURLOPT_URL, $filelink);
+      curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+      curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+      curl_setopt($ch, CURLOPT_USERAGENT, $ua);
+      curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+      curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+      curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+      $h1 = curl_exec($ch);
+      curl_close($ch);
+
+      $h1=urldecode(str_replace("\\","",$h1));
+      //echo $h1;
+      preg_match('/(?:hd_src|sd_src):\"([\w\-\.\_\/\&\=\:\?]+)/',$h1,$m);
+
+      $link=$m[1];
+}
 if (preg_match("/media\.cms\.protvplus\.ro/",$link)) {
   $ua = $_SERVER['HTTP_USER_AGENT'];
   $head = array('Accept: */*',

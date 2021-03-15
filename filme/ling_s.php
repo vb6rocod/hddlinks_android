@@ -171,15 +171,15 @@ echo '</TR>'."\r\n";
 
 if($tip=="release") {
   if ($page>1)
-   $l="https://".$host."/en/video/serials/?page=".$page;
+   $l="https://".$host."/en/videos/serials/?page=".$page;
   else
-   $l="https://".$host."/en/video/serials/";
+   $l="https://".$host."/en/videos/serials/";
 } else {
   $search=str_replace(" ","+",$tit);
   if ($page > 1)
-   $l="https://".$host."/en/video/serials/?genre=&country=&order_by=-rating&page=".$page."&title=".$search;
+   $l="https://".$host."/en/videos/serials/?genre=&country=&order_by=-rating&page=".$page."&title=".$search;
   else
-   $l = "https://".$host."/en/video/serials/?title=".$search."&genre=&country=&order_by=-rating";
+   $l = "https://".$host."/en/videos/serials/?title=".$search."&genre=&country=&order_by=-rating";
 
 }
   $ua="Mozilla/5.0 (Windows NT 10.0; rv:55.0) Gecko/20100101 Firefox/55.0";
