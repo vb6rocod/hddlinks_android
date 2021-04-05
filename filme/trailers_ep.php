@@ -10,8 +10,8 @@ $year=$_GET['year'];
 /* ======================================= */
 $width="200px";
 $height="100px";
-$fs_target="noxx_fs.php";
-$has_img="no";
+$fs_target="trailers_fs.php";
+$has_img="yes";
 ?>
 <html>
 <head>
@@ -30,36 +30,39 @@ function str_between($string, $start, $end){
 	return substr($string,$ini,$len);
 }
 echo '<h2>'.$tit.'</h2>';
-$requestLink=$link;
-$cookie=$base_cookie."noxx.dat";
-$cookie1=$base_cookie."noxx.txt";
-$ua="Mozilla/5.0 (Windows NT 10.0; rv:55.0) Gecko/20100101 Firefox/55.0";
-$c1=file_get_contents($cookie1);
-  $head=array('Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
-  'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
-  $c1);
+$ua="Mozilla/5.0 (Windows NT 10.0; rv:80.0) Gecko/20100101 Firefox/80.0";
+$host=parse_url($link)['host'];
+$head=array('Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
+'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
+'Accept-Encoding: deflate',
+'Connection: keep-alive');
+//echo $link;
   $ch = curl_init($link);
   curl_setopt($ch, CURLOPT_USERAGENT, $ua);
   curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER  ,1);  // RETURN THE CONTENTS OF THE CALL
   curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-  curl_setopt($ch,CURLOPT_HTTPHEADER,$head);
-  curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie);
+  curl_setopt($ch, CURLOPT_HTTPHEADER,$head);
+  //curl_setopt($ch, CURLOPT_COOKIEJAR, $cookie);
+  //curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie);
+  //curl_setopt($ch, CURLOPT_HEADER,1);
   curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
   curl_setopt($ch, CURLOPT_TIMEOUT, 15);
   $h = curl_exec($ch);
   curl_close ($ch);
-$host=parse_url($requestLink)['host'];
 //echo $h;
 $n=0;
-$videos = explode('<span>Season', $h);
+$videos = explode('class="tour-minimal-title">', $h);
 $sezoane=array();
 unset($videos[0]);
 $videos = array_values($videos);
 //$videos = array_reverse($videos);
 foreach($videos as $video) {
-  if (preg_match("/(\d+)/",$video,$m))
-  $sezoane[]=$m[1];
+  $t1=explode("<",$video);
+  if (preg_match("/Season\s+(\d+)/",trim($t1[0]),$m))
+    $sezoane[]=$m[1];
+  else
+    $sezoane[]="1";
 }
 echo '<table border="1" width="100%">'."\n\r";
 
@@ -83,14 +86,16 @@ if ($p < 10 && $p > 0 && $k > 9) {
 echo '</TABLE>';
 
 foreach($videos as $video) {
-  if (preg_match("/(\d+)/",$video,$m))
-  $season=trim($m[1]);
+  $t1=explode("<",$video);
+  if (preg_match("/Season\s+(\d+)/",trim($t1[0]),$m))
+    $season=$m[1];
+  else
+    $season="1";
   $sez = $season;
   echo '<table border="1" width="100%">'."\n\r";
   echo '<TR><td class="sez" style="color:black;background-color:#0a6996;color:#64c8ff;text-align:center" colspan="3">Sezonul '.($sez).'</TD></TR>';
   $n=0;
-  //echo $video;
-  $vids = explode('href="/tv', $video);
+  $vids = explode('<article class="tour-modern', $video);
   unset($vids[0]);
   $vids = array_values($vids);
   //$vids = array_reverse($vids);
@@ -98,19 +103,30 @@ foreach($videos as $video) {
   $img_ep="";
   $episod="";
   $ep_tit="";
-  //$t1=explode('href="',$vid);
-  $t2=explode('"',$vid);
-  $link="https://noxx.is/tv".$t2[0];
+  $t1=explode('href="',$vid);
+  $t2=explode('"',$t1[1]);
+  $link="https://".$host.$t2[0];
+  $t3=explode('alt="',$vid);
+  $t4=explode('"',$t3[1]);
+  //echo $t4[0];
+  preg_match("/Season\s+\d+\s+\-\s+(Episode\s+\d+\s*\:)?\s*(.+)/i",$t4[0],$x);
+  //print_r ($x);
+  $ep_tit=prep_tit($x[2]);
+  $t1=explode('src="',$vid);
+  $t2=explode('"',$t1[1]);
+  $img_ep=$t2[0];
+  if (preg_match("/\.png/",$img_ep)) $img_ep=$image;
 
-  $title="";;
-  $img_ep=$image;
-  $episod = substr(strrchr($link, "/"), 1);
-  $ep_tit=$title;
+  if (preg_match("/(episode|part)\-(\d+)/",$link,$m)) {
+    $episod=$m[2];
+  } else {
+    $episod="1";
+  }
   if ($ep_tit)
    $ep_tit_d=$season."x".$episod." ".$ep_tit;
   else
    $ep_tit_d=$season."x".$episod;
-if (is_numeric($episod)) {
+
   $link_f=$fs_target.'?tip=series&link='.urlencode($link).'&title='.urlencode(fix_t($tit)).'&image='.$img_ep."&sez=".$season."&ep=".$episod."&ep_tit=".urlencode(fix_t($ep_tit))."&year=".$year;
    if ($n == 0) echo "<TR>"."\n\r";
    if ($has_img == "yes")
@@ -122,8 +138,7 @@ if (is_numeric($episod)) {
     echo '</TR>'."\n\r";
     $n=0;
    }
-}
-}
+}  
   if ($n < 3 && $n > 0) {
     for ($k=0;$k<3-$n;$k++) {
       echo '<TD></TD>'."\r\n";

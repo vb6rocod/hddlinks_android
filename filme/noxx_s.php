@@ -190,8 +190,8 @@ if ($page==1 && $tip=="release") {
   //curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie);
   curl_setopt($ch, CURLOPT_HEADER,1);
   curl_setopt($ch, CURLOPT_HTTPHEADER,$head);
-  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
-  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 25);
   $html = curl_exec($ch);
   curl_close($ch);
   if (preg_match("/ddg2\=(\w+)/",$html,$m))
@@ -218,8 +218,8 @@ if ($page==1 && $tip=="release") {
   //curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie);
   curl_setopt($ch, CURLOPT_HEADER,1);
   curl_setopt($ch, CURLOPT_HTTPHEADER,$head);
-  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
-  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 25);
   $html = curl_exec($ch);
   curl_close($ch);
   //echo $html;
@@ -250,8 +250,8 @@ if ($page==1 && $tip=="release") {
   curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie);
   curl_setopt($ch, CURLOPT_HEADER,1);
   curl_setopt($ch, CURLOPT_HTTPHEADER,$head);
-  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
-  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 25);
   $html = curl_exec($ch);
   curl_close($ch);
   //echo $html;
@@ -262,6 +262,7 @@ $c1=file_get_contents($cookie1);
 if ($tip=="release") {
  $l="https://noxx.is/fetch.php";
  $post="no=".(48*($page-1))."&gpar=&qpar=&spar=date%20desc";
+ // no=48&gpar=&qpar=&spar=date desc
  $head=array('Accept: */*',
  'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
  'Accept-Encoding: deflate',
@@ -285,6 +286,7 @@ if ($tip=="release") {
   curl_setopt($ch, CURLOPT_TIMEOUT, 25);
   $html = curl_exec($ch);
   curl_close ($ch);
+  //echo $html;
 } else {
   $search=str_replace(" ","+",$tit);
   $l="https://noxx.is/browse?q=".$search;
@@ -298,23 +300,23 @@ if ($tip=="release") {
   curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
   curl_setopt($ch,CURLOPT_HTTPHEADER,$head);
   curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie);
-  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
-  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 25);
   $html = curl_exec($ch);
   curl_close ($ch);
 }
 //echo $html;
 ///////////////////////////////////////////////////////////////////////////
 $r=array();
-  $videos = explode('div class="col-1',$html);
+  $videos = explode('<a href="/tv',$html);
   unset($videos[0]);
   $videos = array_values($videos);
   foreach($videos as $video) {
-   $t1 = explode('href="',$video);
-   $t2=explode('"',$t1[1]);
-   $link = "https://noxx.is".$t2[0];
+   //$t1 = explode('href="',$video);
+   $t2=explode('"',$video);
+   $link = "https://noxx.is/tv".$t2[0];
 
-   $t3 = explode('class="title">', $video);
+   $t3 = explode('block w-full truncate">', $video);
    $t4 = explode('<', $t3[1]);
    $title = $t4[0];
    $title=prep_tit($title);

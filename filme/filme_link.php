@@ -1295,7 +1295,7 @@ $s=$s."fastplay\.cc|watchers\.to|fastplay\.to";
 $s=$s."|trilulilu|proplayer\/playlist-controller.php|viki\.com|modovideo\.com|roshare|rosharing|ishared\.eu|";
 $s=$s."stagevu\.com|vidup\.me|vidup\.io";
 $s=$s."|filebox\.com|glumbouploads\.com|uploadc\.com|sharefiles4u\.com|zixshare\.com|uploadboost\.com|";
-$s=$s."hqq\.tv|hqq\.to|hqq\.watch|waaw1?\.|waaws|hindipix\.in|pajalusta\.club|vidtodo\.com|vshare\.eu|bit\.ly";
+$s=$s."netu\.wiztube\.xyz|hqq\.tv|hqq\.to|hqq\.watch|waaw1?\.|waaws|hindipix\.in|pajalusta\.club|vidtodo\.com|vshare\.eu|bit\.ly";
 $s=$s."|nowvideo\.eu|nowvideo\.co|vreer\.com|180upload\.com|dailymotion\.com|nosvideo\.com|vidbull\.com|";
 $s=$s."purevid\.com|videobam\.com|streamcloud\.eu|donevideo\.com|upafile\.com|docs\.google|mail\.ru|";
 $s=$s."superweb|moviki\.ru|entervideos\.com";
@@ -1594,7 +1594,7 @@ for ($i=0;$i<count($links);$i++) {
    $pat="/hqq\.watch|xopenload\.me|hqq\.tv\/player\/script\.php|top\.mail\.ru|facebook|twitter|player\.swf";
    $pat .="|img\.youtube|youtube\.com\/user|radioarad|\.jpg|\.png|\.gif|jq\/(js|css)";
    $pat .="|fsplay\.net\?s|changejplayer\.js|validateemb\.php|restore_google\.php|";
-   $pat .="ExoLoader.addZone|js\/api\/share\.js|hindipix\.in\/(js|style)|share\.php\?|brave\.com/i";
+   $pat .="ExoLoader.addZone|js\/api\/share\.js|hindipix\.in\/(js|style)|share\.php\?|brave\.com|affiliate\.rusvpn\.com/i";
    if (!preg_match($pat,$cur_link)) {
      $cur_link=str_replace(urldecode("%0A"),"",$cur_link);
      if ($cur_link) $link_f[]=$cur_link;
@@ -1750,7 +1750,7 @@ $cap=0;
 foreach($link_f as $k=>$val) {
 $server="";
 $server = parse_url($link_f[$k])["host"];
-if (preg_match("/hqq\.|waaw1?|netu|pajalusta|hindipix\.|goplayer\.online/",$link_f[$k])) {
+if (preg_match("/hqq\.|waaw1?|netu|pajalusta|hindipix\.|goplayer\.online|netu\.wiztube\.xyz/",$link_f[$k])) {
   if (preg_match("/\?vid\=http/",$link_f[$k])) {
    $t1=explode("?vid",$link_f[$k]);
    $link_f[$k]=$t1[1];

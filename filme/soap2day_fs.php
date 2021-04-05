@@ -137,8 +137,8 @@ echo '<BR>';
 ///////////////////////////////////////////////////////////////
 $l=$link;
 $r=array();
-$r[]=$l."&val=1";
-$r[]=$l."&val=2";
+$r[]=$l."&val=1&tip=".$tip;
+$r[]=$l."&val=2&tip=".$tip;
 echo '<table border="1" width="100%">';
 echo '<TR><TD class="mp">Alegeti un server: Server curent:<label id="server">'.parse_url($r[0])['host'].'</label>
 <input type="hidden" id="file" value="'.urlencode($r[0]).'"></td></TR></TABLE>';

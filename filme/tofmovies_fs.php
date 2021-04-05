@@ -145,6 +145,7 @@ $ua="Mozilla/5.0 (Windows NT 10.0; rv:80.0) Gecko/20100101 Firefox/80.0";
   curl_setopt($ch, CURLOPT_TIMEOUT, 25);
   $h = curl_exec($ch);
   curl_close ($ch);
+  //echo $h;
   if (preg_match("/onlystream\=\"([\w|\-|\_]+)\"/",$h,$v)) // Vidoo.tv
    $r[]="https://vidoo.tv/e/".$v[1];
   if (preg_match("/server\_e\=\"https\:\/\/mystream\.streamango\.to\/([\w|\-|\_]+)\"/",$h,$v))

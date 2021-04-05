@@ -74,7 +74,7 @@ document.onkeypress =  zx;
 <!-- straine -->
 <TR>
 <TD width="25%"><a href="filme/tvseries_s.php?page=1&tip=release&title=tvseries&link=" target="_blank">tvseries</a></TD>
-<TD width="25%"></TD>
+<TD width="25%"><a href="filme/trailers_s.php?page=1&tip=release&title=trailers&link=" target="_blank">trailers</a></TD>
 <TD width="25%"><a href="filme/solarmovie_s.php?page=1&tip=release&title=solarmovie&link=" target="_blank">solarmovie</a></TD>
 <!--<TD width="25%"><a href="filme/lookmovie_s.php?page=1&tip=release&title=lookmovie&link=" target="_blank">lookmovie</a></TD>-->
 <TD width="25%"><a href="filme/cl.php?host=https://lookmovie.io&cookie=lookmovie.dat&target=lookmovie_s.php&title=lookmovie" target="_blank">lookmovie</a></TD>
@@ -96,14 +96,14 @@ document.onkeypress =  zx;
 <TD width="25%"><a href="filme/noxx_s.php?page=1&tip=release&title=noxx&link=" target="_blank">noxx</a></TD>
 <TD width="25%"><a href="filme/gerryreid_s.php?page=1&tip=release&title=gerryreid&link=" target="_blank">gerryreid</a></TD>
 <TD width="25%"><a href="filme/yesmovies_s.php?page=1&tip=release&title=yesmovies&link=" target="_blank">yesmovies</a></TD>
-<TD width="25%"></TD>
+<TD width="25%"><a href="filme/xmovies_s.php?page=1&tip=release&title=xmovies&link=" target="_blank">xmovies</a></TD>
 </TR>
 
 <TR>
 <TD width="25%"><a href="filme/uniquestream_s.php?page=1&tip=release&title=uniquestream&link=" target="_blank">uniquestream</a></TD>
 <!--<TD width="25%"><a href="filme/5movies_s.php?page=1&tip=release&title=5movies&link=" target="_blank">5movies</a></TD>-->
 <TD width="25%"><a href="filme/cl.php?host=https://5movies.fm&cookie=5movies.dat&target=5movies_s.php&title=5movies" target="_blank">5movies</a></TD>
-<TD width="25%"></TD>
+<TD width="25%"><a href="filme/flixanity_s.php?page=1&tip=release&title=flixanity&link=" target="_blank">flixanity</a></TD>
 <TD width="25%"><a href="filme/flixtor_s.php?page=1&tip=release&title=flixtor&link=" target="_blank">flixtor</a></TD>
 </TR>
 <TR>

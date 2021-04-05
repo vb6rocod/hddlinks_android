@@ -136,7 +136,8 @@ else
 <TR>
 <TD width="25%"><a href="filme/europix_f.php?page=1&tip=release&title=europix&link=" target="_blank">europix</a></TD>
 <TD width="25%"><a href="filme/esubmovie.php?page=1&tip=release&title=esubmovie&link=" target="_blank">esubmovie</a></TD>
-<TD width="25%"></TD>
+<!--<TD width="25%"></TD>-->
+<TD width="25%"><a href="filme/cl.php?host=https://ww2.batflix.org/uploads/movies/9371/LltK216Bgq-150x220.jpeg&cookie=batflix.txt&target=batflix.php&title=batflix" target="_blank">batflix</a></TD>
 <TD width="25%"><a href="filme/fmoviesarena.php?page=1&tip=release&title=fmoviesarena&link=" target="_blank">fmoviesarena</a></TD>
 </TR>
 <TR>
@@ -152,7 +153,7 @@ else
 <TD width="25%"><a href="filme/tofmovies_f.php?page=1&tip=release&title=tofmovies&link=" target="_blank">tofmovies</a></TD>
 <TD width="25%"><a href="filme/topmoviesonline_f.php?page=1&tip=release&title=topmoviesonline&link=" target="_blank">topmoviesonline</a></TD>
 <TD width="25%"><a href="filme/123files.php?page=1&tip=release&title=123files&link=" target="_blank">123files</a></TD>
-<TD width="25%"></TD>
+<TD width="25%"><a href="filme/trailers_f.php?page=1&tip=release&title=trailers&link=" target="_blank">trailers</a></TD>
 </TR>
 <?php
 if (file_exists($base_pass."tvplay.txt")) {

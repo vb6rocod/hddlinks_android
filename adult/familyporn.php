@@ -163,6 +163,7 @@ if ($flash != "mp") {
 if (preg_match("/android|ipad/i",$user_agent) && preg_match("/chrome|firefox|mobile/i",$user_agent)) $flash="chrome";
 }
 if ($flash=="chrome") $flash="mp";
+//$flash="flash";
 $w=0;
 $n=0;
 if ($tast=="NU")

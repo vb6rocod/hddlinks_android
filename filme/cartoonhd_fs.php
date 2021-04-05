@@ -205,7 +205,7 @@ $ua = $_SERVER['HTTP_USER_AGENT'];
   $r=array();
   foreach ($s1 as $key => $value) {
    $l=str_replace(" ","+",$value);
-   if (preg_match("/vidcloud9\./",$l)) {
+   if (preg_match("/vidcloud99\./",$l)) {
     $r[]=urlencode($l);
     $head=array('Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
      'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2');

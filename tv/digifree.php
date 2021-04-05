@@ -82,8 +82,9 @@ $videos=array(
 'Digi Sport 4' => 'https://sportbar.biz/rodigi4.html',
 'Eurosport 1'  => 'https://sportbar.biz/eurosport1ro.html'
 );
-
-
+// http://www.tvs-widget.com/channel/tvs.php?ch=d1
+// www.sports-stream.org/chtv/sps.php?ch=d1
+// https://www.wmsxx.com/embx.php?live=spstreamd1&vw=700&vh=440
 foreach($videos as $key => $value) {
   $link=$value;
   $title=$key;

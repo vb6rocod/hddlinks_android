@@ -164,6 +164,23 @@ $head=array('User-Agent: '.$ua.'',
 //print_r ($head);
 $l=$link;
   //$ua = $_SERVER['HTTP_USER_AGENT'];
+$last_good="https://lookmovie.io";
+$opts = array(
+  'http'=>array(
+    'method'=>"GET",
+    'header'=>"User-Agent: ".$ua."\r\n".
+              "Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\r\n" .
+              "Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2\r\n" .
+              "Accept-Encoding: deflate\r\n" .
+              "Connection: keep-alive\r\n" .
+              "Cookie: cf_clearance=".$cc."\r\n".
+              "Referer: ".$last_good."\r\n"
+  )
+);
+//print_r ($opts);
+$context = stream_context_create($opts);
+$h=@file_get_contents($l,false,$context);
+/*
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $l);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
@@ -175,6 +192,7 @@ $l=$link;
   curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
   $h = curl_exec($ch);
   curl_close($ch);
+*/
   //echo $h;
   $h=str_replace('" + window.location.host + "',"lookmovie.io",$h);
   if (preg_match("/file\"\:\s*\"((.*?)(Romanian|ro)\.vtt)/",$h,$p))

@@ -67,6 +67,7 @@ $filelink="https://www.facebook.com/video/embed?video_id=".$m[2];
 // https://www.facebook.com/134093565449/videos/342521610130689/
 // https://www.facebook.com/watch/live/?v=342521610130689&ref=watch_permalink
 $filelink="https://www.facebook.com/watch/live/?v=".$m[2]."&ref=watch_permalink";
+//echo $filelink;
       $ua="Mozilla/5.0 (Windows NT 10.0; WOW64; rv:46.0) Gecko/20100101 Firefox/46.0";
       $ua="Mozilla/5.0 (Windows NT 10.0; rv:81.0) Gecko/20100101 Firefox/81.0";
       $ch = curl_init();
@@ -79,11 +80,11 @@ $filelink="https://www.facebook.com/watch/live/?v=".$m[2]."&ref=watch_permalink"
       curl_setopt($ch, CURLOPT_TIMEOUT, 15);
       $h1 = curl_exec($ch);
       curl_close($ch);
-
+      $h1=str_replace("&amp;","&",$h1);
       $h1=urldecode(str_replace("\\","",$h1));
       //echo $h1;
       preg_match('/(?:hd_src|sd_src):\"([\w\-\.\_\/\&\=\:\?]+)/',$h1,$m);
-
+      //print_r ($m);
       $link=$m[1];
 }
 if (preg_match("/media\.cms\.protvplus\.ro/",$link)) {
@@ -202,7 +203,7 @@ if (preg_match("/realiptv\.eu/",$link)) {
     $t2=explode("<",$t1[1]);
     $link=$t2[0];
 }
-if (preg_match("/canale\.live/",$link)) {
+if (preg_match("/canale1\.live/",$link)) {
     $ua="Mozilla/5.0 (Windows NT 10.0; rv:64.0) Gecko/20100101 Firefox/64.0";
     $ch = curl_init();
     curl_setopt($ch, CURLOPT_URL, $link);
@@ -287,6 +288,25 @@ if (strpos($link,"jurnaltv.md/JurnalTV") !== false) {
     $h = curl_exec($ch);
     curl_close($ch);
     $link=str_between($h,'source src="','"');
+}
+///////////////////////////////////////////////
+if ($from=="stream4free") {
+ $ua="Mozilla/5.0 (Windows NT 10.0; rv:87.0) Gecko/20100101 Firefox/87.0";
+ $head=array('Cookie: 1f3372654d375ef621c5014fed5588ff=74cc38feeba3ca1a1f8f1a7b1ebc2a95');
+  $ch = curl_init();
+  curl_setopt($ch, CURLOPT_URL, $link);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
+  curl_setopt($ch,CURLOPT_REFERER,"https://www.stream4free.live");
+  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+  curl_setopt($ch, CURLOPT_HTTPHEADER, $head);
+  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 25);
+  $h = curl_exec($ch);
+  curl_close($ch);
+    if (preg_match("/http.+\.m3u8/",$h,$m))
+     $link=trim($m[0]);
 }
 if ($from=="tvrlive") {
     $ch = curl_init();
@@ -450,8 +470,10 @@ $ua = $_SERVER['HTTP_USER_AGENT'];
    $link=$l2;
 }
 if ($from=="ustream") {
-  $t1=explode("id=",$link);
-  $id=$t1[1];
+  // https://www.ustream.to/live/antena-1-romanesti/cf617b06961f0b35cfc2582012bf749
+  $t1=explode("/",$link);
+  //echo $link;
+  $id=$t1[4];
   $l="https://www.ustream.to/stream_original.php?id=".$id."&";
   $ua="Mozilla/5.0 (Windows NT 10.0; rv:85.0) Gecko/20100101 Firefox/85.0";
   $head=array('Accept: */*',
@@ -460,7 +482,7 @@ if ($from=="ustream") {
   'Origin: https://beef1999.blogspot.com',
   'Connection: keep-alive',
   'Referer: https://beef1999.blogspot.com');
-
+  //echo $l;
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $l);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
@@ -472,6 +494,7 @@ if ($from=="ustream") {
   curl_setopt($ch, CURLOPT_TIMEOUT, 25);
   $h = curl_exec($ch);
   curl_close($ch);
+  //echo $h;
   require_once("../filme/JavaScriptUnpacker.php");
   $t1=explode("var x_first_ua",$h);
   $jsu = new JavaScriptUnpacker();
@@ -556,6 +579,7 @@ $ad .="&Referer=".urlencode("http://tvhd-online.com");
     $link="redirect.php?file=".$link;
 }
 if ($from=="digilive") {
+//echo $link;
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $link);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);

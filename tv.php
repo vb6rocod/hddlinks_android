@@ -96,7 +96,7 @@ $(document).on('keyup', '.imdb', isValid);
 <TD width="25%"><a href="tv/iptv.php" target="_blank">IPTV International</a></TD>
 <TD width="25%"><a href="tv/playlist.php?title=Sport+IPTV&link=https://iptv-org.github.io/iptv/categories/sport.m3u" target="_blank">Sport IPTV</a></TD>
 <TD width="25%"><a href="tv/digifree.php" target="_blank">Digi Sport (Live)</a></TD>
-<TD width="25%"></TD>
+<TD width="25%"><a href="tv/stream4free.php" target="_blank">stream4free</TD>
 </TR>
 <?php
 include ("common.php");

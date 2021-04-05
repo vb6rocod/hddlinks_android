@@ -71,7 +71,7 @@ $host=parse_url($l)["host"];
 $out="";
 $type="mp4";
 $cookie=$base_cookie."adultc.dat";
-if (preg_match("/jizzbunker\.com|familyporn\.tv|zbporn\.com|trannytube\.net/",$host)) {
+if (preg_match("/jizzbunker\.com|familyporn1\.tv|zbporn\.com|trannytube\.net/",$host)) {
   $h=@file_get_contents($l);
 } elseif (preg_match("/pefilme\.info|filmeleporno\.xxx/",$l)) {
   //$l="https://pefilme.info/video.php?id=159035";
@@ -541,7 +541,7 @@ $out=$t2[0];
 } else if (preg_match("/porndoe\.com/",$host)) {
 //echo $h;
   // https://cdnu.porndoe.com/movie/1/4/2/8/3/2/4/5efa4157a7128-976-240p-400.mp4?cdn_bw_fs=4000k&cdn_bw=608000
-  if (preg_match_all("/src=\"([\w\/\:_\-\.\=\&\?]+)\"\s+type\=\"video\/mp4\"/msi",$h,$m)) {
+  if (preg_match_all("/src=\"([\w\/\:_\-\.\=\&\?\%]+)\"\s+type\=\"video\/mp4\"/msi",$h,$m)) {
   //print_r ($m);
    $out=$m[1][count($m[1])-1];
   }

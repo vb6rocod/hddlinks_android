@@ -234,7 +234,7 @@ foreach($videos as $video) {
   $year=$t2[0];
     if (strpos($image,"http") === false && $image) $image="https://".$host.$image;
     if (!$image) $image="blank.jpg";
-    if (strpos($link,"/tv_") !== false) array_push($r ,array($title,$link, $image,$year));
+    if (strpos($link,"/tv_") === false) array_push($r ,array($title,$link, $image,$year));
   }
 //print_r ($r);
 $c=count($r);
@@ -247,7 +247,7 @@ for ($k=0;$k<$c;$k++) {
   $tit_imdb=$title;
   $imdb="";
   $link_f=$fs_target.'?tip=series&link='.urlencode($link).'&title='.urlencode(fix_t($title)).'&image='.$image."&sez=&ep=&ep_tit=&year=".$year;
-  if ($title && strpos($link,"/tv_") !== false) {
+  if ($title) {
   if ($n==0) echo '<TR>'."\r\n";
   $val_imdb="tip=series&title=".urlencode(fix_t($tit_imdb))."&year=".$year."&imdb=".$imdb;
   $fav_link="mod=add&title=".urlencode(fix_t($title))."&link=".urlencode($link)."&image=".urlencode($image)."&year=".$year;

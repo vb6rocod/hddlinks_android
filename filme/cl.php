@@ -28,6 +28,9 @@ if (file_exists($firefox)) { // ua firefox
   $t1=explode(".",$www);
   $k=count($t1);
   $www=$t1[$k-2].".".$t1[$k-1];
+  $t1=explode("/",$host);
+  $l=$t1[0]."//".$t1[2];
+  //echo $l;
   //echo $www;
   //die();
   $x="";
@@ -49,9 +52,11 @@ if (file_exists($firefox)) { // ua firefox
               "Accept-Encoding: deflate\r\n" .
               "Connection: keep-alive\r\n" .
               "Cookie: cf_clearance=".$cc."\r\n".
-              "Referer: ".$host.""."\r\n"
+              "Referer: ".$l.""."\r\n"
   )
  );
+ //print_r ($opts);
+ //die();
  $context = stream_context_create($opts);
  $h=@file_get_contents($l,false,$context);
 
@@ -69,6 +74,8 @@ if (file_exists($firefox)) { // ua firefox
  $ua="Mozilla/5.0 (Windows NT 10.0; rv:75.0) Gecko/20100101 Firefox/75.0";
  $cc="";
  $l=$host;
+ $t1=explode("/",$host);
+ $l=$t1[0]."//".$t1[2];
  $opts = array(
   'http'=>array(
     'method'=>"GET",
@@ -78,7 +85,7 @@ if (file_exists($firefox)) { // ua firefox
               "Accept-Encoding: deflate\r\n" .
               "Connection: keep-alive\r\n" .
               "Cookie: cf_clearance=".$cc."\r\n".
-              "Referer: ".$host.""."\r\n"
+              "Referer: ".$l.""."\r\n"
   )
  );
  $context = stream_context_create($opts);

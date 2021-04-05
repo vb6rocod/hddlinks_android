@@ -7,10 +7,11 @@ $image=$_GET["image"];
 $link=urldecode($_GET["link"]);
 $tip=$_GET["tip"];
 $year=$_GET['year'];
+$sez=$_GET['sez'];
 /* ======================================= */
 $width="200px";
 $height="100px";
-$fs_target="soap2day_fs.php";
+$fs_target="xmovies_fs.php";
 $has_img="no";
 ?>
 <html>
@@ -29,90 +30,58 @@ function str_between($string, $start, $end){
 	if ($ini == 0) return ""; $ini += strlen($start); $len = strpos($string,$end,$ini) - $ini;
 	return substr($string,$ini,$len);
 }
+if (preg_match("/\s+Season\s+(\d+).+/i",$tit,$m)) {
+  $tit=trim(str_replace($m[0],"",$tit));
+}
 echo '<h2>'.$tit.'</h2>';
 $host=parse_url($link)['host'];
-$cookie=$base_cookie."soap2day.dat";
-$ua=file_get_contents($base_pass."firefox.txt");
 $head=array('Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
 'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2');
-
+$link=$link."?play=1";
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $link);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-  curl_setopt($ch,CURLOPT_REFERER,"https://".$host);
+  curl_setopt($ch,CURLOPT_REFERER,"http://".$host);
   curl_setopt($ch,CURLOPT_HTTPHEADER,$head);
-  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
-  curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie);
+  curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 10.0; rv:55.0) Gecko/20100101 Firefox/55.0');
   curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
   curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
   curl_setopt($ch, CURLOPT_TIMEOUT, 15);
-  $h = curl_exec($ch);
+  $html = curl_exec($ch);
   curl_close($ch);
-  //echo $h;
-  $t1=explode('Similar TV Series',$h);
-  $h=$t1[0];
+//echo $html;
+
 $n=0;
-$videos = explode("<h4>Season", $h);
-$sezoane=array();
-unset($videos[0]);
-//$videos = array_values($videos);
-$videos = array_reverse($videos);
-foreach($videos as $video) {
-  $t1=explode(':',$video);
-  $sezoane[]=trim($t1[0]);
-}
+
 echo '<table border="1" width="100%">'."\n\r";
+echo '<TR><td class="sez" style="color:black;background-color:#0a6996;color:#64c8ff;text-align:center" colspan="3">Sezonul '.($sez).'</TD></TR>';
 
-$p=0;
-$c=count($sezoane);
-for ($k=0;$k<$c;$k++) {
-if ($p==0) echo '<TR>';
-echo '<td class="sez" style="color:black;text-align:center"><a href="#sez'.($sezoane[$k]).'">Sezonul '.($sezoane[$k]).'</a></TD>';
-$p++;
-if ($p == 10) {
- echo '</tr>';
- $p=0;
- }
-}
-if ($p < 10 && $p > 0 && $k > 9) {
- for ($x=0;$x<10-$p;$x++) {
-   echo '<TD></TD>'."\r\n";
- }
- echo '</TR>'."\r\n";
-}
-echo '</TABLE>';
 
+$s=array();
+$videos = explode('data-episode="', $html);
+unset($videos[0]);
+$videos = array_values($videos);
+//$videos = array_reverse($videos);
 foreach($videos as $video) {
-  $t1=explode(':',$video);
-  $season=trim($t1[0]);
-  $sez = $season;
-  echo '<table border="1" width="100%">'."\n\r";
-  echo '<TR><td class="sez" style="color:black;background-color:#0a6996;color:#64c8ff;text-align:center" colspan="3">Sezonul '.($sez).'</TD></TR>';
-  $n=0;
-  $vids = explode('href="/', $video);
-  unset($vids[0]);
-  //$vids = array_values($vids);
-  $vids = array_reverse($vids);
-  foreach($vids as $vid) {
-  $img_ep="";
-  $episod="";
-  $ep_tit="";
-  $t1=explode('"',$vid);
-  $link="https://".$host."/".$t1[0];
 
-  $t2=explode('>',$vid);
-  $t3=explode('<',$t2[1]);
-  $title=$t3[0];
-  $img_ep=$image;
-  // 7.Foam Party
-  preg_match("/\d+/",$title,$m);
-  $episod=$m[0];
-  //$ep_tit=html_entity_decode($t2[0]);
-  $title=str_replace("&nbsp;"," ",$title);
-  $title=prep_tit($title);
-  $ep_tit=$title;
+  $t1 = explode('"', $video);
+  $episod=$t1[0];
+  $t1=explode('href="',$video);
+  $t2=explode('"',$t1[1]);
+  $link=$t2[0];
+  $ep_tit="";
+  $s[$episod]=$link;
+}
+//$s=array_unique($s);
+//print_r ($s);
+$season=$sez;
+$img_ep=$image;
+foreach ($s as $key=>$value) {
+  $episod=$key;
+  $link=$value;
+  $ep_tit="";
   if ($ep_tit)
-   $ep_tit_d=$ep_tit;
+   $ep_tit_d=$season."x".$episod." ".$ep_tit;
   else
    $ep_tit_d=$season."x".$episod;
 
@@ -135,7 +104,6 @@ foreach($videos as $video) {
     echo '</TR>'."\r\n";
   }
 echo '</table>';
-}
 ?>
 </body>
 </html>

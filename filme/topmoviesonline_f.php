@@ -223,8 +223,8 @@ if ($tip=="release") {
    $t4 = explode('<', $t3[1]);
    $title = trim($t4[0]);
    $title=prep_tit($title);
-   $t1 = explode('?url=', $video);
-   $t2 = explode('&', $t1[1]);
+   $t1 = explode('data-src="', $video);
+   $t2 = explode('"', $t1[1]);
    $image = $t2[0];
   $rest = substr($title, -6);
   if (preg_match("/\(?(\d{4})\)?/",$rest,$m)) {
@@ -250,8 +250,8 @@ if ($tip=="release") {
    $t5=explode('<',$t4[1]);
    $title = trim($t5[0]);
    $title=prep_tit($title);
-   $t1 = explode('?url=', $video);
-   $t2 = explode('&', $t1[1]);
+   $t1 = explode('src="', $video);
+   $t2 = explode('"', $t1[1]);
    $image = $t2[0];
   $rest = substr($title, -6);
   if (preg_match("/\(?(\d{4})\)?/",$rest,$m)) {

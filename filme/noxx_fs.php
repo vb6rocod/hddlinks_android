@@ -153,16 +153,17 @@ $l=$link;
 //echo $html;
 $r=array();
 $s=array();
-$videos = explode('<option value="', $html);
+$videos = explode('button value="', $html);
 unset($videos[0]);
 $videos = array_values($videos);
 foreach($videos as $video) {
   $t1=explode('"',$video);
   $l1=$t1[0];
-  if (strpos($l1,"getlink.php") !== false) $l1= "https://noxx.is".$l1;
+  //if (strpos($l1,"getlink.php") !== false) $l1= "https://noxx.is".$l1;
+  if (strpos($l1,"securitycheck.php") !== false) $l1= "https://noxx.is".$l1;
   $l1=preg_replace("/\n|\r|\t/","",$l1);
   $r[]=$l1;
-  $t2=explode(">",$video);
+  $t2=explode("span>",$video);
   $t3=explode("<",$t2[1]);
   $s[]=trim($t3[0]);
 }

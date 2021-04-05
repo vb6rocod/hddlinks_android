@@ -12,18 +12,18 @@ $tit=$_GET["title"];
 $link=$_GET["link"];
 $width="200px";
 $height="278px";
-$last_good="http://www.classicmovieshd.com";
+$last_good="https://ww2.batflix.org";
 $host=parse_url($last_good)['host'];
 /* ==================================================== */
-$has_fav="no";
+$has_fav="yes";
 $has_search="yes";
 $has_add="yes";
-$has_fs="no";
-$fav_target="";
-$add_target="filme_add.php";
+$has_fs="yes";
+$fav_target="batflix_fav.php?host=".$last_good;
+$add_target="batflix_add.php";
 $add_file="";
-$fs_target="";
-$target="classicmovies_f.php";
+$fs_target="batflix_fs.php";
+$target="batflix.php";
 /* ==================================================== */
 $base=basename($_SERVER['SCRIPT_FILENAME']);
 $p=$_SERVER['QUERY_STRING'];
@@ -59,7 +59,9 @@ if ($tip=="search") {
 } else
   $page_title=$tit;
 /* ==================================================== */
-
+if ($page==10000 && $tip=="release") {
+echo '<iframe src="https://ww2.batflix.org/uploads/movies/9371/LltK216Bgq-150x220.jpeg" style="display: none;"></iframe>';
+}
 ?>
 <html>
 <head>
@@ -167,104 +169,84 @@ if ($page==1) {
    echo '<TD class="nav" colspan="4" align="right"><a href="'.$prev.'">&nbsp;&lt;&lt;&nbsp;</a> | <a href="'.$next.'">&nbsp;&gt;&gt;&nbsp;</a></TD>'."\r\n";
 }
 echo '</TR>'."\r\n";
-// http://www.classicmovies.ro/load/?page2
-// http://www.classicmovies.ro/search/?q=star;t=0;p=2;md=
-if($tip=="release") {
- if ($page>1)
-  $l ="http://".$host."/load/?page".$page."";
- else
-  $l="http://".$host."/load/";
+$f=array();
+if ($tip=="search") {
+ $l="https://".$host."/search?q=".str_replace(" ","+",$tit);
 } else {
-  $search=str_replace(" ","+",$tit);
-  if ($page > 1)
-    $l="http://".$host."/search/?q=".$search;
-  else
-    $l="http://".$host."/search/?q=".$search.";t=0;p=".$page.";md=";
+ $l="https://".$host."/movies?page=".$page;
 }
-$r=array();
-$ua = $_SERVER['HTTP_USER_AGENT'];
+//https://ww2.batflix.org/movies?page=2
+/*
+$ua="Mozilla/5.0 (Windows NT 10.0; rv:75.0) Gecko/20100101 Firefox/75.0";
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $l);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-  curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 10.0; rv:55.0) Gecko/20100101 Firefox/55.0');
+  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
   curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
-  curl_setopt($ch, CURLOPT_ENCODING, "");
   curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
-  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
-  $html = curl_exec($ch);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 25);
+  $h = curl_exec($ch);
   curl_close($ch);
-  //echo $html;
-  if ($tip=="release") {
-  $videos = explode('class="ml-item', $html);
-  unset($videos[0]);
-  $videos = array_values($videos);
-  foreach($videos as $video) {
-    $t1=explode('href="',$video);
-    $t2=explode('"',$t1[1]);
-    if (strpos($t2[0],$host) === false)
-      $link="http://".$host.$t2[0];
-    else
-      $link=$t2[0];
-    $t1=explode('class="qtip-title">',$video);
-    $t2=explode('</div',$t1[1]);
-    $title=trim($t2[0]);
-    $title=strip_tags($title);
-    $t1=explode('data-original="',$video);
-    $t2=explode('"',$t1[1]);
-    $image="http://".$host.$t2[0];
-    if (strpos($link,"/film") !== false) array_push($r ,array($title,$link, $image));
-  }
-  } else {
-  $videos = explode('class="ml-item', $html);
-  unset($videos[0]);
-  $videos = array_values($videos);
-  foreach($videos as $video) {
-    $t1=explode('href="',$video);
-    $t2=explode('"',$t1[1]);
-    if (strpos($t2[0],$host) === false)
-      $link="http://".$host.$t2[0];
-    else
-      $link=$t2[0];
+  if (!$h) $h=file_get_contents($l);
+*/
+$cookie=$base_cookie."batflix.txt";
+$ua=file_get_contents($base_pass."firefox.txt");
+$host=parse_url($l)['host'];
+$head=array('Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2');
 
-    $t1=explode('class="qtip-title">',$video);
-    $t2=explode('</div',$t1[1]);
-    $title=trim($t2[0]);
-    $title=strip_tags($title);
-    $t1=explode('data-original="',$video);
-    $t2=explode('"',$t1[1]);
-    $image="http://".$host.$t2[0];
-    if (strpos($link,"/film") !== false) array_push($r ,array($title,$link, $image));
-  }
-  }
-  //print_r ($r);
-$c=count($r);
-for ($k=0;$k<$c;$k++) {
-  $title=$r[$k][0];
-  $title=str_replace("&#8211;","-",$title);
-  //$title=prep_tit($title);
-  $link=$r[$k][1];
-  $image=$r[$k][2];
-  //echo $title;
-  //$rest = substr($title, -2);
-  //echo urlencode($rest);
-  //if ($rest == " -") $title = substr($title, 0, -2);
+  $ch = curl_init();
+  curl_setopt($ch, CURLOPT_URL, $l);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+  curl_setopt($ch,CURLOPT_REFERER,"https://".$host);
+  curl_setopt($ch,CURLOPT_HTTPHEADER,$head);
+  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
+  curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie);
+  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 25);
+  $h = curl_exec($ch);
+  curl_close($ch);
+
+$videos = explode('itemprop="itemListElement', $h);
+unset($videos[0]);
+$videos = array_values($videos);
+foreach($videos as $video) {
+ $t1=explode('href="',$video);
+ $t2=explode('"',$t1[1]);
+ $link=$t2[0];
+ $t1=explode('src="',$video);
+ $t2=explode('"',$t1[1]);
+ $image="https://".$host.$t2[0];
+ $t1=explode('itemprop="name">',$video);
+ $t3=explode('<',$t1[1]);
+ $title=$t3[0];
+  if ($title && strpos($link,"/movies") !== false) $f[] = array($title,$link,$image);
+}
+//echo $html;
+foreach($f as $key => $value) {
+  $title=$value[0];
+  $title=prep_tit($title);
+  $link=$value[1];
+  $image=$value[2];
+  $year="";
+  $imdb="";
+  $year="";
   $rest = substr($title, -6);
-  if (preg_match("/\(?(\d{4})\)?/",$rest,$m)) {
+  if (preg_match("/\((\d{4})\)/",$rest,$m)) {
    $year=$m[1];
    $tit_imdb=trim(str_replace($m[0],"",$title));
   } else {
    $year="";
    $tit_imdb=$title;
   }
-  $imdb="";
-  if ($has_fs == "no")
-    $link_f='filme_link.php?file='.urlencode($link).'&title='.urlencode(fix_t($title));
-  else
-    $link_f=$fs_target.'?tip=movie&link='.urlencode($link).'&title='.urlencode(fix_t($tit)).'&image='.$image."&sez=&ep=&ep_tit=&year=".$year;
+  $link_f=$fs_target.'?tip=movie&link='.urlencode($link).'&title='.urlencode(fix_t($title)).'&image='.$image."&sez=&ep=&ep_tit=&year=".$year;
+  if ($title) {
   if ($n==0) echo '<TR>'."\r\n";
   $val_imdb="tip=movie&title=".urlencode(fix_t($tit_imdb))."&year=".$year."&imdb=".$imdb;
-  $fav_link="file=".$add_file."&mod=add&title=".urlencode(fix_t($title))."&link=".urlencode($link)."&image=".urlencode($image)."&year=".$year;
+  $fav_link="mod=add&title=".urlencode(fix_t($title))."&link=".urlencode($link)."&image=".urlencode($image)."&year=".$year;
+  $image="r_m.php?file=".$image;
   if ($tast == "NU") {
     echo '<td class="mp" width="25%"><a href="'.$link_f.'" id="myLink'.$w.'" target="_blank" onmousedown="isKeyPressed(event)">
     <img id="myLink'.$w.'" src="'.$image.'" width="'.$width.'" height="'.$height.'"><BR>'.$title.'</a>
@@ -286,7 +268,10 @@ for ($k=0;$k<$c;$k++) {
   echo '</tr>'."\r\n";
   $n=0;
   }
-}
+  }
+ }
+
+/* bottom */
   if ($n < 4 && $n > 0) {
     for ($k=0;$k<4-$n;$k++) {
       echo '<TD></TD>'."\r\n";
@@ -301,6 +286,6 @@ else
   echo '<a href="'.$next.'">&nbsp;&gt;&gt;&nbsp;</a></TD>'."\r\n";
 echo '</TR>'."\r\n";
 echo "</table>"."\r\n";
-?>
-<br></body>
+echo "</table>";
+?></body>
 </html>
