@@ -95,8 +95,8 @@ $x=json_decode($html,1);
 
 
 for($k=0;$k<count($x);$k++) {
- $link="https://player.teleon.tv/channel/".$x[$k]['slug'];
-
+ //$link="https://player.teleon.tv/channel/".$x[$k]['slug'];
+ $link="http://player.teleon.tv/ro/channel/".$x[$k]['slug'];
  $title = trim($x[$k]['title']);
  $descriere=$title;
  $l="link=".urlencode(fix_t($link))."&title=".urlencode(fix_t($title))."&from=teleon&mod=direct";

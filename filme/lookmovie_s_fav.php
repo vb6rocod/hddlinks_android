@@ -128,6 +128,7 @@ foreach($arr as $key => $value) {
     $image=urldecode($arr[$key]["image"]);
     //$image=$host.parse_url($image)['path'];
     $image=str_replace("image.lookmovie.ag/p","lookmovie.ag/images/p",$image);
+    $image=str_replace("lookmovie.ag","lookmovie.io",$image);
     $year="";
     $link=$host.parse_url($link)['path'];
     $link_f=$fs_target.'?tip=series&link='.urlencode($link).'&title='.urlencode(fix_t($title)).'&image='.$image."&sez=&ep=&ep_tit=&year=".$year;

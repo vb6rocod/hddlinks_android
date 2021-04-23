@@ -233,6 +233,11 @@ if (preg_match("/canale1\.live/",$link)) {
     }
      //$link=trim($m[1]);
 }
+if (preg_match("/clients\.your\-server\.de/",$link)) {
+  $ua="Mozilla/5.0 (Windows NT 10.0; rv:64.0) Gecko/20100101 Firefox/64.0";
+  if ($flash <> "flash")
+  $link=$link."|User-Agent=".urlencode($ua);
+}
 if (preg_match("/tvhd-online1\.com/",$link)) {
     $ch = curl_init();
     curl_setopt($ch, CURLOPT_URL, $link);
@@ -449,6 +454,8 @@ curl_setopt($ch, CURLOPT_HTTPHEADER,$head);
   }
 }
 if ($from=="teleon") {
+//echo $link;
+//$link="http://player.teleon.tv/ro/channel/a7-tv-ro";
 $ua = $_SERVER['HTTP_USER_AGENT'];
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $link);
@@ -471,10 +478,16 @@ $ua = $_SERVER['HTTP_USER_AGENT'];
 }
 if ($from=="ustream") {
   // https://www.ustream.to/live/antena-1-romanesti/cf617b06961f0b35cfc2582012bf749
+  require_once("../filme/JavaScriptUnpacker.php");
+
+  $jsu = new JavaScriptUnpacker();
   $t1=explode("/",$link);
   //echo $link;
   $id=$t1[4];
-  $l="https://www.ustream.to/stream_original.php?id=".$id."&";
+
+  $l="https://www.ustream.to/stream?id=".$id;
+  //$l="https://blog1199.blogspot.com/page.html?id=rtv-romania&url=aHR0cHMlM0ElMkYlMkZ3d3cudXN0cmVhbS50byUyRnN0cmVhbV9vcmlnaW5hbC5waHAlM0Z0b2tlbiUzRGNkYzRkYWQ2ZTc1NGQzNTM0OTM4YThmZjgyMjNjYjkzJTI2aWQlM0RydHYtcm9tYW5pYSUyNg==";
+  //echo $l;
   $ua="Mozilla/5.0 (Windows NT 10.0; rv:85.0) Gecko/20100101 Firefox/85.0";
   $head=array('Accept: */*',
   'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
@@ -495,9 +508,27 @@ if ($from=="ustream") {
   $h = curl_exec($ch);
   curl_close($ch);
   //echo $h;
-  require_once("../filme/JavaScriptUnpacker.php");
+
+
+  //echo $out;
+  $t1=explode('<iframe id="iframe',$h);
+  $out = $jsu->Unpack($t1[1]);
+  $t1=explode('url=',$out);
+  $t2=explode('"',$t1[1]);
+  $l=urldecode(base64_decode($t2[0]));
+  $ch = curl_init();
+  curl_setopt($ch, CURLOPT_URL, $l);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
+  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+  curl_setopt($ch, CURLOPT_HTTPHEADER, $head);
+  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 25);
+  $h = curl_exec($ch);
+  curl_close($ch);
+  //echo $h;
   $t1=explode("var x_first_ua",$h);
-  $jsu = new JavaScriptUnpacker();
   $out = $jsu->Unpack($t1[1]);
   $t1=explode('var file_name="',$out);
   $t2=explode('"',$t1[1]);

@@ -1,16 +1,18 @@
 <!doctype html>
 <?php
 include ("../common.php");
+
 error_reporting(0);
+if (file_exists($base_pass."debug.txt"))
+ $debug=true;
+else
+ $debug=false;
+
 $list = glob($base_sub."*.srt");
    foreach ($list as $l) {
     str_replace(" ","%20",$l);
     unlink($l);
 }
-if (file_exists($base_pass."debug.txt"))
- $debug=true;
-else
- $debug=false;
 if (file_exists($base_pass."player.txt")) {
 $flash=trim(file_get_contents($base_pass."player.txt"));
 } else {
@@ -46,11 +48,6 @@ $tip="series";
 }
 $imdbid="";
 
-function str_between($string, $start, $end){
-	$string = " ".$string; $ini = strpos($string,$start);
-	if ($ini == 0) return ""; $ini += strlen($start); $len = strpos($string,$end,$ini) - $ini;
-	return substr($string,$ini,$len);
-}
 ?>
 <html>
 <head>
@@ -133,227 +130,33 @@ function off() {
 <?php
 echo '<h2>'.$tit.$tit2.'</H2>';
 echo '<BR>';
-function unjuice($source) {
-  $juice = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=";
-  $pat='@JuicyCodes.Run\(([^\)]+)@';
-  if (preg_match($pat,$source,$m)) {
-  $e=preg_replace('/\"\s*\+\s*\"/',"",$m[1]);
-  $e=preg_replace('/[^A-Za-z0-9+\\/=]/',"",$e);
-  $t = "";
-  $n=$r=$i=$s=$o=$u=$a=$f=0;
-  while ($f < strlen($e)) {
-    $s = strpos($juice,$e[$f]);$f+=1;
-    $o = strpos($juice,$e[$f]);$f+=1;
-    $u = strpos($juice,$e[$f]);$f+=1;
-    $a = strpos($juice,$e[$f]);$f+=1;
-    $n = $s << 2 | $o >> 4; $r = (15 & $o) << 4 | $u >> 2; $i = (3 & $u) << 6 | $a;
-    $t .= chr($n);
-    if (64 != $u) $t .= chr($r);
-    if (64 != $a) $t .= chr($i);
-  }
-  return $t;
-  }
-  return $source;
-}
-//echo $link;
-//$link="https://onionplay.is/movies/zack-snyders-justice-league-2021/";
- $link=str_replace("/watch-","/",$link);
- $link=str_replace("-onionplay","",$link);
-// https://onionplay.is/movies/star-wars-the-rise-of-skywalker-2019/
-// https://onionplay.is/movies/watch-star-wars-the-rise-of-skywalker-2019-onionplay/
-$host=parse_url($link)['host'];
-$ua="Mozilla/5.0 (Windows NT 10.0; rv:80.0) Gecko/20100101 Firefox/80.0";
-  $ch = curl_init($link);
-  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
-  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
-  curl_setopt($ch, CURLOPT_RETURNTRANSFER  ,1);  // RETURN THE CONTENTS OF THE CALL
-  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-  curl_setopt($ch, CURLOPT_ENCODING,"");
-  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
-  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
-  $html = curl_exec($ch);
-  curl_close ($ch);
-  //echo $html;
-  //$t1=explode("data-post='",$html);
-  //$t2=explode("'",$t1[1]);
-  //$id=$t2[0];
-//preg_match_all("/data\-post\=\'(\d+)\'\s+data\-nume\=\'(\d+)\'/",$html,$m);
-//print_r ($m);
-preg_match_all("/postid\-(\d+)/",$html,$m);
-//print_r ($m);
-$l="https://".$host."/wp-admin/admin-ajax.php";
-$ch = curl_init($l);
-$source=array();
-for ($k=0;$k<count($m[1]);$k++) {
-$id=$m[1][$k];
-//$nume=$m[2][$k];
-$nume="1";
-$post="action=doo_player_ajax&post=".$id."&nume=".$nume."&type=movie";
-$head=array('Accept: */*',
-'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
-'Accept-Encoding: deflate',
-'Content-Type: application/x-www-form-urlencoded; charset=UTF-8',
-'X-Requested-With: XMLHttpRequest',
-'Content-Length: '.strlen($post).'',
-'Origin: https://'.$host,
-'Connection: keep-alive',
-'Referer: https://'.$host.'/');
-
-
-  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
-  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
-  curl_setopt($ch, CURLOPT_RETURNTRANSFER  ,1);  // RETURN THE CONTENTS OF THE CALL
-  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-  curl_setopt($ch, CURLOPT_HTTPHEADER,$head);
-  curl_setopt($ch, CURLOPT_POST, 1);
-  curl_setopt($ch, CURLOPT_POSTFIELDS, $post);
-  curl_setopt($ch, CURLOPT_ENCODING,"");
-  //curl_setopt($ch, CURLOPT_HEADER,1);
-  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
-  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
-  $h = curl_exec($ch);
-
-  //echo $h;
-  $l="";
-  $x=json_decode($h,1);
-  if (isset($x["embed_url"])) {
-    $l=$x["embed_url"];
-  } else {
-    $t1=explode("src='",$h);
-    $t2=explode("'",$t1[1]);
-    $l=$t2[0];
-  }
-  $source[]=$l;
-}
-curl_close ($ch);
 $r=array();
-require_once("JavaScriptUnpacker.php");
-$jsu = new JavaScriptUnpacker();
-//print_r ($source);
-  //$l="https://go.onionplay.is/iAt";
+if ($tip=="movie") {
 
-  //$l="https://go.onionplay.is/nNY";
-  //echo $l;
-//$l="https://www.onionbox.org/movie/2021/G/tt5034838.js";
-// https://go.onionbox.org/movie/2021/G/Godzilla.Vs..Kong.2021.mp4
-// https://fembed.stream/lUf
-$head=array('Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
-'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
-'Accept-Encoding: deflate',
-'Connection: keep-alive',
-'Referer: https://'.$host.'/');
+  $ua="Mozilla/5.0 (Windows NT 10.0; rv:75.0) Gecko/20100101 Firefox/75.0";
 
   $ch = curl_init();
+  curl_setopt($ch, CURLOPT_URL, $link);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
   curl_setopt($ch, CURLOPT_USERAGENT, $ua);
   curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
-  curl_setopt($ch, CURLOPT_RETURNTRANSFER  ,1);  // RETURN THE CONTENTS OF THE CALL
   curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-  curl_setopt($ch, CURLOPT_HTTPHEADER,$head);
-  curl_setopt($ch, CURLOPT_ENCODING,"");
-  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
-  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
-
-  for ($n=0;$n<count($source);$n++) {
-  curl_setopt($ch, CURLOPT_URL, $source[$n]);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 25);
   $h = curl_exec($ch);
+  curl_close($ch);
 
-  //echo $h;
-  //die();
-  $out="";
-  $h1=unjuice($h);
-
-
-  $out = $jsu->Unpack($h1);
-  //echo $out;
-//echo $h;
-
-  $t1=explode("= [",$h);
-  $t2=explode("]",$t1[1]);
-  $e="\$c=array(".$t2[0].");";
-  eval ($e);
-  //print_r ($c);
-  $t1=explode("parseInt(value) -",$h);
-  $t2=explode(")",$t1[1]);
-  $d=$t2[0];
-  //echo $d;
-  //die();
-
-  for ($k=0;$k<count($c);$k++) {
-   $out .=chr($c[$k]-$d);
-  }
-  //echo $out;
-  $t1=explode('redirect").attr("href","',$out);
-  $t2=explode('"',$t1[2]);
-  $l=$t2[0];
-  if (!$l) {
-  $t1=explode("window.location.replace('",$h);
-  $t2=explode("'",$t1[1]);
-  $l=$t2[0];
-  }
-  if (!$l) {
-  $t1=explode('<section>',$out);
-  $t2=explode('href="',$t1[1]);
+  if (preg_match("/\/tt(\d+)/",$h,$m))
+   $imdbid=$m[1];
+  else
+   $imdbid="";
+  $t1=explode('<iframe',$h);
+  $t2=explode('src="',$t1[1]);
   $t3=explode('"',$t2[1]);
-  $l=$t3[0];
-  }
-  if (!$l) {
-  $t1=explode('file":"',$out);
-  $t2=explode('"',$t1[1]);
-  $l=$t2[0];
-  }
-  $r[]=$l;
+  $r[]=str_replace("&#038;","&",$t3[0]);
+} else {
+ $r[]=$link;
 }
-curl_close ($ch);
-  //echo $l;
-
-  if (preg_match("/2embed\.ru/",$l)) { // 2embed.ru
-  $ua="Mozilla/5.0 (Windows NT 10.0; rv:80.0) Gecko/20100101 Firefox/80.0";
-  $head=array('Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
-  'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
-  'Accept-Encoding: deflate',
-  'Connection: keep-alive',
-  'Referer: https://onionplay.co/');
-  $ch = curl_init($l);
-  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
-  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
-  curl_setopt($ch, CURLOPT_RETURNTRANSFER  ,1);  // RETURN THE CONTENTS OF THE CALL
-  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-  curl_setopt($ch, CURLOPT_HTTPHEADER,$head);
-  curl_setopt($ch, CURLOPT_ENCODING,"");
-  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
-  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
-  $h = curl_exec($ch);
-  curl_close ($ch);
-  //$h=str_replace("\/","/",$h);
-  if (preg_match_all("/data\-id\=\"(\d+)/",$h,$m)) {
-   $head=array('Accept: */*',
-    'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
-    'Accept-Encoding: deflate',
-    'X-Requested-With: XMLHttpRequest',
-    'Connection: keep-alive',
-    'Referer: https://www.2embed.ru/');
-   $ch = curl_init();
-   curl_setopt($ch, CURLOPT_USERAGENT, $ua);
-   curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
-   curl_setopt($ch, CURLOPT_RETURNTRANSFER  ,1);  // RETURN THE CONTENTS OF THE CALL
-   curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-   curl_setopt($ch, CURLOPT_HTTPHEADER,$head);
-   curl_setopt($ch, CURLOPT_ENCODING,"");
-   curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
-   curl_setopt($ch, CURLOPT_TIMEOUT, 15);
-
-   for ($k=0;$k<count($m[1]);$k++) {
-    $l="https://www.2embed.ru/ajax/embed/play?id=".$m[1][$k]."&_token=";
-    curl_setopt($ch, CURLOPT_URL, $l);
-    $h = curl_exec($ch);
-    $x=json_decode($h,1);
-    //print_r ($x);
-    if (isset($x['link'])) $r[]=$x['link'];
-   }
-   curl_close ($ch);
-  }
-  }
-  //echo $html;
 echo '<table border="1" width="100%">';
 echo '<TR><TD class="mp">Alegeti un server: Server curent:<label id="server">'.parse_url($r[0])['host'].'</label>
 <input type="hidden" id="file" value="'.urlencode($r[0]).'"></td></TR></TABLE>';
@@ -386,20 +189,21 @@ if ($tip=="movie") {
   $tit2="";
   $sez="";
   $ep="";
-  $imdbid="";
   $from="";
   $link_page="";
 } else {
   $tit3=$tit;
   $sez=$sez;
   $ep=$ep;
-  $imdbid="";
   $from="";
   $link_page="";
 }
   $rest = substr($tit3, -6);
   if (preg_match("/\((\d+)\)/",$rest,$m)) {
+   $year=$m[1];
    $tit3=trim(str_replace($m[0],"",$tit3));
+  } else {
+   $year="";
   }
 $sub_link ="from=".$from."&tip=".$tip."&sez=".$sez."&ep=".$ep."&imdb=".$imdbid."&title=".urlencode(fix_t($tit3))."&link=".$link_page."&ep_tit=".urlencode(fix_t($tit2))."&year=".$year;
 echo '<br>';
@@ -437,6 +241,10 @@ echo '<br>
 <BR>Scurtaturi: 7=opensubtitles, 8=titrari, 9=subs, 0=subtitrari (cauta imdb id)
 </b></font></TD></TR></TABLE>
 ';
+
+if (preg_match("/c\d?_file\=(http[\.\d\w\-\.\/\\\:\?\&\#\%\_\,]+)\&c\d?_label\=English/i",$r[0],$s)) {
+ echo 'Cu subtitrare in Engleza.<BR>';
+}
 include("../debug.html");
 echo '
 <div id="overlay">

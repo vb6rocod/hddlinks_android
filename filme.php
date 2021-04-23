@@ -79,7 +79,7 @@ else
 <!--- desene si filme...-->
 <TR>
 <TD width="25%"><a href="filme/filmehd_f.php?page=1&tip=release&title=filmehd&link=" target="_blank">filmehd.to</a></TD>
-<TD width="25%"><a href="filme/filmeserialehd_f.php?page=1&tip=release&title=filmeserialehd&link=" target="_blank">filmeserialehd</a></TD>
+<TD width="25%"></TD>
 <TD width="25%"><a href="filme/deseneledublate.php?page=1&tip=release&title=desenedublate&link=" target="_blank">deseneledublate</a></TD>
 <TD width="25%"><a href="filme/desenefaine_main.php" target="_blank">desenefaine.ro</a></TD>
 </TR>
@@ -95,8 +95,8 @@ else
 <TD width="25%"><a href="filme/classicmovies_f.php?page=1&tip=release&title=classicmovies&link=" target="_blank">classicmovies</a></TD>
 <TD width="25%"><a href="filme/cineplex_f_main.php" target="_blank">cineplex (cont)</a></TD>
 <TD width="25%"><a href="filme/vikv.php?page=1&tip=release&title=vikv&link=" target="_blank">vikv</a></TD>
-<!--<TD width="25%"><a href="filme/lookmovie_f.php?page=1&tip=release&title=lookmovie&link=" target="_blank">lookmovie</a></TD>-->
-<TD width="25%"><a href="filme/cl.php?host=https://lookmovie.io&cookie=lookmovie.dat&target=lookmovie_f.php&title=lookmovie" target="_blank">lookmovie</a></TD>
+<TD width="25%"><a href="filme/lookmovie_f.php?page=1&tip=release&title=lookmovie&link=" target="_blank">lookmovie</a></TD>
+<!--<TD width="25%"><a href="filme/cl.php?host=https://lookmovie.io&cookie=lookmovie.dat&target=lookmovie_f.php&title=lookmovie" target="_blank">lookmovie</a></TD>-->
 </TR>
 <TR>
 <TD width="25%"><a href="filme/azm_f.php?page=1&tip=release&title=azm&link=" target="_blank">azm</a></TD>
@@ -130,7 +130,7 @@ else
 <TD width="25%"><a href="filme/goojara_f.php?page=1&tip=release&title=goojara&link=" target="_blank">goojara</a></TD>
 <!--<TD width="25%"><a href="filme/moviehdkh_f.php?page=1&tip=release&title=moviehdkh&link=" target="_blank">moviehdkh</a></TD>-->
 <TD width="25%"><a href="filme/cff.php?loc=https://www.moviehdkh.com&cookie=moviehdkh.txt&dest=moviehdkh_f.php%3Fpage%3D1%26tip%3Drelease%26title%3Dmoviehdkh%26link%3D" target="_blank">moviehdkh</a></TD>
-<TD width="25%"><a href="filme/flixgo_f.php?page=1&tip=release&title=flixgo&link=" target="_blank">flixgo</a></TD>
+<TD width="25%"><a href="filme/msmoviesbd_f.php?page=1&tip=release&title=msmoviesbd&link=" target="_blank">msmoviesbd</a></TD>
 <TD width="25%"><a href="filme/dailymotion_fav.php" target="_blank">dailymotion</a></TD>
 </TR>
 <TR>
@@ -150,7 +150,8 @@ else
 </TR>
 
 <TR>
-<TD width="25%"><a href="filme/tofmovies_f.php?page=1&tip=release&title=tofmovies&link=" target="_blank">tofmovies</a></TD>
+<!--<TD width="25%"><a href="filme/tofmovies_f.php?page=1&tip=release&title=tofmovies&link=" target="_blank">tofmovies</a></TD>-->
+<TD width="25%"><a href="filme/themoviebay.php?page=1&tip=release&title=themoviebay&link=" target="_blank">themoviebay</a></TD>
 <TD width="25%"><a href="filme/topmoviesonline_f.php?page=1&tip=release&title=topmoviesonline&link=" target="_blank">topmoviesonline</a></TD>
 <TD width="25%"><a href="filme/123files.php?page=1&tip=release&title=123files&link=" target="_blank">123files</a></TD>
 <TD width="25%"><a href="filme/trailers_f.php?page=1&tip=release&title=trailers&link=" target="_blank">trailers</a></TD>

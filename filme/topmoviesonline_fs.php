@@ -248,6 +248,14 @@ $head=array('Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image
    $r[]=$l;
    $s[]=parse_url($l)['host'];
   }
+  } elseif (preg_match("/getElementById\(\"iframe\_player\"\)\.src/",$h)) {
+    $t1=explode('getElementById("iframe_player").src = ',$h);
+    $t2=explode("]",$t1[1]);
+    $t=json_decode(trim($t2[0])."]",1);
+    for ($k=0;$k<count($t);$k++) {
+     $r[]=$t[$k];
+     $s[]=parse_url($t[$k])['host'];
+    }
   } elseif (preg_match("/window\.serverlist/",$h)) {
     $t1=explode("window.serverlist=",$h);
     $t2=explode("<",$t1[1]);

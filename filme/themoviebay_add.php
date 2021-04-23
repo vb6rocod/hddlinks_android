@@ -2,18 +2,12 @@
 //error_reporting(0);
 //62
 include ("../common.php");
-function str_between($string, $start, $end){
-	$string = " ".$string; $ini = strpos($string,$start);
-	if ($ini == 0) return ""; $ini += strlen($start); $len = strpos($string,$end,$ini) - $ini;
-	return substr($string,$ini,$len);
-}
 //$fav_link="mod=add&title=".urlencode(fix_t($title11))."&link=".$link1."&image=".$image;
 $mod=$_POST["mod"];
 $link=$_POST["link"];
 $title=$_POST["title"];
 $image=urldecode($_POST["image"]);
-
-$file=$base_fav."filmeonlinegratis_s.dat";
+$file=$base_fav."themoviebay.dat";
 $arr=array();
 $h="";
 if (file_exists($file)) {
@@ -43,13 +37,13 @@ if ($mod=="add") {
   if (!$found) {
     $arr[$title]["link"]=$link;
     $arr[$title]["image"]=$image;
-    echo "Am adaugat serialul ".unfix_t(urldecode($title));
+    echo "Am adaugat filmul ".unfix_t(urldecode($title));
   }
   ksort($arr);
   } else {
     $arr[$title]["link"]=$link;
     $arr[$title]["image"]=$image;
-    echo "Am adaugat serialul ".unfix_t(urldecode($title));
+    echo "Am adaugat filmul ".unfix_t(urldecode($title));
   }
   $out="";
   //print_r ($arr);
@@ -57,7 +51,7 @@ if ($mod=="add") {
     $out =$out.$key."#separator".$arr[$key]["link"]."#separator".$arr[$key]["image"]."\r\n";
   }
   //echo $out;
-  if ($found) echo "Serialul a fost adaugat deja!";
+  if ($found) echo "Filmul a fost adaugat deja!";
   file_put_contents($file,$out);
 } else {
   $found=false;
@@ -69,7 +63,7 @@ if ($mod=="add") {
       $found=true;
       //echo $title;
       unset ($arr[$key]);
-      echo "Am sters serialul ".unfix_t(urldecode($title));
+      echo "Am sters filmul ".unfix_t(urldecode($title));
       break;
     }
   }

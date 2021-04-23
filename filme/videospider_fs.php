@@ -159,91 +159,53 @@ if ($tip == "movie") {      //2426
   $imdbid = str_replace("tt","",$result['imdb_id']);
 }
 $r=array();
-$f1=$base_pass."videospiderp.txt";
-$ua="Mozilla/5.0 (Windows NT 10.0; rv:71.0) Gecko/20100101 Firefox/71.0";
-if (!file_exists($f1)) {
-if (file_exists($base_pass."videospider.txt"))
-  $key=trim(file_get_contents($base_pass."videospider.txt"));
-else
-  $key="l81VXYfPFbaneLed";
-if ($tip=="movie")
-$l="https://videospider.stream/personal?key=".$key."&video_id=".$link."&tv=0&tmdb=1";
-else
-$l="https://videospider.stream/personal?key=".$key."&video_id=".$link."&s=".$sez."&e=".$ep."&tv=1&tmdb=1";
-$ref="https://videospider.stream";
-  $ch = curl_init();
-  curl_setopt($ch, CURLOPT_URL, $l);
-  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-  //curl_setopt($ch,CURLOPT_REFERER,"http://www.verystream.live");
-  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
-  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
-  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
-  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
-  curl_setopt($ch, CURLOPT_HEADER,1);
-  $h = curl_exec($ch);
-  curl_close($ch);
-  if (preg_match("/location:\s*(.+)/i",$h,$m))
-    $l1=trim($m[1]);
+$name=array();
 
-} else {
-$h1=file_get_contents($f1);
-$t1=explode("|",$h1);
-$key=$t1[0];
-$ref=$t1[1];
-if ($tip=="movie")
-$l1="https://streamvideo.link/getvideo?key=".$key."&video_id=".$link."&tv=0&tmdb=1";
-else
-$l1="https://streamvideo.link/getvideo?key=".$key."&video_id=".$link."&s=".$sez."&e=".$ep."&tv=1&tmdb=1";
-}
-//echo $l1;
-  $ch = curl_init();
-  curl_setopt($ch, CURLOPT_URL, $l1);
-  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-  //curl_setopt($ch, CURLOPT_HTTPHEADER,$head);
-  //curl_setopt($ch, CURLOPT_POST,1);
-  //curl_setopt($ch, CURLOPT_POSTFIELDS,$post);
-  curl_setopt($ch, CURLOPT_HEADER, 1);
-  curl_setopt($ch, CURLOPT_REFERER,$ref);
-  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
+$f1=$base_pass."videospiderp.txt";
+$api='6092d731fb7509468fb0c38de2008a38';
+$passphrase=hex2bin("4d4b48bfe943ed7933feb1ceee1b2942");
+$iv=hex2bin("76ec83290362bcef0000000000000000");
+$data = array('api' => $api, 'id' => $link, 'season' => $sez, 'episode' => $ep);
+$post = http_build_query($data);
+$ua="Mozilla/5.0 (Windows NT 10.0; rv:71.0) Gecko/20100101 Firefox/71.0";
+$l="https://www.vidstreamapi.com/stream_src.php";
+  $ch = curl_init($l);
   curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER  ,1);  // RETURN THE CONTENTS OF THE CALL
+  curl_setopt ($ch, CURLOPT_POST, 1);
+  curl_setopt ($ch, CURLOPT_POSTFIELDS, $post);
+  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
   curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
   curl_setopt($ch, CURLOPT_TIMEOUT, 15);
-  $h = curl_exec($ch);
-  //echo $h;
-  $t1=explode('var token = "',$h);
-  $t2=explode('"',$t1[1]);
-  $token=$t2[0];
-  $serv1=array();
-  $name=array();
-  $videos=explode('data-server="',$h);
-  unset($videos[0]);
-  $videos = array_values($videos);
-  foreach($videos as $video) {
-    $t1=explode('"',$video);
-    $server=$t1[0];
-    $t1=explode('data-server-id="',$video);
-    $t2=explode('"',$t1[1]);
-    $id=$t2[0];
-    $t1=explode('title="',$video);
-    $t2=explode('"',$t1[1]);
-    $name[]=$t2[0];
-    $serv1[]=array('serv' => $server,'id' => $id);
-  }
-  $r=array();
-  for ($k=0;$k<count($serv1);$k++) {
-  $server=$serv1[$k]['serv'];
-  $id=$serv1[$k]['id'];
-  $l1="https://oload.party/loadsource.php?server=".$server."&id=".$id."&token=".$token;
-  curl_setopt($ch, CURLOPT_URL, $l1);
-  $h = curl_exec($ch);
-  //echo $h;
-  //$h=file_get_contents($l1);
-  $t1=explode('iframe src="',$h);
-  $t2=explode('"',$t1[1]);
-  $r[]=urlencode($t2[0]);
-  }
+  $stream_src = curl_exec($ch);
   curl_close($ch);
+$head=array('Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
+'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
+'Accept-Encoding: deflate',
+'Connection: keep-alive',
+'Upgrade-Insecure-Requests: 1');
+  $ch = curl_init();
+  curl_setopt($ch, CURLOPT_URL, $stream_src);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
+  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+  curl_setopt($ch, CURLOPT_HTTPHEADER, $head);
+  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 25);
+  $h = curl_exec($ch);
+  curl_close($ch);
+  $t1=explode("abc='[",$h);
+  $t2=explode("]'",$t1[1]);
+  $x=json_decode("[".$t2[0]."]",1);
+  //print_r ($x);
+  for ($k=0;$k<count($x);$k++) {
+    $value=$x[$k]['url'];
+    $data = openssl_decrypt(base64_decode($value), 'aes-128-cbc', $passphrase, OPENSSL_RAW_DATA, $iv);
+    $r[]=urlencode($data);
+    $name[]=base64_decode($x[$k]['title'])." (".$x[$k]['quality'].")";
+  }
 /////////////////////////////////////////////////////////////////////////////////////////
 
 echo '<table border="1" width="100%">';
@@ -337,3 +299,7 @@ echo '
 </div>
 </body>
 </html>';
+echo "<BR>";
+for ($k=0;$k<count($r);$k++) {
+ echo urldecode($r[$k])."<BR>";
+}

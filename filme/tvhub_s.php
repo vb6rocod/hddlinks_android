@@ -6,10 +6,9 @@ function str_between($string, $start, $end){
 	return substr($string,$ini,$len);
 }
 include ("../common.php");
-include ("../cloudflare.php");
 $last_good="https://www1.tvhub.ro";
 $last_good="https://tvhub.org";
-$last_good="https://tvhub.pro";
+//$last_good="https://tvhub.pro";
 $host=parse_url($last_good)['host'];
 $page = $_GET["page"];
 $tip= $_GET["tip"];

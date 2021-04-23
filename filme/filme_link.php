@@ -725,9 +725,10 @@ $cookie=$base_cookie."hdpopcorns.dat";
    $url=$m[1];
   else
    $url="/wp-content/themes/vizer/inc/parts/single/field-ajax.php";
+// https://tvhub.org/wp-content/themes/grifus/includes/single/field-ajax3.php
   $l=$scheme."://".$host.$url;
   if (preg_match("/tvhub/",$host))
-   $l="https://".$host."/wp-content/themes/serialenoi/field-ajax.php";
+   $l="https://".$host."/wp-content/themes/grifus/includes/single/field-ajax3.php";
   else if (preg_match("/serialeonlinesubtitrate/",$host))
    $l="https://serialeonlinesubtitrate.ro/wp-content/themes/hdvix/field-ajax.php";
   //echo $post;

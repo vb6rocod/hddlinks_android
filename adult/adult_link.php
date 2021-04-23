@@ -598,6 +598,7 @@ $out=$t2[0];
   }
   if (strpos($out,"http") === false && $out) $out="https:".$out;
 } else if (preg_match("/pornhub\.com/",$host)) {
+//echo $h;
   //https://www.pornhub.com/embed/ph5d4b0d9dbca84
   preg_match_all("/flashvars\.mediaDefinitions\.(.*?)\.videoUrl/msi",$h,$q);
   $s=$q[1][0];
@@ -611,7 +612,29 @@ $out=$t2[0];
    $o .=str_replace("+",".",str_replace("var ra","\$ra",$m[0][$k]))."\n";
   }
   $o .=str_replace("+",".",str_replace(" ra","\$ra",$x))."\n";
+  //echo $o;
   eval ($o);
+  $ua="Mozilla/5.0 (Windows NT 10.0; rv:87.0) Gecko/20100101 Firefox/87.0";
+$head=array('Accept: */*',
+'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
+'Accept-Encoding: deflate',
+'Connection: keep-alive',
+'Referer: '.$l);
+  $ch = curl_init();
+  curl_setopt($ch, CURLOPT_URL, $out);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
+  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+  curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie);
+  curl_setopt($ch, CURLOPT_HTTPHEADER, $head);
+  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 25);
+  $h = curl_exec($ch);
+  curl_close($ch);
+  $x=json_decode($h,1);
+  //print_r ($x);
+  $out=$x[0]['videoUrl'];
 } else if (preg_match("/pornmaki\.com/",$host)) {
   $t1=explode('file:"',$h);
   $t2=explode('"',$t1[1]);

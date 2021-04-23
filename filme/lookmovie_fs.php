@@ -140,6 +140,7 @@ echo '<BR>';
 $r=array();
 $s=array();
 $srt="";
+$lang="";
 if ($tip=="movie") {
 $ua = $_SERVER['HTTP_USER_AGENT'];
 $cookie=$base_cookie."hdpopcorns.dat";
@@ -219,7 +220,28 @@ $h=@file_get_contents($l,false,$context);
   $context = stream_context_create($opts);
   $h = @file_get_contents($l, false, $context);
   $x=json_decode($h,1);
-  //print_r ($r);
+  //print_r ($x);
+  if (isset($x['data']['subtitles'])) {
+  $srt1=array();
+  $s=array();
+  $srt="";
+  $sss=$x['data']['subtitles'];
+  for ($k=0;$k<count($sss);$k++) {
+   if ($sss[$k]['file'][0] == "/")
+     $ss= "https://lookmovie.io".$sss[$k]['file'];
+   else
+     $ss=$sss[$k]['file'];
+   $srt1[$sss[$k]['language']] = $ss;
+  }
+  if (isset($srt1["Romanian"])) {
+    $srt=$srt1["Romanian"];
+    $lang="Romanian";
+  } elseif (isset($srt1["English"])) {
+    $srt=$srt1["English"];
+    $lang="English";
+  } else
+    $srt="";
+  }
   $time=$x['data']['expires'];
   $token=$x['data']['accessToken'];
   $l="https://lookmovie.io/manifests/movies/json/".$id."/".$time."/".$token."/master.m3u8";
@@ -317,13 +339,25 @@ $s=array();
   $srt1=array();
   $srt="";
   for ($k=0;$k<count($s);$k++) {
+   if ($s[$k]['file'][0] == "/")
+     $ss= "https://lookmovie.io".$s[$k]['file'];
+   else
+     $ss=$s[$k]['file'];
+   $srt1[$s[$k]['language']] = $ss;
+  }
+  /*
+  for ($k=0;$k<count($s);$k++) {
     $srt1[$s[$k]["languageName"]]="https://lookmovie.io/".$s[$k]["shard"]."/".$s[$k]["storagePath"].$s[$k]["isoCode"].".vtt";
   }
-  if (isset($srt1["Romanian"]))
+  */
+  //print_r ($srt1);
+  if (isset($srt1["Romanian"])) {
     $srt=$srt1["Romanian"];
-  elseif (isset($srt1["English"]))
+    $lang="Romanian";
+  } elseif (isset($srt1["English"])) {
     $srt=$srt1["English"];
-  else
+    $lang="English";
+  } else
     $srt="";
 $r=array();
 $s=array();
@@ -449,12 +483,8 @@ else
 echo '</tr>';
 echo '</table>';
 echo '<br>';
-if ($tip=="movie") {
-if (preg_match("/English|Romanian|en|ro/",$srt,$z))
- echo '<b>Subtitles: '.$z[0]."</b><BR>";
-} else {
-if (preg_match("/(en|ro)\.vtt/",$srt,$z))
- echo '<b>Subtitles: '.$z[1]."</b><BR>";
+if ($lang) {
+ echo '<b>Subtitles: '.$lang."</b><BR>";
 }
 echo '<table border="0px" width="100%">
 <TR>
