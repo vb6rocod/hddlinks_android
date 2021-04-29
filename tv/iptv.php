@@ -24,6 +24,7 @@ $l="https://iptv-org.github.io/iptv/index.m3u";
 $l="https://iptv-org.github.io/iptv/index.country.m3u";
 $l="https://raw.githubusercontent.com/iptv-org/iptv/master/index.m3u";
 //$l="https://raw.githubusercontent.com/freearhey/iptv/master/index.m3u";
+$l="https://raw.githubusercontent.com/iptv-org/iptv/master/index.m3u";
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $l);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);

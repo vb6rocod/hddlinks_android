@@ -230,7 +230,7 @@ $host=parse_url($l)['host'];
   curl_setopt($ch, CURLOPT_TIMEOUT, 15);
   $html = curl_exec($ch);
   curl_close($ch);
-  
+//echo $html;
 $r=array();
 $videos = explode('a class="video-thumb', $html);
 unset($videos[0]);
@@ -248,8 +248,8 @@ foreach($videos as $video) {
   $t2 = explode('"', $t1[1]);
   $image = $t2[0];
   if (strpos($image,"http") === false) $image="https:".$image;
-  $t1 = explode('duration"',$video);
-  $t2 = explode ('>',$t1[1]);
+  //$t1 = explode('duration"',$video);
+  $t2 = explode ('duration>',$video);
   $t3 = explode("<",$t2[1]);
   $durata=trim($t3[0]);
   $durata = preg_replace("/\n|\r/"," ",strip_tags($durata));

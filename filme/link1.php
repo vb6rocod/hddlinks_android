@@ -157,10 +157,11 @@ if (strpos($filelink,"https://www.google.com/search") !== false) {
   else
     $filelink="";
 }
-if (preg_match("/movs\.today/",$filelink)) {
-  $t1=explode("&sub=",$filelink);
-  $link=$t1[0];
-  $srt=$t1[1];
+if (preg_match("/trailers\./",$filelink)) {
+  $t1=explode("?file=",$filelink);
+  $t2=explode("&sub=",$t1[1]);
+  $link=$t2[0];
+  $srt=$t2[1];
   $filelink="";
   if ($flash <> "flash")
    $link=$link."|Origin=".urlencode("https://trailers.to")."&Referer=".urlencode("https://trailers.to");
@@ -10470,7 +10471,7 @@ if ($srt <> "") {
    curl_close($ch);
    //echo $h;
    } elseif (strpos($srt,"lookmovie") !== false) {
-    $cookie=$base_cookie."lookmovie.dat";
+    $cookie=$base_cookie."lookmovie.txt";
     if (file_exists($base_pass."firefox.txt"))
      $ua=file_get_contents($base_pass."firefox.txt");
     else
@@ -10478,7 +10479,7 @@ if ($srt <> "") {
 
     $head=array('Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
     'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2');
-
+//echo $srt;
     $ch = curl_init();
     curl_setopt($ch, CURLOPT_URL, $srt);
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
@@ -10496,6 +10497,8 @@ if ($srt <> "") {
     $h=file_get_contents($base_sub."sub_extern.srt");
    }
    if ($h) {
+   //echo $srt;
+   //echo $h;
    if (preg_match("/dl\.opensubtitles\.org/",$srt)) {
     $h = gzdecode($h);
    }

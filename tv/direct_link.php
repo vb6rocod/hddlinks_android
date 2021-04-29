@@ -203,6 +203,17 @@ if (preg_match("/realiptv\.eu/",$link)) {
     $t2=explode("<",$t1[1]);
     $link=$t2[0];
 }
+if (preg_match("/clients\.your\-server\.de/",$link)) {
+  // https://static.240.188.251.148.clients.your-server.de:2083/live/canale/live/2.m3u8
+  $ua="Mozilla/5.0 (Windows NT 10.0; rv:64.0) Gecko/20100101 Firefox/64.0";
+  $ua     =   $_SERVER['HTTP_USER_AGENT'];
+  $ua = 'Mozilla/5.0(Linux;Android 10.1.2) MXPlayer';
+  $ua="Mozilla/5.0 (Windows NT 10.0; rv:88.0) Gecko/20100101 Firefox/88.0";
+    if ($flash <> "flash") {
+     $link=$link."|Origin=".urlencode("https://canale.live")."&Referer=".urlencode("https://canale.live");
+     $link=$link."&User-Agent=".urlencode($ua);
+    }
+}
 if (preg_match("/canale1\.live/",$link)) {
     $ua="Mozilla/5.0 (Windows NT 10.0; rv:64.0) Gecko/20100101 Firefox/64.0";
     $ch = curl_init();
@@ -232,11 +243,6 @@ if (preg_match("/canale1\.live/",$link)) {
      $link=$link."&User-Agent=".urlencode($ua);
     }
      //$link=trim($m[1]);
-}
-if (preg_match("/clients\.your\-server\.de/",$link)) {
-  $ua="Mozilla/5.0 (Windows NT 10.0; rv:64.0) Gecko/20100101 Firefox/64.0";
-  if ($flash <> "flash")
-  $link=$link."|User-Agent=".urlencode($ua);
 }
 if (preg_match("/tvhd-online1\.com/",$link)) {
     $ch = curl_init();
@@ -611,6 +617,7 @@ $ad .="&Referer=".urlencode("http://tvhd-online.com");
 }
 if ($from=="digilive") {
 //echo $link;
+  if (!preg_match("/clients\.your\-server\.de/",$link)) {
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $link);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
@@ -625,6 +632,7 @@ if ($from=="digilive") {
   $t1=explode("videoLink = '",$h);
   $t2=explode("'",$t1[1]);
   $link=$t2[0];
+  }
 }
 if ($from=="protvplus") {
   $ua = $_SERVER['HTTP_USER_AGENT'];
@@ -1405,6 +1413,7 @@ if ($from=="cabinet") {
    $link="";
 }
 if ($from=="privesceu") {
+//echo $link;
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $link);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
@@ -1414,14 +1423,19 @@ if ($from=="privesceu") {
   curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
   curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
   curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
-  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
-  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 25);
   $html = curl_exec($ch);
   curl_close($ch);
 //echo $html;
+  $link="";
+  $t1=explode('contentUrl":"',$html);
+  $t2=explode('"',$t1[1]);
+  $link=$t2[0];
+/*
   $id=str_between($html,"widget/live/",'"');
   $l="http://www.privesc.eu/api/live/".$id;
-//echo $l;
+echo $l;
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $l);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
@@ -1431,12 +1445,13 @@ if ($from=="privesceu") {
   curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
   curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
   curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
-  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
-  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 25);
   $h = curl_exec($ch);
   curl_close($ch);
-//echo $h;
-$link=trim(str_between($h,'hls":"','"'));
+echo $h;
+*/
+//$link=trim(str_between($h,'hls":"','"'));
    if ($link && $flash != "flash")
      $link=$link."|Referer=".urlencode("https://www.privesc.eu");
 }

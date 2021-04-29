@@ -941,20 +941,30 @@ $cookie=$base_cookie."hdpopcorns.dat";
 //echo $h;
 } elseif (strpos($filelink,"filmeonline2016.biz") !== false || strpos($filelink,"filmeonline.st") !== false) {
   $ua=$_SERVER['HTTP_USER_AGENT'];
-  $ch = curl_init($filelink);
+
   //echo $filelink;
   //https://filmeonline.st/spider-man-far-from-home-2019/
+  $filelink=$filelink."?show_player=true";
+  //echo $filelink;
+  //$filelink="https://filmeonline.st/mortal-kombat-2021/?show_player=true";
+  $head=array('Accept: */*',
+'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
+'Accept-Encoding: deflate',
+'X-Moz: prefetch',
+'Connection: keep-alive',
+'Referer: https://jurnalul.info/');
+  $ch = curl_init($filelink);
   curl_setopt($ch, CURLOPT_USERAGENT,$ua);
-  curl_setopt($ch,CURLOPT_REFERER,"http://www.filmeonline2016.biz/");
+  //curl_setopt($ch,CURLOPT_REFERER,"http://www.filmeonline2016.biz/");
   //curl_setopt ($ch, CURLOPT_POST, 1);
   //curl_setopt ($ch, CURLOPT_POSTFIELDS, $post);
-  //curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+  curl_setopt($ch, CURLOPT_HTTPHEADER, $head);
   curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER  ,1);  // RETURN THE CONTENTS OF THE CALL
-  //curl_setopt($ch, CURLOPT_HEADER, true);
-  //curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
-  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+  curl_setopt($ch, CURLOPT_HEADER, true);
+  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 25);
   $html = curl_exec($ch);
   curl_close ($ch);
   //echo $html;

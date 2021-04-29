@@ -144,56 +144,28 @@ $lang="";
 if ($tip=="movie") {
 $ua = $_SERVER['HTTP_USER_AGENT'];
 $cookie=$base_cookie."hdpopcorns.dat";
-$cookie=$base_cookie."lookmovie.dat";
+$cookie=$base_cookie."lookmovie.txt";
 if (file_exists($base_pass."firefox.txt"))
  $ua=file_get_contents($base_pass."firefox.txt");
 else
  $ua="Mozilla/5.0 (Windows NT 10.0; rv:75.0) Gecko/20100101 Firefox/75.0";
-if (file_exists($cookie)) {
- $x=file_get_contents($cookie);
- if (preg_match("/lookmovie\.io	\w+	\/	\w+	\d+	cf_clearance	([\w|\-]+)/",$x,$m))
-  $cc=trim($m[1]);
- else
-  $cc="";
-} else {
-  $cc="";
-}
-$head=array('User-Agent: '.$ua.'',
-'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
-'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
-'Cookie: cf_clearance='.$cc);
-//print_r ($head);
+
 $l=$link;
   //$ua = $_SERVER['HTTP_USER_AGENT'];
 $last_good="https://lookmovie.io";
-$opts = array(
-  'http'=>array(
-    'method'=>"GET",
-    'header'=>"User-Agent: ".$ua."\r\n".
-              "Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\r\n" .
-              "Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2\r\n" .
-              "Accept-Encoding: deflate\r\n" .
-              "Connection: keep-alive\r\n" .
-              "Cookie: cf_clearance=".$cc."\r\n".
-              "Referer: ".$last_good."\r\n"
-  )
-);
-//print_r ($opts);
-$context = stream_context_create($opts);
-$h=@file_get_contents($l,false,$context);
-/*
+
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $l);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-  //curl_setopt($ch, CURLOPT_USERAGENT, $ua);
-  //curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie);
-  curl_setopt($ch, CURLOPT_HTTPHEADER,$head);
+  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
+  curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie);
+  //curl_setopt($ch, CURLOPT_HTTPHEADER,$head);
   curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
   curl_setopt($ch, CURLOPT_TIMEOUT, 25);
   curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
   $h = curl_exec($ch);
   curl_close($ch);
-*/
+
   //echo $h;
   $h=str_replace('" + window.location.host + "',"lookmovie.io",$h);
   if (preg_match("/file\"\:\s*\"((.*?)(Romanian|ro)\.vtt)/",$h,$p))
@@ -210,15 +182,19 @@ $h=@file_get_contents($l,false,$context);
   if (preg_match("/id_movie\:?\s*\'?(\d+)/",$h,$m))
    $id=$m[1];
   $l="https://lookmovie.io/api/v1/security/movie-access?id_movie=".$id."&token=1&sk=&step=1";
-  $opts = array(
-  'http'=>array(
-    'method'=>"GET",
-    'header'=> $head
-  )
-  );
-
-  $context = stream_context_create($opts);
-  $h = @file_get_contents($l, false, $context);
+  //echo $l;
+  $ch = curl_init();
+  curl_setopt($ch, CURLOPT_URL, $l);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
+  curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie);
+  //curl_setopt($ch, CURLOPT_HTTPHEADER,$head);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 25);
+  curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
+  $h = curl_exec($ch);
+  curl_close($ch);
+  //echo $h;
   $x=json_decode($h,1);
   //print_r ($x);
   if (isset($x['data']['subtitles'])) {
@@ -245,15 +221,17 @@ $h=@file_get_contents($l,false,$context);
   $time=$x['data']['expires'];
   $token=$x['data']['accessToken'];
   $l="https://lookmovie.io/manifests/movies/json/".$id."/".$time."/".$token."/master.m3u8";
-$opts = array(
-  'http'=>array(
-    'method'=>"GET",
-    'header'=> $head
-  )
-);
-
-$context = stream_context_create($opts);
-$h = @file_get_contents($l, false, $context);
+  $ch = curl_init();
+  curl_setopt($ch, CURLOPT_URL, $l);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
+  curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie);
+  //curl_setopt($ch, CURLOPT_HTTPHEADER,$head);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 25);
+  curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
+  $h = curl_exec($ch);
+  curl_close($ch);
   if (!$slug) {
   $x=json_decode($h,1);
   //print_r ($r);
@@ -300,33 +278,21 @@ $h = @file_get_contents($l, false, $context);
 } else {
   $id=$link;
   $sub="";
-$cookie=$base_cookie."lookmovie.dat";
+$cookie=$base_cookie."lookmovie.txt";
 if (file_exists($base_pass."firefox.txt"))
  $ua=file_get_contents($base_pass."firefox.txt");
 else
  $ua="Mozilla/5.0 (Windows NT 10.0; rv:75.0) Gecko/20100101 Firefox/75.0";
-if (file_exists($cookie)) {
- $x=file_get_contents($cookie);
- if (preg_match("/lookmovie\.io	\w+	\/	\w+	\d+	cf_clearance	([\w|\-]+)/",$x,$m))
-  $cc=trim($m[1]);
- else
-  $cc="";
-} else {
-  $cc="";
-}
-$head=array('User-Agent: '.$ua.'',
-'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
-'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
-'Cookie: cf_clearance='.$cc);
+
 $s=array();
   $l="https://lookmovie.io/api/v1/shows/episode-subtitles/?id_episode=".$id;
   //$l="https://lookmovie.io/api/v1/shows/episode-subtitles/?id_episode=119775";
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $l);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-  curl_setopt($ch, CURLOPT_HTTPHEADER,$head);
-  //curl_setopt($ch, CURLOPT_USERAGENT, $ua);
-  //curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie);
+  //curl_setopt($ch, CURLOPT_HTTPHEADER,$head);
+  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
+  curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie);
   curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
   curl_setopt($ch, CURLOPT_TIMEOUT, 25);
   curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
@@ -364,30 +330,34 @@ $s=array();
 //$head=array('Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
 //'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2');
   $l="https://lookmovie.io/api/v1/security/show-access?slug=".$slug."&token=&step=2";
-  $opts = array(
-  'http'=>array(
-    'method'=>"GET",
-    'header'=> $head
-  )
-  );
-
-  $context = stream_context_create($opts);
-  $h = @file_get_contents($l, false, $context);
+  $ch = curl_init();
+  curl_setopt($ch, CURLOPT_URL, $l);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+  //curl_setopt($ch, CURLOPT_HTTPHEADER,$head);
+  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
+  curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 25);
+  curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
+  $h = curl_exec($ch);
+  curl_close($ch);
   $x=json_decode($h,1);
   //print_r ($r);
   $time=$x['data']['expires'];
   $token=$x['data']['accessToken'];
   $l="https://lookmovie.io/manifests/movies/json/".$id."/".$time."/".$token."/master.m3u8";
   $l="https://lookmovie.io/manifests/shows/json/".$token."/".$time."/".$id."/master.m3u8";
-$opts = array(
-  'http'=>array(
-    'method'=>"GET",
-    'header'=> $head
-  )
-);
-
-$context = stream_context_create($opts);
-$h = @file_get_contents($l, false, $context);
+  $ch = curl_init();
+  curl_setopt($ch, CURLOPT_URL, $l);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+  //curl_setopt($ch, CURLOPT_HTTPHEADER,$head);
+  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
+  curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 25);
+  curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
+  $h = curl_exec($ch);
+  curl_close($ch);
 //echo $h;
   //if ($slug) {
   $x=json_decode($h,1);

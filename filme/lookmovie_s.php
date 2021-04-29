@@ -1,4 +1,3 @@
-<!DOCTYPE html>
 <?php
 function str_between($string, $start, $end){
 	$string = " ".$string; $ini = strpos($string,$start);
@@ -7,6 +6,11 @@ function str_between($string, $start, $end){
 }
 include ("../common.php");
 error_reporting(0);
+if (file_exists($base_pass."player.txt")) {
+$flash=trim(file_get_contents($base_pass."player.txt"));
+} else {
+$flash="direct";
+}
 $page = $_GET["page"];
 $tip= $_GET["tip"];
 $tit=$_GET["title"];
@@ -60,8 +64,57 @@ if ($tip=="search") {
 } else
   $page_title=$tit;
 /* ==================================================== */
+$ua="Mozilla/5.0 (Windows NT 10.0; rv:55.0) Gecko/20100101 Firefox/55.0";
+$r=array();
+//http://free2watch.net/tvseries/sort/latest/all/all/all
+if($tip=="release") {
+  $l=$last_good."/shows/filter/?p=".$page;
+} else {
+  $search=str_replace(" ","%20",$tit);
+  $l=$last_good."/shows/search/?p=".$page."&q=".$search;
+}
+$host=parse_url($l)['host'];
+$cookie=$base_cookie."lookmovie.txt";
+ if (file_exists("/storage/emulated/0/Download/cookies.txt")) {
+  $h1=file_get_contents("/storage/emulated/0/Download/cookies.txt");
+  file_put_contents($cookie,$h1);
+  unlink ("/storage/emulated/0/Download/cookies.txt");
+ } elseif (file_exists($base_cookie."cookies.txt")) {
+  $h1=file_get_contents($base_cookie."cookies.txt");
+  file_put_contents($cookie,$h1);
+  unlink ($base_cookie."cookies.txt");
+ }
+if (file_exists($base_pass."firefox.txt"))
+ $ua=file_get_contents($base_pass."firefox.txt");
+else
+ $ua="Mozilla/5.0 (Windows NT 10.0; rv:75.0) Gecko/20100101 Firefox/75.0";
 
+//echo $ua."<BR>";
+//print_r ($head);
+
+
+  $ch = curl_init();
+  curl_setopt($ch, CURLOPT_URL, $l);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+  curl_setopt($ch,CURLOPT_REFERER,$last_good);
+  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
+  curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie);
+  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+  $html = curl_exec($ch);
+  curl_close($ch);
+if (preg_match("/invisible\-recaptcha\-key/",$html)) {
+//echo '<a href="look_captcha.php?host=https://lookmovie.io&cookie=lookmovie.txt&target=lookmovie_f.php&title=lookmovie" target="_blank"><b>GET COOKIE</b></a>';
+//header ("Location: look_captcha1.php");
+   if ($flash=="mp")
+    echo '<a href="intent:http://127.0.0.1:8080/scripts/filme/cf.php?site=https://lookmovie.io/account/login&cookie='.$cookie.'#Intent;package=org.mozilla.firefox;S.title=Cloudflare;end">GET cloudflare cookie</a>';
+   else
+    header('Location: cf.php?site=https://lookmovie.io/account/login&cookie='.$cookie);
+exit ;
+}
 ?>
+<!DOCTYPE html>
 <html>
 <head>
 <meta http-equiv="content-type" content="text/html; charset=UTF-8">
@@ -168,78 +221,10 @@ if ($page==1) {
    echo '<TD class="nav" colspan="4" align="right"><a href="'.$prev.'">&nbsp;&lt;&lt;&nbsp;</a> | <a href="'.$next.'">&nbsp;&gt;&gt;&nbsp;</a></TD>'."\r\n";
 }
 echo '</TR>'."\r\n";
-$ua="Mozilla/5.0 (Windows NT 10.0; rv:55.0) Gecko/20100101 Firefox/55.0";
-$r=array();
-//http://free2watch.net/tvseries/sort/latest/all/all/all
-if($tip=="release") {
-  $l=$last_good."/shows/filter/?p=".$page;
-} else {
-  $search=str_replace(" ","%20",$tit);
-  $l=$last_good."/shows/search/?p=".$page."&q=".$search;
-}
-$host=parse_url($l)['host'];
-$cookie=$base_cookie."lookmovie.dat";
-if (file_exists($base_pass."firefox.txt"))
- $ua=file_get_contents($base_pass."firefox.txt");
-else
- $ua="Mozilla/5.0 (Windows NT 10.0; rv:75.0) Gecko/20100101 Firefox/75.0";
-if (file_exists($cookie)) {
- $x=file_get_contents($cookie);
- if (preg_match("/lookmovie\.io	\w+	\/	\w+	\d+	cf_clearance	([\w|\-]+)/",$x,$m))
-  $cc=trim($m[1]);
- else
-  $cc="";
-} else {
-  $cc="";
-}
-//echo $h;
-//https://lookmovie.io/favicon-16x16.png
-$head=array('User-Agent: '.$ua,
-'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
-'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
-'Cookie: cf_clearance='.$cc,
-'Connection: keep-alive',
-'Referer: https://lookmovie.io/',
-'Upgrade-Insecure-Requests: 1');
-//echo $ua."<BR>";
-//print_r ($head);
 
-  /*
-  $ch = curl_init();
-  curl_setopt($ch, CURLOPT_URL, $l);
-  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-  curl_setopt($ch,CURLOPT_REFERER,$last_good);
-  //curl_setopt($ch, CURLOPT_USERAGENT, $ua);
-  curl_setopt($ch, CURLOPT_HTTPHEADER, $head);
-  curl_setopt($ch, CURLINFO_HEADER_OUT, true);
-  curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie);
-  curl_setopt($ch, CURLOPT_COOKIEJAR, $cookie);
-  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,0);
-  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
-  curl_setopt($ch, CURLOPT_TIMEOUT, 25);
-  curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
-  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
-  $html = curl_exec($ch);
-  $info = curl_getinfo($ch);
-  curl_close($ch);
-  */
 //echo $html;
 //print_r ($info);
-$opts = array(
-  'http'=>array(
-    'method'=>"GET",
-    'header'=>"User-Agent: ".$ua."\r\n".
-              "Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\r\n" .
-              "Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2\r\n" .
-              "Accept-Encoding: deflate\r\n" .
-              "Connection: keep-alive\r\n" .
-              "Cookie: cf_clearance=".$cc."\r\n".
-              "Referer: ".$last_good."\r\n"
-  )
-);
-//print_r ($opts);
-$context = stream_context_create($opts);
-$html=@file_get_contents($l,false,$context);
+;
   $videos = explode('<div class="movie-item', $html);
   unset($videos[0]);
   $videos = array_values($videos);

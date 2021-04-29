@@ -1,4 +1,3 @@
-<!DOCTYPE html>
 <?php
 error_reporting(0);
 function str_between($string, $start, $end){
@@ -7,6 +6,11 @@ function str_between($string, $start, $end){
 	return substr($string,$ini,$len);
 }
 include ("../common.php");
+if (file_exists($base_pass."player.txt")) {
+$flash=trim(file_get_contents($base_pass."player.txt"));
+} else {
+$flash="direct";
+}
 $page = $_GET["page"];
 $tip= $_GET["tip"];
 $tit=$_GET["title"];
@@ -60,8 +64,61 @@ if ($tip=="search") {
 } else
   $page_title=$tit;
 /* ==================================================== */
+$ua = $_SERVER['HTTP_USER_AGENT'];
+$ua="Mozilla/5.0 (Windows NT 10.0; rv:86.0) Gecko/20100101 Firefox/86.0";
+if($tip=="release") {
+ if (strpos($ua,"Windows") !== false)
+  $l=$last_good."/?p=".$page."&r=1";
+ else
+  $l=$last_good."/page/".$page;
+} else {
+  $search=str_replace(" ","%20",$tit);
+  $l=$last_good."/movies/search/?p=".$page."&q=".$search;
+}
+$host=parse_url($l)['host'];
+$cookie=$base_cookie."lookmovie.txt";
+ if (file_exists("/storage/emulated/0/Download/cookies.txt")) {
+  $h1=file_get_contents("/storage/emulated/0/Download/cookies.txt");
+  file_put_contents($cookie,$h1);
+  unlink ("/storage/emulated/0/Download/cookies.txt");
+ } elseif (file_exists($base_cookie."cookies.txt")) {
+  $h1=file_get_contents($base_cookie."cookies.txt");
+  file_put_contents($cookie,$h1);
+  unlink ($base_cookie."cookies.txt");
+ }
+if (file_exists($base_pass."firefox.txt"))
+ $ua=file_get_contents($base_pass."firefox.txt");
+else
+ $ua="Mozilla/5.0 (Windows NT 10.0; rv:75.0) Gecko/20100101 Firefox/75.0";
+//echo $h;
 
+$head=array('Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2');
+
+  $ch = curl_init();
+  curl_setopt($ch, CURLOPT_URL, $l);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+  curl_setopt($ch,CURLOPT_REFERER,$last_good);
+  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
+  curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie);
+  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+  $html = curl_exec($ch);
+  curl_close($ch);
+  //echo $html;
+  //die();
+if (preg_match("/invisible\-recaptcha\-key/",$html)) {
+//echo '<a href="look_captcha.php?host=https://lookmovie.io&cookie=lookmovie.txt&target=lookmovie_f.php&title=lookmovie" target="_blank"><b>GET COOKIE</b></a>';
+//header ("Location: look_captcha1.php");
+   if ($flash=="mp")
+    echo '<a href="intent:http://127.0.0.1:8080/scripts/filme/cf.php?site=https://lookmovie.io/account/login&cookie='.$cookie.'#Intent;package=org.mozilla.firefox;S.title=Cloudflare;end">GET cloudflare cookie</a>';
+   else
+    header('Location: cf.php?site=https://lookmovie.io/account/login&cookie='.$cookie);
+exit ;
+}
 ?>
+<!DOCTYPE html>
 <html>
 <head>
 <meta http-equiv="content-type" content="text/html; charset=UTF-8">
@@ -168,72 +225,6 @@ if ($page==1) {
    echo '<TD class="nav" colspan="4" align="right"><a href="'.$prev.'">&nbsp;&lt;&lt;&nbsp;</a> | <a href="'.$next.'">&nbsp;&gt;&gt;&nbsp;</a></TD>'."\r\n";
 }
 echo '</TR>'."\r\n";
-$ua = $_SERVER['HTTP_USER_AGENT'];
-$ua="Mozilla/5.0 (Windows NT 10.0; rv:86.0) Gecko/20100101 Firefox/86.0";
-if($tip=="release") {
- if (strpos($ua,"Windows") !== false)
-  $l=$last_good."/?p=".$page."&r=1";
- else
-  $l=$last_good."/page/".$page;
-} else {
-  $search=str_replace(" ","%20",$tit);
-  $l=$last_good."/movies/search/?p=".$page."&q=".$search;
-}
-$host=parse_url($l)['host'];
-$cookie=$base_cookie."lookmovie.dat";
-if (file_exists($base_pass."firefox.txt"))
- $ua=file_get_contents($base_pass."firefox.txt");
-else
- $ua="Mozilla/5.0 (Windows NT 10.0; rv:75.0) Gecko/20100101 Firefox/75.0";
-//echo $h;
-
-$head=array('Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
-'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2');
-/*
-  $ch = curl_init();
-  curl_setopt($ch, CURLOPT_URL, $l);
-  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-  curl_setopt($ch,CURLOPT_REFERER,$last_good);
-  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
-  curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie);
-  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
-  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
-  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
-  $html = curl_exec($ch);
-  curl_close($ch);
-*/
-if (file_exists($base_pass."firefox.txt"))
- $ua=file_get_contents($base_pass."firefox.txt");
-else
- $ua="Mozilla/5.0 (Windows NT 10.0; rv:75.0) Gecko/20100101 Firefox/75.0";
-if (file_exists($cookie)) {
- $x=file_get_contents($cookie);
- if (preg_match("/lookmovie\.io	\w+	\/	\w+	\d+	cf_clearance	([\w|\-]+)/",$x,$m))
-  $cc=trim($m[1]);
- else
-  $cc="";
-} else {
-  $cc="";
-}
-$opts = array(
-  'http'=>array(
-    'method'=>"GET",
-    'header'=>"User-Agent: ".$ua."\r\n".
-              "Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\r\n" .
-              "Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2\r\n" .
-              "Accept-Encoding: deflate\r\n" .
-              "Connection: keep-alive\r\n" .
-              "Cookie: cf_clearance=".$cc."\r\n".
-              "Referer: ".$last_good."\r\n"
-  )
-);
-//print_r ($opts);
-$context = stream_context_create($opts);
-$html=@file_get_contents($l,false,$context);
-//echo $html;
-//$html=str_replace("script","",$html);
-//echo $html;
-//file_put_contents($base_cookie."look.txt",$html);
 if (strpos($html,'div class="movie-list-detailed mobile') === false)
 $videos = explode('div class="movie-', $html);
 else

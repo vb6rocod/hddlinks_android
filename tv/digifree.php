@@ -80,8 +80,11 @@ $videos=array(
 'Digi Sport 2' => 'https://sportbar.biz/digisport2ro.html',
 'Digi Sport 3' => 'https://sportbar.biz/digi3ro.html',
 'Digi Sport 4' => 'https://sportbar.biz/rodigi4.html',
-'Eurosport 1'  => 'https://sportbar.biz/eurosport1ro.html'
+'Eurosport 1'  => 'https://sportbar.biz/eurosport1ro.html',
+'Digi Sport 1' => 'https://static.240.188.251.148.clients.your-server.de:2083/live/canale/live/2.m3u8',
+'Digi Sport 2' => 'https://static.240.188.251.148.clients.your-server.de:2083/live/canale/live/3.m3u8'
 );
+//print_r ($videos);
 // http://www.tvs-widget.com/channel/tvs.php?ch=d1
 // www.sports-stream.org/chtv/sps.php?ch=d1
 // https://www.wmsxx.com/embx.php?live=spstreamd1&vw=700&vh=440

@@ -61,7 +61,7 @@ $link="yt_channel.php?token=&id=UC7612aZQ9llm_nR_3wDDqGA&kind=channel&title=(cha
 echo '<TD style="text-align:center"><font size="4">'.'<a href="'.$link.'" target="_blank">'.$title.'</a></font></TD>';
 
 $title="(channel) FILME HD Romanesti, Teatru Tv si Filme Straine";
-$link="yt_channel.php?token=&id=UCCWc5wm3Tkc_QD7K2WatWXw&kind=channel&title=%28channel%29+FILME+HD+Romanesti%23virgula+Teatru+Tv+si+Filme+Straine&image=https://yt3.ggpht.com/-C-ZhAnaML8I/AAAAAAAAAAI/AAAAAAAAAAA/WwUsCIA-nLI/s88-c-k-no-mo-rj-c0xffffff/photo.jpg";
+$link="yt_channel.php?token=&id=UCpwjXGhQSLjyDvTFrsYvoug&kind=channel&title=%28channel%29+FILME+HD+Romanesti%23virgula+Teatru+Tv+si+Filme+Straine&image=https://yt3.ggpht.com/-C-ZhAnaML8I/AAAAAAAAAAI/AAAAAAAAAAA/WwUsCIA-nLI/s88-c-k-no-mo-rj-c0xffffff/photo.jpg";
 echo '<TD style="text-align:center"><font size="4">'.'<a href="'.$link.'" target="_blank">'.$title.'</a></font></TD>';
 
 echo "</TR>"."\n\r";

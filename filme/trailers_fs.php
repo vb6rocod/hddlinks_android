@@ -219,7 +219,7 @@ $head=array('Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image
   $t1=explode("source src='",$h);
   $t2=explode("'",$t1[1]);
   $l=$t2[0];
-  $r[]=$l."&sub=".$srt;
+  $r[]="https://".$host."?file=".$l."&sub=".$srt;
   // https://trailers.to/subtitles/5A95A2814385723B
   //echo $html;
 echo '<table border="1" width="100%">';
