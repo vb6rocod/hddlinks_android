@@ -17,11 +17,11 @@ $has_fav="yes";
 $has_search="yes";
 $has_add="yes";
 $has_fs="yes";
-$fav_target="azm_f_fav.php";
-$add_target="azm_f_add.php";
+$fav_target="moviewetrust_f_fav.php?host=";
+$add_target="moviewetrust_f_add.php";
 $add_file="";
-$fs_target="azm_fs.php";
-$target="azm_f.php";
+$fs_target="moviewetrust_fs.php";
+$target="moviewetrust_f.php";
 /* ==================================================== */
 $base=basename($_SERVER['SCRIPT_FILENAME']);
 $p=$_SERVER['QUERY_STRING'];
@@ -165,148 +165,61 @@ if ($page==1) {
    echo '<TD class="nav" colspan="4" align="right"><a href="'.$prev.'">&nbsp;&lt;&lt;&nbsp;</a> | <a href="'.$next.'">&nbsp;&gt;&gt;&nbsp;</a></TD>'."\r\n";
 }
 echo '</TR>'."\r\n";
-
-$cookie=$base_cookie."azm.dat";
-$cookie1=$base_cookie."azm.txt";
-if (file_exists($base_pass."azm.txt"))
- $y=trim(file_get_contents($base_pass."azm.txt"));
-else
- $y="";
-if ($page==1 && $tip=="release") {
-$l="https://azm.to/favicon.ico";
-$head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:55.0) Gecko/20100101 Firefox/55.0',
-'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
-'Accept-Language: en-US,en;q=0.5',
-'Accept-Encoding: gzip, deflate, br',
-'Cookie: '.$y,
-'Connection: keep-alive',
-'Range: bytes=0-',
-'If-Range: "47e-594152cc6bf80"');
-  $ch = curl_init();
-  curl_setopt($ch, CURLOPT_URL,$l);
-  //curl_setopt($ch, CURLOPT_USERAGENT, $ua);
-  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
-  curl_setopt($ch, CURLOPT_RETURNTRANSFER  ,1);  // RETURN THE CONTENTS OF THE CALL
-  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-  curl_setopt($ch, CURLOPT_ENCODING,"");
-  //curl_setopt($ch, CURLOPT_COOKIEJAR, $cookie);
-  //curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie);
-  curl_setopt($ch, CURLOPT_HEADER,1);
-  curl_setopt($ch, CURLOPT_HTTPHEADER,$head);
-  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
-  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
-  $html = curl_exec($ch);
-  curl_close($ch);
-  //echo $html;
-  preg_match("/ddg1\=(\w+)/",$html,$m);
-  file_put_contents($cookie1,'Cookie: '.$y.'; __ddg1='.$m[1]);
-  $l="https://azm.to/";
-  $head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:55.0) Gecko/20100101 Firefox/55.0',
-'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
-'Accept-Language: en-US,en;q=0.5',
-'Accept-Encoding: gzip, deflate, br',
-'Cookie: '.$y.'; __ddg1='.$m[1],
-'Connection: keep-alive',
-'Upgrade-Insecure-Requests: 1',
-'Pragma: no-cache',
-'Cache-Control: no-cache');
-  $ch = curl_init();
-  curl_setopt($ch, CURLOPT_URL,$l);
-  //curl_setopt($ch, CURLOPT_USERAGENT, $ua);
-  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
-  curl_setopt($ch, CURLOPT_RETURNTRANSFER  ,1);  // RETURN THE CONTENTS OF THE CALL
-  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-  curl_setopt($ch, CURLOPT_ENCODING,"");
-  curl_setopt($ch, CURLOPT_COOKIEJAR, $cookie);
-  curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie);
-  curl_setopt($ch, CURLOPT_HEADER,1);
-  curl_setopt($ch, CURLOPT_HTTPHEADER,$head);
-  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
-  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
-  $html = curl_exec($ch);
-  curl_close($ch);
-}
-
 if($tip=="release") {
-  $l="https://azm.to/all";
-  $l="https://azm.to/loadmore.php";
-  $post="page=".$page."&featured=0";
+  $l="https://api.themoviedb.org/3/movie/popular?api_key=d0e6107be30f2a3cb0a34ad2a90ceb6f&language=en-US&page=".$page;
 } else {
-  $search=str_replace(" ","%20",$tit);
-  $l="https://azm.to/search/".$search;
+  $search=str_replace(" ","+",$tit);
+  $l = "https://api.themoviedb.org/3/search/multi?api_key=d0e6107be30f2a3cb0a34ad2a90ceb6f&query=".$search."&page=".$page;
 }
-$c1=file_get_contents($cookie1);
-$ua="Mozilla/5.0 (Windows NT 10.0; rv:55.0) Gecko/20100101 Firefox/55.0";
-$host=parse_url($l)['host'];
-if ($tip=="search") {
-$head=array('Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
-'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
-$c1);
-  $ch = curl_init();
-  curl_setopt($ch, CURLOPT_URL, $l);
-  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-  curl_setopt($ch,CURLOPT_REFERER,"https://azm.to/all");
-  curl_setopt($ch,CURLOPT_HTTPHEADER,$head);
-  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
-  curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie);
-  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
-  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
-  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
-  $html = curl_exec($ch);
-  curl_close($ch);
-  //echo $html;
-} else {
+///////////////////////////////////////////////
+$ua = $_SERVER['HTTP_USER_AGENT'];
+$ua="Mozilla/5.0 (Windows NT 10.0; rv:88.0) Gecko/20100101 Firefox/88.0";
 
-$head=array('Accept: */*',
-'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
-'Accept-Encoding: deflate',
-'Content-Type: application/x-www-form-urlencoded; charset=UTF-8',
-'X-Requested-With: XMLHttpRequest',
-'Content-Length: '.strlen($post).'',
-'Origin: https://azm.to',
-'Connection: keep-alive',
-'Referer: https://azm.to/all',
-$c1);
-$ch = curl_init();
-curl_setopt($ch, CURLOPT_URL, $l);
-curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-curl_setopt($ch, CURLOPT_USERAGENT, $ua);
-curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 0);
-curl_setopt($ch, CURLOPT_HTTPHEADER, $head);
-curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie);
-//curl_setopt($ch, CURLOPT_COOKIEJAR, $cookie);
-curl_setopt ($ch, CURLOPT_POST, 1);
-curl_setopt ($ch, CURLOPT_POSTFIELDS, $post);
-$html = curl_exec($ch);
-curl_close($ch);
-}
-//echo $html;
-$videos = explode('div class="col', $html);
-unset($videos[0]);
-$videos = array_values($videos);
-foreach($videos as $video) {
-  $t1 = explode('href="',$video);
-  $t2=explode('"',$t1[1]);
-  $link = $t2[0];
-  if (strpos($link,"http") === false) $link="https://".$host.$link;
-  $t3 = explode('class="title">', $video);
-  $t5 = explode('<', $t3[1]);
-  $title = $t5[0];
-  $title=prep_tit($title);
-  $t1 = explode('data-src="', $video);
-  $t2 = explode('"', $t1[1]);
-  $image = $t2[0];
-  $rest = substr($title, -6);
-  if (preg_match("/\((\d+)\)/",$rest,$m)) {
-   $year=$m[1];
-   $tit_imdb=trim(str_replace($m[0],"",$title));
-  } else {
-   $year="";
-   $tit_imdb=$title;
+  $ch = curl_init($l);
+  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
+  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER  ,1);  // RETURN THE CONTENTS OF THE CALL
+  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 25);
+  $html = curl_exec($ch);
+  curl_close ($ch);
+  $x=json_decode($html,1);
+  //print_r ($x);
+  $r=array();
+if ($tip=="release") {
+ for ($k=0;$k<count($x['results']);$k++) {
+   $title=$x['results'][$k]['title'];
+   if (isset($x['results'][$k]['poster_path']))  // backdrop_path
+    $image="http://image.tmdb.org/t/p/w500".$x['results'][$k]['poster_path'];
+   else
+    $image="blank.jpg";
+   $link=$x['results'][$k]['id'];
+   $r[]=array($link,$title,$image);
+ }
+} else {
+ for ($k=0;$k<count($x['results']);$k++) {
+  if ($x['results'][$k]['media_type'] == "movie") {
+   $title=$x['results'][$k]['title'];
+   if (isset($x['results'][$k]['poster_path']))  // backdrop_path
+    $image="http://image.tmdb.org/t/p/w500".$x['results'][$k]['poster_path'];
+   else
+    $image="blank.jpg";
+   $link=$x['results'][$k]['id'];
+   $r[]=array($link,$title,$image);
   }
+ }
+}
+for ($k=0; $k<count($r);$k++) {
+  $link=$r[$k][0];
+  $title=$r[$k][1];
+  $image=$r[$k][2];
+
+  $tit_imdb=$title;
   $imdb="";
+  $year="";
   $link_f=$fs_target.'?tip=movie&link='.urlencode($link).'&title='.urlencode(fix_t($title)).'&image='.$image."&sez=&ep=&ep_tit=&year=".$year;
-  if ($title) {
+  if ($title && strpos($link,"/show") === false) {
   if ($n==0) echo '<TR>'."\r\n";
   $val_imdb="tip=movie&title=".urlencode(fix_t($tit_imdb))."&year=".$year."&imdb=".$imdb;
   $fav_link="mod=add&title=".urlencode(fix_t($title))."&link=".urlencode($link)."&image=".urlencode($image)."&year=".$year;

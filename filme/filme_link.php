@@ -1645,6 +1645,19 @@ echo '
 <script src="../jquery.fancybox.min.js"></script>
 <link rel="stylesheet" type="text/css" href="../jquery.fancybox.min.css">
 <script type="text/javascript">
+function playtube(title,link) {
+  document.getElementById("server").innerHTML = '."'".'<font size="6" color="red">Asteptati..................</font>'."'".';
+     //document.getElementById("fancy").href="playtube.php?link=" + link + "&title=" + title;
+     //document.getElementById("fancy").click();
+     document.getElementById("myframe").src="playtube.php?link=" + link + "&title=" + title;
+}
+function ajaxrequest2(title, link) {
+  var request =  new XMLHttpRequest();
+  var the_data = "title="+ title +"&file="+link;
+  var php_file="link1.php?" + the_data;
+  document.getElementById("server").innerHTML = '."'".'<font size="6" color="lightblue">Alegeti un server</font>'."'".';
+  window.open(php_file, "_blank");
+}
 // create the XMLHttpRequest object, according browser
 function get_XmlHttp() {
   // create the variable that will contain the instance of the XMLHttpRequest object (initially with null value)
@@ -1747,6 +1760,8 @@ td.link {
 <!--font-family: Arial, Helvetica, sans-serif;-->
 </head>
 <body>';
+echo '<iframe id="myframe" src="" style="display: none;"></iframe>';
+echo '<a id="fancy" data-fancybox data-type="iframe" href=""></a>';
 //$out1="http://127.0.0.1:8080/scripts/subs/out.m3u";
 //$title="play...";
 //$c="intent:".$out1."#Intent;package=com.mxtech.videoplayer.".$mx.";S.title=".urlencode($title).";end";
@@ -1814,7 +1829,10 @@ if ($cap == 1)  echo '<label id="hqq_msg">'.$msg_captcha."</label>";
     echo '<TR><td class="link"><a href="link1.php?file='.urlencode($link_f[$k]).'&title='.urlencode($pg).'" target="_blank">'.$server.'</a> <a href="https://vev.io/pair" target="_blank"><font color="lightblue"> | Pair IP (4 ore)</font></a></TD></TR>';
    elseif (strpos($link_f[$k],"vidup.io") !== false)
     echo '<TR><td class="link"><a href="link1.php?file='.urlencode($link_f[$k]).'&title='.urlencode($pg).'" target="_blank">'.$server.'</a> <a href="https://vidup.io/pair" target="_blank"><font color="lightblue"> | Pair IP (4 ore)</font></a></TD></TR>';
-   else
+   elseif (preg_match("/playtube22\./",$link_f[$k])) {
+//echo $link_f[$k];
+    echo '<TR><td class="link"><a onclick="playtube('."'".urlencode($pg)."', '".urlencode($link_f[$k])."')".'"'." style='cursor:pointer;'>".$server.'</a></TD></TR>';
+   } else
     echo '<TR><td class="link"><a href="link1.php?file='.urlencode($link_f[$k]).'&title='.urlencode($pg).'" target="_blank">'.$server.'</a></TD></TR>';
   } else {  //== "mp"
    if (strpos($link_f[$k],"hqq.") !== false) {
@@ -1832,7 +1850,9 @@ if ($cap == 1)  echo '<label id="hqq_msg">'.$msg_captcha."</label>";
    echo '<TR><td class="link"><a onclick="ajaxrequest('."'".urlencode($pg)."', '".urlencode($link_f[$k])."')".'"'." style='cursor:pointer;'>".''.$server.'</a> <a href="https://vev.io/pair" target="_blank"><font color="lightblue"> | Pair IP (4 ore)</font></a></TD></TR>';
     elseif (strpos($link_f[$k],"vidup.io") !== false )
    echo '<TR><td class="link"><a onclick="ajaxrequest('."'".urlencode($pg)."', '".urlencode($link_f[$k])."')".'"'." style='cursor:pointer;'>".''.$server.'</a> <a href="https://vidup.io/pair" target="_blank"><font color="lightblue"> | Pair IP (4 ore)</font></a></TD></TR>';
-   else
+   elseif (preg_match("/playtube22\./",$link_f[$k])) {
+     echo '<TR><td class="link"><a onclick="playtube('."'".urlencode($pg)."', '".urlencode($link_f[$k])."')".'"'." style='cursor:pointer;'>".$server.'</a></TD></TR>';
+   } else
      echo '<TR><td class="link"><a onclick="ajaxrequest('."'".urlencode($pg)."', '".urlencode($link_f[$k])."')".'"'." style='cursor:pointer;'>".$server.'</a></TD></TR>';
    }
 }

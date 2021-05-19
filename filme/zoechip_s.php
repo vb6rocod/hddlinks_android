@@ -17,7 +17,7 @@ $has_fav="yes";
 $has_search="yes";
 $has_add="yes";
 $has_fs="yes";
-$last_good="https://www1.zoechip.com";
+$last_good="https://www2.zoechip.com";
 $host=parse_url($last_good)['host'];
 $fav_target="zoechip_s_fav.php?host=".$last_good;
 $add_target="zoechip_s_add.php";

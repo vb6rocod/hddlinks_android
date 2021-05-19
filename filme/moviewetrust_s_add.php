@@ -1,5 +1,5 @@
 <?php
-error_reporting(0);
+//error_reporting(0);
 //62
 include ("../common.php");
 //$fav_link="mod=add&title=".urlencode(fix_t($title11))."&link=".$link1."&image=".$image;
@@ -7,7 +7,7 @@ $mod=$_POST["mod"];
 $link=$_POST["link"];
 $title=$_POST["title"];
 $image=urldecode($_POST["image"]);
-$file=$base_fav."5movies_s.dat";
+$file=$base_fav."moviewetrust_s.dat";
 $arr=array();
 $h="";
 if (file_exists($file)) {

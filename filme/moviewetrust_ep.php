@@ -10,8 +10,7 @@ $year=$_GET['year'];
 /* ======================================= */
 $width="200px";
 $height="100px";
-$fs_target="videospider_fs.php";
-//$fs_target="moviewetrust_fs.php";
+$fs_target="moviewetrust_fs.php";
 $has_img="yes";
 ?>
 <html>

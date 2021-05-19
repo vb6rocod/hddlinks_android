@@ -37,7 +37,7 @@ echo '<h2>'.$tit.'</h2><BR>';
 echo '<table border="1" width="100%">'."\n\r";
 //echo '<TR><td style="color:#000000;background-color:deepskyblue;text-align:center" colspan="3" align="center">'.$tit.'</TD></TR>';
 $ua="Mozilla/5.0 (Windows NT 10.0; rv:79.0) Gecko/20100101 Firefox/79.0";
-$l="https://ww4.9movies.yt/ajax/movie_episodes/".$link;
+$l="https://9movies.ro/ajax/movie_episodes/".$link;
 $cookie=$base_cookie."9movies.dat";
 if (file_exists($base_pass."firefox.txt"))
  $ua=file_get_contents($base_pass."firefox.txt");

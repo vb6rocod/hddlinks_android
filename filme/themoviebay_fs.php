@@ -131,12 +131,13 @@ function off() {
 echo '<h2>'.$tit.$tit2.'</H2>';
 echo '<BR>';
 $r=array();
+//echo $link;
 if ($tip=="movie") {
 
   $ua="Mozilla/5.0 (Windows NT 10.0; rv:75.0) Gecko/20100101 Firefox/75.0";
 
   $ch = curl_init();
-  curl_setopt($ch, CURLOPT_URL, $link);
+  curl_setopt($ch, CURLOPT_URL, $link."?checked=1");
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
   curl_setopt($ch, CURLOPT_USERAGENT, $ua);
   curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
@@ -145,7 +146,7 @@ if ($tip=="movie") {
   curl_setopt($ch, CURLOPT_TIMEOUT, 25);
   $h = curl_exec($ch);
   curl_close($ch);
-
+  //echo $h;
   if (preg_match("/\/tt(\d+)/",$h,$m))
    $imdbid=$m[1];
   else
@@ -155,7 +156,25 @@ if ($tip=="movie") {
   $t3=explode('"',$t2[1]);
   $r[]=str_replace("&#038;","&",$t3[0]);
 } else {
- $r[]=$link;
+  $ua="Mozilla/5.0 (Windows NT 10.0; rv:75.0) Gecko/20100101 Firefox/75.0";
+  $ch = curl_init();
+  curl_setopt($ch, CURLOPT_URL, $link."&checked=1");
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
+  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 25);
+  $h = curl_exec($ch);
+  curl_close($ch);
+  if (preg_match("/\/tt(\d+)/",$h,$m))
+   $imdbid=$m[1];
+  else
+   $imdbid="";
+  $t1=explode('<iframe',$h);
+  $t2=explode('src="',$t1[1]);
+  $t3=explode('"',$t2[1]);
+  $r[]=str_replace("&#038;","&",$t3[0]);
 }
 echo '<table border="1" width="100%">';
 echo '<TR><TD class="mp">Alegeti un server: Server curent:<label id="server">'.parse_url($r[0])['host'].'</label>

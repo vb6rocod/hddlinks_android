@@ -79,16 +79,17 @@ else
 <!--- desene si filme...-->
 <TR>
 <TD width="25%"><a href="filme/filmehd_f.php?page=1&tip=release&title=filmehd&link=" target="_blank">filmehd.to</a></TD>
-<TD width="25%"></TD>
+
 <TD width="25%"><a href="filme/deseneledublate.php?page=1&tip=release&title=desenedublate&link=" target="_blank">deseneledublate</a></TD>
 <TD width="25%"><a href="filme/desenefaine_main.php" target="_blank">desenefaine.ro</a></TD>
+<TD width="25%"><a href="filme/moviewetrust_f.php?page=1&tip=release&title=moviewetrust&link=" target="_blank">moviewetrust</a></TD>
 </TR>
 
 <!-- straine -->
 <TR>
 <TD width="25%"><a href="filme/tvseries_f.php?page=1&tip=release&title=tvseries&link=" target="_blank">tvseries</a></TD>
 <TD width="25%"><a href="filme/putlockerfit_f.php?page=1&tip=release&title=putlockerfit&link=" target="_blank">putlockerfit</a></TD>
-<TD width="25%"><a href="filme/cartoonhd_f.php?page=1&tip=release&title=cartoonhd&link=" target="_blank">cartoonhd</a></TD>
+<TD width="25%"><a href="filme/themoviebay.php?page=1&tip=release&title=themoviebay&link=" target="_blank">themoviebay</a></TD>
 <TD width="25%"><a href="filme/ling_f.php?page=1&tip=release&title=ling.online&link=" target="_blank">ling.online</a></TD>
 </TR>
 <TR>
@@ -99,7 +100,7 @@ else
 <!--<TD width="25%"><a href="filme/cl.php?host=https://lookmovie.io&cookie=lookmovie.dat&target=lookmovie_f.php&title=lookmovie" target="_blank">lookmovie</a></TD>-->
 </TR>
 <TR>
-<TD width="25%"><a href="filme/azm_f.php?page=1&tip=release&title=azm&link=" target="_blank">azm</a></TD>
+<TD width="25%"><a href="filme/topmoviesonline_f.php?page=1&tip=release&title=topmoviesonline&link=" target="_blank">topmoviesonline</a></TD>
 <TD width="25%"><a href="filme/bmovies_f.php?page=1&tip=release&title=bmovies&link=" target="_blank">bmovies</a></TD>
 <TD width="25%"><a href="filme/vidcloud9_f.php?page=1&tip=release&title=vidcloud9&link=" target="_blank">vidcloud9</a></TD>
 <TD width="25%"><a href="filme/solarmovie_f.php?page=1&tip=release&title=solarmovie&link=" target="_blank">solarmovie</a></TD>
@@ -136,12 +137,11 @@ else
 <TR>
 <TD width="25%"><a href="filme/europix_f.php?page=1&tip=release&title=europix&link=" target="_blank">europix</a></TD>
 <TD width="25%"><a href="filme/esubmovie.php?page=1&tip=release&title=esubmovie&link=" target="_blank">esubmovie</a></TD>
-<!--<TD width="25%"></TD>-->
-<TD width="25%"><a href="filme/cl.php?host=https://ww2.batflix.org/uploads/movies/9371/LltK216Bgq-150x220.jpeg&cookie=batflix.txt&target=batflix.php&title=batflix" target="_blank">batflix</a></TD>
+<TD width="25%"><a href="filme/123files.php?page=1&tip=release&title=123files&link=" target="_blank">123files</a></TD>
 <TD width="25%"><a href="filme/fmoviesarena.php?page=1&tip=release&title=fmoviesarena&link=" target="_blank">fmoviesarena</a></TD>
 </TR>
 <TR>
-<TD width="25%"><a href="filme/movies4u_f.php?page=1&tip=release&title=movies4u&link=" target="_blank">movies4u</a></TD>
+<TD width="25%"><a href="filme/trailers_f.php?page=1&tip=release&title=trailers&link=" target="_blank">trailers</a></TD>
 <TD width="25%"><a href="filme/ask4movie_f.php?page=1&tip=release&title=ask4movie&link=" target="_blank">ask4movie</a></TD>
 <!--<TD width="25%"><a href="filme/9movies_f.php?page=1&tip=release&title=9movies&link=" target="_blank">9movies</a></TD>-->
 <!--<TD width="25%"><a href="filme/9movies_ff.php" target="_blank">9movies</a></TD>-->
@@ -149,13 +149,7 @@ else
 <TD width="25%"><a href="filme/soap2day_ff.php" target="_blank">soap2day</a></TD>
 </TR>
 
-<TR>
-<!--<TD width="25%"><a href="filme/tofmovies_f.php?page=1&tip=release&title=tofmovies&link=" target="_blank">tofmovies</a></TD>-->
-<TD width="25%"><a href="filme/themoviebay.php?page=1&tip=release&title=themoviebay&link=" target="_blank">themoviebay</a></TD>
-<TD width="25%"><a href="filme/topmoviesonline_f.php?page=1&tip=release&title=topmoviesonline&link=" target="_blank">topmoviesonline</a></TD>
-<TD width="25%"><a href="filme/123files.php?page=1&tip=release&title=123files&link=" target="_blank">123files</a></TD>
-<TD width="25%"><a href="filme/trailers_f.php?page=1&tip=release&title=trailers&link=" target="_blank">trailers</a></TD>
-</TR>
+
 <?php
 if (file_exists($base_pass."tvplay.txt")) {
 echo '

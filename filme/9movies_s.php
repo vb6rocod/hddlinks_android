@@ -13,6 +13,7 @@ $link=$_GET["link"];
 $width="200px";
 $height="278px";
 $last_good="https://ww4.9movies.yt";
+$last_good="https://9movies.ro";
 $host=parse_url($last_good)['host'];
 /* ==================================================== */
 $has_fav="yes";

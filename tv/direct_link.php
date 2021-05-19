@@ -88,13 +88,15 @@ $filelink="https://www.facebook.com/watch/live/?v=".$m[2]."&ref=watch_permalink"
       $link=$m[1];
 }
 if (preg_match("/media\.cms\.protvplus\.ro/",$link)) {
+//$link="https://media.cms.protvplus.ro/embed/9w1VHN18dnM?autoplay=any";
   $ua = $_SERVER['HTTP_USER_AGENT'];
   $head = array('Accept: */*',
    'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
    'Accept-Encoding: deflate',
-   'Origin: http://protvplus.ro'
+   'Origin: http://protvplus.ro',
+   'Referer: https://protvplus.ro/'
   );
-
+//echo urldecode($head[3]);
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $link);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
@@ -106,6 +108,7 @@ if (preg_match("/media\.cms\.protvplus\.ro/",$link)) {
   curl_setopt($ch, CURLOPT_TIMEOUT, 15);
   $h = curl_exec($ch);
   curl_close($ch);
+  //echo $h;
   $h=str_replace("\\","",$h);
   $t1=explode('src":"',$h);
   $t2=explode('"',$t1[1]);

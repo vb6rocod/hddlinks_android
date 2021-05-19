@@ -139,8 +139,7 @@ if (file_exists($base_pass."tmdb.txt"))
 else
   $key="";
 $ua = $_SERVER['HTTP_USER_AGENT'];
-//https://api.themoviedb.org/3/movie/423204?api_key=f8cf02e6b30bf8cc33c04c60695781aa
-//https://api.themoviedb.org/3/tv/2426?api_key=f8cf02e6b30bf8cc33c04c60695781aa
+
 if ($tip == "movie") {      //2426
   $l="https://api.themoviedb.org/3/movie/".$link."?api_key=".$key;
   //echo $l;

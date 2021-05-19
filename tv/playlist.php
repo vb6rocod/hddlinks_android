@@ -168,7 +168,9 @@ foreach($m3uFile as $key => $line) {
     }
     $mod="direct";
     $from="fara";
-    $val_prog="link=".urlencode(fix_t($title));
+    $t1=preg_replace("/^\|?RO\s*\|\s*/","",$title);
+    //echo $t1;
+    $val_prog="link=".urlencode(fix_t($t1));
     if (substr($file, 0, 4) == "http" || $pg_tit == "alltvn.m3u") {
     if (preg_match("/\.m3u8|\.mp4|\.flv|\.ts/",$file))
       $mod="direct";
@@ -215,7 +217,8 @@ foreach($m3uFile as $key => $line) {
     $w++;
   }
     if ($tip_stream == "http" || $tip_stream == "https" || $tip_stream=="acestream" || $tip_stream=="sop") {
-    $l_prog="link=".urlencode(fix_t($title));
+    $t1=preg_replace("/^\|?RO\s*\|\s*/","",$title);
+    $l_prog="link=".urlencode(fix_t($t1));
     if ($tast == "NU") {
    	echo '<a onclick="prog('."'".$l_prog."')".'"'." style='cursor:pointer;'>"." *".'</a></TD>';
     if ($n > 3) {

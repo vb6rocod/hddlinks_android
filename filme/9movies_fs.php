@@ -150,7 +150,7 @@ if (file_exists($cookie)) {
 if ($tip=="movie") {
 $cookie=$base_cookie."9movies.dat";
 $l="https://ww2.9movies.yt/ajax/movie_episodes/".$link;
-$l="https://ww4.9movies.yt/ajax/movie_episodes/".$link;
+$l="https://9movies.ro/ajax/movie_episodes/".$link;
 $head=array('Accept: application/json, text/javascript, */*; q=0.01',
 'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
 'Accept-Encoding: deflate',
@@ -194,9 +194,9 @@ $h=@file_get_contents($l,false,$context);
   $t1=explode('id="ep-',$x);
   $t2=explode('"',$t1[1]);
   $id=$t2[0];
-$l="https://ww4.9movies.yt/ajax/movie_sources/";
+$l="https://9movies.ro/ajax/movie_sources/";
 $post="eid=".$id;
-$l="https://ww4.9movies.yt/ajax/movie_sources/";
+$l="https://9movies.ro/ajax/movie_sources/";
 $post="eid=".$link;
 	$data = array(
 		'eid' => $id
@@ -250,7 +250,7 @@ $head=array('Accept: application/json, text/javascript, */*; q=0.01',
   $l2=$rr['embed'];
   $r[]=$l2;
 } else {
-$l="https://ww4.9movies.yt/ajax/movie_sources/";
+$l="https://9movies.ro/ajax/movie_sources/";
 $post="eid=".$link;
 	$data = array(
 		'eid' => $link

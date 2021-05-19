@@ -52,7 +52,7 @@ document.onkeypress =  zx;
 <TR>
 <TD width="25%"><a href="filme/filmeseriale_main.php?page=1&tip=release&title=filmeseriale.online&link=" target="_blank">filmeseriale.online</a></TD>
 <TD width="25%"><a href="filme/tvhub_s.php?page=1&tip=release&title=tvhub&link=" target="_blank">tvhub</a></TD>
-<TD width="25%"></TD>
+<TD width="25%"><a href="filme/fsonline_s.php?page=1&tip=release&title=fsonline&link=" target="_blank">fsonline</a></TD>
 <TD width="25%"><a href="filme/filmeseriale_eu.php?page=1&tip=release&title=filmeseriale.eu&link=" target="_blank">filmeseriale.eu</a></TD>
 </TR>
 <TR>
@@ -64,7 +64,7 @@ document.onkeypress =  zx;
 <TR>
 <TD width="25%"><a href="filme/serialeonline.php?page=1&tip=release&title=serialeonline&link=" target="_blank">serialeonline</a></TD>
 <TD width="25%"><a href="filme/fsgratis_s.php?page=1&tip=release&title=fsgratis&link=" target="_blank">fsgratis</a></TD>
-<TD width="25%"><a href="filme/fsonline_s.php?page=1&tip=release&title=fsonline&link=" target="_blank">fsonline</a></TD>
+<TD width="25%"><a href="filme/moviewetrust_s.php?page=1&tip=release&title=moviewetrust&link=" target="_blank">moviewetrust</a></TD>
 <TD width="25%"><a href="filme/soap2day_ss.php" target="_blank">soap2day</a></TD>
 </TR>
 
@@ -82,7 +82,7 @@ document.onkeypress =  zx;
 <TR>
 <TD width="25%"><a href="filme/zoechip_s.php?page=1&tip=release&title=zoechip&link=" target="_blank">zoechip</a></TD>
 <TD width="25%"><a href="filme/watch-serieshd_s.php?page=1&tip=release&title=watch-serieshd&link=" target="_blank">watch-serieshd</a></TD>
-<TD width="25%"><a href="filme/cartoonhd_s.php?page=1&tip=release&title=cartoonhd&link=" target="_blank">cartoonhd</a></TD>
+<TD width="25%"><a href="filme/themoviebay_s.php?page=1&tip=release&title=themoviebay&link=" target="_blank">themoviebay</a></TD>
 <TD width="25%"><a href="filme/cineplex_s_main.php" target="_blank">cineplex (cont)</a></TD>
 </TR>
 <TR>
@@ -101,10 +101,9 @@ document.onkeypress =  zx;
 
 <TR>
 <TD width="25%"><a href="filme/uniquestream_s.php?page=1&tip=release&title=uniquestream&link=" target="_blank">uniquestream</a></TD>
-<!--<TD width="25%"><a href="filme/5movies_s.php?page=1&tip=release&title=5movies&link=" target="_blank">5movies</a></TD>-->
-<TD width="25%"><a href="filme/cl.php?host=https://5movies.fm&cookie=5movies.dat&target=5movies_s.php&title=5movies" target="_blank">5movies</a></TD>
-<TD width="25%"><a href="filme/flixanity_s.php?page=1&tip=release&title=flixanity&link=" target="_blank">flixanity</a></TD>
 <TD width="25%"><a href="filme/flixtor_s.php?page=1&tip=release&title=flixtor&link=" target="_blank">flixtor</a></TD>
+<TD width="25%"></TD>
+<TD width="25%"></TD>
 </TR>
 <TR>
 <!--<TD width="25%"><a href="filme/9movies_s.php?page=1&tip=release&title=9movies&link=" target="_blank">9movies</a></TD>-->

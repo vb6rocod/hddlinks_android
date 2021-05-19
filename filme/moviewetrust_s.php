@@ -5,8 +5,7 @@ function str_between($string, $start, $end){
 	if ($ini == 0) return ""; $ini += strlen($start); $len = strpos($string,$end,$ini) - $ini;
 	return substr($string,$ini,$len);
 }
-include ("../common.php");
-error_reporting(0);
+include ("../common.php");;
 $page = $_GET["page"];
 $tip= $_GET["tip"];
 $tit=$_GET["title"];
@@ -18,13 +17,11 @@ $has_fav="yes";
 $has_search="yes";
 $has_add="yes";
 $has_fs="yes";
-$last_good="https://flixanity.app";
-$host=parse_url($last_good)['host'];
-$fav_target="flixanity_s_fav.php?host=".$last_good;
-$add_target="flixanity_s_add.php";
+$fav_target="moviewetrust_s_fav.php?host=";
+$add_target="moviewetrust_s_add.php";
 $add_file="";
-$fs_target="flixanity_ep.php";
-$target="flixanity_s.php";
+$fs_target="moviewetrust_ep.php";
+$target="moviewetrust_s.php";
 /* ==================================================== */
 $base=basename($_SERVER['SCRIPT_FILENAME']);
 $p=$_SERVER['QUERY_STRING'];
@@ -168,59 +165,47 @@ if ($page==1) {
    echo '<TD class="nav" colspan="4" align="right"><a href="'.$prev.'">&nbsp;&lt;&lt;&nbsp;</a> | <a href="'.$next.'">&nbsp;&gt;&gt;&nbsp;</a></TD>'."\r\n";
 }
 echo '</TR>'."\r\n";
-
 if($tip=="release") {
-  $l=$last_good."/tv-series/default/".$page;
+  $l="https://api.themoviedb.org/3/tv/popular?api_key=d0e6107be30f2a3cb0a34ad2a90ceb6f&language=en-US&page=".$page;
 } else {
   $search=str_replace(" ","+",$tit);
-  $l="https://api.movieshd.tv/api/v1/cautare/nuxt?q=".$search."&limit=100&lo=0";
+  $l = "https://api.themoviedb.org/3/search/multi?api_key=d0e6107be30f2a3cb0a34ad2a90ceb6f&query=".$search."&page=".$page;
 }
-//$host=parse_url($l)['host'];
-$ua="Mozilla/5.0 (Windows NT 10.0; rv:87.0) Gecko/20100101 Firefox/87.0";
-$head=array('Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
-'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2');
+///////////////////////////////////////////////
+$ua = $_SERVER['HTTP_USER_AGENT'];
+$ua="Mozilla/5.0 (Windows NT 10.0; rv:88.0) Gecko/20100101 Firefox/88.0";
 
-  $ch = curl_init();
-  curl_setopt($ch, CURLOPT_URL, $l);
-  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-  curl_setopt($ch,CURLOPT_REFERER,$last_good);
-  curl_setopt($ch,CURLOPT_HTTPHEADER,$head);
+  $ch = curl_init($l);
   curl_setopt($ch, CURLOPT_USERAGENT, $ua);
   curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
-  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
-  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER  ,1);  // RETURN THE CONTENTS OF THE CALL
+  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 25);
   $html = curl_exec($ch);
-  curl_close($ch);
-//echo $html;
-$r=array();
+  curl_close ($ch);
+  $x=json_decode($html,1);
+  //print_r ($x);
+  $r=array();
 if ($tip=="release") {
-  $videos = explode('<div class="flipBox"',$html);
-  unset($videos[0]);
-  $videos = array_values($videos);
-  foreach($videos as $video) {
-   $t1 = explode('href="',$video);
-   $t2=explode('"',$t1[1]);
-   $link = $t2[0];
-   if (strpos($link,"http") === false) $link="https://".$host.$link;
-   $t3 = explode('>', $t1[1]);
-   $t4 = explode('<', $t3[1]);
-   $title = $t4[0];
-   $title=prep_tit($title);
-   $t1 = explode('src="', $video);
-   $t2 = explode('"', $t1[1]);
-   $image = $t2[0];
+ for ($k=0;$k<count($x['results']);$k++) {
+   $title=$x['results'][$k]['name'];
+   if ($x['results'][$k]['poster_path'])
+    $image="http://image.tmdb.org/t/p/w500".$x['results'][$k]['poster_path'];
+   else
+    $image="blank.jpg";
+   $link=$x['results'][$k]['id'];
    $r[]=array($link,$title,$image);
-  }
+ }
 } else {
- $x=json_decode($html,1);
- //print_r ($x);
- for ($k=0;$k<count($x);$k++) {
-  if ($x[$k]['type'] != "movie") {
-   $link=$x[$k]['permalink'];
-   if (strpos($link,"http") === false) $link="https://".$host.$link;
-   $title=$x[$k]['title'];
-   $image=$x[$k]['image'];
-   if (strpos($image,"http") === false) $image="https://".$host.$image;
+ for ($k=0;$k<count($x['results']);$k++) {
+  if ($x['results'][$k]['media_type'] == "tv") {
+   $title=$x['results'][$k]['name'];
+   if (isset($x['results'][$k]['poster_path']))  // backdrop_path
+    $image="http://image.tmdb.org/t/p/w500".$x['results'][$k]['poster_path'];
+   else
+    $image="blank.jpg";
+   $link=$x['results'][$k]['id'];
    $r[]=array($link,$title,$image);
   }
  }
@@ -229,17 +214,16 @@ for ($k=0; $k<count($r);$k++) {
   $link=$r[$k][0];
   $title=$r[$k][1];
   $image=$r[$k][2];
-  $sez="";
-  $tit_serial=$title;
+
   $tit_imdb=$title;
-  $year="";
   $imdb="";
+  $year="";
+  $sez="";
   $link_f=$fs_target.'?tip=series&link='.urlencode($link).'&title='.urlencode(fix_t($title)).'&image='.$image."&sez=".$sez."&ep=&ep_tit=&year=".$year;
-  if ($title) {
+  if ($title && strpos($link,"/show") === false) {
   if ($n==0) echo '<TR>'."\r\n";
   $val_imdb="tip=series&title=".urlencode(fix_t($tit_imdb))."&year=".$year."&imdb=".$imdb;
   $fav_link="mod=add&title=".urlencode(fix_t($title))."&link=".urlencode($link)."&image=".urlencode($image)."&year=".$year;
-  $image="r_m.php?file=".$image;
   if ($tast == "NU") {
     echo '<td class="mp" width="25%"><a href="'.$link_f.'" id="myLink'.$w.'" target="_blank" onmousedown="isKeyPressed(event)">
     <img id="myLink'.$w.'" src="'.$image.'" width="'.$width.'" height="'.$height.'"><BR>'.$title.'</a>

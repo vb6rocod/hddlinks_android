@@ -5,9 +5,9 @@ $host=$_GET['host'];
 $page_title="Seriale favorite";
 $width="200px";
 $height="278px";
-$add_target="flixanity_s_add.php";
-$fs_target="flixanity_ep.php";
-$file=$base_fav."flixanity_s.dat";
+$add_target="moviewetrust_s_add.php";
+$fs_target="moviewetrust_ep.php";
+$file=$base_fav."moviewetrust_s.dat";
 ?>
 <html><head>
 <meta http-equiv="content-type" content="text/html; charset=UTF-8">
@@ -122,29 +122,18 @@ for ($m=1;$m<$k;$m++) {
 echo '</TR></table>';
 echo '<table border="1px" width="100%">'."\n\r";
 foreach($arr as $key => $value) {
-  $imdb="";
-  $link = urldecode($arr[$key]["link"]);
-  $title = unfix_t(urldecode($key));
-  $image=urldecode($arr[$key]["image"]);
-  //$image=$host.parse_url($image)['path'];
-  $year="";
-  $sez="";
-  $link=$host.parse_url($link)['path'];
-   if (preg_match("/\s*-\s*Season\s*(\d+)(.+)/i",$title,$m)) {
-   $tit_serial=str_replace($m[0],"",$title);
-   $title=str_replace($m[2],"",$title);
-   $sez=$m[1];
-   $tit_imdb=$tit_serial;
-   } else {
-     $sez=1;
-     $tit_serial=$title;
-     $tit_imdb=$tit_serial;
-   }
-    $link_f=$fs_target.'?tip=series&link='.urlencode($link).'&title='.urlencode(fix_t($title)).'&image='.$image."&sez=".$sez."&ep=&ep_tit=&year=".$year;
+    $imdb="";
+	$link = urldecode($arr[$key]["link"]);
+    $title = unfix_t(urldecode($key));
+    $image=urldecode($arr[$key]["image"]);
+    $tit_imdb=$title;
+    //$image=$host.parse_url($image)['path'];
+    $year="";
+    //$link=$host.parse_url($link)['path'];
+    $link_f=$fs_target.'?tip=series&link='.urlencode($link).'&title='.urlencode(fix_t($title)).'&image='.$image."&sez=&ep=&ep_tit=&year=".$year;
   if ($n==0) echo '<TR>'."\r\n";
   $val_imdb="tip=series&title=".urlencode(fix_t($tit_imdb))."&year=".$year."&imdb=".$imdb;
   $fav_link="file=&mod=del&title=".urlencode(fix_t($title))."&link=".urlencode($link)."&image=".urlencode($image)."&year=".$year;
-  $image="r_m.php?file=".$image;
   if ($tast == "NU") {
     echo '<td class="mp" width="25%"><a href="'.$link_f.'" id="myLink'.$w.'" target="_blank" onmousedown="isKeyPressed(event)">
     <img id="myLink'.$w.'" src="'.$image.'" width="'.$width.'" height="'.$height.'"><BR>'.$title.'</a>
