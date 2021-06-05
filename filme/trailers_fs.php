@@ -136,11 +136,8 @@ echo '<BR>';
 
   $r=array();
 $ua="Mozilla/5.0 (Windows NT 10.0; rv:80.0) Gecko/20100101 Firefox/80.0";
-$cookie=$base_cookie."trailers.dat";
-$head=array('Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
-'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
-'Accept-Encoding: deflate',
-'Connection: keep-alive');
+$cookie=$base_cookie."trailers1.dat";
+
   $host=parse_url($link)['host'];
   $ch = curl_init($link);
   curl_setopt($ch, CURLOPT_USERAGENT, $ua);
@@ -148,14 +145,16 @@ $head=array('Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image
   curl_setopt($ch, CURLOPT_RETURNTRANSFER  ,1);  // RETURN THE CONTENTS OF THE CALL
   curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
   curl_setopt($ch, CURLOPT_HEADER,1);
-  curl_setopt($ch, CURLOPT_HTTPHEADER,$head);
-  //curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie);
-  //curl_setopt($ch, CURLOPT_COOKIEJAR, $cookie);
+  //curl_setopt($ch, CURLOPT_HTTPHEADER,$head);
+  curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie);
+  curl_setopt($ch, CURLOPT_COOKIEJAR, $cookie);
   curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
   curl_setopt($ch, CURLOPT_TIMEOUT, 25);
   $html = curl_exec($ch);
   curl_close ($ch);
+
   //echo urldecode($html);
+  //die();
   // get subtitles
   $t1=explode('<subtitle-content',$html);
   $t2=explode('data-url="',$t1[1]);
@@ -167,7 +166,7 @@ $head=array('Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image
   curl_setopt($ch, CURLOPT_RETURNTRANSFER  ,1);  // RETURN THE CONTENTS OF THE CALL
   curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
   //curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie);
-  curl_setopt($ch, CURLOPT_REFERER,$l);
+  curl_setopt($ch, CURLOPT_REFERER,$link);
   curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
   curl_setopt($ch, CURLOPT_TIMEOUT, 25);
   $h = curl_exec($ch);
@@ -206,20 +205,39 @@ $head=array('Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image
   $t2=explode('"',$t1[1]);
 
   $l1="https://".$host.$t2[0];
+  //echo $l1."\n";
+
+$head=array('Accept: text/html, */*; q=0.01',
+'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
+'Accept-Encoding: deflate',
+'Referer: https://trailers.to/en/movie/4361534/p-nk-all-i-know-so-far-2021',
+'X-Requested-With: XMLHttpRequest',
+'Alt-Used: trailers.to',
+'Connection: keep-alive');
   $ch = curl_init($l1);
   curl_setopt($ch, CURLOPT_USERAGENT, $ua);
   curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER  ,1);  // RETURN THE CONTENTS OF THE CALL
   curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-  curl_setopt($ch, CURLOPT_REFERER,$l);
+  curl_setopt($ch, CURLOPT_HTTPHEADER,$head);
+  curl_setopt($ch, CURLOPT_HEADER,1);
+  curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie);
   curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
   curl_setopt($ch, CURLOPT_TIMEOUT, 25);
   $h = curl_exec($ch);
   curl_close ($ch);
+  //echo "\n".$h."\n";
+  //die();
+  // https://trailers.to/js/dynamic.91/remote.js
   $t1=explode("source src='",$h);
   $t2=explode("'",$t1[1]);
   $l=$t2[0];
+  $host1=parse_url($l)['host'];
+  //$l=str_replace($host1,"s1.movies.futbol",$l);
   $r[]="https://".$host."?file=".$l."&sub=".$srt;
+
+  // https://s1.movies.futbol/web-sources/50A11CB91C2C685F/4543437/friends-the-reunion-2021
+  // https://learn-movies-university.site/web-sources/E4DC411993AF86DA/4543437/friends-the-reunion-2021
   // https://trailers.to/subtitles/5A95A2814385723B
   //echo $html;
 echo '<table border="1" width="100%">';

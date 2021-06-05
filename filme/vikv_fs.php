@@ -184,6 +184,9 @@ $head=array('Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image
  $h = curl_exec($ch);
  curl_close($ch);
  //echo $h;
+ $t1=explode('hdv_user="',$h);
+ $t2=explode('"',$t1[1]);
+ $user=$t2[0];
  $srt_name="";
  if (preg_match("/\"romanian\"\: \[\[\d+\, (\d+)/",$h,$o)) {
   $sub=$o[1];
@@ -197,7 +200,7 @@ $head=array('Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image
  }
  if (preg_match_all("/\"name\"\: \"(\w+)\"\, \"quality\"\: \"(\w*)\"\, \"res\"\: (\d*)/",$h,$m)) {
   for ($k=0;$k<count($m[1]);$k++) {
-   $r[]="https://vikv.net?id=".$m[1][$k]."&sub=".$sub;
+   $r[]="https://vikv.net?id=".$m[1][$k]."&sub=".$sub."&user=".$user;
    $s[]=$m[2][$k]." - ".$m[3][$k];
   }
  }

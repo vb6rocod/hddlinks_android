@@ -18,6 +18,7 @@ $has_search="yes";
 $has_add="yes";
 $has_fs="yes";
 $ref="https://uniquestream.vip";
+$ref="https://uniquestream.net";
 $host=parse_url($ref)['host'];
 $fav_target="uniquestream_f_fav.php?host=".$ref;
 $add_target="uniquestream_f_add.php";

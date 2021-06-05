@@ -149,6 +149,12 @@ else
 <TD width="25%"><a href="filme/soap2day_ff.php" target="_blank">soap2day</a></TD>
 </TR>
 
+<TR>
+<TD width="25%"><a href="filme/c1ne_f.php?page=1&tip=release&title=c1ne&link=" target="_blank">c1ne</a></TD>
+<TD width="25%"></TD>
+<TD width="25%"></TD>
+<TD width="25%"></TD>
+</TR>
 
 <?php
 if (file_exists($base_pass."tvplay.txt")) {

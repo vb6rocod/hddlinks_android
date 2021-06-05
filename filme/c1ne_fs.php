@@ -1,16 +1,18 @@
 <!doctype html>
 <?php
 include ("../common.php");
+
 error_reporting(0);
+if (file_exists($base_pass."debug.txt"))
+ $debug=true;
+else
+ $debug=false;
+
 $list = glob($base_sub."*.srt");
    foreach ($list as $l) {
     str_replace(" ","%20",$l);
     unlink($l);
 }
-if (file_exists($base_pass."debug.txt"))
- $debug=true;
-else
- $debug=false;
 if (file_exists($base_pass."player.txt")) {
 $flash=trim(file_get_contents($base_pass."player.txt"));
 } else {
@@ -46,11 +48,6 @@ $tip="series";
 }
 $imdbid="";
 
-function str_between($string, $start, $end){
-	$string = " ".$string; $ini = strpos($string,$start);
-	if ($ini == 0) return ""; $ini += strlen($start); $len = strpos($string,$end,$ini) - $ini;
-	return substr($string,$ini,$len);
-}
 ?>
 <html>
 <head>
@@ -133,36 +130,37 @@ function off() {
 <?php
 echo '<h2>'.$tit.$tit2.'</H2>';
 echo '<BR>';
+$r=array();
+//echo $link;
+if ($tip=="movie") {
 
-  $r=array();
-$ua="Mozilla/5.0 (Windows NT 10.0; rv:80.0) Gecko/20100101 Firefox/80.0";
-$host=parse_url($link)['host'];
-$head=array('Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
-'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
-'Accept-Encoding: deflate',
-'Connection: keep-alive');
+  $ua="Mozilla/5.0 (Windows NT 10.0; rv:75.0) Gecko/20100101 Firefox/75.0";
 
-  $ch = curl_init($link);
+$head=array('Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2');
+  $ch = curl_init();
+  curl_setopt($ch, CURLOPT_URL, $link);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
   curl_setopt($ch, CURLOPT_USERAGENT, $ua);
+  curl_setopt($ch,CURLOPT_REFERER,"https://c1ne.co/");
   curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
-  curl_setopt($ch, CURLOPT_RETURNTRANSFER  ,1);  // RETURN THE CONTENTS OF THE CALL
+  curl_setopt($ch, CURLOPT_HTTPHEADER, $head);
   curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-  curl_setopt($ch, CURLOPT_HTTPHEADER,$head);
-  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
-  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
-  $html = curl_exec($ch);
-  curl_close ($ch);
-  //echo $html;
-  $t1=explode("data-post='",$html);
-  $t2=explode("'",$t1[1]);
-  $id=$t2[0];
-  if ($tip=="movie")
-   $type="movie";
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 25);
+  $h = curl_exec($ch);
+  curl_close($ch);
+  //echo $h;
+  if (preg_match("/\/tt(\d+)/",$h,$m))
+   $imdbid=$m[1];
   else
-   $type="tv";
-  $l="https://".$host."?id=".$id."&type=".$type;
-  $r[]=$l;
-  //echo $html;
+   $imdbid="";
+   if (preg_match_all("/https\:\/\/v\d+\.c1ne\.co\/stream\/\w+/",$h,$m))
+    $r=$m[0];
+} else {
+  $r[]=$link;
+  $imdbid=$_GET['imdbid'];
+}
 echo '<table border="1" width="100%">';
 echo '<TR><TD class="mp">Alegeti un server: Server curent:<label id="server">'.parse_url($r[0])['host'].'</label>
 <input type="hidden" id="file" value="'.urlencode($r[0]).'"></td></TR></TABLE>';
@@ -195,20 +193,21 @@ if ($tip=="movie") {
   $tit2="";
   $sez="";
   $ep="";
-  $imdbid="";
   $from="";
   $link_page="";
 } else {
   $tit3=$tit;
   $sez=$sez;
   $ep=$ep;
-  $imdbid="";
   $from="";
   $link_page="";
 }
   $rest = substr($tit3, -6);
   if (preg_match("/\((\d+)\)/",$rest,$m)) {
+   $year=$m[1];
    $tit3=trim(str_replace($m[0],"",$tit3));
+  } else {
+   $year="";
   }
 $sub_link ="from=".$from."&tip=".$tip."&sez=".$sez."&ep=".$ep."&imdb=".$imdbid."&title=".urlencode(fix_t($tit3))."&link=".$link_page."&ep_tit=".urlencode(fix_t($tit2))."&year=".$year;
 echo '<br>';
@@ -246,6 +245,10 @@ echo '<br>
 <BR>Scurtaturi: 7=opensubtitles, 8=titrari, 9=subs, 0=subtitrari (cauta imdb id)
 </b></font></TD></TR></TABLE>
 ';
+
+if (preg_match("/c\d?_file\=(http[\.\d\w\-\.\/\\\:\?\&\#\%\_\,]+)\&c\d?_label\=English/i",$r[0],$s)) {
+ echo 'Cu subtitrare in Engleza.<BR>';
+}
 include("../debug.html");
 echo '
 <div id="overlay">

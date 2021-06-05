@@ -6,6 +6,7 @@ function str_between($string, $start, $end){
 	return substr($string,$ini,$len);
 }
 include ("../common.php");
+error_reporting(0);
 $page = $_GET["page"];
 $tip= $_GET["tip"];
 $tit=$_GET["title"];
@@ -17,12 +18,13 @@ $has_fav="yes";
 $has_search="yes";
 $has_add="yes";
 $has_fs="yes";
-$ref="https://uniquestream.net";
-$fav_target="uniquestream_s_fav.php?host=".$ref;
-$add_target="uniquestream_s_add.php";
+$last_good="https://c1ne.co";
+$host=parse_url($last_good)['host'];
+$fav_target="c1ne_f_fav.php?host=".$last_good;
+$add_target="c1ne_f_add.php";
 $add_file="";
-$fs_target="uniquestream_s_ep.php";
-$target="uniquestream_s.php";
+$fs_target="c1ne_fs.php";
+$target="c1ne_f.php";
 /* ==================================================== */
 $base=basename($_SERVER['SCRIPT_FILENAME']);
 $p=$_SERVER['QUERY_STRING'];
@@ -40,12 +42,12 @@ $prev=$base."?page=".($page-1)."&".$p;
 $tit=unfix_t(urldecode($tit));
 $link=unfix_t(urldecode($link));
 /* ==================================================== */
-if (file_exists($base_cookie."seriale.dat"))
-  $val_search=file_get_contents($base_cookie."seriale.dat");
+if (file_exists($base_cookie."filme.dat"))
+  $val_search=file_get_contents($base_cookie."filme.dat");
 else
   $val_search="";
 $form='<form action="'.$target.'" target="_blank">
-Cautare serial:  <input type="text" id="title" name="title" value="'.$val_search.'">
+Cautare film:  <input type="text" id="title" name="title" value="'.$val_search.'">
 <input type="hidden" name="page" id="page" value="1">
 <input type="hidden" name="tip" id="tip" value="search">
 <input type="hidden" name="link" id="link" value="">
@@ -54,7 +56,7 @@ Cautare serial:  <input type="text" id="title" name="title" value="'.$val_search
 /* ==================================================== */
 if ($tip=="search") {
   $page_title = "Cautare: ".$tit;
-  if ($page == 1) file_put_contents($base_cookie."seriale.dat",$tit);
+  if ($page == 1) file_put_contents($base_cookie."filme.dat",$tit);
 } else
   $page_title=$tit;
 /* ==================================================== */
@@ -166,70 +168,81 @@ if ($page==1) {
    echo '<TD class="nav" colspan="4" align="right"><a href="'.$prev.'">&nbsp;&lt;&lt;&nbsp;</a> | <a href="'.$next.'">&nbsp;&gt;&gt;&nbsp;</a></TD>'."\r\n";
 }
 echo '</TR>'."\r\n";
-$r=array();
+
 if($tip=="release") {
-  if ($page==1)
-   $l=$ref."/tvshows";
-  else
-   $l=$ref."/tvshows/page/".$page."/";
+  $l=$last_good."/tag/movies/?_page=".$page;
 } else {
-  $search=str_replace(" ","+",$tit);
-  $l=$ref."/page/".$page."/?s=".$search;
+  $search=$tit;
+  $ua="Mozilla/5.0 (Windows NT 10.0; rv:88.0) Gecko/20100101 Firefox/88.0";
+  $head=array('Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+  'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2');
+  $ch = curl_init();
+  curl_setopt($ch, CURLOPT_URL, "https://c1ne.co");
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
+  curl_setopt($ch,CURLOPT_REFERER,"https://c1ne.co/");
+  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+  curl_setopt($ch, CURLOPT_HTTPHEADER, $head);
+  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 25);
+  $h = curl_exec($ch);
+  curl_close($ch);
+  $t1=explode("script id='astra-theme-js-js-extra",$h);
+  $t2=explode('base64,',$t1[1]);
+  $t3=explode('"',$t2[1]);
+  $code=base64_decode($t3[0]);
+  $t1=explode('infinite_nonce":"',$code);
+  $t2=explode('"',$t1[1]);
+  $nonce=$t2[0];
+  $post='action=astra_pagination_infinite&page_no='.$page.'&post_type=post&nonce='.$nonce.'&query_vars={"s":"'.$tit.'"}&astra_infinite=astra_pagination_ajax';
+  $l=$last_good."/wp-admin/admin-ajax.php";
 }
 $host=parse_url($l)['host'];
-
-$ua="Mozilla/5.0 (Windows NT 10.0; rv:80.0) Gecko/20100101 Firefox/80.0";
-
-$head=array('Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
+$ua="Mozilla/5.0 (Windows NT 10.0; rv:88.0) Gecko/20100101 Firefox/88.0";
+if ($tip=="release") {
+$head=array('Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2');
+  $ch = curl_init();
+  curl_setopt($ch, CURLOPT_URL, $l);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
+  curl_setopt($ch,CURLOPT_REFERER,"https://c1ne.co/");
+  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+  curl_setopt($ch, CURLOPT_HTTPHEADER, $head);
+  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 25);
+  $html = curl_exec($ch);
+  curl_close($ch);
+} else {
+ $head=array('Accept: */*',
 'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
 'Accept-Encoding: deflate',
+'Content-Type: application/x-www-form-urlencoded; charset=UTF-8',
+'Content-Length: '.strlen($post),
+'X-Requested-With: XMLHttpRequest',
+'Origin: https://c1ne.co',
+'Referer: https://c1ne.co/?s=',
 'Connection: keep-alive');
-
-  $ch = curl_init($l);
+  $ch = curl_init();
+  curl_setopt($ch, CURLOPT_URL, $l);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
   curl_setopt($ch, CURLOPT_USERAGENT, $ua);
   curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
-  curl_setopt($ch, CURLOPT_RETURNTRANSFER  ,1);  // RETURN THE CONTENTS OF THE CALL
+  curl_setopt($ch, CURLOPT_HTTPHEADER, $head);
+  curl_setopt($ch, CURLOPT_POST,1);
+  curl_setopt($ch, CURLOPT_POSTFIELDS,$post);
   curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-  curl_setopt($ch, CURLOPT_HTTPHEADER,$head);
-  //curl_setopt($ch, CURLOPT_COOKIEJAR, $cookie);
-  //curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie);
-  //curl_setopt($ch, CURLOPT_HEADER,1);
-  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
-  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 25);
   $html = curl_exec($ch);
-  curl_close ($ch);
-  //echo $html;
-///////////////////////////////////////////////////////////////////////////
+  curl_close($ch);
+}
+//echo $html;
 $r=array();
 if ($tip=="release") {
-  $videos = explode('article id="post-',$html);
-  unset($videos[0]);
-  $videos = array_values($videos);
-  foreach($videos as $video) {
-   $t1=explode('"',$video);
-   $tip=$t1[0];
-   $t1=explode('href="',$video);
-   $t2=explode('"',$t1[1]);
-   $link=$t2[0];
-   $t3 = explode('alt="', $video);
-   $t4 = explode('"', $t3[1]);
-   $title = trim($t4[0]);
-   $title=prep_tit($title);
-   $t1 = explode('src="', $video);
-   $t2 = explode('"', $t1[1]);
-   $image = $t2[0];
-  $rest = substr($title, -6);
-  if (preg_match("/\(?(\d{4})\)?/",$rest,$m)) {
-   $year=$m[1];
-   $title=trim(str_replace($m[0],"",$title));
-  } else {
-   $year="";
-   $title=$title;
-  }
-   if (strpos($tip,"feature") === false) $r[]=array($link,$title,$image,$year);
-  }
-} else {
-  $videos = explode('div class="result-item',$html);
+  $videos = explode('data-pid="',$html);
   unset($videos[0]);
   $videos = array_values($videos);
   foreach($videos as $video) {
@@ -237,38 +250,55 @@ if ($tip=="release") {
    $t2=explode('"',$t1[1]);
    $link = $t2[0];
    if (strpos($link,"http") === false) $link="https://".$host.$link;
-   $t3 = explode('alt="', $video);
-   $t5=explode('"',$t3[1]);
-   $title = trim($t5[0]);
+   $t3 = explode('title="', $video);
+   $t4 = explode('"', $t3[1]);
+   $title = $t4[0];
    $title=prep_tit($title);
    $t1 = explode('src="', $video);
    $t2 = explode('"', $t1[1]);
    $image = $t2[0];
-  $rest = substr($title, -6);
-  if (preg_match("/\(?(\d{4})\)?/",$rest,$m)) {
-   $year=$m[1];
-   $title=trim(str_replace($m[0],"",$title));
-  } else {
-   $year="";
-   $title=$title;
+   $r[]=array($link,$title,$image);
   }
-   if (strpos($image,"http") === false) $image="https://".$host.$image;
-   if (strpos($link,"/tvshows") !== false) $r[]=array($link,$title,$image,$year);
+} else {
+//echo $html;
+  $videos = explode('<article',$html);
+  unset($videos[0]);
+  $videos = array_values($videos);
+  foreach($videos as $video) {
+   $t1 = explode('href="',$video);
+   $t2=explode('"',$t1[1]);
+   $link = $t2[0];
+   if (strpos($link,"http") === false) $link="https://".$host.$link;
+   $t3 = explode('title="', $video);
+   $t4 = explode('"', $t3[1]);
+   $title = $t4[0];
+   $title=prep_tit($title);
+   $t1 = explode('src="', $video);
+   $t2 = explode('"', $t1[1]);
+   $image = $t2[0];
+   if (!preg_match("/season/i",$title)) $r[]=array($link,$title,$image);
   }
 }
-$c=count($r);
-for ($k=0;$k<$c;$k++) {
+for ($k=0; $k<count($r);$k++) {
   $link=$r[$k][0];
   $title=$r[$k][1];
   $image=$r[$k][2];
-  $year=$r[$k][3];
-  $tit_imdb=$title;
+  $rest = substr($title, -6);
+  if (preg_match("/\((\d+)\)/",$rest,$m)) {
+   $year=$m[1];
+   $tit_imdb=trim(str_replace($m[0],"",$title));
+  } else {
+   $year="";
+   $tit_imdb=$title;
+  }
   $imdb="";
-  $link_f=$fs_target.'?tip=series&link='.urlencode($link).'&title='.urlencode(fix_t($title)).'&image='.$image."&sez=&ep=&ep_tit=&year=".$year;
+  $link_f=$fs_target.'?tip=movie&link='.urlencode($link).'&title='.urlencode(fix_t($title)).'&image='.$image."&sez=&ep=&ep_tit=&year=".$year;
   if ($title) {
   if ($n==0) echo '<TR>'."\r\n";
-  $val_imdb="tip=series&title=".urlencode(fix_t($tit_imdb))."&year=".$year."&imdb=".$imdb;
+  $val_imdb="tip=movie&title=".urlencode(fix_t($tit_imdb))."&year=".$year."&imdb=".$imdb;
   $fav_link="mod=add&title=".urlencode(fix_t($title))."&link=".urlencode($link)."&image=".urlencode($image)."&year=".$year;
+  if (preg_match("/^https\:\/\/i\.imgur\.com/",$image))
+    $image="https://res.cloudinary.com/practicaldev/image/fetch/w_120,h_178,c_scale,f_auto,q_auto/".$image;
   if ($tast == "NU") {
     echo '<td class="mp" width="25%"><a href="'.$link_f.'" id="myLink'.$w.'" target="_blank" onmousedown="isKeyPressed(event)">
     <img id="myLink'.$w.'" src="'.$image.'" width="'.$width.'" height="'.$height.'"><BR>'.$title.'</a>

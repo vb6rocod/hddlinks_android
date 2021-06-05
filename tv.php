@@ -70,14 +70,14 @@ $(document).on('keyup', '.imdb', isValid);
 <TR>
 <TD width="25%"><a href="tv/privesc.php?page=1&link=https://www.privesc.eu/arhiva/categorii/Toate&title=privesc.eu" target="_blank">privesc.eu</a></TD>
 <TD width="25%"><a href="tv/b1_main.php?page=1&link=&title=B1TV" target="_blank">B1 Emisiuni</a></TD>
-<TD width="25%"><a href="tv/adevarul.php?page=1&link=https://adevarul.ro/video-center/&title=Toate" target="_blank">Adevarul.ro</a></TD>
+<TD width="25%"><a href="filme/yt_channel.php?token=&id=UChdrIsYOHZXgEyCLaOHc2Ew&kind=channel&title=(channel)+TVR&image=https://yt3.ggpht.com/ytc/AAUvwnj2psS6y8NO4ze0BR7gSRJ2OcpwzEWxJOY_m0cj=s88-c-k-c0xffffffff-no-rj-mo" target="_blank">TVR+ (youtube)</a></TD>
 <TD width="25%"><a href="tv/tvrplus_main.php" target="_blank">TVR+ (Emisiuni)</a></TD>
 </TR>
 <TR>
+<TD width="25%"><a href="filme/yt_playlist.php?token=&id=UC6Sn1XzRBCBl8UMyAb8_5PA&kind=channel&title=%28channel%29+PrimaTV+Romania&image=https://yt3.ggpht.com/-hMQUv-XEccM/AAAAAAAAAAI/AAAAAAAAAAA/Tek8sw-tzhU/s88-c-k-no-mo-rj-c0xffffff/photo.jpg" target="_blank">PrimaTV</a></TD>
 <TD width="25%"><a href="tv/protvmd.php?page=1,,ProTV Moldova" target="_blank">PROTV Moldova</a></TD>
 <TD width="25%"><a href="tv/moldova-in-direct.php" target="_blank">Moldova in Direct</a></TD>
 <TD width="25%"><a href="tv/inprofunzime.php?page=1,,IN+PROfunzime" target="_blank">IN PROfunzime</a></TD>
-<TD width="25%"><a href="tv/teleon_main.php" target="_blank">teleon.tv</TD>
 </TR>
 <TR>
 <TD width="25%"><a href="filme/youtube_fav.php" target="_blank">youtube</a></TD>
@@ -85,18 +85,12 @@ $(document).on('keyup', '.imdb', isValid);
 <TD width="25%"><a href="filme/youtube_live.php?token=&search=" target="_blank">youtube live</a></TD>
 <TD width="25%"><a href="filme/facebook1_fav.php" target="_blank">facebook</a></TD>
 </TR>
-<TR>
-<TD width="25%"><a href="filme/yt_channel.php?token=&id=UChdrIsYOHZXgEyCLaOHc2Ew&kind=channel&title=(channel)+TVR&image=https://yt3.ggpht.com/ytc/AAUvwnj2psS6y8NO4ze0BR7gSRJ2OcpwzEWxJOY_m0cj=s88-c-k-c0xffffffff-no-rj-mo" target="_blank">TVR+ (youtube)</a></TD>
-<TD width="25%"><a href="filme/starea_natiei.php" target="_blank">Starea Natiei</a></TD>
-<TD width="25%"><a href="filme/yt_playlist.php?token=&id=UC6Sn1XzRBCBl8UMyAb8_5PA&kind=channel&title=%28channel%29+PrimaTV+Romania&image=https://yt3.ggpht.com/-hMQUv-XEccM/AAAAAAAAAAI/AAAAAAAAAAA/Tek8sw-tzhU/s88-c-k-no-mo-rj-c0xffffff/photo.jpg" target="_blank">PrimaTV</a></TD>
-<TD width="25%"><a href="tv/ustream_main.php" target="_blank">ustream</TD>
-</TR>
 
 <TR>
+<TD width="25%"><a href="tv/ustream_main.php" target="_blank">ustream</TD>
 <TD width="25%"><a href="tv/iptv.php" target="_blank">IPTV International</a></TD>
-<TD width="25%"><a href="tv/playlist.php?title=Sport+IPTV&link=https://iptv-org.github.io/iptv/categories/sport.m3u" target="_blank">Sport IPTV</a></TD>
-<TD width="25%"><a href="tv/digifree.php" target="_blank">Digi Sport (Live)</a></TD>
 <TD width="25%"><a href="tv/stream4free.php" target="_blank">stream4free</TD>
+<TD width="25%"></TD>
 </TR>
 <?php
 include ("common.php");
@@ -104,17 +98,6 @@ $list = glob($base_sub."*.srt");
 foreach ($list as $l) {
     str_replace(" ","%20",$l);
      unlink($l);
-}
-if (file_exists($base_pass."tvplay.txt")) {
-
-echo '
-<TR>
-<TD width="25%"></TD>
-<TD width="25%"></TD>
-<TD width="25%"></TD>
-<TD width="25%"></TD>
-</TR>
-';
 }
 ?>
 <!--
