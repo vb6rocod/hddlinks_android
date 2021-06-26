@@ -97,6 +97,7 @@ if (preg_match("/media\.cms\.protvplus\.ro/",$link)) {
    'Referer: https://protvplus.ro/'
   );
 //echo urldecode($head[3]);
+//echo $link;
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $link);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
@@ -114,6 +115,12 @@ if (preg_match("/media\.cms\.protvplus\.ro/",$link)) {
   $t2=explode('"',$t1[1]);
   $l=$t2[0];
   //echo $l;
+// https://cmero-ott-live-web-avod-sec.ssl.cdn.cra.cz/b_gEKFdTF9H_BLKjZ8_IWQ==,1623321957/channels/cme-ro-pro2/playlist-live_lq-live_mq-live_hq.m3u8
+// https://cmero-ott-live-web-avod-sec.ssl.cdn.cra.cz/b_gEKFdTF9H_BLKjZ8_IWQ==,1623321957/channels/cme-ro-pro2/playlist/rum/live_mq.m3u8?offsetSeconds=0&url=0
+$t1=explode("/playlist",$l);
+$l=$t1[0]."/playlist/rum/live_hq.m3u8?offsetSeconds=0&url=0";
+$link=$l;
+/*
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $l);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
@@ -155,6 +162,9 @@ if (count($pl) > 1) {
 } else {
   $link=$l;
 }
+*/
+if ($flash <> "flash")
+ $link=$link."|Referer=".urlencode("https://media.cms.protvplus.ro")."&Origin=".urlencode("https://media.cms.protvplus.ro");
 }
 if (preg_match("/looksport\.1616\.ro/",$link)) {
   $ua="Mozilla/5.0 (Windows NT 10.0; rv:80.0) Gecko/20100101 Firefox/80.0";
@@ -644,6 +654,7 @@ if ($from=="protvplus") {
    'Accept-Encoding: deflate',
    'Origin: http://protvplus.ro'
   );
+  //echo $link;
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $link);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);

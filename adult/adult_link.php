@@ -287,7 +287,7 @@ $out=$t2[0];
   $t2=explode('"',$t1[1]);
   $out=$t2[0];
 } else if (preg_match("/bitporno\.com/",$host)) {
-  if (preg_match("/source src\=[\"|\']((.*?)\.mp4)[\"|\']/",$h,$m))
+  if (preg_match("/[\"|\']((.*?)\.(m3u8|mp4))[\"|\']/",$h,$m))
   $out=$m[1];
 } else if (preg_match("/bravoporn\.com/",$host)) {
   if (preg_match_all("/source src\=\"(.*?)\"/",$h,$m)) {
@@ -865,6 +865,7 @@ echo $c;
   header("Location: $c");
 } else {
 $out=str_replace("&amp;","&",$out);
+if (preg_match("/\.m3u8/",$out)) $type="m3u8";
 echo '
 <!doctype html>
 <HTML>

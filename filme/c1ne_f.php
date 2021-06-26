@@ -188,10 +188,21 @@ if($tip=="release") {
   curl_setopt($ch, CURLOPT_TIMEOUT, 25);
   $h = curl_exec($ch);
   curl_close($ch);
+  /*
   $t1=explode("script id='astra-theme-js-js-extra",$h);
+  $t1=explode('script id="astra-theme-js-js-extra',$h);
   $t2=explode('base64,',$t1[1]);
   $t3=explode('"',$t2[1]);
   $code=base64_decode($t3[0]);
+  */
+  $code=preg_replace_callback(
+    "/base64\,([a-zA-Z0-9\+\=\/]+)\"/",
+    function ($m) {
+      return base64_decode($m[1]);
+    },
+    $h
+  );
+  
   $t1=explode('infinite_nonce":"',$code);
   $t2=explode('"',$t1[1]);
   $nonce=$t2[0];

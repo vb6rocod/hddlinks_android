@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <?php
-error_reporting(0);
+//error_reporting(0);
 include ("../common.php");
 $tit=unfix_t(urldecode($_GET["title"]));
 $image=$_GET["image"];
@@ -10,8 +10,8 @@ $year=$_GET['year'];
 /* ======================================= */
 $width="200px";
 $height="100px";
-$fs_target="filme_link.php";
-$has_img="yes";
+$fs_target="streamm4u_fs.php";
+$has_img="no";
 ?>
 <html>
 <head>
@@ -30,30 +30,47 @@ function str_between($string, $start, $end){
 	return substr($string,$ini,$len);
 }
 echo '<h2>'.$tit.'</h2>';
-$ua = $_SERVER['HTTP_USER_AGENT'];
+$ua="Mozilla/5.0 (Windows NT 10.0; rv:89.0) Gecko/20100101 Firefox/89.0";
+$cookie=$base_cookie."streamm4u.dat";
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $link);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
   curl_setopt($ch, CURLOPT_USERAGENT, $ua);
+  curl_setopt($ch,CURLOPT_REFERER,"http://streamm4u.com");
   curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
-  curl_setopt($ch,CURLOPT_REFERER,"https://fsgratis.com");
+  curl_setopt($ch, CURLOPT_HEADER,1);
+  //curl_setopt($ch, CURLOPT_POST,1);
+  //curl_setopt($ch, CURLOPT_POSTFIELDS,$post);
+  //curl_setopt($ch, CURLOPT_NOBODY,1);
+  curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie);
+  curl_setopt($ch, CURLOPT_COOKIEJAR, $cookie);
+  //curl_setopt($ch, CURLOPT_HTTPHEADER, $head);
   curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
-  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
-  $h = curl_exec($ch);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 25);
+  $html = curl_exec($ch);
   curl_close($ch);
+  //echo $html;
+  $t1=explode('csrf-token" content="',$html);
+  $t2=explode('"',$t1[1]);
+  $token=$t2[0];
+  $y=array();
+  if (preg_match_all("/idepisode\=\"(\w+)\"\s*\>S(\d+)\-E(\d+)/",$html,$s)) {
+   for ($z=count($s[1])-1;$z>=0;$z--) {
+    $y[$s[2][$z]][$s[3][$z]]=$s[1][$z];
+   }
+  } elseif (preg_match_all("/idepisode\=\"(\w+)\"\s*\>Part\s*(\d+)/i",$html,$s)) {
+   for ($z=count($s[1])-1;$z>=0;$z--) {
+    $y[1][$s[2][$z]]=$s[1][$z];
+   }
+  }
+//print_r ($y);
 //echo $h;
-$h=htmlspecialchars_decode($h);
 $n=0;
-$videos = explode('data-tab="', $h);
-$sezoane=array();
-unset($videos[0]);
-$videos = array_values($videos);
+
 //$videos = array_reverse($videos);
-foreach($videos as $video) {
-  $t1=explode('span>',$video);
-  $t2=explode("<",$t1[1]);
-  $sezoane[]=trim($t2[0]);
+foreach($y as $key => $value) {
+  $sezoane[]=round($key);
 }
 echo '<table border="1" width="100%">'."\n\r";
 
@@ -76,45 +93,27 @@ if ($p < 10 && $p > 0 && $k > 9) {
 }
 echo '</TABLE>';
 
-foreach($videos as $video) {
-  $t1=explode('span>',$video);
-  $t2=explode("<",$t1[1]);
-  $season=trim($t2[0]);
+foreach($y as $key => $value) {
+  $season=round($key);
   $sez = $season;
   echo '<table border="1" width="100%">'."\n\r";
   echo '<TR><td class="sez" style="color:black;background-color:#0a6996;color:#64c8ff;text-align:center" colspan="3">Sezonul '.($sez).'</TD></TR>';
   $n=0;
-  $vids = explode('span class="Num', $video);
-  unset($vids[0]);
-  $vids = array_values($vids);
-  //$vids = array_reverse($vids);
-  foreach($vids as $vid) {
+
+  foreach($value as $num => $id) {
   $img_ep="";
   $episod="";
   $ep_tit="";
-  $t1=explode(">",$vid);
-  $t2=explode("<",$t1[1]);
-  $episod=$t2[0];
-  $t1=explode('href="',$vid);
-  $t2=explode('"',$t1[1]);
-  $link=$t2[0];
-
-
-  $t3=explode('>',$t1[2]);
-  $t4=explode('<',$t3[1]);
-  $title=$t4[0];
-  $title=str_replace("&nbsp;"," ",$title);
-  $ep_tit=prep_tit($title);
-  $t1=explode('src="',$vid);
-  $t2=explode('"',$t1[1]);
-  $img_ep=$t2[0];
+  $link="token=".$token."&id=".$id;
+  $ep_tit="";
+  $img_ep=$image;
+  $episod=round($num);
   if ($ep_tit)
    $ep_tit_d=$season."x".$episod." ".$ep_tit;
   else
    $ep_tit_d=$season."x".$episod;
-  $tit_link = $tit." ".$ep_tit_d;
-  if ($episod) {
-  $link_f=$fs_target.'?file='.urlencode($link).'&title='.urlencode(fix_t($tit_link));
+
+  $link_f=$fs_target.'?tip=series&link='.urlencode($link).'&title='.urlencode(fix_t($tit)).'&image='.$img_ep."&sez=".$season."&ep=".$episod."&ep_tit=".urlencode(fix_t($ep_tit))."&year=".$year;
    if ($n == 0) echo "<TR>"."\n\r";
    if ($has_img == "yes")
     echo '<TD class="mp" width="33%">'.'<a id="sez'.$sez.'" href="'.$link_f.'" target="_blank"><img width="'.$width.'" height="'.$height.'" src="'.$img_ep.'"><BR>'.$ep_tit_d.'</a></TD>'."\r\n";
@@ -124,7 +123,6 @@ foreach($videos as $video) {
    if ($n == 3) {
     echo '</TR>'."\n\r";
     $n=0;
-   }
    }
 }  
   if ($n < 3 && $n > 0) {

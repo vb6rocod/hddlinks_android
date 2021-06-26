@@ -1,5 +1,7 @@
 #EXTINF:-1, Digi 24
 http://dai.google.com/linear/hls/event/OQfdjUhHSDSlb1fJVzehsQ/master.m3u8
+#EXTINF:-1, Digi 24
+https://edge-ar.rcs-rds.ro/digi24ar/hd.m3u8
 #EXTINF:-1, B1
 https://stream.adunity.com/b1/b1_640-.m3u8
 #EXTINF:-1, Realitatea Plus
@@ -9,7 +11,7 @@ https://mn-nl.mncdn.com/tvrmoldova_new/smil:tvrmoldova_new.smil/index.m3u8
 #EXTINF:-1, MD| ProTV Chisinau
 http://hls.protv.md/hls/protv.m3u8
 #EXTINF:0,PROTV Chisinau
-http://185.244.216.155:23073/play/_PROTV_Chisinau_/index.m3u8?token=soiwoiw154826jfgtdrabjoi154
+http://imaiptv.ddns.net:12345/play/PROTV_Chisinau?token=M2
 #EXTINF:-1, MD| Realitatea MD
 https://hls2.realitatealive.md/chanel/tv/rlive.m3u8
 #EXTINF:-1, Jurnal TV

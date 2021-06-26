@@ -64,7 +64,7 @@ else
 </TR>
 
 <TR>
-<TD width="25%"><a href="filme/fsgratis_main.php" target="_blank">fsgratis</a></TD>
+<TD width="25%"></TD>
 <TD width="25%"><a href="filme/filmele-online.php?page=1&tip=release&title=filmele-online&link=" target="_blank">filmele-online</a></TD>
 <TD width="25%"><a href="filme/serialeonline_f.php?page=1&tip=release&title=serialeonline&link=" target="_blank">serialeonline</a></TD>
 <TD width="25%"><a href="filme/portalultautv_main.php" target="_blank">portalultautv</a></TD>
@@ -151,10 +151,18 @@ else
 
 <TR>
 <TD width="25%"><a href="filme/c1ne_f.php?page=1&tip=release&title=c1ne&link=" target="_blank">c1ne</a></TD>
+<TD width="25%"><a href="filme/sockshare_f.php?page=1&tip=release&title=sockshare&link=" target="_blank">sockshare</a></TD>
+<TD width="25%"><a href="filme/kumfimovies_f.php?page=1&tip=release&title=kumfimovies&link=" target="_blank">kumfimovies</a></TD>
+<TD width="25%"><a href="filme/coronamovies_f.php?page=1&tip=release&title=coronamovies&link=" target="_blank">coronamovies</a></TD>
+</TR>
+
+<TR>
+<TD width="25%"><a href="filme/streamm4u_f.php?page=1&tip=release&title=streamm4u&link=" target="_blank">streamm4u</a></TD>
 <TD width="25%"></TD>
 <TD width="25%"></TD>
 <TD width="25%"></TD>
 </TR>
+
 
 <?php
 if (file_exists($base_pass."tvplay.txt")) {
