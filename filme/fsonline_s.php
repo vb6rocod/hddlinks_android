@@ -234,7 +234,7 @@ $ua = $_SERVER['HTTP_USER_AGENT'];
      $image=trim($m[1]);
     else
      $image="blank.jpg";
-    if (strpos($link1,"/serial") !== false) array_push($r ,array($title,$link, $image));
+    if (strpos($link,"/serial") !== false) array_push($r ,array($title,$link, $image));
   }
   }
 $c=count($r);

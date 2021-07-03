@@ -847,6 +847,7 @@ if (preg_match("/hls\.ezylink\.co/",$filelink)) {
 
 /////////////////////////////////////////////////////
 if (preg_match("/uniquestream\./",$filelink)) {
+//echo $filelink;
  $t1=explode("id=",$filelink);
  $t2=explode("&",$t1[1]);
  $id=$t2[0];
@@ -877,12 +878,16 @@ if (preg_match("/uniquestream\./",$filelink)) {
   $html = curl_exec($ch);
   curl_close ($ch);
   //echo $html;
+  $x=json_decode($html,1);
+  //print_r ($x);
   $l="https:".json_decode($html,1)['embed_url'];
   $l=str_replace(" ","%20",$l);
   //echo $l."\n";
+  //$head=array('Origin: https://'.$host);
   $ch = curl_init($l);
   curl_setopt($ch, CURLOPT_USERAGENT, $ua);
   curl_setopt($ch,CURLOPT_REFERER,"https://".$host);
+  //curl_setopt($ch, CURLOPT_HTTPHEADER,$head);
   curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER  ,1);  // RETURN THE CONTENTS OF THE CALL
   curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
@@ -2195,10 +2200,11 @@ function decode_code($code){
    //echo $r;
    if ($r[0] == "/") {
     if ($x['url']) $link="https://vidcloud.is".base64_decode($x['url']);
+    $filelink="";
    } else
     $filelink=$r;
   }
-  if ($link && $flash<> "flash")
+  if ($link && $flash <> "flash")
    $link=$link."|Referer=".urlencode("https://vidcloud.is");
   //echo $filelink;
 }
@@ -8119,7 +8125,7 @@ function rec($site_key,$co,$sa,$loc) {
   // https://vidcloud.msk.ru/embed4/54enm296il6tu?i=2c6b544306d5c1b81e0b7b86a000da4c2d52850a6e79371835929ac55d1155b6c045926b500d70e69163d8e81cf9c0c9&el=4236402
   //echo $filelink;
   //die();
-  $host="httpos://".parse_url($filelink)['host'];
+  $host="https://".parse_url($filelink)['host'];
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $filelink);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);

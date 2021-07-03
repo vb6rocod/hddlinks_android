@@ -1321,7 +1321,7 @@ $s=$s."powvideo|povvideo|cloudvideo|vidtodo|vidcloud\.co|flashx\.|vidcloud\d*";
 $s=$s."|putload\.|event\.2target\.net|fembed\.com|streamcherry\.com|hideiframe\.com|";
 $s=$s."filmeonlinehd\.tv\/sharemovie|rovideo\.net\/video|flix555\.com|gamovideo\.com|playhd\.fun|idtbox\.com|";
 $s=$s."bitporno\.com|thevideobee\.to|mangovideo\.|smartshare\.tv|datoporn\.co|xstreamcdn\.com|onlystream\.tv|";
-$s=$s."database\.serialeonline\.to|drive\.google\.com|videomega\.|vidload\.co|mixdrop\.|mystream\.to|mstream\.cloud";
+$s=$s."database\.seriale|drive\.google\.com|videomega\.|vidload\.co|mixdrop\.|mystream\.to|mstream\.cloud";
 $s=$s."|hxload\.|bazavox\.com|cloud\.vidhubstr\.org|vidia\.tv|gomostream\.com|viduplayer\.com|leaked-celebrities\.";
 $s=$s."|prostream\.to|videobin\.co|upstream\.to|playtvid\.com|jetload\.net|vidfast\.co|clipwatching\.";
 $s=$s."|(video|player)\.filmeserialeonline\.org|streamwire\.|cloudvid\.icu|mstream\.xyz|streamhoe\.online|videyo\.";
@@ -1412,7 +1412,7 @@ for ($i=0;$i<count($links);$i++) {
    //echo $h2;
    if (preg_match("/location\:\s*(.+)/i",$h2,$m)) {
      $l1=$m[1];
-     if (strpos($l1,"database.serialeonline.to") !== false) {
+     if (strpos($l1,"database.seriale") !== false) {
       $links[$i]=$l1;
      } else {
       $cur_link=$l1;
@@ -1441,7 +1441,7 @@ for ($i=0;$i<count($links);$i++) {
    //echo $h2;
    if (preg_match("/Location:\s*(.+)/i",$h2,$m)) {
      $l1=$m[1];
-     if (strpos($l1,"database.serialeonline.to") !== false) {
+     if (strpos($l1,"database.seriale") !== false) {
       $links[$i]=$l1;
      } else {
       $cur_link=$l1;
@@ -1450,7 +1450,8 @@ for ($i=0;$i<count($links);$i++) {
      $cur_link="";
    }
  }
-  if (strpos($links[$i],"database.serialeonline.to") !== false) {
+  //if (strpos($links[$i],"database.serialeonline.to") !== false) {
+  if (preg_match("/database\.serialeonline\.to|database\.seriale\-online\.net/",$links[$i])) {
   if (strpos($links[$i],"https://database") === false)
   $l=trim("https:".$links[$i]);
   else
@@ -1475,7 +1476,7 @@ for ($i=0;$i<count($links);$i++) {
    if (preg_match("/location\:\s*(.+)/i",$h2,$m)) {
     $cur_link=trim($m[1]);
     //echo html_entity_decode(urldecode($cur_link))."\n";
-    if (strpos($cur_link,"database.serialeonline.to") !== false) {
+    if (strpos($cur_link,"database.seriale") !== false) {
      $cur_link="";
     }
    } else

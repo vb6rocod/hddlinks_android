@@ -178,6 +178,7 @@ if($tip=="release") {
   else
      $l="https://divxfilmeonline.org/?s=".$search;
 }
+// https://divxfilmeonline.net/?s=star
 $ua = $_SERVER['HTTP_USER_AGENT'];
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $l);
@@ -200,7 +201,8 @@ foreach($videos as $video) {
   $t2 = explode('"', $t1[1]);
   $link = $t2[0];
   //https://divxfilmeonline.org/star-trek-discovery-sezonul-2-episodul-14/
-  if (preg_match("/divxfilmeonline\.org\/(.*)?\-sezonul\-\d+\-episodul\-\d+/",$link,$m)) {
+  //https://divxfilmeonline.net/star-wars-the-bad-batch-sezonul-1-episodul-8/
+  if (preg_match("/divxfilmeonline\.\w+\/(.*)?\-sezonul\-\d+\-episodul\-\d+/",$link,$m)) {
    $link="https://divxfilmeonline.org/seriale-online/".$m[1]."/";
   }
   $t1 = explode('span>', $video);

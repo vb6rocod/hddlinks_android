@@ -13,7 +13,7 @@ http://hls.protv.md/hls/protv.m3u8
 #EXTINF:0,PROTV Chisinau
 http://imaiptv.ddns.net:12345/play/PROTV_Chisinau?token=M2
 #EXTINF:-1, MD| Realitatea MD
-https://hls2.realitatealive.md/chanel/tv/rlive.m3u8
+https://hls.rlive.md/chanel/tv/rlive.m3u8
 #EXTINF:-1, Jurnal TV
 http://live.cdn.jurnaltv.md/JurnalTV_HD/index.m3u8?token=d3ff4ba3b0c33ac3e75c9d5268c0c170500cfc30
 #EXTINF:0 ,MD| MOLDOVA 1

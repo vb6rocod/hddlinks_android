@@ -95,7 +95,7 @@ foreach($videos as $video) {
  $tip=$t2[0];
  $ora=trim(str_between($video,'<span class="time">','</span>'));
  $title=str_between($video,'<h3>','</h3>');
- $title = trim(preg_replace("/(<\/?)(\w+)([^>]*>)/e","",$title));
+ $title = trim(preg_replace("/(<\/?)(\w+)([^>]*>)/i","",$title));
  //echo $ora." ".$title."\r\n";
  //echo $ora." ".$title."<BR>";
  if ($tip <> "old_show")

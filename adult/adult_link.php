@@ -675,14 +675,26 @@ $head=array('Accept: */*',
       if (strpos($out,"http") === false && $out) $out="https:".trim($t2[0]);
  }
 } else if (preg_match("/redtube\.com/",$host)) {
-  if (preg_match_all("/videoUrl\"\:\"(.*?)\"/",$h,$m)) {
-  foreach ($m[1] as $key=>$value) {
-    $out=$value;
-    if ($out) break;
-  }
+//echo $h;
+  if (preg_match_all("/format\"\:\"hls\"\,\"videoUrl\"\:\"(.*?)\"/",$h,$m)) {
+  //print_r ($m);
+  $out=$m[1][0];
   $out=str_replace("\\","",$out);
+  //echo $out;
   if (strpos($out,"http") === false && $out) $out="http:".$out;
-  $out=str_replace("https","http",$out);
+  //$out=str_replace("https","http",$out);
+      $ch = curl_init();
+      curl_setopt($ch, CURLOPT_URL, $out);
+      curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+      curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 10.0; WOW64; rv:46.0) Gecko/20100101 Firefox/46.0');
+      curl_setopt($ch, CURLOPT_REFERER, "https://www.redtube.com");
+      curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+      curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+      $ret = curl_exec($ch);
+      curl_close($ch);
+      $x=json_decode($ret,1);
+      //print_r ($x);
+      $out=$x[0]['videoUrl'];
   }
 } else if (preg_match("/slutload\.com/",$host)) {
   if (preg_match("/license_code:\s+\'(.*?)\'/ms",$h,$m)) {

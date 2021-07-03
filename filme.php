@@ -124,7 +124,7 @@ else
 <TD width="25%"><a href="filme/vumoo_f.php?page=1&tip=release&title=vumoo&link=" target="_blank">vumoo</a></TD>
 <TD width="25%"><a href="filme/flixtor_f.php?page=1&tip=release&title=flixtor&link=" target="_blank">flixtor</a></TD>
 <TD width="25%"><a href="filme/gerryreid_f.php?page=1&tip=release&title=gerryreid&link=" target="_blank">gerryreid</a></TD>
-<TD width="25%"><a href="filme/yesmovies_f.php?page=1&tip=release&title=yesmovies&link=" target="_blank">yesmovies</a></TD>
+<TD width="25%"></TD>
 </TR>
 
 <TR>
