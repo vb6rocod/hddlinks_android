@@ -86,20 +86,25 @@ $l=$search;
   curl_setopt($ch, CURLOPT_TIMEOUT, 15);
   $html = curl_exec($ch);
   curl_close($ch);
-
-$videos = explode('td class="on', $html);
+$t1=explode('<div class="date_filters',$html);
+$t2=explode('<input',$t1[1]);
+//$html=$t2[0];
+$t1=explode('<dt>',$html);
+$html=$t1[1];
+$videos = explode('<li', $html);
 
 unset($videos[0]);
 $videos = array_reverse($videos);
 
 foreach($videos as $video) {
- $link="https://www.b1.ro".str_between($video,'href="','"');
+ $link="";
+ $link="https://www.b1.ro".str_between($video,"href='","'");
  $title = substr(strrchr($link, "/"), 1);
  $descriere=$title;
  $l="link=".urlencode(fix_t($link))."&title=".urlencode(fix_t($title))."&from=b1tv&mod=direct";
  $link1="direct_link.php?link=".$link."&title=".urlencode($title)."&from=b1tv&mod=direct";
 
-  if (strpos($link,"vedete") === false) {
+  if (strpos($link,"/inregistrari") !== false) {
   if ($n == 0) echo "<TR>"."\n\r";
   if ($flash != "mp")
   echo '<td class="mp" width="25%"><a href="'.$link1.'" target="_blank">'.$title.'</a></TD>';

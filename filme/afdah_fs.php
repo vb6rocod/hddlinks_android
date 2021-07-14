@@ -1,18 +1,16 @@
 <!doctype html>
 <?php
 include ("../common.php");
-
 error_reporting(0);
-if (file_exists($base_pass."debug.txt"))
- $debug=true;
-else
- $debug=false;
-
 $list = glob($base_sub."*.srt");
    foreach ($list as $l) {
     str_replace(" ","%20",$l);
     unlink($l);
 }
+if (file_exists($base_pass."debug.txt"))
+ $debug=true;
+else
+ $debug=false;
 if (file_exists($base_pass."player.txt")) {
 $flash=trim(file_get_contents($base_pass."player.txt"));
 } else {
@@ -48,6 +46,11 @@ $tip="series";
 }
 $imdbid="";
 
+function str_between($string, $start, $end){
+	$string = " ".$string; $ini = strpos($string,$start);
+	if ($ini == 0) return ""; $ini += strlen($start); $len = strpos($string,$end,$ini) - $ini;
+	return substr($string,$ini,$len);
+}
 ?>
 <html>
 <head>
@@ -130,140 +133,23 @@ function off() {
 <?php
 echo '<h2>'.$tit.$tit2.'</H2>';
 echo '<BR>';
-$r=array();
-$ua="Mozilla/5.0 (Windows NT 10.0; rv:89.0) Gecko/20100101 Firefox/89.0";
-$cookie=$base_cookie."streamm4u.dat";
-if ($tip=="movie") {
+
+  $r=array();
+$ua="Mozilla/5.0 (Windows NT 10.0; rv:80.0) Gecko/20100101 Firefox/80.0";
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $link);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
   curl_setopt($ch, CURLOPT_USERAGENT, $ua);
-  curl_setopt($ch,CURLOPT_REFERER,"http://streamm4u.com");
+  curl_setopt($ch,CURLOPT_REFERER,"https://afdah.info");
   curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
-  curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie);
-  curl_setopt($ch, CURLOPT_COOKIEJAR, $cookie);
   curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
   curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
   curl_setopt($ch, CURLOPT_TIMEOUT, 25);
-  $html = curl_exec($ch);
+  $h = curl_exec($ch);
   curl_close($ch);
-  //echo $html;
-  $t1=explode('csrf-token" content="',$html);
+  $t1=explode('afdah.info/embed/',$h);
   $t2=explode('"',$t1[1]);
-  $token=$t2[0];
-  if (preg_match_all("/data\=\"([^\"]+)\"/",$html,$m)) {
-   //print_r ($m);
-   $l="http://streamm4u.com/anhjax";
-   $ch = curl_init();
-   curl_setopt($ch, CURLOPT_URL, $l);
-   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-   curl_setopt($ch, CURLOPT_USERAGENT, $ua);
-   curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
-   curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie);
-   curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-   curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
-   curl_setopt($ch, CURLOPT_TIMEOUT, 25);
-   for ($j=0;$j<count($m[1]);$j++) {
-    $x=array("_token" => $token,
-    "m4u" => $m[1][$j]);
-    $post=http_build_query($x);
-    $head=array('Accept: */*',
-    'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
-    'Accept-Encoding: deflate',
-    'Content-Type: application/x-www-form-urlencoded; charset=UTF-8',
-    'X-Requested-With: XMLHttpRequest',
-    'Content-Length: '.strlen($post),
-    'Origin: http://streamm4u.com',
-    'Alt-Used: streamm4u.com:443',
-    'Connection: keep-alive',
-    'Referer: http://streamm4u.com/watch/movie/the-birthday-cake-2021.257430.html');
-    curl_setopt($ch, CURLOPT_HTTPHEADER, $head);
-    curl_setopt($ch, CURLOPT_POST,1);
-    curl_setopt($ch, CURLOPT_POSTFIELDS,$post);
-    $h = curl_exec($ch);
-    //echo $h;
-    if (preg_match("/iframe src\=\"([^\"]+)\"/",$h,$q))
-     $r[]=$q[1];
-    elseif (preg_match("/sources\:\s*\[\s*\{file\:\s*\"([^\"]+)\"/",$h,$u))
-      $r[]=$u[1];
-   }
-   curl_close($ch);
-  }
-} else {
-  parse_str($link,$v);
-  $token=$v['token'];
-  $id=$v['id'];
-  $l="http://streamm4u.com/anhjaxtv";
-  $x=array("_token" => $token,
-  "idepisode" => $id);
-  $post=http_build_query($x);
-
-$head=array('Accept: */*',
-'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
-'Accept-Encoding: deflate',
-'Content-Type: application/x-www-form-urlencoded; charset=UTF-8',
-'X-Requested-With: XMLHttpRequest',
-'Content-Length: '.strlen($post),
-'Origin: http://streamm4u.com',
-'Alt-Used: streamm4u.com:443',
-'Connection: keep-alive',
-'Referer: http://streamm4u.com/watch/movie/the-birthday-cake-2021.257430.html');
-  $ch = curl_init();
-  curl_setopt($ch, CURLOPT_URL, $l);
-  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
-  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
-  //curl_setopt($ch, CURLOPT_HEADER,1);
-  curl_setopt($ch, CURLOPT_POST,1);
-  curl_setopt($ch, CURLOPT_POSTFIELDS,$post);
-  //curl_setopt($ch, CURLOPT_NOBODY,1);
-  curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie);
-  //curl_setopt($ch, CURLOPT_COOKIEJAR, $cookie);
-  curl_setopt($ch, CURLOPT_HTTPHEADER, $head);
-  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
-  curl_setopt($ch, CURLOPT_TIMEOUT, 25);
-  $html = curl_exec($ch);
-  curl_close($ch);
-  if (preg_match_all("/data\=\"([^\"]+)\"/",$html,$m)) {
-   //print_r ($m);
-   $l="http://streamm4u.com/anhjax";
-   $ch = curl_init();
-   curl_setopt($ch, CURLOPT_URL, $l);
-   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-   curl_setopt($ch, CURLOPT_USERAGENT, $ua);
-   curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
-   curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie);
-   curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-   curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
-   curl_setopt($ch, CURLOPT_TIMEOUT, 25);
-   for ($j=0;$j<count($m[1]);$j++) {
-    $x=array("_token" => $token,
-    "m4u" => $m[1][$j]);
-    $post=http_build_query($x);
-    $head=array('Accept: */*',
-    'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
-    'Accept-Encoding: deflate',
-    'Content-Type: application/x-www-form-urlencoded; charset=UTF-8',
-    'X-Requested-With: XMLHttpRequest',
-    'Content-Length: '.strlen($post),
-    'Origin: http://streamm4u.com',
-    'Alt-Used: streamm4u.com:443',
-    'Connection: keep-alive',
-    'Referer: http://streamm4u.com/watch/movie/the-birthday-cake-2021.257430.html');
-    curl_setopt($ch, CURLOPT_HTTPHEADER, $head);
-    curl_setopt($ch, CURLOPT_POST,1);
-    curl_setopt($ch, CURLOPT_POSTFIELDS,$post);
-    $h = curl_exec($ch);
-    //echo $h;
-    if (preg_match("/iframe src\=\"([^\"]+)\"/",$h,$q))
-      $r[]=$q[1];
-    elseif (preg_match("/sources\:\s*\[\s*\{file\:\s*\"([^\"]+)\"/",$h,$u))
-      $r[]=$u[1];
-   }
-   curl_close($ch);
-  }
-}
+  $r[]="https://afdah.info/embed/".$t2[0];
 echo '<table border="1" width="100%">';
 echo '<TR><TD class="mp">Alegeti un server: Server curent:<label id="server">'.parse_url($r[0])['host'].'</label>
 <input type="hidden" id="file" value="'.urlencode($r[0]).'"></td></TR></TABLE>';
@@ -309,10 +195,7 @@ if ($tip=="movie") {
 }
   $rest = substr($tit3, -6);
   if (preg_match("/\((\d+)\)/",$rest,$m)) {
-   $year=$m[1];
    $tit3=trim(str_replace($m[0],"",$tit3));
-  } else {
-   $year="";
   }
 $sub_link ="from=".$from."&tip=".$tip."&sez=".$sez."&ep=".$ep."&imdb=".$imdbid."&title=".urlencode(fix_t($tit3))."&link=".$link_page."&ep_tit=".urlencode(fix_t($tit2))."&year=".$year;
 echo '<br>';
@@ -350,10 +233,6 @@ echo '<br>
 <BR>Scurtaturi: 7=opensubtitles, 8=titrari, 9=subs, 0=subtitrari (cauta imdb id)
 </b></font></TD></TR></TABLE>
 ';
-
-if (preg_match("/c\d?_file\=(http[\.\d\w\-\.\/\\\:\?\&\#\%\_\,]+)\&c\d?_label\=English/i",$r[0],$s)) {
- echo 'Cu subtitrare in Engleza.<BR>';
-}
 include("../debug.html");
 echo '
 <div id="overlay">

@@ -158,6 +158,217 @@ if (strpos($filelink,"https://www.google.com/search") !== false) {
   else
     $filelink="";
 }
+if (preg_match("/afdah\./",$filelink)) {
+    $arrChrs = array("A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z", "a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z", "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "+", "/");
+    $reversegetFChars = array();
+    $getFStr="";
+    $getFCount = 0;
+    for ($i = 0; $i < count($arrChrs); $i++) {
+        $reversegetFChars[$arrChrs[$i]] = $i;
+    }
+
+    function ntos($e) {
+        //echo "=".$e."=";
+        //return iconv("UTF-8", "ISO-8859-1//TRANSLIT", chr($e));
+        return chr($e);
+    }
+    function readReversegetF() {
+        global $reversegetFChars;
+        global $getFStr;
+        global $getFCount;
+        if (!$getFStr) return -1;
+        while (true) {
+            if ($getFCount >= strlen($getFStr)) return -1;
+            $e = $getFStr[$getFCount];
+            //echo "readReversegetF=".$e."\n";
+            $getFCount++;
+            if (isset($reversegetFChars[$e])) {
+                return $reversegetFChars[$e];
+            }
+            if ($e == "A") return 0;
+        }
+        return -1;
+    }
+
+    function setgetFStr($e) {
+     global $reversegetFChars;
+     global $getFStr;
+     global $getFCount;
+        $getFStr = $e;
+        $getFCount = 0;
+    }
+
+
+
+    function getF($e) {
+        global $reversegetFChars;
+        global $getFStr;
+        global $getFCount;
+        setgetFStr($e);
+        $t = "";
+        $n = array(4);
+        $r = false;
+        while (!$r && ($n[0] = readReversegetF()) != -1 && ($n[1] = readReversegetF()) != -1) {
+            $n[2] = readReversegetF();
+            $n[3] = readReversegetF();
+            $t .= ntos($n[0] << 2 & 255 | $n[1] >> 4);
+            if ($n[2] != -1) {
+                $t .= ntos($n[1] << 4 & 255 | $n[2] >> 2);
+                if ($n[3] != -1) {
+                    $t .= ntos($n[2] << 6 & 255 | $n[3]);
+                } else {
+                    $r = true;
+                }
+            } else {
+                $r = true;
+            }
+        }
+        return $t;
+    }
+    function tor($txt) {
+        $map = array();
+        $tmp = "abcdefghijklmnopqrstuvwxyz";
+        $buf = "";
+        for ($j = 0; $j < strlen($tmp); $j++) {
+            $x = $tmp[$j];
+            $y = $tmp[($j + 13) % 26];
+            $map[$x] = $y;
+            $map[strtoupper($x)] = strtoupper($y);
+        }
+        for ($j = 0; $j < strlen($txt); $j++) {
+            $c = $txt[$j];
+            $buf .= ($c >= 'A' && $c <= 'Z' || $c >= 'a' && $c <= 'z' ? $map[$c] : $c);
+        }
+        return $buf;
+    }
+  include("rec.php");
+  $ua="Mozilla/5.0 (Windows NT 10.0; rv:86.0) Gecko/20100101 Firefox/86.0";
+  //echo $filelink;
+  $key="6LeLo6IZAAAAAD1sHLlRReThaDfdZvxZ07nS0olp";
+  $co="aHR0cHM6Ly9hZmRhaC5pbmZvOjQ0Mw..";
+  $sa="play1";
+  $loc="https://afdah.info";
+  $token=rec($key,$co,$sa,$loc);
+  $post="g-recaptcha-response=".$token;
+  $head=array('Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
+  'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
+  'Accept-Encoding: deflate',
+  'Content-Type: application/x-www-form-urlencoded',
+  'Content-Length: '.strlen($post),
+  'Origin: https://afdah.info',
+  'Connection: keep-alive',
+  'Referer: '.$filelink,
+  'Upgrade-Insecure-Requests: 1');
+  $ch = curl_init();
+  curl_setopt($ch, CURLOPT_URL, $filelink);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
+  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+  curl_setopt($ch, CURLOPT_HEADER,1);
+  curl_setopt($ch, CURLOPT_POST,1);
+  curl_setopt($ch, CURLOPT_POSTFIELDS,$post);
+  curl_setopt($ch, CURLOPT_HTTPHEADER, $head);
+  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 25);
+  $h = curl_exec($ch);
+  curl_close($ch);
+  //$h=str_replace('src="/','src="https://afdah.info/',$h);
+  //echo $h;
+
+  $t1=explode('var kodi =',$h);
+  $t2=explode(';',$t1[1]);
+  $c=str_replace('unescape',"",$t2[0]);
+  $c=str_replace("(e)","(\$e)",$c);
+  $c="\$kodi=".$c.";";
+
+  $e="";
+  $t1=explode('salt("',$h);
+  $t2=explode('");',$t1[1]);
+  $e=$t2[0];
+  if ($e) {
+   eval ($c);
+   if (preg_match("/hlsvideo\s*\=\s*\"([^\"]+)\"/",$kodi,$r))
+    $link=$r[1];
+   if (preg_match("/\/subtitles\/\d+\.srt/",$kodi,$s))
+    $srt="https://afdah.info".$s[0];
+  }
+  $host="afdah.info";
+  if ($host && $flash <> "flash") {
+  //echo $link;
+  $ch = curl_init();
+  curl_setopt($ch, CURLOPT_URL, $link);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
+  curl_setopt($ch,CURLOPT_REFERER,"https://afdah.info");
+  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 25);
+  $h = curl_exec($ch);
+  curl_close($ch);
+  //echo $h;
+  if (preg_match_all("/http.+/",$h,$m))
+    $link=trim($m[0][count($m[0])-1]);
+  $link=$link."|Referer=".urlencode("https://".$host);
+  }
+}
+if (preg_match("/yifytv\./",$filelink)) {
+  $t1=explode("?",$filelink);
+  $post=$t1[1];
+  $ua="Mozilla/5.0 (Windows NT 10.0; rv:89.0) Gecko/20100101 Firefox/89.0";
+  $l="https://yifytv.top/wp-admin/admin-ajax.php";
+  $head=array('Accept: */*',
+  'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
+  'Accept-Encoding: deflate',
+  'Referer: https://yifytv.top/movies/mind-games-2021/',
+  'Content-Type: application/x-www-form-urlencoded; charset=UTF-8',
+  'X-Requested-With: XMLHttpRequest',
+  'Content-Length: '.strlen($post),
+  'Origin: https://yifytv.top',
+  'Connection: keep-alive');
+  $ch = curl_init();
+  curl_setopt($ch, CURLOPT_URL, $l);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
+  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+  curl_setopt($ch, CURLOPT_POST,1);
+  curl_setopt($ch, CURLOPT_POSTFIELDS,$post);
+  curl_setopt($ch, CURLOPT_HTTPHEADER, $head);
+  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 25);
+  $h = curl_exec($ch);
+  curl_close($ch);
+  $x=json_decode($h,1);
+  $z=$x['embed_url'];
+  $t1=explode('iframe src="',$z);
+  $t2=explode('"',$t1[1]);
+  $l=$t2[0];
+  $ch = curl_init();
+  curl_setopt($ch, CURLOPT_URL, $l);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
+  curl_setopt($ch,CURLOPT_REFERER,"https://yifytv.top");
+  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 25);
+  $h = curl_exec($ch);
+  curl_close($ch);
+  //echo $h;
+  $t1=explode("FirePlayer(vhash,",$h);
+  $t2=explode(", false);",$t1[1]);
+  $u=json_decode($t2[0],1);
+  //print_r ($u);
+  $host=parse_url($l)['host'];
+  $videoServer=$u['videoServer'];
+  $videoUrl=$u['videoUrl'];
+  $videoDisk=$u['videoDisk'];
+  $link="https://".$host.$videoUrl."?s=".$videoServer."&d=".base64_encode($videoDisk);
+  if ($host && $flash <> "flash")
+   $link=$link."|Referer=".urlencode("https://".$host);
+}
 if (preg_match("/coronamovies\./",$filelink)) {
   $ua="Mozilla/5.0 (Windows NT 10.0; rv:80.0) Gecko/20100101 Firefox/80.0";
   $t1=explode("?file=",$filelink);
@@ -165,6 +376,10 @@ if (preg_match("/coronamovies\./",$filelink)) {
   $link=$t2[0];
   $srt=$t2[1];
   //echo $srt;
+  $filelink="";
+}
+if (preg_match("/m4umv\.com/",$filelink)) {
+  $link=$filelink;
   $filelink="";
 }
 if (preg_match("/kumfimovie\./",$filelink)) {
@@ -5123,14 +5338,15 @@ function decode_code($code){
   if (preg_match('/(\/\/[\.\d\w\-\.\/\\\:\?\&\#\%\_\,]*(\.(srt|vtt)))/', $h, $s))
   $srt="https:".$s[1];
 } elseif (strpos($filelink,"jawcloud.") !== false) {
+//echo $filelink;
   // https://jawcloud.co/embed-7ezp8ikxy7f8.html?cap&c1_file=https://upvtt.com/uploads/Blindspot-05x01-ICametoSleigh.POKE.English.C.orig.Addic7ed.com.vtt&c1_label=English
-  $ua="Mozilla/5.0 (Windows NT 10.0; WOW64; rv:46.0) Gecko/20100101 Firefox/46.0";
+  $ua="Mozilla/5.0 (Windows NT 10.0; rv:89.0) Gecko/20100101 Firefox/89.0";
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $filelink);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
   curl_setopt($ch, CURLOPT_USERAGENT, $ua);
   curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
-  //curl_setopt($ch,CURLOPT_REFERER,"supervideo.tv");
+  curl_setopt($ch,CURLOPT_REFERER,"https://jawcloud.co");
   curl_setopt($ch, CURLOPT_ENCODING, "");
   curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
   curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
@@ -5291,88 +5507,11 @@ if ($link && $flash<>"flash")
   // https://www.doodstream.com/d/sot4bb1da0rq
   //echo $filelink;
   $ua     =   $_SERVER['HTTP_USER_AGENT'];
-  $ua="Mozilla/5.0";
+  //$ua="Mozilla/5.0";
   //$ua="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.106 Safari/537.36";
   $host=parse_url($filelink)['host'];
   $srt="";
-//echo $filelink;
-  $site_key="6LeBZ_QUAAAAAFRlK-3AKsVsAhMsXme1mO_NBKpc";
-  $co="aHR0cHM6Ly9kb29kLnRvOjQ0Mw..";
-  $sa="pass_md5";
-  $loc="https://dood.to";
-  $srt="";
 
-  $head = array(
-   'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
-   'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
-   'Referer: https://dood.to'
-  );
-  $l="https://www.google.com/recaptcha/api.js";
-
-  $ch = curl_init();
-  curl_setopt($ch, CURLOPT_URL, $l);
-  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
-  curl_setopt($ch, CURLOPT_REFERER, $loc);
-  curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 0);
-  curl_setopt($ch, CURLOPT_HTTPHEADER, $head);
-  curl_setopt($ch, CURLOPT_HEADER, 1);
-  $h = curl_exec($ch);
-
-
-  $t1=explode("releases/",$h);
-  $t2=explode("/",$t1[1]);
-  $v=$t2[0];
-
-  $cb="123456789";
-
-  $l2="https://www.google.com/recaptcha/api2/anchor?ar=1&k=".$site_key."&co=".$co."&hl=ro&v=".$v."&size=invisible&cb=".$cb;
-
-  curl_setopt($ch, CURLOPT_URL, $l2);
-  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
-  curl_setopt($ch, CURLOPT_REFERER, $loc);
-  curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 0);
-  curl_setopt($ch, CURLOPT_HTTPHEADER, $head);
-  $h = curl_exec($ch);
-  curl_close($ch);
-
-  $h=str_replace('\x22','"',$h);
-  $t1=explode('recaptcha-token" value="',$h);
-  $t2=explode('"',$t1[1]);
-  $c=$t2[0];
-  $l6="https://www.google.com/recaptcha/api2/reload?k=".$site_key;
-  $p=array('v' => $v,
-  'reason' => 'q',
-  'k' => $site_key,
-  'c' => $c,
-  'sa' => $sa,
-  'co' => $co);
-  $post=http_build_query($p);
-  $head=array(
-  'Accept: */*',
-  'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
-  'Accept-Encoding: deflate',
-  'Content-Type: application/x-www-form-urlencoded;charset=utf-8',
-  'Content-Length: '.strlen($post).'',
-  'Referer: '.$l2.'',
-  'Connection: keep-alive');
-
-  $ch = curl_init();
-  curl_setopt($ch, CURLOPT_URL, $l6);
-  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
-  curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 0);
-  curl_setopt($ch, CURLOPT_HTTPHEADER, $head);
-  curl_setopt ($ch, CURLOPT_POST, 1);
-  curl_setopt ($ch, CURLOPT_POSTFIELDS, $post);
-  $h = curl_exec($ch);
-  curl_close($ch);
-
-
-  $t1=explode('rresp","',$h);
-  $t2=explode('"',$t1[1]);
-  $token=$t2[0];
   //https://dood.watch/e/gd93oog2e3vq?c1_file=https://serialeonline.to/subtitrarifilme/tt4619908.vtt&c1_label=Romana
   function makePlay() {
    $a="";
@@ -5385,8 +5524,33 @@ if ($link && $flash<>"flash")
   }
   $filelink=str_replace("/f/","/e/",$filelink);
   $filelink=str_replace("/d/","/e/",$filelink);
-  $co="aHR0cDovL2Rvb2QudG86ODA.";
-  $co="aHR0cHM6Ly9kb29kLnRvOjQ0Mw..";
+  //echo $filelink;
+  /* prevent cloudflare captcha (PHP 7.x > */
+ $DEFAULT_CIPHERS =array(
+            "ECDHE+AESGCM",
+            "ECDHE+CHACHA20",
+            "DHE+AESGCM",
+            "DHE+CHACHA20",
+            "ECDH+AESGCM",
+            "DH+AESGCM",
+            "ECDH+AES",
+            "DH+AES",
+            "RSA+AESGCM",
+            "RSA+AES",
+            "!aNULL",
+            "!eNULL",
+            "!MD5",
+            "!DSS",
+            "!ECDHE+SHA",
+            "!AES128-SHA",
+            "!DHE"
+        );
+ if (defined('CURL_SSLVERSION_TLSv1_3'))
+  $ssl_version=7;
+ else
+  $ssl_version=0;
+  $ua="Mozilla/5.0 (Windows NT 10.0; rv:89.0) Gecko/20100101 Firefox/89.0";
+  $ua="Mozilla/5.0";
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $filelink);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
@@ -5395,6 +5559,9 @@ if ($link && $flash<>"flash")
   curl_setopt($ch, CURLOPT_ENCODING, "");
   curl_setopt($ch, CURLOPT_HEADER,1);
   curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+  //curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
+  curl_setopt($ch, CURLOPT_SSL_CIPHER_LIST, implode(":", $DEFAULT_CIPHERS));
+  curl_setopt($ch, CURLOPT_SSLVERSION,$ssl_version);
   curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
   curl_setopt($ch, CURLOPT_TIMEOUT, 25);
   $h = curl_exec($ch);
@@ -5402,6 +5569,7 @@ if ($link && $flash<>"flash")
   if (preg_match_all("/location\:\s+(http.+)/i",$h,$m)) {
     $host=parse_url(trim($m[1][count($m[1])-1]))['host'];
   }
+  //echo $h;
   if (preg_match('/(\/\/[\.\d\w\-\.\/\\\:\?\&\#\%\_\,]*(\.(srt|vtt)))/', $h, $s))
   $srt="https:".$s[1];
   //echo $srt."\n";
@@ -5432,6 +5600,8 @@ if ($link && $flash<>"flash")
   curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
   curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
   //curl_setopt($ch, CURLOPT_HEADER,1);
+  curl_setopt($ch, CURLOPT_SSL_CIPHER_LIST, implode(":", $DEFAULT_CIPHERS));
+  curl_setopt($ch, CURLOPT_SSLVERSION,$ssl_version);
   curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
   curl_setopt($ch, CURLOPT_TIMEOUT, 25);
   $h1 = curl_exec($ch);

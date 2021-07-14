@@ -138,7 +138,7 @@ if ($tip=="movie") {
   curl_setopt($ch, CURLOPT_URL, $link);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
   curl_setopt($ch, CURLOPT_USERAGENT, $ua);
-  curl_setopt($ch,CURLOPT_REFERER,"http://streamm4u.com");
+  curl_setopt($ch,CURLOPT_REFERER,"https://m4uhd.tv");
   curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
   curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie);
   curl_setopt($ch, CURLOPT_COOKIEJAR, $cookie);
@@ -153,7 +153,8 @@ if ($tip=="movie") {
   $token=$t2[0];
   if (preg_match_all("/data\=\"([^\"]+)\"/",$html,$m)) {
    //print_r ($m);
-   $l="http://streamm4u.com/anhjax";
+   $l="https://m4uhd.tv/anhjax";
+   $l="https://m4uhd.tv/ajax";
    $ch = curl_init();
    curl_setopt($ch, CURLOPT_URL, $l);
    curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
@@ -173,17 +174,17 @@ if ($tip=="movie") {
     'Content-Type: application/x-www-form-urlencoded; charset=UTF-8',
     'X-Requested-With: XMLHttpRequest',
     'Content-Length: '.strlen($post),
-    'Origin: http://streamm4u.com',
+    'Origin: https://m4uhd.tv',
     'Alt-Used: streamm4u.com:443',
     'Connection: keep-alive',
-    'Referer: http://streamm4u.com/watch/movie/the-birthday-cake-2021.257430.html');
+    'Referer: https://m4uhd.tv');
     curl_setopt($ch, CURLOPT_HTTPHEADER, $head);
     curl_setopt($ch, CURLOPT_POST,1);
     curl_setopt($ch, CURLOPT_POSTFIELDS,$post);
     $h = curl_exec($ch);
-    //echo $h;
+    //echo $h."=========="."\n";
     if (preg_match("/iframe src\=\"([^\"]+)\"/",$h,$q))
-     $r[]=$q[1];
+      $r[]=$q[1];
     elseif (preg_match("/sources\:\s*\[\s*\{file\:\s*\"([^\"]+)\"/",$h,$u))
       $r[]=$u[1];
    }
@@ -194,6 +195,7 @@ if ($tip=="movie") {
   $token=$v['token'];
   $id=$v['id'];
   $l="http://streamm4u.com/anhjaxtv";
+  $l="https://m4uhd.tv/ajaxtv";
   $x=array("_token" => $token,
   "idepisode" => $id);
   $post=http_build_query($x);
@@ -204,10 +206,9 @@ $head=array('Accept: */*',
 'Content-Type: application/x-www-form-urlencoded; charset=UTF-8',
 'X-Requested-With: XMLHttpRequest',
 'Content-Length: '.strlen($post),
-'Origin: http://streamm4u.com',
-'Alt-Used: streamm4u.com:443',
+'Origin: https://m4uhd.tv',
 'Connection: keep-alive',
-'Referer: http://streamm4u.com/watch/movie/the-birthday-cake-2021.257430.html');
+'Referer: https://m4uhd.tv');
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $l);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
@@ -228,6 +229,7 @@ $head=array('Accept: */*',
   if (preg_match_all("/data\=\"([^\"]+)\"/",$html,$m)) {
    //print_r ($m);
    $l="http://streamm4u.com/anhjax";
+   $l="https://m4uhd.tv/ajax";
    $ch = curl_init();
    curl_setopt($ch, CURLOPT_URL, $l);
    curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
@@ -247,10 +249,9 @@ $head=array('Accept: */*',
     'Content-Type: application/x-www-form-urlencoded; charset=UTF-8',
     'X-Requested-With: XMLHttpRequest',
     'Content-Length: '.strlen($post),
-    'Origin: http://streamm4u.com',
-    'Alt-Used: streamm4u.com:443',
+    'Origin: https://m4uhd.tv',
     'Connection: keep-alive',
-    'Referer: http://streamm4u.com/watch/movie/the-birthday-cake-2021.257430.html');
+    'Referer: https://m4uhd.tv');
     curl_setopt($ch, CURLOPT_HTTPHEADER, $head);
     curl_setopt($ch, CURLOPT_POST,1);
     curl_setopt($ch, CURLOPT_POSTFIELDS,$post);

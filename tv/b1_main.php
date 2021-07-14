@@ -34,21 +34,22 @@ $l="https://www.b1.ro/inregistrari";
   $html = curl_exec($ch);
   curl_close($ch);
 
-$videos = explode('<article', $html);
+$videos = explode('<div class="article__media', $html);
 
 unset($videos[0]);
 $videos = array_values($videos);
 
 foreach($videos as $video) {
- $video=html_entity_decode($video);
- $title=str_between($video,'title="','"');
+ $t1=explode('alt="',$video);
+ $t2=explode('"',$t1[1]);
+ $title=$t2[0];
  $descriere=$title;
- $image="https://www.b1.ro".urldecode(str_between($video,'src="','"'));
- $l=str_between($video,'href="','"');
- if (strpos($l,"http") === false)
-    $link="https://www.b1.ro".$l;
- else
-    $link=$l;
+ $t1=explode('href="',$video);
+ $t2=explode('"',$t1[1]);
+ $link=$t2[0];
+ $t1=explode('src="',$video);
+ $t2=explode('"',$t1[1]);
+ $image=$t2[0];
     $link="b1.php?page=1&link=".$link."&title=".urlencode($title);
     if (preg_match("/inregistrari/",$link)) {
 	if ($n == 0) echo "<TR>"."\n\r";

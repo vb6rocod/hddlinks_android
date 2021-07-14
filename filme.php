@@ -124,7 +124,7 @@ else
 <TD width="25%"><a href="filme/vumoo_f.php?page=1&tip=release&title=vumoo&link=" target="_blank">vumoo</a></TD>
 <TD width="25%"><a href="filme/flixtor_f.php?page=1&tip=release&title=flixtor&link=" target="_blank">flixtor</a></TD>
 <TD width="25%"><a href="filme/gerryreid_f.php?page=1&tip=release&title=gerryreid&link=" target="_blank">gerryreid</a></TD>
-<TD width="25%"></TD>
+<TD width="25%"><a href="filme/afdah_f.php?page=1&tip=release&title=afdah&link=" target="_blank">afdah</a></TD>
 </TR>
 
 <TR>
@@ -158,9 +158,9 @@ else
 
 <TR>
 <TD width="25%"><a href="filme/streamm4u_f.php?page=1&tip=release&title=streamm4u&link=" target="_blank">streamm4u</a></TD>
-<TD width="25%"></TD>
-<TD width="25%"></TD>
-<TD width="25%"></TD>
+<TD width="25%"><a href="filme/azseries_f.php?page=1&tip=release&title=azseries&link=" target="_blank">azseries</a></TD>
+<TD width="25%"><a href="filme/m4uhd_f.php?page=1&tip=release&title=m4uhd&link=" target="_blank">m4uhd</a></TD>
+<TD width="25%"><a href="filme/yifytv_f.php?page=1&tip=release&title=yifytv&link=" target="_blank">yifytv</a></TD>
 </TR>
 
 

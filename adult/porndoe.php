@@ -228,7 +228,7 @@ $host=parse_url($l)['host'];
   curl_close($ch);
 //echo $html;
 $r=array();
-$videos = explode('<div data-video',$html);
+$videos = explode('<div class="video-item"',$html);
 unset($videos[0]);
 $videos = array_values($videos);
 foreach($videos as $video) {
@@ -237,7 +237,7 @@ foreach($videos as $video) {
   $link = "https://porndoe.com".$t2[0];
   //$t1=explode('title="',$video);
   $link=str_replace("/video/","/video/embed/",$link);
-  $t3=explode('aria-label="',$video);
+  $t3=explode('title="',$video);
   $t4=explode('"',$t3[1]);
   $title=$t4[0];
   $title = trim(strip_tags($title));
@@ -246,11 +246,11 @@ foreach($videos as $video) {
   $t2 = explode('"', $t1[1]);
   $image = $t2[0];
   if (strpos($image,"http") === false) $image="https:".$image;
-  $t1=explode('class="txt"',$video);
-  $t2=explode('>',$t1[1]);
-  $t3=explode("<",$t2[1]);
-  $durata=trim($t3[0]);
-  $durata = preg_replace("/\n|\r/"," ",strip_tags($durata));
+  $t1=explode('data-duration="',$video);
+  $t2=explode('"',$t1[1]);
+  //$t3=explode("<",$t2[1]);
+  $durata=trim($t2[0]);
+  //$durata = preg_replace("/\n|\r/"," ",strip_tags($durata));
   if ($durata) $title=$title." (".$durata.')';
   if ($title) array_push($r ,array($title,$link, $image));
 }

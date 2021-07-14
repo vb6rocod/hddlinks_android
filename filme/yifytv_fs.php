@@ -132,138 +132,24 @@ echo '<h2>'.$tit.$tit2.'</H2>';
 echo '<BR>';
 $r=array();
 $ua="Mozilla/5.0 (Windows NT 10.0; rv:89.0) Gecko/20100101 Firefox/89.0";
-$cookie=$base_cookie."streamm4u.dat";
-if ($tip=="movie") {
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $link);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
   curl_setopt($ch, CURLOPT_USERAGENT, $ua);
-  curl_setopt($ch,CURLOPT_REFERER,"http://streamm4u.com");
+  curl_setopt($ch,CURLOPT_REFERER,"https://yifytv.top");
   curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
-  curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie);
-  curl_setopt($ch, CURLOPT_COOKIEJAR, $cookie);
   curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
   curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
   curl_setopt($ch, CURLOPT_TIMEOUT, 25);
-  $html = curl_exec($ch);
+  $h = curl_exec($ch);
   curl_close($ch);
-  //echo $html;
-  $t1=explode('csrf-token" content="',$html);
-  $t2=explode('"',$t1[1]);
-  $token=$t2[0];
-  if (preg_match_all("/data\=\"([^\"]+)\"/",$html,$m)) {
-   //print_r ($m);
-   $l="http://streamm4u.com/anhjax";
-   $ch = curl_init();
-   curl_setopt($ch, CURLOPT_URL, $l);
-   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-   curl_setopt($ch, CURLOPT_USERAGENT, $ua);
-   curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
-   curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie);
-   curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-   curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
-   curl_setopt($ch, CURLOPT_TIMEOUT, 25);
-   for ($j=0;$j<count($m[1]);$j++) {
-    $x=array("_token" => $token,
-    "m4u" => $m[1][$j]);
-    $post=http_build_query($x);
-    $head=array('Accept: */*',
-    'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
-    'Accept-Encoding: deflate',
-    'Content-Type: application/x-www-form-urlencoded; charset=UTF-8',
-    'X-Requested-With: XMLHttpRequest',
-    'Content-Length: '.strlen($post),
-    'Origin: http://streamm4u.com',
-    'Alt-Used: streamm4u.com:443',
-    'Connection: keep-alive',
-    'Referer: http://streamm4u.com/watch/movie/the-birthday-cake-2021.257430.html');
-    curl_setopt($ch, CURLOPT_HTTPHEADER, $head);
-    curl_setopt($ch, CURLOPT_POST,1);
-    curl_setopt($ch, CURLOPT_POSTFIELDS,$post);
-    $h = curl_exec($ch);
-    //echo $h;
-    if (preg_match("/iframe src\=\"([^\"]+)\"/",$h,$q))
-     $r[]=$q[1];
-    elseif (preg_match("/sources\:\s*\[\s*\{file\:\s*\"([^\"]+)\"/",$h,$u))
-      $r[]=$u[1];
-   }
-   curl_close($ch);
-  }
-} else {
-  parse_str($link,$v);
-  $token=$v['token'];
-  $id=$v['id'];
-  $l="http://streamm4u.com/anhjaxtv";
-  $x=array("_token" => $token,
-  "idepisode" => $id);
-  $post=http_build_query($x);
-
-$head=array('Accept: */*',
-'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
-'Accept-Encoding: deflate',
-'Content-Type: application/x-www-form-urlencoded; charset=UTF-8',
-'X-Requested-With: XMLHttpRequest',
-'Content-Length: '.strlen($post),
-'Origin: http://streamm4u.com',
-'Alt-Used: streamm4u.com:443',
-'Connection: keep-alive',
-'Referer: http://streamm4u.com/watch/movie/the-birthday-cake-2021.257430.html');
-  $ch = curl_init();
-  curl_setopt($ch, CURLOPT_URL, $l);
-  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
-  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
-  //curl_setopt($ch, CURLOPT_HEADER,1);
-  curl_setopt($ch, CURLOPT_POST,1);
-  curl_setopt($ch, CURLOPT_POSTFIELDS,$post);
-  //curl_setopt($ch, CURLOPT_NOBODY,1);
-  curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie);
-  //curl_setopt($ch, CURLOPT_COOKIEJAR, $cookie);
-  curl_setopt($ch, CURLOPT_HTTPHEADER, $head);
-  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
-  curl_setopt($ch, CURLOPT_TIMEOUT, 25);
-  $html = curl_exec($ch);
-  curl_close($ch);
-  if (preg_match_all("/data\=\"([^\"]+)\"/",$html,$m)) {
-   //print_r ($m);
-   $l="http://streamm4u.com/anhjax";
-   $ch = curl_init();
-   curl_setopt($ch, CURLOPT_URL, $l);
-   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-   curl_setopt($ch, CURLOPT_USERAGENT, $ua);
-   curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
-   curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie);
-   curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-   curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
-   curl_setopt($ch, CURLOPT_TIMEOUT, 25);
-   for ($j=0;$j<count($m[1]);$j++) {
-    $x=array("_token" => $token,
-    "m4u" => $m[1][$j]);
-    $post=http_build_query($x);
-    $head=array('Accept: */*',
-    'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
-    'Accept-Encoding: deflate',
-    'Content-Type: application/x-www-form-urlencoded; charset=UTF-8',
-    'X-Requested-With: XMLHttpRequest',
-    'Content-Length: '.strlen($post),
-    'Origin: http://streamm4u.com',
-    'Alt-Used: streamm4u.com:443',
-    'Connection: keep-alive',
-    'Referer: http://streamm4u.com/watch/movie/the-birthday-cake-2021.257430.html');
-    curl_setopt($ch, CURLOPT_HTTPHEADER, $head);
-    curl_setopt($ch, CURLOPT_POST,1);
-    curl_setopt($ch, CURLOPT_POSTFIELDS,$post);
-    $h = curl_exec($ch);
-    //echo $h;
-    if (preg_match("/iframe src\=\"([^\"]+)\"/",$h,$q))
-      $r[]=$q[1];
-    elseif (preg_match("/sources\:\s*\[\s*\{file\:\s*\"([^\"]+)\"/",$h,$u))
-      $r[]=$u[1];
-   }
-   curl_close($ch);
-  }
-}
+  $t1=explode("data-post='",$h);
+  $t2=explode("'",$t1[1]);
+  $id=$t2[0];
+  if ($tip=="movie")
+  $r[]="https://yifytv.top?action=doo_player_ajax&post=".$id."&nume=1&type=movie";
+  else
+  $r[]="https://yifytv.top?action=doo_player_ajax&post=".$id."&nume=1&type=tv";
 echo '<table border="1" width="100%">';
 echo '<TR><TD class="mp">Alegeti un server: Server curent:<label id="server">'.parse_url($r[0])['host'].'</label>
 <input type="hidden" id="file" value="'.urlencode($r[0]).'"></td></TR></TABLE>';

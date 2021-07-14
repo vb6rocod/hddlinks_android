@@ -116,8 +116,8 @@ document.onkeypress =  zx;
 
 <TR>
 <TD width="25%"><a href="filme/streamm4u_s.php?page=1&tip=release&title=streamm4u&link=" target="_blank">streamm4u</a></TD>
-<TD width="25%"></TD>
-<TD width="25%"></TD>
+<TD width="25%"><a href="filme/m4uhd_s.php?page=1&tip=release&title=m4uhd&link=" target="_blank">m4uhd</a></TD>
+<TD width="25%"><a href="filme/yifytv_s.php?page=1&tip=release&title=yifytv&link=" target="_blank">yifytv</a></TD>
 <TD width="25%"></TD>
 </TR>
 <?php
