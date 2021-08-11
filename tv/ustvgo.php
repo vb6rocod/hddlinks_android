@@ -5,14 +5,14 @@ include ("../common.php");
 
 $width="200px";
 $height=intval(200*(228/380))."px";
-$page_title="stream4free";
+$page_title="ustvgo";
 ?>
 <html><head>
 <meta http-equiv="content-type" content="text/html; charset=UTF-8">
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate"/>
 <meta http-equiv="Pragma" content="no-cache"/>
 <meta http-equiv="Expires" content="0"/>
-      <title>stream4free</title>
+      <title>ustvgo.php</title>
 <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.0/jquery.min.js"></script>
 <link rel="stylesheet" type="text/css" href="../custom.css" />
 <script type="text/javascript">
@@ -73,87 +73,38 @@ if (preg_match("/android|ipad/i",$user_agent) && preg_match("/chrome|firefox|mob
 $n=0;
 echo '<h2>'.$page_title.'</H2>';
 echo '<table border="1px" width="100%">'."\n\r";
-$l="https://www.stream4free.live/tv-show-series";
-$post="source=jcontent&Itemid=277&task=getItems&offset=0";
-  $l="https://www.stream4free.live/tv-live-france";
-  $post="source=jcontent&Itemid=115&task=getItems&offset=0";
-$head=array('Accept: application/json, text/javascript, */*; q=0.01',
-'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
-'Accept-Encoding: deflate',
-'Content-Type: application/x-www-form-urlencoded; charset=UTF-8',
-'X-Requested-With: XMLHttpRequest',
-'Content-Length: '.strlen($post),
-'Origin: https://www.stream4free.live',
-'Connection: keep-alive',
-'Referer: https://www.stream4free.live');
+$ua="Mozilla/5.0 (Windows NT 10.0; rv:89.0) Gecko/20100101 Firefox/89.0";
+$l="https://ustvgo.tv/";
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $l);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
   curl_setopt($ch, CURLOPT_USERAGENT, $ua);
   curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
-  curl_setopt($ch, CURLOPT_POST,1);
-  curl_setopt($ch, CURLOPT_POSTFIELDS,$post);
-  curl_setopt($ch, CURLOPT_HTTPHEADER, $head);
   curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
   curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
   curl_setopt($ch, CURLOPT_TIMEOUT, 25);
   $h = curl_exec($ch);
   curl_close($ch);
-  //echo $h;
-  $x=json_decode($h,1)['content'];
-  $y1=json_decode($x,1);
-$l="https://www.stream4free.live/tv-show-series";
-$post="source=jcontent&Itemid=277&task=getItems&offset=0";
+$videos = explode("<li>", $h);
 
-$head=array('Accept: application/json, text/javascript, */*; q=0.01',
-'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
-'Accept-Encoding: deflate',
-'Content-Type: application/x-www-form-urlencoded; charset=UTF-8',
-'X-Requested-With: XMLHttpRequest',
-'Content-Length: '.strlen($post),
-'Origin: https://www.stream4free.live',
-'Connection: keep-alive',
-'Referer: https://www.stream4free.live');
-  $ch = curl_init();
-  curl_setopt($ch, CURLOPT_URL, $l);
-  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
-  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
-  curl_setopt($ch, CURLOPT_POST,1);
-  curl_setopt($ch, CURLOPT_POSTFIELDS,$post);
-  curl_setopt($ch, CURLOPT_HTTPHEADER, $head);
-  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
-  curl_setopt($ch, CURLOPT_TIMEOUT, 25);
-  $h = curl_exec($ch);
-  curl_close($ch);
-  //echo $h;
-  $x=json_decode($h,1)['content'];
-  $y2=json_decode($x,1);
-  $y=array_merge($y1,$y2);
-  //print_r ($y);
+unset($videos[0]);
+$videos = array_values($videos);
 
-
-
-for($k=0;$k<count($y);$k++) {
-    $t1 = explode('href="', $y[$k]['link']);
-    $t2 = explode('"', $t1[1]);
-    $link = "https://www.stream4free.live".$t2[0];
-
-    $title=$y[$k]['title'];
-
-    $image = "https://www.stream4free.live".$y[$k]['image'];
-
-//    $l1=explode("picture:",$image);
-//    $id=$l1[1];
-    $link1="direct_link.php?link=".$link."&title=".urlencode($title)."&from=stream4free&mod=direct";
-    $l="link=".urlencode(fix_t($link))."&title=".urlencode(fix_t($title))."&from=stream4free&mod=direct";
+foreach($videos as $video) {
+ $t1=explode('href="',$video);
+ $t2=explode('"',$t1[1]);
+ $link=$t2[0];
+ $t3=explode(">",$t1[1]);
+ $t4=explode("<",$t3[1]);
+ $title=trim($t4[0]);
+    $link1="direct_link.php?link=".$link."&title=".urlencode($title)."&from=ustvgo&mod=direct";
+    $l="link=".urlencode(fix_t($link))."&title=".urlencode(fix_t($title))."&from=ustvgo&mod=direct";
   if ($link && $title) {
   if ($n==0) echo '<TR>';
   if ($flash != "mp")
-  echo '<td class="mp" align="center" width="25%"><a href="'.$link1.'" target="_blank"><img src="'.$image.'" width="'.$width.'" height="'.$height.'"><BR>'.$title.'</a></TD>';
+  echo '<td class="mp" align="center" width="25%"><a href="'.$link1.'" target="_blank">'.$title.'</a></TD>';
     else
-  echo '<td class="mp" align="center" width="25%">'.'<a onclick="ajaxrequest('."'".$l."')".'"'." style='cursor:pointer;'>".'<img src="'.$image.'" width="'.$width.'" height="'.$height.'"><BR>'.$title.'</a></TD>';
+  echo '<td class="mp" align="center" width="25%">'.'<a onclick="ajaxrequest('."'".$l."')".'"'." style='cursor:pointer;'>".''.$title.'</a></TD>';
 
   $n++;
   if ($n == 4) {

@@ -12,18 +12,20 @@ $tit=$_GET["title"];
 $link=$_GET["link"];
 $width="200px";
 $height="278px";
+$width="200px";
+$height="107px";
 /* ==================================================== */
 $has_fav="yes";
 $has_search="yes";
 $has_add="yes";
 $has_fs="yes";
-$ref="https://kumfimovies.com";
+$ref="https://ronemo.com";
 $host=parse_url($ref)['host'];
-$fav_target="kumfimovies_f_fav.php?host=".$ref;
-$add_target="kumfimovies_f_add.php";
+$fav_target="ronemo_fav.php?host=".$ref;
+$add_target="ronemo_add.php";
 $add_file="";
-$fs_target="kumfimovies_fs.php";
-$target="kumfimovies_f.php";
+$fs_target="ronemo_fs.php";
+$target="ronemo.php";
 /* ==================================================== */
 $base=basename($_SERVER['SCRIPT_FILENAME']);
 $p=$_SERVER['QUERY_STRING'];
@@ -140,13 +142,8 @@ document.onkeypress =  zx;
 <?php
 $w=0;
 $n=0;
-if (file_exists($base_pass."player.txt")) {
-$flash=trim(file_get_contents($base_pass."player.txt"));
-} else {
-$flash="direct";
-}
-
 echo '<H2>'.$page_title.'</H2>'."\r\n";
+
 echo '<table border="1px" width="100%" style="table-layout:fixed;">'."\r\n";
 echo '<TR>'."\r\n";
 if ($page==1) {
@@ -174,79 +171,62 @@ if ($page==1) {
 echo '</TR>'."\r\n";
 
 if($tip=="release") {
-  if ($page==1)
-   $l=$ref."/movies/";
-  else
-   $l=$ref."/movies/page/".$page."/";
+  $l="https://ronemo.com/api/posts/get-post?userName=&urlCategory=&h_inside=1&start=".(10*($page-1))."&userId=undefined&firstVisit=1";
 } else {
   $search=str_replace(" ","+",$tit);
-  if ($page==1)
-  $l=$ref."/title/?post_type=video_skrn&search_keyword=".$search."&vtype%5B%5D=movies&vgenre=&vduration=&vrating=0%2C5&submit=Search+Videos";
-  else
-  $l=$ref."/title/page/".$page."?post_type=video_skrn&search_keyword=".$search."&vtype%5B%5D=movies&vgenre=&vduration=&vrating=0%2C5&submit=Search+Videos";
+  $l="https://ronemo.com/api/video/search?key=".$search."&scrollId=&start=".(20*($page-1))."&startYt=0&cCode=";
 }
 $host=parse_url($l)['host'];
+$ua = $_SERVER['HTTP_USER_AGENT'];
+$ua="Mozilla/5.0 (Windows NT 10.0; rv:77.0) Gecko/20100101 Firefox/77.0";
 
-$ua="Mozilla/5.0 (Windows NT 10.0; rv:80.0) Gecko/20100101 Firefox/80.0";
-
-$head=array('Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
-'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
-'Accept-Encoding: deflate',
-'Connection: keep-alive');
-
-  $ch = curl_init($l);
+$head=array('Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2');
+  $ch = curl_init();
+  curl_setopt($ch, CURLOPT_URL, $l);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+  curl_setopt($ch,CURLOPT_REFERER,"https://".$host);
+  curl_setopt($ch,CURLOPT_HTTPHEADER,$head);
   curl_setopt($ch, CURLOPT_USERAGENT, $ua);
   curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
-  curl_setopt($ch, CURLOPT_RETURNTRANSFER  ,1);  // RETURN THE CONTENTS OF THE CALL
-  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-  curl_setopt($ch, CURLOPT_HTTPHEADER,$head);
   curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
   curl_setopt($ch, CURLOPT_TIMEOUT, 25);
-  $html = curl_exec($ch);
-  curl_close ($ch);
+  $h = curl_exec($ch);
+  curl_close($ch);
+  $x=json_decode($h,1);
+  //print_r ($x);
 
-//echo $html;
 $r=array();
-if ($tip=="release") {
-  $videos = explode('div id="post-',$html);
-  unset($videos[0]);
-  $videos = array_values($videos);
-  foreach($videos as $video) {
-   if (preg_match("/href=\"([^\"]+)\"/",$video,$m)) {
-    $link=$m[1];
-    if (preg_match("/video\-title\"\>(.*?)\</",$video,$o)) {
-     $title=$o[1];
-     $t1=explode('data-src="',$video);
-     $t2=explode('?',$t1[1]);
-     $image=$t2[0];
-     $r[]=array($link,$title,$image);
-    }
-   }
+  if ($tip=="release") {
+  for ($k=0;$k<count($x['results']);$k++) {
+   $link = $x['results'][$k]['uuid'];
+   $title= $x['results'][$k]['name'];
+   $r[]=array($link,$title);
   }
-} else {
-  $videos = explode('div id="post-',$html);
-  unset($videos[0]);
-  $videos = array_values($videos);
-  foreach($videos as $video) {
-   if (preg_match("/href=\"([^\"]+)\"/",$video,$m)) {
-    $link=$m[1];
-    if (preg_match("/video\-title\"\>(.*?)\</",$video,$o)) {
-     $title=$o[1];
-     $t1=explode('data-src="',$video);
-     $t2=explode('?',$t1[1]);
-     $image=$t2[0];
-     $r[]=array($link,$title,$image);
-    }
-   }
+  } else {
+  for ($k=0;$k<count($x['data']);$k++) {
+   $link = $x['data'][$k]['uuid'];
+   $title= $x['data'][$k]['name'];
+   $r[]=array($link,$title);
   }
-}
+ }
 for ($k=0; $k<count($r);$k++) {
   $link=$r[$k][0];
   $title=$r[$k][1];
-  $image=$r[$k][2];
+  $image="https://thumb.ronemo.com/".$link."/s.jpg";
   $year="";
   $imdb="";
-  $tit_imdb=$title;
+  $title=preg_replace("/\s*(1080|720)p.*/","",$title);
+  $title=preg_replace("/((\s*\-\s*)|(\|))?Full.+/i","",$title);
+  $title=preg_replace("/\s*\|\s*/","",$title);
+  $rest = substr($title, -6);
+  if (preg_match("/\(?(\d{4})\)?/",$rest,$m)) {
+   $year=$m[1];
+   $tit_imdb=trim(str_replace($m[0],"",$title));
+  } else {
+   $year="";
+   $tit_imdb=$title;
+  }
   $link_f=$fs_target.'?tip=movie&link='.urlencode($link).'&title='.urlencode(fix_t($title)).'&image='.$image."&sez=&ep=&ep_tit=&year=".$year;
   if ($title) {
   if ($n==0) echo '<TR>'."\r\n";

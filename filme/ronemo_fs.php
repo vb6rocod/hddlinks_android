@@ -1,7 +1,7 @@
 <!doctype html>
 <?php
 include ("../common.php");
-error_reporting(0);
+//error_reporting(0);
 $list = glob($base_sub."*.srt");
    foreach ($list as $l) {
     str_replace(" ","%20",$l);
@@ -26,25 +26,27 @@ if ($flash != "mp") {
 if (preg_match("/android|ipad/i",$user_agent) && preg_match("/chrome|firefox|mobile/i",$user_agent)) $flash="chrome";
 }
 $tit=unfix_t(urldecode($_GET["title"]));
-//$tit=prep_tit($tit);
+$tit=prep_tit($tit);
 $image=$_GET["image"];
 $link=urldecode($_GET["link"]);
 $tip=$_GET["tip"];
 $sez=$_GET["sez"];
 $ep=$_GET["ep"];
 $ep_title=unfix_t(urldecode($_GET["ep_tit"]));
-//$ep_title=prep_tit($ep_title);
+$ep_title=prep_tit($ep_title);
 $year=$_GET["year"];
 if ($tip=="movie") {
 $tit2="";
+$slug="";
 } else {
 if ($ep_title)
    $tit2=" - ".$sez."x".$ep." ".$ep_title;
 else
    $tit2=" - ".$sez."x".$ep;
 $tip="series";
+$slug=$_GET['slug'];
 }
-$imdbid=str_replace("tt","",$link);
+$imdbid="";
 
 function str_between($string, $start, $end){
 	$string = " ".$string; $ini = strpos($string,$start);
@@ -59,26 +61,6 @@ function str_between($string, $start, $end){
 <link rel="stylesheet" type="text/css" href="../custom.css" />
 <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.0/jquery.min.js"></script>
 <script type="text/javascript">
-function savesub(sub) {
-  on();
-  var request =  new XMLHttpRequest();
-  link1=document.getElementById('file').value;
-  var the_data = "link=" + sub;
-  var php_file="savesub1.php";
-  request.open("POST", php_file, true);			// set the request
-
-  // adds a header to tell the PHP script to recognize the data as is sent via POST
-  request.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-  request.send(the_data);		// calls the send() method with datas as parameter
-
-  // Check request status
-  // If the response is received completely, will be transferred to the HTML tag with tagID
-  request.onreadystatechange = function() {
-    if (request.readyState == 4) {
-      off();
-    }
-  }
-}
 function openlink1(link) {
   link1=document.getElementById('file').value;
   msg="link1.php?file=" + link1 + "&title=" + link;
@@ -110,7 +92,7 @@ function openlink(link) {
   }
 }
 function changeserver(s,t) {
-  document.getElementById('server').innerHTML = decodeURIComponent(s.replace(/\+/g, ' '));;
+  document.getElementById('server').innerHTML = s;
   document.getElementById('file').value=t;
 }
    function zx(e){
@@ -153,104 +135,51 @@ function off() {
 <?php
 echo '<h2>'.$tit.$tit2.'</H2>';
 echo '<BR>';
+
 $r=array();
-//die();
-$s=array();
-$s_l=array();
-$ua = $_SERVER['HTTP_USER_AGENT'];
-//echo $filelink;
+  $ua="Mozilla/5.0 (Windows NT 10.0; rv:77.0) Gecko/20100101 Firefox/77.0";
+  $l="https://ronemo.com/api/video/video-info?idVid=".$link;
+  $head=array('Accept: application/json, text/plain, */*',
+  'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
+  'Accept-Encoding: deflate',
+  'Content-Type: application/json',
+  'Alt-Used: ronemo.com',
+  'Connection: keep-alive',
+  'Referer: https://ronemo.com/embed/'.$link);
   $ch = curl_init();
-  curl_setopt($ch, CURLOPT_URL, $link);
+  curl_setopt($ch, CURLOPT_URL, $l);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-  curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 10.0; rv:55.0) Gecko/20100101 Firefox/55.0');
+  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
   curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
-  curl_setopt($ch, CURLOPT_ENCODING, "");
+  curl_setopt($ch, CURLOPT_HTTPHEADER, $head);
   curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
-  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
-  $h = curl_exec($ch);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 25);
+  $html = curl_exec($ch);
   curl_close($ch);
-  //echo $h;
-  $t1=explode('class="movieplay"><iframe src="',$h);
-  $t2=explode('"',$t1[1]);
-  $filelink=$t2[0];
-  if (preg_match("/tt(\d+)/",$filelink,$m)) {
-    $imdbid=$m[1];
-    $link=$m[0];
-  }
-//echo $filelink;
-//die();
-$cookie=$base_cookie."vikv.dat";
-$ua = $_SERVER['HTTP_USER_AGENT'];
-$l="https://hls.hdv.fun/imdb/".$link;
-// https://hls.hdv.fun/imdb/
-//echo $l;
-$head=array('Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
-'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
-'Accept-Encoding: deflate',
-'Connection: keep-alive',
-'Upgrade-Insecure-Requests: 1');
- $ch = curl_init();
- curl_setopt($ch, CURLOPT_URL, $l);
- curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
- curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
- curl_setopt($ch, CURLOPT_USERAGENT, $ua);
- curl_setopt($ch, CURLOPT_REFERER,"https://vikv.net");
- curl_setopt($ch, CURLOPT_HTTPHEADER,$head);
- curl_setopt($ch, CURLOPT_ENCODING, "");
- curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
- curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
- curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
- curl_setopt($ch, CURLOPT_TIMEOUT, 25);
- //curl_setopt($ch, CURLINFO_HEADER_OUT, true);
- $h = curl_exec($ch);
- curl_close($ch);
- //echo $h;
- $t1=explode('hdv_user="',$h);
- $t2=explode('"',$t1[1]);
- $user=$t2[0];
- $srt_name="";
- if (preg_match("/\"romanian\"\: \[\[\d+\, (\d+)/",$h,$o)) {
-  $sub=$o[1];
-  $srt_name="Romanian";
- } elseif (preg_match("/\"english\"\: \[\[\d+\, (\d+)/",$h,$o)) {
-  $sub=$o[1];
-  $srt_name="English";
- } else {
-  $sub="";
+  $x=json_decode($html,1);
+  //print_r ($x);
+  $srt="";
   $srt_name="";
- }
- if (preg_match_all("/\"name\"\: \"(\w+)\"\, \"quality\"\: \"(\w*)\"\, \"res\"\: (\d*)/",$h,$m)) {
-  for ($k=0;$k<count($m[1]);$k++) {
-   $r[]="https://vikv.net?id=".$m[1][$k]."&sub=".$sub."&user=".$user;
-   $s[]=$m[2][$k]." - ".$m[3][$k];
+  for ($k=0;$k<count($x["sub"]);$k++) {
+    if (preg_match("/Romanian/i",$x["sub"][$k]["language_name"])) {
+     $srt="https://sub.ronemo.com/".$link."/".$x["sub"][$k]["sub_name"];
+     $srt_name="Romanian";
+     break;
+    }
   }
- }
-
- //print_r ($m);
- //die();
-
-//https://api.hdv.fun/sub?fid=22&lg=english
-//https://sub1.hdv.fun/vtt1/442044.vtt
-/*
-for ($k=0;$k<count($p);$k++) {
- $l=$p[$k]['src'][0]['src']."&referer=https://".$host;
- $name=$p[$k]['name'];
- if (strpos($l,"http") !== false) $r[]=urlencode($l)."||".$name;
- if (isset($p[$k]['sub'])) {
- foreach ($p[$k]['sub'] as $key=> $value) {
-   if ($p[$k]['sub'][$key]['lg'] == 'romanian' || $p[$k]['sub'][$key]['lg'] == 'english') {
-     $sub_id=$p[$k]['sub'][$key]['sub_id'];
-     $s_l[]=$p[$k]['sub'][$key]['lg'];
-     $s[]="https://api.hdv.fun/sub?fid=".$sub_id."&lg=".$p[$k]['sub'][$key]['lg'];
-   }
- }
- }
-}
-
-*/
+  if (!$srt) {
+  for ($k=0;$k<count($x["sub"]);$k++) {
+    if (preg_match("/English/i",$x["sub"][$k]["language_name"])) {
+     $srt="https://sub.ronemo.com/".$link."/".$x["sub"][$k]["sub_name"];
+     $srt_name="English";
+     break;
+    }
+  }
+  }
+  $r[] = "https://hls.ronemo.com/".$link."/f/playlist.m3u8?sub=".$srt;
 echo '<table border="1" width="100%">';
-echo '<TR><TD class="mp">Varianta aleasa: <label style="color: #e6e600;" id="server">'.$s[0].'</label>
+echo '<TR><TD class="mp">Alegeti un server: Server curent:<label id="server">'.parse_url($r[0])['host'].'</label>
 <input type="hidden" id="file" value="'.urlencode($r[0]).'"></td></TR></TABLE>';
 echo '<table border="1" width="100%"><TR>';
 $k=count($r);
@@ -258,21 +187,19 @@ $x=0;
 for ($i=0;$i<$k;$i++) {
   if ($x==0) echo '<TR>';
   $c_link=$r[$i];
-  //$openload=parse_url(urldecode($r[$i]))['host'];
-  $indirect="/asasaass/";
-  $openload=$s[$i];
+  $openload=parse_url($r[$i])['host'];
   if (preg_match($indirect,$openload)) {
   echo '<TD class="mp"><a href="filme_link.php?file='.urlencode($c_link).'&title='.urlencode(unfix_t($tit.$tit2)).'" target="_blank">'.$openload.'</a></td>';
   } else
-  echo '<TD class="mp"><a id="myLink" href="#" onclick="changeserver('."'".urlencode($openload)."','".urlencode($c_link)."'".');return false;">'.$openload.'</a></td>';
+  echo '<TD class="mp"><a id="myLink" href="#" onclick="changeserver('."'".$openload."','".urlencode($c_link)."'".');return false;">'.$openload.'</a></td>';
   $x++;
-  if ($x==3) {
+  if ($x==6) {
     echo '</TR>';
     $x=0;
   }
 }
-if ($x < 3 && $x > 0 & $k>3) {
- for ($k=0;$k<3-$x;$k++) {
+if ($x < 6 && $x > 0 & $k>6) {
+ for ($k=0;$k<6-$x;$k++) {
    echo '<TD></TD>'."\r\n";
  }
  echo '</TR>'."\r\n";
@@ -283,30 +210,38 @@ if ($tip=="movie") {
   $tit2="";
   $sez="";
   $ep="";
+  $imdbid="";
   $from="";
   $link_page="";
 } else {
   $tit3=$tit;
   $sez=$sez;
   $ep=$ep;
+  $imdbid="";
   $from="";
   $link_page="";
 }
-  $rest = substr($tit3, -5);
-  if (preg_match("/\-(\d+)/",$rest,$m)) {
+  $rest = substr($tit3, -6);
+  if (preg_match("/\(?(\d+)\)?/",$rest,$m)) {
    $tit3=trim(str_replace($m[0],"",$tit3));
   }
 $sub_link ="from=".$from."&tip=".$tip."&sez=".$sez."&ep=".$ep."&imdb=".$imdbid."&title=".urlencode(fix_t($tit3))."&link=".$link_page."&ep_tit=".urlencode(fix_t($tit2))."&year=".$year;
 echo '<br>';
 echo '<table border="1" width="100%">';
 echo '<TR><TD style="background-color:#0a6996;color:#64c8ff;font-weight: bold;font-size: 1.5em" align="center" colspan="4">Alegeti o subtitrare</td></TR>';
-echo '</table>';
-echo '<table border="1" width="100%">';
 echo '<TR>';
 echo '<TD class="mp"><a id="opensub" href="opensubtitles.php?'.$sub_link.'">opensubtitles</a></td>';
 echo '<TD class="mp"><a id="titrari" href="titrari_main.php?page=1&'.$sub_link.'&page=1">titrari.ro</a></td>';
 echo '<TD class="mp"><a id="subs" href="subs_main.php?'.$sub_link.'">subs.ro</a></td>';
 echo '<TD class="mp"><a id="subtitrari" href="subtitrari_main.php?'.$sub_link.'">subtitrari_noi.ro</a></td>';
+echo '</TR></TABLE>';
+echo '<table border="1" width="100%">';
+echo '<TR><TD style="background-color:#0a6996;color:#64c8ff;font-weight: bold;font-size: 1.5em" align="center" colspan="4">Alegeti o subtitrare (cauta imdb id)</td></TR>';
+echo '<TR>';
+echo '<TD class="mp"><a id="opensub1" href="opensubtitles1.php?'.$sub_link.'">opensubtitles</a></td>';
+echo '<TD class="mp"><a id="titrari1" href="titrari_main1.php?page=1&'.$sub_link.'&page=1">titrari.ro</a></td>';
+echo '<TD class="mp"><a id="subs1" href="subs_main1.php?'.$sub_link.'">subs.ro</a></td>';
+echo '<TD class="mp"><a id="subtitrari1" href="subtitrari_main1.php?'.$sub_link.'">subtitrari_noi.ro</a></td>';
 echo '</TR></TABLE>';
 echo '<table border="1" width="100%"><TR>';
 if ($tip=="movie")
@@ -319,11 +254,11 @@ else
    echo '<TD align="center" colspan="4"><a id="viz" onclick="'."openlink('".$openlink."')".'"'." style='cursor:pointer;'>".'VIZIONEAZA !</a></td>';
 echo '</tr>';
 echo '</table>';
-if ($sub)
+echo '<br>';
+if ($srt)
  echo '<BR>'.$srt_name;
-echo '<br>
 
-<table border="0px" width="100%">
+echo '<table border="0px" width="100%">
 <TR>
 <TD><font size="4"><b>Scurtaturi: 1=opensubtitles, 2=titrari, 3=subs, 4=subtitrari, 5=vizioneaza
 <BR>Scurtaturi: 7=opensubtitles, 8=titrari, 9=subs, 0=subtitrari (cauta imdb id)

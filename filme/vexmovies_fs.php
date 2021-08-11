@@ -1,7 +1,7 @@
 <!doctype html>
 <?php
 include ("../common.php");
-error_reporting(0);
+//error_reporting(0);
 $list = glob($base_sub."*.srt");
    foreach ($list as $l) {
     str_replace(" ","%20",$l);
@@ -37,12 +37,14 @@ $ep_title=prep_tit($ep_title);
 $year=$_GET["year"];
 if ($tip=="movie") {
 $tit2="";
+$slug="";
 } else {
 if ($ep_title)
    $tit2=" - ".$sez."x".$ep." ".$ep_title;
 else
    $tit2=" - ".$sez."x".$ep;
 $tip="series";
+$slug=$_GET['slug'];
 }
 $imdbid="";
 
@@ -134,26 +136,96 @@ function off() {
 echo '<h2>'.$tit.$tit2.'</H2>';
 echo '<BR>';
 
-  $r=array();
-$ua="Mozilla/5.0 (Windows NT 10.0; rv:80.0) Gecko/20100101 Firefox/80.0";
-
-$head=array('Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
-'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
-'Accept-Encoding: deflate',
-'Connection: keep-alive');
-
-  $ch = curl_init($link);
+$r=array();
+  $ua="Mozilla/5.0 (Windows NT 10.0; rv:77.0) Gecko/20100101 Firefox/77.0";
+  $head=array('Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+  'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2');
+  $ch = curl_init();
+  curl_setopt($ch, CURLOPT_URL, $link);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+  curl_setopt($ch,CURLOPT_REFERER,$link);
+  curl_setopt($ch,CURLOPT_HTTPHEADER,$head);
   curl_setopt($ch, CURLOPT_USERAGENT, $ua);
   curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
-  curl_setopt($ch, CURLOPT_RETURNTRANSFER  ,1);  // RETURN THE CONTENTS OF THE CALL
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+  $h = curl_exec($ch);
+  curl_close($ch);
+  $t1=explode('iframe src="',$h);
+  $t2=explode('"',$t1[1]);
+  $l=$t2[0];
+  if (preg_match("/gomo\.|gomostream\./",$l)) {
+  $head=array('Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+  'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
+  'Accept-Encoding: deflate',
+  'Connection: keep-alive',
+  'Upgrade-Insecure-Requests: 1');
+  $ch = curl_init();
+  curl_setopt($ch, CURLOPT_URL, $l);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
+  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+  curl_setopt($ch, CURLOPT_HEADER,1);
+  curl_setopt($ch, CURLOPT_HTTPHEADER, $head);
   curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-  curl_setopt($ch, CURLOPT_HTTPHEADER,$head);
   curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
   curl_setopt($ch, CURLOPT_TIMEOUT, 25);
-  $html = curl_exec($ch);
-  curl_close ($ch);
-  if (preg_match("/source src\=\"([^\"]+)\"/",$html,$m))
-   $r[]=$m[1];
+  $h = curl_exec($ch);
+  curl_close($ch);
+
+  preg_match("/var\s+tc\s+\=\s+\'(\S+)\'/msi",$h,$m);
+
+  $tc=$m[1];
+  preg_match("/\_token\"\: \"(\S+)\"/msi",$h,$o);
+
+  $token=$o[1];
+  $t1=explode("slice(",$h);
+  $h1=$t1[1];
+
+  preg_match("/(\d+)\,\s*(\d+)/msi",$h1,$n);
+
+  $a=$n[1];
+  $b=$n[2];
+  preg_match("/return.*?\"(\d+)\".*?\"(\d+)/msi",$h1,$p);
+
+  $c=$p[1];
+  $d=$p[2];
+  $e=substr($tc,$a,$b-$a);
+  $f=strrev($e);
+  $j=$f.$c.$d;
+
+  $l="https://gomo.to/decoding_v3.php";
+  $post="tokenCode=".$tc."&_token=".$token;
+
+  $head=array('Accept: */*',
+  'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
+  'Accept-Encoding: deflate',
+  'Content-Type: application/x-www-form-urlencoded; charset=UTF-8',
+  'x-token: '.$j.'',
+  'X-Requested-With: XMLHttpRequest',
+  'Content-Length: '.strlen($post).'',
+  'Origin: https://gomostream.com',
+  'Connection: keep-alive',
+  'Referer: https://gomostream.com');
+  $ch = curl_init();
+  curl_setopt($ch, CURLOPT_URL, $l);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
+  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+  curl_setopt ($ch, CURLOPT_POST, 1);
+  curl_setopt ($ch, CURLOPT_POSTFIELDS, $post);
+  curl_setopt($ch, CURLOPT_HTTPHEADER, $head);
+  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 25);
+  $h = curl_exec($ch);
+  curl_close($ch);
+  $x=json_decode($h,1);
+  //print_r ($x);
+  for ($k=0;$k<count($x);$k++) {
+   if (!preg_match("/gomo\.to\/vid1|hqq\./",$x[$k]) && preg_match("/http/",$x[$k])) $r[]=$x[$k];
+  }
+  }
 echo '<table border="1" width="100%">';
 echo '<TR><TD class="mp">Alegeti un server: Server curent:<label id="server">'.parse_url($r[0])['host'].'</label>
 <input type="hidden" id="file" value="'.urlencode($r[0]).'"></td></TR></TABLE>';
@@ -230,8 +302,9 @@ else
    echo '<TD align="center" colspan="4"><a id="viz" onclick="'."openlink('".$openlink."')".'"'." style='cursor:pointer;'>".'VIZIONEAZA !</a></td>';
 echo '</tr>';
 echo '</table>';
-echo '<br>
-<table border="0px" width="100%">
+echo '<br>';
+
+echo '<table border="0px" width="100%">
 <TR>
 <TD><font size="4"><b>Scurtaturi: 1=opensubtitles, 2=titrari, 3=subs, 4=subtitrari, 5=vizioneaza
 <BR>Scurtaturi: 7=opensubtitles, 8=titrari, 9=subs, 0=subtitrari (cauta imdb id)

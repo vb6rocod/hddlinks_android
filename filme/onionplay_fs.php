@@ -155,39 +155,61 @@ function unjuice($source) {
   }
   return $source;
 }
+$cookie=$base_cookie."onionplay.txt";
 //echo $link;
 //$link="https://onionplay.is/movies/zack-snyders-justice-league-2021/";
  $link=str_replace("/watch-","/",$link);
  $link=str_replace("-onionplay","",$link);
 // https://onionplay.is/movies/star-wars-the-rise-of-skywalker-2019/
 // https://onionplay.is/movies/watch-star-wars-the-rise-of-skywalker-2019-onionplay/
+//$link="https://onionplay.club/watch-baggio-the-divine-ponytail-2021-online-ads-free";
 $host=parse_url($link)['host'];
-$ua="Mozilla/5.0 (Windows NT 10.0; rv:80.0) Gecko/20100101 Firefox/80.0";
+$firefox = $base_pass."firefox.txt";
+if (file_exists($firefox))
+ $ua=file_get_contents($firefox);
+else
+ $ua="Mozilla/5.0 (Windows NT 10.0; rv:80.0) Gecko/20100101 Firefox/80.0";
+
   $ch = curl_init($link);
   curl_setopt($ch, CURLOPT_USERAGENT, $ua);
   curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER  ,1);  // RETURN THE CONTENTS OF THE CALL
   curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
   curl_setopt($ch, CURLOPT_ENCODING,"");
+  curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie);
+  //curl_setopt($ch, CURLOPT_HTTPHEADER,$head);
   curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
   curl_setopt($ch, CURLOPT_TIMEOUT, 15);
   $html = curl_exec($ch);
   curl_close ($ch);
+  $out="";
+  $t1=explode("= [",$html);
+  $t2=explode("]",$t1[1]);
+  $e="\$c=array(".$t2[0].");";
+  eval ($e);
+  //print_r ($c);
+  $t1=explode("parseInt(value) -",$html);
+  $t2=explode(")",$t1[1]);
+  $d=$t2[0];
+  for ($k=0;$k<count($c);$k++) {
+   $out .=chr($c[$k]-$d);
+  }
+  //echo $out;
   //echo $html;
   //$t1=explode("data-post='",$html);
   //$t2=explode("'",$t1[1]);
   //$id=$t2[0];
-//preg_match_all("/data\-post\=\'(\d+)\'\s+data\-nume\=\'(\d+)\'/",$html,$m);
+preg_match_all("/data\-post\=\'(\d+)\'\s+data\-nume\=\'(\d+)\'/",$out.$html,$m);
 //print_r ($m);
-preg_match_all("/postid\-(\d+)/",$html,$m);
+//preg_match_all("/postid\-(\d+)/",$html,$m);
 //print_r ($m);
 $l="https://".$host."/wp-admin/admin-ajax.php";
 $ch = curl_init($l);
 $source=array();
 for ($k=0;$k<count($m[1]);$k++) {
 $id=$m[1][$k];
-//$nume=$m[2][$k];
-$nume="1";
+$nume=$m[2][$k];
+//$nume="2";
 $post="action=doo_player_ajax&post=".$id."&nume=".$nume."&type=movie";
 $head=array('Accept: */*',
 'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
@@ -208,6 +230,7 @@ $head=array('Accept: */*',
   curl_setopt($ch, CURLOPT_POST, 1);
   curl_setopt($ch, CURLOPT_POSTFIELDS, $post);
   curl_setopt($ch, CURLOPT_ENCODING,"");
+  curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie);
   //curl_setopt($ch, CURLOPT_HEADER,1);
   curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
   curl_setopt($ch, CURLOPT_TIMEOUT, 15);
@@ -281,10 +304,17 @@ $head=array('Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image
   for ($k=0;$k<count($c);$k++) {
    $out .=chr($c[$k]-$d);
   }
-  //echo $out;
-  $t1=explode('redirect").attr("href","',$out);
+  $t1=explode('redirect").attr("href","',$out.$h);
   $t2=explode('"',$t1[2]);
   $l=$t2[0];
+  //echo $l;
+  /*
+  if (!$out) {
+  $t1=explode('redirect").attr("href","',$h);
+  $t2=explode('"',$t1[2]);
+  $l=$t2[0];
+  }
+  */
   if (!$l) {
   $t1=explode("window.location.replace('",$h);
   $t2=explode("'",$t1[1]);
@@ -301,7 +331,7 @@ $head=array('Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image
   $t2=explode('"',$t1[1]);
   $l=$t2[0];
   }
-  $r[]=$l;
+  if (!preg_match("/mega\.nz/",$l)) $r[]=$l;
 }
 curl_close ($ch);
   //echo $l;

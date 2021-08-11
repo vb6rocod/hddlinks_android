@@ -59,13 +59,6 @@ else
 <TR>
 <TD width="25%"><a href="filme/filmeseriale_filme.php?page=1&tip=release&title=filmeseriale&link=" target="_blank">filmeseriale.online</a></TD>
 <TD width="25%"><a href="filme/filmeonline2016_main.php" target="_blank">filmeonline2016</a></TD>
-<TD width="25%"><a href="filme/filme-seriale_f.php?page=1&tip=release&title=filme-seriale&link=" target="_blank">filme-seriale</a></TD>
-<TD width="25%"><a href="filme/dozaanimata_f.php?page=1&tip=release&title=dozaanimata&link=" target="_blank">dozaanimata</a></TD>
-</TR>
-
-<TR>
-<TD width="25%"></TD>
-<TD width="25%"><a href="filme/filmele-online.php?page=1&tip=release&title=filmele-online&link=" target="_blank">filmele-online</a></TD>
 <TD width="25%"><a href="filme/serialeonline_f.php?page=1&tip=release&title=serialeonline&link=" target="_blank">serialeonline</a></TD>
 <TD width="25%"><a href="filme/portalultautv_main.php" target="_blank">portalultautv</a></TD>
 </TR>
@@ -117,7 +110,7 @@ else
 <TD width="25%"><a href="filme/uniquestream_f.php?page=1&tip=release&title=uniquestream&link=" target="_blank">uniquestream</a></TD>
 <TD width="25%"><a href="filme/hdm_f.php?page=0&tip=release&title=hdm&link=" target="_blank">hdm</a></TD>
 <TD width="25%"><a href="filme/fsharetv.php?page=1&tip=release&title=fsharetv&link=" target="_blank">fsharetv</a></TD>
-<TD width="25%"><a href="filme/videospider.php?page=1&tip=release&title=videospider&link=" target="_blank">videospider</a></TD>
+<TD width="25%"></TD>
 </TR>
 
 <TR>
@@ -152,8 +145,8 @@ else
 <TR>
 <TD width="25%"><a href="filme/c1ne_f.php?page=1&tip=release&title=c1ne&link=" target="_blank">c1ne</a></TD>
 <TD width="25%"><a href="filme/sockshare_f.php?page=1&tip=release&title=sockshare&link=" target="_blank">sockshare</a></TD>
-<TD width="25%"><a href="filme/kumfimovies_f.php?page=1&tip=release&title=kumfimovies&link=" target="_blank">kumfimovies</a></TD>
 <TD width="25%"><a href="filme/coronamovies_f.php?page=1&tip=release&title=coronamovies&link=" target="_blank">coronamovies</a></TD>
+<TD width="25%"><a href="filme/vexmovies_f.php?page=1&tip=release&title=vexmovies&link=" target="_blank">vexmovies</a></TD>
 </TR>
 
 <TR>

@@ -76,8 +76,8 @@ $filelink="https://www.facebook.com/watch/live/?v=".$m[2]."&ref=watch_permalink"
       curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
       curl_setopt($ch, CURLOPT_USERAGENT, $ua);
       curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-      curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
-      curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+      curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
+      curl_setopt($ch, CURLOPT_TIMEOUT, 25);
       $h1 = curl_exec($ch);
       curl_close($ch);
       $h1=str_replace("&amp;","&",$h1);
@@ -314,6 +314,48 @@ if (strpos($link,"jurnaltv.md/JurnalTV") !== false) {
     $link=str_between($h,'source src="','"');
 }
 ///////////////////////////////////////////////
+if ($from=="ustvgo") {
+  $ua="Mozilla/5.0 (Windows NT 10.0; rv:89.0) Gecko/20100101 Firefox/89.0";
+  $ch = curl_init();
+  curl_setopt($ch, CURLOPT_URL, $link);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
+  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 25);
+  $html = curl_exec($ch);
+  curl_close($ch);
+  $link="";
+  if (preg_match("/clappr\.php\?stream\=/",$html)) {
+   $t1=explode("/clappr.php?stream=",$html);
+   $t2=explode("'",$t1[1]);
+   $post="stream=".$t2[0];
+   $l="https://ustvgo.tv/data.php";
+   $head= array('Accept: */*',
+   'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
+   'Accept-Encoding: deflate',
+   'Content-Type: application/x-www-form-urlencoded; charset=UTF-8',
+   'X-Requested-With: XMLHttpRequest',
+   'Content-Length: '.strlen($post),
+   'Origin: https://ustvgo.tv',
+   'Connection: keep-alive',
+   'Referer: https://ustvgo.tv/clappr.php?stream=ACCN');
+  $ch = curl_init();
+  curl_setopt($ch, CURLOPT_URL, $l);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
+  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+  curl_setopt($ch, CURLOPT_POST,1);
+  curl_setopt($ch, CURLOPT_POSTFIELDS,$post);
+  curl_setopt($ch, CURLOPT_HTTPHEADER, $head);
+  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 25);
+  $link = curl_exec($ch);
+  curl_close($ch);
+  }
+}
 if ($from=="stream4free") {
  $ua="Mozilla/5.0 (Windows NT 10.0; rv:87.0) Gecko/20100101 Firefox/87.0";
  $head=array('Cookie: 1f3372654d375ef621c5014fed5588ff=74cc38feeba3ca1a1f8f1a7b1ebc2a95');
@@ -1595,7 +1637,7 @@ if (preg_match("/android|ipad/i",$user_agent) && preg_match("/chrome|firefox|mob
 }
 $out=$link;
 //$flash="flash";
-
+//$out="http://127.0.0.1:8080/scripts/filme/lava.m3u8|Referer=https%3A%2F%2Ftr.vidlink.org&Origin=https%3A%2F%2Ftr.vidlink.org";
 if ($from=="arconaitv1") {
 header('Accept: */*');
 header('X-CustomHeader: videojs');

@@ -131,6 +131,7 @@ foreach($arr as $key => $value) {
     $image=str_replace("content/uploads/","",$image);
     $image=str_replace(parse_url($host)['host'],"zeroneplus.stream",$image);
     $image=str_replace("onionplay.co","zeroneplus.stream",$image);
+    $image=str_replace("onionplay.is","zeroneplus.stream",$image);
   $rest = substr($title, -6);
   if (preg_match("/\((\d{4})\)/",$rest,$m)) {
    $year=$m[1];

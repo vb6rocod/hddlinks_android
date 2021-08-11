@@ -90,7 +90,7 @@ $(document).on('keyup', '.imdb', isValid);
 <TD width="25%"><a href="tv/ustream_main.php" target="_blank">ustream</TD>
 <TD width="25%"><a href="tv/iptv.php" target="_blank">IPTV International</a></TD>
 <TD width="25%"><a href="tv/stream4free.php" target="_blank">stream4free</TD>
-<TD width="25%"></TD>
+<TD width="25%"><a href="tv/ustvgo.php" target="_blank">ustvgo</TD>
 </TR>
 <?php
 include ("common.php");

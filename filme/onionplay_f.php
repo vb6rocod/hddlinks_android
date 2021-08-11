@@ -19,6 +19,8 @@ $has_add="yes";
 $has_fs="yes";
 $ref="https://ww1.onionplay.to";
 $ref="https://onionplay.is";
+$ref="https://onionplay.uk";
+//$ref="https://onionplay.club";
 $host=parse_url($ref)['host'];
 $fav_target="onionplay_f_fav.php?host=".$ref;
 $add_target="onionplay_f_add.php";
@@ -196,17 +198,23 @@ if (file_exists($firefox))
  $ua=file_get_contents($firefox);
 else
  $ua="Mozilla/5.0 (Windows NT 10.0; rv:80.0) Gecko/20100101 Firefox/80.0";
-if (file_exists("/storage/emulated/0/Download/cookies.txt"))
- $cookie="/storage/emulated/0/Download/cookies.txt";
-elseif (file_exists($base_cookie."cookies.txt"))
- $cookie = $base_cookie."cookies.txt";
-else
- $cookie="";
+$cookie=$base_cookie."onionplay.txt";
+ if (file_exists("/storage/emulated/0/Download/cookies.txt")) {
+  $h1=file_get_contents("/storage/emulated/0/Download/cookies.txt");
+  file_put_contents($cookie,$h1);
+  unlink ("/storage/emulated/0/Download/cookies.txt");
+ } elseif (file_exists($base_cookie."cookies.txt")) {
+  $h1=file_get_contents($base_cookie."cookies.txt");
+  file_put_contents($cookie,$h1);
+  unlink ($base_cookie."cookies.txt");
+ }
 $cc="";
 if (file_exists($cookie)) {
 $x=file_get_contents($cookie);
+//file_put_contents($base_cookie."onionplay.txt",$x);
+$y=preg_quote($host,"/");
 //unlink ($cookie);
-if (preg_match("/onionplay\.is	\w+	\/	\w+	\d+	cf_clearance	([\w|\-]+)/",$x,$m))
+if (preg_match("/".$y."	\w+	\/	\w+	\d+	cf_clearance	([\w|\-]+)/",$x,$m))
  $cc=trim($m[1]);
 else
  $cc="";
@@ -218,8 +226,8 @@ $head=array('Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image
 'Accept-Encoding: deflate',
 'Connection: keep-alive',
 'Cookie: cf_clearance='.$cc,
-'Referer: https://onionplay.to/');
-
+'Referer: '.$ref);
+//print_r ($head);
   $ch = curl_init($l);
   curl_setopt($ch, CURLOPT_USERAGENT, $ua);
   curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
@@ -244,7 +252,7 @@ $opts = array(
               "Accept-Encoding: deflate\r\n" .
               "Connection: keep-alive\r\n" .
               "Cookie: cf_clearance=".$cc."\r\n".
-              "Referer: https://onionplay.to"."\r\n"
+              "Referer: ".$ref."\r\n"
   )
 );
 $context = stream_context_create($opts);
@@ -254,7 +262,7 @@ $head=array('Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image
 'Accept-Encoding: deflate',
 'Connection: keep-alive',
 'Cookie: cf_clearance='.$cc,
-'Referer: https://onionplay.to/');
+'Referer: '.$ref);
 
   $ch = curl_init($l);
   curl_setopt($ch, CURLOPT_USERAGENT, $ua);
@@ -283,6 +291,7 @@ if ($tip=="release") {
    $t1=explode('href="',$video);
    $t2=explode('"',$t1[1]);
    $link=$t2[0];
+   if (strpos($link,"http") === false) $link="https://".$host.$link;
    $t3 = explode('>', $t1[2]);
    $t4 = explode('<', $t3[1]);
    $title = trim($t4[0]);
@@ -298,7 +307,7 @@ if ($tip=="release") {
    $year="";
    $title=$title;
   }
-   if (strpos($link,"/movie") !== false && !preg_match("/featured/",$link1)) $r[]=array($link,$title,$image,$year);
+   if (!preg_match("/featured/",$link1) && !preg_match("/\/tvshows/",$link)) $r[]=array($link,$title,$image,$year);
   }
 } else {
   $videos = explode('<article',$html);
@@ -326,7 +335,7 @@ if ($tip=="release") {
    $title=$title;
   }
    if (strpos($image,"http") === false) $image="https://".$host.$image;
-   if (strpos($link,"/movie") !== false) $r[]=array($link,$title,$image,$year);
+   if (!preg_match("/\/tvshows/",$link)) $r[]=array($link,$title,$image,$year);
   }
 }
 for ($k=0; $k<count($r);$k++) {

@@ -318,6 +318,8 @@ function decrypt($data_file, $data_seed) {
     $a71 = Array();
     $a71[0] = 1633837924;
     $a71[1] = 1650680933;
+    //$a71[0] = 0x61626364;
+    //$a71[1] = 0x62636465;
     $a72 = Array();
     $a73 = Array();
     $a74 = Array();

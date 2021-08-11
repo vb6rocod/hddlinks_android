@@ -329,6 +329,7 @@ if (preg_match("/filmeonlinegratis\.org/",$filelink)) {
     $html .='<iframe src="'.base64_decode($t1[0]).'"> ';
   }
 } elseif (strpos($filelink,"desenefaine.") !== false) {
+
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $filelink);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
@@ -341,9 +342,10 @@ if (preg_match("/filmeonlinegratis\.org/",$filelink)) {
   $h = curl_exec($ch);
   curl_close($ch);
   $html = urldecode(str_replace("@","%",$h));
-  $html=str_replace("player.desenefaine.io","hqq.tv",$html);
+  //$html=str_replace("player.desenefaine.io","hqq.tv",$html);
   //echo $html;
-  /*
+
+
   $t1=explode('embed_url: "',$html);
   $t2=explode('"',$t1[1]);
   $l=$t2[0];
@@ -359,9 +361,11 @@ if (preg_match("/filmeonlinegratis\.org/",$filelink)) {
   $h = curl_exec($ch);
   curl_close($ch);
   $html = urldecode(str_replace("@","%",$h));
+  //echo $html;
+  $html=str_replace("player.desenefaine.io","hqq.tv",$html);
   //$html=str_replace("https://desenefaine.ro/embed.php?vid=","https://hqq.tv/embed.php?vid=",$html);
-  $html=str_replace("https://desenedublate.xyz/player/embed_player.php?vid=","https://hqq.tv/player/embed_player.php?vid=",$html);
-  */
+  //$html=str_replace("https://desenedublate.xyz/player/embed_player.php?vid=","https://hqq.tv/player/embed_player.php?vid=",$html);
+
 } elseif (strpos($filelink,"pornhdo.com") !== false || strpos($filelink,"porndbs.com") !== false) {
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $filelink);
@@ -1327,7 +1331,7 @@ $s=$s."|prostream\.to|videobin\.co|upstream\.to|playtvid\.com|jetload\.net|vidfa
 $s=$s."|(video|player)\.filmeserialeonline\.org|streamwire\.|cloudvid\.icu|mstream\.xyz|streamhoe\.online|videyo\.";
 $s=$s."|fastvid\.co|vidload\.net|rovideo\.net\/embed|eplayvid\.com|dood\.|mediashore\.org|uptostream\.com";
 $s=$s."|movcloud\.net|dogestream\.|streamtape\.|jawcloud\.|evoload\.|sendvid\.|easyload\.io|okstream\.";
-$s=$s."|youdbox\.com|filmele-online\.com|playtube\.|ninjastream\.to|userload\.co|goplayer\.online/i";
+$s=$s."|youdbox\.com|filmele-online\.com|playtube\.|ninjastream\.to|userload\.co|goplayer\.online|videovard\./i";
 /////////////////////////////////////////////
 //$x=preg_grep($s,$links);
 //print_r ($x);
