@@ -106,6 +106,14 @@ function changeserver(s,t) {
       document.getElementById("subtitrari").click();
      } else if (charCode == "53") {
       document.getElementById("viz").click();
+     } else if (charCode == "55") {
+      document.getElementById("opensub1").click();
+     } else if (charCode == "56") {
+      document.getElementById("titrari1").click();
+     } else if (charCode == "57") {
+      document.getElementById("subs1").click();
+     } else if (charCode == "48") {
+      document.getElementById("subtitrari1").click();
      }
    }
 document.onkeypress =  zx;
@@ -246,7 +254,9 @@ echo '</table>';
 echo '<br>
 <table border="0px" width="100%">
 <TR>
-<TD><font size="4"><b>Scurtaturi: 1=opensubtitles, 2=titrari, 3=subs, 4=subtitrari, 5=vizioneaza</b></font></TD></TR></TABLE>
+<TD><font size="4"><b>Scurtaturi: 1=opensubtitles, 2=titrari, 3=subs, 4=subtitrari, 5=vizioneaza
+<BR>Scurtaturi: 7=opensubtitles, 8=titrari, 9=subs, 0=subtitrari (cauta imdb id)
+</b></font></TD></TR></TABLE>
 ';
 include("../debug.html");
 echo '

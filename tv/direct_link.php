@@ -694,7 +694,8 @@ if ($from=="protvplus") {
   $head = array('Accept: */*',
    'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
    'Accept-Encoding: deflate',
-   'Origin: http://protvplus.ro'
+   'Referer: https://protvplus.ro',
+   'Origin: https://protvplus.ro'
   );
   //echo $link;
   $ch = curl_init();
@@ -708,6 +709,7 @@ if ($from=="protvplus") {
   curl_setopt($ch, CURLOPT_TIMEOUT, 15);
   $h = curl_exec($ch);
   curl_close($ch);
+  //echo $h;
   $t1=explode("/embed",$h);
   $t2=explode('"',$t1[1]);
   $l="https://media.cms.protvplus.ro/embed".$t2[0];
@@ -722,6 +724,7 @@ if ($from=="protvplus") {
   curl_setopt($ch, CURLOPT_TIMEOUT, 15);
   $h = curl_exec($ch);
   curl_close($ch);
+  //echo $h;
   $h=str_replace("\\","",$h);
   $t1=explode('src":"',$h);
   $t2=explode('"',$t1[1]);

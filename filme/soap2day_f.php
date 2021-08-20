@@ -176,7 +176,8 @@ echo '</TR>'."\r\n";
 $ua = $_SERVER['HTTP_USER_AGENT'];
 //$ua="Mozilla/5.0 (Windows NT 10.0; rv:71.0) Gecko/20100101 Firefox/71.0";
 $cookie=$base_cookie."soap2day.dat";
-$ua=file_get_contents($base_pass."firefox.txt");
+//$ua=file_get_contents($base_pass."firefox.txt");
+$ua="Mozilla/5.0 (Windows NT 10.0; rv:91.0) Gecko/20100101 Firefox/91.0";
 if($tip=="release") {
   if ($page>1)
   $l="https://".$host."/movielist?page=".$page;
@@ -187,8 +188,38 @@ if($tip=="release") {
   $l="https://".$host."/search/keyword/".$search;
 }
 $host=parse_url($l)['host'];
+if ($page==1 && $tip=="release") {
+ $l1="https://soap2day.to/auth";
+$head=array('Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
+'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
+'Accept-Encoding: deflate',
+'Referer: https://soap2day.to/enter.html',
+'Connection: keep-alive',
+'Cookie: sjv=5326',
+'Upgrade-Insecure-Requests: 1');
+  $ch = curl_init($l1);
+  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
+  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER  ,1);  // RETURN THE CONTENTS OF THE CALL
+  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+  curl_setopt($ch, CURLOPT_HTTPHEADER,$head);
+  //curl_setopt($ch, CURLOPT_POST, 1);
+  //curl_setopt($ch, CURLOPT_POSTFIELDS, $post);
+  curl_setopt($ch, CURLOPT_COOKIEJAR, $cookie);
+  //curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie);
+  curl_setopt($ch, CURLOPT_HEADER,1);
+  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+  $h = curl_exec($ch);
+  curl_close ($ch);
+  //echo $h;
+  //$add="soap2day.to	FALSE	/	FALSE	0	sjv	5326";
+  //file_put_contents($cookie,$add,FILE_APPEND);
+  }
 $head=array('Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
-'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2');
+'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
+'Cookie: sjv=5326');
 
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $l);

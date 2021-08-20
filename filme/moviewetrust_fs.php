@@ -179,6 +179,7 @@ $l="https://fsapi.xyz/tv-tmdb/".$link."-".$sez."-".$ep;
   for ($k=0;$k<count($m[1]);$k++) {
    $z[]=base64_decode($m[1][$k]);
    $l=base64_decode($m[1][$k]);
+   //echo $l."\n";
    if (preg_match("/vidnext\.net/",$l)) {
      if ($l[0] =="/") $l="https:".$l;
      $r[]=$l;
@@ -195,6 +196,7 @@ else
   'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
   'Accept-Encoding: deflate',
   'Connection: keep-alive');
+  //echo $l;
   $ch = curl_init($l);
   curl_setopt($ch, CURLOPT_USERAGENT, $ua);
   curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
@@ -331,7 +333,7 @@ else
    }
    curl_close ($ch);
 ///////////////////////////////////////////
-
+//print_r ($r);
 echo '<table border="1" width="100%">';
 echo '<TR><TD class="mp">Alegeti un server: Server curent:<label id="server">'.$s[0].'</label>
 <input type="hidden" id="file" value="'.urlencode($r[0]).'"></td></TR></TABLE>';

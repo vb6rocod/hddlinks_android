@@ -139,7 +139,7 @@ else
 <!--<TD width="25%"><a href="filme/9movies_f.php?page=1&tip=release&title=9movies&link=" target="_blank">9movies</a></TD>-->
 <!--<TD width="25%"><a href="filme/9movies_ff.php" target="_blank">9movies</a></TD>-->
 <TD width="25%"><a href="filme/cl.php?host=https://ww4.9movies.yt&cookie=9movies.dat&target=9movies_f.php&title=9movies" target="_blank">9movies</a></TD>
-<TD width="25%"><a href="filme/soap2day_ff.php" target="_blank">soap2day</a></TD>
+<TD width="25%"><a href="filme/soap2day_f.php?page=1&tip=release&title=soap2day&link=" target="_blank">soap2day</a></TD>
 </TR>
 
 <TR>

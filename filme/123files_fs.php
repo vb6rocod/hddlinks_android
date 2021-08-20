@@ -128,7 +128,7 @@ if ($tip=="movie") {
   $l="https://123files.club/imdb/play/?id=".$link;
   $l="https://play.123files.club/movie.php?imdb=".$link;
   $l="https://player.apimdb.net/e/movie/".$link;
-  $l="https://apimdb.net/e/movie/".$link;
+  //$l="https://apimdb.net/e/movie/".$link;
 } else {
   $l="https://123files.club/imdb/tv/?id=".$link."&s=".$sez."&e=".$ep;
   $l="https://play.123files.club/tv.php?imdb=".$link."&s=".$sez."&e=".$ep;

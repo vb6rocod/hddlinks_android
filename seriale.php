@@ -65,7 +65,7 @@ document.onkeypress =  zx;
 <TD width="25%"><a href="filme/serialeonline.php?page=1&tip=release&title=serialeonline&link=" target="_blank">serialeonline</a></TD>
 <TD width="25%"></TD>
 <TD width="25%"><a href="filme/moviewetrust_s.php?page=1&tip=release&title=moviewetrust&link=" target="_blank">moviewetrust</a></TD>
-<TD width="25%"><a href="filme/soap2day_ss.php" target="_blank">soap2day</a></TD>
+<TD width="25%"><a href="filme/soap2day_s.php?page=1&tip=release&title=soap2day&link=" target="_blank">soap2day</a></TD>
 </TR>
 
 <TR>
