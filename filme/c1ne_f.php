@@ -208,6 +208,7 @@ if($tip=="release") {
   $nonce=$t2[0];
   $post='action=astra_pagination_infinite&page_no='.$page.'&post_type=post&nonce='.$nonce.'&query_vars={"s":"'.$tit.'"}&astra_infinite=astra_pagination_ajax';
   $l=$last_good."/wp-admin/admin-ajax.php";
+  $l="https://c1ne.co/page/".$page."/?s=".$search;
 }
 $host=parse_url($l)['host'];
 $ua="Mozilla/5.0 (Windows NT 10.0; rv:88.0) Gecko/20100101 Firefox/88.0";
@@ -241,9 +242,9 @@ $head=array('Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
   curl_setopt($ch, CURLOPT_USERAGENT, $ua);
   curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
-  curl_setopt($ch, CURLOPT_HTTPHEADER, $head);
-  curl_setopt($ch, CURLOPT_POST,1);
-  curl_setopt($ch, CURLOPT_POSTFIELDS,$post);
+  //curl_setopt($ch, CURLOPT_HTTPHEADER, $head);
+  //curl_setopt($ch, CURLOPT_POST,1);
+  //curl_setopt($ch, CURLOPT_POSTFIELDS,$post);
   curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
   curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
   curl_setopt($ch, CURLOPT_TIMEOUT, 25);
@@ -265,7 +266,7 @@ if ($tip=="release") {
    $t4 = explode('"', $t3[1]);
    $title = $t4[0];
    $title=prep_tit($title);
-   $t1 = explode('src="', $video);
+   $t1 = explode('data-src="', $video);
    $t2 = explode('"', $t1[1]);
    $image = $t2[0];
    $r[]=array($link,$title,$image);
@@ -284,7 +285,7 @@ if ($tip=="release") {
    $t4 = explode('"', $t3[1]);
    $title = $t4[0];
    $title=prep_tit($title);
-   $t1 = explode('src="', $video);
+   $t1 = explode('data-src="', $video);
    $t2 = explode('"', $t1[1]);
    $image = $t2[0];
    if (!preg_match("/season/i",$title)) $r[]=array($link,$title,$image);

@@ -50,6 +50,22 @@ $flash="direct";
 //$link="http://89.136.209.30:1935/liveedge/TVRMOLDOVA.stream/playlist.m3u8";
 //$link=urldecode("https%3A%2F%2Fwww.youtube.com%2Fwatch%3Fv%3Dr_d4ryn9UsA&title=Gaming%20Music%20Radio%20%E2%9A%A1%2024/7%20NCS%20Live%20Stream%20%E2%9A%A1%20Trap,%20Chill,%20Electro,%20Dubstep,%20Future%20Bass,%20EDM");
 //$mod="direct";
+if (strpos($link,"streamwat.ch") !== false) {
+      $ua="Mozilla/5.0 (Windows NT 10.0; rv:81.0) Gecko/20100101 Firefox/81.0";
+      $ch = curl_init();
+      curl_setopt($ch, CURLOPT_URL, $link);
+      curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+      curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+      curl_setopt($ch, CURLOPT_USERAGENT, $ua);
+      curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+      curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
+      curl_setopt($ch, CURLOPT_TIMEOUT, 25);
+      $h = curl_exec($ch);
+      curl_close($ch);
+      $t1=explode('playM3u8("',$h);
+      $t2=explode('"',$t1[1]);
+      $link=$t2[0];
+}
 if (strpos($link,"facebook") !== false) {
 function decode_code1($code){
     return preg_replace_callback(
@@ -544,8 +560,11 @@ if ($from=="ustream") {
   $jsu = new JavaScriptUnpacker();
   $t1=explode("/",$link);
   //echo $link;
-  $id=$t1[4];
-
+  $id=$t1[3];
+  $id=str_replace("-live","",$id);
+  //$id="b446a8b8fdd785ef1ea91aab57e751b2";
+  //$id="40dc1e70446506473d32a7cd81d67d20";
+  //$id="kanal-d-romanesti";
   $l="https://www.ustream.to/stream?id=".$id;
   //$l="https://blog1199.blogspot.com/page.html?id=rtv-romania&url=aHR0cHMlM0ElMkYlMkZ3d3cudXN0cmVhbS50byUyRnN0cmVhbV9vcmlnaW5hbC5waHAlM0Z0b2tlbiUzRGNkYzRkYWQ2ZTc1NGQzNTM0OTM4YThmZjgyMjNjYjkzJTI2aWQlM0RydHYtcm9tYW5pYSUyNg==";
   //echo $l;
@@ -553,9 +572,8 @@ if ($from=="ustream") {
   $head=array('Accept: */*',
   'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
   'Accept-Encoding: deflate',
-  'Origin: https://beef1999.blogspot.com',
   'Connection: keep-alive',
-  'Referer: https://beef1999.blogspot.com');
+  'Referer: '.$link);
   //echo $l;
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $l);
@@ -600,7 +618,7 @@ if ($from=="ustream") {
   // https://hls.ustream.to/Antena-1-Romania.m3u8?token=e5b-52f-f5f-f97-973-5fc-342-f0c-25b-f20-88d-8bd-d6a-113-7d3-62a-6a9-6f8-6c1-09c-039-4
   $link = "https://hls.ustream.to/".$fn."?token=".$token;
   if ($token && $flash <> "flash")
-   $link=$link."|Referer=".urlencode("https://beef1999.blogspot.com")."&Origin=".urlencode("https://beef1999.blogspot.com");
+   $link=$link."|Referer=".urlencode("https://dotmeraz.blogspot.com")."&Origin=".urlencode("https://dotmeraz.blogspot.com");
 }
 if ($from=="b1tv") {
   $ch = curl_init();

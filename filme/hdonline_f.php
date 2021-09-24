@@ -12,18 +12,18 @@ $tit=$_GET["title"];
 $link=$_GET["link"];
 $width="200px";
 $height="278px";
-$last_good="https://www.afdah.info";
+$last_good="https://w10.hdonline.eu";
 $host=parse_url($last_good)['host'];
 /* ==================================================== */
 $has_fav="yes";
-$has_search="no";
+$has_search="yes";
 $has_add="yes";
 $has_fs="yes";
-$fav_target="afdah_f_fav.php?host=".$last_good;
-$add_target="afdah_f_add.php";
+$fav_target="hdonline_f_fav.php?host=".$last_good;
+$add_target="hdonline_f_add.php";
 $add_file="";
-$fs_target="afdah_fs.php";
-$target="afdah_f.php";
+$fs_target="hdonline_fs.php";
+$target="hdonline_f.php";
 /* ==================================================== */
 $base=basename($_SERVER['SCRIPT_FILENAME']);
 $p=$_SERVER['QUERY_STRING'];
@@ -171,15 +171,16 @@ $f=array();
 if ($tip=="search") {
  $search= str_replace(" ","+",$tit);
  if ($page==1)
-  $l=$last_good."/?s=".$search;
+  $l=$last_good."/search-query/".$search."/";
  else
-  $l=$last_good."/page/".$page."/?s=".$search;
+  $l=$last_good."/search-query/".$search."/page/".$page."/";
 } else {
  if ($page==1)
-  $l=$last_good."/category/watch-movies/";
+  $l=$last_good."/movies/";
  else
-  $l=$last_good."/category/watch-movies/page/".$page."/";
+  $l=$last_good."/movies/page/".$page."/";
 }
+
 $ua="Mozilla/5.0 (Windows NT 10.0; rv:86.0) Gecko/20100101 Firefox/86.0";
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $l);
@@ -193,7 +194,7 @@ $ua="Mozilla/5.0 (Windows NT 10.0; rv:86.0) Gecko/20100101 Firefox/86.0";
   curl_close($ch);
 
 $host=parse_url($l)['host'];
-$videos = explode('div class="entry-thumbnails"', $h);
+$videos = explode('<li class="movie-item', $h);
 unset($videos[0]);
 $videos = array_values($videos);
 foreach($videos as $video) {
@@ -203,10 +204,11 @@ foreach($videos as $video) {
  $t1=explode('src="',$video);
  $t2=explode('"',$t1[1]);
  $image=$t2[0];
- $t1=explode('style="color:#000;">',$video);
- $t2=explode('<',$t1[1]);
+ $t1=explode('title="',$video);
+ $t2=explode('"',$t1[1]);
  $title=trim($t2[0]);
-  if ($title) $f[] = array($title,$link,$image);
+ $title=prep_tit($title);
+  if ($title && preg_match("/\/movie\//",$link)) $f[] = array($title,$link,$image);
 }
 //echo $html;
 foreach($f as $key => $value) {

@@ -31,6 +31,8 @@ function str_between($string, $start, $end){
 }
 echo '<h2>'.$tit.'</h2>';
   $l="https://www.imdb.com/title/".$link;
+  //echo $l;
+  //$l="https://www.imdb.com/title/tt8722888/episodes?ref_=tt_eps";
   $ch = curl_init($l);
   curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows; U; Windows NT 6.1; en-US; rv:1.9.1.2) Gecko/20090729 Firefox/3.5.2 GTB5');
   //curl_setopt($ch,CURLOPT_REFERER,$l);
@@ -42,13 +44,21 @@ echo '<h2>'.$tit.'</h2>';
   curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
   $h = curl_exec($ch);
   curl_close ($ch);
-
+//echo $h;
+$sezoane=array();
   //print_r ($s);
-  preg_match_all("/href\=\"(\/title\/".$link."\/episodes\?season\=(\d+))/",$h,$m);
+  if (preg_match_all("/href\=\"(\/title\/".$link."\/episodes\?season\=(\d+))/",$h,$m)) {
   //print_r ($m);
   //die();
-$sezoane=array();
-$sezoane=$m[2];
+  $sezoane=$m[2];
+  } else {
+    $t1=explode('select id="browse-episodes-season',$h);
+    $t2=explode('See all',$t1[1]);
+    if (preg_match_all("/option value\=\"(\d+)\"/",$t2[0],$m)) {
+     $sezoane=$m[1];
+     //print_r ($m);
+    }
+  }
 echo '<table border="1" width="100%">'."\n\r";
 
 $p=0;
@@ -85,7 +95,9 @@ for ($k=count($sezoane)-1;$k>=0;$k--) {
   echo '<TR><td class="sez" style="color:black;background-color:#0a6996;color:#64c8ff;text-align:center" colspan="3">Season '.$season.'</TD></TR>';
   $n=0;
 
-  $l="https://www.imdb.com".$m[1][$k];
+  //$l="https://www.imdb.com".$m[1][$k];
+  $l="https://www.imdb.com/title/".$link."/episodes?season=".$sez;
+  //echo $l;
   curl_setopt($ch, CURLOPT_URL,$l);
   $h = curl_exec($ch);
   $videos=explode('div class="list_item',$h);

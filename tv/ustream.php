@@ -87,7 +87,7 @@ $ua="Mozilla/5.0 (Windows NT 10.0; rv:85.0) Gecko/20100101 Firefox/85.0";
   curl_setopt($ch, CURLOPT_TIMEOUT, 25);
   $html = curl_exec($ch);
   curl_close($ch);
-
+//echo $html;
 $videos = explode('<a class="ch_numz"', $html);
 
 unset($videos[0]);

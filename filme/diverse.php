@@ -57,7 +57,7 @@ $link="peserialehd_main.php";
 echo '<TD style="text-align:center"><font size="4">'.'<a href="'.$link.'" target="_blank">'.$title.'</a></font></TD>';
 
 $title="CINEMATOGRAFIA ROMANEASCA";
-$link="yt_channel.php?token=&id=UCCWc5wm3Tkc_QD7K2WatWXw&kind=channel&title=(channel)+CINEMATOGRAFIA+ROMANEASCA&image=https://yt3.ggpht.com/a/AATXAJynQBFCnYb0qbwYGXKMFwnDYSiH1-izNKHu-5DW=s88-c-k-c0x00ffffff-no-rj";
+$link="yt_channel.php?token=&id=UCOKEwOave88wtWJCPKs2mZA&kind=channel&title=(channel)+CINEMATOGRAFIA+ROMANEASCA&image=https://yt3.ggpht.com/a/AATXAJynQBFCnYb0qbwYGXKMFwnDYSiH1-izNKHu-5DW=s88-c-k-c0x00ffffff-no-rj";
 echo '<TD style="text-align:center"><font size="4">'.'<a href="'.$link.'" target="_blank">'.$title.'</a></font></TD>';
 /*
 $title="(channel) FILME HD Romanesti, Teatru Tv si Filme Straine";
@@ -68,6 +68,14 @@ $title="ronemo";
 $link="ronemo.php?page=1&tip=release&title=ronemo&link=";
 echo '<TD style="text-align:center"><font size="4">'.'<a href="'.$link.'" target="_blank">'.$title.'</a></font></TD>';
 
+echo "</TR>"."\n\r";
+echo "<TR>"."\n\r";
+$title="filme_yt";
+$link="../tv/playlist.php?title=filme_yt&link=https://raw.githubusercontent.com/vb6rocod/hddlinks/master/filme_yt.m3u";
+echo '<TD style="text-align:center"><font size="4">'.'<a href="'.$link.'" target="_blank">'.$title.'</a></font></TD>';
+echo "<TD></TD>";
+echo "<TD></TD>";
+echo "<TD></TD>";
 echo "</TR>"."\n\r";
  echo '</table>';
 ?>

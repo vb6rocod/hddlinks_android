@@ -65,6 +65,7 @@ echo '<TR><td class="sez" style="color:black;background-color:#0a6996;color:#64c
    $epp[$m[1][$k]][]=array($m[3][$k],$m[4][$k]);
   }
   //print_r ($epp);
+  $epp = array_reverse($epp);
 foreach ($epp as $key => $value) {
 
   $out="";
