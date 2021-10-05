@@ -248,14 +248,16 @@ if (preg_match("/afdah\./",$filelink)) {
   $ua="Mozilla/5.0 (Windows NT 10.0; rv:86.0) Gecko/20100101 Firefox/86.0";
   //echo $filelink;
   $host=parse_url($filelink)['host'];
-  $filelink=str_replace($host,"www.afdah.info",$filelink);
+  //$filelink=str_replace($host,"www.afdah.info",$filelink);
   //echo $filelink;
+  $key="6LeLo6IZAAAAAD1sHLlRReThaDfdZvxZ07nS0olp";
   $key="6LeLo6IZAAAAAD1sHLlRReThaDfdZvxZ07nS0olp";
   $key="6LeLo6IZAAAAAD1sHLlRReThaDfdZvxZ07nS0olp";
   $co="aHR0cHM6Ly9hZmRhaC5pbmZvOjQ0Mw..";
   $co="aHR0cHM6Ly93d3cuYWZkYWguaW5mbzo0NDM.";
+  $co="aHR0cHM6Ly9hZmRhaC52aWRlbzo0NDM.";
   $sa="play1";
-  $loc="https://www.afdah.info";
+  $loc="https://afdah.video";
   $token=rec($key,$co,$sa,$loc);
   $post="g-recaptcha-response=".$token;
   //echo $post;
@@ -264,7 +266,7 @@ if (preg_match("/afdah\./",$filelink)) {
   'Accept-Encoding: deflate',
   'Content-Type: application/x-www-form-urlencoded',
   'Content-Length: '.strlen($post),
-  'Origin: https://www.afdah.info',
+  'Origin: https://afdah.video',
   'Connection: keep-alive',
   'Referer: '.$filelink,
   'Upgrade-Insecure-Requests: 1');
@@ -300,16 +302,16 @@ if (preg_match("/afdah\./",$filelink)) {
    if (preg_match("/hlsvideo\s*\=\s*\"([^\"]+)\"/",$kodi,$r))
     $link=$r[1];
    if (preg_match("/\/subtitles\/\d+\.srt/",$kodi,$s))
-    $srt="https://www.afdah.info".$s[0];
+    $srt="https://afdah.video".$s[0];
   }
-  $host="afdah.info";
+  $host="afdah.video";
   if ($host && $flash <> "flash") {
   //echo $link;
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $link);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
   curl_setopt($ch, CURLOPT_USERAGENT, $ua);
-  curl_setopt($ch,CURLOPT_REFERER,"https://afdah.info");
+  curl_setopt($ch,CURLOPT_REFERER,"https://afdah.video");
   curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
   curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
   curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
@@ -1401,6 +1403,7 @@ $filelink=htmlspecialchars_decode($filelink, ENT_QUOTES);
 }
 if (strpos($filelink,"streamlord.com") !== false) {
   //$filelink="http://www.streamlord.com/episode-izombie-s05e11-21102.html";
+  //echo $filelink;
   require_once("JavaScriptUnpacker.php");
   $ua="Mozilla/5.0 (Windows NT 10.0; rv:75.0) Gecko/20100101 Firefox/75.0";
   $ch = curl_init();
@@ -1414,7 +1417,7 @@ if (strpos($filelink,"streamlord.com") !== false) {
   curl_setopt($ch, CURLOPT_TIMEOUT, 25);
   $h = curl_exec($ch);
   curl_close($ch);
-
+  //echo $h;
   if (preg_match('/([http|https][\.\d\w\-\.\/\\\:\?\&\#\%\_\,]*(\.(srt|vtt)))/', $h, $m))
    $srt=$m[1];
   if (preg_match("/eval\(function\(p,a,c,k,e,[r|d]?/",$h)) {
@@ -1423,6 +1426,8 @@ if (strpos($filelink,"streamlord.com") !== false) {
   }
   //echo $h;
   if (preg_match("/(https?\:\/\/stream\d+\.streamlord\.com\:8080.+)\"/",$h,$m))
+   $link=$m[1];
+  if (preg_match("/return\(\"([^\"]+)\"/",$h,$m))
    $link=$m[1];
 }
 if (strpos($filelink,"player.apimdb.net") !== false) {
@@ -11641,9 +11646,10 @@ if ($srt <> "") {
     curl_setopt($ch,CURLOPT_REFERER,$srt);
     curl_setopt($ch, CURLOPT_USERAGENT, $ua);
     curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie);
+    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
     curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
-    curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
-    curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+    curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
+    curl_setopt($ch, CURLOPT_TIMEOUT, 25);
     $h = curl_exec($ch);
     curl_close($ch);
    }

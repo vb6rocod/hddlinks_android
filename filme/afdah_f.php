@@ -13,6 +13,8 @@ $link=$_GET["link"];
 $width="200px";
 $height="278px";
 $last_good="https://www.afdah.info";
+//$last_good="https://afdah.top";
+$last_good="https://afdah.video";
 $host=parse_url($last_good)['host'];
 /* ==================================================== */
 $has_fav="yes";

@@ -163,6 +163,7 @@ $last_good="https://lookmovie.io";
   curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
   curl_setopt($ch, CURLOPT_TIMEOUT, 25);
   curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
+  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
   $h = curl_exec($ch);
   curl_close($ch);
 
@@ -192,6 +193,7 @@ $last_good="https://lookmovie.io";
   curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
   curl_setopt($ch, CURLOPT_TIMEOUT, 25);
   curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
+  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
   $h = curl_exec($ch);
   curl_close($ch);
   //echo $h;
@@ -203,11 +205,12 @@ $last_good="https://lookmovie.io";
   $srt="";
   $sss=$x['data']['subtitles'];
   for ($k=0;$k<count($sss);$k++) {
-   if ($sss[$k]['file'][0] == "/")
+   if ($sss[$k]['file'][0] == "/") {
      $ss= "https://lookmovie.io".$sss[$k]['file'];
-   else
-     $ss=$sss[$k]['file'];
+   //else
+     //$ss=$sss[$k]['file'];
    $srt1[$sss[$k]['language']] = $ss;
+   }
   }
   if (isset($srt1["Romanian"])) {
     $srt=$srt1["Romanian"];
@@ -230,6 +233,7 @@ $last_good="https://lookmovie.io";
   curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
   curl_setopt($ch, CURLOPT_TIMEOUT, 25);
   curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
+  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
   $h = curl_exec($ch);
   curl_close($ch);
   if (!$slug) {
@@ -286,6 +290,7 @@ else
 
 $s=array();
   $l="https://lookmovie.io/api/v1/shows/episode-subtitles/?id_episode=".$id;
+  $l="https://lookmovie.io/api/v1/security/episode-subtitles/?id_episode=".$id;
   //$l="https://lookmovie.io/api/v1/shows/episode-subtitles/?id_episode=119775";
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $l);
@@ -296,6 +301,7 @@ $s=array();
   curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
   curl_setopt($ch, CURLOPT_TIMEOUT, 25);
   curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
+  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
   $h = curl_exec($ch);
   curl_close($ch);
   $s=json_decode($h,1);
@@ -304,12 +310,13 @@ $s=array();
   // shows/8134470-the-undoing-2020/9676-S1-E1-1610132346/subtitles/
   $srt1=array();
   $srt="";
-  for ($k=0;$k<count($s);$k++) {
-   if ($s[$k]['file'][0] == "/")
-     $ss= "https://lookmovie.io".$s[$k]['file'];
-   else
-     $ss=$s[$k]['file'];
-   $srt1[$s[$k]['language']] = $ss;
+  for ($k=0;$k<count($s['subtitles']);$k++) {
+   if ($s['subtitles'][$k]['file'][0] == "/") {
+     $ss= "https://lookmovie.io".$s['subtitles'][$k]['file'];
+   //else
+     //$ss=$s['subtitles'][$k]['file'];
+   $srt1[$s['subtitles'][$k]['language']] = $ss;
+   }
   }
   /*
   for ($k=0;$k<count($s);$k++) {
@@ -339,6 +346,7 @@ $s=array();
   curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
   curl_setopt($ch, CURLOPT_TIMEOUT, 25);
   curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
+  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
   $h = curl_exec($ch);
   curl_close($ch);
   $x=json_decode($h,1);
@@ -356,6 +364,7 @@ $s=array();
   curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
   curl_setopt($ch, CURLOPT_TIMEOUT, 25);
   curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
+  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
   $h = curl_exec($ch);
   curl_close($ch);
 //echo $h;
