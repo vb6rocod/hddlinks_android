@@ -35,7 +35,7 @@ if (file_exists($base_pass."firefox.txt"))
  $ua=file_get_contents($base_pass."firefox.txt");
 else
  $ua="Mozilla/5.0 (Windows NT 10.0; rv:75.0) Gecko/20100101 Firefox/75.0";
-
+//echo $link;
 //print_r ($head);
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $link);
@@ -60,11 +60,26 @@ function removeBOM($data) {
 $t1=explode("window.seasons='",$h);
 $t2=explode("';",$t1[1]);
 $z=str_replace('\\\\\\"',"'",trim($t2[0]));
-//echo $z;
+$t1=explode("seasons:",$h);
+$t2=explode("};",$t1[1]);
+$z=str_replace('\\\\\\"',"'",trim($t2[0]));
+
 //die();
 $z=str_replace("\\","", $z);
-$p=json_decode($z,1);
+$z=str_replace("\n","",$z);
+//echo $z;
+preg_match_all("/title\:\s+\'(.*?)\'\,\s+index\:\s+\'(.*?)\'\,\s+episode\:\s+\'(.*?)\'\,\s+id\_episode\:\s+\'?(.*?)\'?\,\s+season\:\s+\'(.*?)\'/si",$z,$m);
+//print_r ($m);
 $r=array();
+for ($k=0;$k<count($m[5]);$k++) {
+ $r[$m[5][$k]][$m[3][$k]]=array($m[1][$k],$m[3][$k],$m[4][$k],$m[5][$k]);
+}
+//print_r ($r);
+//echo $z;
+//die();
+//$p=json_decode($z,1);
+//print_r ($p);
+
 //for ($k=0;$k<count($p);$k++) {
 foreach ($p as $pp) {
  //for ($i=1;$i<count($p[$k]['episodes']);$i++) {
@@ -72,6 +87,7 @@ foreach ($p as $pp) {
   $r[$pp['meta']['season']][] = array($ee['title'],$ee['episode_number'],$ee['id_episode'],$ee['still_path']);
  }
 }
+//print_r ($r);
 // https://false-promise.lookmovie.ag/api/v1/storage/shows/?slug=10380768-love-life-2020&token=
 // https://lookmovie.ag/manifests/shows/4UNbOWGB--phpVD_Mri7ug/1591460238/96045/master.m3u8
 // https://lookmovie.ag/storage2/1591455930289/shows/10380768-love-life-2020/9171-S1-E3-1590996329/subtitles/en.vtt

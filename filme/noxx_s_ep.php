@@ -102,7 +102,9 @@ foreach($videos as $video) {
   $t2=explode('"',$vid);
   $link="https://noxx.is/tv".$t2[0];
 
-  $title="";;
+  $title="";
+  if (preg_match("/Episode\s*\d+\s*(.*?)\</i",$vid,$m))
+    $title=$m[1];
   $img_ep=$image;
   $episod = substr(strrchr($link, "/"), 1);
   $ep_tit=$title;

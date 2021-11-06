@@ -223,6 +223,7 @@ $host=parse_url($l)['host'];
   curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
   curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
   curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
   $html = curl_exec($ch);
   curl_close($ch);
 //echo $html;
@@ -239,7 +240,7 @@ foreach($videos as $video) {
   $t4=explode('"',$t3[1]);
   $title = trim(strip_tags($t4[0]));
   $title = prep_tit($title);
-  $t1 = explode('src="', $video);
+  $t1 = explode('data-src="', $video);
   $t2 = explode('"', $t1[1]);
   $image = $t2[0];
   if (strpos($image,"http") === false) $image="https:".$image;

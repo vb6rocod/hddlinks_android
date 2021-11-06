@@ -222,10 +222,11 @@ $host=parse_url($l)['host'];
   curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
   curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
   curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
   $html = curl_exec($ch);
   curl_close($ch);
   
-
+//echo $html;
 $r=array();
 $videos=explode('id=post-',$html);
 unset($videos[0]);
@@ -240,8 +241,8 @@ foreach($videos as $video) {
   $title = trim(strip_tags($t2[0]));
   $title = prep_tit($title);
   $t1 = explode('src=', $video);
-  $t2 = explode('.jpg', $t1[1]);
-  $image = $t2[0].".jpg";
+  $t2 = explode('.jpeg', $t1[1]);
+  $image = $t2[0].".jpeg";
   if (strpos($image,"http") === false) $image="https:".$image;
   $durata="";
   $durata = preg_replace("/\n|\r/"," ",strip_tags($durata));

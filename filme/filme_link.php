@@ -144,6 +144,49 @@ if (preg_match("/filmeonlinegratis\.org/",$filelink)) {
   curl_close($ch);
   $html = urldecode(str_replace("@","%",$html));
 //} elseif (strpos($filelink,"fsgratis.") !== false) {
+} elseif (preg_match("/classicmovieshd/",$filelink)) {
+  // https://www.classicmovieshd.com/ajax/embed
+  $ua="Mozilla/5.0 (Windows NT 10.0; rv:82.0) Gecko/20100101 Firefox/82.0";
+  $ch = curl_init();
+  curl_setopt($ch, CURLOPT_URL, $filelink);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
+  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+  $html = curl_exec($ch);
+  curl_close($ch);
+  preg_match_all("/data\-embed\=\"(\d+)/",$html,$m);
+  //print_r ($m);
+  $html="";
+  $l="https://www.classicmovieshd.com/ajax/embed";
+  $ch = curl_init();
+  curl_setopt($ch, CURLOPT_URL, $l);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
+  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 25);
+  curl_setopt($ch, CURLOPT_POST,1);
+  for ($k=0;$k<count($m[1]);$k++) {
+   $post="id=".$m[1][$k];
+  $head=array('Accept: */*',
+  'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
+  'Accept-Encoding: deflate',
+  'Content-Type: application/x-www-form-urlencoded; charset=UTF-8',
+  'X-Requested-With: XMLHttpRequest',
+  'Content-Length: '.strlen($post).'',
+  'Origin: https://www.classicmovieshd.com',
+  'Connection: keep-alive',
+  'Referer: https://www.classicmovieshd.com');
+  curl_setopt($ch, CURLOPT_HTTPHEADER,$head);
+  curl_setopt($ch, CURLOPT_POSTFIELDS,$post);
+  $html .='<iframe src="'.curl_exec($ch).'">';
+  }
+  curl_close($ch);
+  //echo $html;
 } elseif (preg_match("/fsonline\.to/",$filelink)) {
   $ua="Mozilla/5.0 (Windows NT 10.0; rv:82.0) Gecko/20100101 Firefox/82.0";
   if (preg_match("/id\=/",$filelink)) {
@@ -518,10 +561,11 @@ if (preg_match("/filmeonlinegratis\.org/",$filelink)) {
   $html .=$h;
   //echo $html;
 } elseif (strpos($filelink,"veziseriale.online") !== false || strpos($filelink,"veziserialeonline.") !== false) {
+  //preg_match("/veziserialeonline.net|
   $headers = array('Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
    'Accept-Encoding: deflate',
    'Accept-Language: en-US,en;q=0.5',
-   'Cookie: CAPTCHA=1; _popfired=2'
+   'Cookie: recaptcha_validate=1; _popfired=2'
   );
   $ch = curl_init($filelink);
   curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 10.0; rv:62.0) Gecko/20100101 Firefox/62.0');
@@ -531,6 +575,7 @@ if (preg_match("/filmeonlinegratis\.org/",$filelink)) {
   curl_setopt($ch, CURLOPT_RETURNTRANSFER  ,1);  // RETURN THE CONTENTS OF THE CALL
   //curl_setopt($ch, CURLOPT_COOKIEJAR, $cookie);
   //curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie);
+  curl_setopt($ch, CURLOPT_ENCODING,"");
   curl_setopt($ch, CURLOPT_HEADER, true);
   curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
   curl_setopt($ch, CURLOPT_TIMEOUT, 15);

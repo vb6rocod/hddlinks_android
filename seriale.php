@@ -106,9 +106,9 @@ document.onkeypress =  zx;
 <TD width="25%"><a href="filme/sockshare_s.php?page=1&tip=release&title=sockshare&link=" target="_blank">sockshare</a></TD>
 </TR>
 <TR>
-<!--<TD width="25%"><a href="filme/9movies_s.php?page=1&tip=release&title=9movies&link=" target="_blank">9movies</a></TD>-->
+<TD width="25%"><a href="filme/9movies_s.php?page=1&tip=release&title=9movies&link=" target="_blank">9movies</a></TD>
 <!--<TD width="25%"><a href="filme/9movies_ss.php" target="_blank">9movies</a></TD>-->
-<TD width="25%"><a href="filme/cl.php?host=https://ww3.9movies.yt&cookie=9movies.dat&target=9movies_s.php&title=9movies" target="_blank">9movies</a></TD>
+<!--<TD width="25%"><a href="filme/cl.php?host=https://ww3.9movies.yt&cookie=9movies.dat&target=9movies_s.php&title=9movies" target="_blank">9movies</a></TD>-->
 <TD width="25%"><a href="filme/topmoviesonline_s.php?page=1&tip=release&title=topmoviesonline&link=" target="_blank">topmoviesonline</a></TD>
 <TD width="25%"><a href="filme/streamlord_s.php?page=1&tip=release&title=streamlord&link=" target="_blank">streamlord</a></TD>
 <TD width="25%"><a href="filme/goojara_s.php?page=1&tip=release&title=goojara&link=" target="_blank">goojara</a></TD>

@@ -96,8 +96,11 @@ foreach($videos as $video) {
   $t2=explode('<',$t1[1]);
   if (preg_match("/\d+/",trim($t2[0]),$m))
    $episod=$m[0];
-  $t1=explode("seriesModal', '",$vid);
-  $t2=explode("'",$t1[1]);
+  //$t1=explode("seriesModal', '",$vid);
+  //$t2=explode("'",$t1[1]);
+  $link="https://".$host.$t2[0];
+  $t1=explode('data-href="',$vid);
+  $t2=explode('"',$t1[1]);
   $link="https://".$host.$t2[0];
   $t3=explode('>',$t1[1]);
   $t4=explode('<',$t3[1]);

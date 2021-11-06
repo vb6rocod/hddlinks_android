@@ -250,6 +250,20 @@ foreach($videos as $video) {
   if ($durata) $title=$title." (".$durata.')';
   if ($title && strpos($link,"out.php") === false) array_push($r ,array($title,$link, $image));
 }
+/*
+$l=$r[3][1];
+  $ch = curl_init();
+  curl_setopt($ch, CURLOPT_URL, $l);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+  curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 10.0; rv:55.0) Gecko/20100101 Firefox/55.0');
+  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 25);
+  $h = curl_exec($ch);
+  curl_close($ch);
+  echo $h;
+  */
 $c=count($r);
 for ($k=0;$k<$c;$k++) {
   $title=$r[$k][0];

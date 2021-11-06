@@ -17,7 +17,7 @@ $has_fav="yes";
 $has_search="yes";
 $has_add="yes";
 $has_fs="yes";
-$last_good="https://yifytv.top";
+$last_good="https://yify.plus";
 $host=parse_url($last_good)['host'];
 $fav_target="yifytv_s_fav.php?host=".$last_good;
 $add_target="yifytv_s_add.php";
@@ -176,9 +176,9 @@ if ($tip=="search") {
   $l=$last_good."/page/".$page."/?s=".$search;
 } else {
  if ($page==1)
-  $l=$last_good."/series/";
+  $l=$last_good."/tvseries/";
  else
-  $l=$last_good."/series/page/".$page."/";
+  $l=$last_good."/tvseries/page/".$page."/";
 }
 $ua="Mozilla/5.0 (Windows NT 10.0; rv:75.0) Gecko/20100101 Firefox/75.0";
   $ch = curl_init();
@@ -209,7 +209,7 @@ foreach($videos as $video) {
  $t1=explode('alt="',$video);
  $t2=explode('"',$t1[1]);
  $title=trim($t2[0]);
-  if (!preg_match("/featured/",$fel) && preg_match("/\/series\//",$link)) $f[] = array($title,$link,$image);
+  if (!preg_match("/featured/",$fel) && preg_match("/\/tvseries\//",$link)) $f[] = array($title,$link,$image);
 }
 } else {
 $videos = explode('<article', $h);
@@ -225,7 +225,7 @@ foreach($videos as $video) {
  $t1=explode('alt="',$video);
  $t2=explode('"',$t1[1]);
  $title=trim($t2[0]);
-  if (preg_match("/\/series\//",$link)) $f[] = array($title,$link,$image);
+  if (preg_match("/\/tvseries\//",$link)) $f[] = array($title,$link,$image);
 }
 }
 foreach($f as $key => $value) {

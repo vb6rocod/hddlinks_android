@@ -15,10 +15,11 @@ $width="200px";
 $height="278px";
 /* ==================================================== */
 $has_fav="yes";
-$has_search="no";
+$has_search="yes";
 $has_add="yes";
 $has_fs="yes";
-$fav_target="veziseriale_s_fav.php?host=http://www.veziserialeonline.info";
+$last_good="https://www.veziserialeonline.net";
+$fav_target="veziseriale_s_fav.php?host=".$last_good;
 $add_target="veziseriale_s_add.php";
 $add_file="";
 $fs_target="veziseriale_s_ep.php";
@@ -168,7 +169,21 @@ if ($page==1) {
 echo '</TR></TABLE>'."\r\n";
 $l = "http://www.veziseriale.online/tv-shows";
 $l="http://www.veziserialeonline.info/tv-shows";
+$l="https://www.veziserialeonline.net/tv-shows";
 $r=array();
+if($tip=="release") {
+  if ($page==1)
+   $l=$last_good."/tv-shows";
+  else
+   $l=$last_good."/tv-shows/".$page;
+} else {
+  $search=str_replace(" ","+",$tit);
+  $l=$last_good."/search/result/".$search;
+}
+// https://www.veziserialeonline.net/search/result/star
+$host=parse_url($l)['host'];
+
+$ua="Mozilla/5.0 (Windows NT 10.0; rv:80.0) Gecko/20100101 Firefox/80.0";
 $ua = $_SERVER['HTTP_USER_AGENT'];
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $l);
@@ -181,15 +196,18 @@ $ua = $_SERVER['HTTP_USER_AGENT'];
   curl_setopt($ch, CURLOPT_TIMEOUT, 15);
   $html = curl_exec($ch);
   curl_close($ch);
-  $videos = explode('<li class="post-', $html);
+  $t1=explode('<ul class="serie_list',$html);
+  $t2=explode('</ul',$t1[1]);
+  $html=$t2[0];
+  $videos = explode('<li', $html);
   unset($videos[0]);
   $videos = array_values($videos);
   foreach($videos as $video) {
     $t1=explode('href="',$video);
     $t2=explode('"',$t1[1]);
     $link=$t2[0];
-    $t1 = explode('title="', $video);
-    $t2 = explode('"', $t1[1]);
+    $t3 = explode('>', $t1[2]);
+    $t2 = explode('<', $t3[1]);
     $title=trim($t2[0]);
     $t1=explode('src="',$video);
     $t2=explode('"',$t1[1]);
@@ -198,6 +216,7 @@ $ua = $_SERVER['HTTP_USER_AGENT'];
   }
 $c=count($r);
 $p=0;
+/*
 $k=intval($c/15) + 1;
 echo '<table border="1px" width="100%"><tr>'."\n\r";
 for ($m=1;$m<$k;$m++) {
@@ -209,7 +228,7 @@ for ($m=1;$m<$k;$m++) {
    }
 }
 echo '</TR></table>';
-
+*/
 echo '<table border="1px" width="100%">'."\n\r";
 for ($k=0;$k<$c;$k++) {
   $title=$r[$k][0];

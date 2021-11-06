@@ -12,7 +12,7 @@ $tit=$_GET["title"];
 $link=$_GET["link"];
 $width="200px";
 $height="278px";
-$last_good="http://www.classicmovieshd.com";
+$last_good="https://www.classicmovieshd.com";
 $host=parse_url($last_good)['host'];
 /* ==================================================== */
 $has_fav="no";
@@ -169,17 +169,18 @@ if ($page==1) {
 echo '</TR>'."\r\n";
 // http://www.classicmovies.ro/load/?page2
 // http://www.classicmovies.ro/search/?q=star;t=0;p=2;md=
+// https://www.classicmovieshd.com/movies?filter=null&page=2
 if($tip=="release") {
  if ($page>1)
-  $l ="http://".$host."/load/?page".$page."";
+  $l ="http://".$host."/movies?filter=null&page=".$page."";
  else
-  $l="http://".$host."/load/";
+  $l="http://".$host."/movies";
 } else {
   $search=str_replace(" ","+",$tit);
-  if ($page > 1)
-    $l="http://".$host."/search/?q=".$search;
-  else
-    $l="http://".$host."/search/?q=".$search.";t=0;p=".$page.";md=";
+  //if ($page > 1)
+    $l="https://".$host."/search/".$search;
+  //else
+  //  $l="https://".$host."/search/?q=".$search.";t=0;p=".$page.";md=";
 }
 $r=array();
 $ua = $_SERVER['HTTP_USER_AGENT'];
@@ -195,8 +196,9 @@ $ua = $_SERVER['HTTP_USER_AGENT'];
   $html = curl_exec($ch);
   curl_close($ch);
   //echo $html;
-  if ($tip=="release") {
-  $videos = explode('class="ml-item', $html);
+  //if ($tip=="release") {
+
+  $videos = explode('div class="list-movie', $html);
   unset($videos[0]);
   $videos = array_values($videos);
   foreach($videos as $video) {
@@ -206,15 +208,16 @@ $ua = $_SERVER['HTTP_USER_AGENT'];
       $link="http://".$host.$t2[0];
     else
       $link=$t2[0];
-    $t1=explode('class="qtip-title">',$video);
+    $t1=explode('class="list-title">',$video);
     $t2=explode('</div',$t1[1]);
     $title=trim($t2[0]);
     $title=strip_tags($title);
-    $t1=explode('data-original="',$video);
+    $t1=explode('data-src="',$video);
     $t2=explode('"',$t1[1]);
-    $image="http://".$host.$t2[0];
-    if (strpos($link,"/film") !== false) array_push($r ,array($title,$link, $image));
+    $image=$t2[0];
+    if (strpos($link,"/movie") !== false) array_push($r ,array($title,$link, $image));
   }
+/*
   } else {
   $videos = explode('class="ml-item', $html);
   unset($videos[0]);
@@ -237,11 +240,13 @@ $ua = $_SERVER['HTTP_USER_AGENT'];
     if (strpos($link,"/film") !== false) array_push($r ,array($title,$link, $image));
   }
   }
+*/
   //print_r ($r);
 $c=count($r);
 for ($k=0;$k<$c;$k++) {
   $title=$r[$k][0];
   $title=str_replace("&#8211;","-",$title);
+  $title=str_replace("  ","",$title);
   //$title=prep_tit($title);
   $link=$r[$k][1];
   $image=$r[$k][2];

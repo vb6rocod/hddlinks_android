@@ -147,9 +147,9 @@ $ua="Mozilla/5.0 (Windows NT 10.0; rv:89.0) Gecko/20100101 Firefox/89.0";
   $t2=explode("'",$t1[1]);
   $id=$t2[0];
   if ($tip=="movie")
-  $r[]="https://yifytv.top?action=doo_player_ajax&post=".$id."&nume=1&type=movie";
+  $r[]="https://yify.plus?action=doo_player_ajax&post=".$id."&nume=1&type=movie";
   else
-  $r[]="https://yifytv.top?action=doo_player_ajax&post=".$id."&nume=1&type=tv";
+  $r[]="https://yify.plus?action=doo_player_ajax&post=".$id."&nume=1&type=tv";
 echo '<table border="1" width="100%">';
 echo '<TR><TD class="mp">Alegeti un server: Server curent:<label id="server">'.parse_url($r[0])['host'].'</label>
 <input type="hidden" id="file" value="'.urlencode($r[0]).'"></td></TR></TABLE>';

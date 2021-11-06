@@ -30,12 +30,14 @@ function splice($a,$b) {
 	return  array_slice($a,$b);
 }
 $ua="Mozilla/5.0 (Windows NT 10.0; rv:82.0) Gecko/20100101 Firefox/82.0";
+$ua='Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/53.0.2785.143 Safari/537.36';
 //$ua = $_SERVER['HTTP_USER_AGENT'];
 if(preg_match('/youtube\.com\/(v\/|watch\?v=|embed\/)([\w\-]+)/', $file, $match)) {
   $id = $match[2];
   $l = "https://www.youtube.com/watch?v=".$id;
   $html="";
   $p=0;
+  //echo $l;
   while($html == "" && $p<10) {
 
   $ch = curl_init();
@@ -44,8 +46,8 @@ if(preg_match('/youtube\.com\/(v\/|watch\?v=|embed\/)([\w\-]+)/', $file, $match)
   curl_setopt($ch, CURLOPT_USERAGENT, $ua);
   curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
   curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
-  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 25);
   $html = curl_exec($ch);
   curl_close($ch);
 
@@ -87,8 +89,8 @@ if(preg_match('/youtube\.com\/(v\/|watch\?v=|embed\/)([\w\-]+)/', $file, $match)
       curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
       curl_setopt($ch, CURLOPT_USERAGENT, $ua);
       curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-      curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
-      curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+      curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
+      curl_setopt($ch, CURLOPT_TIMEOUT, 25);
       $h = curl_exec($ch);
       curl_close($ch);
 
@@ -106,7 +108,6 @@ if(preg_match('/youtube\.com\/(v\/|watch\?v=|embed\/)([\w\-]+)/', $file, $match)
     return $r;
   } else {
   $videos=array();
-  //print_r ($r1['streamingData']['formats']);
   if (isset($r1['streamingData']['formats'][0]['url'])) {
   for ($k=0;$k<count($r1['streamingData']['formats']);$k++) {
     $videos[$r1['streamingData']['formats'][$k]['itag']]=$r1['streamingData']['formats'][$k]['url'];
@@ -122,7 +123,15 @@ if(preg_match('/youtube\.com\/(v\/|watch\?v=|embed\/)([\w\-]+)/', $file, $match)
     $videos[$r1['streamingData']['formats'][$k]['itag']]=urldecode($t1[1])."&".$t1[0];
   }
   }
-  if (isset($videos['37']))
+  if (isset($r1['streamingData']['adaptiveFormats'][0]['url'])) {
+  for ($k=0;$k<count($r1['streamingData']['adaptiveFormats']);$k++) {
+    $videos[$r1['streamingData']['adaptiveFormats'][$k]['itag']]=$r1['streamingData']['adaptiveFormats'][$k]['url'];
+  }
+  }
+  //print_r ($videos);
+  if (isset($videos['2471']))
+    $video= $videos['247'];
+  else if (isset($videos['37']))
     $video= $videos['37'];
   else if (isset($videos['22']))
     $video= $videos['22'];
@@ -130,10 +139,12 @@ if(preg_match('/youtube\.com\/(v\/|watch\?v=|embed\/)([\w\-]+)/', $file, $match)
     $video= $videos['18'];
   else
     $video="";
+  //$audio= $videos['249'];
   if ($video) {
   parse_str($video, $output);
   if (!isset($output['s'])) {
     $r=$video;
+    //$r=$video."|||".$audio;
   } else {
   $sA="";
   $s=$output["s"];
@@ -149,8 +160,8 @@ if(preg_match('/youtube\.com\/(v\/|watch\?v=|embed\/)([\w\-]+)/', $file, $match)
   curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 10.0; rv:82.0) Gecko/20100101 Firefox/82.0');
   curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
   curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
-  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 25);
   $h = curl_exec($ch);
   curl_close($ch);
   //echo $h;
@@ -183,6 +194,7 @@ if(preg_match('/youtube\.com\/(v\/|watch\?v=|embed\/)([\w\-]+)/', $file, $match)
  } else {
   $r="";
  }
+ //if ($r) $r =str_replace(parse_url($r)['host'],"redirector.googlevideo.com",$r);
  return $r;
 }
 } else

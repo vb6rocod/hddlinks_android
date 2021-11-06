@@ -151,6 +151,7 @@ else
  $ua="Mozilla/5.0 (Windows NT 10.0; rv:75.0) Gecko/20100101 Firefox/75.0";
 
 $l=$link;
+//echo $l;
   //$ua = $_SERVER['HTTP_USER_AGENT'];
 $last_good="https://lookmovie.io";
 
@@ -199,11 +200,11 @@ $last_good="https://lookmovie.io";
   //echo $h;
   $x=json_decode($h,1);
   //print_r ($x);
-  if (isset($x['data']['subtitles'])) {
+  if (isset($x['subtitles'])) {
   $srt1=array();
   $s=array();
   $srt="";
-  $sss=$x['data']['subtitles'];
+  $sss=$x['subtitles'];
   for ($k=0;$k<count($sss);$k++) {
    if ($sss[$k]['file'][0] == "/") {
      $ss= "https://lookmovie.io".$sss[$k]['file'];
@@ -221,6 +222,8 @@ $last_good="https://lookmovie.io";
   } else
     $srt="";
   }
+  //echo $srt;
+  /*
   $time=$x['data']['expires'];
   $token=$x['data']['accessToken'];
   $l="https://lookmovie.io/manifests/movies/json/".$id."/".$time."/".$token."/master.m3u8";
@@ -236,9 +239,11 @@ $last_good="https://lookmovie.io";
   curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
   $h = curl_exec($ch);
   curl_close($ch);
+  */
   if (!$slug) {
-  $x=json_decode($h,1);
-  //print_r ($r);
+  $x=$x['streams'];
+  //print_r ($x);
+
   foreach ($x as $key => $value) {
    if ($key <> "auto") {
     $r[]=$value;
@@ -337,6 +342,8 @@ $s=array();
 //$head=array('Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
 //'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2');
   $l="https://lookmovie.io/api/v1/security/show-access?slug=".$slug."&token=&step=2";
+  $l="https://lookmovie.io/api/v1/security/episode-access?id_episode=".$link;
+  //echo $l;
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $l);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
@@ -349,8 +356,10 @@ $s=array();
   curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
   $h = curl_exec($ch);
   curl_close($ch);
+  //echo $h;
   $x=json_decode($h,1);
-  //print_r ($r);
+  //print_r ($x);
+  /*
   $time=$x['data']['expires'];
   $token=$x['data']['accessToken'];
   $l="https://lookmovie.io/manifests/movies/json/".$id."/".$time."/".$token."/master.m3u8";
@@ -367,9 +376,10 @@ $s=array();
   curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
   $h = curl_exec($ch);
   curl_close($ch);
+  */
 //echo $h;
   //if ($slug) {
-  $x=json_decode($h,1);
+  $x=json_decode($h,1)['streams'];
   //print_r ($x);
   foreach ($x as $key => $value) {
    if ($key <> "auto") {

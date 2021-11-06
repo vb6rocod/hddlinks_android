@@ -261,8 +261,9 @@ $r=array();
 $c1=file_get_contents($cookie1);
 if ($tip=="release") {
  $l="https://noxx.is/fetch.php";
- $post="no=".(48*($page-1))."&gpar=&qpar=&spar=date%20desc";
+ $post="no=".(48*($page-1))."&gpar=&qpar=&spar=";    // date%20desc
  // no=48&gpar=&qpar=&spar=date desc
+ //$post="no=48&gpar=&qpar=&spar=";
  $head=array('Accept: */*',
  'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
  'Accept-Encoding: deflate',

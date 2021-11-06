@@ -42,9 +42,11 @@ $ua = $_SERVER['HTTP_USER_AGENT'];
   curl_setopt($ch, CURLOPT_TIMEOUT, 15);
   $h = curl_exec($ch);
   curl_close($ch);
-
+$t1=explode('<div class="season_episodes',$h);
+$t2=explode('</ul',$t1[1]);
+$h=$t2[0];
 $n=0;
-$videos = explode('<li class="post-', $h);
+$videos = explode('<li', $h);
 $sezoane=array();
 $last_sez="";
 unset($videos[0]);
@@ -91,7 +93,7 @@ foreach($videos as $video) {
   echo '<table border="1" width="100%">'."\n\r";
   echo '<TR><td class="sez" style="color:black;background-color:#0a6996;color:#64c8ff;text-align:center" colspan="3">Sezonul '.($sez).'</TD></TR>';
   $n=0;
-  $vids = explode('<li class="post-', $h);
+  $vids = explode('<li', $h);
   unset($vids[0]);
   //$vids = array_values($vids);
   $vids = array_reverse($vids);
@@ -110,7 +112,7 @@ foreach($videos as $video) {
   $t2=explode('"',$t1[1]);
   $link=$t2[0];
   $ep_tit="";
-  $se = trim(str_between($vid,'rel="bookmark">','</a>'));
+  $se = trim(str_between($vid,'class="far fa-play-circle">','</a>'));
   if (preg_match("/Sezonul\s+(\d+)\s+Episodul\s+(\d+)/",$se,$m)) {
   $episod=$m[2];
   } else {

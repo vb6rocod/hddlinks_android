@@ -20,6 +20,7 @@ $has_fs="yes";
 $ref="https://ww1.onionplay.to";
 $ref="https://onionplay.is";
 $ref="https://onionplay.uk";
+$ref="https://onionplay.se";
 //$ref="https://onionplay.club";
 $host=parse_url($ref)['host'];
 $fav_target="onionplay_f_fav.php?host=".$ref;

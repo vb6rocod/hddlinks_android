@@ -71,7 +71,7 @@ $host=parse_url($l)["host"];
 $out="";
 $type="mp4";
 $cookie=$base_cookie."adultc.dat";
-if (preg_match("/jizzbunker\.com|familyporn1\.tv|zbporn\.com|trannytube\.net/",$host)) {
+if (preg_match("/jizzbunker\.com|familyporn1\.tv|zbporn\.com|trannytube11\.net/",$host)) {
   $h=@file_get_contents($l);
 } elseif (preg_match("/pefilme\.info|filmeleporno\.xxx/",$l)) {
   //$l="https://pefilme.info/video.php?id=159035";
@@ -600,11 +600,16 @@ $out=$t2[0];
 } else if (preg_match("/pornhub\.com/",$host)) {
 //echo $h;
   //https://www.pornhub.com/embed/ph5d4b0d9dbca84
-  preg_match_all("/flashvars\.mediaDefinitions\.(.*?)\.videoUrl/msi",$h,$q);
+  preg_match_all("/flashvars\.mediaDefinitions\.(.*?)\.videoUrl/si",$h,$q);
+  //print_r ($q);
   $s=$q[1][0];
-  preg_match_all("/var ra[a-zA-Z0-9]+.*?\;/msi",$h,$m);
+  //echo $s;
+  preg_match_all("/var ra[a-zA-Z0-9]+.*?\;/si",$h,$m);
+  
   $find="/var ".$s."=.*?\;/";
+  //echo $find;
   preg_match($find,$h,$n);
+  //print_r ($n);
   $x=preg_replace("/\/\*.*?\*\//","",$n[0]);
   $x=str_replace("var ".$s."=ra","\$out=\$ra",$x);
   $o="";
@@ -614,12 +619,14 @@ $out=$t2[0];
   $o .=str_replace("+",".",str_replace(" ra","\$ra",$x))."\n";
   //echo $o;
   eval ($o);
+  //echo $out;
   $ua="Mozilla/5.0 (Windows NT 10.0; rv:87.0) Gecko/20100101 Firefox/87.0";
 $head=array('Accept: */*',
 'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
 'Accept-Encoding: deflate',
 'Connection: keep-alive',
 'Referer: '.$l);
+/*
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $out);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
@@ -632,9 +639,11 @@ $head=array('Accept: */*',
   curl_setopt($ch, CURLOPT_TIMEOUT, 25);
   $h = curl_exec($ch);
   curl_close($ch);
+  echo $h;
   $x=json_decode($h,1);
   //print_r ($x);
   $out=$x[0]['videoUrl'];
+  */
 } else if (preg_match("/pornmaki\.com/",$host)) {
   $t1=explode('file:"',$h);
   $t2=explode('"',$t1[1]);
