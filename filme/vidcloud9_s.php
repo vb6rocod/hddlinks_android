@@ -17,7 +17,7 @@ $has_fav="yes";
 $has_search="yes";
 $has_add="yes";
 $has_fs="yes";
-$fav_target="vidcloud9_s_fav.php?host=https://vidcloud9.com";
+$fav_target="vidcloud9_s_fav.php?host=https://vidembed.cc";
 $add_target="vidcloud9_s_add.php";
 $add_file="";
 $fs_target="vidcloud9_ep.php";
@@ -167,10 +167,10 @@ if ($page==1) {
 echo '</TR>'."\r\n";
 
 if($tip=="release") {
-  $l="https://vidcloud9.com/series?page=".$page;
+  $l="https://vidembed.cc/series?page=".$page;
 } else {
   $search=str_replace(" ","%20",$tit);
-  $l="https://vidcloud9.com/search.html?page=".$page."&keyword=".$search;
+  $l="https://vidembed.cc/search.html?page=".$page."&keyword=".$search;
 }
 $host=parse_url($l)['host'];
 $head=array('Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
@@ -178,10 +178,11 @@ $head=array('Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $l);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-  curl_setopt($ch,CURLOPT_REFERER,"https://vidcloud9.com");
+  curl_setopt($ch,CURLOPT_REFERER,"https://vidembed.cc");
   curl_setopt($ch,CURLOPT_HTTPHEADER,$head);
   curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 10.0; rv:55.0) Gecko/20100101 Firefox/55.0');
   curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
   curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
   curl_setopt($ch, CURLOPT_TIMEOUT, 15);
   $html = curl_exec($ch);
@@ -210,7 +211,7 @@ $r=array();
      $tit_imdb=$tit_serial;
    }
    //$title=preg_replace("/- Season.+/i","",$title);
-   $title=prep_tit($title);
+   //$title=prep_tit($title);
 
    $t1 = explode('src="', $video);
    $t2 = explode('"', $t1[1]);

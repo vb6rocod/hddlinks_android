@@ -177,8 +177,9 @@ if($tip=="release") {
   $l="https://www.moviehdkh.com/searchs?q=".$search;
 }
 $ua = $_SERVER['HTTP_USER_AGENT'];
+$ua="Mozilla/5.0 (Windows NT 10.0; rv:71.0) Gecko/20100101 Firefox/71.0";
 $cookie=$base_cookie."moviehdkh.txt";
-$ua=file_get_contents($base_pass."firefox.txt");
+//$ua=file_get_contents($base_pass."firefox.txt");
 //$ua="xx";
 $host=parse_url($l)['host'];
 $host=parse_url($l)['host'];
@@ -188,14 +189,15 @@ Cookie: cf_clearance=f8fa32636d8645ce09865f61b855587751177be2-1599206311-0-1z1b3
 //echo $ua."\n";
 //$x=file_get_contents($cookie);
 //echo $x;
-  /*
+
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $l);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
   curl_setopt($ch,CURLOPT_REFERER,"https://".$host);
   curl_setopt($ch,CURLOPT_HTTPHEADER,$head);
   curl_setopt($ch, CURLOPT_USERAGENT, $ua);
-  //curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie);
+  curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie);
+  curl_setopt($ch, CURLOPT_COOKIEJAR, $cookie);
   curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
  curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
@@ -203,16 +205,19 @@ Cookie: cf_clearance=f8fa32636d8645ce09865f61b855587751177be2-1599206311-0-1z1b3
   curl_setopt($ch, CURLOPT_TIMEOUT, 15);
   $html = curl_exec($ch);
   curl_close($ch);
-  */
+
   //echo $html;
+/*
 $x=file_get_contents($cookie);
 if (preg_match("/moviehdkh\.com	\w+	\/	\w+	\d+	cf_clearance	([\w|\-]+)/",$x,$m))
  $cc=trim($m[1]);
 else
  $cc="";
+*/
 //print_r ($m);
 //////////////////////////////////////////////////
 $cf="cf_clearance";
+$cc="";
 //$cc="f8fa32636d8645ce09865f61b855587751177be2-1599206311-0-1z1b336d43za7f96604z14ff514f-150";
 $opts = array(
   'http'=>array(
@@ -226,8 +231,8 @@ $opts = array(
               "Referer: https://www.moviehdkh.com/"."\r\n"
   )
 );
-$context = stream_context_create($opts);
-$html=@file_get_contents($l,false,$context);
+//$context = stream_context_create($opts);
+//$html=@file_get_contents($l,false,$context);
 //echo $html;
 //////////////////////////////////////////////////
 $r=array();

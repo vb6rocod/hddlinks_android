@@ -12,6 +12,7 @@ $base="https://soap2day.to";
 //$base="https://soap2day.se";
 //$base="https://soap2day.is";
 //$base="https://soap2day.im";
+$base="https://soap2day.ac";
 $host=parse_url($base)['host'];
 $page = $_GET["page"];
 $tip= $_GET["tip"];
@@ -188,14 +189,15 @@ if($tip=="release") {
   $l="https://".$host."/search/keyword/".$search;
 }
 $host=parse_url($l)['host'];
+$sjv="9812";
 if ($page==1 && $tip=="release") {
- $l1="https://soap2day.to/auth";
+ $l1="https://".$host."/auth";
 $head=array('Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
 'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
 'Accept-Encoding: deflate',
-'Referer: https://soap2day.to/enter.html',
+'Referer: https://'.$host.'/enter.html',
 'Connection: keep-alive',
-'Cookie: sjv=5326',
+'Cookie: sjv='.$sjv,
 'Upgrade-Insecure-Requests: 1');
   $ch = curl_init($l1);
   curl_setopt($ch, CURLOPT_USERAGENT, $ua);
@@ -219,7 +221,7 @@ $head=array('Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image
   }
 $head=array('Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
 'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
-'Cookie: sjv=5326');
+'Cookie: sjv='.$sjv);
 
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $l);
@@ -229,6 +231,7 @@ $head=array('Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q
   curl_setopt($ch, CURLOPT_USERAGENT, $ua);
   curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie);
   curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
   curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
   curl_setopt($ch, CURLOPT_TIMEOUT, 15);
   $html = curl_exec($ch);

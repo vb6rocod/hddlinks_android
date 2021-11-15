@@ -24,6 +24,7 @@ function getSiteHost($siteLink) {
 		return $siteParts['scheme'].'://'.$siteParts['host'].$port;
 }
 include ("../filme/youtube.php");
+include ("../filme/yt.php");
 //http://gradajoven.es/spicenew.php
 //http://edge3.spicetvnetwork.de:1935/live/_definst_/mp4:spicetv/ro/6tv.stream/chunklist_w2087458837.m3u8?c=176&u=52409&e=1398753453&t=298944a96a9161b2300ae3ae072b85f4&d=android&i=1.30
 //http://edge1.spicetvnetwork.de:1935/live/_definst_/mp4:spicetv/ro/6tv.streamchunklist_w2087458837.m3u8?c=176&u=52560&e=1398777448&t=3869972b307e53bfd2e048f093fd5f1c&d=site&i=Android%2C+Safari
@@ -1133,7 +1134,11 @@ if ($from=="tvrplus") {
     $link=$t3[0];
 }
 if ($from=="tvrplus_y") {
- $link=youtube("https://www.youtube.com/watch?v=".$link);
+ $link1=youtube_nou("https://www.youtube.com/watch?v=".$link);
+ if ($link1)
+  $link=$link1;
+ else
+  $link=youtube("https://www.youtube.com/watch?v=".$link);
 }
 if ($from=="protvstiri") {
 $ua = $_SERVER['HTTP_USER_AGENT'];
@@ -1639,7 +1644,9 @@ if(preg_match('/youtube\.com\/(v\/|watch\?v=|embed\/)([\w\-]+)/', $link, $match)
   $id = $match[2];
   $l1 = "https://www.youtube.com/watch?v=".$id;
   //$html   = file_get_contents($link);
-  $link=youtube($l1);
+  $link=youtube_nou($l1);
+  if (!$link)
+   $link=youtube($l1);
 }
 
 if (file_exists($base_pass."player.txt")) {

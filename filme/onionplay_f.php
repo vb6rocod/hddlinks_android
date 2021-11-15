@@ -215,7 +215,7 @@ $x=file_get_contents($cookie);
 //file_put_contents($base_cookie."onionplay.txt",$x);
 $y=preg_quote($host,"/");
 //unlink ($cookie);
-if (preg_match("/".$y."	\w+	\/	\w+	\d+	cf_clearance	([\w|\-]+)/",$x,$m))
+if (preg_match("/".$y."	\w+	\/	\w+	\d+	cf_clearance	([\w\-\.\_]+)/",$x,$m))
  $cc=trim($m[1]);
 else
  $cc="";
@@ -264,7 +264,7 @@ $head=array('Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image
 'Connection: keep-alive',
 'Cookie: cf_clearance='.$cc,
 'Referer: '.$ref);
-
+//print_r ($head);
   $ch = curl_init($l);
   curl_setopt($ch, CURLOPT_USERAGENT, $ua);
   curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);

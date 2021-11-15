@@ -73,7 +73,10 @@ echo "<TR>"."\n\r";
 $title="filme_yt";
 $link="../tv/playlist.php?title=filme_yt&link=https://raw.githubusercontent.com/vb6rocod/hddlinks/master/filme_yt.m3u";
 echo '<TD style="text-align:center"><font size="4">'.'<a href="'.$link.'" target="_blank">'.$title.'</a></font></TD>';
-echo "<TD></TD>";
+$title="dailymotion";
+$link="dailymotion_fav.php";
+echo '<TD style="text-align:center"><font size="4">'.'<a href="'.$link.'" target="_blank">'.$title.'</a></font></TD>';
+
 echo "<TD></TD>";
 echo "<TD></TD>";
 echo "</TR>"."\n\r";

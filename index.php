@@ -219,6 +219,10 @@ $list = glob($base_fav."*.list");
     str_replace(" ","%20",$l);
     unlink($l);
 }
+$firefox = $base_pass."firefox.txt";
+$ua="Mozilla/5.0 (Windows NT 10.0; rv:80.0) Gecko/20100101 Firefox/80.0";
+if (!file_exists($firefox))
+  file_put_contents($firefox,$ua);
 ?>
 <br>
 <div id="overlay">

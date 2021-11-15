@@ -137,7 +137,7 @@ echo '<BR>';
   $r=array();
 $ua="Mozilla/5.0 (Windows NT 10.0; rv:80.0) Gecko/20100101 Firefox/80.0";
 $cookie=$base_cookie."trailers1.dat";
-
+//echo $link;
   $host=parse_url($link)['host'];
   $ch = curl_init($link);
   curl_setopt($ch, CURLOPT_USERAGENT, $ua);
