@@ -83,7 +83,8 @@ $(document).on('keyup', '.imdb', isValid);
 <TD width="25%"><a href="filme/youtube_fav.php" target="_blank">youtube</a></TD>
 <TD width="25%"><a href="filme/yt_playlist.php?token=&id=UCANDAWMJQsxMlaDMGlCdKpg&kind=channel&title=DanceTelevision&image=https://yt3.ggpht.com/-K4rbFp56pRQ/AAAAAAAAAAI/AAAAAAAAAAA/UKcWkGWWeOU/s88-c-k-no-mo-rj-c0xffffff/photo.jpg" target="_blank">Dance Television</a></TD>
 <TD width="25%"><a href="filme/youtube_live.php?token=&search=" target="_blank">youtube live</a></TD>
-<TD width="25%"><a href="filme/facebook1_fav.php" target="_blank">facebook</a></TD>
+<TD width="25%"><a href="tv/primaplay.php?page=1&link=&title=primaplay" target="_blank">primaplay</a></TD>
+
 </TR>
 
 <TR>
@@ -94,6 +95,15 @@ $(document).on('keyup', '.imdb', isValid);
 </TR>
 <?php
 include ("common.php");
+if (file_exists($base_pass."tvplay.txt")) {
+echo '
+<TR>
+<TD width="25%"><a href="filme/facebook1_fav.php" target="_blank">facebook1</a></TD>
+<TD width="25%"><a href="filme/facebook2_fav.php" target="_blank">facebook2</a></TD>
+<TD width="25%"></TD>
+<TD width="25%"></TD>';
+echo '</TR>';
+}
 $list = glob($base_sub."*.srt");
 foreach ($list as $l) {
     str_replace(" ","%20",$l);

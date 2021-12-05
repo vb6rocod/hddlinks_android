@@ -40,31 +40,6 @@ function ajaxrequest2(link) {
     }
   }
 }
-function ajaxrequest3() {
-  var request =  new XMLHttpRequest();
-
-  // create pairs index=value with data that must be sent to server
-  //var the_data = {mod:del,title:title, link:link}; //Array
-  val_canal=document.getElementById('canal').value;
-  val_videoid=document.getElementById('videoid').value;
-  link = 'mod=add&canal=' + val_canal + '&videoid=' + val_videoid;
-  var the_data = link;
-  var php_file='facebook2_add.php';
-  request.open("POST", php_file, true);			// set the request
-
-  // adds a header to tell the PHP script to recognize the data as is sent via POST
-  request.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-  request.send(the_data);		// calls the send() method with datas as parameter
-
-  // Check request status
-  // If the response is received completely, will be transferred to the HTML tag with tagID
-  request.onreadystatechange = function() {
-    if (request.readyState == 4) {
-      alert (request.responseText);
-      location.reload();
-    }
-  }
-}
 function ajaxrequest1(link) {
   msg="link1.php?file=" + link;
   window.open(msg);
@@ -128,8 +103,6 @@ $user_agent     =   $_SERVER['HTTP_USER_AGENT'];
 if ($flash != "mp") {
 if (preg_match("/android|ipad/i",$user_agent) && preg_match("/chrome|firefox|mobile/i",$user_agent)) $flash="chrome";
 }
-$n=0;
-$w=0;
 $cookie=$base_cookie."facebook.dat";
 if (!file_exists($cookie)) {
   $l="https://raw.githubusercontent.com/vb6rocod/hddlinks/master/fb.txt";
@@ -143,11 +116,13 @@ if (!file_exists($cookie)) {
   curl_close($ch);
   file_put_contents($cookie,$h);
 }
+$n=0;
+$w=0;
 echo '<h2>'.$page_title.'</H2>';
 $c="";
 echo "<a href='".$c."' id='mytest1'></a>".'<div id="mainnav">';
 echo '<table border="1px" width="100%"><TR><TD class="form" >'."\n\r";
-echo '<form action="facebook1.php" target="_blank">Cautare (user video): ';
+echo '<form action="facebook2.php" target="_blank">Cautare (user video): ';
 echo '<input type="text" id="search" name="search">
 <input type="hidden" id="page" name="page" value="1">
 <input type="hidden" id="prev" name="prev" value="">
@@ -173,7 +148,7 @@ echo '<table border="1px" width="100%">'."\n\r";
     }
 
   $add_fav="mod=del&title=".urlencode(fix_t($title))."&image=".$image;
-  $playlist="facebook1.php?page=1&prev=&next=&doc_id=&search=".$title;
+  $playlist="facebook2.php?page=1&prev=&next=&doc_id=&search=".$title;
 
   if ($n==0) echo '<TR>';
 
@@ -193,7 +168,7 @@ echo '<table border="1px" width="100%">'."\n\r";
 echo "</table>";
 } else {
 if ($tast == "DA")
-echo '<table border="1px" width="100%"><TR><TD>Apasti tasta 3 pentru a sterge la favorite</td></TR></TABLE>'."\n\r";
+echo '<table border="1px" width="100%"><TR><TD>Apasti tasta 3 pentru a adauga/sterge la favorite</td></TR></TABLE>'."\n\r";
 }
 
 ?>

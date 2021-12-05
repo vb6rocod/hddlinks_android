@@ -21,6 +21,13 @@ echo '<table border="1px" width="100%">'."\n\r";
 //echo '<TR><td style="color:black;background-color:deepskyblue;text-align:center" colspan="3"><b>Digi24 Emisiuni</b></TD></TR>';
 $n=0;
 echo '<TR>';
+$link="https://www.digi24.ro/interviurile-digi24-ro";
+
+$title="Interviuri";
+$link="digi24_e_main.php?page=1&link=".$link."&title=".urlencode($title);
+	if ($n == 0) echo "<TR>"."\n\r";
+	echo '<TD class="cat">'.'<a href="'.$link.'" target="_blank">'.$title.'</a></TD>';
+	$n=1;
 $l="https://www.digi24.ro/emisiuni";
 $l="https://www.digi24.ro/emisiuni/toate-emisiunile";
 
@@ -39,7 +46,7 @@ $videos = explode('article class="article', $html);
 
 unset($videos[0]);
 $videos = array_values($videos);
-
+// https://www.digi24.ro/interviurile-digi24-ro
 foreach($videos as $video) {
  $video=html_entity_decode($video);
  $title=str_between($video,'title="','"');

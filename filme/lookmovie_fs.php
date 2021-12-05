@@ -161,6 +161,7 @@ $last_good="https://lookmovie.io";
   curl_setopt($ch, CURLOPT_USERAGENT, $ua);
   curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie);
   //curl_setopt($ch, CURLOPT_HTTPHEADER,$head);
+  //curl_setopt($ch, CURLOPT_HEADER,1);
   curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
   curl_setopt($ch, CURLOPT_TIMEOUT, 25);
   curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
@@ -284,7 +285,7 @@ $last_good="https://lookmovie.io";
    $s[]="auto";
   }
 ////////////////////////////////////////////////////////////////////////////////////////
-} else {
+} else {    // series
   $id=$link;
   $sub="";
 $cookie=$base_cookie."lookmovie.txt";

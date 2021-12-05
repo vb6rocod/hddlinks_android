@@ -2,10 +2,10 @@
 <?php
 include ("../common.php");
 $page = $_GET["page"];
-$search = $_GET['link'];
-$page_title=urldecode($_GET['title']);
+$search= $_GET["link"];
+$page_title=urldecode($_GET["title"]);
 $width="200px";
-$height=intval(200*(214/380))."px";
+$height=intval(200*(137/244))."px";
 ?>
 <html><head>
 <meta http-equiv="content-type" content="text/html; charset=UTF-8">
@@ -18,7 +18,7 @@ $height=intval(200*(214/380))."px";
 <script type="text/javascript">
 function ajaxrequest(link) {
   var request =  new XMLHttpRequest();
-   on();
+  on();
   var the_data = link;
   var php_file='direct_link.php';
   request.open('POST', php_file, true);			// set the request
@@ -49,8 +49,7 @@ function off() {
     document.getElementById("overlay").style.display = "none";
 }
 </script>
-<a href='' id='mytest1'></a>
-
+   <a href='' id='mytest1'></a>
 <?php
 function str_between($string, $start, $end){
 	$string = " ".$string; $ini = strpos($string,$start);
@@ -72,65 +71,74 @@ if ($flash != "mp") {
 if (preg_match("/android|ipad/i",$user_agent) && preg_match("/chrome|firefox|mobile/i",$user_agent)) $flash="chrome";
 }
 $n=0;
-echo '<h2>'.$page_title.'</h2>';
+echo '<h2>'.$page_title.'</H2>';
 echo '<table border="1px" width="100%">'."\n\r";
-$title="";
-$l=$search;
-//$l="https://www.digi24.ro/interviurile-digi24-ro";
+echo '<tr><TD colspan="4" align="right">';
+if ($page > 1)
+echo '<a href="primaplay.php?page='.($page-1).'&link='.$search.'&title='.urlencode($page_title).'">&nbsp;&lt;&lt;&nbsp;</a> | <a href="primaplay.php?page='.($page+1).'&link='.$search.'&title='.urlencode($page_title).'">&nbsp;&gt;&gt;&nbsp;</a></TD></TR>';
+else
+echo '<a href="primaplay.php?page='.($page+1).'&link='.$search.'&title='.urlencode($page_title).'">&nbsp;&gt;&gt;&nbsp;</a></TD></TR>';
+
+$n=0;
+if ($page > 1)
+$l="https://www.primaplay.ro/free?page=".$page;
+else
+$l="https://www.primaplay.ro/free";
+$ua="Mozilla/5.0 (Windows NT 10.0; rv:87.0) Gecko/20100101 Firefox/87.0";
+//echo $l;
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $l);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-  curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows; U; Windows NT 6.1; en-US; rv:1.9.1.2) Gecko/20090729 Firefox/3.5.2 GTB5');
+  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
   curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
-  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+  curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
+  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
   curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
   curl_setopt($ch, CURLOPT_TIMEOUT, 15);
   $html = curl_exec($ch);
   curl_close($ch);
-
-$videos = explode('article class="article', $html);
+$videos = explode('id="video_box', $html);
 
 unset($videos[0]);
 $videos = array_values($videos);
 
 foreach($videos as $video) {
- $video=html_entity_decode($video);
- $t1=explode('href="',$video);
- if (preg_match("/title\=\"/",$video)) {
- $t1=explode('title="',$video);
- $t2=explode('"',$t1[1]);
- $title=$t2[0];
- } else {
- $t2=explode(">",$t1[2]);
- $t3=explode("<",$t2[1]);
- $title=trim($t3[0]);
- }
+  $t1 = explode('href="', $video);
+  $t2 = explode('"',$t1[1]);
+  $link=$t2[0];
 
- $descriere=$title;
- $image=urldecode(str_between($video,'src="','"'));
- $link="https://www.digi24.ro".str_between($video,'href="','"');
+  $t1=explode('class="name text-center">',$video);
+  $t2=explode("<",$t1[1]);
+  $title=trim($t2[0]);
+  //$title=fix_s($title);
+//http://storage.privesc.eu/thumnails/49569.jpg
+  $t1=explode("background-image:url('",$video);
+  $t2=explode("'",$t1[1]);
+  $image=$t2[0];
 
- $l="link=".urlencode(fix_t($link))."&title=".urlencode(fix_t($title))."&from=digi24&mod=direct";
- $link1="direct_link.php?link=".$link."&title=".urlencode($title)."&from=digi24&mod=direct";
-
-  if (strpos($link,"vedete") === false) {
-  if ($n == 0) echo "<TR>"."\n\r";
+    $link1="direct_link.php?link=".$link."&title=".urlencode($title)."&from=primaplay&mod=direct";
+    $l="link=".urlencode(fix_t($link))."&title=".urlencode(fix_t($title))."&from=primaplay&mod=direct";
+  if ($n==0) echo '<TR>';
   if ($flash != "mp")
-  echo '<td class="mp" width="25%"><a href="'.$link1.'" target="_blank"><img src="'.$image.'" width="'.$width.'" height="'.$height.'"><BR>'.$title.'</a></TD>';
-  else
-  echo '<TD class="mp"  width="25%">'.'<a onclick="ajaxrequest('."'".$l."')".'"'." style='cursor:pointer;'>".'<img src="'.$image.'" width="'.$width.'" height="'.$height.'"><BR>'.$title.'</a></TD>';
-    $n++;
-    if ($n > 2) {
-     echo '</TR>'."\n\r";
-     $n=0;
-    }
+  echo '<td class="mp" align="center" width="25%"><a href="'.$link1.'" target="_blank"><img src="'.$image.'" width="'.$width.'" height="'.$height.'"><BR>'.$title.'</a></TD>';
+    else
+  echo '<td class="mp" align="center" width="25%">'.'<a onclick="ajaxrequest('."'".$l."')".'"'." style='cursor:pointer;'>".'<img src="'.$image.'" width="'.$width.'" height="'.$height.'"><BR>'.$title.'</a></TD>';
+
+  $n++;
+  if ($n == 4) {
+  echo '</tr>';
+  $n=0;
   }
 }
- if ($n<3) echo "</TR>"."\n\r";
- echo '</table>';
+echo '<tr><TD colspan="4" align="right">';
+if ($page > 1)
+echo '<a href="primaplay.php?page='.($page-1).'&link='.$search.'&title='.urlencode($page_title).'">&nbsp;&lt;&lt;&nbsp;</a> | <a href="primaplay.php?page='.($page+1).'&link='.$search.'&title='.urlencode($page_title).'">&nbsp;&gt;&gt;&nbsp;</a></TD></TR>';
+else
+echo '<a href="primaplay.php?page='.($page+1).'&link='.$search.'&title='.urlencode($page_title).'">&nbsp;&gt;&gt;&nbsp;</a></TD></TR>';
+echo "</table>";
 ?>
 <div id="overlay"">
   <div id="text">Wait....</div>
 </div>
-<BODY>
-</HTML>
+</body>
+</html>

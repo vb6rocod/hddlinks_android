@@ -104,7 +104,7 @@ document.onkeypress =  zx;
 <TD width="25%"><a href="filme/streamm4u_s.php?page=1&tip=release&title=streamm4u&link=" target="_blank">streamm4u</a></TD>
 <TD width="25%"><a href="filme/topmoviesonline_s.php?page=1&tip=release&title=topmoviesonline&link=" target="_blank">topmoviesonline</a></TD>
 <TD width="25%"><a href="filme/streamlord_s.php?page=1&tip=release&title=streamlord&link=" target="_blank">streamlord</a></TD>
-<TD width="25%"></TD>
+<TD width="25%"><a href="filme/allmoviesforyou_s.php?page=1&tip=release&title=allmoviesforyou&link=" target="_blank">allmoviesforyou</a></TD>
 </TR>
 
 

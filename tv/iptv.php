@@ -25,6 +25,7 @@ $l="https://iptv-org.github.io/iptv/index.country.m3u";
 $l="https://raw.githubusercontent.com/iptv-org/iptv/master/index.m3u";
 //$l="https://raw.githubusercontent.com/freearhey/iptv/master/index.m3u";
 $l="https://raw.githubusercontent.com/iptv-org/iptv/master/index.m3u";
+$l="https://github.com/iptv-org/iptv";
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $l);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
@@ -38,6 +39,7 @@ $l="https://raw.githubusercontent.com/iptv-org/iptv/master/index.m3u";
   $html = curl_exec($ch);
   curl_close($ch);
   //echo $html;
+/*
 $m3uFile=explode("\n",$html);
 foreach($m3uFile as $key => $line) {
   if(strtoupper(substr($line, 0, 7)) === "#EXTINF") {
@@ -59,6 +61,28 @@ foreach($m3uFile as $key => $line) {
  }
  }
 }
+*/
+  $videos = explode('<g-emoji', $html);
+  unset($videos[0]);
+  $videos = array_values($videos);
+  foreach($videos as $video) {
+   $t1=explode('</g-emoji>',$video);
+   $t2=explode('<',$t1[1]);
+   $title=trim($t2[0]);
+   $t1=explode('<code>',$video);
+   $t2=explode('</code',$t1[1]);
+   $file=$t2[0];
+    $link="playlist.php?title=".urlencode($title)."&link=".$file;
+    if ($title) {
+	if ($n == 0) echo "<TR>"."\n\r";
+	echo '<TD class="cat">'.'<a href="'.$link.'" target="_blank">'.$title.'</a></TD>';
+    $n++;
+    if ($n > 4) {
+     echo '</TR>'."\n\r";
+     $n=0;
+    }
+ }
+  }
  if ($n<5) echo "</TR>"."\n\r";
  echo '</table>';
 ?>
