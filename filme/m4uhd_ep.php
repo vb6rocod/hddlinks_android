@@ -32,6 +32,16 @@ function str_between($string, $start, $end){
 echo '<h2>'.$tit.'</h2>';
 $ua="Mozilla/5.0 (Windows NT 10.0; rv:89.0) Gecko/20100101 Firefox/89.0";
 $cookie=$base_cookie."streamm4u.dat";
+$head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:95.0) Gecko/20100101 Firefox/95.0',
+'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8',
+'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
+'Accept-Encoding: deflate',
+'Connection: keep-alive',
+'Upgrade-Insecure-Requests: 1',
+'Sec-Fetch-Dest: document',
+'Sec-Fetch-Mode: navigate',
+'Sec-Fetch-Site: none',
+'Sec-Fetch-User: ?1');
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $link);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
@@ -39,6 +49,7 @@ $cookie=$base_cookie."streamm4u.dat";
   curl_setopt($ch,CURLOPT_REFERER,"https://m4uhd.tv");
   curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
   curl_setopt($ch, CURLOPT_HEADER,1);
+  curl_setopt($ch, CURLOPT_HTTPHEADER,$head);
   //curl_setopt($ch, CURLOPT_POST,1);
   //curl_setopt($ch, CURLOPT_POSTFIELDS,$post);
   //curl_setopt($ch, CURLOPT_NOBODY,1);

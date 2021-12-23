@@ -222,13 +222,13 @@ $host=parse_url($l)['host'];
   curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 10.0; rv:55.0) Gecko/20100101 Firefox/55.0');
   curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
   curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
-  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
-  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 25);
   $html = curl_exec($ch);
   curl_close($ch);
-
+//echo $html;
 $r=array();
-$videos = explode('article class="video-item',$html);
+$videos = explode('<div class="card-image',$html);
 unset($videos[0]);
 $videos = array_values($videos);
 foreach($videos as $video) {
@@ -240,8 +240,8 @@ foreach($videos as $video) {
   $title=$t3[0];
   $title = trim(strip_tags($title));
   $title = prep_tit($title);
-  $t1 = explode('data-original="', $video);
-  $t2 = explode('"', $t1[1]);
+  $t1 = explode('srcset="', $video);
+  $t2 = explode('"', $t1[2]);
   $image = $t2[0];
   if (!$image) {
     $t1 = explode('srcset="', $video);
@@ -255,7 +255,7 @@ foreach($videos as $video) {
   $durata=trim($t3[0]);
   $durata = preg_replace("/\n|\r/"," ",strip_tags($durata));
   if ($durata) $title=$title." (".$durata.')';
-  if ($title) array_push($r ,array($title,$link, $image));
+  if ($title && $durata) array_push($r ,array($title,$link, $image));
 }
 $c=count($r);
 for ($k=0;$k<$c;$k++) {

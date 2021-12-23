@@ -91,7 +91,7 @@ document.onkeypress =  zx;
 <TD width="25%"><a href="filme/noxx_s.php?page=1&tip=release&title=noxx&link=" target="_blank">noxx</a></TD>
 <TD width="25%"><a href="filme/gerryreid_s.php?page=1&tip=release&title=gerryreid&link=" target="_blank">gerryreid</a></TD>
 <TD width="25%"><a href="filme/m4uhd_s.php?page=1&tip=release&title=m4uhd&link=" target="_blank">m4uhd</a></TD>
-<TD width="25%"><a href="filme/xmovies_s.php?page=1&tip=release&title=xmovies&link=" target="_blank">xmovies</a></TD>
+<TD width="25%"></TD>
 </TR>
 
 <TR>
@@ -101,7 +101,7 @@ document.onkeypress =  zx;
 <TD width="25%"><a href="filme/sockshare_s.php?page=1&tip=release&title=sockshare&link=" target="_blank">sockshare</a></TD>
 </TR>
 <TR>
-<TD width="25%"><a href="filme/streamm4u_s.php?page=1&tip=release&title=streamm4u&link=" target="_blank">streamm4u</a></TD>
+<TD width="25%"></TD>
 <TD width="25%"><a href="filme/topmoviesonline_s.php?page=1&tip=release&title=topmoviesonline&link=" target="_blank">topmoviesonline</a></TD>
 <TD width="25%"><a href="filme/streamlord_s.php?page=1&tip=release&title=streamlord&link=" target="_blank">streamlord</a></TD>
 <TD width="25%"><a href="filme/allmoviesforyou_s.php?page=1&tip=release&title=allmoviesforyou&link=" target="_blank">allmoviesforyou</a></TD>

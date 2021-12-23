@@ -36,8 +36,7 @@ if (preg_match_all($pat,$h,$m)) {
 $token=$m[1][0];
 $post="call=".$token;
 $l="http://www.filmeserialeonline.org/wp-content/themes/grifus/loop/second.php";
-$headers=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:71.0) Gecko/20100101 Firefox/71.0',
-'Accept: text/html, */*; q=0.01',
+$headers=array('Accept: text/html, */*; q=0.01',
 'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
 'Accept-Encoding: deflate',
 'Content-Type: application/x-www-form-urlencoded; charset=UTF-8',
@@ -48,7 +47,8 @@ $headers=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:71.0) Gecko/2010010
 'Referer: http://www.filmeserialeonline.org'
 );
   $ch = curl_init($l);
-  curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows; U; Windows NT 6.1; en-US; rv:1.9.1.2) Gecko/20090729 Firefox/3.5.2 GTB5');
+  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
+  //curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows; U; Windows NT 6.1; en-US; rv:1.9.1.2) Gecko/20090729 Firefox/3.5.2 GTB5');
   curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
   curl_setopt ($ch, CURLOPT_POST, 1);
   curl_setopt ($ch, CURLOPT_POSTFIELDS, $post);

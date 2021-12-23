@@ -68,17 +68,18 @@ $ua="Mozilla/5.0 (Windows NT 10.0; rv:68.0) Gecko/20100101 Firefox/68.0";
   curl_setopt($ch, CURLOPT_TIMEOUT, 15);
   $html = curl_exec($ch);
   curl_close($ch);
-$videos = explode('article class="small-thumb', $html);
+  //echo $html;
+$videos = explode('href="/category', $html);
 unset($videos[0]);
 $videos = array_values($videos);
 foreach($videos as $video) {
-    $t=explode('href="',$video);
-    $t1=explode('"',$t[1]);
-    $link="https://www.pornrox.com".$t1[0];
+    //$t=explode('href="',$video);
+    $t1=explode('"',$video);
+    $link="https://www.pornrox.com/category".$t1[0];
     $t2=explode('alt="',$video);
     $t3=explode('"',$t2[1]);
   	$title=trim($t3[0]);
-  	$title=prep_tit($title);
+  	//$title=prep_tit($title);
     $link=$target."?page=1&tip=release&link=".urlencode(fix_t($link))."&title=".urlencode(fix_t($title));
     if ($title) {
 	if ($n == 0) echo "<TR>"."\r\n";

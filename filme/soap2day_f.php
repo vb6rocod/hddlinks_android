@@ -262,6 +262,7 @@ foreach($videos as $video) {
   $image = "https://".$host.$t2[0];
   else
   $image=$t2[0];
+  if (strpos($image,"http") === false) $image="https://".$host.$image;
   $rest = substr($title, -6);
   if (preg_match("/\((\d+)\)/",$rest,$m)) {
    $year=$m[1];

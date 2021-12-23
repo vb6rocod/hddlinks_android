@@ -50,7 +50,12 @@ else
   curl_setopt($ch, CURLOPT_TIMEOUT, 25);
   $h = curl_exec($ch);
   curl_close($ch);
-//echo $h;
+
+  if (preg_match("/(lookmovie\d+\.\w+)\//",$h,$m))
+    $ref=$m[1];
+  else
+    $ref="lookmovie.io";
+  file_put_contents($base_cookie."lookmovie_ref.txt",$ref);
 function removeBOM($data) {
     if (0 === strpos(bin2hex($data), 'efbbbf')) {
        return substr($data, 3);

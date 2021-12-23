@@ -299,6 +299,7 @@ if (preg_match("/albacarolinatv\.ro/",$link)) {
 }
 if (strpos($link,"live1.cdn.tv8.md/TV7") !== false) {
     $l="https://tv8.md/wp-json/tv8/v1/live-url";
+    $l="https://api.tv8.md/v1/live";
     $ch = curl_init();
     curl_setopt($ch, CURLOPT_URL, $l);
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
@@ -312,7 +313,8 @@ if (strpos($link,"live1.cdn.tv8.md/TV7") !== false) {
     $h = curl_exec($ch);
     curl_close($ch);
     $p=json_decode($h,1);
-    $link=$p['url'];
+    //$link=$p['url'];
+    $link=$p['liveUrl'];
 }
 if (strpos($link,"jurnaltv.md/JurnalTV") !== false) {
     $l="https://www.jurnaltv.md/page/live";

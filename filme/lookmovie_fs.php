@@ -169,7 +169,11 @@ $last_good="https://lookmovie.io";
   $h = curl_exec($ch);
   curl_close($ch);
 
-  //echo $h;
+  if (preg_match("/(lookmovie\d+\.\w+)\//",$h,$m))
+    $ref=$m[1];
+  else
+    $ref="lookmovie.io";
+  file_put_contents($base_cookie."lookmovie_ref.txt",$ref);
   $h=str_replace('" + window.location.host + "',"lookmovie.io",$h);
   if (preg_match("/file\"\:\s*\"((.*?)(Romanian|ro)\.vtt)/",$h,$p))
     $srt=$p[1];
@@ -184,7 +188,7 @@ $last_good="https://lookmovie.io";
   //$id=$t2[0];
   if (preg_match("/id_movie\:?\s*\'?(\d+)/",$h,$m))
    $id=$m[1];
-  $l="https://lookmovie.io/api/v1/security/movie-access?id_movie=".$id."&token=1&sk=&step=1";
+  $l="https://".$ref."/api/v1/security/movie-access?id_movie=".$id; //"&token=1&sk=&step=1";
   //echo $l;
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $l);
@@ -208,7 +212,7 @@ $last_good="https://lookmovie.io";
   $sss=$x['subtitles'];
   for ($k=0;$k<count($sss);$k++) {
    if ($sss[$k]['file'][0] == "/") {
-     $ss= "https://lookmovie.io".$sss[$k]['file'];
+     $ss= "https://".$ref.$sss[$k]['file'];
    //else
      //$ss=$sss[$k]['file'];
    $srt1[$sss[$k]['language']] = $ss;
@@ -293,10 +297,10 @@ if (file_exists($base_pass."firefox.txt"))
  $ua=file_get_contents($base_pass."firefox.txt");
 else
  $ua="Mozilla/5.0 (Windows NT 10.0; rv:75.0) Gecko/20100101 Firefox/75.0";
-
+$ref=file_get_contents($base_cookie."lookmovie_ref.txt");
 $s=array();
   $l="https://lookmovie.io/api/v1/shows/episode-subtitles/?id_episode=".$id;
-  $l="https://lookmovie.io/api/v1/security/episode-subtitles/?id_episode=".$id;
+  $l="https://".$ref."/api/v1/security/episode-subtitles/?id_episode=".$id;
   //$l="https://lookmovie.io/api/v1/shows/episode-subtitles/?id_episode=119775";
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $l);
@@ -343,7 +347,7 @@ $s=array();
 //$head=array('Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
 //'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2');
   $l="https://lookmovie.io/api/v1/security/show-access?slug=".$slug."&token=&step=2";
-  $l="https://lookmovie.io/api/v1/security/episode-access?id_episode=".$link;
+  $l="https://".$ref."/api/v1/security/episode-access?id_episode=".$link;
   //echo $l;
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $l);

@@ -262,7 +262,7 @@ foreach($videos as $video) {
   $image = "https://".$host.$t2[0];
   else
   $image=$t2[0];
-
+  if (strpos($image,"http") === false) $image="https://".$host.$image;
   $t1=explode('style="padding:3">',$video);
   $t2=explode('<',$t1[1]);
   $year=$t2[0];

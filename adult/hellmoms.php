@@ -226,7 +226,7 @@ $host=parse_url($l)['host'];
   curl_setopt($ch, CURLOPT_TIMEOUT, 15);
   $html = curl_exec($ch);
   curl_close($ch);
-  
+//echo $html;
 $r=array();
 $videos = explode('div class="thumb',$html);
 unset($videos[0]);
@@ -235,7 +235,7 @@ foreach($videos as $video) {
   $t1=explode('href="',$video);
   $t2 = explode('"', $t1[1]);
   $link = $t2[0];
-  $t1=explode('span>',$video);
+  $t1=explode('class="title">',$video);
   $t3=explode('<',$t1[1]);
   $title=$t3[0];
   $title = trim(strip_tags($title));

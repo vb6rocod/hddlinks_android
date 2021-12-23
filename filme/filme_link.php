@@ -588,8 +588,10 @@ if (preg_match("/filmeonlinegratis\.org/",$filelink)) {
   //echo $html;
 } elseif (strpos($filelink,"filmeserialeonline.org") !== false) {
 //echo $filelink;
+//die();
+  $ua = $_SERVER['HTTP_USER_AGENT'];
   $ch = curl_init($filelink);
-  curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows; U; Windows NT 6.1; en-US; rv:1.9.1.2) Gecko/20090729 Firefox/3.5.2 GTB5');
+  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
   curl_setopt($ch,CURLOPT_REFERER,$filelink);
   //curl_setopt ($ch, CURLOPT_POST, 1);
   //curl_setopt ($ch, CURLOPT_POSTFIELDS, $post);
@@ -608,6 +610,7 @@ if (preg_match("/filmeonlinegratis\.org/",$filelink)) {
 //wp-content/themes/grifus/includes/single/second.php
   if (strpos($h2,"grifus/includes") !== false) {
     //$id=str_between($h2,'data: {id: ',')');
+    // wp-content/themes/grifus/includes/single/second.php
     $tip=1;
     $post="id=".$id."&logat=1";
     $post="id=".$id;
@@ -621,9 +624,8 @@ if (preg_match("/filmeonlinegratis\.org/",$filelink)) {
   }
   //$post="call=03";
   //$post="id=".$id."&logat=1";
-  //echo $post;
-$headers=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:71.0) Gecko/20100101 Firefox/71.0',
-'Accept: text/html, */*; q=0.01',
+  //echo $l.$post;
+$headers=array('Accept: text/html, */*; q=0.01',
 'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
 'Accept-Encoding: deflate',
 'Content-Type: application/x-www-form-urlencoded; charset=UTF-8',
@@ -633,14 +635,17 @@ $headers=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:71.0) Gecko/2010010
 'Connection: keep-alive',
 'Referer: '.$filelink.''
 );
+//print_r ($headers);
   $ch = curl_init($l);
-  curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows; U; Windows NT 6.1; en-US; rv:1.9.1.2) Gecko/20090729 Firefox/3.5.2 GTB5');
+  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
+  //curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows; U; Windows NT 6.1; en-US; rv:1.9.1.2) Gecko/20090729 Firefox/3.5.2 GTB5');
   curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
   curl_setopt ($ch, CURLOPT_POST, 1);
   curl_setopt ($ch, CURLOPT_POSTFIELDS, $post);
   curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER  ,1);  // RETURN THE CONTENTS OF THE CALL
   //curl_setopt($ch, CURLOPT_HEADER, true);
+  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
   curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
   curl_setopt($ch, CURLOPT_TIMEOUT, 15);
   $html = curl_exec($ch);
@@ -655,7 +660,8 @@ $headers=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:71.0) Gecko/2010010
       $l="http://www.filmeserialeonline.org/".$t1[0];
       //echo $l;
       $ch = curl_init($l);
-      curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows; U; Windows NT 6.1; en-US; rv:1.9.1.2) Gecko/20090729 Firefox/3.5.2 GTB5');
+      curl_setopt($ch, CURLOPT_USERAGENT, $ua);
+      //curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows; U; Windows NT 6.1; en-US; rv:1.9.1.2) Gecko/20090729 Firefox/3.5.2 GTB5');
       curl_setopt($ch,CURLOPT_REFERER,$filelink);
       //curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
       //curl_setopt ($ch, CURLOPT_POST, 1);
@@ -672,16 +678,21 @@ $headers=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:71.0) Gecko/2010010
         $t1=explode('src="',$h3);
         $t2=explode('"',$t1[1]);
         $l=$t2[0];
+        //echo $l."==============";
         $ch = curl_init($l);
-        curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows; U; Windows NT 6.1; en-US; rv:1.9.1.2) Gecko/20090729 Firefox/3.5.2 GTB5');
+        curl_setopt($ch, CURLOPT_USERAGENT, $ua);
+        //curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows; U; Windows NT 6.1; en-US; rv:1.9.1.2) Gecko/20090729 Firefox/3.5.2 GTB5');
         curl_setopt($ch,CURLOPT_REFERER,$filelink);
         curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER  ,1);  // RETURN THE CONTENTS OF THE CALL
         curl_setopt($ch, CURLOPT_HEADER, true);
+        curl_setopt($ch, CURLOPT_NOBODY,true);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
         curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
         curl_setopt($ch, CURLOPT_TIMEOUT, 15);
         $h3 = curl_exec($ch);
         curl_close ($ch);
+        //echo $h3."========><><>";
       }
       $html .=$h3;
     }
