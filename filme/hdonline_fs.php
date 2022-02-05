@@ -165,6 +165,7 @@ $host=parse_url($link)['host'];
     $id=$m[1];
     $l="https://w10.hdonline.eu/wp-admin/admin-ajax.php";
     $post="action=fkingyrfather&id=".$id."&annoying=videospider";
+    // action=fkingyrfather&id=96130&annoying=videospider
     //echo $post;
     $head=array('Accept: application/json, text/javascript, */*; q=0.01',
     'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
@@ -192,6 +193,7 @@ $host=parse_url($link)['host'];
     //echo $h;
     $d=json_decode($h,1);
     $l=$d['url'];
+    //echo $l;
     $ch = curl_init();
     curl_setopt($ch, CURLOPT_URL, $l);
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
@@ -205,6 +207,30 @@ $host=parse_url($link)['host'];
     $h = curl_exec($ch);
     curl_close($ch);
     //echo $h;
+    if (preg_match("/location:\s+(.+)/",$h,$m)) {
+    $l=trim($m[1]);
+    //echo $h;
+///////////////////////////////////////////////////////////////////////
+//$l="https://123streaming.rocks/?token=TWJ1NkJlRmR5MUJES3NJSHJRSnlZVTQ3NjMvbGgxb3hhajRTeDcwdEZ5cWIvSmhuWEU4RlljdzNURFVyMms1ampnbWVCTXZkMlN1bFdpd0p6blUzOUNuMHdUbz0=";
+  $post="button-click=ZEhKMVpTLVF0LVBTLVF0Ti0wWTJMUy1Rei1QLTAtUHRMLTAtVjItUHpBeS1QelF4TnpBei1Qai1WLTU=";
+  $ch = curl_init();
+  curl_setopt($ch, CURLOPT_URL, $l);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
+  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+  curl_setopt($ch, CURLOPT_REFERER,"https://123stream.fun");
+  curl_setopt($ch, CURLOPT_HEADER,1);
+  curl_setopt($ch, CURLOPT_POST,1);
+  curl_setopt($ch, CURLOPT_POSTFIELDS,$post);
+  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 25);
+  $h = curl_exec($ch);
+  curl_close($ch);
+  //echo $h;
+  }
+  //echo $h;
+//////////////////////////////////////////////////////////////////////
   $t1=explode('var servers = [',$h);
   $t2=explode(']',$t1[1]);
   $e="\$s1=array(".$t2[0].");";

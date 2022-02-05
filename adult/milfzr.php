@@ -205,15 +205,15 @@ echo '</TR>'."\r\n";
 
 if($tip=="release") {
   if ($page>1)
-    $l = "http://milfzr.com/page/".$page;
+    $l = "https://milfzr.com/page/".$page;
   else
-    $l = "http://milfzr.com/page/".$page;
+    $l = "https://milfzr.com/page/".$page;
 } else {
   $search=str_replace(" ","+",$tit);
   if ($page > 1)
-    $l = "http://milfzr.com/page/".$page."?s=".$search;
+    $l = "https://milfzr.com/page/".$page."?s=".$search;
   else
-    $l = "http://milfzr.com/page/".$page."?s=".$search;
+    $l = "https://milfzr.com/page/".$page."?s=".$search;
 }
 $host=parse_url($l)['host'];
   $ch = curl_init();
@@ -221,11 +221,12 @@ $host=parse_url($l)['host'];
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
   curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 10.0; rv:55.0) Gecko/20100101 Firefox/55.0');
   curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
   curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
   curl_setopt($ch, CURLOPT_TIMEOUT, 15);
   $html = curl_exec($ch);
   curl_close($ch);
-  
+//echo $html;
 $r=array();
 $videos = explode('<div class="thumb"', $html);
 unset($videos[0]);

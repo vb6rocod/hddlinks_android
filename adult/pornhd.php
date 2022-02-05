@@ -226,16 +226,17 @@ $host=parse_url($l)['host'];
   curl_setopt($ch, CURLOPT_TIMEOUT, 15);
   $html = curl_exec($ch);
   curl_close($ch);
-  
+//echo $html;
 $r=array();
-$videos = explode('article class="video-item', $html);
+$videos = explode('<div class="video-list-item', $html);
 unset($videos[0]);
 $videos = array_values($videos);
 foreach($videos as $video) {
   $t1=explode('href="',$video);
   $t2 = explode('"', $t1[1]);
   $link = $t2[0];
-  $t1=explode('alt="',$video);
+  if ($link[0] == "/") $link="https://www.pornhd.com".$link;
+  $t1=explode('label="',$video);
   $t3=explode('"',$t1[1]);
   $title=$t3[0];
   $title = trim(strip_tags($title));

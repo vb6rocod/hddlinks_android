@@ -49,7 +49,9 @@ $ua="Mozilla/5.0 (Windows NT 10.0; rv:80.0) Gecko/20100101 Firefox/80.0";
 //echo $h;
 $n=0;
 $z=1;
-
+$path = parse_url($link)['path'];
+//echo $h;
+$host=parse_url($link)['host'];
 $videos = explode('<section class="SeasonBx AACrdn', $h);
 $sezoane=array();
 $link_sez=array();
@@ -62,7 +64,14 @@ foreach($videos as $video) {
      $sezoane[]=$m[1];
   $t1=explode('href="',$video);
   $t2=explode('"',$t1[1]);
-  $link_sez[]=$t2[0];
+  $l1=trim($t2[0]);
+  if ($l1[0]=="/")
+   $l1="https://".$host.$l1;
+  elseif (substr($l1, 0, 4) == "http")
+  $l1=trim($t2[0]);
+  else
+   $l1 = "https://".$host.$path.$l1;
+  $link_sez[]=$l1;
 }
 echo '<table border="1" width="100%">'."\n\r";
 
@@ -102,7 +111,7 @@ foreach($sezoane as $key => $value) {
   //echo $link_sez[$key];
   curl_setopt($ch, CURLOPT_URL,$link_sez[$key]);
   $h = curl_exec($ch);
-
+  $path = parse_url($link_sez[$key])['path'];
   //echo $h;
   $vids = explode('span class="Num">', $h);
   unset($vids[0]);
@@ -117,6 +126,14 @@ foreach($sezoane as $key => $value) {
   $t1=explode('href="',$vid);
   $t2=explode('"',$t1[1]);
   $link=$t2[0];
+ if ($link[0]=="/")
+  $link="https://".$host.$link;
+ elseif (substr($link, 0, 4) == "http")
+  $link=$t2[0];
+ else
+  $link="https://".$host.$path.$link;
+  //if ($link[0]=="/")
+   //$link="https://".$host.$link;
   $t3=explode('>',$t1[2]);
   $t4=explode('<',$t3[1]);
   $ep_tit = $t4[0];

@@ -167,6 +167,8 @@ $r=array();
   $t3=explode('"',$t2[1]);
   $l=$t3[0];
 $r[]=$l;
+//echo $l;
+// https://cinegrabber.com/v/j-plrcdmym8dmpy
 echo '<table border="1" width="100%">';
 echo '<TR><TD class="mp">Alegeti un server: Server curent:<label id="server">'.parse_url($r[0])['host'].'</label>
 <input type="hidden" id="file" value="'.urlencode($r[0]).'"></td></TR></TABLE>';

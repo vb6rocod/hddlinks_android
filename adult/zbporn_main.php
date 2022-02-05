@@ -80,7 +80,7 @@ foreach($videos as $video) {
   	$title=$t3[0];
   	$title=prep_tit($title);
     $link=$target."?page=1&tip=release&link=".urlencode(fix_t($link))."&title=".urlencode(fix_t($title));
-    if ($title) {
+    if ($title && !preg_match("/%2Fvideo/",$link)) {
 	if ($n == 0) echo "<TR>"."\r\n";
 	echo '<TD class="cat">'.'<a class ="cat" href="'.$link.'" target="_blank">'.$title.'</a></TD>';
     $n++;

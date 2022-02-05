@@ -42,6 +42,7 @@ echo '<td class="cat">'.'<a class ="cat" href="peserialehd_fav.php" target="_bla
 echo '<td class="cat" colspan="2"></td></tr>'."\r\n";
 $n=0;
 $l="https://www.peserialehd.us";
+//echo $l;
 $ua="Mozilla/5.0 (Windows NT 10.0; rv:75.0) Gecko/20100101 Firefox/75.0";
 $ch = curl_init();
 curl_setopt($ch, CURLOPT_URL, $l);
@@ -50,25 +51,28 @@ curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
 curl_setopt($ch, CURLOPT_USERAGENT, $ua);
 curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
 curl_setopt($ch, CURLOPT_REFERER, "https://www.peserialehd.us");
+curl_setopt($ch, CURLOPT_HEADER,1);
 curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
 curl_setopt($ch, CURLOPT_TIMEOUT, 15);
 $html = curl_exec($ch);
 curl_close($ch);
+//$html=file_get_contents($l);
+//echo $html;
 
-$html = str_between($html,"<ul class='menu main-menu'","</ul>" );
+//$html = str_between($html,"<ul class='menu main-menu'","</ul>" );
 
 $videos = explode('<li', $html);
 unset($videos[0]);
 $videos = array_values($videos);
 
 foreach($videos as $video) {
-    $t0 = explode("href='",$video);
-    $t1 = explode("'", $t0[1]);
+    $t0 = explode('href="',$video);
+    $t1 = explode('"', $t0[1]);
     if (strpos($t1[0],"http") === false)
        $link = "https://www.peserialehd.us".$t1[0];
     else
        $link=$t1[0];
-    $t2 = explode('</i>', $video);
+    $t2 = explode('>', $t0[1]);
     $t3 = explode("'", $t2[1]);
     $title = $t3[0];
     $link=$target."?link=".urlencode(fix_t($link))."&title=".urlencode(fix_t($title));

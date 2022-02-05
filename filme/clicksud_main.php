@@ -25,6 +25,7 @@ echo '<table border="1px" width="100%" style="table-layout:fixed;">'."\r\n";
 echo '<TR><th class="cat" colspan="3">'.$main_title.'</th></TR>';
 $n=0;
 $l="https://www.clicksud.org/2012/06/seriale-romanesti-online.html";
+$l="https://clicksud.biz/2012/06/seriale-romanesti-online/";
 $ua = $_SERVER['HTTP_USER_AGENT'];
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $l);
@@ -37,18 +38,19 @@ $ua = $_SERVER['HTTP_USER_AGENT'];
   $html = curl_exec($ch);
   curl_close($ch);
 
-$videos = explode("li><a href='", $html);
+$videos = explode("<td><strong>", $html);
 unset($videos[0]);
 $videos = array_values($videos);
 
 foreach($videos as $video) {
-    $t1 = explode("'", $video);
-    $link = $t1[0];
-    $t2 = explode("title='", $video);
-    $t3 = explode("'", $t2[1]);
-    $title = $t3[0];
-    if (preg_match("/^_/i",$title)) {
-    $title=substr($title,1);
+    $t1 = explode("<", $video);
+    $title=$t1[0];
+    //$link = $t1[0];
+    $t2 = explode('href="', $video);
+    $t3 = explode('"', $t2[1]);
+    $link = $t3[0];
+    //if (preg_match("/^_/i",$title)) {
+    //$title=substr($title,1);
     $link=$target."?page=1&tip=release&link=".urlencode(fix_t($link))."&title=".urlencode(fix_t($title));
 	if ($n == 0) echo "<TR>"."\r\n";
 	echo '<TD class="cat">'.'<a class ="cat" href="'.$link.'" target="_blank">'.$title.'</a></TD>';
@@ -57,7 +59,7 @@ foreach($videos as $video) {
      echo '</TR>'."\r\n";
      $n=0;
     }
-    }
+    //}
 }
   if ($n < 3 && $n > 0) {
     for ($k=0;$k<3-$n;$k++) {

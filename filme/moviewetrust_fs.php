@@ -158,6 +158,8 @@ if ($tip=="movie")
 $l="https://fsapi.xyz/tmdb-movie/".$link;
 else
 $l="https://fsapi.xyz/tv-tmdb/".$link."-".$sez."-".$ep;
+//echo $l;
+//die();
   $head=array('Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
   'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
   'Accept-Encoding: deflate',

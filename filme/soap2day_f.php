@@ -1,4 +1,3 @@
-<!DOCTYPE html>
 <?php
 function str_between($string, $start, $end){
 	$string = " ".$string; $ini = strpos($string,$start);
@@ -6,12 +5,18 @@ function str_between($string, $start, $end){
 	return substr($string,$ini,$len);
 }
 include ("../common.php");
+if (file_exists($base_pass."player.txt")) {
+$flash=trim(file_get_contents($base_pass."player.txt"));
+} else {
+$flash="direct";
+}
 //include ("../cloudflare.php");
 /* links from https://soapgate.org/ */
 $base="https://soap2day.to";
 //$base="https://soap2day.se";
 //$base="https://soap2day.is";
 //$base="https://soap2day.im";
+$base="https://soap2day.ac";
 $base="https://soap2day.ac";
 $host=parse_url($base)['host'];
 $page = $_GET["page"];
@@ -64,9 +69,66 @@ if ($tip=="search") {
   if ($page == 1) file_put_contents($base_cookie."filme.dat",$tit);
 } else
   $page_title=$tit;
+$sjv="9812";
+$cookie=$base_cookie."soap2day.dat";
+ if (file_exists("/storage/emulated/0/Download/cookies.txt")) {
+  $h1=file_get_contents("/storage/emulated/0/Download/cookies.txt");
+  file_put_contents($cookie,$h1);
+  unlink ("/storage/emulated/0/Download/cookies.txt");
+ } elseif (file_exists($base_cookie."cookies.txt")) {
+  $h1=file_get_contents($base_cookie."cookies.txt");
+  file_put_contents($cookie,$h1);
+  unlink ($base_cookie."cookies.txt");
+ }
+if (file_exists($base_pass."firefox.txt"))
+ $ua=file_get_contents($base_pass."firefox.txt");
+else
+ $ua="Mozilla/5.0 (Windows NT 10.0; rv:96.0) Gecko/20100101 Firefox/96.0";
+if ($page==1 && $tip=="release") {
+
+//////////////////////////////////////////
+
+$l1="https://".$host;
+//$l="https://soap2day.ac/enter.html";
+$head=array('User-Agent: '.$ua,
+'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8',
+'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
+'Accept-Encoding: deflate',
+'Connection: keep-alive');
+  $ch = curl_init();
+  curl_setopt($ch, CURLOPT_URL, $l1);
+  //curl_setopt($ch, CURLOPT_USERAGENT, $ua);
+  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,0);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER  ,1);  // RETURN THE CONTENTS OF THE CALL
+  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+  curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie);
+  curl_setopt($ch, CURLOPT_COOKIEJAR, $cookie);
+  curl_setopt($ch, CURLOPT_HTTPHEADER,$head);
+  curl_setopt($ch, CURLOPT_HEADER,1);
+  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+  $h = curl_exec($ch);
+  curl_close($ch);
+  //echo $h;
+  if (preg_match("/enter\.html/",$h)) {
+   if ($flash=="mp")
+    echo '<a href="intent:http://127.0.0.1:8080/scripts/filme/cf.php?site=https://'.$host.'/enter.html&cookie='.$cookie.'#Intent;package=org.mozilla.firefox;S.title=Cloudflare;end">GET cloudflare cookie</a>';
+   else
+    header('Location: cf.php?site=https://'.$host.'/enter.html&cookie='.$cookie);
+exit ;
+  } elseif (preg_match("/403 Forbidden/",$h)) {
+   if ($flash=="mp")
+    echo '<a href="intent:http://127.0.0.1:8080/scripts/filme/cf.php?site=https://'.$host.'&cookie='.$cookie.'#Intent;package=org.mozilla.firefox;S.title=Cloudflare;end">GET cloudflare cookie</a>';
+   else
+    header('Location: cf.php?site=https://'.$host.'&cookie='.$cookie);
+exit ;
+}
+  }
 /* ==================================================== */
 
 ?>
+<!DOCTYPE html>
 <html>
 <head>
 <meta http-equiv="content-type" content="text/html; charset=UTF-8">
@@ -174,11 +236,12 @@ if ($page==1) {
 }
 echo '</TR>'."\r\n";
 //////////////////////////////////
-$ua = $_SERVER['HTTP_USER_AGENT'];
+//$ua = $_SERVER['HTTP_USER_AGENT'];
 //$ua="Mozilla/5.0 (Windows NT 10.0; rv:71.0) Gecko/20100101 Firefox/71.0";
-$cookie=$base_cookie."soap2day.dat";
+
+//$cookie=$base_cookie."cookies.txt";
 //$ua=file_get_contents($base_pass."firefox.txt");
-$ua="Mozilla/5.0 (Windows NT 10.0; rv:91.0) Gecko/20100101 Firefox/91.0";
+
 if($tip=="release") {
   if ($page>1)
   $l="https://".$host."/movielist?page=".$page;
@@ -188,47 +251,18 @@ if($tip=="release") {
   $search=str_replace(" ","%20",$tit);
   $l="https://".$host."/search/keyword/".$search;
 }
-$host=parse_url($l)['host'];
-$sjv="9812";
-if ($page==1 && $tip=="release") {
- $l1="https://".$host."/auth";
-$head=array('Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
+$head=array('User-Agent: '.$ua,
+'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8',
 'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
 'Accept-Encoding: deflate',
-'Referer: https://'.$host.'/enter.html',
-'Connection: keep-alive',
-'Cookie: sjv='.$sjv,
-'Upgrade-Insecure-Requests: 1');
-  $ch = curl_init($l1);
-  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
-  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
-  curl_setopt($ch, CURLOPT_RETURNTRANSFER  ,1);  // RETURN THE CONTENTS OF THE CALL
-  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-  curl_setopt($ch, CURLOPT_HTTPHEADER,$head);
-  //curl_setopt($ch, CURLOPT_POST, 1);
-  //curl_setopt($ch, CURLOPT_POSTFIELDS, $post);
-  curl_setopt($ch, CURLOPT_COOKIEJAR, $cookie);
-  //curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie);
-  curl_setopt($ch, CURLOPT_HEADER,1);
-  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
-  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
-  $h = curl_exec($ch);
-  curl_close ($ch);
-  //echo $h;
-  //$add="soap2day.to	FALSE	/	FALSE	0	sjv	5326";
-  //file_put_contents($cookie,$add,FILE_APPEND);
-  }
-$head=array('Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
-'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
-'Cookie: sjv='.$sjv);
+'Connection: keep-alive');
 
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $l);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
   curl_setopt($ch,CURLOPT_REFERER,"https://".$host);
   curl_setopt($ch,CURLOPT_HTTPHEADER,$head);
-  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
+  //curl_setopt($ch, CURLOPT_USERAGENT, $ua);
   curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie);
   curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
   curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);

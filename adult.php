@@ -72,7 +72,7 @@ echo '
 
 
 <TR>
-<TD width="25%"><a href="adult/slutload_main.php" target="_blank">slutload</a></TD>
+<TD width="25%"></TD>
 <TD width="25%"><a href="adult/tvporn_main.php" target="_blank">tvporn</a></TD>
 <TD width="25%"><a href="adult/fapbox_main.php" target="_blank">fapbox</a></TD>
 <TD width="25%"><a href="adult/pornhub_main.php" target="_blank">porhub</a></TD>
@@ -95,7 +95,7 @@ echo '
 <TR>
 <TD width="25%"><a href="adult/youjizz_main.php" target="_blank">youjizz</a></TD>
 <TD width="25%"><a href="adult/drtuber_main.php" target="_blank">drtuber</a></TD>
-<TD width="25%"><a href="adult/vporn.php?tip=release&page=1&title=vporn&link=" target="_blank">vporn</a></TD>
+<TD width="25%"></TD>
 <TD width="25%"><a href="adult/tube8_main.php" target="_blank">tube8</a></TD>
 </TR>
 
@@ -108,7 +108,7 @@ echo '
 
 <TR>
 <TD width="25%"></TD>
-<TD width="25%"><a href="adult/pornhdo_main.php" target="_blank">pornhdo</a></TD>
+<TD width="25%"></TD>
 <TD width="25%"><a href="adult/porndroids_main.php" target="_blank">porndroids</a></TD>
 <TD width="25%"><a href="adult/youporn.php?tip=release&page=1&title=youporn&link=" target="_blank">youporn</a></TD>
 </TR>
@@ -131,13 +131,13 @@ echo '
 <TD width="25%"><a href="adult/pornheed_main.php" target="_blank">pornheed</a></TD>
 <TD width="25%"><a href="adult/pornrabbit_main.php" target="_blank">pornrabbit</a></TD>
 <TD width="25%"><a href="adult/eroxia_main.php" target="_blank">eroxia</a></TD>
-<TD width="25%"><a href="adult/deviantclip_main.php" target="_blank">deviantclip</a></TD>
+<TD width="25%"></TD>
 </TR>
 
 <TR>
 <TD width="25%"><a href="adult/trannytube_main.php" target="_blank">trannytube</a></TD>
 <TD width="25%"><a href="adult/eporner_main.php" target="_blank">eporner</a></TD>
-<TD width="25%"><a href="adult/extremetube_main.php" target="_blank">extremetube</a></TD>
+<TD width="25%"></TD>
 <TD width="25%"><a href="adult/porntrex_main.php" target="_blank">porntrex</a></TD>
 </TR>
 

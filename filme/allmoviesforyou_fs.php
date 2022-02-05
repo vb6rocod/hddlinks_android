@@ -164,9 +164,11 @@ $ua="Mozilla/5.0 (Windows NT 10.0; rv:89.0) Gecko/20100101 Firefox/89.0";
   $h = curl_exec($ch);
   curl_close($ch);
   //echo $h;
-  $t1=explode('data-src="',$h);
+  $t1=explode('src="',$h);
   $t2=explode('"',$t1[1]);
-  $r[]=trim($t2[0]);
+  $link=trim($t2[0]);
+  if (strpos($link,"http") === false) $link="https:".$link;
+  $r[]=$link;
   }
 
 echo '<table border="1" width="100%">';

@@ -191,16 +191,23 @@ $ua="Mozilla/5.0 (Windows NT 10.0; rv:75.0) Gecko/20100101 Firefox/75.0";
   curl_setopt($ch, CURLOPT_TIMEOUT, 25);
   $h = curl_exec($ch);
   curl_close($ch);
-
+$path = parse_url($l)['path'];
+//echo $h;
 $host=parse_url($l)['host'];
 
-$videos = explode('<article', $h);
+$videos = explode('<li id="post-', $h);
 unset($videos[0]);
 $videos = array_values($videos);
 foreach($videos as $video) {
  $t1=explode('href="',$video);
  $t2=explode('"',$t1[1]);
  $link=$t2[0];
+ if ($link[0]=="/")
+  $link="https://allmoviesforyou.net".$link;
+ elseif (substr($link, 0, 4) == "http")
+  $link=$t2[0];
+ else
+  $link="https://allmoviesforyou.net".$path.$link;
  $t1=explode('data-src="',$video);
  $t2=explode('"',$t1[1]);
  $image=$t2[0];

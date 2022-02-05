@@ -1,0 +1,24 @@
+<html>
+<body>
+            <div class="captcha">
+                <form method="POST" id="recaptcha-form" action="look.php">
+                    <input type="hidden" name="_csrf"
+                           value="2uKPytCpcA56b92jkPih5XDCM-OoP6O5S5J9LbCHIiWNuOv8iuhHdzQluvbyqOzdFrpxkPFPlO8t_Qtm4LFKRA=="/>
+                    <div class="g-recaptcha" data-sitekey="6LcYj7kaAAAAAAdh5kzxcimA-CDFf0Ei8UTAFg3g"
+                         data-callback="captchaPassed"></div>
+                </form>
+            </div>
+            <p class="text text-bottom">Thank you and enjoy your free unlimited watching</p>
+        </div>
+
+    </div>
+</div>
+
+<script>
+    function captchaPassed(token) {
+        document.querySelector('#recaptcha-form').submit();
+    }
+</script>
+</div>
+<script src="https://www.google.com/recaptcha/api.js"></script></body>
+</html>

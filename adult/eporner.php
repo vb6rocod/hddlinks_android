@@ -235,8 +235,8 @@ foreach($videos as $video) {
   $t1=explode('href="',$video);
   $t2 = explode('"', $t1[1]);
   $link = "https://www.eporner.com".$t2[0];
-  $t1=explode('title="',$video);
-  $t3=explode('"',$t1[2]);
+  $t1=explode('alt="',$video);
+  $t3=explode('"',$t1[1]);
   $title=$t3[0];
   $title = trim(strip_tags($title));
   $title = prep_tit($title);

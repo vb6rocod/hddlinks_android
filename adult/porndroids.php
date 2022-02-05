@@ -236,7 +236,7 @@ foreach($videos as $video) {
   $t2 = explode('"', $t1[1]);
   $l=$t2[0];
   $link = "https://www.porndroids.com".$t2[0];
-  $t1=explode('item__title--videos">',$video);
+  $t1=explode('title--videos border-color">',$video);
   $t3=explode('<',$t1[1]);
   $title=$t3[0];
   $title = trim(strip_tags($title));
@@ -245,7 +245,7 @@ foreach($videos as $video) {
   $t2 = explode('"', $t1[1]);
   $image = $t2[0];
   if (strpos($image,"http") === false) $image="https:".$image;
-  $t1=explode('</svg',$video);
+  $t1=explode('class="duration-video"',$video);
   $t2=explode('>',$t1[1]);
   $t3=explode("<",$t2[1]);
   $durata=trim($t3[0]);

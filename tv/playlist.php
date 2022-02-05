@@ -38,7 +38,25 @@ function ajaxrequest(link) {
     }
   }
 }
+function addfav(link) {
+  var request =  new XMLHttpRequest();
+  var the_data = link;
+  var php_file='playlist_add.php';
+  request.open("POST", php_file, true);			// set the request
 
+  // adds a header to tell the PHP script to recognize the data as is sent via POST
+  request.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+  request.send(the_data);		// calls the send() method with datas as parameter
+
+  // Check request status
+  // If the response is received completely, will be transferred to the HTML tag with tagID
+  request.onreadystatechange = function() {
+    if (request.readyState == 4) {
+      alert (request.responseText);
+      location.reload();
+    }
+  }
+}
 function isValid(evt) {
     var charCode = (evt.which) ? evt.which : evt.keyCode,
     self = evt.target;
@@ -49,6 +67,17 @@ function isValid(evt) {
      msg="prog.php?" + val_imdb;
      document.getElementById("fancy").href=msg;
      document.getElementById("fancy").click();
+    } else if  (charCode == "50") {
+      id = "fav_" + self.id;
+      val_fav=document.getElementById(id).value;
+      //alert (val_fav);
+      addfav(val_fav);
+    } else if  (charCode == "52") {
+      id = "fav_" + self.id;
+      val_fav=document.getElementById(id).value;
+      val_fav = val_fav.replace("mod=add","mod=del");
+      //alert (val_fav);
+      addfav(val_fav);
     } else if (charCode == "51") {
      id = "imdb_" + self.id;
      id_link=self.id;
@@ -98,7 +127,7 @@ function off() {
 </script>
 <a href='' id='mytest1'></a>
 <a id="fancy" data-fancybox data-type="iframe" href=""></a>
-<h2><?php echo $pg_tit; ?></H2>
+<h2><?php echo $pg_tit; ?> (2=add,4=del)</H2>
 
 <table border="1px" width="100%">
 <?php
@@ -185,13 +214,20 @@ foreach($m3uFile as $key => $line) {
     }
     $link="direct_link.php?link=".urlencode(fix_t($file))."&title=".urlencode(fix_t($title))."&from=".$from."&mod=direct";
     $l="link=".urlencode(fix_t($file))."&title=".urlencode(fix_t($title))."&from=".$from."&mod=".$mod;
+    $fav_link="mod=add&title=".urlencode(fix_t($title))."&link=".urlencode($file);
     if (strpos($link,"html")=== false) {
     if ($n == 0) echo "<TR>"."\n\r";
     //if ($tast == "NU")
     if ($flash != "mp")
-    echo '<TD class="cat" width="20%">'.'<a class ="imdb" id="myLink'.($w*1).'" href="'.$link.'" target="_blank">'.$title.'<input type="hidden" id="imdb_myLink'.($w*1).'" value="'.$val_prog.'"></a>';
+    echo '<TD class="cat" width="20%">'.'<a class ="imdb" id="myLink'.($w*1).'" href="'.$link.'" target="_blank">'.$title
+    .'<input type="hidden" id="imdb_myLink'.($w*1).'" value="'.$val_prog.'">
+    <input type="hidden" id="fav_myLink'.($w*1).'" value="'.$fav_link.'">
+    </a>';
     else
-    echo '<TD class="cat" width="20%">'.'<a class ="imdb" id="myLink'.($w*1).'" onclick="ajaxrequest('."'".$l."')".'"'." style='cursor:pointer;'>".$title.'<input type="hidden" id="imdb_myLink'.($w*1).'" value="'.$val_prog.'"></a>';
+    echo '<TD class="cat" width="20%">'.'<a class ="imdb" id="myLink'.($w*1).'" onclick="ajaxrequest('."'".$l."')".'"'." style='cursor:pointer;'>".$title
+    .'<input type="hidden" id="imdb_myLink'.($w*1).'" value="'.$val_prog.'">
+    <input type="hidden" id="fav_myLink'.($w*1).'" value="'.$fav_link.'">
+    </a>';
     $n++;
     $w++;
     }
@@ -220,7 +256,9 @@ foreach($m3uFile as $key => $line) {
     $t1=preg_replace("/^\|?RO\s*\|\s*/","",$title);
     $l_prog="link=".urlencode(fix_t($t1));
     if ($tast == "NU") {
-   	echo '<a onclick="prog('."'".$l_prog."')".'"'." style='cursor:pointer;'>"." *".'</a></TD>';
+   	echo '<a onclick="prog('."'".$l_prog."')".'"'." style='cursor:pointer;'>"." *".'</a>
+   	<a onclick="addfav('."'".$fav_link."')".'"'." style='cursor:pointer;'>"." A".'</a>
+       </TD>';
     if ($n > 3) {
      echo '</TR>'."\n\r";
      $n=0;

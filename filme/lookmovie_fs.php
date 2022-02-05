@@ -1,4 +1,3 @@
-<!doctype html>
 <?php
 include ("../common.php");
 //error_reporting(0);
@@ -55,88 +54,6 @@ function str_between($string, $start, $end){
 	if ($ini == 0) return ""; $ini += strlen($start); $len = strpos($string,$end,$ini) - $ini;
 	return substr($string,$ini,$len);
 }
-?>
-<html>
-<head>
-<meta http-equiv="content-type" content="text/html; charset=UTF-8">
-<title><?php echo $tit.$tit2; ?></title>
-<link rel="stylesheet" type="text/css" href="../custom.css" />
-<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.0/jquery.min.js"></script>
-<script type="text/javascript">
-function openlink1(link) {
-  link1=document.getElementById('file').value;
-  msg="link1.php?file=" + link1 + "&title=" + link;
-  window.open(msg);
-}
-function openlink(link) {
-  on();
-  var request =  new XMLHttpRequest();
-  link1=document.getElementById('file').value;
-  var the_data = "link=" + link1 + "&title=" + link;
-  var php_file="link1.php";
-  request.open("POST", php_file, true);			// set the request
-
-  // adds a header to tell the PHP script to recognize the data as is sent via POST
-  request.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-  request.send(the_data);		// calls the send() method with datas as parameter
-
-  // Check request status
-  // If the response is received completely, will be transferred to the HTML tag with tagID
-  request.onreadystatechange = function() {
-    if (request.readyState == 4) {
-      off();
-      <?php
-      if ($debug) echo "document.getElementById('debug').innerHTML = request.responseText.match(/http.+#/g);"."\r\n";
-      ?>
-      document.getElementById("mytest1").href=request.responseText;
-      document.getElementById("mytest1").click();
-    }
-  }
-}
-function changeserver(s,t) {
-  document.getElementById('server').innerHTML = s;
-  document.getElementById('file').value=t;
-}
-   function zx(e){
-     var charCode = (typeof e.which == "number") ? e.which : e.keyCode
-     //alert (charCode);
-     if (charCode == "49") {
-      document.getElementById("opensub").click();
-     } else if (charCode == "50") {
-      document.getElementById("titrari").click();
-     } else if (charCode == "51") {
-      document.getElementById("subs").click();
-     } else if (charCode == "52") {
-      document.getElementById("subtitrari").click();
-     } else if (charCode == "53") {
-      document.getElementById("viz").click();
-     } else if (charCode == "55") {
-      document.getElementById("opensub1").click();
-     } else if (charCode == "56") {
-      document.getElementById("titrari1").click();
-     } else if (charCode == "57") {
-      document.getElementById("subs1").click();
-     } else if (charCode == "48") {
-      document.getElementById("subtitrari1").click();
-     }
-   }
-document.onkeypress =  zx;
-</script>
-<script>
-function on() {
-    document.getElementById("overlay").style.display = "block";
-}
-
-function off() {
-    document.getElementById("overlay").style.display = "none";
-}
-</script>
-</head>
-<body>
-<a href='' id='mytest1'></a>
-<?php
-echo '<h2>'.$tit.$tit2.'</H2>';
-echo '<BR>';
 $r=array();
 $s=array();
 $srt="";
@@ -160,19 +77,21 @@ $last_good="https://lookmovie.io";
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
   curl_setopt($ch, CURLOPT_USERAGENT, $ua);
   curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie);
+  curl_setopt($ch, CURLOPT_COOKIEJAR, $cookie);
   //curl_setopt($ch, CURLOPT_HTTPHEADER,$head);
-  //curl_setopt($ch, CURLOPT_HEADER,1);
+  curl_setopt($ch, CURLOPT_HEADER,1);
   curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
   curl_setopt($ch, CURLOPT_TIMEOUT, 25);
   curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
   curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
   $h = curl_exec($ch);
   curl_close($ch);
-
-  if (preg_match("/(lookmovie\d+\.\w+)\//",$h,$m))
+  //echo $h;
+  if (preg_match("/(lookmovie\d+\.\w+)\/[^\"]+/",$h,$m))
     $ref=$m[1];
   else
     $ref="lookmovie.io";
+
   file_put_contents($base_cookie."lookmovie_ref.txt",$ref);
   $h=str_replace('" + window.location.host + "',"lookmovie.io",$h);
   if (preg_match("/file\"\:\s*\"((.*?)(Romanian|ro)\.vtt)/",$h,$p))
@@ -189,20 +108,100 @@ $last_good="https://lookmovie.io";
   if (preg_match("/id_movie\:?\s*\'?(\d+)/",$h,$m))
    $id=$m[1];
   $l="https://".$ref."/api/v1/security/movie-access?id_movie=".$id; //"&token=1&sk=&step=1";
+
   //echo $l;
+  //die();
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $l);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
   curl_setopt($ch, CURLOPT_USERAGENT, $ua);
   curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie);
+  //curl_setopt($ch, CURLOPT_HEADER,1);
   //curl_setopt($ch, CURLOPT_HTTPHEADER,$head);
+  curl_setopt($ch, CURLINFO_HEADER_OUT, true);
   curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
   curl_setopt($ch, CURLOPT_TIMEOUT, 25);
   curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
   curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
   $h = curl_exec($ch);
+  $info = curl_getinfo($ch);
   curl_close($ch);
+  //print_r ($info);
+  if (preg_match("/threat\-protection/",$info['url'])) {
+   require_once("rec.php");
+   $key="6Lc-jrkaAAAAAP03RoRV_-WL0-ETAxXJXGU_62lT";
+   $co="aHR0cHM6Ly9sb29rbW92aWUuaW86NDQz";
+   //echo base64_decode($co)."\n";
+   $sa="submit";
+   $loc="https://lookmovie.io";
+   $token=rec($key,$co,$sa,$loc);
+   $t1=explode('hidden" name="_csrf" value="',$h);
+   $t2=explode('"',$t1[1]);
+   $csrf=$t2[0];
+   $post="_csrf=".$csrf."&tk=".$token;
+   $l=$info['url'];
+   $head=array('Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
+   'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
+   'Accept-Encoding: deflate',
+   'Content-Type: application/x-www-form-urlencoded',
+   'Content-Length: '.strlen($post),
+   'Origin: https://'.$ref,
+   'Connection: keep-alive',
+   'Referer: '.$l,
+   'Upgrade-Insecure-Requests: 1');
+//print_r ($head);
+  $ch = curl_init();
+  curl_setopt($ch, CURLOPT_URL, $l);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
+  //curl_setopt($ch,CURLOPT_REFERER,$l);
+  curl_setopt($ch, CURLOPT_HTTPHEADER, $head);
+  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,0);
+  //curl_setopt($ch, CURLOPT_HEADER,1);
+  curl_setopt($ch, CURLOPT_POST,1);
+  curl_setopt($ch, CURLOPT_POSTFIELDS,$post);
+  //curl_setopt($ch, CURLOPT_NOBODY,1);
+  curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie);
+  curl_setopt($ch, CURLOPT_COOKIEJAR, $cookie);
+  curl_setopt($ch, CURLOPT_HTTPHEADER, $head);
+ //curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
+ curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
+  //curl_setopt($ch, CURLOPT_SSL_CIPHER_LIST, implode(":", $DEFAULT_CIPHERS));
+  //curl_setopt($ch, CURLOPT_SSLVERSION,$ssl_version);
+  curl_setopt($ch, CURLINFO_HEADER_OUT, true);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 25);
+  $h = curl_exec($ch);
+  $info = curl_getinfo($ch);
+  curl_close($ch);
+  //print_r ($info);
+  if (isset($info['redirect_url'])) {
+  $l=$info['redirect_url'];
+  if (preg_match("/second/",$l)) {
+  file_put_contents($base_cookie."lookmovie_ref1.txt",$l."|".$ref."|".$csrf);
+   echo '<a href="look.html">Solve captcha</a>';
+  } else {
+   echo 'Try again';
+   echo '<script>setTimeout(function(){ history.go(-1); }, 2000);</script>';
+  }
+  }
+    //header('Location: look.html');
+exit ;
+  }
   //echo $h;
+/////////////////////////////////////////////////////////////////////////////////////////////
+
+/////////////////////////////////////////////////////////////////////////////////////////////
+  //die();
+  /*
+  if (preg_match("/Please allow up to 5 seconds/",$h)) {
+   if ($flash=="mp")
+    echo '<a href="intent:http://127.0.0.1:8080/scripts/filme/cf.php?site='.$l.'&cookie='.$cookie.'#Intent;package=org.mozilla.firefox;S.title=Cloudflare;end">GET cloudflare cookie</a>';
+   else
+    header('Location: cf.php?site='.$l.'&cookie='.$cookie);
+exit ;
+  }
+  */
   $x=json_decode($h,1);
   //print_r ($x);
   if (isset($x['subtitles'])) {
@@ -305,15 +304,80 @@ $s=array();
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $l);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-  //curl_setopt($ch, CURLOPT_HTTPHEADER,$head);
   curl_setopt($ch, CURLOPT_USERAGENT, $ua);
   curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie);
+  //curl_setopt($ch, CURLOPT_HEADER,1);
+  //curl_setopt($ch, CURLOPT_HTTPHEADER,$head);
+  curl_setopt($ch, CURLINFO_HEADER_OUT, true);
   curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
   curl_setopt($ch, CURLOPT_TIMEOUT, 25);
   curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
   curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
   $h = curl_exec($ch);
+  $info = curl_getinfo($ch);
   curl_close($ch);
+  //print_r ($info);
+  if (preg_match("/threat\-protection/",$info['url'])) {
+   require_once("rec.php");
+   $key="6Lc-jrkaAAAAAP03RoRV_-WL0-ETAxXJXGU_62lT";
+   $co="aHR0cHM6Ly9sb29rbW92aWUuaW86NDQz";
+   //echo base64_decode($co)."\n";
+   $sa="submit";
+   $loc="https://lookmovie.io";
+   $token=rec($key,$co,$sa,$loc);
+   $t1=explode('hidden" name="_csrf" value="',$h);
+   $t2=explode('"',$t1[1]);
+   $csrf=$t2[0];
+   $post="_csrf=".$csrf."&tk=".$token;
+   $l=$info['url'];
+   $head=array('Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
+   'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
+   'Accept-Encoding: deflate',
+   'Content-Type: application/x-www-form-urlencoded',
+   'Content-Length: '.strlen($post),
+   'Origin: https://'.$ref,
+   'Connection: keep-alive',
+   'Referer: '.$l,
+   'Upgrade-Insecure-Requests: 1');
+//print_r ($head);
+  $ch = curl_init();
+  curl_setopt($ch, CURLOPT_URL, $l);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
+  //curl_setopt($ch,CURLOPT_REFERER,$l);
+  curl_setopt($ch, CURLOPT_HTTPHEADER, $head);
+  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,0);
+  //curl_setopt($ch, CURLOPT_HEADER,1);
+  curl_setopt($ch, CURLOPT_POST,1);
+  curl_setopt($ch, CURLOPT_POSTFIELDS,$post);
+  //curl_setopt($ch, CURLOPT_NOBODY,1);
+  curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie);
+  curl_setopt($ch, CURLOPT_COOKIEJAR, $cookie);
+  curl_setopt($ch, CURLOPT_HTTPHEADER, $head);
+ //curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
+ curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
+  //curl_setopt($ch, CURLOPT_SSL_CIPHER_LIST, implode(":", $DEFAULT_CIPHERS));
+  //curl_setopt($ch, CURLOPT_SSLVERSION,$ssl_version);
+  curl_setopt($ch, CURLINFO_HEADER_OUT, true);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 25);
+  $h = curl_exec($ch);
+  $info = curl_getinfo($ch);
+  curl_close($ch);
+  //print_r ($info);
+  if (isset($info['redirect_url'])) {
+  $l=$info['redirect_url'];
+  if (preg_match("/second/",$l)) {
+  file_put_contents($base_cookie."lookmovie_ref1.txt",$l."|".$ref."|".$csrf);
+   echo '<a href="look.html">Solve captcha</a>';
+  } else {
+   echo 'Try again';
+   echo '<script>setTimeout(function(){ history.go(-1); }, 2000);</script>';
+  }
+  }
+    //header('Location: look.html');
+exit ;
+  }
   $s=json_decode($h,1);
   //print_r ($s);
   // https://lookmovie.io/storage2/shows/8134470-the-undoing-2020/9676-S1-E6-1610711843/subtitles/en.vtt
@@ -397,6 +461,90 @@ $s=array();
   //echo 'lookmovie_token.html?id='.$id.'&slug='.$slug;
   // https://lookmovie.ag/api/v1/shows/episode-subtitles/?id_episode=96036
 }
+?>
+<!doctype html>
+<html>
+<head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+<title><?php echo $tit.$tit2; ?></title>
+<link rel="stylesheet" type="text/css" href="../custom.css" />
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.0/jquery.min.js"></script>
+<script type="text/javascript">
+function openlink1(link) {
+  link1=document.getElementById('file').value;
+  msg="link1.php?file=" + link1 + "&title=" + link;
+  window.open(msg);
+}
+function openlink(link) {
+  on();
+  var request =  new XMLHttpRequest();
+  link1=document.getElementById('file').value;
+  var the_data = "link=" + link1 + "&title=" + link;
+  var php_file="link1.php";
+  request.open("POST", php_file, true);			// set the request
+
+  // adds a header to tell the PHP script to recognize the data as is sent via POST
+  request.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+  request.send(the_data);		// calls the send() method with datas as parameter
+
+  // Check request status
+  // If the response is received completely, will be transferred to the HTML tag with tagID
+  request.onreadystatechange = function() {
+    if (request.readyState == 4) {
+      off();
+      <?php
+      if ($debug) echo "document.getElementById('debug').innerHTML = request.responseText.match(/http.+#/g);"."\r\n";
+      ?>
+      document.getElementById("mytest1").href=request.responseText;
+      document.getElementById("mytest1").click();
+    }
+  }
+}
+function changeserver(s,t) {
+  document.getElementById('server').innerHTML = s;
+  document.getElementById('file').value=t;
+}
+   function zx(e){
+     var charCode = (typeof e.which == "number") ? e.which : e.keyCode
+     //alert (charCode);
+     if (charCode == "49") {
+      document.getElementById("opensub").click();
+     } else if (charCode == "50") {
+      document.getElementById("titrari").click();
+     } else if (charCode == "51") {
+      document.getElementById("subs").click();
+     } else if (charCode == "52") {
+      document.getElementById("subtitrari").click();
+     } else if (charCode == "53") {
+      document.getElementById("viz").click();
+     } else if (charCode == "55") {
+      document.getElementById("opensub1").click();
+     } else if (charCode == "56") {
+      document.getElementById("titrari1").click();
+     } else if (charCode == "57") {
+      document.getElementById("subs1").click();
+     } else if (charCode == "48") {
+      document.getElementById("subtitrari1").click();
+     }
+   }
+document.onkeypress =  zx;
+</script>
+<script>
+function on() {
+    document.getElementById("overlay").style.display = "block";
+}
+
+function off() {
+    document.getElementById("overlay").style.display = "none";
+}
+</script>
+</head>
+<body>
+<a href='' id='mytest1'></a>
+<?php
+echo '<h2>'.$tit.$tit2.'</H2>';
+echo '<BR>';
+
 // https://lookmovie.io/storage2/1612680271/movies/9028784-christmas-at-grand-valley-2018-1612657873/subtitles/en.vtt
 
 //$r[]=$l;

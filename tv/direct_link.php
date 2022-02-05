@@ -331,21 +331,35 @@ if (strpos($link,"jurnaltv.md/JurnalTV") !== false) {
     $h = curl_exec($ch);
     curl_close($ch);
     $link=str_between($h,'source src="','"');
+    if (!$link) $link=str_between($h,'file:"','"');
 }
 ///////////////////////////////////////////////
 if ($from=="ustvgo") {
   $ua="Mozilla/5.0 (Windows NT 10.0; rv:89.0) Gecko/20100101 Firefox/89.0";
+  //echo $link;
+  $link="https://ustvgo.tv/player.php?stream=ABC";
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $link);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
   curl_setopt($ch, CURLOPT_USERAGENT, $ua);
+  curl_setopt($ch, CURLOPT_REFERER,"https://ustvgo.tv");
   curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
   curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
   curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
   curl_setopt($ch, CURLOPT_TIMEOUT, 25);
   $html = curl_exec($ch);
+  $t1=explode("stream=",$html);
+  $t2=explode("'",$t1[1]);
+  $stream=$t2[0];
+  $l="https://ustvgo.tv/player.php?stream=".$stream;
+  $html = curl_exec($ch);
   curl_close($ch);
+  //echo $html;
   $link="";
+  $t1=explode("hls_src='",$html);
+  $t2=explode("'",$t1[1]);
+  $link=$t2[0];
+  $html="";
   if (preg_match("/clappr\.php\?stream\=/",$html)) {
    $t1=explode("/clappr.php?stream=",$html);
    $t2=explode("'",$t1[1]);

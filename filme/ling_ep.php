@@ -115,6 +115,7 @@ foreach($videos as $video) {
   else
    $ep_tit_d=$season."x".$episod;
   //}
+  if ($episod) {
   $link_f=$fs_target.'?tip=series&link='.urlencode($link).'&title='.urlencode(fix_t($tit)).'&image='.$img_ep."&sez=".$season."&ep=".$episod."&ep_tit=".urlencode(fix_t($ep_tit))."&year=".$year;
    if ($n == 0) echo "<TR>"."\n\r";
    if ($has_img == "yes")
@@ -125,6 +126,7 @@ foreach($videos as $video) {
    if ($n == 3) {
     echo '</TR>'."\n\r";
     $n=0;
+   }
    }
    }
   if ($n < 3 && $n > 0) {

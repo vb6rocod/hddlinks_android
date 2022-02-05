@@ -71,8 +71,17 @@ $host=parse_url($l)["host"];
 $out="";
 $type="mp4";
 $cookie=$base_cookie."adultc.dat";
+//echo $host;
+// zbporn.com
 if (preg_match("/jizzbunker\.com|familyporn1\.tv|zbporn\.com|trannytube11\.net/",$host)) {
-  $h=@file_get_contents($l);
+   $arrContextOptions=array(
+    "ssl"=>array(
+        "verify_peer"=>false,
+        "verify_peer_name"=>false,
+    ),
+   );
+
+   $h = file_get_contents($l, false, stream_context_create($arrContextOptions));
 } elseif (preg_match("/pefilme\.info|filmeleporno\.xxx/",$l)) {
   //$l="https://pefilme.info/video.php?id=159035";
   //echo $l;
@@ -279,6 +288,7 @@ $out=$t2[0];
   }
   */
 } else if (preg_match("/ashemaletube\.com/",$host)) {
+//echo $h;
   $t1=explode('source src="',$h);
   $t2=explode('"',$t1[1]);
   $out=$t2[0];
@@ -289,6 +299,7 @@ $out=$t2[0];
 } else if (preg_match("/bitporno\.com/",$host)) {
   if (preg_match("/[\"|\']((.*?)\.(m3u8|mp4))[\"|\']/",$h,$m))
   $out=$m[1];
+  if (strpos("http",$out) === false) $out="https:///bitporno.com".$out;
 } else if (preg_match("/bravoporn\.com/",$host)) {
   if (preg_match_all("/source src\=\"(.*?)\"/",$h,$m)) {
     $out=$m[1][count($m[1])-1];
@@ -317,6 +328,7 @@ $out=$t2[0];
     $out="";
   }
 } else if (preg_match("/eporner\.com/",$host)) {
+//echo $l;
   function encode_base_n($num,$n) {
     $table='0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
     $table = substr($table,0,$n);
@@ -334,17 +346,19 @@ $out=$t2[0];
     }
     return $ret;
   }
-  $t1=explode("vid: '",$h);
+  $t1=explode("video.player.vid = '",$h);
   $t2=explode("'",$t1[1]);
   $vid=$t2[0];
-  $t1=explode("hash: '",$h);
+  $t1=explode("player.hash = '",$h);
   $t2=explode("'",$t1[1]);
   $hash=$t2[0];
   //echo $hash;
   $hash=calc_hash($hash);
-
+  //echo $h;
   $l ="https://www.eporner.com/xhr/video/".$vid."?hash=".$hash."&device=generic&domain=www.eporner.com&fallback=false&embed=false&supportedFormats=mp4&tech=Html5&_=";
-
+  $l="https://www.eporner.com/xhr/video/".$vid."?hash=".$hash."&domain=www.eporner.com&pixelRatio=1&playerWidth=0&playerHeight=0&fallback=false&embed=false&supportedFormats=hls,dash,mp4&_=";
+  //echo $l."\n";
+  //$l="https://www.eporner.com/xhr/video/8fKF7iPVH21?hash=948hbl172wm341ptoxycsiipu5&domain=www.eporner.com&pixelRatio=1&playerWidth=0&playerHeight=0&fallback=false&embed=false&supportedFormats=hls,dash,mp4&_=1644004901435";
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $l);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
@@ -358,6 +372,7 @@ $out=$t2[0];
   $h = curl_exec($ch);
   curl_close($ch);
   $r=json_decode($h,1);
+  //print_r ($r);
   foreach ($r['sources']['mp4'] as $key => $value) {
     $out = $r['sources']['mp4'][$key]['src'];
     if ($out) break;
@@ -539,18 +554,49 @@ $out=$t2[0];
   $t2=explode('"',$t1[1]);
   $out=$t2[0];
 } else if (preg_match("/porndoe\.com/",$host)) {
-//echo $h;
+//echo $l;
   // https://cdnu.porndoe.com/movie/1/4/2/8/3/2/4/5efa4157a7128-976-240p-400.mp4?cdn_bw_fs=4000k&cdn_bw=608000
   if (preg_match_all("/src=\"([\w\/\:_\-\.\=\&\?\%]+)\"\s+type\=\"video\/mp4\"/msi",$h,$m)) {
   //print_r ($m);
    $out=$m[1][count($m[1])-1];
   }
+  $l1="https://porndoe.com/service/embed.json";
+  $ua="Mozilla/5.0 (Windows NT 10.0; rv:96.0) Gecko/20100101 Firefox/96.0";
+  $head=array('Accept: */*',
+  'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
+  'Accept-Encoding: deflate',
+  'Referer: '.$l,
+  'Connection: keep-alive',
+  'Sec-Fetch-Dest: empty',
+  'Sec-Fetch-Mode: cors',
+  'Sec-Fetch-Site: same-origin');
+  $ch = curl_init();
+  curl_setopt($ch, CURLOPT_URL, $l1);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
+  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+  //curl_setopt($ch, CURLOPT_HEADER,1);
+  curl_setopt($ch, CURLOPT_HTTPHEADER, $head);
+  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 25);
+  $html = curl_exec($ch);
+  curl_close($ch);
+  //echo $html;
+  $x=json_decode($html,1);
+  $out=$x['payload']['video']['media'];
 } else if (preg_match("/porndroids\.com/",$host)) {
   $t1=explode('data-video="',$h);
   $t2=explode('"',$t1[1]);
   $out=$t2[0];
   $out=str_replace("\\","",$out);
   if (strpos($out,"http") === false && $out) $out="https:".$out;
+} else if (preg_match("/pornhd\.com/",$host)) {
+  if (preg_match("/source\s+src\=\"(.*?)\"/msi",$h,$p)) {
+   $out=$p[1];
+   $out=str_replace("&amp;","&",$out);
+     if (strpos($out,"http") === false) $out="https://pornhd.com".$out;
+   }
 } else if (preg_match("/pornhdprime\.com/",$host)) {
 //echo $h;
   if (preg_match("/source\s+src\=\"(.*?)\"/msi",$h,$p)) {
@@ -651,7 +697,8 @@ $head=array('Accept: */*',
   $out=str_replace("\\","",$out);
   if (strpos($out,"http") === false && $out) $out="https:".$out;
 } else if (preg_match("/pornrabbit\.com/",$host)) {
-  if(preg_match("/desktopFile \= \'(.*?)\'/",$h,$m)) {
+//echo $h;
+  if(preg_match("/desktopFile\s*\=\s*\'(.*?)\'/",$h,$m)) {
    $out=$m[1];
    if (strpos($out,"http") === false && $out) $out="https:".$out;
   }
@@ -852,16 +899,22 @@ $head=array('Accept: */*',
     if (strpos($out,"http") === false && $out) $out="https:".$out;
   }
 } else if (preg_match("/youporn\.com/",$host)) {
-  $t1=explode('id="player-html5',$h);
-  $t2=explode('src="',$t1[1]);
-  $t3=explode('"',$t2[1]);
-  $out=str_replace("&amp;","&",$t3[0]);
+  //echo $h;
+  $t1=explode('videoUrl":"',$h);
+  $t2=explode('"',$t1[1]);
+  $l="https://youporn.com".str_replace("\\","",$t2[0]);
+  //echo $l;
+  $h = file_get_contents($l);
+  $x=json_decode($h,1);
+  $out=$x[0]['videoUrl'];
 } else if (preg_match("/zbporn\.com/",$host)) {
+//echo "===".$h;
   $t1=explode("video_url: '",$h);
   $t2=explode("'",$t1[1]);
   $out=$t2[0];
   $out=str_replace("\\","",$out);
   if (strpos($out,"http") === false && $out) $out="https:".$out;
+  $out=$out."|Referer=".urlencode("https://zbporn.com")."&Origin=".urlencode("https://zbporn.com");
 }
 
 ///////////////////////////////////////////////////////////////////

@@ -58,6 +58,7 @@ echo '<TR><td class="sez" style="color:black;background-color:#0a6996;color:#64c
 $t1=explode('class="list_episdoe">',$html);
 $t2=explode('</ul',$t1[1]);
 $html=$t2[0];
+//echo $html;
 $videos = explode('class="video-block', $html);
 unset($videos[0]);
 $videos = array_reverse($videos);
@@ -77,8 +78,8 @@ foreach($videos as $video) {
    //print_r ($m);
   } else
    $ep_tit="";
-  if (preg_match("/season-(\d+)-e?pisode-(\d+)/i",$link,$m)) {
-    $episod=$m[2];
+  if (preg_match("/e?pisode-(\d+)/i",$link,$m)) {
+    $episod=$m[1];
   }
   $img_ep=$image;
   $season=$sez;

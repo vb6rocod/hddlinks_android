@@ -228,29 +228,29 @@ $host=parse_url($l)['host'];
   curl_close($ch);
 //echo $html;
 $r=array();
-$videos = explode('div class="th">',$html);
+$videos = explode('<a class="th"',$html);
 unset($videos[0]);
 $videos = array_values($videos);
 foreach($videos as $video) {
   $t1=explode('href="',$video);
   $t2 = explode('"', $t1[1]);
   $link = $t2[0];
-  $t1=explode('title="',$video);
-  $t3=explode('"',$t1[1]);
+  $t1=explode('row-title">',$video);
+  $t3=explode('<',$t1[1]);
   $title=$t3[0];
   $title = trim(strip_tags($title));
-  $title = prep_tit($title);
+  //$title = prep_tit($title);
   $t1 = explode('data-src="', $video);
   $t2 = explode('"', $t1[1]);
   $image = $t2[0];
   if (strpos($image,"http") === false) $image="https:".$image;
-  $t1=explode('class="th-time"',$video);
+  $t1=explode('class="th-duration"',$video);
   $t2=explode('>',$t1[1]);
   $t3=explode("<",$t2[1]);
   $durata=trim($t3[0]);
   $durata = preg_replace("/\n|\r/"," ",strip_tags($durata));
   if ($durata) $title=$title." (".$durata.')';
-  if ($title) array_push($r ,array($title,$link, $image));
+  if ($title && preg_match("/\/video/",$link)) array_push($r ,array($title,$link, $image));
 }
 $c=count($r);
 for ($k=0;$k<$c;$k++) {
