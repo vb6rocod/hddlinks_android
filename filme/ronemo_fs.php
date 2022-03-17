@@ -135,7 +135,7 @@ function off() {
 <?php
 echo '<h2>'.$tit.$tit2.'</H2>';
 echo '<BR>';
-
+//echo 'https://ronemo.com/embed/'.$link;
 $r=array();
   $ua="Mozilla/5.0 (Windows NT 10.0; rv:77.0) Gecko/20100101 Firefox/77.0";
   $l="https://ronemo.com/api/video/video-info?idVid=".$link;
@@ -177,7 +177,9 @@ $r=array();
     }
   }
   }
-  $r[] = "https://hls.ronemo.com/".$link."/f/playlist.m3u8?sub=".$srt;
+  //$r[] = "https://hls.ronemo.com/".$link."/f/playlist.m3u8?sub=".$srt;
+  //$r[] = "https://rocdn.net/".$link."/f/playlist.m3u8?sub=".$srt;
+  $r[]=$x['link'];
 echo '<table border="1" width="100%">';
 echo '<TR><TD class="mp">Alegeti un server: Server curent:<label id="server">'.parse_url($r[0])['host'].'</label>
 <input type="hidden" id="file" value="'.urlencode($r[0]).'"></td></TR></TABLE>';

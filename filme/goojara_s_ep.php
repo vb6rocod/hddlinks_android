@@ -32,15 +32,17 @@ function str_between($string, $start, $end){
 echo '<h2>'.$tit.'</h2>';
 $t1=explode("/",$link);
 $id=$t1[3];
-
+$ref="https://".parse_url($link)['host'];
 $ua="Mozilla/5.0 (Windows NT 10.0; rv:80.0) Gecko/20100101 Firefox/80.0";
 
 $head=array('Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
 'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
 'Accept-Encoding: deflate',
 'Connection: keep-alive');
+$link22=$link;
 if ($id[0]=="e") { // episode
 //echo $link;
+
   $ch = curl_init($link);
   curl_setopt($ch, CURLOPT_USERAGENT, $ua);
   curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
@@ -54,12 +56,15 @@ if ($id[0]=="e") { // episode
   curl_setopt($ch, CURLOPT_TIMEOUT, 15);
   $h = curl_exec($ch);
   curl_close ($ch);
+  //echo $h;
   $t1=explode('id="sesh">',$h);
-  $t2=explode('href="/',$t1[1]);
+  $t2=explode('href="',$t1[1]);
   $t3=explode('?',$t2[1]);
-  $link="https://www.goojara.to/".$t3[0];
+  $link22=$t3[0];
+  //echo $link22;
+  //die();
 }
-  $ch = curl_init($link);
+  $ch = curl_init($link22);
   curl_setopt($ch, CURLOPT_USERAGENT, $ua);
   curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER  ,1);  // RETURN THE CONTENTS OF THE CALL
@@ -68,8 +73,8 @@ if ($id[0]=="e") { // episode
   //curl_setopt($ch, CURLOPT_COOKIEJAR, $cookie);
   //curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie);
   //curl_setopt($ch, CURLOPT_HEADER,1);
-  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
-  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 25);
   $h = curl_exec($ch);
   curl_close ($ch);
   $t1=explode('data-id="',$h);
@@ -106,14 +111,16 @@ if ($p < 10 && $p > 0 && $k > 9) {
  echo '</TR>'."\r\n";
 }
 echo '</TABLE>';
-$l="https://www.goojara.to/xhrr.php";
-  $ch = curl_init($l);
+//$l=$ref."/xhrr.php";
+//$l=$ref."/xkbc.php";
+//$l="https://supernova.to/teQOlk?s=1";
+  $ch = curl_init();
   curl_setopt($ch, CURLOPT_USERAGENT, $ua);
   curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER  ,1);  // RETURN THE CONTENTS OF THE CALL
   curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
-  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 25);
 for ($z=0;$z<$c;$z++) {
   $season=$sezoane[$z];
   $sez = $season;
@@ -121,17 +128,21 @@ for ($z=0;$z<$c;$z++) {
   echo '<TR><td class="sez" style="color:black;background-color:#0a6996;color:#64c8ff;text-align:center" colspan="3">Sezonul '.($sez).'</TD></TR>';
   $n=0;
   $post="s=".$sez."&t=".$id;
+  //echo $post;
   $head=array('Accept: */*',
   'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
   'Accept-Encoding: deflate',
   'Content-type: application/x-www-form-urlencoded',
   'Content-Length: '.strlen($post).'',
-  'Origin: https://www.goojara.to',
+  'Origin: '.$ref,
   'Connection: keep-alive',
-  'Referer: https://www.goojara.to/');
-  curl_setopt($ch, CURLOPT_HTTPHEADER,$head);
-  curl_setopt($ch, CURLOPT_POST,1);
-  curl_setopt($ch, CURLOPT_POSTFIELDS, $post);
+  'Referer: '.$ref);
+  $l=$link22."?s=".$sez;
+  // echo $l;
+  //curl_setopt($ch, CURLOPT_HTTPHEADER,$head);
+  //curl_setopt($ch, CURLOPT_POST,1);
+  //curl_setopt($ch, CURLOPT_POSTFIELDS, $post);
+  curl_setopt($ch, CURLOPT_URL,$l);
   $h = curl_exec($ch);
   //echo $h;
   $vids = explode('div class="seho', $h);
@@ -144,7 +155,7 @@ for ($z=0;$z<$c;$z++) {
   $ep_tit="";
   $t1=explode('href="',$vid);
   $t2=explode('"',$t1[1]);
-  $link="https://www.goojara.to".$t2[0];
+  $link=$ref.$t2[0];
   $t3=explode(">",$t1[1]);
   $t4=explode("<",$t3[1]);
   $title=$t4[0];

@@ -17,7 +17,9 @@ $has_fav="yes";
 $has_search="yes";
 $has_add="yes";
 $has_fs="yes";
-$fav_target="goojara_s_fav.php?host=https://www.goojara.to";
+$ref="https://www.goojara.to";
+//$ref="https://supernova.to";
+$fav_target="goojara_s_fav.php?host=".$ref;
 $add_target="goojara_s_add.php";
 $add_file="";
 $fs_target="goojara_s_ep.php";
@@ -168,12 +170,18 @@ echo '</TR>'."\r\n";
 $r=array();
 if($tip=="release") {
   if ($page==1)
-   $l="https://www.goojara.to/watch-series";
+   $l=$ref."/watch-series";
   else
-   $l="https://www.goojara.to/watch-series?p=".$page;
+   $l=$ref."/watch-series?p=".$page;
 } else {
   $search=str_replace(" ","%20",$tit);
-  $l="https://www.goojara.to/xhrr.php";
+  // https://supernova.to/xkbc.php
+  $l=$ref."/xhrr.php";
+  $l=$ref."/xkbc.php";
+  $ref1="https://ww1.goojara.to";
+  $l=$ref1."/xhrr.php";
+  //$l=$ref."/xkbc.php";
+  $l=$ref1."/xhrc.php";
   $post="q=".$search;
 }
 $host=parse_url($l)['host'];
@@ -193,11 +201,20 @@ $head=array('Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image
   curl_setopt($ch, CURLOPT_HTTPHEADER,$head);
   //curl_setopt($ch, CURLOPT_COOKIEJAR, $cookie);
   //curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie);
-  //curl_setopt($ch, CURLOPT_HEADER,1);
-  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
-  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+  curl_setopt($ch, CURLOPT_HEADER,1);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 25);
   $html = curl_exec($ch);
   curl_close ($ch);
+  //echo $html;
+  if ($page==1) {
+    preg_match("/_3chk\(\'([a-z0-9_]+)\'\,\'([a-z0-9]+)\'/",$html,$m);
+    //print_r ($m);
+    preg_match("/aGooz\=(\w+)\;/",$html,$nn);
+    $out='aGooz='.$nn[1].'; '.$m[1].'='.$m[2];
+    //$out = 'aGooz='.$m[2];
+    file_put_contents($base_cookie."goojora.dat",$out);
+  }
   $t1=explode('div id="subdiv">',$html);
   $t2=explode('<div id="pgs',$t1[1]);
   $html=$t2[0];
@@ -207,10 +224,11 @@ $head=array('Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image
   'Accept-Encoding: deflate',
   'Content-type: application/x-www-form-urlencoded',
   'Content-Length: '.strlen($post).'',
-  'Origin: https://www.goojara.to',
+  'Origin: '.$ref,
+  'Cookie: '.file_get_contents($base_cookie."goojora.dat"),
   'Connection: keep-alive',
-  'Referer: https://www.goojara.to/watch-series');
-
+  'Referer: '.$ref.'/watch-series');
+//echo $l;
   $ch = curl_init($l);
   curl_setopt($ch, CURLOPT_USERAGENT, $ua);
   curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
@@ -220,8 +238,8 @@ $head=array('Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image
   curl_setopt($ch, CURLOPT_POST,1);
   curl_setopt($ch, CURLOPT_POSTFIELDS, $post);
   //curl_setopt($ch, CURLOPT_HEADER,1);
-  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
-  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 25);
   $html = curl_exec($ch);
   curl_close ($ch);
   //echo $html;
@@ -234,7 +252,7 @@ if ($tip=="release") {
   $videos = array_values($videos);
   foreach($videos as $video) {
    $t1=explode('"',$video);
-   $link="https://www.goojara.to".$t1[0];
+   $link=$t1[0];
    $t3 = explode('span class="mtl">', $video);
    $t4 = explode('<', $t3[1]);
    $title = trim($t4[0]);
@@ -250,11 +268,11 @@ if ($tip=="release") {
   $videos = array_values($videos);
   foreach($videos as $video) {
    $t1=explode('"',$video);
-   $link="https://www.goojara.to".$t1[0];
+   $link=$ref1.$t1[0];
    $t3 = explode('strong>', $video);
    $t4 = explode('<', $t3[1]);
    $title = trim($t4[0]);
-   $title=prep_tit($title);
+   //$title=prep_tit($title);
    $image = "blank.jpg";
    $t1=explode('div class="',$video);
    $t2=explode('"',$t1[1]);

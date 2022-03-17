@@ -109,16 +109,16 @@ echo '</TR>';
 
   if ($imdbid) {
   if ($page==1)
-  $l="https://".$host."/index.php?page=cautaremaiavansata&z7=&z2=&z5=".$imdbid."&z3=-1&z4=-1&z8=1&z9=All&z11=0&z6=0";
+  $l="https://".$host."/index.php?page=cautarecutare&z7=&z2=&z5=".$imdbid."&z3=-1&z4=-1&z8=1&z9=All&z11=0&z6=0";
   else
-  $l="https://".$host."/index.php?page=cautaremaiavansata&z1=".($page1*20)."&z2=&z3=-1&z4=-1&z5=".$imdbid."&z6=0&z7=&z8=1&z9=All&z10=&z11=0";
+  $l="https://".$host."/index.php?page=cautarecutare&z1=".($page1*20)."&z2=&z3=-1&z4=-1&z5=".$imdbid."&z6=0&z7=&z8=1&z9=All&z10=&z11=0";
   //$l="https://www.xn--titrri-l0a.ro/index.php?page=cautareavansata&z1=".$page1."&z2=&z3=-1&z4=-1&z5=".$imdbid."&z6=0&z7=&z8=1&z9=All&z10=&z11=0";
   } else  {
 // https://www.titrari.ro/index.php?page=cautarenedevansata&z7=Star+Trek&z2=&z5=&z3=-1&z4=-1&z8=1&z9=All&z11=0&z6=0
   if ($page==1)
-  $l="https://".$host."/index.php?page=cautaremaiavansata&z7=".urlencode($title)."&z2=&z5=&z3=-1&z4=-1&z8=1&z9=All&z11=0&z6=0";
+  $l="https://".$host."/index.php?page=cautarecutare&z7=".urlencode($title)."&z2=&z5=&z3=-1&z4=-1&z8=1&z9=All&z11=0&z6=0";
   else
-  $l="https://".$host."/index.php?page=cautaremaiavansata&z1=".($page1*20)."&z2=&z3=-1&z4=-1&z5=&z6=0&z7=".urlencode($title)."&z8=1&z9=All&z10=&z11=0";
+  $l="https://".$host."/index.php?page=cautarecutare&z1=".($page1*20)."&z2=&z3=-1&z4=-1&z5=&z6=0&z7=".urlencode($title)."&z8=1&z9=All&z10=&z11=0";
   }
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $l);

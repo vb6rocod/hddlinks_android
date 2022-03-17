@@ -67,7 +67,7 @@ $ua="Mozilla/5.0 (Windows NT 10.0; rv:68.0) Gecko/20100101 Firefox/68.0";
   curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
   curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
   curl_setopt($ch, CURLOPT_TIMEOUT, 15);
-for ($k=1;$k<6;$k++) {
+for ($k=1;$k<9;$k++) {
 $l="https://pornkino.cc/adult/genres/page/".$k."/";
 curl_setopt($ch, CURLOPT_URL, $l);
 

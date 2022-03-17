@@ -26,6 +26,7 @@ echo '<TR><th class="cat" colspan="3">'.$main_title.'</th></TR>';
 $n=0;
 $l="https://www.clicksud.org/2012/06/seriale-romanesti-online.html";
 $l="https://clicksud.biz/2012/06/seriale-romanesti-online/";
+$l="https://clicksud.biz/2012/06/seriale-romanesti-online/";
 $ua = $_SERVER['HTTP_USER_AGENT'];
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $l);

@@ -191,7 +191,7 @@ $ua="Mozilla/5.0 (Windows NT 10.0; rv:75.0) Gecko/20100101 Firefox/75.0";
   curl_setopt($ch, CURLOPT_TIMEOUT, 25);
   $h = curl_exec($ch);
   curl_close($ch);
-
+//echo $h;
 $host=parse_url($l)['host'];
 $videos = explode('<article id="post-', $h);
 unset($videos[0]);
@@ -209,14 +209,31 @@ foreach($videos as $video) {
  $t2=explode('"',$t1[1]);
  $title=trim($t2[0]);
  $title=preg_replace("/\s*Watch Online/i","",$title);
-  if ($title && preg_match("/\/movie\//",$link)) $f[] = array($title,$id,$image);
+  if ($title && preg_match("/\/movie\//",$link)) $f[] = array("title"=>$title,"id"=>$id,"image"=>$image);
 }
+function unique_multidim_array($array, $key) {
+    $temp_array = array();
+    $i = 0;
+    $key_array = array();
+
+    foreach($array as $val) {
+        if (!in_array($val[$key], $key_array)) {
+            $key_array[$i] = $val[$key];
+            $temp_array[$i] = $val;
+        }
+        $i++;
+    }
+    return $temp_array;
+}
+//print_r ($f);
+$f=unique_multidim_array($f,"title");
+//$f[]=array_unique($f);
 //echo $html;
 foreach($f as $key => $value) {
-  $title=$value[0];
+  $title=$value["title"];
   $title=prep_tit($title);
-  $link=$value[1];
-  $image=$value[2];
+  $link=$value["id"];
+  $image=$value["image"];
   $year="";
   $imdb="";
   $year="";

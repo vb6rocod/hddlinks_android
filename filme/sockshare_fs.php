@@ -136,145 +136,36 @@ function off() {
 echo '<h2>'.$tit.$tit2.'</H2>';
 echo '<BR>';
 $ua = $_SERVER['HTTP_USER_AGENT'];
-$ua="Mozilla/5.0 (Windows NT 10.0; rv:80.0) Gecko/20100101 Firefox/80.0";
-$host=parse_url($link)['host'];
+//$host=parse_url($link)['host'];
+//echo $link;
+$ua = $_SERVER['HTTP_USER_AGENT'];
+$ua="Mozilla/5.0 (Windows NT 10.0; rv:71.0) Gecko/20100101 Firefox/71.0";
+  $ch = curl_init($link);
+  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
+  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER  ,1);  // RETURN THE CONTENTS OF THE CALL
+  //curl_setopt($ch, CURLOPT_HTTPHEADER, $head);
+  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 25);
+  $html = curl_exec($ch);
+  curl_close ($ch);
+  //echo $html;
   $r=array();
   $s=array();
-//echo $host;
-//echo $link;
-  $ch = curl_init();
-  curl_setopt($ch, CURLOPT_URL, $link);
-  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
-  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
-  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
-  curl_setopt($ch, CURLOPT_TIMEOUT, 25);
-  $h = curl_exec($ch);
-  curl_close($ch);
-  //echo $h;
-  if (preg_match("/data\-stape\=\"([^\"]+)/",$h,$m)) {
-    $r[]="https://streamtape.com/e/".$m[1];
-    $s[]="Streamtape";
-  }
-  if (preg_match("/data\-dood\=\"([^\"]+)/",$h,$m)) {
-    $r[]="https://dood.la/e/".$m[1];
-    $s[]="dood";
-  }
-  if (preg_match("/var movie\_id\s*\=\s*(\d+)/",$h,$m)) {
-    $id=$m[1];
-    $l="https://w10.hdonline.eu/wp-admin/admin-ajax.php";
-    $post="action=fkingyrfather&id=".$id."&annoying=videospider";
-    // action=fkingyrfather&id=96130&annoying=videospider
-    //echo $post;
-    $head=array('Accept: application/json, text/javascript, */*; q=0.01',
-    'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
-    'Accept-Encoding: deflate',
-    'Content-Type: application/x-www-form-urlencoded; charset=UTF-8',
-    'X-Requested-With: XMLHttpRequest',
-    'Content-Length: '.strlen($post),
-    'Origin: https://w10.hdonline.eu',
-    'Alt-Used: w10.hdonline.eu',
-    'Connection: keep-alive',
-    'Referer: https://w10.hdonline.eu/movie/reminiscence-2021/?ep=4');
-    $ch = curl_init();
-    curl_setopt($ch, CURLOPT_URL, $l);
-    curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-    curl_setopt($ch, CURLOPT_USERAGENT, $ua);
-    curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
-    curl_setopt($ch, CURLOPT_POST,1);
-    curl_setopt($ch, CURLOPT_POSTFIELDS,$post);
-    curl_setopt($ch, CURLOPT_HTTPHEADER,$head);
-    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-    curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
-    curl_setopt($ch, CURLOPT_TIMEOUT, 25);
-    $h = curl_exec($ch);
-    curl_close($ch);
-    //echo $h;
-    $d=json_decode($h,1);
-    $l=$d['url'];
-    //echo $l;
-    $ch = curl_init();
-    curl_setopt($ch, CURLOPT_URL, $l);
-    curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-    curl_setopt($ch, CURLOPT_USERAGENT, $ua);
-    curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
-    curl_setopt($ch, CURLOPT_REFERER,"https://w10.hdonline.eu");
-    curl_setopt($ch, CURLOPT_HEADER,1);
-    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-    curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
-    curl_setopt($ch, CURLOPT_TIMEOUT, 25);
-    $h = curl_exec($ch);
-    curl_close($ch);
-    //echo $h;
-    if (preg_match("/location:\s+(.+)/i",$h,$m)) {
-    $l=trim($m[1]);
-    //echo $l;
-    //echo $h;
-///////////////////////////////////////////////////////////////////////
-//$l="https://123streaming.rocks/?token=TWJ1NkJlRmR5MUJES3NJSHJRSnlZVTQ3NjMvbGgxb3hhajRTeDcwdEZ5cWIvSmhuWEU4RlljdzNURFVyMms1ampnbWVCTXZkMlN1bFdpd0p6blUzOUNuMHdUbz0=";
-  $post="button-click=ZEhKMVpTLVF0LVBTLVF0Ti0wWTJMUy1Rei1QLTAtUHRMLTAtVjItUHpBeS1QelF4TnpBei1Qai1WLTU=";
-  $ch = curl_init();
-  curl_setopt($ch, CURLOPT_URL, $l);
-  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
-  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
-  curl_setopt($ch, CURLOPT_REFERER,"https://123stream.fun");
-  curl_setopt($ch, CURLOPT_HEADER,1);
-  curl_setopt($ch, CURLOPT_POST,1);
-  curl_setopt($ch, CURLOPT_POSTFIELDS,$post);
-  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
-  curl_setopt($ch, CURLOPT_TIMEOUT, 25);
-  $h = curl_exec($ch);
-  curl_close($ch);
-  //echo $h;
-  }
-  //echo $h;
-//////////////////////////////////////////////////////////////////////
-  $t1=explode('var servers = [',$h);
-  $t2=explode(']',$t1[1]);
-  $e="\$s1=array(".$t2[0].");";
-  eval ($e);
-  //print_r ($s);
-  $t1=explode('load_sources("',$h);
+$videos = explode('class="server_servername">', $html);
+unset($videos[0]);
+$videos = array_values($videos);
+foreach($videos as $video) {
+  $t1=explode("<",$video);
+  if ($t1[0])
+  $s[]=$t1[0];
+  else
+  $s[]="Other";
+  $t1=explode('href="',$video);
   $t2=explode('"',$t1[1]);
-  $token=$t2[0];
-  $l="https://123stream.fun/response.php";
-  $post="token=".$token;
-  $head=array('Accept: */*',
-  'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
-  'Accept-Encoding: deflate',
-  'Content-Type: application/x-www-form-urlencoded; charset=UTF-8',
-  'X-Requested-With: XMLHttpRequest',
-  'Content-Length: '.strlen($post),
-  'Origin: https://123stream.fun',
-  'Alt-Used: 123stream.fun',
-  'Connection: keep-alive',
-  'Referer: https://123stream.fun');
-  $ch = curl_init();
-  curl_setopt($ch, CURLOPT_URL, $l);
-  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
-  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
-  curl_setopt($ch, CURLOPT_POST,1);
-  curl_setopt($ch, CURLOPT_POSTFIELDS,$post);
-  curl_setopt($ch, CURLOPT_HTTPHEADER,$head);
-  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
-  curl_setopt($ch, CURLOPT_TIMEOUT, 25);
-  $h = curl_exec($ch);
-  curl_close($ch);
-  //echo $h;
-  preg_match_all("/data\-id\=\"([^\"]+)\" data\-server\=\"(\d+)/",$h,$m);
-  //print_r ($m);
-  for ($z=0;$z<count($m[1]);$z++) {
-  $id1=$m[1][$z];
-  $server=$m[2][$z];
-  $r[]="https://123stream.fun/playvideo.php?video_id=".$id1."&server_id=".$server."&token=".$token."&init=1";
-  $s[]=$s1[$server];
-  }
-  }
+  $r[]=$t2[0];
+}
 echo '<table border="1" width="100%">';
 echo '<TR><TD class="mp">Alegeti un server: Server curent:<label id="server">'.$s[0].'</label>
 <input type="hidden" id="file" value="'.urlencode($r[0]).'"></td></TR></TABLE>';

@@ -24,6 +24,7 @@ $has_add="yes";
 $has_fs="yes";
 $last_good="https://lookmovie.ag";
 $last_good="https://lookmovie.io";
+$last_good="https://lookmovie2.to";
 $fav_target="lookmovie_s_fav.php?host=".$last_good;
 $add_target="lookmovie_s_add.php";
 $add_file="";

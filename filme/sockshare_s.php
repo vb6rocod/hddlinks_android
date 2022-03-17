@@ -1,36 +1,30 @@
+<!DOCTYPE html>
 <?php
-error_reporting(0);
 function str_between($string, $start, $end){
 	$string = " ".$string; $ini = strpos($string,$start);
 	if ($ini == 0) return ""; $ini += strlen($start); $len = strpos($string,$end,$ini) - $ini;
 	return substr($string,$ini,$len);
 }
-include ("../common.php");
-if (file_exists($base_pass."player.txt")) {
-$flash=trim(file_get_contents($base_pass."player.txt"));
-} else {
-$flash="direct";
-}
+include ("../common.php");;
 $page = $_GET["page"];
 $tip= $_GET["tip"];
 $tit=$_GET["title"];
 $link=$_GET["link"];
 $width="200px";
 $height="278px";
+$last_good="https://sockshare1.com";
+$last_good="https://wat32.tv";
+$host=parse_url($last_good)['host'];
 /* ==================================================== */
 $has_fav="yes";
 $has_search="yes";
 $has_add="yes";
 $has_fs="yes";
-// https://proxymirrorlookmovie.github.io/
-$last_good="https://lookmovie.ag";
-$last_good="https://lookmovie.io";
-$last_good="https://lookmovie2.to";
-$fav_target="lookmovie_f_fav.php?host=".$last_good;
-$add_target="lookmovie_f_add.php";
+$fav_target="sockshare_s_fav.php?host=".$last_good;;
+$add_target="sockshare_s_add.php";
 $add_file="";
-$fs_target="lookmovie_fs.php";
-$target="lookmovie_f.php";
+$fs_target="sockshare_ep.php";
+$target="sockshare_s.php";
 /* ==================================================== */
 $base=basename($_SERVER['SCRIPT_FILENAME']);
 $p=$_SERVER['QUERY_STRING'];
@@ -48,12 +42,12 @@ $prev=$base."?page=".($page-1)."&".$p;
 $tit=unfix_t(urldecode($tit));
 $link=unfix_t(urldecode($link));
 /* ==================================================== */
-if (file_exists($base_cookie."filme.dat"))
-  $val_search=file_get_contents($base_cookie."filme.dat");
+if (file_exists($base_cookie."seriale.dat"))
+  $val_search=file_get_contents($base_cookie."seriale.dat");
 else
   $val_search="";
 $form='<form action="'.$target.'" target="_blank">
-Cautare film:  <input type="text" id="title" name="title" value="'.$val_search.'">
+Cautare serial:  <input type="text" id="title" name="title" value="'.$val_search.'">
 <input type="hidden" name="page" id="page" value="1">
 <input type="hidden" name="tip" id="tip" value="search">
 <input type="hidden" name="link" id="link" value="">
@@ -62,67 +56,12 @@ Cautare film:  <input type="text" id="title" name="title" value="'.$val_search.'
 /* ==================================================== */
 if ($tip=="search") {
   $page_title = "Cautare: ".$tit;
-  if ($page == 1) file_put_contents($base_cookie."filme.dat",$tit);
+  if ($page == 1) file_put_contents($base_cookie."seriale.dat",$tit);
 } else
   $page_title=$tit;
 /* ==================================================== */
-$ua = $_SERVER['HTTP_USER_AGENT'];
-$ua="Mozilla/5.0 (Windows NT 10.0; rv:86.0) Gecko/20100101 Firefox/86.0";
-if($tip=="release") {
- if (strpos($ua,"Windows") !== false)
-  $l=$last_good."/?p=".$page."&r=1";
- else
-  $l=$last_good."/page/".$page;
-} else {
-  $search=str_replace(" ","%20",$tit);
-  $l=$last_good."/movies/search/?p=".$page."&q=".$search;
-}
-$host=parse_url($l)['host'];
-$cookie=$base_cookie."lookmovie.txt";
- if (file_exists("/storage/emulated/0/Download/cookies.txt")) {
-  $h1=file_get_contents("/storage/emulated/0/Download/cookies.txt");
-  file_put_contents($cookie,$h1);
-  unlink ("/storage/emulated/0/Download/cookies.txt");
- } elseif (file_exists($base_cookie."cookies.txt")) {
-  $h1=file_get_contents($base_cookie."cookies.txt");
-  file_put_contents($cookie,$h1);
-  unlink ($base_cookie."cookies.txt");
- }
-if (file_exists($base_pass."firefox.txt"))
- $ua=file_get_contents($base_pass."firefox.txt");
-else
- $ua="Mozilla/5.0 (Windows NT 10.0; rv:75.0) Gecko/20100101 Firefox/75.0";
-//echo $h;
 
-$head=array('Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
-'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2');
-
-  $ch = curl_init();
-  curl_setopt($ch, CURLOPT_URL, $l);
-  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-  curl_setopt($ch,CURLOPT_REFERER,$last_good);
-  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
-  curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie);
-  curl_setopt($ch, CURLOPT_COOKIEJAR, $cookie);
-  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
-  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
-  curl_setopt($ch, CURLOPT_TIMEOUT, 25);
-  $html = curl_exec($ch);
-  curl_close($ch);
-  //echo $html;
-  //die();
-if (preg_match("/invisible\-recaptcha\-key/",$html)) {
-//echo '<a href="look_captcha.php?host=https://lookmovie.io&cookie=lookmovie.txt&target=lookmovie_f.php&title=lookmovie" target="_blank"><b>GET COOKIE</b></a>';
-//header ("Location: look_captcha1.php");
-   if ($flash=="mp")
-    echo '<a href="intent:http://127.0.0.1:8080/scripts/filme/cf.php?site=https://lookmovie.io/account/login&cookie='.$cookie.'#Intent;package=org.mozilla.firefox;S.title=Cloudflare;end">GET cloudflare cookie</a>';
-   else
-    header('Location: cf.php?site=https://lookmovie.io/account/login&cookie='.$cookie);
-exit ;
-}
 ?>
-<!DOCTYPE html>
 <html>
 <head>
 <meta http-equiv="content-type" content="text/html; charset=UTF-8">
@@ -229,60 +168,73 @@ if ($page==1) {
    echo '<TD class="nav" colspan="4" align="right"><a href="'.$prev.'">&nbsp;&lt;&lt;&nbsp;</a> | <a href="'.$next.'">&nbsp;&gt;&gt;&nbsp;</a></TD>'."\r\n";
 }
 echo '</TR>'."\r\n";
-if (strpos($html,'div class="movie-list-detailed mobile') === false)
-$videos = explode('div class="movie-', $html);
-else
-$videos=explode('div class="movie-list-detailed mobile',$html);
-//print_r ($videos);
+if($tip=="release") {
+  $l=$last_good."/tv-series/page-".$page.".html";
+} else {
+  $search=str_replace(" ","%20",$tit);
+  $l = $last_good."/search-movies/".$search."/page-".$page.".html";
+}
+// https://wat32.tv/tv-series/page-2.html
+// https://wat32.tv/search-movies/earth%202.html
+///////////////////////////////////////////////
+$ua = $_SERVER['HTTP_USER_AGENT'];
+$ua="Mozilla/5.0 (Windows NT 10.0; rv:71.0) Gecko/20100101 Firefox/71.0";
+
+
+$host=parse_url($l)['host'];
+  $ch = curl_init($l);
+  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
+  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER  ,1);  // RETURN THE CONTENTS OF THE CALL
+  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 25);
+  $html = curl_exec($ch);
+  curl_close ($ch);
+//echo $html;
+$videos = explode('<div class="itemBody', $html);
 unset($videos[0]);
 $videos = array_values($videos);
-//print_r ($videos);
 foreach($videos as $video) {
   $t1 = explode('href="',$video);
-  $t2=explode('"',$t1[1]);
-  $link = $t2[0];
-  if (strpos($link,"http") === false) $link="https://".$host.$link;
-  if (strpos($video,'detailed__title">') === false) {
-  $t3 = explode('>', $t1[3]);
-  $t4 = explode('<', $t3[1]);
-  } else {
-  $t3=explode('detailed__title">',$video);
-  $t4=explode('<',$t3[1]);
-  }
-  $title = trim($t4[0]);
-  $title=prep_tit($title);
-  $imamge="";
-  $t1 = explode('data-src="', $video);
   $t2 = explode('"', $t1[1]);
-  $image=$t2[0];
-  if (strpos($image,"http") === false && $image) $image="https://".$host.$image;
-  if (!$image) $image="blank.jpg";
-  //$t1=explode('data-src="'
-  //$image=str_replace("w342","w300",$image);
-  //$image="https://image.tmdb.org/t/p/w342/zfxZSe4cGPYj3XUOgJO8OBRy47n.jpg";
-  $rest = substr($title, -6);
+  $link = $t2[0];
+  $t1 = explode('class="title">', $video);
+  $t2 = explode('>', $t1[1]);
+  $t3=explode("<",$t2[1]);
+  $title = $t3[0];
+  $title = prep_tit($title);
+  $t1 = explode('src="', $video);
+  $t2 = explode('"', $t1[1]);
+  $image = $t2[0];
+  if (strpos($image,"http") === false) $image="https:".$image;
+  //$tit_imdb=$title;
+  //$imdb="";
+  if (preg_match("/status-year\"\>(\d{4}).*?\</",$video,$m))
+    $year=$m[1];
+  else
+    $year="";
+  $imdb="";
+  $sez="";
+  if (preg_match("/(:|-)?\s+Season\s+(\d+)/i",$title,$m)) {
+  $tit_serial=trim(str_replace($m[0],"",$title));
+  $sez=$m[2];
+  $rest = substr($tit_serial, -6);
   if (preg_match("/\((\d+)\)/",$rest,$m)) {
-   $year=$m[1];
+   //$year=$m[1];
    $tit_imdb=trim(str_replace($m[0],"",$title));
   } else {
-   $year="";
-   $tit_imdb=$title;
+   //$year="";
+   $tit_imdb=$tit_serial;
   }
-  if (strpos($video,'year-intitle">') !== false) {
-  $t1=explode('class="year">',$video);
-  $t2=explode('<',$t1[1]);
   } else {
-  $t1=explode('year-intitle">',$video);
-  $t2=explode('<',$t1[1]);
+    $tit_imdb=$title;
   }
-  $year=$t2[0];
-  $imdb="";
-  $link_f=$fs_target.'?tip=movie&link='.urlencode($link).'&title='.urlencode(fix_t($title)).'&image='.$image."&sez=&ep=&ep_tit=&year=".$year;
-  if ($title && strpos($link,"/movie") !== false) {
+  $link_f=$fs_target.'?tip=series&link='.urlencode($link).'&title='.urlencode(fix_t($title)).'&image='.$image."&sez=".$sez."&ep=&ep_tit=&year=".$year;
+  if ($title && $sez) {
   if ($n==0) echo '<TR>'."\r\n";
-  $val_imdb="tip=movie&title=".urlencode(fix_t($tit_imdb))."&year=".$year."&imdb=".$imdb;
+  $val_imdb="tip=series&title=".urlencode(fix_t($tit_imdb))."&year=".$year."&imdb=".$imdb;
   $fav_link="mod=add&title=".urlencode(fix_t($title))."&link=".urlencode($link)."&image=".urlencode($image)."&year=".$year;
-  //$image="r_m.php?file=".$image;
   if ($tast == "NU") {
     echo '<td class="mp" width="25%"><a href="'.$link_f.'" id="myLink'.$w.'" target="_blank" onmousedown="isKeyPressed(event)">
     <img id="myLink'.$w.'" src="'.$image.'" width="'.$width.'" height="'.$height.'"><BR>'.$title.'</a>

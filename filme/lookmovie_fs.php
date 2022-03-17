@@ -71,7 +71,7 @@ $l=$link;
 //echo $l;
   //$ua = $_SERVER['HTTP_USER_AGENT'];
 $last_good="https://lookmovie.io";
-
+$last_good="https://lookmovie2.to";
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $l);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
@@ -386,7 +386,7 @@ exit ;
   $srt="";
   for ($k=0;$k<count($s['subtitles']);$k++) {
    if ($s['subtitles'][$k]['file'][0] == "/") {
-     $ss= "https://lookmovie.io".$s['subtitles'][$k]['file'];
+     $ss= "https://lookmovie2.to".$s['subtitles'][$k]['file'];
    //else
      //$ss=$s['subtitles'][$k]['file'];
    $srt1[$s['subtitles'][$k]['language']] = $ss;
@@ -408,6 +408,7 @@ exit ;
     $srt="";
 $r=array();
 $s=array();
+//echo $srt;
 //$head=array('Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
 //'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2');
   $l="https://lookmovie.io/api/v1/security/show-access?slug=".$slug."&token=&step=2";

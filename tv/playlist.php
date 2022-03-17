@@ -215,7 +215,7 @@ foreach($m3uFile as $key => $line) {
     $link="direct_link.php?link=".urlencode(fix_t($file))."&title=".urlencode(fix_t($title))."&from=".$from."&mod=direct";
     $l="link=".urlencode(fix_t($file))."&title=".urlencode(fix_t($title))."&from=".$from."&mod=".$mod;
     $fav_link="mod=add&title=".urlencode(fix_t($title))."&link=".urlencode($file);
-    if (strpos($link,"html")=== false) {
+    if (strpos($link,"html1")=== false) {
     if ($n == 0) echo "<TR>"."\n\r";
     //if ($tast == "NU")
     if ($flash != "mp")

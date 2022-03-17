@@ -1,23 +1,18 @@
 <!DOCTYPE html>
 <?php
+error_reporting(0);
 include ("../common.php");
-$query = $_GET["page"];
-if($query) {
-   $queryArr = explode(',', $query);
-   $page = $queryArr[0];
-   $search = $queryArr[1];
-   $page_title=urldecode($queryArr[2]);
-   $search=str_replace("|","&",$search);
-}
+
 $width="200px";
-$height=intval(200*(180/240))."px";
+$height=intval(200*(228/380))."px";
+$page_title="canale.live";
 ?>
 <html><head>
 <meta http-equiv="content-type" content="text/html; charset=UTF-8">
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate"/>
 <meta http-equiv="Pragma" content="no-cache"/>
 <meta http-equiv="Expires" content="0"/>
-      <title><?php echo $page_title; ?></title>
+      <title>canale.live</title>
 <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.0/jquery.min.js"></script>
 <link rel="stylesheet" type="text/css" href="../custom.css" />
 <script type="text/javascript">
@@ -78,52 +73,39 @@ if (preg_match("/android|ipad/i",$user_agent) && preg_match("/chrome|firefox|mob
 $n=0;
 echo '<h2>'.$page_title.'</H2>';
 echo '<table border="1px" width="100%">'."\n\r";
-$link="http://inprofunzime.md/emisiuni/shows/in-profunzime-cu-lorena-bogza/";
-$link="http://inprofunzime.protv.md/emisiuni/shows/in-profunzime-cu-lorena-bogza/";
-//http://inpro.protv.md/emisiuni
-$link="http://inpro.protv.md/api/category-page";
-$link="https://inprofunzime.protv.md/api/category-page";
-// https://inprofunzime.protv.md/api/category-page
-$post="link=emisiuni&page=1";
-// {"link":"emisiuni","page":2}
-$head=array('Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
-'Accept-Encoding: deflate',
-'Referer: http://inpro.protv.md/emisiuni',
-'Content-Type: application/x-www-form-urlencoded; charset=UTF-8',
-'X-Requested-With: XMLHttpRequest',
-'Content-Length: 20');
+$ua="Mozilla/5.0 (Windows NT 10.0; rv:89.0) Gecko/20100101 Firefox/89.0";
+$l="https://canale.live/";
   $ch = curl_init();
-  curl_setopt($ch, CURLOPT_URL, $link);
+  curl_setopt($ch, CURLOPT_URL, $l);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-  curl_setopt($ch,CURLOPT_REFERER,$link);
-  curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows; U; Windows NT 6.1; en-US; rv:1.9.1.2) Gecko/20090729 Firefox/3.5.2 GTB5');
+  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
   curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
-  curl_setopt($ch,CURLOPT_HTTPHEADER,$head);
-  curl_setopt ($ch, CURLOPT_POST, 1);
-  curl_setopt ($ch, CURLOPT_POSTFIELDS, $post);
   curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
-  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
-  $html = curl_exec($ch);
-  $p=json_decode($html,1);
-  //print_r ($p);
-  //echo $html;
-  $r=$p["items"];
-for ($k=0;$k<count($r);$k++) {
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 25);
+  $h = curl_exec($ch);
+  curl_close($ch);
+$videos = explode("canale.live/tv/", $h);
 
-    $image=$r[$k]["cover_thumb_md"];
+unset($videos[0]);
+$videos = array_values($videos);
 
-    $link="https://inprofunzime.protv.md".$r[$k]["long_link"];
-    $title=$r[$k]["name"];
-    //$link="http://video.protv.md/assets/articles/files/".$link.".mp4";
-    $link1="direct_link.php?link=".$link."&title=".urlencode($title)."&from=profunzime&mod=direct";
-    $l="link=".urlencode(fix_t($link))."&title=".urlencode(fix_t($title))."&from=profunzime&mod=direct";
-  if (preg_match("/inpro\.protv\.md|inprofunzime\.md/",$r[$k]["site"]["link_desktop"])) {
+foreach($videos as $video) {
+ $t1=explode('"',$video);
+
+ $link=$t1[0];
+ $link=str_replace("/","",$link);
+ $t3=explode('channel-name">',$video);
+ $t4=explode("<",$t3[1]);
+ $title=trim($t4[0]);
+    $link1="direct_link.php?link=".$link."&title=".urlencode($title)."&from=canale.live&mod=direct";
+    $l="link=".urlencode(fix_t($link))."&title=".urlencode(fix_t($title))."&from=canale.live&mod=direct";
+  if ($link && $title) {
   if ($n==0) echo '<TR>';
   if ($flash != "mp")
-  echo '<td class="mp" align="center" width="25%"><a href="'.$link1.'" target="_blank"><img src="'.$image.'" width="'.$width.'" height="'.$height.'"><BR>'.$title.'</a></TD>';
+  echo '<td class="mp" align="center" width="25%"><a href="'.$link1.'" target="_blank">'.$title.'</a></TD>';
     else
-  echo '<td class="mp" align="center" width="25%">'.'<a onclick="ajaxrequest('."'".$l."')".'"'." style='cursor:pointer;'>".'<img src="'.$image.'" width="'.$width.'" height="'.$height.'"><BR>'.$title.'</a></TD>';
+  echo '<td class="mp" align="center" width="25%">'.'<a onclick="ajaxrequest('."'".$l."')".'"'." style='cursor:pointer;'>".''.$title.'</a></TD>';
 
   $n++;
   if ($n == 4) {

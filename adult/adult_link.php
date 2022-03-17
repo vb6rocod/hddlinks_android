@@ -299,10 +299,15 @@ $out=$t2[0];
 } else if (preg_match("/bitporno\.com/",$host)) {
   if (preg_match("/[\"|\']((.*?)\.(m3u8|mp4))[\"|\']/",$h,$m))
   $out=$m[1];
-  if (strpos("http",$out) === false) $out="https:///bitporno.com".$out;
+  //echo $out;
+  if (strpos($out,"http") === false) $out="https:///bitporno.com".$out;
+  if ($flash <> "flash")
+    $out=$out."|Referer=".urlencode("https://bitporno.com")."&Origin=".urlencode("https://bitporno.com");
 } else if (preg_match("/bravoporn\.com/",$host)) {
   if (preg_match_all("/source src\=\"(.*?)\"/",$h,$m)) {
     $out=$m[1][count($m[1])-1];
+  if ($flash <> "flash")
+    $out=$out."|Referer=".urlencode("https://bravoporn.com")."&Origin=".urlencode("https://bravoporn.com");
   }
 } else if (preg_match("/dansmovies\.com/",$host)) {
   $t1=explode('source src="',$h);
@@ -859,6 +864,8 @@ $head=array('Accept: */*',
   if (strpos($out,"http") === false && $out) $out="https:".$out;
 } else if (preg_match("/tube8\.com/",$host)) {
   $out=trim(str_between($h,'videoUrlJS = "','"'));
+  $out=str_replace("&amp;","&",$out);
+  $out=str_replace("\\","",$out);
 } else if (preg_match("/vporn\.com|pornone\.com/",$host)) {
   $t1=explode('source src="',$h);
   $t2=explode('"',$t1[1]);

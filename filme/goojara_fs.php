@@ -134,6 +134,10 @@ function off() {
 echo '<h2>'.$tit.$tit2.'</H2>';
 echo '<BR>';
 $r=array();
+
+//echo $link;
+//$link="https://ww1.goojara.to/mGQb8b";
+$ref="https://".parse_url($link)['host'];
 $ua="Mozilla/5.0 (Windows NT 10.0; rv:80.0) Gecko/20100101 Firefox/80.0";
   $ch = curl_init($link);
   curl_setopt($ch, CURLOPT_USERAGENT, $ua);
@@ -141,11 +145,12 @@ $ua="Mozilla/5.0 (Windows NT 10.0; rv:80.0) Gecko/20100101 Firefox/80.0";
   curl_setopt($ch, CURLOPT_RETURNTRANSFER  ,1);  // RETURN THE CONTENTS OF THE CALL
   curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
   curl_setopt($ch, CURLOPT_HEADER,1);
-  curl_setopt($ch, CURLOPT_REFERER,"https://www.goojara.to");
-  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
-  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+  curl_setopt($ch, CURLOPT_REFERER,$ref);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 25);
   $h = curl_exec($ch);
   curl_close ($ch);
+  //echo $h;
   if (preg_match("imdb\.com\/tt(\d+)/",$h,$m))
    $imdbid=$m;
   else
@@ -153,17 +158,19 @@ $ua="Mozilla/5.0 (Windows NT 10.0; rv:80.0) Gecko/20100101 Firefox/80.0";
   //echo $h;
   preg_match_all("/(go\.php\?url\=\w+)\"/",$h,$p);
   //print_r ($p);
-  preg_match("/_3chk\(\'([a-z0-9]+)\'\,\'([a-z0-9]+)\'/",$h,$m);
-  //print_r ($m);
-  
-  preg_match("/aGooz\=(\w+)\;/",$h,$n);
+  // _3chk("_0x9dc6a","acb3f8adc93b7adc9f0b8b")
+    preg_match("/_3chk\(\'([a-z0-9_]+)\'\,\'([a-z0-9]+)\'/",$h,$m);
+    //print_r ($m);
+    preg_match("/aGooz\=(\w+)\;/",$h,$nn);
   $head=array('Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
   'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
   'Accept-Encoding: deflate',
   'Connection: keep-alive',
-  'Referer: https://www.goojara.to/',
-  'Cookie: aGooz='.$n[1].'; '.$m[1].'='.$m[2].'',
+  'Referer: '.$ref,
+  'Origin: '.$ref,
+  'Cookie: aGooz='.$nn[1].'; '.$m[1]."=".$m[2],
   'Upgrade-Insecure-Requests: 1');
+  //print_r ($head);
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_USERAGENT, $ua);
   curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,0);
@@ -171,12 +178,15 @@ $ua="Mozilla/5.0 (Windows NT 10.0; rv:80.0) Gecko/20100101 Firefox/80.0";
   curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
   curl_setopt($ch, CURLOPT_HTTPHEADER,$head);
   curl_setopt($ch, CURLOPT_HEADER,1);
-  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
-  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 25);
   for ($z=0;$z<count($p[0]);$z++) {
-   curl_setopt($ch, CURLOPT_URL,"https://www.goojara.to/".$p[1][$z]);
+  
+  //echo $ref."/".$p[1][$z]."\n";
+   curl_setopt($ch, CURLOPT_URL,$ref."/".$p[1][$z]);
    $h = curl_exec($ch);
-   if (preg_match("/location\:\s*(.+)/",$h,$j))
+   //echo $h;
+   if (preg_match("/location\:\s*(.+)/i",$h,$j))
     $r[]=trim($j[1]);
   }
   curl_close ($ch);

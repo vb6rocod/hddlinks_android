@@ -115,11 +115,18 @@ $n=0;
 $w=0;
 $nn=count($arr);
 $k=intval($nn/10) + 1;
-echo '<table border="1px" width="100%"><tr>'."\n\r";
+$p=0;
+echo '<table border="1px" width="100%">'."\n\r";
 for ($m=1;$m<$k;$m++) {
+if ($p==0) echo '<TR>';
    echo '<TD align="center"><a href="#myLink'.($m*10).'">Salt:'.($m*10).'</a></td>';
+   $p++;
+  if ($p == 14) {
+  echo '</tr>';
+  $p=0;
+  }
 }
-echo '</TR></table>';
+echo '</table>';
 echo '<table border="1px" width="100%">'."\n\r";
 foreach($arr as $key => $value) {
     $imdb="";
@@ -127,8 +134,10 @@ foreach($arr as $key => $value) {
     $title = unfix_t(urldecode($key));
     $image=urldecode($arr[$key]["image"]);
     //$image=$host.parse_url($image)['path'];
+    $image=str_replace("////","//",$image);
     $image=str_replace("image.lookmovie.ag/p","lookmovie.ag/images/p",$image);
     $image=str_replace("lookmovie.ag","lookmovie.io",$image);
+    $image=str_replace("lookmovie.io","lookmovie2.to",$image);
     $year="";
     $link=$host.parse_url($link)['path'];
     $link_f=$fs_target.'?tip=series&link='.urlencode($link).'&title='.urlencode(fix_t($title)).'&image='.$image."&sez=&ep=&ep_tit=&year=".$year;

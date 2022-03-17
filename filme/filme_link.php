@@ -1669,13 +1669,13 @@ for ($i=0;$i<count($links);$i++) {
    //echo "c=".$cur_link;
    $pat="/hqq\.watch|xopenload\.me|hqq\.tv\/player\/script\.php|top\.mail\.ru|facebook|twitter|player\.swf";
    $pat .="|img\.youtube|youtube\.com\/user|radioarad|\.jpg|\.png|\.gif|jq\/(js|css)";
-   $pat .="|fsplay\.net\?s|changejplayer\.js|validateemb\.php|restore_google\.php|";
+   $pat .="|fsplay\.net\?s|changejplayer\.js|validateemb\.php|restore_google\.php|clicksud\.biz|123formbuilder\.com|";
    $pat .="ExoLoader.addZone|js\/api\/share\.js|hindipix\.in\/(js|style)|share\.php\?|brave\.com|affiliate\.rusvpn\.com/i";
    if (!preg_match($pat,$cur_link)) {
      $cur_link=str_replace(urldecode("%0A"),"",$cur_link);
      if ($cur_link) $link_f[]=$cur_link;
    }
-  //echo $cur_link;
+  //echo $cur_link."\n";
  }
 }
 

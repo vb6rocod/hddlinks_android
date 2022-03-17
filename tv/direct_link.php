@@ -334,10 +334,73 @@ if (strpos($link,"jurnaltv.md/JurnalTV") !== false) {
     if (!$link) $link=str_between($h,'file:"','"');
 }
 ///////////////////////////////////////////////
+if ($from=="canale.live") {
+  $ua="Mozilla/5.0 (Windows NT 10.0; rv:89.0) Gecko/20100101 Firefox/89.0";
+  $l="https://canale.live/embdr/".$link."/";
+  $ch = curl_init();
+  curl_setopt($ch, CURLOPT_URL, $l);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
+  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+  curl_setopt($ch, CURLOPT_REFERER,"https://canale.live/reclama/ftv/?id=100");
+  //curl_setopt($ch, CURLOPT_HEADER,1);
+  //curl_setopt($ch, CURLOPT_HTTPHEADER, $head);
+  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 25);
+  $html = curl_exec($ch);
+  curl_close($ch);
+  $ch = curl_init();
+  curl_setopt($ch, CURLOPT_URL, $l);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
+  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+  curl_setopt($ch, CURLOPT_REFERER,"https://canale.live/reclama/ftv/?id=100");
+  //curl_setopt($ch, CURLOPT_HEADER,1);
+  //curl_setopt($ch, CURLOPT_HTTPHEADER, $head);
+  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 25);
+  $html = curl_exec($ch);
+  curl_close($ch);
+  //echo $html;
+  if (preg_match("/parseInt\(atob\(value/",$html)) {
+  $t1=explode('[',$html);
+  $t2=explode(';',$t1[1]);
+  $e="\$c=[".$t2[0].";";
+  eval ($e);
+  $t1=explode("replace(/\D/g,'')) -",$html);
+  $t2=explode(")",$t1[1]);
+  $n=$t2[0];
+
+  //echo $n."\n";
+  $out="";
+  for ($k=0;$k<count($c);$k++) {
+    $p=base64_decode($c[$k]);
+    $p=preg_replace("/\D/","",$p);
+    //echo $p." ";
+    $out .=chr($p-$n);
+  }
+  } else {
+   $out=$html;
+  }
+  //echo $out;
+  //echo $e;
+  // source: '
+  preg_match_all("/(\/\s+)?source\:\s+\'(.*?)\'/",$out,$m);
+  //print_r ($m);
+  for ($z=0;$z<count($m[2]);$z++) {
+   if ($m[0][$z][0] != "/") {
+     $link=$m[2][$z];
+     break;
+   }
+  }
+}
 if ($from=="ustvgo") {
   $ua="Mozilla/5.0 (Windows NT 10.0; rv:89.0) Gecko/20100101 Firefox/89.0";
   //echo $link;
-  $link="https://ustvgo.tv/player.php?stream=ABC";
+  // https://ustvgo.tv/acc-network/
+  //$link="https://ustvgo.tv/player.php?stream=ABC";
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $link);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
@@ -348,10 +411,13 @@ if ($from=="ustvgo") {
   curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
   curl_setopt($ch, CURLOPT_TIMEOUT, 25);
   $html = curl_exec($ch);
+  //echo $html;
+  // iframe src='/player.php?stream=ACCN'
   $t1=explode("stream=",$html);
   $t2=explode("'",$t1[1]);
   $stream=$t2[0];
   $l="https://ustvgo.tv/player.php?stream=".$stream;
+  curl_setopt($ch, CURLOPT_URL, $l);
   $html = curl_exec($ch);
   curl_close($ch);
   //echo $html;
@@ -822,6 +888,7 @@ if (count($pl) > 1) {
 }
 }
 if ($from=="profunzime") {
+    //echo $link;
     $ch = curl_init();
     curl_setopt($ch, CURLOPT_URL, $link);
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
@@ -838,13 +905,16 @@ if ($from=="profunzime") {
     if (strpos($h,"embed/") !== false) {
     $t1=explode("embed/",$h);
     $t2=explode('"',$t1[1]);
-    $link="http://inprofunzime.protv.md/embed/".$t2[0];
-    //echo $link;
+    // https://inprofunzime.protv.md/embed/2679589.html
+    $link="https://inprofunzime.protv.md/embed/".$t2[0];
+    // https://inprofunzime.protv.md/embed/2679589.html
+    //echo "\n".$link."\n";
     $ch = curl_init();
     curl_setopt($ch, CURLOPT_URL, $link);
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
     curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 10.0; rv:64.0) Gecko/20100101 Firefox/64.0');
     curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+    curl_setopt($ch, CURLOPT_REFERER,"https://inprofunzime.protv.md");
     curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
     //curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
     //curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
@@ -852,6 +922,7 @@ if ($from=="profunzime") {
     curl_setopt($ch, CURLOPT_TIMEOUT, 15);
     $h1 = curl_exec($ch);
     curl_close($ch);
+    //echo $h1;
     $t1=explode('source  src="',$h1);
     $t2=explode('"',$t1[1]);
     $link=$t2[0];

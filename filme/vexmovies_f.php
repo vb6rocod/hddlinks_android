@@ -18,6 +18,7 @@ $has_search="yes";
 $has_add="yes";
 $has_fs="yes";
 $ref="http://vexmovies.space";
+//$ref="http://vexmovies.pw";
 $host=parse_url($ref)['host'];
 $fav_target="vexmovies_f_fav.php?host=".$ref;
 $add_target="vexmovies_f_add.php";

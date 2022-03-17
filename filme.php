@@ -96,7 +96,7 @@ else
 
 <TR>
 <TD width="25%"><a href="filme/uniquestream_f.php?page=1&tip=release&title=uniquestream&link=" target="_blank">uniquestream</a></TD>
-<TD width="25%"></TD>
+<TD width="25%"><a href="filme/sockshare_f.php?page=1&tip=release&title=sockshare&link=" target="_blank">sockshare</a></TD>
 <TD width="25%"><a href="filme/fsharetv.php?page=1&tip=release&title=fsharetv&link=" target="_blank">fsharetv</a></TD>
 <TD width="25%"><a href="filme/hdonline_f.php?page=1&tip=release&title=hdonline&link=" target="_blank">hdonline</a></TD>
 </TR>
@@ -105,7 +105,7 @@ else
 <TD width="25%"><a href="filme/vumoo_f.php?page=1&tip=release&title=vumoo&link=" target="_blank">vumoo</a></TD>
 <TD width="25%"><a href="filme/flixtor_f.php?page=1&tip=release&title=flixtor&link=" target="_blank">flixtor</a></TD>
 <TD width="25%"><a href="filme/gerryreid_f.php?page=1&tip=release&title=gerryreid&link=" target="_blank">gerryreid</a></TD>
-<TD width="25%"></TD>
+<TD width="25%"><a href="filme/lookclub_f.php?page=1&tip=release&title=lookclub&link=" target="_blank">lookclub</a></TD>
 </TR>
 
 <TR>
