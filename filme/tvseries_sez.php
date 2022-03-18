@@ -6,7 +6,7 @@ $tit=unfix_t(urldecode($_GET["title"]));
 $image=$_GET["image"];
 $link=urldecode($_GET["link"]);
 $tip=$_GET["tip"];
-$l="http://www.tvseries.net".$link;
+$l="https://tvseries.net".$link;
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $l);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
@@ -16,7 +16,7 @@ $l="http://www.tvseries.net".$link;
   curl_setopt($ch, CURLOPT_TIMEOUT, 15);
   $html = curl_exec($ch);
   curl_close($ch);
-$image="http://img.tvseries.net".str_between($html,'src="http://img.tvseries.net','"');
+$image="https://img.tvseries.net".str_between($html,'src="http://img.tvseries.net','"');
 ?>
 <html><head>
 <meta http-equiv="content-type" content="text/html; charset=UTF-8">

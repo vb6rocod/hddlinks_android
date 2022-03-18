@@ -31,7 +31,7 @@ function str_between($string, $start, $end){
 	return substr($string,$ini,$len);
 }
 echo '<h2>'.$tit.'</h2>';
-$l="http://www.tvseries.net".$link;
+$l="https://tvseries.net".$link;
 $ch = curl_init($l);
 curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows; U; Windows NT 6.1; en-US; rv:1.9.1.2) Gecko/20090729 Firefox/3.5.2 GTB5');
 curl_setopt($ch,CURLOPT_REFERER,"http://www.tvseries.net");

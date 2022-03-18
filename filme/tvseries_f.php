@@ -17,7 +17,7 @@ $has_fav="yes";
 $has_search="yes";
 $has_add="yes";
 $has_fs="yes";
-$fav_target="tvseries_f_fav.php?host=http://www.tvseries.net";
+$fav_target="tvseries_f_fav.php?host=https://tvseries.net";
 $add_target="tvseries_f_add.php";
 $add_file="";
 $fs_target="tvseries_fs.php";
@@ -168,12 +168,14 @@ echo '</TR>'."\r\n";
 
 if($tip=="release") {
   $l="http://www.tvseries.net/movie_class_paging.php";
+  $l="https://tvseries.net/movie_paging.php";
   $post="pageNum=".($page-1);
 } else {
   $search=str_replace(" ","+",$tit);
   $l="http://www.tvseries.net/search_list.php?keyword_main=".$search;
+  $l="https://tvseries.net/search_list.php?keyword_main=".$search."&type=0";
 }
-
+// https://tvseries.net/search_list.php?keyword_main=star&type=0
 if ($tip=="search") {
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $l);
@@ -206,6 +208,7 @@ if ($tip=="release") {
   $title=$r["list"][$k]["title"];
   $title=trim(preg_replace("/Season\s+\d+/i","",$title));
   $image=$r["list"][$k]["pic"];
+  $image=str_replace("http:","https:",$image);
   $year="";
   $imdb="";
   $link_f=$fs_target.'?tip=movie&link='.urlencode($link).'&title='.urlencode(fix_t($title)).'&image='.$image."&sez=&ep=&ep_tit=&year=".$year;

@@ -126,6 +126,7 @@ foreach($arr as $key => $value) {
 	$link = urldecode($arr[$key]["link"]);
     $title = unfix_t(urldecode($key));
     $image=urldecode($arr[$key]["image"]);
+    $image=str_replace("http:","https:",$image);
     //$image=$host.parse_url($image)['path'];
     $year="";
     $tit=$title;

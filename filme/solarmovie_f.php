@@ -168,7 +168,10 @@ if ($page==1) {
 }
 echo '</TR>'."\r\n";
 if($tip=="release") {
-  $l=$last_good."/movie/filter/movies/page-".$page.".html";
+  if ($page==1)
+    $l=$last_good."/movie/filter/movies.html";
+  else
+    $l=$last_good."/movie/filter/movies/page-".$page.".html";
 } else {
   $search=str_replace(" ","+",$tit);
   if ($page > 1)
