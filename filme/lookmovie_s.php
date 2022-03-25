@@ -70,9 +70,11 @@ $r=array();
 //http://free2watch.net/tvseries/sort/latest/all/all/all
 if($tip=="release") {
   $l=$last_good."/shows/filter/?p=".$page;
+  $l=$last_good."/shows/page/".$page."?per-page=30";
 } else {
   $search=str_replace(" ","%20",$tit);
   $l=$last_good."/shows/search/?p=".$page."&q=".$search;
+  $l=$last_good."/shows/search?like=".$search."&page=".$page;
 }
 $host=parse_url($l)['host'];
 $cookie=$base_cookie."lookmovie.txt";
@@ -89,7 +91,7 @@ if (file_exists($base_pass."firefox.txt"))
  $ua=file_get_contents($base_pass."firefox.txt");
 else
  $ua="Mozilla/5.0 (Windows NT 10.0; rv:75.0) Gecko/20100101 Firefox/75.0";
-
+$ua="Mozilla/5.0 (Windows NT 10.0; rv:86.0) Gecko/20100101 Firefox/86.0";
 //echo $ua."<BR>";
 //print_r ($head);
 
@@ -225,29 +227,59 @@ if ($page==1) {
 }
 echo '</TR>'."\r\n";
 
-//echo $html;
-//print_r ($info);
-;
-  $videos = explode('<div class="movie-item', $html);
-  unset($videos[0]);
-  $videos = array_values($videos);
-  foreach($videos as $video) {
-    $t1 = explode('href="',$video);
-    $t2=explode('"',$t1[1]);
-    $link = $t2[0];
-    if (strpos($link,"http") === false) $link="https://".$host.$link;
-    $t3=explode('>',$t1[3]);
-    $t2=explode('<',$t3[1]);
-    $title=trim($t2[0]);
-    $title=prep_tit($title);
-    $image="";
-    $t1 = explode('data-src="', $video);
-    $t2 = explode('"', $t1[1]);
-    $image=$t2[0];
-
-    $t1=explode('class="year">',$video);
-    $t2=explode('<',$t1[1]);
-    $year=$t2[0];
+$videos = explode('div class="movie-card"', $html);
+unset($videos[0]);
+$videos = array_values($videos);
+//print_r ($videos);
+foreach($videos as $video) {
+  $t1 = explode('href="',$video);
+  $t2=explode('"',$t1[1]);
+  $link = $t2[0];
+  if (strpos($link,"http") === false) $link="https://".$host.$link;
+  /*
+  if (strpos($video,'detailed__title">') === false) {
+  $t3 = explode('>', $t1[3]);
+  $t4 = explode('<', $t3[1]);
+  } else {
+  $t3=explode('detailed__title">',$video);
+  $t4=explode('<',$t3[1]);
+  }
+  */
+  $t3=explode('class="movie-card-title">',$video);
+  $t4=explode('</h2',$t3[1]);
+  $title = strip_tags(trim($t4[0]));
+  $title=prep_tit($title);
+  $imamge="";
+  $t1 = explode('src="', $video);
+  $t2 = explode('"', $t1[1]);
+  $image=$t2[0];
+  if (strpos($image,"http") === false && $image) $image="https://".$host.$image;
+  if (!$image) $image="blank.jpg";
+  //$t1=explode('data-src="'
+  //$image=str_replace("w342","w300",$image);
+  //$image="https://image.tmdb.org/t/p/w342/zfxZSe4cGPYj3XUOgJO8OBRy47n.jpg";
+  $rest = substr($title, -6);
+  if (preg_match("/\((\d+)\)/",$rest,$m)) {
+   $year=$m[1];
+   $tit_imdb=trim(str_replace($m[0],"",$title));
+  } else {
+   $year="";
+   $tit_imdb=$title;
+  }
+  /*
+  if (strpos($video,'year-intitle">') !== false) {
+  $t1=explode('class="year">',$video);
+  $t2=explode('<',$t1[1]);
+  } else {
+  $t1=explode('year-intitle">',$video);
+  $t2=explode('<',$t1[1]);
+  }
+  $year=$t2[0];
+  */
+  $t1=explode('div class="movie-stats__item">',$video);
+  $t2=explode('</div>',$t1[1]);
+  $year=trim(strip_tags($t2[0]));
+  $imdb="";
     if (strpos($image,"http") === false && $image) $image="https://".$host.$image;
     if (!$image) $image="blank.jpg";
     if (strpos($link,"/shows") !== false) array_push($r ,array($title,$link, $image,$year));

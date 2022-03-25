@@ -90,7 +90,7 @@ $last_good="https://lookmovie2.to";
   if (preg_match("/(lookmovie\d+\.\w+)\/[^\"]+/",$h,$m))
     $ref=$m[1];
   else
-    $ref="lookmovie.io";
+    $ref="lookmovie2.to";
 
   file_put_contents($base_cookie."lookmovie_ref.txt",$ref);
   $h=str_replace('" + window.location.host + "',"lookmovie.io",$h);
@@ -209,12 +209,16 @@ exit ;
   $s=array();
   $srt="";
   $sss=$x['subtitles'];
-  for ($k=0;$k<count($sss);$k++) {
-   if ($sss[$k]['file'][0] == "/") {
-     $ss= "https://".$ref.$sss[$k]['file'];
+  //for ($k=0;$k<count($sss);$k++) {
+  foreach($sss as $key=>$value) {
+   if ($sss[$key]['url'][0]=="/") {
+   //if ($sss[$k]['file'][0] == "/") {
+     //$ss= "https://".$ref.$sss[$k]['file'];
+     $ss= "https://".$ref.$sss[$key]['url'];
    //else
      //$ss=$sss[$k]['file'];
-   $srt1[$sss[$k]['language']] = $ss;
+   //$srt1[$sss[$k]['language']] = $ss;
+   $srt1[$sss[$key]['language']] = $ss;
    }
   }
   if (isset($srt1["Romanian"])) {
@@ -300,6 +304,7 @@ $ref=file_get_contents($base_cookie."lookmovie_ref.txt");
 $s=array();
   $l="https://lookmovie.io/api/v1/shows/episode-subtitles/?id_episode=".$id;
   $l="https://".$ref."/api/v1/security/episode-subtitles/?id_episode=".$id;
+  $l="https://".$ref."/api/v1/security/episode-access?id=".$link;
   //$l="https://lookmovie.io/api/v1/shows/episode-subtitles/?id_episode=119775";
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $l);
@@ -385,8 +390,8 @@ exit ;
   $srt1=array();
   $srt="";
   for ($k=0;$k<count($s['subtitles']);$k++) {
-   if ($s['subtitles'][$k]['file'][0] == "/") {
-     $ss= "https://lookmovie2.to".$s['subtitles'][$k]['file'];
+   if ($s['subtitles'][$k]['url'][0] == "/") {
+     $ss= "https://lookmovie2.to".$s['subtitles'][$k]['url'];
    //else
      //$ss=$s['subtitles'][$k]['file'];
    $srt1[$s['subtitles'][$k]['language']] = $ss;
@@ -411,8 +416,12 @@ $s=array();
 //echo $srt;
 //$head=array('Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
 //'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2');
+  // https://lookmovie2.to/api/v1/security/episode-access?id_episode=15205
+  // https://lookmovie2.to/api/v1/security/episode-access?id=15205
+  /*
   $l="https://lookmovie.io/api/v1/security/show-access?slug=".$slug."&token=&step=2";
   $l="https://".$ref."/api/v1/security/episode-access?id_episode=".$link;
+  $l="https://".$ref."/api/v1/security/episode-access?id=".$link;
   //echo $l;
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $l);
@@ -426,6 +435,7 @@ $s=array();
   curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
   $h = curl_exec($ch);
   curl_close($ch);
+  */
   //echo $h;
   $x=json_decode($h,1);
   //print_r ($x);

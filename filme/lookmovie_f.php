@@ -70,13 +70,17 @@ $ua = $_SERVER['HTTP_USER_AGENT'];
 $ua="Mozilla/5.0 (Windows NT 10.0; rv:86.0) Gecko/20100101 Firefox/86.0";
 if($tip=="release") {
  if (strpos($ua,"Windows") !== false)
-  $l=$last_good."/?p=".$page."&r=1";
+  $l=$last_good."/movies/page/".$page."?per-page=30";
  else
   $l=$last_good."/page/".$page;
 } else {
   $search=str_replace(" ","%20",$tit);
   $l=$last_good."/movies/search/?p=".$page."&q=".$search;
+  $l=$last_good."/movies/search?like=".$search."&page=".$page;
 }
+//https://lookmovie2.to/movies/page/2?per-page=30
+// https://lookmovie2.to/movies/search/?like=star
+// https://lookmovie2.to/movies/search?like=star&page=2
 $host=parse_url($l)['host'];
 $cookie=$base_cookie."lookmovie.txt";
  if (file_exists("/storage/emulated/0/Download/cookies.txt")) {
@@ -93,10 +97,10 @@ if (file_exists($base_pass."firefox.txt"))
 else
  $ua="Mozilla/5.0 (Windows NT 10.0; rv:75.0) Gecko/20100101 Firefox/75.0";
 //echo $h;
-
+$ua="Mozilla/5.0 (Windows NT 10.0; rv:86.0) Gecko/20100101 Firefox/86.0";
 $head=array('Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
 'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2');
-
+//echo $l;
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $l);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
@@ -229,11 +233,15 @@ if ($page==1) {
    echo '<TD class="nav" colspan="4" align="right"><a href="'.$prev.'">&nbsp;&lt;&lt;&nbsp;</a> | <a href="'.$next.'">&nbsp;&gt;&gt;&nbsp;</a></TD>'."\r\n";
 }
 echo '</TR>'."\r\n";
+/*
 if (strpos($html,'div class="movie-list-detailed mobile') === false)
 $videos = explode('div class="movie-', $html);
 else
 $videos=explode('div class="movie-list-detailed mobile',$html);
+*/
 //print_r ($videos);
+// div class="movie-card"
+$videos = explode('div class="movie-card"', $html);
 unset($videos[0]);
 $videos = array_values($videos);
 //print_r ($videos);
@@ -242,6 +250,7 @@ foreach($videos as $video) {
   $t2=explode('"',$t1[1]);
   $link = $t2[0];
   if (strpos($link,"http") === false) $link="https://".$host.$link;
+  /*
   if (strpos($video,'detailed__title">') === false) {
   $t3 = explode('>', $t1[3]);
   $t4 = explode('<', $t3[1]);
@@ -249,10 +258,13 @@ foreach($videos as $video) {
   $t3=explode('detailed__title">',$video);
   $t4=explode('<',$t3[1]);
   }
-  $title = trim($t4[0]);
+  */
+  $t3=explode('class="movie-card-title">',$video);
+  $t4=explode('</h3',$t3[1]);
+  $title = strip_tags(trim($t4[0]));
   $title=prep_tit($title);
   $imamge="";
-  $t1 = explode('data-src="', $video);
+  $t1 = explode('src="', $video);
   $t2 = explode('"', $t1[1]);
   $image=$t2[0];
   if (strpos($image,"http") === false && $image) $image="https://".$host.$image;
@@ -268,6 +280,7 @@ foreach($videos as $video) {
    $year="";
    $tit_imdb=$title;
   }
+  /*
   if (strpos($video,'year-intitle">') !== false) {
   $t1=explode('class="year">',$video);
   $t2=explode('<',$t1[1]);
@@ -276,6 +289,10 @@ foreach($videos as $video) {
   $t2=explode('<',$t1[1]);
   }
   $year=$t2[0];
+  */
+  $t1=explode('div class="movie-stats__item">',$video);
+  $t2=explode('</div>',$t1[1]);
+  $year=trim(strip_tags($t2[0]));
   $imdb="";
   $link_f=$fs_target.'?tip=movie&link='.urlencode($link).'&title='.urlencode(fix_t($title)).'&image='.$image."&sez=&ep=&ep_tit=&year=".$year;
   if ($title && strpos($link,"/movie") !== false) {

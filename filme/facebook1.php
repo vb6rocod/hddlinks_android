@@ -70,7 +70,19 @@ function ajaxrequest(link) {
   }
 }
 </script>
-
+<script type="text/javascript">
+function isValid(evt) {
+    var charCode = (evt.which) ? evt.which : evt.keyCode,
+    self = evt.target;
+    if  (charCode == "51") {
+      id = "fav_" + self.id;
+      val_fav=document.getElementById(id).value;
+      ajaxrequest2(val_fav);
+    }
+    return true;
+}
+$(document).on('keyup', '.imdb', isValid);
+</script>
 </head>
 <body>
 <script>

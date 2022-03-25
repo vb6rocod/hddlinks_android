@@ -35,6 +35,8 @@ if (file_exists($base_pass."firefox.txt"))
  $ua=file_get_contents($base_pass."firefox.txt");
 else
  $ua="Mozilla/5.0 (Windows NT 10.0; rv:75.0) Gecko/20100101 Firefox/75.0";
+$ua="Mozilla/5.0 (Windows NT 10.0; rv:86.0) Gecko/20100101 Firefox/86.0";
+ $link=str_replace("/view/","/play/",$link);
 //echo $link;
 //print_r ($head);
   $ch = curl_init();
@@ -50,7 +52,7 @@ else
   curl_setopt($ch, CURLOPT_TIMEOUT, 25);
   $h = curl_exec($ch);
   curl_close($ch);
-
+  //echo $h;
   if (preg_match("/(lookmovie\d+\.\w+)\//",$h,$m))
     $ref=$m[1];
   else
@@ -62,6 +64,7 @@ function removeBOM($data) {
     }
     return $data;
 }
+/*
 $t1=explode("window.seasons='",$h);
 $t2=explode("';",$t1[1]);
 $z=str_replace('\\\\\\"',"'",trim($t2[0]));
@@ -92,6 +95,7 @@ foreach ($p as $pp) {
   $r[$pp['meta']['season']][] = array($ee['title'],$ee['episode_number'],$ee['id_episode'],$ee['still_path']);
  }
 }
+*/
 //print_r ($r);
 // https://false-promise.lookmovie.ag/api/v1/storage/shows/?slug=10380768-love-life-2020&token=
 // https://lookmovie.ag/manifests/shows/4UNbOWGB--phpVD_Mri7ug/1591460238/96045/master.m3u8
@@ -115,7 +119,30 @@ if (preg_match("/year\:\s*\'(\d+)\'/",$rest,$y))
 //for ($k=0;$k<count($m[1]);$k++) {
 // $r[$m[4][$k]][]=array($m[4][$k],$m[1][$k],$m[2][$k],$m[3][$k]);
 //}
-
+$r=array();
+$videos = explode('data-season-episodes="', $h);
+unset($videos[0]);
+$videos = array_values($videos);
+foreach($videos as $video) {
+ $t1=explode('"',$video);
+ $ss=$t1[0];
+ $vids = explode('li class="episodes', $video);
+ unset($vids[0]);
+ $vids = array_values($vids);
+ foreach($vids as $vid) {
+  $t1=explode('data-episode="',$vid);
+  $t2=explode('"',$t1[1]);
+  $ep=$t2[0];
+  $t1=explode('episodes__title">',$vid);
+  $t2=explode('<',$t1[1]);
+  $tt=$t2[0];
+  $t1=explode('data-id-episode="',$vid);
+  $t2=explode('"',$t1[1]);
+  $ll=$t2[0];
+  $r[$ss][]=array($tt,$ep,$ll,"");
+ }
+}
+//print_r ($r);
 $n=0;
 foreach($r as $key=>$value) {
   $sezoane[]=$key;

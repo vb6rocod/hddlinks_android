@@ -22,6 +22,14 @@ $ref="https://onionplay.is";
 $ref="https://onionplay.uk";
 $ref="https://onionplay.se";
 //$ref="https://onionplay.club";
+/*
+https://onionplay.network/ main
+onionplay.se
+onionplay.re
+onionplay.co
+onionplay.org
+onionplay.net
+*/
 $host=parse_url($ref)['host'];
 $fav_target="onionplay_f_fav.php?host=".$ref;
 $add_target="onionplay_f_add.php";
