@@ -70,11 +70,12 @@ $r=array();
 //http://free2watch.net/tvseries/sort/latest/all/all/all
 if($tip=="release") {
   $l=$last_good."/shows/filter/?p=".$page;
-  $l=$last_good."/shows/page/".$page."?per-page=30";
+  //$l=$last_good."/shows/page/".$page."?per-page=30";
+  //$l=$last_good."/shows/page/".$page;
 } else {
   $search=str_replace(" ","%20",$tit);
   $l=$last_good."/shows/search/?p=".$page."&q=".$search;
-  $l=$last_good."/shows/search?like=".$search."&page=".$page;
+  //$l=$last_good."/shows/search?like=".$search."&page=".$page;
 }
 $host=parse_url($l)['host'];
 $cookie=$base_cookie."lookmovie.txt";
@@ -95,7 +96,7 @@ $ua="Mozilla/5.0 (Windows NT 10.0; rv:86.0) Gecko/20100101 Firefox/86.0";
 //echo $ua."<BR>";
 //print_r ($head);
 
-
+//echo $l;
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $l);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
@@ -227,7 +228,7 @@ if ($page==1) {
 }
 echo '</TR>'."\r\n";
 
-$videos = explode('div class="movie-card"', $html);
+$videos = explode('<div class="movie-item', $html);
 unset($videos[0]);
 $videos = array_values($videos);
 //print_r ($videos);
@@ -245,12 +246,12 @@ foreach($videos as $video) {
   $t4=explode('<',$t3[1]);
   }
   */
-  $t3=explode('class="movie-card-title">',$video);
-  $t4=explode('</h2',$t3[1]);
+  $t3 = explode('>', $t1[3]);
+  $t4 = explode('<', $t3[1]);
   $title = strip_tags(trim($t4[0]));
   $title=prep_tit($title);
   $imamge="";
-  $t1 = explode('src="', $video);
+  $t1 = explode('data-src="', $video);
   $t2 = explode('"', $t1[1]);
   $image=$t2[0];
   if (strpos($image,"http") === false && $image) $image="https://".$host.$image;
@@ -266,21 +267,11 @@ foreach($videos as $video) {
    $year="";
    $tit_imdb=$title;
   }
-  /*
-  if (strpos($video,'year-intitle">') !== false) {
   $t1=explode('class="year">',$video);
   $t2=explode('<',$t1[1]);
-  } else {
-  $t1=explode('year-intitle">',$video);
-  $t2=explode('<',$t1[1]);
-  }
   $year=$t2[0];
-  */
-  $t1=explode('div class="movie-stats__item">',$video);
-  $t2=explode('</div>',$t1[1]);
-  $year=trim(strip_tags($t2[0]));
   $imdb="";
-    if (strpos($image,"http") === false && $image) $image="https://".$host.$image;
+
     if (!$image) $image="blank.jpg";
     if (strpos($link,"/shows") !== false) array_push($r ,array($title,$link, $image,$year));
   }

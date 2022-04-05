@@ -69,14 +69,13 @@ if ($tip=="search") {
 $ua = $_SERVER['HTTP_USER_AGENT'];
 $ua="Mozilla/5.0 (Windows NT 10.0; rv:86.0) Gecko/20100101 Firefox/86.0";
 if($tip=="release") {
- if (strpos($ua,"Windows") !== false)
   $l=$last_good."/movies/page/".$page."?per-page=30";
- else
-  $l=$last_good."/page/".$page;
+  $l=$last_good."/movies/page/".$page;
+
 } else {
   $search=str_replace(" ","%20",$tit);
   $l=$last_good."/movies/search/?p=".$page."&q=".$search;
-  $l=$last_good."/movies/search?like=".$search."&page=".$page;
+  //$l=$last_good."/movies/search?like=".$search."&page=".$page;
 }
 //https://lookmovie2.to/movies/page/2?per-page=30
 // https://lookmovie2.to/movies/search/?like=star
@@ -241,7 +240,7 @@ $videos=explode('div class="movie-list-detailed mobile',$html);
 */
 //print_r ($videos);
 // div class="movie-card"
-$videos = explode('div class="movie-card"', $html);
+$videos = explode('<div class="movie-item', $html);
 unset($videos[0]);
 $videos = array_values($videos);
 //print_r ($videos);
@@ -259,12 +258,12 @@ foreach($videos as $video) {
   $t4=explode('<',$t3[1]);
   }
   */
-  $t3=explode('class="movie-card-title">',$video);
-  $t4=explode('</h3',$t3[1]);
+  $t3 = explode('>', $t1[3]);
+  $t4 = explode('<', $t3[1]);
   $title = strip_tags(trim($t4[0]));
   $title=prep_tit($title);
   $imamge="";
-  $t1 = explode('src="', $video);
+  $t1 = explode('data-src="', $video);
   $t2 = explode('"', $t1[1]);
   $image=$t2[0];
   if (strpos($image,"http") === false && $image) $image="https://".$host.$image;
@@ -280,6 +279,9 @@ foreach($videos as $video) {
    $year="";
    $tit_imdb=$title;
   }
+  $t1=explode('class="year">',$video);
+  $t2=explode('<',$t1[1]);
+  $year=$t2[0];
   /*
   if (strpos($video,'year-intitle">') !== false) {
   $t1=explode('class="year">',$video);
@@ -290,9 +292,7 @@ foreach($videos as $video) {
   }
   $year=$t2[0];
   */
-  $t1=explode('div class="movie-stats__item">',$video);
-  $t2=explode('</div>',$t1[1]);
-  $year=trim(strip_tags($t2[0]));
+
   $imdb="";
   $link_f=$fs_target.'?tip=movie&link='.urlencode($link).'&title='.urlencode(fix_t($title)).'&image='.$image."&sez=&ep=&ep_tit=&year=".$year;
   if ($title && strpos($link,"/movie") !== false) {

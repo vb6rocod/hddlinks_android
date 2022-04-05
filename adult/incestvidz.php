@@ -240,15 +240,18 @@ foreach($videos as $video) {
   $t2 = explode('"', $t1[1]);
   $title = trim(strip_tags($t2[0]));
   $title = prep_tit($title);
-  $t1 = explode('src=', $video);
-  $t2 = explode('.jpeg', $t1[1]);
-  $image = $t2[0].".jpeg";
+  //$t1 = explode('src=', $video);
+  //$t2 = explode('.jpeg', $t1[1]);
+  //$image = $t2[0].".jpeg";
+  preg_match("/http.+\.jpe?g/i",$video,$m);
+  $image=$m[0];
   if (strpos($image,"http") === false) $image="https:".$image;
   $durata="";
   $durata = preg_replace("/\n|\r/"," ",strip_tags($durata));
   if ($durata) $title=$title." (".$durata.')';
   if (!preg_match("/title\]/",$title)) array_push($r ,array($title,$link, $image));
 }
+//print_r ($r);
 $c=count($r);
 for ($k=0;$k<$c;$k++) {
   $title=$r[$k][0];

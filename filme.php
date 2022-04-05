@@ -102,7 +102,7 @@ else
 </TR>
 
 <TR>
-<TD width="25%"><a href="filme/vumoo_f.php?page=1&tip=release&title=vumoo&link=" target="_blank">vumoo</a></TD>
+<TD width="25%"><a href="filme/yifytv_f.php?page=1&tip=release&title=yifytv&link=" target="_blank">yifytv</a></TD>
 <TD width="25%"><a href="filme/flixtor_f.php?page=1&tip=release&title=flixtor&link=" target="_blank">flixtor</a></TD>
 <TD width="25%"><a href="filme/gerryreid_f.php?page=1&tip=release&title=gerryreid&link=" target="_blank">gerryreid</a></TD>
 <TD width="25%"><a href="filme/lookclub_f.php?page=1&tip=release&title=lookclub&link=" target="_blank">lookclub</a></TD>
@@ -110,7 +110,7 @@ else
 
 <TR>
 <TD width="25%"><a href="filme/goojara_f.php?page=1&tip=release&title=goojara&link=" target="_blank">goojara</a></TD>
-<TD width="25%"><a href="filme/moviehdkh_f.php?page=1&tip=release&title=moviehdkh&link=" target="_blank">moviehdkh</a></TD>
+<TD width="25%"></TD>
 <TD width="25%"><a href="filme/trailers_f.php?page=1&tip=release&title=trailers&link=" target="_blank">trailers</a></TD>
 <TD width="25%"><a href="filme/ask4movie_f.php?page=1&tip=release&title=ask4movie&link=" target="_blank">ask4movie</a></TD>
 </TR>
@@ -124,17 +124,12 @@ else
 
 <TR>
 <TD width="25%"><a href="filme/c1ne_f.php?page=1&tip=release&title=c1ne&link=" target="_blank">c1ne</a></TD>
-<TD width="25%"></TD>
-<TD width="25%"><a href="filme/coronamovies_f.php?page=1&tip=release&title=coronamovies&link=" target="_blank">coronamovies</a></TD>
+<TD width="25%"><a href="filme/azseries_f.php?page=1&tip=release&title=azseries&link=" target="_blank">azseries</a></TD>
+<TD width="25%"><a href="filme/m4uhd_f.php?page=1&tip=release&title=m4uhd&link=" target="_blank">m4uhd</a></TD>
 <TD width="25%"><a href="filme/vexmovies_f.php?page=1&tip=release&title=vexmovies&link=" target="_blank">vexmovies</a></TD>
 </TR>
 
-<TR>
-<TD width="25%"></TD>
-<TD width="25%"><a href="filme/azseries_f.php?page=1&tip=release&title=azseries&link=" target="_blank">azseries</a></TD>
-<TD width="25%"><a href="filme/m4uhd_f.php?page=1&tip=release&title=m4uhd&link=" target="_blank">m4uhd</a></TD>
-<TD width="25%"><a href="filme/yifytv_f.php?page=1&tip=release&title=yifytv&link=" target="_blank">yifytv</a></TD>
-</TR>
+
 
 
 <?php

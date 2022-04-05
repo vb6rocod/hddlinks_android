@@ -1350,6 +1350,10 @@ $html=str_replace("&#038;","&",$html);
 $html=str_replace("&amp;","&",$html);
 $html=str_replace("&quot;","'",$html);
 //echo $html;
+/* alias */
+$html=str_replace('http://realyplayonli.xyz',"http://hqq.to",$html);
+$html=str_replace('http://player.filmehd.se',"http://hqq.to",$html);
+/* end alias */
 if(preg_match_all("/(\/\/.*?)(\"|\'|\s)+/si",$html,$matches)) {
 $links=$matches[1];
 //print_r ($links);

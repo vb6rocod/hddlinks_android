@@ -81,7 +81,7 @@ document.onkeypress =  zx;
 <TD width="25%"><a href="filme/cineplex_s_main.php" target="_blank">cineplex (cont)</a></TD>
 </TR>
 <TR>
-<TD width="25%"><a href="filme/vumoo_s.php?page=1&tip=release&title=vumoo&link=" target="_blank">vumoo</a></TD>
+<TD width="25%"><a href="filme/allmoviesforyou_s.php?page=1&tip=release&title=allmoviesforyou&link=" target="_blank">allmoviesforyou</a></TD>
 <TD width="25%"><a href="filme/ling_s.php?page=1&tip=release&title=ling.online&link=" target="_blank">ling.online</a></TD>
 <TD width="25%"><a href="filme/vidcloud9_s.php?page=1&tip=release&title=vidcloud9&link=" target="_blank">vidcloud9</a></TD>
 <TD width="25%"><a href="filme/bmovies_s.php?page=1&tip=release&title=bmovies&link=" target="_blank">bmovies</a></TD>
@@ -98,14 +98,9 @@ document.onkeypress =  zx;
 <TD width="25%"><a href="filme/uniquestream_s.php?page=1&tip=release&title=uniquestream&link=" target="_blank">uniquestream</a></TD>
 <TD width="25%"><a href="filme/flixtor_s.php?page=1&tip=release&title=flixtor&link=" target="_blank">flixtor</a></TD>
 <TD width="25%"><a href="filme/c1ne_s.php?page=1&tip=release&title=c1ne&link=" target="_blank">c1ne</a></TD>
-<TD width="25%"></TD>
-</TR>
-<TR>
-<TD width="25%"></TD>
-<TD width="25%"></TD>
 <TD width="25%"><a href="filme/streamlord_s.php?page=1&tip=release&title=streamlord&link=" target="_blank">streamlord</a></TD>
-<TD width="25%"><a href="filme/allmoviesforyou_s.php?page=1&tip=release&title=allmoviesforyou&link=" target="_blank">allmoviesforyou</a></TD>
 </TR>
+
 
 
 <?php

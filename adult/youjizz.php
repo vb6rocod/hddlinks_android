@@ -215,6 +215,7 @@ if($tip=="release") {
   else
     $l="https://www.youjizz.com/search/".$search."-".$page.".html?";
 }
+//echo $l;
 $host=parse_url($l)['host'];
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $l);
@@ -228,7 +229,7 @@ $host=parse_url($l)['host'];
   curl_close($ch);
 //echo $html;
 $r=array();
-$videos = explode('div class="video-item"',$html);
+$videos = explode('<div class="video-thumb',$html);
 unset($videos[0]);
 $videos = array_values($videos);
 foreach($videos as $video) {

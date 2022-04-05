@@ -8,6 +8,7 @@ function str_between($string, $start, $end){
 }
 include ("../common.php");
 $l="https://ling.online";
+$l="https://ling-online.com";
 $host=parse_url($l)['host'];
 $page = $_GET["page"];
 $tip= $_GET["tip"];

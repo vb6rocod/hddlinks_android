@@ -71,61 +71,17 @@ if (preg_match("/android|ipad/i",$user_agent) && preg_match("/chrome|firefox|mob
 }
 $n=0;
 /////////////////////////////////////////////////////////////////////////
-$ua = $_SERVER['HTTP_USER_AGENT'];
-if (true == false) {
-  if ($flash=="flash")
-  $user_agent     =   $_SERVER['HTTP_USER_AGENT'];
-  else {
-  $user_agent = 'Mozilla/5.0(Linux;Android 7.1.2;ro;RO;MXQ-4K Build/MXQ-4K) MXPlayer/1.8.10';
-  $user_agent = 'Mozilla/5.0(Linux;Android 10.1.2) MXPlayer';
-  }
-$user_agent     =   $_SERVER['HTTP_USER_AGENT'];
-$cookie=$base_cookie."hdpopcorns.dat";
-$requestLink="https://www.trm.md";
-if (file_exists($cookie)) unlink ($cookie);
-$head=array(
-'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
-'Accept-Language: en-US,en;q=0.5',
-'Accept-Encoding: deflate, br',
-'Connection: keep-alive',
-'Upgrade-Insecure-Requests: 1');
-  $ch = curl_init();
-  curl_setopt($ch, CURLOPT_URL, $requestLink);
-  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
-  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
-  curl_setopt($ch,CURLOPT_HTTPHEADER,$head);
-  curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie);
-  curl_setopt($ch, CURLOPT_COOKIEJAR, $cookie);
-  curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'GET');
-  curl_setopt($ch, CURLOPT_HTTPGET, true);
-  curl_setopt($ch, CURLINFO_HEADER_OUT, true);
-  curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
-  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
-  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
-  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
-  curl_setopt($ch, CURLOPT_HEADER,1);
-  $h = curl_exec($ch);
- if (strpos($h,"503 Service") !== false) {
-  if (strpos($h,'id="cf-dn') === false)
-   $q= getClearanceLink_old($h,$requestLink);
-  else
-   $q= getClearanceLink($h,$requestLink);
 
-  curl_setopt($ch, CURLOPT_URL, $q);
-  $h = curl_exec($ch);
-  curl_close($ch);
- } else {
-    curl_close($ch);
- }
-}
 //////////////////////////////////////////////////////////////////
-
+$ua="Mozilla/5.0 (Windows NT 10.0; rv:99.0) Gecko/20100101 Firefox/99.0";
+$cookie=$base_cookie."hdpopcorns.dat";
 echo '<h2>Moldova in Direct</H2>';
 echo '<table border="1px" width="100%">'."\n\r";
 $link="https://www.trm.md/ro/moldova-in-direct/";
 $link="http://trm.md/ro/moldova-in-direct/";
 $link="http://www.trm.md/ro/moldova-in-direct";
+//$link="https://www.trm.md/ro/moldova-1";
+$link="https://www.trm.md/ro/joi-cu-liliana-barbarosie";
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $link);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
@@ -136,6 +92,7 @@ $link="http://www.trm.md/ro/moldova-in-direct";
   curl_setopt($ch, CURLOPT_TIMEOUT, 25);
   $html = curl_exec($ch);
   curl_close($ch);
+  //echo $html;
 //$html = file_get_contents($link);
 $videos = explode('div class="_dq-news-read-more', $html);
 unset($videos[0]);
@@ -148,11 +105,11 @@ foreach($videos as $video) {
     $t1=explode('src="',$video);
     //$t2=explode('value="',$t1[1]);
     $t3=explode('"',$t1[1]);
-    $image="../filme/r_m.php?file=http://www.trm.md".$t3[0];
-    $image="http://www.trm.md".$t3[0];
+    $image="../filme/r_m.php?file=https://www.trm.md".$t3[0];
+    $image="https://www.trm.md".$t3[0];
     $t1=explode('href="',$video);
     $t2=explode('"',$t1[1]);
-    $link="http://www.trm.md".$t2[0];
+    $link="https://www.trm.md".$t2[0];
     //$link=str_replace("tiny-","",$image);
     //$link=str_replace("jpg","mp4",$link);
     $link1="direct_link.php?link=".$link."&title=".urlencode(fix_t($title))."&from=moldova&mod=direct";
@@ -172,7 +129,7 @@ foreach($videos as $video) {
   }
 }
 $n=0;
-$link="http://www.trm.md/ro/butonul-rosu";
+$link="https://www.trm.md/ro/miezul-zilei";
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $link);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);

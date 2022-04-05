@@ -211,10 +211,10 @@ exit ;
   $sss=$x['subtitles'];
   //for ($k=0;$k<count($sss);$k++) {
   foreach($sss as $key=>$value) {
-   if ($sss[$key]['url'][0]=="/") {
+   if ($sss[$key]['file'][0]=="/") {
    //if ($sss[$k]['file'][0] == "/") {
      //$ss= "https://".$ref.$sss[$k]['file'];
-     $ss= "https://".$ref.$sss[$key]['url'];
+     $ss= "https://".$ref.$sss[$key]['file'];
    //else
      //$ss=$sss[$k]['file'];
    //$srt1[$sss[$k]['language']] = $ss;
@@ -304,7 +304,7 @@ $ref=file_get_contents($base_cookie."lookmovie_ref.txt");
 $s=array();
   $l="https://lookmovie.io/api/v1/shows/episode-subtitles/?id_episode=".$id;
   $l="https://".$ref."/api/v1/security/episode-subtitles/?id_episode=".$id;
-  $l="https://".$ref."/api/v1/security/episode-access?id=".$link;
+  //$l="https://".$ref."/api/v1/security/episode-access?id=".$link;
   //$l="https://lookmovie.io/api/v1/shows/episode-subtitles/?id_episode=119775";
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $l);
@@ -390,8 +390,8 @@ exit ;
   $srt1=array();
   $srt="";
   for ($k=0;$k<count($s['subtitles']);$k++) {
-   if ($s['subtitles'][$k]['url'][0] == "/") {
-     $ss= "https://lookmovie2.to".$s['subtitles'][$k]['url'];
+   if ($s['subtitles'][$k]['file'][0] == "/") {
+     $ss= "https://lookmovie2.to".$s['subtitles'][$k]['file'];
    //else
      //$ss=$s['subtitles'][$k]['file'];
    $srt1[$s['subtitles'][$k]['language']] = $ss;
@@ -418,10 +418,10 @@ $s=array();
 //'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2');
   // https://lookmovie2.to/api/v1/security/episode-access?id_episode=15205
   // https://lookmovie2.to/api/v1/security/episode-access?id=15205
-  /*
+
   $l="https://lookmovie.io/api/v1/security/show-access?slug=".$slug."&token=&step=2";
   $l="https://".$ref."/api/v1/security/episode-access?id_episode=".$link;
-  $l="https://".$ref."/api/v1/security/episode-access?id=".$link;
+  //$l="https://".$ref."/api/v1/security/episode-access?id=".$link;
   //echo $l;
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $l);
@@ -435,7 +435,7 @@ $s=array();
   curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
   $h = curl_exec($ch);
   curl_close($ch);
-  */
+
   //echo $h;
   $x=json_decode($h,1);
   //print_r ($x);

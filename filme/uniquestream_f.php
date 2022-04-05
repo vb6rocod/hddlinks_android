@@ -19,6 +19,7 @@ $has_add="yes";
 $has_fs="yes";
 $ref="https://uniquestream.vip";
 $ref="https://uniquestream.net";
+$ref="https://uniquestream.net";
 $host=parse_url($ref)['host'];
 $fav_target="uniquestream_f_fav.php?host=".$ref;
 $add_target="uniquestream_f_add.php";
@@ -176,12 +177,12 @@ echo '</TR>'."\r\n";
 
 if($tip=="release") {
   if ($page==1)
-   $l="https://uniquestream.vip/movies";
+   $l=$ref."/movies";
   else
-   $l="http://uniquestream.vip/movies/page/".$page."/";
+   $l=$ref."/movies/page/".$page."/";
 } else {
   $search=str_replace(" ","+",$tit);
-  $l="https://uniquestream.vip/page/".$page."/?s=".$search;
+  $l=$ref."/page/".$page."/?s=".$search;
 }
 $host=parse_url($l)['host'];
 
