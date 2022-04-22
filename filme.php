@@ -110,7 +110,7 @@ else
 
 <TR>
 <TD width="25%"><a href="filme/goojara_f.php?page=1&tip=release&title=goojara&link=" target="_blank">goojara</a></TD>
-<TD width="25%"></TD>
+<TD width="25%"><a href="filme/moviesnipipay_f.php?page=1&tip=release&title=moviesnipipay&link=" target="_blank">moviesnipipay</a></TD>
 <TD width="25%"><a href="filme/trailers_f.php?page=1&tip=release&title=trailers&link=" target="_blank">trailers</a></TD>
 <TD width="25%"><a href="filme/ask4movie_f.php?page=1&tip=release&title=ask4movie&link=" target="_blank">ask4movie</a></TD>
 </TR>

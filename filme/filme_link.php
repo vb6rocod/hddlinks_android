@@ -1353,6 +1353,7 @@ $html=str_replace("&quot;","'",$html);
 /* alias */
 $html=str_replace('http://realyplayonli.xyz',"http://hqq.to",$html);
 $html=str_replace('http://player.filmehd.se',"http://hqq.to",$html);
+$html=str_replace('https://cdn1.fastvid.co',"http://hqq.to",$html);
 /* end alias */
 if(preg_match_all("/(\/\/.*?)(\"|\'|\s)+/si",$html,$matches)) {
 $links=$matches[1];
@@ -1395,7 +1396,9 @@ $s=$s."|prostream\.to|videobin\.co|upstream\.to|playtvid\.com|jetload\.net|vidfa
 $s=$s."|(video|player)\.filmeserialeonline\.org|streamwire\.|cloudvid\.icu|mstream\.xyz|streamhoe\.online|videyo\.";
 $s=$s."|fastvid\.co|vidload\.net|rovideo\.net\/embed|eplayvid\.com|dood\.|mediashore\.org|uptostream\.com";
 $s=$s."|movcloud\.net|dogestream\.|streamtape\.|jawcloud\.|evoload\.|sendvid\.|easyload\.io|okstream\.";
-$s=$s."|youdbox\.com|filmele-online\.com|playtube\.|ninjastream\.to|userload\.co|goplayer\.online|videovard\.|cloudemb\.|streamlare\./i";
+$s=$s."|youdbox\.com|filmele-online\.com|playtube\.|ninjastream\.to|userload\.co|goplayer\.online|videovard\.|cloudemb\.|streamlare\.";
+$s=$s."|sbembed\.com|sbembed1\.com|sbplay\.|sbvideo\.net|streamsb\.net|sbplay\.one|cloudemb\.com|playersb\.com|tubesb\.com|sbplay\d\.|embedsb\.com";
+$s=$s."|sbfast\.com/i";
 /////////////////////////////////////////////
 //$x=preg_grep($s,$links);
 //print_r ($x);
@@ -1461,9 +1464,10 @@ for ($i=0;$i<count($links);$i++) {
     $cur_link="";
   }
   //echo $cur_link;
-  if (strpos($links[$i],"fastvid.co") !== false) {
+  //echo $links[$i];
+  if (strpos($links[$i],"fastvid.co") !== false) {  //cdn1.fastvid.co
    $l=trim("https:".$links[$i]);
-   //echo $filelink;
+   //echo $links[$i];
    $ch = curl_init();
    curl_setopt($ch, CURLOPT_URL, $l);
    curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
@@ -1543,6 +1547,7 @@ for ($i=0;$i<count($links);$i++) {
   //echo $h2;
    if (preg_match("/location\:\s*(.+)/i",$h2,$m)) {
     $cur_link=trim($m[1]);
+    $cur_link=str_replace("cdn1.fastvid.co","hqq.tv",$cur_link);
     //echo html_entity_decode(urldecode($cur_link))."\n";
     if (strpos($cur_link,"database.seriale") !== false) {
      $cur_link="";
@@ -1674,7 +1679,7 @@ for ($i=0;$i<count($links);$i++) {
    $pat="/hqq\.watch|xopenload\.me|hqq\.tv\/player\/script\.php|top\.mail\.ru|facebook|twitter|player\.swf";
    $pat .="|img\.youtube|youtube\.com\/user|radioarad|\.jpg|\.png|\.gif|jq\/(js|css)";
    $pat .="|fsplay\.net\?s|changejplayer\.js|validateemb\.php|restore_google\.php|clicksud\.biz|123formbuilder\.com|";
-   $pat .="ExoLoader.addZone|js\/api\/share\.js|hindipix\.in\/(js|style)|share\.php\?|brave\.com|affiliate\.rusvpn\.com/i";
+   $pat .="ExoLoader.addZone|js\/api\/share\.js|hindipix\.in\/(js|style)|share\.php\?|brave\.com|affiliate\.rusvpn\.com|favicon\.ico/i";
    if (!preg_match($pat,$cur_link)) {
      $cur_link=str_replace(urldecode("%0A"),"",$cur_link);
      if ($cur_link) $link_f[]=$cur_link;

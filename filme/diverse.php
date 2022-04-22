@@ -56,6 +56,7 @@ $title="peserialehd";
 $link="peserialehd_main.php";
 echo '<TD style="text-align:center"><font size="4">'.'<a href="'.$link.'" target="_blank">'.$title.'</a></font></TD>';
 */
+// https://www.youtube.com/playlist?list=PL7pi6YA0cKGvq0avv-7RDGYtJuFMTYCSn
 $title="CINEMATOGRAFIA ROMANEASCA";
 $link="yt_channel.php?token=&id=UCOKEwOave88wtWJCPKs2mZA&kind=channel&title=(channel)+CINEMATOGRAFIA+ROMANEASCA&image=https://yt3.ggpht.com/a/AATXAJynQBFCnYb0qbwYGXKMFwnDYSiH1-izNKHu-5DW=s88-c-k-c0x00ffffff-no-rj";
 echo '<TD style="text-align:center"><font size="4">'.'<a href="'.$link.'" target="_blank">'.$title.'</a></font></TD>';

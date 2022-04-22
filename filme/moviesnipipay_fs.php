@@ -1,16 +1,18 @@
 <!doctype html>
 <?php
 include ("../common.php");
-//error_reporting(0);
+
+error_reporting(0);
+if (file_exists($base_pass."debug.txt"))
+ $debug=true;
+else
+ $debug=false;
+
 $list = glob($base_sub."*.srt");
    foreach ($list as $l) {
     str_replace(" ","%20",$l);
     unlink($l);
 }
-if (file_exists($base_pass."debug.txt"))
- $debug=true;
-else
- $debug=false;
 if (file_exists($base_pass."player.txt")) {
 $flash=trim(file_get_contents($base_pass."player.txt"));
 } else {
@@ -38,8 +40,6 @@ $year=$_GET["year"];
 if ($tip=="movie") {
 $tit2="";
 } else {
-$t1=explode("- Season",$tit);
-$tit=trim($t1[0]);
 if ($ep_title)
    $tit2=" - ".$sez."x".$ep." ".$ep_title;
 else
@@ -48,18 +48,13 @@ $tip="series";
 }
 $imdbid="";
 
-function str_between($string, $start, $end){
-	$string = " ".$string; $ini = strpos($string,$start);
-	if ($ini == 0) return ""; $ini += strlen($start); $len = strpos($string,$end,$ini) - $ini;
-	return substr($string,$ini,$len);
-}
 ?>
 <html>
 <head>
 <meta http-equiv="content-type" content="text/html; charset=UTF-8">
 <title><?php echo $tit.$tit2; ?></title>
 <link rel="stylesheet" type="text/css" href="../custom.css" />
-<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.0/jquery.min.js"></script>
+<script type="text/javascript" src="//code.jquery.com/jquery-3.2.1.min.js"></script>
 <script type="text/javascript">
 function openlink1(link) {
   link1=document.getElementById('file').value;
@@ -135,148 +130,31 @@ function off() {
 <?php
 echo '<h2>'.$tit.$tit2.'</H2>';
 echo '<BR>';
-$ua = $_SERVER['HTTP_USER_AGENT'];
-$ua="Mozilla/5.0 (Windows NT 10.0; rv:80.0) Gecko/20100101 Firefox/80.0";
-$host=parse_url($link)['host'];
-  $r=array();
-  $s=array();
-//echo $host;
+$r=array();
 //echo $link;
+$ua="Mozilla/5.0 (Windows NT 10.0; rv:89.0) Gecko/20100101 Firefox/89.0";
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $link);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
   curl_setopt($ch, CURLOPT_USERAGENT, $ua);
+  curl_setopt($ch,CURLOPT_REFERER,$link);
   curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
   curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
   curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
   curl_setopt($ch, CURLOPT_TIMEOUT, 25);
   $h = curl_exec($ch);
   curl_close($ch);
-  //echo $h;
-  if (preg_match("/data\-stape\=\"([^\"]+)/",$h,$m)) {
-    $r[]="https://streamtape.com/e/".$m[1];
-    $s[]="Streamtape";
-  }
-  if (preg_match("/data\-dood\=\"([^\"]+)/",$h,$m)) {
-    $r[]="https://dood.la/e/".$m[1];
-    $s[]="dood";
-  }
-  if (preg_match("/fkingyrfather\"\,\s*id\:\s*(\d+)/",$h,$m)) {
-    $id=$m[1];
-    $l="https://w10.hdonline.eu/wp-admin/admin-ajax.php";
-    $post="action=fkingyrfather&id=".$id."&annoying=videospider";
-    // action=fkingyrfather&id=96130&annoying=videospider
-    //echo $post;
-    $head=array('Accept: application/json, text/javascript, */*; q=0.01',
-    'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
-    'Accept-Encoding: deflate',
-    'Content-Type: application/x-www-form-urlencoded; charset=UTF-8',
-    'X-Requested-With: XMLHttpRequest',
-    'Content-Length: '.strlen($post),
-    'Origin: https://w10.hdonline.eu',
-    'Alt-Used: w10.hdonline.eu',
-    'Connection: keep-alive',
-    'Referer: https://w10.hdonline.eu/movie/reminiscence-2021/?ep=4');
-    $ch = curl_init();
-    curl_setopt($ch, CURLOPT_URL, $l);
-    curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-    curl_setopt($ch, CURLOPT_USERAGENT, $ua);
-    curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
-    curl_setopt($ch, CURLOPT_POST,1);
-    curl_setopt($ch, CURLOPT_POSTFIELDS,$post);
-    curl_setopt($ch, CURLOPT_HTTPHEADER,$head);
-    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-    curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
-    curl_setopt($ch, CURLOPT_TIMEOUT, 25);
-    $h = curl_exec($ch);
-    curl_close($ch);
-    //echo $h;
-    $d=json_decode($h,1);
-    $l=$d['url'];
-    //echo $l;
-    $ch = curl_init();
-    curl_setopt($ch, CURLOPT_URL, $l);
-    curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-    curl_setopt($ch, CURLOPT_USERAGENT, $ua);
-    curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
-    curl_setopt($ch, CURLOPT_REFERER,"https://w10.hdonline.eu");
-    curl_setopt($ch, CURLOPT_HEADER,1);
-    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-    curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
-    curl_setopt($ch, CURLOPT_TIMEOUT, 25);
-    $h = curl_exec($ch);
-    curl_close($ch);
-    //echo $h;
-    if (preg_match("/location:\s+(.+)/i",$h,$m)) {
-    $l=trim($m[1]);
-    //echo $l;
-    //echo $h;
-///////////////////////////////////////////////////////////////////////
-//$l="https://123streaming.rocks/?token=TWJ1NkJlRmR5MUJES3NJSHJRSnlZVTQ3NjMvbGgxb3hhajRTeDcwdEZ5cWIvSmhuWEU4RlljdzNURFVyMms1ampnbWVCTXZkMlN1bFdpd0p6blUzOUNuMHdUbz0=";
-  $post="button-click=ZEhKMVpTLVF0LVBTLVF0Ti0wWTJMUy1Rei1QLTAtUHRMLTAtVjItUHpBeS1QelF4TnpBei1Qai1WLTU=";
-  $ch = curl_init();
-  curl_setopt($ch, CURLOPT_URL, $l);
-  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
-  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
-  curl_setopt($ch, CURLOPT_REFERER,"https://123stream.fun");
-  curl_setopt($ch, CURLOPT_HEADER,1);
-  curl_setopt($ch, CURLOPT_POST,1);
-  curl_setopt($ch, CURLOPT_POSTFIELDS,$post);
-  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
-  curl_setopt($ch, CURLOPT_TIMEOUT, 25);
-  $h = curl_exec($ch);
-  curl_close($ch);
-  //echo $h;
-  }
-  //echo $h;
-//////////////////////////////////////////////////////////////////////
-  $t1=explode('var servers = [',$h);
-  $t2=explode(']',$t1[1]);
-  $e="\$s1=array(".$t2[0].");";
-  eval ($e);
-  //print_r ($s);
-  $t1=explode('load_sources("',$h);
-  $t2=explode('"',$t1[1]);
-  $token=$t2[0];
-  $l="https://2embedplayer.net/response.php";
-  $post="token=".$token;
-  $head=array('Accept: */*',
-  'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
-  'Accept-Encoding: deflate',
-  'Content-Type: application/x-www-form-urlencoded; charset=UTF-8',
-  'X-Requested-With: XMLHttpRequest',
-  'Content-Length: '.strlen($post),
-  'Origin: https://123stream.fun',
-  'Alt-Used: 123stream.fun',
-  'Connection: keep-alive',
-  'Referer: https://2embedplayer.net');
-  $ch = curl_init();
-  curl_setopt($ch, CURLOPT_URL, $l);
-  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
-  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
-  curl_setopt($ch, CURLOPT_POST,1);
-  curl_setopt($ch, CURLOPT_POSTFIELDS,$post);
-  curl_setopt($ch, CURLOPT_HTTPHEADER,$head);
-  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
-  curl_setopt($ch, CURLOPT_TIMEOUT, 25);
-  $h = curl_exec($ch);
-  curl_close($ch);
-  //echo $h;
-  preg_match_all("/data\-id\=\"([^\"]+)\" data\-server\=\"(\d+)/",$h,$m);
-  //print_r ($m);
-  for ($z=0;$z<count($m[1]);$z++) {
-  $id1=$m[1][$z];
-  $server=$m[2][$z];
-  $r[]="https://2embedplayer.net/playvideo.php?video_id=".$id1."&server_id=".$server."&token=".$token."&init=1";
-  $s[]=$s1[$server];
-  }
+  preg_match_all("/data\-em\=\"(.*?)\"/",$h,$m);
+  //print_r ($m[1]);
+  for ($k=0;$k<count($m[1]);$k++) {
+   $j=base64_decode($m[1][$k]);
+   $t1=explode('src="',$j);
+   $t2=explode('"',$t1[1]);
+   $l=$t2[0];
+   $r[]=$l;
   }
 echo '<table border="1" width="100%">';
-echo '<TR><TD class="mp">Alegeti un server: Server curent:<label id="server">'.$s[0].'</label>
+echo '<TR><TD class="mp">Alegeti un server: Server curent:<label id="server">'.parse_url($r[0])['host'].'</label>
 <input type="hidden" id="file" value="'.urlencode($r[0]).'"></td></TR></TABLE>';
 echo '<table border="1" width="100%"><TR>';
 $k=count($r);
@@ -286,9 +164,9 @@ for ($i=0;$i<$k;$i++) {
   $c_link=$r[$i];
   $openload=parse_url($r[$i])['host'];
   if (preg_match($indirect,$openload)) {
-  echo '<TD class="mp"><a href="filme_link.php?file='.urlencode($c_link).'&title='.urlencode(unfix_t($tit.$tit2)).'" target="_blank">'.$s[$i].'</a></td>';
+  echo '<TD class="mp"><a href="filme_link.php?file='.urlencode($c_link).'&title='.urlencode(unfix_t($tit.$tit2)).'" target="_blank">'.$openload.'</a></td>';
   } else
-  echo '<TD class="mp"><a id="myLink" href="#" onclick="changeserver('."'".$s[$i]."','".urlencode($c_link)."'".');return false;">'.$s[$i].'</a></td>';
+  echo '<TD class="mp"><a id="myLink" href="#" onclick="changeserver('."'".$openload."','".urlencode($c_link)."'".');return false;">'.$openload.'</a></td>';
   $x++;
   if ($x==6) {
     echo '</TR>';
@@ -318,6 +196,13 @@ if ($tip=="movie") {
   $from="";
   $link_page="";
 }
+  $rest = substr($tit3, -6);
+  if (preg_match("/\((\d+)\)/",$rest,$m)) {
+   $year=$m[1];
+   $tit3=trim(str_replace($m[0],"",$tit3));
+  } else {
+   $year="";
+  }
 $sub_link ="from=".$from."&tip=".$tip."&sez=".$sez."&ep=".$ep."&imdb=".$imdbid."&title=".urlencode(fix_t($tit3))."&link=".$link_page."&ep_tit=".urlencode(fix_t($tit2))."&year=".$year;
 echo '<br>';
 echo '<table border="1" width="100%">';
@@ -354,6 +239,10 @@ echo '<br>
 <BR>Scurtaturi: 7=opensubtitles, 8=titrari, 9=subs, 0=subtitrari (cauta imdb id)
 </b></font></TD></TR></TABLE>
 ';
+
+if (preg_match("/c\d?_file\=(http[\.\d\w\-\.\/\\\:\?\&\#\%\_\,]+)\&c\d?_label\=English/i",$r[0],$s)) {
+ echo 'Cu subtitrare in Engleza.<BR>';
+}
 include("../debug.html");
 echo '
 <div id="overlay">

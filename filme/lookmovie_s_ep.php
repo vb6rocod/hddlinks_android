@@ -36,7 +36,7 @@ if (file_exists($base_pass."firefox.txt"))
 else
  $ua="Mozilla/5.0 (Windows NT 10.0; rv:75.0) Gecko/20100101 Firefox/75.0";
 $ua="Mozilla/5.0 (Windows NT 10.0; rv:86.0) Gecko/20100101 Firefox/86.0";
- //$link=str_replace("/view/","/play/",$link);
+ $link=str_replace("/view/","/play/",$link);
 //echo $link;
 //print_r ($head);
   $ch = curl_init();

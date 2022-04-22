@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <?php
-error_reporting(0);
 function str_between($string, $start, $end){
 	$string = " ".$string; $ini = strpos($string,$start);
 	if ($ini == 0) return ""; $ini += strlen($start); $len = strpos($string,$end,$ini) - $ini;
@@ -13,19 +12,18 @@ $tit=$_GET["title"];
 $link=$_GET["link"];
 $width="200px";
 $height="278px";
-$last_good="https://w10.hdonline.eu";
-$last_good="https://w10.hdonline.eu";
+$last_good="https://moviesnipipay.me";
 $host=parse_url($last_good)['host'];
 /* ==================================================== */
 $has_fav="yes";
 $has_search="yes";
 $has_add="yes";
 $has_fs="yes";
-$fav_target="hdonline_f_fav.php?host=".$last_good;
-$add_target="hdonline_f_add.php";
+$fav_target="moviesnipipay_f_fav.php?host=".$last_good;
+$add_target="moviesnipipay_f_add.php";
 $add_file="";
-$fs_target="hdonline_fs.php";
-$target="hdonline_f.php";
+$fs_target="moviesnipipay_fs.php";
+$target="moviesnipipay_f.php";
 /* ==================================================== */
 $base=basename($_SERVER['SCRIPT_FILENAME']);
 $p=$_SERVER['QUERY_STRING'];
@@ -170,20 +168,20 @@ if ($page==1) {
 }
 echo '</TR>'."\r\n";
 $f=array();
+//https://moviesnipipay.me/page/2/?s=star
 if ($tip=="search") {
  $search= str_replace(" ","+",$tit);
  if ($page==1)
-  $l=$last_good."/search-query/".$search."/";
+  $l=$last_good."/?s=".$search;
  else
-  $l=$last_good."/search-query/".$search."/page/".$page."/";
+  $l=$last_good."/page/".$page."/?s=".$search;
 } else {
  if ($page==1)
-  $l=$last_good."/movies/";
+  $l=$last_good."/latest-movies/";
  else
-  $l=$last_good."/movies/page/".$page."/";
+  $l=$last_good."/latest-movies/page/".$page."/";
 }
-
-$ua="Mozilla/5.0 (Windows NT 10.0; rv:86.0) Gecko/20100101 Firefox/86.0";
+$ua="Mozilla/5.0 (Windows NT 10.0; rv:75.0) Gecko/20100101 Firefox/75.0";
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $l);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
@@ -194,23 +192,32 @@ $ua="Mozilla/5.0 (Windows NT 10.0; rv:86.0) Gecko/20100101 Firefox/86.0";
   curl_setopt($ch, CURLOPT_TIMEOUT, 25);
   $h = curl_exec($ch);
   curl_close($ch);
-
+$path = parse_url($l)['path'];
+//echo $h;
 $host=parse_url($l)['host'];
-$videos = explode('<div class="item', $h);
+
+$videos = explode('<article', $h);
 unset($videos[0]);
 $videos = array_values($videos);
 foreach($videos as $video) {
  $t1=explode('href="',$video);
  $t2=explode('"',$t1[1]);
  $link=$t2[0];
+ if ($link[0]=="/")
+  $link="https://moviesnipipay.me".$link;
+ elseif (substr($link, 0, 4) == "http")
+  $link=$t2[0];
+ else
+  $link="https://moviesnipipay.me".$path.$link;
  $t1=explode('src="',$video);
  $t2=explode('"',$t1[1]);
  $image=$t2[0];
- $t1=explode('class="title">',$video);
+ $t1=explode('entry-title" itemprop="headline">',$video);
  $t2=explode('<',$t1[1]);
  $title=trim($t2[0]);
- $title=prep_tit($title);
-  if ($title && preg_match("/\/movie\//",$link)) $f[] = array($title,$link,$image);
+
+ $year="";
+ $f[] = array($title,$link,$image,$year);
 }
 //echo $html;
 foreach($f as $key => $value) {
@@ -218,11 +225,11 @@ foreach($f as $key => $value) {
   $title=prep_tit($title);
   $link=$value[1];
   $image=$value[2];
-  $year="";
+  $year=$value[3];
   $imdb="";
   $year="";
   $rest = substr($title, -6);
-  if (preg_match("/\(?(\d{4})\)?/",$rest,$m)) {
+  if (preg_match("/\((\d+)\)/",$rest,$m)) {
    $year=$m[1];
    $tit_imdb=trim(str_replace($m[0],"",$title));
   } else {

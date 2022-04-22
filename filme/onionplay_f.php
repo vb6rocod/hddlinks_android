@@ -31,7 +31,8 @@ onionplay.org
 onionplay.net
 */
 $host=parse_url($ref)['host'];
-$fav_target="onionplay_f_fav.php?host=".$ref;
+$fav_target="onionplay_f_fav.php?host=".$ref."&fix=no";
+$fav_target1="onionplay_f_fav.php?host=".$ref."&fix=yes";
 $add_target="onionplay_f_add.php";
 $add_file="";
 $fs_target="onionplay_fs.php";
@@ -125,6 +126,7 @@ function isValid(evt) {
    function zx(e){
      var instance = $.fancybox.getInstance();
      var charCode = (typeof e.which == "number") ? e.which : e.keyCode
+     //alert (charCode);
      if (charCode == "13"  && instance !== false) {
        $.fancybox.close();
        setTimeout(function(){ document.getElementById(id_link).focus(); }, 500);
@@ -132,6 +134,8 @@ function isValid(evt) {
       document.getElementById("send").click();
      } else if (charCode == "50" && e.target.type != "text") {
       document.getElementById("fav").click();
+     } else if (charCode == "48" && e.target.type != "text") {
+      window.open("<?php echo $fav_target1;?>");
     }
    }
 function isKeyPressed(event) {

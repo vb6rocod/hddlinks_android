@@ -163,6 +163,7 @@ $cookie=$base_cookie."onionplay.txt";
 // https://onionplay.is/movies/star-wars-the-rise-of-skywalker-2019/
 // https://onionplay.is/movies/watch-star-wars-the-rise-of-skywalker-2019-onionplay/
 //$link="https://onionplay.club/watch-baggio-the-divine-ponytail-2021-online-ads-free";
+//$link="https://onionplay.se/movies/alien-resurrection-1997/";
 $host=parse_url($link)['host'];
 $ref="https://".$host;
 if (file_exists($cookie)) {
@@ -195,6 +196,7 @@ $opts = array(
               "Referer: ".$ref."\r\n"
   )
 );
+//echo $link;
 //$context = stream_context_create($opts);
 //$html=@file_get_contents($link,false,$context);
 $head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:95.0) Gecko/20100101 Firefox/95.0',
