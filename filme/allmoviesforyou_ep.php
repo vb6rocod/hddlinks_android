@@ -137,7 +137,8 @@ foreach($sezoane as $key => $value) {
   $t3=explode('>',$t1[2]);
   $t4=explode('<',$t3[1]);
   $ep_tit = $t4[0];
-  $t1=explode('data-src="',$vid);
+  $img_ep="blank.jpg";
+  $t1=explode('src="',$vid);
   $t2=explode('"',$t1[1]);
   $img_ep=$t2[0];
 

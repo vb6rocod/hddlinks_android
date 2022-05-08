@@ -830,10 +830,17 @@ $head=array('Accept: */*',
   else
     $out="";
 } else if (preg_match("/thumbzilla\.com/",$host)) {
+
+  $h=str_replace("\\","",$h);
+  //echo $h;
   if (preg_match_all("/data-quality\=\"(.*?)\"/ms",$h,$m)) {
     $out=$m[1][count($m[1])-1];
     $link=str_replace("&amp;","&",$out);
     $out=str_replace("https","http",$out);
+  } else {
+    $t1=explode('videoUrl":"',$h);
+    $t2=explode('"',$t1[1]);
+    $out=$t2[0];
   }
 } else if (preg_match("/tnaflix\.com/",$host)) {
   $vid=str_between($h,'VID" type="hidden" value="','"');

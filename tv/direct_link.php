@@ -403,33 +403,11 @@ if ($from=="canale.live") {
      break;
    }
   }
-  if ($link && $flash <> "flash") {
-    $link=$link."Origin=".urlencode("null")."&Referer=".urlencode("https://canale.live");
-    $link=$link."&User-Agent=".urlencode($ua);
+  if (preg_match("/uload.ru/",$link) && $flash <> "flash") {
+    $link="http://127.0.0.1:8080/scripts/tv/uload.php?file=".$link."|Referer=".urlencode("https://canale.live");
+  } elseif ($link[0]=="/") {
+    $link="https://canale.live".$link;
   }
-  $link=str_replace("http:","https:",$link);
-  //$link="https://cazanesticdn.cf/cdn/premium400/l_3487996_15497002_133.js";
-  //$link="https://media.primaplay.ro/live/CineM/playlist.m3u8?from=1649013121&to=1649020321&session=2gmRw05BQiVBKFgX&source=cms&token=l4yEbzEcvUjVbtFOPLiIum8OcLM=";
-  $head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:98.0) Gecko/20100101 Firefox/98.0',
-'Accept: */*',
-'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
-'Accept-Encoding: deflate',
-'Origin: null',
-'Referer: https://canale.live/');
-  $ch = curl_init();
-  curl_setopt($ch, CURLOPT_URL, $link);
-  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-  //curl_setopt($ch, CURLOPT_USERAGENT, $ua);
-  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
-  //curl_setopt($ch, CURLOPT_REFERER,"https://5454445.tk");
-  curl_setopt($ch, CURLOPT_HEADER,1);
-  curl_setopt($ch, CURLOPT_HTTPHEADER, $head);
-  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
-  curl_setopt($ch, CURLOPT_TIMEOUT, 25);
-  $h = curl_exec($ch);
-  curl_close($ch);
-  //echo $h;
 }
 if ($from=="ustvgo") {
   $ua="Mozilla/5.0 (Windows NT 10.0; rv:89.0) Gecko/20100101 Firefox/89.0";

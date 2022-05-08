@@ -1395,10 +1395,10 @@ $s=$s."|hxload\.|bazavox\.com|cloud\.vidhubstr\.org|vidia\.tv|gomostream\.com|vi
 $s=$s."|prostream\.to|videobin\.co|upstream\.to|playtvid\.com|jetload\.net|vidfast\.co|clipwatching\.";
 $s=$s."|(video|player)\.filmeserialeonline\.org|streamwire\.|cloudvid\.icu|mstream\.xyz|streamhoe\.online|videyo\.";
 $s=$s."|fastvid\.co|vidload\.net|rovideo\.net\/embed|eplayvid\.com|dood\.|mediashore\.org|uptostream\.com";
-$s=$s."|movcloud\.net|dogestream\.|streamtape\.|jawcloud\.|evoload\.|sendvid\.|easyload\.io|okstream\.";
+$s=$s."|movcloud\.net|dogestream\.|streamtape\.|jawcloud\.|viphdvid\.|evoload\.|sendvid\.|easyload\.io|okstream\.";
 $s=$s."|youdbox\.com|filmele-online\.com|playtube\.|ninjastream\.to|userload\.co|goplayer\.online|videovard\.|cloudemb\.|streamlare\.";
 $s=$s."|sbembed\.com|sbembed1\.com|sbplay\.|sbvideo\.net|streamsb\.net|sbplay\.one|cloudemb\.com|playersb\.com|tubesb\.com|sbplay\d\.|embedsb\.com";
-$s=$s."|sbfast\.com/i";
+$s=$s."|sbfast\.com|sbfull\.|tubeload\./i";
 /////////////////////////////////////////////
 //$x=preg_grep($s,$links);
 //print_r ($x);
@@ -1440,6 +1440,12 @@ for ($i=0;$i<count($links);$i++) {
     if (strpos($cur_link,"http") === false) $cur_link="https:".$cur_link;
    } else
     $cur_link="";
+  }
+  if (preg_match("/drivevideo\.xyz/",$links[$i])) {
+    $x=urldecode($links[$i]);
+    //echo $x;
+    $t1=explode("link=",$x);
+    $cur_link=trim($t1[1]);
   }
    if (preg_match("/leaked-celebrities\./",$links[$i])) {
    $l=trim("https:".$links[$i]);
@@ -1489,8 +1495,10 @@ for ($i=0;$i<count($links);$i++) {
      } else {
       $cur_link=$l1;
      }
-   } else
-    $cur_link="";
+   } else {
+    $cur_link=$links[$i];
+    $cur_link=str_replace("cdn1.fastvid.co","hqq.tv",$cur_link);
+    }
   }
   if (strpos($links[$i],"cloudvid.icu") !== false) {
    $l=trim("https:".$links[$i]);
@@ -1850,7 +1858,7 @@ $cap=0;
 foreach($link_f as $k=>$val) {
 $server="";
 $server = parse_url($link_f[$k])["host"];
-if (preg_match("/hqq\.|waaw1?|netu|pajalusta|hindipix\.|goplayer\.online|netu\.wiztube\.xyz/",$link_f[$k])) {
+if (preg_match("/hqq\.|waaw1?|netu|pajalusta|hindipix\.|goplayer\.online|netu\.wiztube\.xyz|cdn1\.vidcdn\.co/",$link_f[$k])) {
   if (preg_match("/\?vid\=http/",$link_f[$k])) {
    $t1=explode("?vid",$link_f[$k]);
    $link_f[$k]=$t1[1];
