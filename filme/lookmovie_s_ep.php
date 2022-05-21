@@ -36,7 +36,7 @@ if (file_exists($base_pass."firefox.txt"))
 else
  $ua="Mozilla/5.0 (Windows NT 10.0; rv:75.0) Gecko/20100101 Firefox/75.0";
 $ua="Mozilla/5.0 (Windows NT 10.0; rv:86.0) Gecko/20100101 Firefox/86.0";
- $link=str_replace("/view/","/play/",$link);
+ //$link=str_replace("/view/","/play/",$link);
 //echo $link;
 //print_r ($head);
   $ch = curl_init();
@@ -53,18 +53,104 @@ $ua="Mozilla/5.0 (Windows NT 10.0; rv:86.0) Gecko/20100101 Firefox/86.0";
   $h = curl_exec($ch);
   curl_close($ch);
   //echo $h;
-  if (preg_match("/(lookmovie\d+\.\w+)\//",$h,$m))
-    $ref=$m[1];
-  else
-    $ref="lookmovie.io";
-  file_put_contents($base_cookie."lookmovie_ref.txt",$ref);
-function removeBOM($data) {
-    if (0 === strpos(bin2hex($data), 'efbbbf')) {
-       return substr($data, 3);
-    }
-    return $data;
-}
-
+  
+  if (preg_match("/href\=\"(https.*?\/play\/.*?)\"/",$h,$m)) {
+    $l1=$m[1];
+    $ref=parse_url($l1)['host'];
+  } else {
+    $l1="";
+    $ref="";
+  }
+  //echo $l1;
+  $ch = curl_init();
+  curl_setopt($ch, CURLOPT_URL, $l1);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
+  curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie);
+  curl_setopt($ch, CURLOPT_COOKIEJAR, $cookie);
+  //curl_setopt($ch, CURLOPT_HEADER,1);
+  //curl_setopt($ch, CURLOPT_HTTPHEADER,$head);
+  curl_setopt($ch, CURLINFO_HEADER_OUT, true);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 25);
+  curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
+  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+  $h = curl_exec($ch);
+  $info = curl_getinfo($ch);
+  curl_close($ch);
+  //echo $h;
+  if (preg_match("/threat\-protection/",$info['url'])) {
+   require_once("rec.php");
+   $key="6Lc3OL0aAAAAAJhbmY4C3GvXoRvHizdk5YKZK7fg";
+   $co="aHR0cHM6Ly9sbXBsYXllcjE4Lnh5ejo0NDM.";
+   $sa="submit";
+   $loc="https://lookmovie2.to";
+   $token=rec($key,$co,$sa,$loc);
+   $t1=explode('hidden" name="_csrf" value="',$h);
+   $t2=explode('"',$t1[1]);
+   $csrf=$t2[0];
+   $post="_csrf=".$csrf."&tk=".$token;
+   //echo $post;
+   $l=$info['url'];
+   $head=array('Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
+   'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
+   'Accept-Encoding: deflate',
+   'Content-Type: application/x-www-form-urlencoded',
+   'Content-Length: '.strlen($post),
+   'Origin: https://'.$ref,
+   'Connection: keep-alive',
+   'Referer: '.$l,
+   'Upgrade-Insecure-Requests: 1');
+//print_r ($head);
+  $ch = curl_init();
+  curl_setopt($ch, CURLOPT_URL, $l);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
+  //curl_setopt($ch,CURLOPT_REFERER,$l);
+  curl_setopt($ch, CURLOPT_HTTPHEADER, $head);
+  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,0);
+  //curl_setopt($ch, CURLOPT_HEADER,1);
+  curl_setopt($ch, CURLOPT_POST,1);
+  curl_setopt($ch, CURLOPT_POSTFIELDS,$post);
+  //curl_setopt($ch, CURLOPT_NOBODY,1);
+  curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie);
+  curl_setopt($ch, CURLOPT_COOKIEJAR, $cookie);
+  curl_setopt($ch, CURLOPT_HTTPHEADER, $head);
+ //curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
+ curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
+  //curl_setopt($ch, CURLOPT_SSL_CIPHER_LIST, implode(":", $DEFAULT_CIPHERS));
+  //curl_setopt($ch, CURLOPT_SSLVERSION,$ssl_version);
+  curl_setopt($ch, CURLINFO_HEADER_OUT, true);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 25);
+  $h = curl_exec($ch);
+  $info = curl_getinfo($ch);
+  curl_close($ch);
+  //print_r ($info);
+  //echo $h;
+  if (isset($info['redirect_url'])) {
+  $l=$info['redirect_url'];
+  if (preg_match("/second/",$l)) {
+  file_put_contents($base_cookie."lookmovie_ref1.txt",$l."|".$ref."|".$csrf);
+   echo '<a href="look.html">Solve captcha</a>';
+  } else {
+   echo 'Try again';
+   echo '<script>setTimeout(function(){ history.go(-1); }, 2000);</script>';
+  }
+  exit;
+  }
+  } else {
+    //echo $h;
+  $id="";
+  $hash="";
+  $ex="";
+  if (preg_match("/hash\:\s*[\"|\']([^\"\']+)[\'\"]/",$h,$n))
+   $hash=$n[1];
+  if (preg_match("/expires\:?\s*\'?(\d+)/",$h,$m))
+   $ex=$m[1];
+  if (preg_match("/year\:\s*\'(\d+)\'/",$h,$y))
+   $year=$y[1];
+   
 $t1=explode("window.seasons='",$h);
 $t2=explode("';",$t1[1]);
 $z=str_replace('\\\\\\"',"'",trim($t2[0]));
@@ -83,68 +169,10 @@ for ($k=0;$k<count($m[5]);$k++) {
  $r[$m[5][$k]][$m[3][$k]]=array($m[1][$k],$m[3][$k],$m[4][$k],$m[5][$k]);
 }
 //print_r ($r);
-//echo $z;
-//die();
-//$p=json_decode($z,1);
-//print_r ($p);
-
-//for ($k=0;$k<count($p);$k++) {
-foreach ($p as $pp) {
- //for ($i=1;$i<count($p[$k]['episodes']);$i++) {
- foreach($pp['episodes'] as $ee) {
-  $r[$pp['meta']['season']][] = array($ee['title'],$ee['episode_number'],$ee['id_episode'],$ee['still_path']);
- }
-}
-
-//print_r ($r);
-// https://false-promise.lookmovie.ag/api/v1/storage/shows/?slug=10380768-love-life-2020&token=
-// https://lookmovie.ag/manifests/shows/4UNbOWGB--phpVD_Mri7ug/1591460238/96045/master.m3u8
-// https://lookmovie.ag/storage2/1591455930289/shows/10380768-love-life-2020/9171-S1-E3-1590996329/subtitles/en.vtt
-// https://lookmovie.ag/api/v1/shows/episode-subtitles/?id_episode=96045
-$t1=explode("window['show_storage'] =",$h);
-$t2=explode("</script>",$t1[1]);
-$t3=trim($t2[0]);
-$rest = substr($t3, 0, -1);
-$slug="";
-$year="";
-if (preg_match("/slug\:\s*\'(.*?)\'/",$rest,$s))
- $slug=$s[1];
-if (preg_match("/year\:\s*\'(\d+)\'/",$rest,$y))
- $year=$y[1];
-
-// title: 'O Brave New World', episode: '1', id_episode: 6168, season: '1'},
-// title: 'Episode #1.3', index: '1', episode: '3', id_episode: 125400, season: '1'}
-//preg_match_all("/title\:\s*\'(.*?)\'\,\s*episode\:\s*\'(\d+)\'\,\s*id_episode\:\s*(\d+)\,\s*season\:\s*\'(\d+)\'/",$h,$m);
-//$r=array();
-//for ($k=0;$k<count($m[1]);$k++) {
-// $r[$m[4][$k]][]=array($m[4][$k],$m[1][$k],$m[2][$k],$m[3][$k]);
-//}
-/*
-$r=array();
-$videos = explode('data-season-episodes="', $h);
-unset($videos[0]);
-$videos = array_values($videos);
-foreach($videos as $video) {
- $t1=explode('"',$video);
- $ss=$t1[0];
- $vids = explode('li class="episodes', $video);
- unset($vids[0]);
- $vids = array_values($vids);
- foreach($vids as $vid) {
-  $t1=explode('data-episode="',$vid);
-  $t2=explode('"',$t1[1]);
-  $ep=$t2[0];
-  $t1=explode('episodes__title">',$vid);
-  $t2=explode('<',$t1[1]);
-  $tt=$t2[0];
-  $t1=explode('data-id-episode="',$vid);
-  $t2=explode('"',$t1[1]);
-  $ll=$t2[0];
-  $r[$ss][]=array($tt,$ep,$ll,"");
- }
-}
-*/
-//print_r ($r);
+    //die();
+  }
+  //die();
+//////////////////////////////////////////////////////////
 $n=0;
 foreach($r as $key=>$value) {
   $sezoane[]=$key;
@@ -180,7 +208,7 @@ foreach($r as $key=>$value) {
   $episod="";
   $ep_tit="";
   $episod=$v[1];
-  $link=$v[2];
+  $link=$v[2]."&hash=".$hash."&expires=".$ex;
   $img_ep="https://lookmovie.io/images/p/w300".$v[3];
   $title=$v[0];
   //$ep_tit=html_entity_decode($t2[0]);

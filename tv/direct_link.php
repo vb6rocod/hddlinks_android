@@ -743,10 +743,16 @@ if ($from=="b1tv") {
   curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
   curl_setopt($ch, CURLOPT_TIMEOUT, 15);
   $html = curl_exec($ch);
-  curl_close($ch);
-  $t1=explode('src":"',$html);
+  $t1=explode('https://app.dejacast.com/player',$html);
   $t2=explode('"',$t1[1]);
-  $link="https:".$t2[0];
+  $link= 'https://app.dejacast.com/player'.$t2[0];
+  curl_setopt($ch, CURLOPT_URL, $link);
+  $html = curl_exec($ch);
+  curl_close($ch);
+  //echo $html;
+  $t1=explode('data-playurl","',$html);
+  $t2=explode('"',$t1[1]);
+  $link=$t2[0];
 }
 if ($from=="tvhd") {
   $cookie=$base_cookie."tvhd.dat";
@@ -1304,7 +1310,65 @@ $head=array("X-Requested-With: XMLHttpRequest",
    $link="";
   $link=str_replace("https","http",$link);
 }
-
+if ($from=="europalibera") {
+//echo $link;
+//$link="https://romania.europalibera.org/a/interviu-geoana---despre-r%C4%83zboi-comunicarea-%C8%99i-liderii-rom%C3%A2niei/31817643.html";
+  $ch = curl_init();
+  curl_setopt($ch, CURLOPT_URL, urldecode($link));
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+  curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows; U; Windows NT 6.1; en-US; rv:1.9.1.2) Gecko/20090729 Firefox/3.5.2 GTB5');
+  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+  //curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+  $h = curl_exec($ch);
+  curl_close($ch);
+  //echo $h;
+  $t1=explode('<video',$h);
+  $t2=explode('src="',$t1[1]);
+  $t3=explode('"',$t2[1]);
+  $l=$t3[0];
+  $ch = curl_init();
+  curl_setopt($ch, CURLOPT_URL, urldecode($l));
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+  curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows; U; Windows NT 6.1; en-US; rv:1.9.1.2) Gecko/20090729 Firefox/3.5.2 GTB5');
+  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+  //curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+  $h = curl_exec($ch);
+  curl_close($ch);
+$base1=str_replace(strrchr($l, "/"),"/",$l);
+$base2=getSiteHost($l);
+if (preg_match("/\.m3u8/",$h)) {
+$a1=explode("\n",$h);
+for ($k=0;$k<count($a1);$k++) {
+  if ($a1[$k][0] !="#" && $a1[$k]) $pl[]=trim($a1[$k]);
+}
+if ($pl[0][0] == "/")
+  $base=$base2;
+elseif (preg_match("/http(s)?:/",$pl[0]))
+  $base="";
+else
+  $base=$base1;
+if (count($pl) > 1) {
+  if (preg_match_all("/RESOLUTION\=(\d+)/i",$h))
+    preg_match_all("/RESOLUTION\=(\d+)/i",$h,$m);
+  else
+    preg_match_all("/BANDWIDTH\=(\d+)/i",$h,$m);
+  $max_res=max($m[1]);
+  $arr_max=array_keys($m[1], $max_res);
+  $key_max=$arr_max[0];
+  $link=$base.$pl[$key_max];
+} else {
+  $link=$l;
+}
+} else {
+  $link=$l;
+}
+}
 if ($from=="libertatea") {
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, urldecode($link));

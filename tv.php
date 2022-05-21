@@ -101,7 +101,8 @@ echo '
 <TD width="25%"><a href="filme/facebook1_fav.php" target="_blank">facebook1</a></TD>
 <TD width="25%"><a href="filme/facebook2_fav.php" target="_blank">facebook2</a></TD>
 <TD width="25%"><a href="tv/ustream_main.php" target="_blank">ustream</TD>
-<TD width="25%"></TD>';
+<TD width="25%"><a href="tv/europalibera.php?page=1,,europalibera" target="_blank">europalibera</a></TD>'
+;
 echo '</TR>';
 }
 $list = glob($base_sub."*.srt");

@@ -522,12 +522,13 @@ if (preg_match("/cdn\-\d+\.fembed\.stream/",$filelink)) {
   if ($flash <> "flash")
    $link=$link."|Origin=".urlencode("https://infinitum.stream")."&Referer=".urlencode("https://infinitum.stream");
 }
-if (preg_match("/onionbox\.org/",$filelink)) {
-  if (preg_match("/onionbox\.org\/v\//",$filelink)) {
+if (preg_match("/onionbox\.org|onionplay\.cloud/",$filelink)) {
+  if (preg_match("/onionbox\.org|onionplay\.cloud\/v\//",$filelink)) {
    // https://onionbox.org/v/rjRuyXc6mUO9fxW/
    //echo $filelink;
    // https://onionbox.org/v/a86qzi1t0OU8QbC/
    // https://onionbox.org/v/a86qzi1t0OU8QbC/
+  $host=parse_url($filelink)['host'];
   require_once("JavaScriptUnpacker.php");
   $jsu = new JavaScriptUnpacker();
   $ua="Mozilla/5.0 (Windows NT 10.0; rv:80.0) Gecko/20100101 Firefox/80.0";
@@ -559,15 +560,16 @@ if (preg_match("/onionbox\.org/",$filelink)) {
   $filelink="";
   }
   if ($flash <> "flash")
-   $link=$link."|Origin=".urlencode("https://onionbox.org")."&Referer=".urlencode("https://onionbox.org");
+   $link=$link."|Origin=".urlencode("https://".$host)."&Referer=".urlencode("https://".$host);
 }
-if (preg_match("/fapdot\.(net|org)/",$filelink)) {
+if (preg_match("/fapdot\.(net|org)|dotnet\.stream/",$filelink)) {
   require_once("JavaScriptUnpacker.php");
   //echo $filelink;
   // https://fapdot.net/v/SJpAucggjv4JUo8/
   // https://fapdot.net/v/SJpAucggjv4JUo8/
   //$filelink="https://fapdot.net/v/TnImYmnMQicemQq/";
   //$filelink="https://fapdot.net/v/2K9drYIP5DNX5Fj/";
+  $host=parse_url($filelink)['host'];
   $jsu = new JavaScriptUnpacker();
   $ua="Mozilla/5.0 (Windows NT 10.0; rv:80.0) Gecko/20100101 Firefox/80.0";
   $head=array('Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
@@ -613,7 +615,7 @@ if (preg_match("/fapdot\.(net|org)/",$filelink)) {
   }
 
   if ($flash <> "flash" && $link)
-   $link=$link."|Origin=".urlencode("https://fapdot.net")."&Referer=".urlencode("https://fapdot.net");
+   $link=$link."|Origin=".urlencode("https://".$host)."&Referer=".urlencode("https://".$host);
 }
 if (preg_match("/lightdl\.xyz/",$filelink)) {
 //echo $filelink;
@@ -9051,7 +9053,9 @@ $head=array('User-Agent: '.$ua,
   //echo $link."\n";
   //$link="https://blectionoud.site/html/aes/746bba909998c44909a3785b710aefed/1642900119/lookmovie144.xyz/storage6/movies/0409301-east-broadway-2006-1642855067/5f4c81809085d1ea1f4f4cbb839ec95d.mp4/index.m3u8";
   $ua="Mozilla/5.0 (Windows NT 10.0; rv:75.0) Gecko/20100101 Firefox/75.0";
-  $ref=file_get_contents($base_cookie."lookmovie_ref.txt");
+  $ref=file_get_contents($base_cookie."lookmovie_ref1.txt");
+  $t1=explode("|",$ref);
+  $ref=$t1[1];
   if ($srt && strpos($srt,"http") === false) $srt="https:".$srt;
   $x =  dirname($link);
   if (preg_match("/\/aes\//",$link) && $flash <> "flash") {
@@ -9828,7 +9832,7 @@ function rec($site_key,$co,$sa,$loc) {
 }
 
 //} elseif (strpos($filelink,"vidcloud.") !== false) {
-} elseif (preg_match("/vidcloud\.|streamrapid\.ru|rabbitstream\.net/",$filelink)) {
+} elseif (preg_match("/vidcloud\.|streamrapid\.ru|rabbitstream\.net|mzzcloud\./",$filelink)) {
   // https://vidcloud.pro/embed4/47bkl9d1f7xz1?i=2c6b544306d5c1b81e0b7b86a000da4cb5572df056ec3727324f7db84611806ecdf5a2e3429a1483ca59e880d8e299ab
   // https://vidcloud.pro/embed/5e1b6063ccb14
   // https://vidcloud.msk.ru/embed4/54enm296il6tu?i=2c6b544306d5c1b81e0b7b86a000da4c2d52850a6e79371835929ac55d1155b6c045926b500d70e69163d8e81cf9c0c9&el=4236402
@@ -9873,7 +9877,7 @@ function rec($site_key,$co,$sa,$loc) {
   $co="aHR0cHM6Ly92aWRjbG91ZC5tc2sucnU6NDQz";
   $loc="https://vidcloud.msk.ru";
   $sa="embed_4_get_sources";
-  } elseif (preg_match("/streamrapid\.ru|rabbitstream\.net/",$host)) {
+  } elseif (preg_match("/streamrapid\.ru|rabbitstream\.net|mzzcloud\./",$host)) {
   $key="6LewJewbAAAAAP7e7M1oZPz-yV3m7YblKNkOWjah";
   $key="6LdAJewbAAAAABSUZxkmD7L8EiAr9MLPqa1jNuOZ";
   $key=$key1;
@@ -9890,7 +9894,7 @@ function rec($site_key,$co,$sa,$loc) {
   $token=rec($key,$co,$sa,$loc);
   if (preg_match("/vidcloud\.msk\.ru/",$host)) {
   $l= $host."/ajax/embed-4/getSources?id=".$id."&_token=".$token;
-  } elseif (preg_match("/streamrapid\.ru|rabbitstream\.net/",$host)) {
+  } elseif (preg_match("/streamrapid\.ru|rabbitstream\.net|mzzcloud\./",$host)) {
   $l= $host."/ajax/embed-4/getSources?id=".$id."&_token=".$token."&_number=".$num;
   }
   //echo $l;
