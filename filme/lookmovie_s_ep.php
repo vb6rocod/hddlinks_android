@@ -52,9 +52,10 @@ $ua="Mozilla/5.0 (Windows NT 10.0; rv:86.0) Gecko/20100101 Firefox/86.0";
   curl_setopt($ch, CURLOPT_TIMEOUT, 25);
   $h = curl_exec($ch);
   curl_close($ch);
-  //echo $h;
+  //$h=str_replace(" ","",$h);
+  //echo urlencode($h);
   
-  if (preg_match("/href\=\"(https.*?\/play\/.*?)\"/",$h,$m)) {
+  if (preg_match("/href\=\s*\"\s*(https.*?\/play\/.*?)\"/",$h,$m)) {
     $l1=$m[1];
     $ref=parse_url($l1)['host'];
   } else {

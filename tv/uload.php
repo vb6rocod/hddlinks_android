@@ -21,10 +21,28 @@ $p=dirname($link);
   curl_setopt($ch, CURLOPT_TIMEOUT, 25);
   $h = curl_exec($ch);
   curl_close($ch);
-  //echo $h;
+  //file_put_contents("1.m3u",$h);
+  /*
+  echo $h;
+  preg_match("/.*\.js/",$h,$m);
+  $ch = curl_init();
+  curl_setopt($ch, CURLOPT_URL, $m[0]);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+  //curl_setopt($ch, CURLOPT_USERAGENT, $ua);
+  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,0);
+  //curl_setopt($ch, CURLOPT_REFERER,"https://5454445.tk");
+  curl_setopt($ch, CURLOPT_HEADER,1);
+  curl_setopt($ch, CURLOPT_HTTPHEADER, $head);
+  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 25);
+  $h = curl_exec($ch);
+  curl_close($ch);
+  echo $h;
+  */
   //die();
   // uload1.php?file=
-  preg_match_all("/.+\.ts/",$h,$m);
+  //preg_match_all("/.+\.ts/",$h,$m);
   //print_r ($m);
   $out=preg_replace_callback(
     "/.+\.ts/",
@@ -35,4 +53,5 @@ $p=dirname($link);
     $h
   );
   echo $out;
+  //file_put_contents("2.m3u",$out);
 ?>

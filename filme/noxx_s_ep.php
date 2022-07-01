@@ -35,6 +35,7 @@ $cookie=$base_cookie."noxx.dat";
 $cookie1=$base_cookie."noxx.txt";
 $ua="Mozilla/5.0 (Windows NT 10.0; rv:55.0) Gecko/20100101 Firefox/55.0";
 $c1=file_get_contents($cookie1);
+//echo $c1;
   $head=array('Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
   'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
   $c1);

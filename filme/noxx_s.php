@@ -179,34 +179,7 @@ if ($page==1 && $tip=="release") {
   'Cache-Control: no-cache');
   $l="https://noxx.is/";
   $l="https://check.ddos-guard.net/check.js";
-  $ch = curl_init();
-  curl_setopt($ch, CURLOPT_URL,$l);
-  //curl_setopt($ch, CURLOPT_USERAGENT, $ua);
-  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
-  curl_setopt($ch, CURLOPT_RETURNTRANSFER  ,1);  // RETURN THE CONTENTS OF THE CALL
-  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-  curl_setopt($ch, CURLOPT_ENCODING,"");
-  //curl_setopt($ch, CURLOPT_COOKIEJAR, $cookie);
-  //curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie);
-  curl_setopt($ch, CURLOPT_HEADER,1);
-  curl_setopt($ch, CURLOPT_HTTPHEADER,$head);
-  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
-  curl_setopt($ch, CURLOPT_TIMEOUT, 25);
-  $html = curl_exec($ch);
-  curl_close($ch);
-  if (preg_match("/ddg2\=(\w+)/",$html,$m))
-   $ddg2=$m[1];
-  else
-   $ddg2="";
-  $l="https://noxx.is/favicon.ico";
-  $head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:55.0) Gecko/20100101 Firefox/55.0',
-  'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
-  'Accept-Language: en-US,en;q=0.5',
-  'Accept-Encoding: gzip, deflate, br',
-  'Cookie: __ddg2='.$ddg2,
-  'Connection: keep-alive',
-  'Range: bytes=0-');
-//print_r ($head);
+  $l="https://check.ddos-guard.net/check.js";
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL,$l);
   //curl_setopt($ch, CURLOPT_USERAGENT, $ua);
@@ -223,17 +196,53 @@ if ($page==1 && $tip=="release") {
   $html = curl_exec($ch);
   curl_close($ch);
   //echo $html;
-  if (preg_match("/ddg1\=(\w+)/",$html,$m))
-   $ddg1=$m[1];
+  if (preg_match("/ddg2\=(\w+)/",$html,$m))
+   $ddg2=$m[1];
   else
-   $ddg1="";
-  file_put_contents($cookie1,'Cookie: __ddg2='.$ddg2.'; __ddg1='.$ddg1);
+   $ddg2="";
+   $t1=explode("new Image().src='",$html);
+   $t2=explode("'",$t1[1]);
+   $l=$t2[0];
+
+   $l="https://noxx.is/.well-known/ddos-guard/id/".$ddg2;
+  //$l="https://noxx.is/favicon.ico";
+  //echo $l;
+  $head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:55.0) Gecko/20100101 Firefox/55.0',
+  'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+  'Accept-Language: en-US,en;q=0.5',
+  'Accept-Encoding: deflate',
+  'Cookie: __ddg2='.$ddg2,
+  'Connection: keep-alive',
+  'Range: bytes=0-');
+//print_r ($head);
+  $ch = curl_init();
+  curl_setopt($ch, CURLOPT_URL,$l);
+  //curl_setopt($ch, CURLOPT_USERAGENT, $ua);
+  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,0);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER  ,1);  // RETURN THE CONTENTS OF THE CALL
+  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+  curl_setopt($ch, CURLOPT_ENCODING,"");
+  //curl_setopt($ch, CURLOPT_COOKIEJAR, $cookie);
+  //curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie);
+  curl_setopt($ch, CURLOPT_HEADER,1);
+  curl_setopt($ch, CURLOPT_HTTPHEADER,$head);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 25);
+  $html = curl_exec($ch);
+  curl_close($ch);
+  //echo $html;
+  $ddg1="";
+  if (preg_match("/__ddg2_\=(\w+)/",$html,$m))
+   $ddg2=$m[1];
+  else
+   $ddg2="";
+  file_put_contents($cookie1,'Cookie: __ddg2_='.$ddg2.'; __ddg1_='.$ddg1);
   $l="https://noxx.is/";
   $head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:55.0) Gecko/20100101 Firefox/55.0',
   'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
   'Accept-Language: en-US,en;q=0.5',
-  'Accept-Encoding: gzip, deflate, br',
-  'Cookie: __ddg2='.$ddg2.'; __ddg1='.$ddg1,
+  'Accept-Encoding: deflate',
+  'Cookie: __ddgid_=; __ddg2_='.$ddg2,
   'Connection: keep-alive',
   'Upgrade-Insecure-Requests: 1',
   'Pragma: no-cache',

@@ -13,6 +13,8 @@ $link=$_GET["link"];
 $width="200px";
 $height="278px";
 $last_good="https://allmoviesforyou.net";
+//$last_good="https://allmoviesforyou.co";
+// https://cinemashack.co/movies/
 $host=parse_url($last_good)['host'];
 /* ==================================================== */
 $has_fav="yes";

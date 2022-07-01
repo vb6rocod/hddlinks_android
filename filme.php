@@ -60,7 +60,8 @@ else
 <TD width="25%"><a href="filme/filmeseriale_filme.php?page=1&tip=release&title=filmeseriale&link=" target="_blank">filmeseriale.online</a></TD>
 <TD width="25%"><a href="filme/filmeonline2016_main.php" target="_blank">filmeonline2016</a></TD>
 <TD width="25%"><a href="filme/serialeonline_f.php?page=1&tip=release&title=serialeonline&link=" target="_blank">serialeonline</a></TD>
-<TD width="25%"><a href="filme/portalultautv_main.php" target="_blank">portalultautv</a></TD>
+<TD width="25%"><a href="filme/fsro_f.php?page=1&tip=release&title=fsro&link=" target="_blank">fsro</a></TD>
+<!--<TD width="25%"><a href="filme/portalultautv_main.php" target="_blank">portalultautv</a></TD>-->
 </TR>
 
 
@@ -128,7 +129,12 @@ else
 <TD width="25%"><a href="filme/m4uhd_f.php?page=1&tip=release&title=m4uhd&link=" target="_blank">m4uhd</a></TD>
 <TD width="25%"><a href="filme/vexmovies_f.php?page=1&tip=release&title=vexmovies&link=" target="_blank">vexmovies</a></TD>
 </TR>
-
+<TR>
+<TD width="25%"><a href="filme/fmovies_f.php?page=1&tip=release&title=fmovies&link=" target="_blank">fmovies.co</a></TD>
+<TD width="25%"><a href="filme/cinemashack_f.php?page=1&tip=release&title=cinemashack&link=" target="_blank">cinemashack</a></TD>
+<TD width="25%"><a href="filme/tv88_f.php?page=1&tip=release&title=tv88&link=" target="_blank">tv88</a></TD>
+<TD width="25%"><a href="filme/dulu_f.php?page=1&tip=release&title=dulu&link=" target="_blank">dulu</a></TD>
+</TR>
 
 
 

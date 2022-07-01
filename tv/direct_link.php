@@ -403,8 +403,10 @@ if ($from=="canale.live") {
      break;
    }
   }
-  if (preg_match("/uload.ru/",$link) && $flash <> "flash") {
+  if (preg_match("/uload\.ru|olacast\.live|netwrk\.ru\.com|networkbest\.ru\.com/",$link) && $flash <> "flash") {
     $link="http://127.0.0.1:8080/scripts/tv/uload.php?file=".$link."|Referer=".urlencode("https://canale.live");
+  } else  if (preg_match("/uload\.ru|olacast\.live|netwrk\.ru\.com|networkbest\.ru\.com/",$link) && $flash == "flash") {
+    $link="uload.php?file=".$link;
   } elseif ($link[0]=="/") {
     $link="https://canale.live".$link;
   }

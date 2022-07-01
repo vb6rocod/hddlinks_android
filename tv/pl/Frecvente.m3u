@@ -75,7 +75,7 @@ http://95.77.16.67:8080/
 #EXTINF:-1,LINK PRESS TV
 http://x1.imcr.ro:9090/seconds6hls/live.m3u8
 #EXTINF:-1,Aleph News
-https://stream-aleph.m.ro/Aleph/ngrp:Alephnewsbackup.stream_all/playlist.m3u8
+https://streamb.m.ro/Aleph/ngrp:Alephnew2.stream_all/playlist.m3u8
 #EXTINF:-1,LookSport
 https://looksport.1616.ro/tv/looksport/
 #EXTINF:-1,Prima TV
@@ -88,4 +88,5 @@ http://149.62.177.105:8001/play/a00n/index.m3u8
 http://149.62.177.105:8001/play/a00f/index.m3u8
 #EXTINF:-1, PRIMA SPORT 4
 http://149.62.177.105:8001/play/a00m/index.m3u8
-
+#EXTINF:-1, EURONEWS RO
+https://www.youtube.com/watch?v=tdwXKd9Gqb8

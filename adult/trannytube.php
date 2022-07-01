@@ -226,9 +226,9 @@ $host=parse_url($l)['host'];
   curl_setopt($ch, CURLOPT_TIMEOUT, 15);
   $html = curl_exec($ch);
   curl_close($ch);
-
+//echo $html;
 $r=array();
-$videos = explode('class="b-thumb-item">',$html);
+$videos = explode('<div class="b-thumb-item-inner">',$html);
 unset($videos[0]);
 $videos = array_values($videos);
 foreach($videos as $video) {

@@ -152,10 +152,14 @@ $cookie=$base_cookie."trailers1.dat";
   curl_setopt($ch, CURLOPT_TIMEOUT, 25);
   $html = curl_exec($ch);
   curl_close ($ch);
-
+  if (preg_match("/title\/tt(\d+)/",$html,$m))
+    $imdbid=$m[1];
+  else
+    $imdb="";
   //echo urldecode($html);
   //die();
   // get subtitles
+  /*
   $t1=explode('<subtitle-content',$html);
   $t2=explode('data-url="',$t1[1]);
   $t3=explode('"',$t2[1]);
@@ -195,10 +199,7 @@ $cookie=$base_cookie."trailers1.dat";
     $lang="English";
   }
   $srt= "https://".$host."/subtitles/".$hash;
-  if (preg_match("/title\/tt(\d+)/",$html,$m))
-    $imdbid=$m[1];
-  else
-    $imdb="";
+  */
   //die();
   //echo $html;
   $t1=explode('<content data-url="',$html);
@@ -227,15 +228,36 @@ $head=array('Accept: text/html, */*; q=0.01',
   $h = curl_exec($ch);
   curl_close ($ch);
   //echo "\n".$h."\n";
+  preg_match("/site\.itemId\s*\=\s*(\d+)/",$h,$m);
+  $siteID=$m[1];
+  // https://trailers.to/js/dynamic.132/subtitles.js
   //die();
-  // https://trailers.to/js/dynamic.91/remote.js
+  // https://trailers.to/js/dynamic.132/remote.js
   $t1=explode("source src='",$h);
   $t2=explode("'",$t1[1]);
   $l=$t2[0];
   $host1=parse_url($l)['host'];
+  $l1="https://trailers.to/en/subtitle-details/".$siteID."/ro?selectedContentHash=";
+  $ch = curl_init($l1);
+  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
+  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER  ,1);  // RETURN THE CONTENTS OF THE CALL
+  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+  curl_setopt($ch, CURLOPT_HTTPHEADER,$head);
+  curl_setopt($ch, CURLOPT_HEADER,1);
+  curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 25);
+  $h = curl_exec($ch);
+  curl_close ($ch);
+  //echo "\n".$h."\n";
+  $t1=explode('ContentHash":"',$h);
+  $t2=explode('"',$t1[1]);
+  if ($t2[0])
+  $srt="https://trailers.to/subtitles/".$t2[0]."/ro.vtt";
   //$l=str_replace($host1,"s1.movies.futbol",$l);
   $r[]="https://".$host."?file=".$l."&sub=".$srt;
-
+  if ($srt) $lang="romana";
   // https://s1.movies.futbol/web-sources/50A11CB91C2C685F/4543437/friends-the-reunion-2021
   // https://learn-movies-university.site/web-sources/E4DC411993AF86DA/4543437/friends-the-reunion-2021
   // https://trailers.to/subtitles/5A95A2814385723B

@@ -297,7 +297,7 @@ $head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:95.0) Gecko/20100101 F
   curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
   curl_setopt($ch, CURLOPT_TIMEOUT, 15);
   $h = curl_exec($ch);
-
+  //echo $h."\n";
   $l="";
   $x=json_decode($h,1);
   if (isset($x["embed_url"])) {
@@ -321,14 +321,20 @@ $jsu = new JavaScriptUnpacker();
 //$l="https://www.onionbox.org/movie/2021/G/tt5034838.js";
 // https://go.onionbox.org/movie/2021/G/Godzilla.Vs..Kong.2021.mp4
 // https://fembed.stream/lUf
-$head=array('Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
+$head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:95.0) Gecko/20100101 Firefox/95.0',
+'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
 'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
 'Accept-Encoding: deflate',
 'Connection: keep-alive',
-'Referer: https://'.$host.'/');
+'Referer: https://'.$host.'/',
+'Upgrade-Insecure-Requests: 1',
+'Sec-Fetch-Dest: document',
+'Sec-Fetch-Mode: navigate',
+'Sec-Fetch-Site: none',
+'Sec-Fetch-User: ?1');
 
   $ch = curl_init();
-  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
+  //curl_setopt($ch, CURLOPT_USERAGENT, $ua);
   curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER  ,1);  // RETURN THE CONTENTS OF THE CALL
   curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
@@ -341,7 +347,7 @@ $head=array('Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image
   curl_setopt($ch, CURLOPT_URL, $source[$n]);
   $h = curl_exec($ch);
 
-  //echo $h;
+  //echo $h."\n";
   //die();
   $out="";
   $h1=unjuice($h);

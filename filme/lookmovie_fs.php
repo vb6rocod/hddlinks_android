@@ -86,7 +86,7 @@ $last_good="https://lookmovie2.to";
   curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
   $h = curl_exec($ch);
   curl_close($ch);
-  if (preg_match("/href\=\"(https.*?\/play\/.*?)\"/",$h,$m)) {
+  if (preg_match("/href\=\s*\"\s*(https.*?\/play\/.*?)\"/",$h,$m)) {
     $l1=$m[1];
     $ref=parse_url($l1)['host'];
   } else {

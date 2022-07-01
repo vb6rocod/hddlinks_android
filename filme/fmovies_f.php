@@ -12,20 +12,18 @@ $tit=$_GET["title"];
 $link=$_GET["link"];
 $width="200px";
 $height="278px";
+$last_good="https://fmovies.co";
+$host=parse_url($last_good)['host'];
 /* ==================================================== */
 $has_fav="yes";
 $has_search="yes";
 $has_add="yes";
 $has_fs="yes";
-$last_good="https://www2.zoechip.com";
-$last_good="https://www3.zoechip.com";
-//$last_good="https://watchtoday.tv";
-$host=parse_url($last_good)['host'];
-$fav_target="zoechip_f_fav.php?host=".$last_good;
-$add_target="zoechip_f_add.php";
+$fav_target="fmovies_f_fav.php?host=".$last_good;
+$add_target="fmovies_f_add.php";
 $add_file="";
-$fs_target="zoechip_fs.php";
-$target="zoechip_f.php";
+$fs_target="fmovies_fs.php";
+$target="fmovies_f.php";
 /* ==================================================== */
 $base=basename($_SERVER['SCRIPT_FILENAME']);
 $p=$_SERVER['QUERY_STRING'];
@@ -169,56 +167,54 @@ if ($page==1) {
    echo '<TD class="nav" colspan="4" align="right"><a href="'.$prev.'">&nbsp;&lt;&lt;&nbsp;</a> | <a href="'.$next.'">&nbsp;&gt;&gt;&nbsp;</a></TD>'."\r\n";
 }
 echo '</TR>'."\r\n";
-if($tip=="release") {
-  $l=$last_good."/movie?page=".$page;
+$f=array();
+//https://fmovies.co/search?keyword=star&page=2
+if ($tip=="search") {
+ $l="https://".$host."/search?keyword=".str_replace(" ","%20",$tit)."&page=".$page;
 } else {
-  $search=str_replace(" ","-",$tit);
-  if ($page > 1)
-  $l = $last_good."/search/".$search."/page-".$page.".html";
-  else
-  $l=$last_good."/search/".$search."?page=".$page;
+ $l="https://".$host."/movies/".$page;
 }
-///////////////////////////////////////////////
-$ua = $_SERVER['HTTP_USER_AGENT'];
-$ua="Mozilla/5.0 (Windows NT 10.0; rv:80.0) Gecko/20100101 Firefox/80.0";
-//$ua="Mozilla/5.0 (Windows NT 10.0; rv:71.0) Gecko/20100101 Firefox/71.0";
-
-
-$host=parse_url($l)['host'];
-  $ch = curl_init($l);
+$ua="Mozilla/5.0 (Windows NT 10.0; rv:75.0) Gecko/20100101 Firefox/75.0";
+  $ch = curl_init();
+  curl_setopt($ch, CURLOPT_URL, $l);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
   curl_setopt($ch, CURLOPT_USERAGENT, $ua);
-  curl_setopt($ch,CURLOPT_REFERER,$last_good);
   curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
-  curl_setopt($ch, CURLOPT_RETURNTRANSFER  ,1);  // RETURN THE CONTENTS OF THE CALL
   curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
   curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
   curl_setopt($ch, CURLOPT_TIMEOUT, 25);
-  $html = curl_exec($ch);
-  curl_close ($ch);
+  $h = curl_exec($ch);
+  curl_close($ch);
+  //if (!$h) $h=file_get_contents($l);
 
-//echo $html;
-$videos = explode('class="flw-item', $html);
+$host=parse_url($l)['host'];
+$videos = explode('<div class="item"', $h);
 unset($videos[0]);
 $videos = array_values($videos);
 foreach($videos as $video) {
-  $t1 = explode('href="',$video);
-  $t2 = explode('"', $t1[1]);
-  $link1=$t2[0];
-  $link = $last_good."/ajax/movie/episodes/".substr(strrchr($t2[0], "-"), 1);
-  
-  $t1=explode('title="',$video);
-  $t4=explode('"',$t1[1]);
-  $title=$t4[0];
-  //}
-  $title = prep_tit($title);
-  $t1 = explode('data-src="', $video);
-  $t2 = explode('"', $t1[1]);
-  $image = $t2[0];
-  if (strpos($image,"http") === false) $image="blank.jpg";
+ $t1=explode('href="',$video);
+ $t2=explode('"',$t1[1]);
+ $link="https://fmovies.co".$t2[0];
+ $t1=explode('src="',$video);
+ $t2=explode('"',$t1[1]);
+ $image=$t2[0];
+ $t1=explode('<a class="name',$video);
+ $t2=explode('>',$t1[1]);
+ $t3=explode('<',$t2[1]);
+ $title=$t3[0];
+  if ($title && !preg_match("/class\=\"status\"\>/",$video)) $f[] = array($title,$link,$image);
+}
+//echo $html;
+foreach($f as $key => $value) {
+  $title=$value[0];
+  $title=prep_tit($title);
+  $link=$value[1];
+  $image=$value[2];
   $year="";
   $imdb="";
+  $year="";
   $rest = substr($title, -6);
-  if (preg_match("/\(?(\d{4})\)?/",$rest,$m)) {
+  if (preg_match("/\((\d{4})\)/",$rest,$m)) {
    $year=$m[1];
    $tit_imdb=trim(str_replace($m[0],"",$title));
   } else {
@@ -226,7 +222,7 @@ foreach($videos as $video) {
    $tit_imdb=$title;
   }
   $link_f=$fs_target.'?tip=movie&link='.urlencode($link).'&title='.urlencode(fix_t($title)).'&image='.$image."&sez=&ep=&ep_tit=&year=".$year;
-  if ($title && !preg_match("/tv/",$link1)) {
+  if ($title && strpos($link,"/show") === false) {
   if ($n==0) echo '<TR>'."\r\n";
   $val_imdb="tip=movie&title=".urlencode(fix_t($tit_imdb))."&year=".$year."&imdb=".$imdb;
   $fav_link="mod=add&title=".urlencode(fix_t($title))."&link=".urlencode($link)."&image=".urlencode($image)."&year=".$year;
