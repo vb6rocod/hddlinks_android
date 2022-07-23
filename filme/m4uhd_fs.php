@@ -135,6 +135,7 @@ $ua="Mozilla/5.0 (Windows NT 10.0; rv:89.0) Gecko/20100101 Firefox/89.0";
 $ua="Mozilla/5.0 (Windows NT 10.0; rv:95.0) Gecko/20100101 Firefox/95.0";
 $cookie=$base_cookie."streamm4u.dat";
 //echo $link;
+// https://m4uhd.tv/watch-movie-1up-2022-268243.html
 if ($tip=="movie") {
 $head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:95.0) Gecko/20100101 Firefox/95.0',
 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8',

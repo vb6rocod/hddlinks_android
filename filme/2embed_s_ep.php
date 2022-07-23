@@ -10,8 +10,8 @@ $year=$_GET['year'];
 /* ======================================= */
 $width="200px";
 $height="100px";
-$fs_target="uniquestream_fs.php";
-$has_img="yes";
+$fs_target="2embed_fs.php";
+$has_img="no";
 ?>
 <html>
 <head>
@@ -43,24 +43,27 @@ $head=array('Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image
   curl_setopt($ch, CURLOPT_RETURNTRANSFER  ,1);  // RETURN THE CONTENTS OF THE CALL
   curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
   curl_setopt($ch, CURLOPT_HTTPHEADER,$head);
-  curl_setopt($ch, CURLOPT_ENCODING,"");
   //curl_setopt($ch, CURLOPT_COOKIEJAR, $cookie);
   //curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie);
   //curl_setopt($ch, CURLOPT_HEADER,1);
-  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
-  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 25);
   $h = curl_exec($ch);
   curl_close ($ch);
+  //die();
 //echo $h;
+  $t1=explode('movie-tmdbid" value="',$h);
+  $t2=explode('"',$t1[1]);
+  $tmdb=$t2[0];
 $n=0;
-$videos = explode("<span class='se-t", $h);
+$videos = explode('<div class="edit-episodes"', $h);
 $sezoane=array();
 unset($videos[0]);
 $videos = array_values($videos);
 //$videos = array_reverse($videos);
 foreach($videos as $video) {
-  $t1=explode(">",$video);
-  $t2=explode("<",$t1[1]);
+  $t1=explode("ss-episodes-",$video);
+  $t2=explode('"',$t1[1]);
   $sezoane[]=trim($t2[0]);
 }
 echo '<table border="1" width="100%">'."\n\r";
@@ -85,14 +88,14 @@ if ($p < 10 && $p > 0 && $k > 9) {
 echo '</TABLE>';
 
 foreach($videos as $video) {
-  $t1=explode(">",$video);
-  $t2=explode("<",$t1[1]);
+  $t1=explode("ss-episodes-",$video);
+  $t2=explode('"',$t1[1]);
   $season=trim($t2[0]);
   $sez = $season;
   echo '<table border="1" width="100%">'."\n\r";
   echo '<TR><td class="sez" style="color:black;background-color:#0a6996;color:#64c8ff;text-align:center" colspan="3">Sezonul '.($sez).'</TD></TR>';
   $n=0;
-  $vids = explode("<li class='mark", $video);
+  $vids = explode('data-number="', $video);
   unset($vids[0]);
   $vids = array_values($vids);
   //$vids = array_reverse($vids);
@@ -100,24 +103,16 @@ foreach($videos as $video) {
   $img_ep="";
   $episod="";
   $ep_tit="";
-  $t1=explode("href='",$vid);
-  $t2=explode("'",$t1[1]);
-  $link=$t2[0];
-  $t3=explode(">",$t1[1]);
+  $img_ep="";
+  $t1=explode('"',$vid);
+  $episod=$t1[0];
+
+  $link="https://www.2embed.to/embed/tmdb/tv?id=".$tmdb."&s=".$sez."&e=".$episod;
+  $t3=explode('javascript:;">',$vid);
   $t4=explode("<",$t3[1]);
-  $ep_tit=$t4[0];
-  $t1=explode("src='",$vid);
-  $t2=explode("'",$t1[1]);
-  $img_ep=$t2[0];
-  if (preg_match("/\.png/",$img_ep)) $img_ep=$image;
-  $t1=explode("numerando'>",$vid);
-  $t2=explode("<",$t1[1]);
-  $num=$t2[0];
-  if (preg_match("/\d+\s*\-\s*(\d+)/",$num,$m)) {
-    $episod=$m[1];
-  } else {
-    $episod="";
-  }
+  $ep_tit=trim($t4[0]);
+  $ep_tit=preg_replace("/episode\s+\d+\s*\:?\s*/i","",$ep_tit);
+  
   if ($ep_tit)
    $ep_tit_d=$season."x".$episod." ".$ep_tit;
   else

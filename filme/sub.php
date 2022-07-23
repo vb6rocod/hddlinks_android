@@ -221,6 +221,7 @@ $n=1;
 $output="";
 $bstart=false;
 $file_array=explode("\n",$contents);
+if (!preg_match("/\{\d+\}\{\d+\}/",$file_array[0])) {
   foreach($file_array as $line)
   {
     $line = trim($line);
@@ -245,6 +246,9 @@ $file_array=explode("\n",$contents);
           $n++;
         }
   }
+} else {  // accept sub format.....
+  $output=$contents;
+}
 return $output;
 }
 $h=fix_srt($h);

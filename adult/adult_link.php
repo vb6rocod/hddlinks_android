@@ -300,7 +300,7 @@ $out=$t2[0];
   if (preg_match("/[\"|\']((.*?)\.(m3u8|mp4))[\"|\']/",$h,$m))
   $out=$m[1];
   //echo $out;
-  if (strpos($out,"http") === false) $out="https:///bitporno.com".$out;
+  if (strpos($out,"http") === false) $out="https://bitporno.com".$out;
   if ($flash <> "flash")
     $out=$out."|Referer=".urlencode("https://bitporno.com")."&Origin=".urlencode("https://bitporno.com");
 } else if (preg_match("/bravoporn\.com/",$host)) {

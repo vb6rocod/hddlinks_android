@@ -18,6 +18,7 @@ $has_search="yes";
 $has_add="yes";
 $has_fs="yes";
 $last_good="https://www2.solarmovie.to";
+$last_good="https://yesmovies.ag";
 $host=parse_url($last_good)['host'];
 $fav_target="solarmovie_f_fav.php?host=".$last_good;
 $add_target="solarmovie_f_add.php";
@@ -182,15 +183,17 @@ if($tip=="release") {
 ///////////////////////////////////////////////
 $ua = $_SERVER['HTTP_USER_AGENT'];
 $ua="Mozilla/5.0 (Windows NT 10.0; rv:80.0) Gecko/20100101 Firefox/80.0";
+$ua="Mozilla/5.0 (Windows NT 10.0; rv:102.0) Gecko/20100101 Firefox/102.0";
 //$ua="Mozilla/5.0 (Windows NT 10.0; rv:71.0) Gecko/20100101 Firefox/71.0";
-
-
+$head=array('Cookie: cf_clearance=FhdP4FA1jI2Ux4vzgjGFa.6n4CuIoNE2U07LcI9DKT0-1657138091-0-1500; srv=1;');
+//$l="https://yesmovies.ag/searching/trek.html";
 $host=parse_url($l)['host'];
   $ch = curl_init($l);
   curl_setopt($ch, CURLOPT_USERAGENT, $ua);
   curl_setopt($ch,CURLOPT_REFERER,$last_good);
   curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER  ,1);  // RETURN THE CONTENTS OF THE CALL
+  //curl_setopt($ch, CURLOPT_HTTPHEADER,$head);
   curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
   curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
   curl_setopt($ch, CURLOPT_TIMEOUT, 25);
@@ -210,7 +213,7 @@ foreach($videos as $video) {
   $t2 = explode('"', $t1[1]);
   $title = $t2[0];
   $title = prep_tit($title);
-  $t1 = explode('data-src="', $video);
+  $t1 = explode('data-original="', $video);
   $t2 = explode('"', $t1[1]);
   $image = $t2[0];
   //$image="r_m.php?file=".$image;

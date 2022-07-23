@@ -80,13 +80,5 @@ https://streamb.m.ro/Aleph/ngrp:Alephnew2.stream_all/playlist.m3u8
 https://looksport.1616.ro/tv/looksport/
 #EXTINF:-1,Prima TV
 https://stream1.1616.ro:1945/prima/livestream/chunklist.m3u8
-#EXTINF:-1, PRIMA SPORT 1
-http://149.62.177.105:8001/play/a00e/index.m3u8
-#EXTINF:-1, PRIMA SPORT 2
-http://149.62.177.105:8001/play/a00n/index.m3u8
-#EXTINF:-1, PRIMA SPORT 3
-http://149.62.177.105:8001/play/a00f/index.m3u8
-#EXTINF:-1, PRIMA SPORT 4
-http://149.62.177.105:8001/play/a00m/index.m3u8
 #EXTINF:-1, EURONEWS RO
 https://www.youtube.com/watch?v=tdwXKd9Gqb8

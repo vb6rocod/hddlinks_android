@@ -10,6 +10,64 @@ function decode_code($code){
         $code
     );
 }
+$r=array();
+function resolve2E($filelink) {
+  global $r;
+  $t1=explode("?",$filelink);
+  $host=parse_url($t1[0])['host'];
+  $ua = $_SERVER['HTTP_USER_AGENT'];
+  require_once ("rec.php");
+  $ch = curl_init($filelink);
+  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER  ,1);  // RETURN THE CONTENTS OF THE CALL
+  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 25);
+  $h = curl_exec($ch);
+  curl_close($ch);
+  //echo $h;
+  $t1=explode('data-recaptcha-key="',$h);
+  $t2=explode('"',$t1[1]);
+  $key=$t2[0];
+  $t1=explode('data-id="',$h);  // only first
+  $t2=explode('"',$t1[1]);
+  $id=$t2[0];
+  preg_match_all("/data-id=\"(\d+)\"/",$h,$m);
+  for ($z=0;$z<count($m[0]);$z++) {
+  $ch = curl_init();
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
+  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+  curl_setopt($ch, CURLOPT_HTTPHEADER, $head);
+  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 25);
+  //$key="6LdBfTkbAAAAAL25IFRzcJzGj9Q-DKcrQCbVX__t";
+  //$key="6Lf2aYsgAAAAAFvU3-ybajmezOYy87U4fcEpWS4C"; // 24.06.2022
+  $co="aHR0cHM6Ly93d3cuMmVtYmVkLnJ1OjQ0Mw..";
+  $co="aHR0cHM6Ly93d3cuMmVtYmVkLnJ1OjQ0Mw..";
+  $loc="https://".$host;
+  $sa="get_link";
+  $id=$m[1][$z];
+  $token=rec($key,$co,$sa,$loc);
+  $l="https://".$host."/ajax/embed/play?id=".$id."&_token=".$token;
+  $head=array('Accept: */*',
+  'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
+  'Accept-Encoding: deflate',
+  'X-Requested-With: XMLHttpRequest',
+  'Connection: keep-alive',
+  'Referer: https://'.$host.'/embed/imdb/tv?id=tt9737326&s=1&e=3');
+
+  curl_setopt($ch, CURLOPT_URL, $l);
+
+  $h = curl_exec($ch);
+  curl_close($ch);
+  $x=json_decode($h,1);
+  //print_r ($x);
+  $r[]=$x['link'];
+  }
+}
 error_reporting(0);
 $list = glob($base_sub."*.srt");
    foreach ($list as $l) {
@@ -259,6 +317,40 @@ for ($k=0;$k<count($p[1]);$k++) {
 if(strpos($link1,"http") !== false) $r[] = $link1;
 }
 //}
+for ($c=0;$c<count($r);$c++) {
+  if (preg_match("/watch\-series\.site/",$r[$c])) unset($r[$c]);
+  if (preg_match("/2embed\./",$r[$c])) {
+    resolve2E($r[$c]);
+    unset($r[$c]);
+  }
+  if (preg_match("/vidnext\.net|vidnode\.net|vidembed\.(net|cc|io)|\/vidcloud9\.|membed\.net/",$r[$c])) {
+   $head=array('Accept: application/json, text/javascript, */*; q=0.01',
+   'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
+   'Accept-Encoding: deflate',
+   'X-Requested-With: XMLHttpRequest',
+   'Connection: keep-alive');
+
+   $ch = curl_init();
+   curl_setopt($ch, CURLOPT_URL, $r[$c]);
+   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+   curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 10.0; rv:71.0) Gecko/20100101 Firefox/71.0');
+   curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+   curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+   curl_setopt($ch, CURLOPT_HTTPHEADER,$head);
+   curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
+   curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
+   curl_setopt($ch, CURLOPT_TIMEOUT, 25);
+   $h2 = curl_exec($ch);
+   curl_close($ch);
+   //echo $h2;
+   preg_match_all("/data\-video\=\"([^\"]+)/",$h2,$m);
+   for ($z=0;$z<count($m[1]);$z++) {
+     $r[]=$m[1][$z];
+   }
+  }
+}
+sort($r);
+//print_r ($r);
 echo '<table border="1" width="100%">';
 echo '<TR><TD class="mp">Alegeti un server: Server curent:<label id="server">'.parse_url($r[0])['host'].'</label>
 <input type="hidden" id="file" value="'.urlencode($r[0]).'"></td></TR></TABLE>';

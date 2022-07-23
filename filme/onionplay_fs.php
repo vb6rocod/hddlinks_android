@@ -398,58 +398,108 @@ $head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:95.0) Gecko/20100101 F
   $t2=explode('"',$t1[1]);
   $l=$t2[0];
   }
-  if (!preg_match("/mega\.nz/",$l)) $r[]=$l;
+  if (!preg_match("/mega\.nz|filepress\.|2embed\./",$l)) $r[]=$l;
+  if (preg_match("/filepress\./",$l)) resolveFP($l);
+  if (preg_match("/2embed\./",$l)) resolve2E($l);
 }
 curl_close ($ch);
   //echo $l;
-
-  if (preg_match("/2embed\.ru/",$l)) { // 2embed.ru
-  $ua="Mozilla/5.0 (Windows NT 10.0; rv:80.0) Gecko/20100101 Firefox/80.0";
-  $head=array('Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
-  'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
-  'Accept-Encoding: deflate',
-  'Connection: keep-alive',
-  'Referer: https://onionplay.co/');
-  $ch = curl_init($l);
-  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
+//print_r ($r);
+  //if (preg_match("/filepress\./",$l)) {
+  function resolveFP($l) {
+    // https://filepress.site/video/62d30767f48e28735d752ad7
+    // https://api.filepress.site/api/file/video/62d30767f48e28735d752ad7/
+    global $r;
+    $ua="Mozilla/5.0 (Windows NT 10.0; rv:102.0) Gecko/20100101 Firefox/102.0";
+    $l=str_replace("/video/","/api/file/video/",$l);
+    $l=str_replace("filepress","api.filepress",$l);
+    $ch = curl_init($l);
+    curl_setopt($ch, CURLOPT_USERAGENT, $ua);
+    curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER  ,1);  // RETURN THE CONTENTS OF THE CALL
+    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+    curl_setopt($ch, CURLOPT_REFERER,"https://filepress.site");
+    curl_setopt($ch, CURLOPT_ENCODING,"");
+    curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+    curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+    $h = curl_exec($ch);
+    curl_close ($ch);
+    $x=json_decode($h,1)['data']['thirdPartyDetails'];
+    foreach ($x as $key=>$value) {
+      if (preg_match("/streamSB/i",$key)) {
+        if (isset($value['filecode']))
+          $r[]="https://gdpress.xyz/e/".$value['filecode'];
+      } elseif (preg_match("/streamTape/i",$key)) {
+        if (isset($value['filecode']))
+          $r[]="https://streamtape.com/e/".$value['filecode'];
+      } elseif (preg_match("/doodStream/i",$key)) {
+        if (isset($value['filecode']))
+          $r[]="https://dood.pm/e/".$value['filecode'];
+        elseif (isset($value['protected_embed']))
+          $r[]="https://dood.pm".$value['protected_embed'];
+      }
+    }
+          
+    //print_r ($x);
+  }
+function resolve2E($filelink) {
+  global $r;
+  $t1=explode("?",$filelink);
+  $host=parse_url($t1[0])['host'];
+  $ua = $_SERVER['HTTP_USER_AGENT'];
+  require_once ("rec.php");
+  $ch = curl_init($filelink);
   curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER  ,1);  // RETURN THE CONTENTS OF THE CALL
   curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-  curl_setopt($ch, CURLOPT_HTTPHEADER,$head);
-  curl_setopt($ch, CURLOPT_ENCODING,"");
-  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
-  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 25);
   $h = curl_exec($ch);
-  curl_close ($ch);
-  //$h=str_replace("\/","/",$h);
-  if (preg_match_all("/data\-id\=\"(\d+)/",$h,$m)) {
-   $head=array('Accept: */*',
-    'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
-    'Accept-Encoding: deflate',
-    'X-Requested-With: XMLHttpRequest',
-    'Connection: keep-alive',
-    'Referer: https://www.2embed.ru/');
-   $ch = curl_init();
-   curl_setopt($ch, CURLOPT_USERAGENT, $ua);
-   curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
-   curl_setopt($ch, CURLOPT_RETURNTRANSFER  ,1);  // RETURN THE CONTENTS OF THE CALL
-   curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-   curl_setopt($ch, CURLOPT_HTTPHEADER,$head);
-   curl_setopt($ch, CURLOPT_ENCODING,"");
-   curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
-   curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+  curl_close($ch);
+  //echo $h;
+  $t1=explode('data-recaptcha-key="',$h);
+  $t2=explode('"',$t1[1]);
+  $key=$t2[0];
+  $t1=explode('data-id="',$h);  // only first
+  $t2=explode('"',$t1[1]);
+  $id=$t2[0];
+  preg_match_all("/data-id=\"(\d+)\"/",$h,$m);
+  for ($z=0;$z<count($m[0]);$z++) {
+  $ch = curl_init();
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
+  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+  curl_setopt($ch, CURLOPT_HTTPHEADER, $head);
+  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 25);
+  //$key="6LdBfTkbAAAAAL25IFRzcJzGj9Q-DKcrQCbVX__t";
+  //$key="6Lf2aYsgAAAAAFvU3-ybajmezOYy87U4fcEpWS4C"; // 24.06.2022
+  $co="aHR0cHM6Ly93d3cuMmVtYmVkLnJ1OjQ0Mw..";
+  $co="aHR0cHM6Ly93d3cuMmVtYmVkLnJ1OjQ0Mw..";
+  $loc="https://".$host;
+  $sa="get_link";
+  $id=$m[1][$z];
+  $token=rec($key,$co,$sa,$loc);
+  $l="https://".$host."/ajax/embed/play?id=".$id."&_token=".$token;
+  $head=array('Accept: */*',
+  'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
+  'Accept-Encoding: deflate',
+  'X-Requested-With: XMLHttpRequest',
+  'Connection: keep-alive',
+  'Referer: https://'.$host.'/embed/imdb/tv?id=tt9737326&s=1&e=3');
 
-   for ($k=0;$k<count($m[1]);$k++) {
-    $l="https://www.2embed.ru/ajax/embed/play?id=".$m[1][$k]."&_token=";
-    curl_setopt($ch, CURLOPT_URL, $l);
-    $h = curl_exec($ch);
-    $x=json_decode($h,1);
-    //print_r ($x);
-    if (isset($x['link'])) $r[]=$x['link'];
-   }
-   curl_close ($ch);
+  curl_setopt($ch, CURLOPT_URL, $l);
+
+  $h = curl_exec($ch);
+  curl_close($ch);
+  $x=json_decode($h,1);
+  //print_r ($x);
+  $r[]=$x['link'];
   }
-  }
+}
+
   //echo $html;
   //print_r ($r);
 echo '<table border="1" width="100%">';

@@ -20,7 +20,7 @@ $head=array('Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image
 'Origin: '.$origin.'',
 'Connection: keep-alive',
 'Upgrade-Insecure-Requests: 1');
-header ('content-type: application/octet-stream');
+//header ('content-type: application/octet-stream');
 $ch = curl_init();
 curl_setopt($ch, CURLOPT_URL, $file);
 curl_setopt($ch, CURLOPT_HTTPHEADER, $head);
@@ -45,7 +45,8 @@ header("Location: $c");
 
 if (preg_match("/Location\:\s+(http.+)/i",$h,$m)) {
   $c=trim($m[1]);
-  $c .="|Origin=".urlencode("https://play.playm4u.xyz");
+  //$c .="|Origin=".urlencode("https://play.playm4u.xyz");
+  $c .="|Origin=".urlencode("null");
 /*
 $ch = curl_init();
 curl_setopt($ch, CURLOPT_URL, $c);
@@ -61,10 +62,15 @@ $h = curl_exec($ch);
 curl_close($ch) ;
 echo $h;
 */
-  header("Location: $c");
+  //header("Location: $c");
 //  echo $c;
 //print $c;
+} else {
+  $c=$file;
+  $c .="|Origin=".urlencode("null");
+  //$c .="|Origin=".urlencode("https://play.playm4u.xyz");
+  //header("Location: $c");
 }
-
+header("Location: $c");
 
 ?>

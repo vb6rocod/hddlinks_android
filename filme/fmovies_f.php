@@ -13,6 +13,8 @@ $link=$_GET["link"];
 $width="200px";
 $height="278px";
 $last_good="https://fmovies.co";
+$last_good="https://fmoviesf.co";
+// $last_good="https://hdmoviesb.com";
 $host=parse_url($last_good)['host'];
 /* ==================================================== */
 $has_fav="yes";
@@ -169,10 +171,19 @@ if ($page==1) {
 echo '</TR>'."\r\n";
 $f=array();
 //https://fmovies.co/search?keyword=star&page=2
+//https://fmoviesf.co/search/?keyword=
 if ($tip=="search") {
- $l="https://".$host."/search?keyword=".str_replace(" ","%20",$tit)."&page=".$page;
+  $search=str_replace(" ","%20",$tit);
+ //$l="https://".$host."/search?keyword=".str_replace(" ","%20",$tit)."&page=".$page;
+ if ($page==1)
+  $l="https://".$host."/search/?keyword=".$search;
+ else
+  $l="https://".$host."/search/?keyword=".$search."&step=".$page;
 } else {
- $l="https://".$host."/movies/".$page;
+ if ($page==1)
+  $l="https://".$host."/movies/";
+ else
+  $l="https://".$host."/movies/page-".$page;
 }
 $ua="Mozilla/5.0 (Windows NT 10.0; rv:75.0) Gecko/20100101 Firefox/75.0";
   $ch = curl_init();
@@ -185,24 +196,25 @@ $ua="Mozilla/5.0 (Windows NT 10.0; rv:75.0) Gecko/20100101 Firefox/75.0";
   curl_setopt($ch, CURLOPT_TIMEOUT, 25);
   $h = curl_exec($ch);
   curl_close($ch);
+  //echo $h;
   //if (!$h) $h=file_get_contents($l);
 
 $host=parse_url($l)['host'];
-$videos = explode('<div class="item"', $h);
+$videos = explode('<a class="poster"', $h);
 unset($videos[0]);
 $videos = array_values($videos);
 foreach($videos as $video) {
  $t1=explode('href="',$video);
  $t2=explode('"',$t1[1]);
- $link="https://fmovies.co".$t2[0];
+ $link=$t2[0];
  $t1=explode('src="',$video);
  $t2=explode('"',$t1[1]);
  $image=$t2[0];
- $t1=explode('<a class="name',$video);
+ $t1=explode('<a class="name"',$video);
  $t2=explode('>',$t1[1]);
  $t3=explode('<',$t2[1]);
- $title=$t3[0];
-  if ($title && !preg_match("/class\=\"status\"\>/",$video)) $f[] = array($title,$link,$image);
+ $title=trim($t3[0]);
+  if ($title && preg_match("/\/movie\//",$link)) $f[] = array($title,$link,$image);
 }
 //echo $html;
 foreach($f as $key => $value) {

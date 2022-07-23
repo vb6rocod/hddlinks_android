@@ -236,6 +236,30 @@ if (preg_match("/(srt|txt|vtt)/i",$ext)) {
    echo "Am salvat subtitrarea";
    } else
    echo "Nu am putut salva subtitrarea!";
+} else if (preg_match("/(sub)/i",$ext)) {
+   $file_srt=$base_sub."sub_extern.srt";
+   //$fp = fopen($file_srt, 'w');
+   $ch = curl_init();
+   curl_setopt($ch, CURLOPT_URL, $l);
+   curl_setopt($ch, CURLOPT_USERAGENT, $ua);
+   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+   curl_setopt($ch, CURLOPT_HEADER, false);
+   curl_setopt($ch,CURLOPT_REFERER,"https://www.titrari.ro");
+   curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+   //curl_setopt($ch, CURLOPT_FILE, $fp);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+   $h1=curl_exec($ch);
+   curl_close($ch);
+   //fclose($fp);
+   if ($h1) {
+   //$h1=prepare_sub($h1);
+   $fh = fopen($file_srt, 'w');
+   fwrite($fh, $h1);
+   fclose($fh);
+   echo "Am salvat subtitrarea";
+   } else
+   echo "Nu am putut salva subtitrarea!";
 } else if (preg_match("/zip/i",$ext)) {
    $file_srt=$base_sub."sub.zip";
 
@@ -267,7 +291,7 @@ $sub= mb_convert_encoding(
     "UTF-8"
 );
       //$sub=$zip->getNameIndex($i);
-      if (preg_match('/(\.srt|\.txt)/i', basename($sub))) {
+      if (preg_match('/(\.srt|\.txt|\.sub)/i', basename($sub))) {
         //$zip->extractTo('path/to/extraction/', array($zip->getNameIndex($i)));
         $arrsub[]=$sub;
         // here you can run a custom function for the particular extracted file
@@ -329,7 +353,7 @@ $sub= mb_convert_encoding(
     "HTML-ENTITIES",
     "UTF-8"
 );
-if (preg_match('/(\.srt|\.txt)/i', basename($sub))) {
+if (preg_match('/(\.srt|\.txt|\.sub)/i', basename($sub))) {
 if (strpos($base_sub,":") !== false) $sub=str_replace("\\","/",$sub);
 $arrsub[] = $sub;
 }

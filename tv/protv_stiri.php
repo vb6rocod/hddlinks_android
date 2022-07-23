@@ -102,7 +102,7 @@ $l="https://stirileprotv.ro/ajax/box/Article_ArticleVideosList/ajaxGetMenuItemsA
   $html = curl_exec($ch);
   curl_close($ch);
   //echo $html;
-$videos = explode('<div class="col-lg-4', $html);
+$videos = explode('<div class="vid_item', $html);
 
 unset($videos[0]);
 $videos = array_values($videos);

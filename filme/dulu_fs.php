@@ -133,7 +133,7 @@ function off() {
 <?php
 echo '<h2>'.$tit.$tit2.'</H2>';
 echo '<BR>';
-
+//echo $link;
 $r=array();
 $ua="Mozilla/5.0 (Windows NT 10.0; rv:80.0) Gecko/20100101 Firefox/80.0";
 $host=parse_url($link)['host'];
@@ -151,7 +151,10 @@ $host=parse_url($link)['host'];
   $h = curl_exec($ch);
   curl_close($ch);
   //echo $h;
+  if ($tip == "movie")
   preg_match_all("/data\-type\=\'movie\' data\-post\=\'(\w+)\' data\-nume\=\'(\w+)\'/",$h,$m);
+  else
+  preg_match_all("/data\-type\=\'tv\' data\-post\=\'(\w+)\' data\-nume\=\'(\w+)\'/",$h,$m);
   //print_r ($m);
   $l="https://www.dulu.to/wp-admin/admin-ajax.php";
   $ch = curl_init();
@@ -165,7 +168,10 @@ $host=parse_url($link)['host'];
   curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
   curl_setopt($ch, CURLOPT_TIMEOUT, 25);
   for ($k=0;$k<count($m[0]);$k++) {
+  if ($tip =="movie")
   $post="action=doo_player_ajax&post=".$m[1][$k]."&nume=".$m[2][$k]."&type=movie";
+  else
+  $post="action=doo_player_ajax&post=".$m[1][$k]."&nume=".$m[2][$k]."&type=tv";
   $head=array('Accept: */*',
   'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
   'Accept-Encoding: deflate',

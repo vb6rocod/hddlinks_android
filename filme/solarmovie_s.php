@@ -18,6 +18,7 @@ $has_search="yes";
 $has_add="yes";
 $has_fs="yes";
 $last_good="https://www2.solarmovie.to";
+$last_good="https://yesmovies.ag";
 $host=parse_url($last_good)['host'];
 $fav_target="solarmovie_s_fav.php?host=".$last_good;
 $add_target="solarmovie_s_add.php";
@@ -207,7 +208,7 @@ foreach($videos as $video) {
   $t2 = explode('"', $t1[1]);
   $title = $t2[0];
   $title = prep_tit($title);
-  $t1 = explode('data-src="', $video);
+  $t1 = explode('data-original="', $video);
   $t2 = explode('"', $t1[1]);
   $image = $t2[0];
   if (strpos($image,"http") === false) $image="https:".$image;

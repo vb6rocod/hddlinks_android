@@ -12,18 +12,20 @@ $tit=$_GET["title"];
 $link=$_GET["link"];
 $width="200px";
 $height="278px";
-$last_good="https://tofmovies.net";
+$last_good="https://2embed.to";
+//$last_good="https://allmoviesforyou.co";
+// https://cinemashack.co/movies/
 $host=parse_url($last_good)['host'];
 /* ==================================================== */
 $has_fav="yes";
 $has_search="yes";
 $has_add="yes";
 $has_fs="yes";
-$fav_target="tofmovies_f_fav.php?host=".$last_good;
-$add_target="tofmovies_f_add.php";
+$fav_target="2embed_f_fav.php?host=".$last_good;
+$add_target="2embed_f_add.php";
 $add_file="";
-$fs_target="tofmovies_fs.php";
-$target="tofmovies_f.php";
+$fs_target="2embed_fs.php";
+$target="2embed_f.php";
 /* ==================================================== */
 $base=basename($_SERVER['SCRIPT_FILENAME']);
 $p=$_SERVER['QUERY_STRING'];
@@ -167,13 +169,18 @@ if ($page==1) {
    echo '<TD class="nav" colspan="4" align="right"><a href="'.$prev.'">&nbsp;&lt;&lt;&nbsp;</a> | <a href="'.$next.'">&nbsp;&gt;&gt;&nbsp;</a></TD>'."\r\n";
 }
 echo '</TR>'."\r\n";
-$f=array();
+$r=array();
 if ($tip=="search") {
- $search=str_replace(" ","+",$tit);
- $l="https://".$host."/search-query/".$search."/page/".$page."/";
+ $search= str_replace(" ","+",$tit);
+ if ($page==1)
+  $l=$last_good."/library/search?keyword=".$search;
+ else
+  $l=$last_good."/library/search?keyword=".$search."&page=".$page;
 } else {
- $l="https://".$host."/movies/page/".$page."/";
+  $l=$last_good."/library";
 }
+//https://www.2embed.to/library/search?keyword=star&page=2
+$host=parse_url($l)['host'];
 $ua="Mozilla/5.0 (Windows NT 10.0; rv:75.0) Gecko/20100101 Firefox/75.0";
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $l);
@@ -185,43 +192,42 @@ $ua="Mozilla/5.0 (Windows NT 10.0; rv:75.0) Gecko/20100101 Firefox/75.0";
   curl_setopt($ch, CURLOPT_TIMEOUT, 25);
   $h = curl_exec($ch);
   curl_close($ch);
-
+$path = parse_url($l)['path'];
+//echo $h;
 $host=parse_url($l)['host'];
-$videos = explode('div class="item', $h);
+
+$videos = explode('<div class="film-poster"', $h);
 unset($videos[0]);
 $videos = array_values($videos);
 foreach($videos as $video) {
- $t1=explode('href="',$video);
+ if (preg_match("/\/library\/movie\//",$video)) {
+ $t1=explode('/library/movie/',$video);
  $t2=explode('"',$t1[1]);
- $link=$t2[0];
+ $link="https://www.2embed.to/embed/tmdb/movie?id=".$t2[0];
+ $t3=explode('class="bop-name">',$video);
+ $t4=explode('<',$t3[1]);
+ $title=trim($t4[0]);
+ $title=prep_tit($title);
  $t1=explode('src="',$video);
  $t2=explode('"',$t1[1]);
  $image=$t2[0];
- $t1=explode('a class="name',$video);
- $t2=explode('>',$t1[1]);
- $t3=explode('<',$t2[1]);
- $title=$t3[0];
-  if ($title && strpos($link,"/tv") === false) $f[] = array($title,$link,$image);
+
+ $year="";
+ $r[] = array($title,$link,$image,$year);
+ }
 }
 //echo $html;
-foreach($f as $key => $value) {
-  $title=$value[0];
-  $title=prep_tit($title);
-  $link=$value[1];
-  $image=$value[2];
-  $year="";
+$c=count($r);
+for ($k=0;$k<$c;$k++) {
+  $link=$r[$k][1];
+  $title=$r[$k][0];
+  $image=$r[$k][2];
+  $year=$r[$k][3];
   $imdb="";
-  $year="";
-  $rest = substr($title, -6);
-  if (preg_match("/\((\d{4})\)/",$rest,$m)) {
-   $year=$m[1];
-   $tit_imdb=trim(str_replace($m[0],"",$title));
-  } else {
-   $year="";
-   $tit_imdb=$title;
-  }
+
+  $tit_imdb=$title;
   $link_f=$fs_target.'?tip=movie&link='.urlencode($link).'&title='.urlencode(fix_t($title)).'&image='.$image."&sez=&ep=&ep_tit=&year=".$year;
-  if ($title && strpos($link,"/show") === false) {
+  if ($title) {
   if ($n==0) echo '<TR>'."\r\n";
   $val_imdb="tip=movie&title=".urlencode(fix_t($tit_imdb))."&year=".$year."&imdb=".$imdb;
   $fav_link="mod=add&title=".urlencode(fix_t($title))."&link=".urlencode($link)."&image=".urlencode($image)."&year=".$year;

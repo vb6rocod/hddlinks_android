@@ -10,7 +10,7 @@ $year=$_GET['year'];
 /* ======================================= */
 $width="200px";
 $height="100px";
-$fs_target="uniquestream_fs.php";
+$fs_target="dulu_fs.php";
 $has_img="yes";
 ?>
 <html>
@@ -43,14 +43,14 @@ $head=array('Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image
   curl_setopt($ch, CURLOPT_RETURNTRANSFER  ,1);  // RETURN THE CONTENTS OF THE CALL
   curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
   curl_setopt($ch, CURLOPT_HTTPHEADER,$head);
-  curl_setopt($ch, CURLOPT_ENCODING,"");
   //curl_setopt($ch, CURLOPT_COOKIEJAR, $cookie);
   //curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie);
   //curl_setopt($ch, CURLOPT_HEADER,1);
-  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
-  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 25);
   $h = curl_exec($ch);
   curl_close ($ch);
+  //die();
 //echo $h;
 $n=0;
 $videos = explode("<span class='se-t", $h);
@@ -112,12 +112,8 @@ foreach($videos as $video) {
   if (preg_match("/\.png/",$img_ep)) $img_ep=$image;
   $t1=explode("numerando'>",$vid);
   $t2=explode("<",$t1[1]);
-  $num=$t2[0];
-  if (preg_match("/\d+\s*\-\s*(\d+)/",$num,$m)) {
-    $episod=$m[1];
-  } else {
-    $episod="";
-  }
+  $episod=$t2[0];
+  
   if ($ep_tit)
    $ep_tit_d=$season."x".$episod." ".$ep_tit;
   else

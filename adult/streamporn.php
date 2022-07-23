@@ -226,7 +226,7 @@ $host=parse_url($l)['host'];
   curl_setopt($ch, CURLOPT_TIMEOUT, 15);
   $html = curl_exec($ch);
   curl_close($ch);
-
+//echo $html;
 $r=array();
 $videos=explode('<div data-movie-id',$html);
 unset($videos[0]);
@@ -244,9 +244,9 @@ foreach($videos as $video) {
   $t2 = explode('"', $t1[1]);
   $image = $t2[0];
   if (!$image) {
-    $t1 = explode('src="', $video);
+    $t1 = explode('src="https', $video);
     $t2 = explode('"', $t1[1]);
-    $image = $t2[0];
+    $image = "https".$t2[0];
   }
   if (strpos($image,"http") === false) $image="http:".$image;
   $durata="";

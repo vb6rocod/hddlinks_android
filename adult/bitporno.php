@@ -230,9 +230,10 @@ foreach($videos as $video) {
   $t2 = explode('"', $t1[1]);
   $link = $t2[0];
   if (strpos($link,"http") === false) $link="https://www.bitporno.com".$link;
-  $t1=explode('color:#343434;">',$video);
-  $t2=explode('<',$t1[1]);
-  $title = trim(strip_tags($t2[0]));
+  $t1=explode('<div style',$video);
+  $t2=explode('>',$t1[1]);
+  $t3=explode('<',$t2[1]);
+  $title = trim(strip_tags($t3[0]));
   $title = prep_tit($title);
   $t1 = explode('src="', $video);
   $t2 = explode('"', $t1[1]);

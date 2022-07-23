@@ -7,7 +7,7 @@ $mod=$_POST["mod"];
 $link=$_POST["link"];
 $title=$_POST["title"];
 $image=urldecode($_POST["image"]);
-$file=$base_fav."tofmovies_f.dat";
+$file=$base_fav."2embed_f.dat";
 $arr=array();
 $h="";
 if (file_exists($file)) {
@@ -36,46 +36,12 @@ if ($mod=="add") {
   }
   if (!$found) {
     $arr[$title]["link"]=$link;
-    if ($image=="blank.jpg") {
-     $ua="Mozilla/5.0 (Windows NT 10.0; rv:80.0) Gecko/20100101 Firefox/80.0";
-     $ch = curl_init($link);
-     curl_setopt($ch, CURLOPT_USERAGENT, $ua);
-     curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
-     curl_setopt($ch, CURLOPT_RETURNTRANSFER  ,1);  // RETURN THE CONTENTS OF THE CALL
-     curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-     curl_setopt($ch, CURLOPT_HEADER,1);
-     curl_setopt($ch, CURLOPT_REFERER,"https://www.goojara.to");
-     curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
-     curl_setopt($ch, CURLOPT_TIMEOUT, 15);
-     $h = curl_exec($ch);
-     curl_close ($ch);
-     $t1=explode('img src="',$h);
-     $t2=explode('"',$t1[1]);
-     $image=$t2[0];
-    }
     $arr[$title]["image"]=$image;
     echo "Am adaugat filmul ".unfix_t(urldecode($title));
   }
   ksort($arr);
   } else {
     $arr[$title]["link"]=$link;
-    if ($image=="blank.jpg") {
-     $ua="Mozilla/5.0 (Windows NT 10.0; rv:80.0) Gecko/20100101 Firefox/80.0";
-     $ch = curl_init($link);
-     curl_setopt($ch, CURLOPT_USERAGENT, $ua);
-     curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
-     curl_setopt($ch, CURLOPT_RETURNTRANSFER  ,1);  // RETURN THE CONTENTS OF THE CALL
-     curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-     curl_setopt($ch, CURLOPT_HEADER,1);
-     curl_setopt($ch, CURLOPT_REFERER,"https://www.goojara.to");
-     curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
-     curl_setopt($ch, CURLOPT_TIMEOUT, 15);
-     $h = curl_exec($ch);
-     curl_close ($ch);
-     $t1=explode('img src="',$h);
-     $t2=explode('"',$t1[1]);
-     $image=$t2[0];
-    }
     $arr[$title]["image"]=$image;
     echo "Am adaugat filmul ".unfix_t(urldecode($title));
   }

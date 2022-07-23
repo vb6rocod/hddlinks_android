@@ -12,18 +12,19 @@ $tit=$_GET["title"];
 $link=$_GET["link"];
 $width="200px";
 $height="278px";
-$last_good="https://azseries.org";
+$last_good="https://hdmoviebox.org";
+
 $host=parse_url($last_good)['host'];
 /* ==================================================== */
 $has_fav="yes";
 $has_search="yes";
 $has_add="yes";
 $has_fs="yes";
-$fav_target="azseries_f_fav.php?host=".$last_good;
-$add_target="azseries_f_add.php";
+$fav_target="hdmoviebox_f_fav.php?host=".$last_good;
+$add_target="hdmoviebox_f_add.php";
 $add_file="";
-$fs_target="azseries_fs.php";
-$target="azseries_f.php";
+$fs_target="hdmoviebox_fs.php";
+$target="hdmoviebox_f.php";
 /* ==================================================== */
 $base=basename($_SERVER['SCRIPT_FILENAME']);
 $p=$_SERVER['QUERY_STRING'];
@@ -170,81 +171,75 @@ echo '</TR>'."\r\n";
 $f=array();
 if ($tip=="search") {
  $search= str_replace(" ","+",$tit);
- if ($page==1)
-  $l=$last_good."/?s=".$search;
- else
-  $l=$last_good."/page/".$page."/?s=".$search;
+ $l=$last_good."/search?qr=".$search;
 } else {
  if ($page==1)
-  $l=$last_good."/movie/";
+  $l=$last_good."/latest-movies";
  else
-  $l=$last_good."/movie/page/".$page."/";
+  $l=$last_good."/latest-movies/".$page;
 }
-$ua="Mozilla/5.0 (Windows NT 10.0; rv:75.0) Gecko/20100101 Firefox/75.0";
-  $ch = curl_init();
-  curl_setopt($ch, CURLOPT_URL, $l);
-  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+$ua="Mozilla/5.0 (Windows NT 10.0; rv:102.0) Gecko/20100101 Firefox/102.0";
+$head=array('Accept: application/json, text/javascript, */*; q=0.01',
+'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
+'Accept-Encoding: deflate',
+'X-Requested-With: XMLHttpRequest',
+'Origin: https://hdmoviebox.org',
+'Alt-Used: hdmoviebox.org',
+'Connection: keep-alive',
+'Referer: https://hdmoviebox.org/latest-movies');
+  $ch = curl_init($l);
   curl_setopt($ch, CURLOPT_USERAGENT, $ua);
   curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER  ,1);  // RETURN THE CONTENTS OF THE CALL
   curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+  curl_setopt($ch, CURLOPT_HTTPHEADER,$head);
+  curl_setopt($ch, CURLOPT_ENCODING, "");
   curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
   curl_setopt($ch, CURLOPT_TIMEOUT, 25);
   $h = curl_exec($ch);
-  curl_close($ch);
+  curl_close ($ch);
+$path = parse_url($l)['path'];
 //echo $h;
 $host=parse_url($l)['host'];
-$videos = explode('<article id="post-', $h);
+if ($tip == "release") {
+$videos = explode('<li class="segment-poster"', $h);
 unset($videos[0]);
 $videos = array_values($videos);
 foreach($videos as $video) {
  $t1=explode('href="',$video);
  $t2=explode('"',$t1[1]);
- $link=$t2[0];
- $t1=explode('"',$video);
- $id=$t1[0];
- $t1=explode('src="',$video);
+ $link=$last_good.$t2[0];
+
+ $t1=explode('data-src="',$video);
  $t2=explode('"',$t1[1]);
  $image=$t2[0];
- $t1=explode('alt="',$video);
- $t2=explode('"',$t1[1]);
+ $t1=explode('h2 class="truncate">',$video);
+ $t2=explode('<',$t1[1]);
  $title=trim($t2[0]);
- $title=preg_replace("/\s*Watch Online/i","",$title);
-  if ($title && preg_match("/\/movie\//",$link)) $f[] = array("title"=>$title,"id"=>$id,"image"=>$image);
+ $title=preg_replace("/\((hdcam|cam|hdts|blu\-ray)\)/i","",$title);
+ $t1=explode('class="item year">',$video);
+ $t2=explode('<',$t1[1]);
+ $year=$t2[0];
+ $f[] = array($title,$link,$image,$year);
 }
-function unique_multidim_array($array, $key) {
-    $temp_array = array();
-    $i = 0;
-    $key_array = array();
-
-    foreach($array as $val) {
-        if (!in_array($val[$key], $key_array)) {
-            $key_array[$i] = $val[$key];
-            $temp_array[$i] = $val;
-        }
-        $i++;
-    }
-    return $temp_array;
+} else {
+  $x=json_decode($h,1)['data']['result'];
+  for ($k=0;$k<count($x);$k++) {
+   if (isset($x[$k]['s_link']))
+     if ($x[$k]['s_type'] == 1)
+      $f[]=array($x[$k]['s_name'],$last_good."/watch/".$x[$k]['s_link'],$last_good."/uploads/series/".$x[$k]['s_image'],$x[$k]['s_year']);
+  }
 }
-//print_r ($f);
-$f=unique_multidim_array($f,"title");
-//$f[]=array_unique($f);
 //echo $html;
 foreach($f as $key => $value) {
-  $title=$value["title"];
+  $title=$value[0];
   $title=prep_tit($title);
-  $link=$value["id"];
-  $image=$value["image"];
-  $year="";
+  $link=$value[1];
+  $image=$value[2];
+  $year=$value[3];
   $imdb="";
-  $year="";
-  $rest = substr($title, -6);
-  if (preg_match("/\(?(\d{4})\)?/",$rest,$m)) {
-   $year=$m[1];
-   $tit_imdb=trim(str_replace($m[0],"",$title));
-  } else {
-   $year="";
-   $tit_imdb=$title;
-  }
+
+  $tit_imdb=$title;
   $link_f=$fs_target.'?tip=movie&link='.urlencode($link).'&title='.urlencode(fix_t($title)).'&image='.$image."&sez=&ep=&ep_tit=&year=".$year;
   if ($title) {
   if ($n==0) echo '<TR>'."\r\n";

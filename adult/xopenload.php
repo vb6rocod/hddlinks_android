@@ -244,9 +244,9 @@ foreach($videos as $video) {
   $t2 = explode('"', $t1[1]);
   $image = $t2[0];
   if (!$image) {
-    $t1 = explode('src="', $video);
+    $t1 = explode('src="https', $video);
     $t2 = explode('"', $t1[1]);
-    $image = $t2[0];
+    $image = "https".$t2[0];
   }
   if (strpos($image,"http") === false) $image="http:".$image;
   $durata="";
