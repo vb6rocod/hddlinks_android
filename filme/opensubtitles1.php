@@ -148,6 +148,7 @@ if (!$imdbid) {
   if (preg_match('/https:\/\/www.imdb.com\/title\/(tt\d+)/ms', $h, $match))
    $imdbid=str_replace("tt","",$match[1]);
 }
+if ($imdbid) $imdbid=round($imdbid);
 //echo $sub_link ="from=".$from."&tip=".$tip."&sez=".$sez."&ep=".$ep."&imdb=".$imdbid."&title=".$title."&link=".$link;
 if (file_exists($base_pass."opensubtitles.txt")) {
  $h=file_get_contents($base_pass."opensubtitles.txt");

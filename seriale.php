@@ -88,8 +88,8 @@ document.onkeypress =  zx;
 </TR>
 
 <TR>
-<TD width="25%"><a href="filme/noxx_s.php?page=1&tip=release&title=noxx&link=" target="_blank">noxx</a></TD>
-<TD width="25%"><a href="filme/gerryreid_s.php?page=1&tip=release&title=gerryreid&link=" target="_blank">gerryreid</a></TD>
+<TD width="25%"><a href="filme/moviehab_s.php?page=1&tip=release&title=moviehab&link=" target="_blank">moviehab</a></TD>
+<TD width="25%"><a href="filme/emovies_s.php?page=1&tip=release&title=emovies&link=" target="_blank">emovies</a></TD>
 <TD width="25%"><a href="filme/m4uhd_s.php?page=1&tip=release&title=m4uhd&link=" target="_blank">m4uhd</a></TD>
 <TD width="25%"><a href="filme/sockshare_s.php?page=1&tip=release&title=sockshare&link=" target="_blank">sockshare</a></TD>
 </TR>
@@ -102,10 +102,16 @@ document.onkeypress =  zx;
 </TR>
 
 <TR>
-<TD width="25%"><a href="filme/dulu_s.php?page=1&tip=release&title=dulu&link=" target="_blank">dulu</a></TD>
+<TD width="25%"></TD>
 <TD width="25%"><a href="filme/o2tvseries_s.php?page=1&tip=release&title=o2tvseries&link=" target="_blank">o2tvseries</a></TD>
 <TD width="25%"><a href="filme/hdmoviebox_s.php?page=1&tip=release&title=hdmoviebox&link=" target="_blank">hdmoviebox</a></TD>
 <TD width="25%"><a href="filme/2embed_s.php?page=1&tip=release&title=2embed&link=" target="_blank">2embed</a></TD>
+</TR>
+<TR>
+<TD width="25%"><a href="filme/fastmovies_s.php?page=1&tip=release&title=fastmovies&link=" target="_blank">fastmovies</a></TD>
+<TD width="25%"></TD>
+<TD width="25%"></TD>
+<TD width="25%"></TD>
 </TR>
 <?php
 if (file_exists($base_pass."tvplay.txt")) {

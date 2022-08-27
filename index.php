@@ -223,6 +223,8 @@ $firefox = $base_pass."firefox.txt";
 $ua="Mozilla/5.0 (Windows NT 10.0; rv:80.0) Gecko/20100101 Firefox/80.0";
 if (!file_exists($firefox))
   file_put_contents($firefox,$ua);
+if (!file_exists($base_pass."tmdb.txt"))
+  file_put_contents($base_pass."tmdb.txt","d0e6107be30f2a3cb0a34ad2a90ceb6f");
 ?>
 <br>
 <div id="overlay">

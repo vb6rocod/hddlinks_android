@@ -12,10 +12,10 @@ $ep_title=unfix_t(urldecode($_GET["ep_tit"]));
 $ep_title=prep_tit($ep_title);
 $year=$_GET["year"];
 /* ====================== */
-$fs_target = "hdmoviebox_fs.php";
+$fs_target = "fastmovies_fs.php";
 $width="200px";
 $height="100px";
-$has_img="no";
+$has_img="yes";
 ?>
 <html><head>
 <meta http-equiv="content-type" content="text/html; charset=UTF-8">
@@ -36,45 +36,38 @@ function str_between($string, $start, $end){
 echo '<h2>'.$tit.'</h2><BR>';
 echo '<table border="1" width="100%">'."\n\r";
 //echo '<TR><td style="color:#000000;background-color:deepskyblue;text-align:center" colspan="3" align="center">'.$tit.'</TD></TR>';
-$ua="Mozilla/5.0 (Windows NT 10.0; rv:102.0) Gecko/20100101 Firefox/102.0";
+$ua="Mozilla/5.0 (Windows NT 10.0; rv:80.0) Gecko/20100101 Firefox/80.0";
   $host=parse_url($link)['host'];
-  $last_good="https://".$host;
-$head=array('Accept: application/json, text/javascript, */*; q=0.01',
+$head=array('Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8',
 'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
 'Accept-Encoding: deflate',
-'X-Requested-With: XMLHttpRequest',
-'Origin: '.$last_good,
 'Connection: keep-alive',
-'Referer: '.$last_good);
-  $ch = curl_init($link);
+'Referer: https://fastmovies.to/',
+'Cookie: PHPSESSID=');
+  $ch = curl_init();
+  curl_setopt($ch, CURLOPT_URL, $link);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
   curl_setopt($ch, CURLOPT_USERAGENT, $ua);
   curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
-  curl_setopt($ch, CURLOPT_RETURNTRANSFER  ,1);  // RETURN THE CONTENTS OF THE CALL
-  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
   curl_setopt($ch, CURLOPT_HTTPHEADER,$head);
-  curl_setopt($ch, CURLOPT_ENCODING, "");
+  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+  curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
   curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
   curl_setopt($ch, CURLOPT_TIMEOUT, 25);
   $h = curl_exec($ch);
-  curl_close ($ch);
-  $t1=explode('<script type="application/ld+json">',$h);
-  $t2=explode('</script>',$t1[1]);
-  $h=$t2[0];
-$n=0;
-$z=1;
-$path = parse_url($link)['path'];
-//echo $h;
-$host=parse_url($link)['host'];
-$videos = explode('"@type": "TVSeason"', $h);
-$sezoane=array();
-//$link_sezoane=array();
-unset($videos[0]);
-$videos = array_values($videos);
-//$videos = array_reverse($videos);
-foreach($videos as $video) {
-  if (preg_match("/\"seasonNumber\"\:\s+\"(\d+)\"/i",$video,$m))
-     $sezoane[]=$m[1];
-}
+  curl_close($ch);
+  //echo $h;
+  if (preg_match("/id\:\s*\'(\d+)/",$h,$m))
+  $id=$m[1];
+  $t1=explode('epi:',$h);
+  $t2=explode('error:',$t1[1]);
+  $x=trim($t2[0]);
+  $x = substr($x, 0, -1);
+  $yy=json_decode($x,1);
+//print_r ($yy);
+  foreach ($yy as $key=>$value) {
+   $sezoane[]=$key;
+  }
 echo '<table border="1" width="100%">'."\n\r";
 
 $p=0;
@@ -95,39 +88,40 @@ if ($p < 10 && $p > 0 && $k > 9) {
 }
 echo '</TABLE>';
 //$z=1;
-$p=0;
-$k=0;
-
-foreach($videos as $video) {
-  if (preg_match("/\"seasonNumber\"\:\s+\"(\d+)\"/i",$video,$m))
-     $sez=$m[1];
-  $season=$sez;
+// https://postercdn.com/thumb/220x0/vthumb/2022/07/17692-ep1.jpg
+foreach($yy as $key => $yyy) {
+  $sez = $key;
+  $season=$key;
   echo '<table border="1" width="100%">'."\n\r";
   echo '<TR><td class="sez" style="color:black;background-color:#0a6996;color:#64c8ff;text-align:center" colspan="3">Sezonul '.($sez).'</TD></TR>';
   $n=0;
-
-  $vids = explode('"@type": "TVEpisode"', $video);
-  unset($vids[0]);
-  $vids = array_values($vids);
-  //$vids = array_reverse($vids);
-  foreach($vids as $vid) {
-  $img_ep="";
-  $episod="";
-  $ep_tit="";
-  preg_match("/\"episodeNumber\"\:\s+\"(\d+)\"/",$vid,$m);
-  $episod = $m[1];
-  $t1=explode('url": "',$vid);
-  $t2=explode('"',$t1[1]);
-  $link=$t2[0];
-  $link=str_replace("/series/","/watch/",$link);
-  $t3=explode('"name": "',$vid);
-  $t4=explode('"',$t3[1]);
-  $ep_tit = $t4[0];
-  $img_ep="blank.jpg";
-
-
+  foreach ($yyy as $key=>$value) {
+  //print_r ($yyy);
+  $episod=$key;
+  
+  $ep_tit = $value['title'];
+  $img_ep=$value['thumb'];
+  if (strpos($img_ep,"http") === false) $img_ep="https://postercdn.com".$img_ep;
+  $hash=$value['epi']['1']['0'];
+  $sub=array();
+  $lang="";
+  $srt="";
+  for ($xx=0;$xx<count($value['sub']);$xx++) {
+    $sub[$value['sub'][$xx]['lang']]=$value['sub'][$xx]['url'];
+  }
+  if (isset($sub["Romanian"])) {
+   $srt=$sub["Romanian"];
+   $lang="Romanian";
+  } elseif (isset($sub["English"])) {
+   $srt=$sub["English"];
+   $lang="English";
+  } else {
+   $srt="";
+   $lang="";
+  }
+  $link="id=".$id."&hash=".$hash."&lang=".$lang."&srt=".$srt;
   $year="";
-  $epNr=$episod;
+   $epNr=$episod;
 
   if ($ep_tit)
    $ep_tit_d=$season."x".$episod." ".$ep_tit;
@@ -155,7 +149,6 @@ foreach($videos as $video) {
 
 }
 echo '</table>';
-curl_close($ch);
 ?>
 </body>
 </html>

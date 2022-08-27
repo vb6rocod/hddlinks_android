@@ -17,11 +17,13 @@ $has_fav="yes";
 $has_search="yes";
 $has_add="yes";
 $has_fs="yes";
-$fav_target="gerryreid_s_fav.php?host=https://gerryreid.com";
-$add_target="gerryreid_s_add.php";
+$last_good="https://moviehab.com";
+$host=parse_url($last_good)['host'];
+$fav_target="moviehab_s_fav.php?host=".$last_good;
+$add_target="moviehab_s_add.php";
 $add_file="";
-$fs_target="gerryreid_ep.php";
-$target="gerryreid_s.php";
+$fs_target="moviehab_ep.php";
+$target="moviehab_s.php";
 /* ==================================================== */
 $base=basename($_SERVER['SCRIPT_FILENAME']);
 $p=$_SERVER['QUERY_STRING'];
@@ -168,54 +170,78 @@ echo '</TR>'."\r\n";
 
 $f=array();
 if ($tip=="search") {
- $l="https://gerryreid.com/list/".str_replace(" ","%20",$tit);
+ $search= str_replace(" ","+",$tit);
+ $l=$last_good."/search?term=".$search;
 } else {
- $l="https://gerryreid.com/category/series/page/".$page."/";
+ if ($page==1)
+  $l=$last_good."/library/shows";
+ else
+  $l=$last_good."/library/shows?page=".$page;
 }
+$path = parse_url($l)['path'];
+//echo $h;
+$host=parse_url($l)['host'];
 $ua="Mozilla/5.0 (Windows NT 10.0; rv:75.0) Gecko/20100101 Firefox/75.0";
+$head=array('Accept: text/html, */*; q=0.01',
+'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
+'Accept-Encoding: deflate',
+'X-Requested-With: XMLHttpRequest',
+'Connection: keep-alive',
+'Referer: https://moviehab.com/');
   $ch = curl_init();
-  curl_setopt($ch, CURLOPT_URL, $l);
-  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+  curl_setopt($ch, CURLOPT_URL,$l);
   curl_setopt($ch, CURLOPT_USERAGENT, $ua);
   curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER  ,1);  // RETURN THE CONTENTS OF THE CALL
   curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+  curl_setopt($ch, CURLOPT_ENCODING,"");
+  curl_setopt($ch, CURLOPT_HTTPHEADER,$head);
   curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
   curl_setopt($ch, CURLOPT_TIMEOUT, 25);
   $h = curl_exec($ch);
   curl_close($ch);
-  if (!$h) $h=file_get_contents($l);
 
 $host=parse_url($l)['host'];
-$videos = explode('class="movie-poster">', $h);
+
+$videos = explode('<div class="poster-img lazy', $h);
 unset($videos[0]);
 $videos = array_values($videos);
 foreach($videos as $video) {
  $t1=explode('href="',$video);
  $t2=explode('"',$t1[1]);
  $link=$t2[0];
- $t1=explode('src="',$video);
- $t2=explode('"',$t1[1]);
+
+ $t1=explode('url(',$video);
+ $t2=explode(')',$t1[1]);
  $image=$t2[0];
- $t1=explode('class="movie-title">',$video);
- $t2=explode('title="',$t1[1]);
- $t3=explode('"',$t2[1]);
- $title=$t3[0];
-  if ($title) $f[] = array($title,$link,$image);
+ $t1=explode('class="title mt-',$video);
+ $t2=explode('>',$t1[1]);
+ $t3=explode('<',$t2[1]);
+ $title=trim($t3[0]);
+ $year="";
+ $f[] = array($title,$link,$image,$year,$year);
 }
-
-
 foreach($f as $key => $value) {
   $title=$value[0];
   $title=prep_tit($title);
   $link=$value[1];
   $image=$value[2];
-  $year="";
+  $year=$value[3];
   $imdb="";
-  $link_f=$fs_target.'?tip=series&link='.urlencode($link).'&title='.urlencode(fix_t($title)).'&image='.$image."&sez=&ep=&ep_tit=&year=".$year;
-  if ($title && strpos($link,"/show") === false) {
+  $year="";
+  $sez="";
+  $tit_imdb=$title;
+  if (preg_match("/\-\s*([1-2]\d{3})/",$title,$m)) {
+    $year=$m[1];
+    $title=trim(preg_replace("/\-\s*([1-2]\d{3})/","",$title));
+  }
+  $link_f=$fs_target.'?tip=series&link='.urlencode($link).'&title='.urlencode(fix_t($title)).'&image='.$image."&sez=".$sez."&ep=&ep_tit=&year=".$year;
+  if ($title) {
   if ($n==0) echo '<TR>'."\r\n";
-  $val_imdb="tip=series&title=".urlencode(fix_t($title))."&year=".$year."&imdb=".$imdb;
+  $val_imdb="tip=series&title=".urlencode(fix_t($tit_imdb))."&year=".$year."&imdb=".$imdb;
   $fav_link="mod=add&title=".urlencode(fix_t($title))."&link=".urlencode($link)."&image=".urlencode($image)."&year=".$year;
+
+  $image="r_m.php?file=".$image;
   if ($tast == "NU") {
     echo '<td class="mp" width="25%"><a href="'.$link_f.'" id="myLink'.$w.'" target="_blank" onmousedown="isKeyPressed(event)">
     <img id="myLink'.$w.'" src="'.$image.'" width="'.$width.'" height="'.$height.'"><BR>'.$title.'</a>

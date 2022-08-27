@@ -50,6 +50,7 @@ $tip=$_GET["tip"];
 $sez=$_GET["sez"];
 $ep=$_GET["ep"];
 $imdbid=$_GET["imdb"];
+if ($imdbid) $imdbid=round($imdbid);
 if (isset($_GET["ep_tit"]))
  $ep_tit=unfix_t(urldecode($_GET["ep_tit"]));
 else

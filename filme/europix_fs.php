@@ -321,7 +321,7 @@ for ($c=0;$c<count($r);$c++) {
   if (preg_match("/watch\-series\.site/",$r[$c])) unset($r[$c]);
   if (preg_match("/2embed\./",$r[$c])) {
     resolve2E($r[$c]);
-    unset($r[$c]);
+    //unset($r[$c]);
   }
   if (preg_match("/vidnext\.net|vidnode\.net|vidembed\.(net|cc|io)|\/vidcloud9\.|membed\.net/",$r[$c])) {
    $head=array('Accept: application/json, text/javascript, */*; q=0.01',
@@ -395,15 +395,7 @@ if ($tip=="movie") {
   $link_page="";
 }
 $sub_link ="from=".$from."&tip=".$tip."&sez=".$sez."&ep=".$ep."&imdb=".$imdbid."&title=".urlencode(fix_t($tit3))."&link=".$link_page."&ep_tit=".urlencode(fix_t($tit2))."&year=".$year;
-echo '<br>';
-echo '<table border="1" width="100%">';
-echo '<TR><TD style="background-color:#0a6996;color:#64c8ff;font-weight: bold;font-size: 1em" align="center" colspan="4">Alegeti o subtitrare</td></TR>';
-echo '<TR>';
-echo '<TD class="mp"><a id="opensub" href="opensubtitles.php?'.$sub_link.'">opensubtitles</a></td>';
-echo '<TD class="mp"><a id="titrari" href="titrari_main.php?page=1&'.$sub_link.'&page=1">titrari.ro</a></td>';
-echo '<TD class="mp"><a id="subs" href="subs_main.php?'.$sub_link.'">subs.ro</a></td>';
-echo '<TD class="mp"><a id="subtitrari" href="subtitrari_main.php?'.$sub_link.'">subtitrari_noi.ro</a></td>';
-echo '</TR></TABLE>';
+include ("subs.php");
 echo '<table border="1" width="100%"><TR>';
 if ($tip=="movie")
   $openlink=urlencode(fix_t($tit3));

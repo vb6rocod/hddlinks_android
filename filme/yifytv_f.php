@@ -6,6 +6,11 @@ function str_between($string, $start, $end){
 	return substr($string,$ini,$len);
 }
 include ("../common.php");
+if (file_exists($base_pass."player.txt")) {
+$flash=trim(file_get_contents($base_pass."player.txt"));
+} else {
+$flash="direct";
+}
 $page = $_GET["page"];
 $tip= $_GET["tip"];
 $tit=$_GET["title"];
@@ -14,6 +19,8 @@ $width="200px";
 $height="278px";
 $last_good="https://yify.plus";
 // https://spacemov.site/
+// https://spacemov.site/movies/secret-headquarters-2022/
+$last_good="https://spacemov.site";
 $host=parse_url($last_good)['host'];
 /* ==================================================== */
 $has_fav="yes";
@@ -181,18 +188,39 @@ if ($tip=="search") {
  else
   $l=$last_good."/movies/page/".$page."/";
 }
-$ua="Mozilla/5.0 (Windows NT 10.0; rv:75.0) Gecko/20100101 Firefox/75.0";
+$cookie=$base_cookie."yify.dat";
+ if (file_exists("/storage/emulated/0/Download/cookies.txt")) {
+  $h1=file_get_contents("/storage/emulated/0/Download/cookies.txt");
+  file_put_contents($cookie,$h1);
+  unlink ("/storage/emulated/0/Download/cookies.txt");
+ } elseif (file_exists($base_cookie."cookies.txt")) {
+  $h1=file_get_contents($base_cookie."cookies.txt");
+  file_put_contents($cookie,$h1);
+  unlink ($base_cookie."cookies.txt");
+ }
+if (file_exists($base_pass."firefox.txt"))
+ $ua=file_get_contents($base_pass."firefox.txt");
+else
+ $ua=$_SERVER['HTTP_USER_AGENT'];
+
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $l);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
   curl_setopt($ch, CURLOPT_USERAGENT, $ua);
   curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
   curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+  curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie);
+  curl_setopt($ch, CURLOPT_COOKIEJAR, $cookie);
   curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
   curl_setopt($ch, CURLOPT_TIMEOUT, 25);
   $h = curl_exec($ch);
   curl_close($ch);
-
+if (preg_match("/cf\-challenge/",$h)) {
+   if ($flash=="mp")
+    echo '<a href="intent:http://127.0.0.1:8080/scripts/filme/cf.php?site=https://'.$host.'&cookie='.$cookie.'#Intent;package=org.mozilla.firefox;S.title=Cloudflare;end">GET cloudflare cookie</a>';
+   else
+    header('Location: cf.php?site=https://'.$host.'&cookie='.$cookie);
+}
 $host=parse_url($l)['host'];
 if ($tip=="release") {
 $videos = explode('<article id="post-', $h);

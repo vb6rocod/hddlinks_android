@@ -57,14 +57,16 @@ function str_between($string, $start, $end){
 <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.0/jquery.min.js"></script>
 <script type="text/javascript">
 function openlink1(link) {
-  msg="tvseries_link.php?" + link;
+  link1=document.getElementById('file').value;
+  msg="link1.php?file=" + link1 + "&title=" + link;
   window.open(msg);
 }
 function openlink(link) {
   on();
   var request =  new XMLHttpRequest();
-  var the_data = link;
-  var php_file="tvseries_link.php";
+  link1=document.getElementById('file').value;
+  var the_data = "link=" + link1 + "&title=" + link;
+  var php_file="link1.php";
   request.open("POST", php_file, true);			// set the request
 
   // adds a header to tell the PHP script to recognize the data as is sent via POST
@@ -87,6 +89,10 @@ function openlink(link) {
 
 </script>
 <script type="text/javascript">
+function changeserver(s,t) {
+  document.getElementById('server').innerHTML = s;
+  document.getElementById('file').value=t;
+}
    function zx(e){
      var charCode = (typeof e.which == "number") ? e.which : e.keyCode
      //alert (charCode);
@@ -125,59 +131,109 @@ function off() {
 </script>
 <a href='' id='mytest1'></a>
 <?php
-echo '<table border="0px" width="100%"><TR>'."\n\r";
-echo '<TD style="background-color:#0a6996;color:#64c8ff;text-align:center;vertical-align:middle;height:15px"><font size="6px" color="#64c8ff"><b>'.$tit." ".$tit2.'</b></font></td>';
-echo '</TR></TABLE>';
+echo '<h2>'.$tit." ".$tit2.'</H2>';
+echo '<BR>';
+$r=array();
+$s=array();
+$s[]="Server US";
+$s[]="Server EU";
+  $ua="Mozilla/5.0 (Windows NT 10.0; rv:75.0) Gecko/20100101 Firefox/75.0";
+  //echo $link;
+  $l="https://tvseries.net".$link;
+  $ch = curl_init();
+  curl_setopt($ch, CURLOPT_URL, $l);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
+  curl_setopt($ch, CURLOPT_REFERER,$link);
+  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+  curl_setopt($ch, CURLOPT_ENCODING,"");
+  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 25);
+  $h = curl_exec($ch);
+  curl_close($ch);
+  //echo $h;
+  if (preg_match("/imdb\=tt(\d+)/",$h,$m))
+   $imdbid=$m[1];
+  else
+   $imdbid="";
+  $r[]=$l."&s=0";
+  $r[]=$l."&s=1";
+echo '<table border="1" width="100%">';
+echo '<TR><TD class="mp">Alegeti un server: Server curent:<label id="server">'.$s[0].'</label>
+<input type="hidden" id="file" value="'.urlencode($r[0]).'"></td></TR></TABLE>';
+echo '<table border="1" width="100%"><TR>';
+$k=count($r);
+$x=0;
+for ($i=0;$i<$k;$i++) {
+  if ($x==0) echo '<TR>';
+  $c_link=$r[$i];
+  $openload=$s[$i];
+  if (preg_match($indirect,$openload)) {
+  echo '<TD class="mp"><a href="filme_link.php?file='.urlencode($c_link).'&title='.urlencode(unfix_t($tit.$tit2)).'" target="_blank">'.$openload.'</a></td>';
+  } else
+  echo '<TD class="mp"><a id="myLink" href="#" onclick="changeserver('."'".$openload."','".urlencode($c_link)."'".');return false;">'.$openload.'</a></td>';
+  $x++;
+  if ($x==6) {
+    echo '</TR>';
+    $x=0;
+  }
+}
+if ($x < 6 && $x > 0 & $k>6) {
+ for ($k=0;$k<6-$x;$k++) {
+   echo '<TD></TD>'."\r\n";
+ }
+ echo '</TR>'."\r\n";
+}
+echo '</TABLE>';
 if ($tip=="movie") {
   $tit3=$tit;
+  $tit2="";
   $sez="";
   $ep="";
-  $imdbid="";
-  $from="tvseries";
+  $from="";
   $link_page="";
-  $ep_title="";
 } else {
   $tit3=$tit;
   $sez=$sez;
   $ep=$ep;
-  $imdbid="";
-  $from="tvseries";
+  $from="";
   $link_page="";
 }
+  $rest = substr($tit3, -6);
+  if (preg_match("/\((\d+)\)/",$rest,$m)) {
+   $year=$m[1];
+   $tit3=trim(str_replace($m[0],"",$tit3));
+  } else {
+   $year="";
+  }
 $sub_link ="from=".$from."&tip=".$tip."&sez=".$sez."&ep=".$ep."&imdb=".$imdbid."&title=".urlencode(fix_t($tit3))."&link=".$link_page."&ep_tit=".urlencode(fix_t($tit2))."&year=".$year;
 
-echo '<br>';
-echo '<table border="1" width="100%">';
-echo '<TR><TD style="background-color:#0a6996;color:#64c8ff;font-weight: bold;font-size: 1.5em" align="center" colspan="4">Alegeti o subtitrare</td></TR>';
-echo '<TR>';
-echo '<TD class="mp"><a id="opensub" href="opensubtitles.php?'.$sub_link.'">opensubtitles</a></td>';
-echo '<TD class="mp"><a id="titrari" href="titrari_main.php?page=1&'.$sub_link.'&page=1">titrari.ro</a></td>';
-echo '<TD class="mp"><a id="subs" href="subs_main.php?'.$sub_link.'">subs.ro</a></td>';
-echo '<TD class="mp"><a id="subtitrari" href="subtitrari_main.php?'.$sub_link.'">subtitrari_noi.ro</a></td>';
-echo '</TR></TABLE>';
-echo '<table border="1" width="100%">';
-echo '<TR><TD style="background-color:#0a6996;color:#64c8ff;font-weight: bold;font-size: 1.5em" align="center" colspan="4">Alegeti o subtitrare (cauta imdb id)</td></TR>';
-echo '<TR>';
-echo '<TD class="mp"><a id="opensub1" href="opensubtitles1.php?'.$sub_link.'">opensubtitles</a></td>';
-echo '<TD class="mp"><a id="titrari1" href="titrari_main1.php?page=1&'.$sub_link.'&page=1">titrari.ro</a></td>';
-echo '<TD class="mp"><a id="subs1" href="subs_main1.php?'.$sub_link.'">subs.ro</a></td>';
-echo '<TD class="mp"><a id="subtitrari1" href="subtitrari_main1.php?'.$sub_link.'">subtitrari_noi.ro</a></td>';
-echo '</TR></TABLE>';
+include ("subs.php");
 echo '<table border="1" width="100%"><TR>';
-$openlink="tip=".$tip."&link=".urlencode($link)."&title=".urlencode(fix_t($tit))."&sez=".$sez."&ep=".$ep."&ep_title=".urlencode(fix_t($ep_title))."&image=".$image;
+if ($tip=="movie")
+  $openlink=urlencode(fix_t($tit3));
+else
+  $openlink=urlencode(fix_t($tit.$tit2));
  if ($flash != "mp")
    echo '<TD align="center" colspan="4"><a id="viz" onclick="'."openlink1('".$openlink."')".'"'." style='cursor:pointer;'>".'VIZIONEAZA !</a></td>';
  else
    echo '<TD align="center" colspan="4"><a id="viz" onclick="'."openlink('".$openlink."')".'"'." style='cursor:pointer;'>".'VIZIONEAZA !</a></td>';
 echo '</tr>';
 echo '</table>';
-echo '<br>
+echo '<br>';
+$lang="";
+if ($lang) {
+ echo '<b>Subtitles: '.$lang."</b><BR>";
+}
+echo '
 <table border="0px" width="100%">
 <TR>
 <TD><font size="4"><b>Scurtaturi: 1=opensubtitles, 2=titrari, 3=subs, 4=subtitrari, 5=vizioneaza
 <BR>Scurtaturi: 7=opensubtitles, 8=titrari, 9=subs, 0=subtitrari (cauta imdb id)
 </b></font></TD></TR></TABLE>
 ';
+
 include("../debug.html");
 echo '
 <div id="overlay">

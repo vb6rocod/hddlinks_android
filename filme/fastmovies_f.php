@@ -12,20 +12,18 @@ $tit=$_GET["title"];
 $link=$_GET["link"];
 $width="200px";
 $height="278px";
-$last_good="https://cinemashack.co";
-$last_good="https://slickmovie.com";
-// https://cinemashack.co/movies/
+$last_good="https://fastmovies.to";
 $host=parse_url($last_good)['host'];
 /* ==================================================== */
 $has_fav="yes";
 $has_search="yes";
 $has_add="yes";
 $has_fs="yes";
-$fav_target="cinemashack_f_fav.php?host=".$last_good;
-$add_target="cinemashack_f_add.php";
+$fav_target="fastmovies_f_fav.php?host=".$last_good;
+$add_target="fastmovies_f_add.php";
 $add_file="";
-$fs_target="cinemashack_fs.php";
-$target="cinemashack_f.php";
+$fs_target="fastmovies_fs.php";
+$target="fastmovies_f.php";
 /* ==================================================== */
 $base=basename($_SERVER['SCRIPT_FILENAME']);
 $p=$_SERVER['QUERY_STRING'];
@@ -170,97 +168,48 @@ if ($page==1) {
 }
 echo '</TR>'."\r\n";
 $f=array();
-// 16914be9ea
-if ($page==1 && $tip <> "search") {
-$l="https://".$host."/movies/";
-$ua="Mozilla/5.0 (Windows NT 10.0; rv:75.0) Gecko/20100101 Firefox/75.0";
-  $ch = curl_init();
-  curl_setopt($ch, CURLOPT_URL, $l);
-  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
-  curl_setopt($ch,CURLOPT_REFERER,"https://".$host);
-  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
-  curl_setopt($ch, CURLOPT_ENCODING,"");
-  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-  curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
-  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
-  curl_setopt($ch, CURLOPT_TIMEOUT, 25);
-  $h = curl_exec($ch);
-  curl_close($ch);
-  if (preg_match("/nonce\"\:\"(\w+)/",$h,$m))
-    $wp=$m[1];
-  else
-    $wp="66b567a97cxx";
-  file_put_contents($base_cookie.$host.".dat",$wp);
-}
-//$wp="66b567a97c";
-$wp=file_get_contents($base_cookie.$host.".dat");
 if ($tip=="search") {
  $search= str_replace(" ","+",$tit);
- $search=$tit;
- $l="https://".$host."/wp-admin/admin-ajax.php";
- $post='action=action_search&vars={"_wpsearch":"'.$wp.'","taxonomy":"none","search":"'.$search.'","term":"none","type":"movies","genres":[],"years":[],"sort":"1","page":'.$page.'}';
+ if ($page==1)
+  $l=$last_good."/search/?q=".$search;
+ else
+  $l=$last_good."/search/?q=".$search."&p=".$page;
 } else {
-  $post='action=action_search&vars={"_wpsearch":"'.$wp.'","taxonomy":"none","search":"none","term":"none","type":"movies","genres":[],"years":[],"sort":"1","page":'.$page.'}';
-  $l="https://".$host."/wp-admin/admin-ajax.php";
+ if ($page==1)
+  $l=$last_good."/movies-fastmovies.html";
+ else
+  $l=$last_good."/movies-fastmovies.html?p=".$page;
 }
-//echo $l;
-//echo $post;
 $ua="Mozilla/5.0 (Windows NT 10.0; rv:75.0) Gecko/20100101 Firefox/75.0";
-$head=array('Accept: */*',
-'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
-'Accept-Encoding: deflate',
-'Referer: https://'.$host.'/movies/',
-'Content-Type: application/x-www-form-urlencoded',
-'Origin: https://'.$host,
-'Cookie: _ga=GA1.2.1852932270.1656244641; _gid=GA1.2.1471500722.1656244641; dom3ic8zudi28v8lr6fgphwffqoz0j6c=ed08fd08-a556-4cc3-ad36-e8ed8a2f3f5c%3A1%3A1; _gat_gtag_UA_221660782_1=1',
-'Content-Length: '.strlen($post),
-'Connection: keep-alive');
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $l);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
   curl_setopt($ch, CURLOPT_USERAGENT, $ua);
   curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
-  curl_setopt($ch, CURLOPT_HTTPHEADER,$head);
-  curl_setopt($ch, CURLOPT_POST,1);
-  curl_setopt($ch, CURLOPT_POSTFIELDS,$post);
   curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
   curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
   curl_setopt($ch, CURLOPT_TIMEOUT, 25);
   $h = curl_exec($ch);
   curl_close($ch);
-  //echo $h;
-  $x=json_decode($h,1);
-  $h=$x['html'];
-  //echo $h;
 $path = parse_url($l)['path'];
-//echo $h;
-$host=parse_url($l)['host'];
 
-$videos = explode('<article', $h);
+$videos = explode('div class="flw-item">', $h);
 unset($videos[0]);
 $videos = array_values($videos);
 foreach($videos as $video) {
  $t1=explode('href="',$video);
  $t2=explode('"',$t1[1]);
  $link=$t2[0];
- if ($link[0]=="/")
-  $link=$last_good.$link;
- elseif (substr($link, 0, 4) == "http")
-  $link=$t2[0];
- else
-  $link=$last_good.$path.$link;
- $t1=explode('src="',$video);
+
+ $t1=explode('data-src="',$video);
  $t2=explode('"',$t1[1]);
  $image=$t2[0];
- $t1=explode('entry-title">',$video);
- $t2=explode('<',$t1[1]);
+ $t1=explode('<a title="',$video);
+ $t2=explode('"',$t1[1]);
  $title=trim($t2[0]);
+
  $year="";
- $t1=explode('class="year">',$video);
- $t2=explode('<',$t1[1]);
- $year=$t2[0];
-  if (preg_match("/\/movies\//",$link) && !preg_match("/\.svg/",$image)) $f[] = array($title,$link,$image,$year);
+  if (!preg_match("/S\\d+\:E\d+/i",$video)) $f[] = array($title,$link,$image,$year);
 }
 //echo $html;
 foreach($f as $key => $value) {

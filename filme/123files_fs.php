@@ -186,6 +186,21 @@ if ($tip=="movie") {
     $s[]=$key;
     $r[]=get_link($key,$value['code']);
   }
+  /////////////////////////////////////////
+  if ($link) {
+   if ($tip=="movie")
+     $r[]="https://voidboost.net/embed/".$link."?t=20&td=20&tlabel=English&cc=off&plang=en&poster=0";
+   else
+     $r[]="https://voidboost.net/embed/".$link."?&s=".$sez."&e=".$ep."&t=20&td=20&tlabel=English&cc=off&plang=en&poster=0";
+  $s[]="voidboost.net_HI";
+  }
+  if ($link) {
+   if ($tip=="movie")
+     $r[]="https://voidboost.net/embed/".$link."?t=20&td=20&tlabel=English&cc=off&plang=en&poster=1";
+   else
+     $r[]="https://voidboost.net/embed/".$link."?&s=".$sez."&e=".$ep."&t=20&td=20&tlabel=English&cc=off&plang=en&poster=1";
+  $s[]="voidboost.net_LO";
+  }
 echo '<table border="1" width="100%">';
 echo '<TR><TD class="mp">Alegeti un server: Server curent:<label id="server">'.$s[0].'</label>
 <input type="hidden" id="file" value="'.urlencode($r[0]).'"></td></TR></TABLE>';
@@ -229,15 +244,7 @@ if ($tip=="movie") {
 }
 $imdbid=str_replace("tt","",$link);
 $sub_link ="from=".$from."&tip=".$tip."&sez=".$sez."&ep=".$ep."&imdb=".$imdbid."&title=".urlencode(fix_t($tit3))."&link=".$link_page."&ep_tit=".urlencode(fix_t($tit2))."&year=".$year;
-echo '<br>';
-echo '<table border="1" width="100%">';
-echo '<TR><TD style="background-color:#0a6996;color:#64c8ff;font-weight: bold;font-size: 1.5em" align="center" colspan="4">Alegeti o subtitrare</td></TR>';
-echo '<TR>';
-echo '<TD class="mp"><a id="opensub" href="opensubtitles.php?'.$sub_link.'">opensubtitles</a></td>';
-echo '<TD class="mp"><a id="titrari" href="titrari_main.php?page=1&'.$sub_link.'&page=1">titrari.ro</a></td>';
-echo '<TD class="mp"><a id="subs" href="subs_main.php?'.$sub_link.'">subs.ro</a></td>';
-echo '<TD class="mp"><a id="subtitrari" href="subtitrari_main.php?'.$sub_link.'">subtitrari_noi.ro</a></td>';
-echo '</TR></TABLE>';
+include ("subs.php");
 echo '<table border="1" width="100%"><TR>';
 if ($tip=="movie")
   $openlink=urlencode(fix_t($tit3));

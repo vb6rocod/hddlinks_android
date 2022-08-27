@@ -12,18 +12,18 @@ $tip= $_GET["tip"];
 $tit=$_GET["title"];
 $link=$_GET["link"];
 $width="200px";
-$height=intval(200*(140/250))."px";
+$height=intval(200*(360/254))."px";
 /* ==================================================== */
-$has_main="no";
+$has_main="yes";
 $has_fav="no";
 $has_search="yes";
 $has_add="yes";
-$has_fs="no";
+$has_fs="yes";
 $fav_target="adult_fav.php";
 $add_target="adult_add.php";
 $add_file="";
 $fs_target="filme_link.php";
-$target="spankbang.php";
+$target="pornfree.php";
 /* ==================================================== */
 $base=basename($_SERVER['SCRIPT_FILENAME']);
 $p=$_SERVER['QUERY_STRING'];
@@ -202,72 +202,78 @@ else
   echo '<TD class="nav" colspan="4" align="right"><a href="'.$prev.'">&nbsp;&lt;&lt;&nbsp;</a> | <a href="'.$next.'">&nbsp;&gt;&gt;&nbsp;</a></TD>'."\r\n";
 }
 echo '</TR>'."\r\n";
-
+// https://pornkino.cc/adult/page/2/?filter=latest
+// https://pornkino.cc/adult/genres/amateur/page/2
 if($tip=="release") {
-  if ($page > 1)
-  $l="https://pl.spankbang.com/new_videos/".$page.'/';
+  if ($page>1)
+    $l=$link."/page/".$page;
   else
-  $l="https://pl.spankbang.com/new_videos/";
+    $l=$link."/page/".$page;
 } else {
-  $search=str_replace(" ","%20",$tit);
+  $search=str_replace(" ","+",$tit);
   if ($page > 1)
-    $l = "https://pl.spankbang.com/s/".$search."/".$page."/";
+    $l="https://pandamovie.info/search/".$search."/page/".$page."/";
   else
-    $l = "https://pl.spankbang.com/s/".$search;
+    $l="https://pandamovie.info/search/".$search;
 }
 $host=parse_url($l)['host'];
-//$l="https://pl.spankbang.com";
-
-$cookie=$base_cookie."spank.dat";
-$ua     =   $_SERVER['HTTP_USER_AGENT'];
-$ua="Mozilla/5.0 (Windows NT 10.0; rv:89.0) Gecko/20100101 Firefox/89.0";
-$head=array('Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
-'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
-'Accept-Encoding: deflate',
-'Connection: keep-alive',
-'Upgrade-Insecure-Requests: 1');
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $l);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
-  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
-  //curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie);
-  //curl_setopt($ch, CURLOPT_COOKIEJAR, $cookie);
-  curl_setopt($ch, CURLOPT_HTTPHEADER, $head);
-  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+  curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows; U; Windows NT 6.1; en-US; rv:1.9.1.2) Gecko/20090729 Firefox/3.5.2 GTB5');
   curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 25);
   $html = curl_exec($ch);
   curl_close($ch);
-//echo $html;
 $r=array();
-$videos=explode('id="v_id',$html);
+if ($tip=="release") {
+$videos=explode('<article id="post-',$html);
 unset($videos[0]);
 $videos = array_values($videos);
 foreach($videos as $video) {
-  $t1 = explode('href="',$video);
+  $t1=explode('href="',$video);
   $t2 = explode('"', $t1[1]);
   $link = $t2[0];
-  if (strpos($link,"http") === false) $link="https://".$host.$link;
-  $t1=explode('alt="',$video);
-  $t2=explode('"',$t1[1]);
-  $title = trim(strip_tags($t2[0]));
+  $t3=explode('>',$t1[2]);
+  $t2=explode('<',$t3[1]);
+  $title=$t2[0];
+  $title = trim(strip_tags($title));
   $title = prep_tit($title);
-  $t1 = explode('src="', $video);
+  $t1 = explode('data-src="', $video);
   $t2 = explode('"', $t1[1]);
   $image = $t2[0];
-  if (strpos($image,".jpg") === false) {
-    $t1 = explode('data-src="', $video);
-    $t2 = explode('"', $t1[1]);
-    $image = $t2[0];
-  }
   if (strpos($image,"http") === false) $image="https:".$image;
-  $t1=explode('span class="l">',$video);
-  $t2=explode('<',$t1[1]);
-  $durata=$t2[0];
-  //$durata = preg_replace("/\n|\r/"," ",strip_tags($durata));
+  //$image="r.php?file=".$image;
+  $durata="";
+  $durata = preg_replace("/\n|\r/"," ",strip_tags($durata));
   if ($durata) $title=$title." (".$durata.')';
-  if ($title && $link) array_push($r ,array($title,$link, $image));
+  if ($title) array_push($r ,array($title,$link, $image));
+}
+} else {
+$videos=explode('<article',$html);
+unset($videos[0]);
+$videos = array_values($videos);
+foreach($videos as $video) {
+  $t1=explode('href="',$video);
+  $t2 = explode('"', $t1[1]);
+  $link = $t2[0];
+  $t3=explode('>',$t1[2]);
+  $t2=explode('<',$t3[1]);
+  $title=$t2[0];
+  $title = trim(strip_tags($title));
+  $title = prep_tit($title);
+  $t1 = explode('data-src="', $video);
+  $t2 = explode('"', $t1[1]);
+  $image = $t2[0];
+  if (strpos($image,"http") === false) $image="https:".$image;
+  //$image="r.php?file=".$image;
+  $durata="";
+  $durata = preg_replace("/\n|\r/"," ",strip_tags($durata));
+  if ($durata) $title=$title." (".$durata.')';
+  if ($title) array_push($r ,array($title,$link, $image));
+}
 }
 $c=count($r);
 for ($k=0;$k<$c;$k++) {

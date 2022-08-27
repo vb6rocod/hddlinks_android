@@ -13,7 +13,7 @@ $link=$_GET["link"];
 $width="200px";
 $height="278px";
 $last_good="https://hdmoviebox.org";
-
+$last_good="https://hdmoviebox.net";
 $host=parse_url($last_good)['host'];
 /* ==================================================== */
 $has_fav="yes";
@@ -183,10 +183,10 @@ $head=array('Accept: application/json, text/javascript, */*; q=0.01',
 'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
 'Accept-Encoding: deflate',
 'X-Requested-With: XMLHttpRequest',
-'Origin: https://hdmoviebox.org',
+'Origin: '.$last_good,
 'Alt-Used: hdmoviebox.org',
 'Connection: keep-alive',
-'Referer: https://hdmoviebox.org/latest-movies');
+'Referer: '.$last_good);
   $ch = curl_init($l);
   curl_setopt($ch, CURLOPT_USERAGENT, $ua);
   curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);

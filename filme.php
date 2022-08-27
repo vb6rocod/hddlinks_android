@@ -105,7 +105,7 @@ else
 <TR>
 <TD width="25%"><a href="filme/yifytv_f.php?page=1&tip=release&title=yifytv&link=" target="_blank">yifytv</a></TD>
 <TD width="25%"><a href="filme/flixtor_f.php?page=1&tip=release&title=flixtor&link=" target="_blank">flixtor</a></TD>
-<TD width="25%"><a href="filme/gerryreid_f.php?page=1&tip=release&title=gerryreid&link=" target="_blank">gerryreid</a></TD>
+<TD width="25%"><a href="filme/emovies_f.php?page=1&tip=release&title=emovies&link=" target="_blank">emovies</a></TD>
 <TD width="25%"><a href="filme/lookclub_f.php?page=1&tip=release&title=lookclub&link=" target="_blank">lookclub</a></TD>
 </TR>
 
@@ -131,15 +131,15 @@ else
 </TR>
 <TR>
 <TD width="25%"><a href="filme/fmovies_f.php?page=1&tip=release&title=fmovies&link=" target="_blank">fmovies.co</a></TD>
-<TD width="25%"><a href="filme/cinemashack_f.php?page=1&tip=release&title=cinemashack&link=" target="_blank">cinemashack</a></TD>
+<TD width="25%"></TD>
 <TD width="25%"><a href="filme/tv88_f.php?page=1&tip=release&title=tv88&link=" target="_blank">tv88</a></TD>
-<TD width="25%"><a href="filme/dulu_f.php?page=1&tip=release&title=dulu&link=" target="_blank">dulu</a></TD>
+<TD width="25%"></TD>
 </TR>
 <TR>
 <TD width="25%"><a href="filme/hdmoviebox_f.php?page=1&tip=release&title=hdmoviebox&link=" target="_blank">hdmoviebox</a></TD>
 <TD width="25%"><a href="filme/2embed_f.php?page=1&tip=release&title=2embed&link=" target="_blank">2embed</a></TD>
-<TD width="25%"></TD>
-<TD width="25%"></TD>
+<TD width="25%"><a href="filme/moviehab_f.php?page=1&tip=release&title=moviehab&link=" target="_blank">moviehab</a></TD>
+<TD width="25%"><a href="filme/fastmovies_f.php?page=1&tip=release&title=fastmovies&link=" target="_blank">fastmovies</a></TD>
 </TR>
 
 <?php

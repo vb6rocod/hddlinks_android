@@ -17,11 +17,13 @@ $has_fav="yes";
 $has_search="yes";
 $has_add="yes";
 $has_fs="yes";
-$fav_target="noxx_s_fav.php?host=https://noxx.is";
-$add_target="noxx_s_add.php";
+$last_good="https://emovies.si";
+$host=parse_url($last_good)['host'];
+$fav_target="emovies_s_fav.php?host=".$last_good;
+$add_target="emovies_s_add.php";
 $add_file="";
-$fs_target="noxx_s_ep.php";
-$target="noxx_s.php";
+$fs_target="emovies_ep.php";
+$target="emovies_s.php";
 /* ==================================================== */
 $base=basename($_SERVER['SCRIPT_FILENAME']);
 $p=$_SERVER['QUERY_STRING'];
@@ -165,216 +167,70 @@ if ($page==1) {
    echo '<TD class="nav" colspan="4" align="right"><a href="'.$prev.'">&nbsp;&lt;&lt;&nbsp;</a> | <a href="'.$next.'">&nbsp;&gt;&gt;&nbsp;</a></TD>'."\r\n";
 }
 echo '</TR>'."\r\n";
-$cookie=$base_cookie."noxx.dat";
-$cookie1=$base_cookie."noxx.txt";
-$ua="Mozilla/5.0 (Windows NT 10.0; rv:55.0) Gecko/20100101 Firefox/55.0";
-if ($page==1 && $tip=="release") {
-  $head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:55.0) Gecko/20100101 Firefox/55.0',
-  'Accept: */*',
-  'Accept-Language: en-US,en;q=0.5',
-  'Accept-Encoding: gzip, deflate, br',
-  'Referer: https://noxx.is/',
-  'Connection: keep-alive',
-  'Pragma: no-cache',
-  'Cache-Control: no-cache');
-  $l="https://noxx.is/";
-  $l="https://check.ddos-guard.net/check.js";
-  $l="https://check.ddos-guard.net/check.js";
-  $ch = curl_init();
-  curl_setopt($ch, CURLOPT_URL,$l);
-  //curl_setopt($ch, CURLOPT_USERAGENT, $ua);
-  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
-  curl_setopt($ch, CURLOPT_RETURNTRANSFER  ,1);  // RETURN THE CONTENTS OF THE CALL
-  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-  curl_setopt($ch, CURLOPT_ENCODING,"");
-  //curl_setopt($ch, CURLOPT_COOKIEJAR, $cookie);
-  //curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie);
-  curl_setopt($ch, CURLOPT_HEADER,1);
-  curl_setopt($ch, CURLOPT_HTTPHEADER,$head);
-  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
-  curl_setopt($ch, CURLOPT_TIMEOUT, 25);
-  $html = curl_exec($ch);
-  curl_close($ch);
-  //echo $html;
-  if (preg_match("/ddg2\=(\w+)/",$html,$m))
-   $ddg2=$m[1];
-  else
-   $ddg2="";
-   $t1=explode("new Image().src='",$html);
-   $t2=explode("'",$t1[1]);
-   $l=$t2[0];
-
-   $l="https://noxx.is/.well-known/ddos-guard/id/".$ddg2;
-  //$l="https://noxx.is/favicon.ico";
-  //echo $l;
-  $head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:55.0) Gecko/20100101 Firefox/55.0',
-  'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
-  'Accept-Language: en-US,en;q=0.5',
-  'Accept-Encoding: deflate',
-  'Cookie: __ddg2='.$ddg2,
-  'Connection: keep-alive',
-  'Range: bytes=0-');
-//print_r ($head);
-  $ch = curl_init();
-  curl_setopt($ch, CURLOPT_URL,$l);
-  //curl_setopt($ch, CURLOPT_USERAGENT, $ua);
-  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,0);
-  curl_setopt($ch, CURLOPT_RETURNTRANSFER  ,1);  // RETURN THE CONTENTS OF THE CALL
-  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-  curl_setopt($ch, CURLOPT_ENCODING,"");
-  //curl_setopt($ch, CURLOPT_COOKIEJAR, $cookie);
-  //curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie);
-  curl_setopt($ch, CURLOPT_HEADER,1);
-  curl_setopt($ch, CURLOPT_HTTPHEADER,$head);
-  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
-  curl_setopt($ch, CURLOPT_TIMEOUT, 25);
-  $html = curl_exec($ch);
-  curl_close($ch);
-  //echo $html;
-  $ddg1="";
-  if (preg_match("/__ddg2_\=(\w+)/",$html,$m))
-   $ddg2=$m[1];
-  else
-   $ddg2="";
-  file_put_contents($cookie1,'Cookie: __ddg2_='.$ddg2.'; __ddg1_='.$ddg1);
-  $l="https://noxx.is/";
-  $head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:55.0) Gecko/20100101 Firefox/55.0',
-  'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
-  'Accept-Language: en-US,en;q=0.5',
-  'Accept-Encoding: deflate',
-  'Cookie: __ddgid_=; __ddg2_='.$ddg2,
-  'Connection: keep-alive',
-  'Upgrade-Insecure-Requests: 1',
-  'Pragma: no-cache',
-  'Cache-Control: no-cache');
-//print_r ($head);
-  $ch = curl_init();
-  curl_setopt($ch, CURLOPT_URL,$l);
-  //curl_setopt($ch, CURLOPT_USERAGENT, $ua);
-  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
-  curl_setopt($ch, CURLOPT_RETURNTRANSFER  ,1);  // RETURN THE CONTENTS OF THE CALL
-  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-  curl_setopt($ch, CURLOPT_ENCODING,"");
-  curl_setopt($ch, CURLOPT_COOKIEJAR, $cookie);
-  curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie);
-  curl_setopt($ch, CURLOPT_HEADER,1);
-  curl_setopt($ch, CURLOPT_HTTPHEADER,$head);
-  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
-  curl_setopt($ch, CURLOPT_TIMEOUT, 25);
-  $html = curl_exec($ch);
-  curl_close($ch);
-  //echo $html;
-}
-$r=array();
-///////////////////////////////////////////////////////////////////////////
-$c1=file_get_contents($cookie1);
-if ($tip=="release") {
- $l="https://noxx.is/fetch.php";
- $post="no=".(48*($page-1))."&gpar=&qpar=&spar=";    // date%20desc
- // no=48&gpar=&qpar=&spar=date desc
- //$post="no=48&gpar=&qpar=&spar=";
- $head=array('Accept: */*',
- 'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
- 'Accept-Encoding: deflate',
- 'Content-Type: application/x-www-form-urlencoded; charset=UTF-8',
- 'X-Requested-With: XMLHttpRequest',
- 'Content-Length: '.strlen($post).'',
- 'Origin: https://noxx.is',
- 'Connection: keep-alive',
- 'Referer: https://noxx.is/browse',
- $c1);
-  $ch = curl_init($l);
-  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
-  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
-  curl_setopt($ch, CURLOPT_RETURNTRANSFER  ,1);  // RETURN THE CONTENTS OF THE CALL
-  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-  curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie);
-  curl_setopt($ch, CURLOPT_HTTPHEADER,$head);
-  curl_setopt($ch, CURLOPT_POST,1);
-  curl_setopt($ch, CURLOPT_HEADER,1);
-  curl_setopt($ch, CURLOPT_POSTFIELDS,$post);
-  curl_setopt($ch, CURLOPT_ENCODING, "");
-  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
-  curl_setopt($ch, CURLOPT_TIMEOUT, 25);
-  $html = curl_exec($ch);
-  curl_close ($ch);
-  if (preg_match("/404 Not Found/i",$html)) {
-  $head=array('Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
-  'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
-  $c1,
-  'Accept-Encoding: deflate',);
-  $l="https://noxx.is/browse";
-  $ch = curl_init($l);
-  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
-  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
-  curl_setopt($ch, CURLOPT_RETURNTRANSFER  ,1);  // RETURN THE CONTENTS OF THE CALL
-  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-  curl_setopt($ch, CURLOPT_ENCODING, "");
-  curl_setopt($ch,CURLOPT_HTTPHEADER,$head);
-  curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie);
-  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
-  curl_setopt($ch, CURLOPT_TIMEOUT, 25);
-  $html = curl_exec($ch);
-  curl_close ($ch);
-  }
+$f=array();
+if ($tip=="search") {
+ $search= str_replace(" ","+",$tit);
+ if ($page==1)
+  $l=$last_good."/movie/search/".$search;
+ else
+  $l=$last_good."/movie/search/".$search."/".$page;
 } else {
-  $search=str_replace(" ","+",$tit);
-  $l="https://noxx.is/browse?q=".$search;
-  $head=array('Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
-  'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
-  $c1,
-  'Accept-Encoding: deflate',);
-  $ch = curl_init($l);
+ if ($page==1)
+  $l=$last_good."/free-latest-tv-series-online";
+ else
+  $l=$last_good."/free-latest-tv-series-online/".$page;
+}
+$ua="Mozilla/5.0 (Windows NT 10.0; rv:75.0) Gecko/20100101 Firefox/75.0";
+  $ch = curl_init();
+  curl_setopt($ch, CURLOPT_URL, $l);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
   curl_setopt($ch, CURLOPT_USERAGENT, $ua);
+  curl_setopt($ch, CURLOPT_REFERER,$last_good);
+  curl_setopt($ch, CURLOPT_ENCODING,"");
   curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
-  curl_setopt($ch, CURLOPT_RETURNTRANSFER  ,1);  // RETURN THE CONTENTS OF THE CALL
   curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-  curl_setopt($ch, CURLOPT_ENCODING, "");
-  curl_setopt($ch,CURLOPT_HTTPHEADER,$head);
-  curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie);
   curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
   curl_setopt($ch, CURLOPT_TIMEOUT, 25);
-  $html = curl_exec($ch);
-  curl_close ($ch);
-}
-//echo $html;
-///////////////////////////////////////////////////////////////////////////
-$r=array();
-  $videos = explode('<a href="/tv',$html);
-  unset($videos[0]);
-  $videos = array_values($videos);
-  foreach($videos as $video) {
-   //$t1 = explode('href="',$video);
-   $t2=explode('"',$video);
-   $link = "https://noxx.is/tv".$t2[0];
+  $h = curl_exec($ch);
+  curl_close($ch);
+  //echo $h;
+$path = parse_url($l)['path'];
+//echo $h;
+$host=parse_url($l)['host'];
 
-   $t3 = explode('block w-full truncate">', $video);
-   $t4 = explode('<', $t3[1]);
-   $title = $t4[0];
-   $title=prep_tit($title);
-   $t1 = explode('data-src="', $video);
-   $t2 = explode('"', $t1[1]);
-   $image = $t2[0];
-   if (preg_match("/\/tv/",$link)) $r[]=array($link,$title,$image);
-  }
-$c=count($r);
-for ($k=0;$k<$c;$k++) {
-  $title=$r[$k][1];
-  $title=prep_tit($title);
-  $link=$r[$k][0];
-  $image=$r[$k][2];
-  $rest = substr($title, -6);
-  if (preg_match("/\((\d+)\)/",$rest,$m)) {
+$videos = explode('<div data-movie-id="', $h);
+unset($videos[0]);
+$videos = array_values($videos);
+foreach($videos as $video) {
+ $t1=explode('href="',$video);
+ $t2=explode('"',$t1[1]);
+ $link=$t2[0];
+
+ $t1=explode('data-original="',$video);
+ $t2=explode('"',$t1[1]);
+ $image=$t2[0];
+ $t1=explode('title="',$video);
+ $t2=explode('"',$t1[1]);
+ $title=trim($t2[0]);
+  $year="";
+  $imdb="";
+  $sez="";
+  if (preg_match("/(:|-)?\s+Season\s+(\d+)/i",$title,$m)) {
+  $tit_serial=trim(str_replace($m[0],"",$title));
+  $sez=$m[2];
+  $rest = substr($tit_serial, -6);
+  if (preg_match("/\(?(\d{4})\)?/",$rest,$m)) {
    $year=$m[1];
    $tit_imdb=trim(str_replace($m[0],"",$title));
   } else {
    $year="";
-   $tit_imdb=$title;
+   $tit_imdb=$tit_serial;
   }
-
-  $imdb="";
-  $link_f=$fs_target.'?tip=series&link='.urlencode($link).'&title='.urlencode(fix_t($title)).'&image='.$image."&sez=&ep=&ep_tit=&year=".$year;
-  if ($title) {
+  } else {
+    $tit_imdb=$title;
+  }
+  $link_f=$fs_target.'?tip=series&link='.urlencode($link).'&title='.urlencode(fix_t($title)).'&image='.$image."&sez=".$sez."&ep=&ep_tit=&year=".$year;
+  if ($title && preg_match("/Season/",$title)) {
   if ($n==0) echo '<TR>'."\r\n";
   $val_imdb="tip=series&title=".urlencode(fix_t($tit_imdb))."&year=".$year."&imdb=".$imdb;
   $fav_link="mod=add&title=".urlencode(fix_t($title))."&link=".urlencode($link)."&image=".urlencode($image)."&year=".$year;

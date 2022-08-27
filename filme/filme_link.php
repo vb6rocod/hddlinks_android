@@ -1398,7 +1398,7 @@ $s=$s."|fastvid\.co|vidload\.net|rovideo\.net\/embed|eplayvid\.com|dood\.|medias
 $s=$s."|movcloud\.net|dogestream\.|streamtape\.|jawcloud\.|viphdvid\.|evoload\.|sendvid\.|easyload\.io|okstream\.";
 $s=$s."|youdbox\.com|filmele-online\.com|playtube\.|ninjastream\.to|userload\.co|goplayer\.online|videovard\.|cloudemb\.|streamlare\.";
 $s=$s."|sbembed\.com|sbembed1\.com|sbplay\.|sbvideo\.net|streamsb\.net|sbplay\.one|cloudemb\.com|playersb\.com|tubesb\.com|sbplay\d\.|embedsb\.com";
-$s=$s."|sbfast\.com|sbfull\.|tubeload\.|filemoon\./i";
+$s=$s."|sbfast\.com|sbfull\.|sbthe\.|sbspeed\.|tubeload\.|embedo\.|filemoon\./i";
 /////////////////////////////////////////////
 //$x=preg_grep($s,$links);
 //print_r ($x);
@@ -1941,7 +1941,7 @@ if ($cap == 1)  echo '<label id="hqq_msg">'.$msg_captcha."</label>";
 echo '</TABLE>';
 //echo '<img id="load" src= "load.jpg" width="450px" height="450px">';
 
-
+/*
 echo '<BR><table border="1" width="100%">';
 echo '<TR>';
 echo '<TD class="mp"><a id="opensub" href="opensubtitles.php?'.$sub_link.'">opensubtitles</a></td>';
@@ -1957,6 +1957,8 @@ echo '<TD class="mp"><a id="titrari1" href="titrari_main1.php?page=1&'.$sub_link
 echo '<TD class="mp"><a id="subs1" href="subs_main1.php?'.$sub_link.'">subs.ro</a></td>';
 echo '<TD class="mp"><a id="subtitrari1" href="subtitrari_main1.php?'.$sub_link.'">subtitrari_noi.ro</a></td>';
 echo '</TR></TABLE>';
+*/
+include ("subs.php");
 echo '<br>
 <table border="0px" width="100%">
 <TR>

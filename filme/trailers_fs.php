@@ -138,12 +138,14 @@ echo '<BR>';
 $ua="Mozilla/5.0 (Windows NT 10.0; rv:80.0) Gecko/20100101 Firefox/80.0";
 $cookie=$base_cookie."trailers1.dat";
 //echo $link;
+//$link="https://trailers.to/video/dbgo/imdb/tt21440188";
   $host=parse_url($link)['host'];
   $ch = curl_init($link);
   curl_setopt($ch, CURLOPT_USERAGENT, $ua);
   curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER  ,1);  // RETURN THE CONTENTS OF THE CALL
   curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+  curl_setopt($ch, CURLOPT_ENCODING,"");
   curl_setopt($ch, CURLOPT_HEADER,1);
   //curl_setopt($ch, CURLOPT_HTTPHEADER,$head);
   curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie);
@@ -155,7 +157,8 @@ $cookie=$base_cookie."trailers1.dat";
   if (preg_match("/title\/tt(\d+)/",$html,$m))
     $imdbid=$m[1];
   else
-    $imdb="";
+    $imdbid="";
+
   //echo urldecode($html);
   //die();
   // get subtitles
@@ -220,6 +223,7 @@ $head=array('Accept: text/html, */*; q=0.01',
   curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER  ,1);  // RETURN THE CONTENTS OF THE CALL
   curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+  curl_setopt($ch, CURLOPT_ENCODING,"");
   curl_setopt($ch, CURLOPT_HTTPHEADER,$head);
   curl_setopt($ch, CURLOPT_HEADER,1);
   curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie);
@@ -236,6 +240,7 @@ $head=array('Accept: text/html, */*; q=0.01',
   $t1=explode("source src='",$h);
   $t2=explode("'",$t1[1]);
   $l=$t2[0];
+  //$l="https://trailers.to/video/dbgo/imdb/tt".$imdbid;
   $host1=parse_url($l)['host'];
   $l1="https://trailers.to/en/subtitle-details/".$siteID."/ro?selectedContentHash=";
   $ch = curl_init($l1);
@@ -243,6 +248,7 @@ $head=array('Accept: text/html, */*; q=0.01',
   curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER  ,1);  // RETURN THE CONTENTS OF THE CALL
   curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+  curl_setopt($ch, CURLOPT_ENCODING,"");
   curl_setopt($ch, CURLOPT_HTTPHEADER,$head);
   curl_setopt($ch, CURLOPT_HEADER,1);
   curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie);
@@ -262,6 +268,18 @@ $head=array('Accept: text/html, */*; q=0.01',
   // https://learn-movies-university.site/web-sources/E4DC411993AF86DA/4543437/friends-the-reunion-2021
   // https://trailers.to/subtitles/5A95A2814385723B
   //echo $html;
+  if ($imdbid) {
+   if ($tip=="movie")
+     $r[]="https://voidboost.net/embed/tt".$imdbid."?t=20&td=20&tlabel=English&cc=off&plang=en&poster=0";
+   else
+     $r[]="https://voidboost.net/embed/tt".$imdbid."?&s=".$sez."&e=".$ep."&t=20&td=20&tlabel=English&cc=off&plang=en&poster=0";
+  }
+  if ($imdbid) {
+   if ($tip=="movie")
+     $r[]="https://voidboost.net/embed/tt".$imdbid."?t=20&td=20&tlabel=English&cc=off&plang=en&poster=1";
+   else
+     $r[]="https://voidboost.net/embed/tt".$imdbid."?&s=".$sez."&e=".$ep."&t=20&td=20&tlabel=English&cc=off&plang=en&poster=1";
+  }
 echo '<table border="1" width="100%">';
 echo '<TR><TD class="mp">Alegeti un server: Server curent:<label id="server">'.parse_url($r[0])['host'].'</label>
 <input type="hidden" id="file" value="'.urlencode($r[0]).'"></td></TR></TABLE>';
@@ -310,23 +328,7 @@ if ($tip=="movie") {
    $tit3=trim(str_replace($m[0],"",$tit3));
   }
 $sub_link ="from=".$from."&tip=".$tip."&sez=".$sez."&ep=".$ep."&imdb=".$imdbid."&title=".urlencode(fix_t($tit3))."&link=".$link_page."&ep_tit=".urlencode(fix_t($tit2))."&year=".$year;
-echo '<br>';
-echo '<table border="1" width="100%">';
-echo '<TR><TD style="background-color:#0a6996;color:#64c8ff;font-weight: bold;font-size: 1.5em" align="center" colspan="4">Alegeti o subtitrare</td></TR>';
-echo '<TR>';
-echo '<TD class="mp"><a id="opensub" href="opensubtitles.php?'.$sub_link.'">opensubtitles</a></td>';
-echo '<TD class="mp"><a id="titrari" href="titrari_main.php?page=1&'.$sub_link.'&page=1">titrari.ro</a></td>';
-echo '<TD class="mp"><a id="subs" href="subs_main.php?'.$sub_link.'">subs.ro</a></td>';
-echo '<TD class="mp"><a id="subtitrari" href="subtitrari_main.php?'.$sub_link.'">subtitrari_noi.ro</a></td>';
-echo '</TR></TABLE>';
-echo '<table border="1" width="100%">';
-echo '<TR><TD style="background-color:#0a6996;color:#64c8ff;font-weight: bold;font-size: 1.5em" align="center" colspan="4">Alegeti o subtitrare (cauta imdb id)</td></TR>';
-echo '<TR>';
-echo '<TD class="mp"><a id="opensub1" href="opensubtitles1.php?'.$sub_link.'">opensubtitles</a></td>';
-echo '<TD class="mp"><a id="titrari1" href="titrari_main1.php?page=1&'.$sub_link.'&page=1">titrari.ro</a></td>';
-echo '<TD class="mp"><a id="subs1" href="subs_main1.php?'.$sub_link.'">subs.ro</a></td>';
-echo '<TD class="mp"><a id="subtitrari1" href="subtitrari_main1.php?'.$sub_link.'">subtitrari_noi.ro</a></td>';
-echo '</TR></TABLE>';
+include ("subs.php");
 echo '<table border="1" width="100%"><TR>';
 if ($tip=="movie")
   $openlink=urlencode(fix_t($tit3));

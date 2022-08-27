@@ -153,6 +153,7 @@ $l="https://api.themoviedb.org/3/tv/".$link."?api_key=d0e6107be30f2a3cb0a34ad2a9
   curl_close ($ch);
   $x=json_decode($html,1);
   //print_r ($x);
+  //die();
   $imdb=$x['external_ids']['imdb_id'];
 if ($tip=="movie")
 $l="https://fsapi.xyz/tmdb-movie/".$link;
@@ -182,110 +183,131 @@ $l="https://fsapi.xyz/tv-tmdb/".$link."-".$sez."-".$ep;
    $z[]=base64_decode($m[1][$k]);
    $l=base64_decode($m[1][$k]);
    //echo $l."\n";
-   if (preg_match("/vidnext\.net/",$l)) {
+   if (preg_match("/vidnext\.net|membed\./",$l)) {
      if ($l[0] =="/") $l="https:".$l;
      $r[]=$l;
-     $s[]="vidnext.net";
+     $s[]="vidnext";
    }
   }
+  //print_r ($r);
+//die();
 //////////////////////////////////////////////////////////////////
 // 2embed.ru
 if ($tip=="movie")
-  $l="https://www.2embed.ru/embed/tmdb/movie?id=".$link;
+  $l="https://www.2embed.to/embed/tmdb/movie?id=".$link;
 else
-  $l="https://www.2embed.ru/embed/tmdb/tv?id=".$link."&s=".$sez."&e=".$ep;
-  $head=array('Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
-  'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
-  'Accept-Encoding: deflate',
-  'Connection: keep-alive');
-  //echo $l;
+  $l="https://www.2embed.to/embed/tmdb/tv?id=".$link."&s=".$sez."&e=".$ep;
+  $t1=explode("?",$l);
+  $host=parse_url($t1[0])['host'];
+  $r[]=$l;
+  $s[]=$host;
+  $ua = $_SERVER['HTTP_USER_AGENT'];
+  require_once ("rec.php");
   $ch = curl_init($l);
-  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
   curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER  ,1);  // RETURN THE CONTENTS OF THE CALL
   curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-  curl_setopt($ch, CURLOPT_HTTPHEADER,$head);
-  curl_setopt($ch, CURLOPT_ENCODING,"");
   curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
   curl_setopt($ch, CURLOPT_TIMEOUT, 25);
   $h = curl_exec($ch);
-  curl_close ($ch);
+  curl_close($ch);
   //echo $h;
-  //$h=str_replace("\/","/",$h);
-  if (preg_match_all("/data\-id\=\"(\d+)\"\>(.*?)\</",$h,$m)) {
-   $head=array('Accept: */*',
-    'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
-    'Accept-Encoding: deflate',
-    'X-Requested-With: XMLHttpRequest',
-    'Connection: keep-alive',
-    'Referer: https://www.2embed.ru/');
-   $ch = curl_init();
-   curl_setopt($ch, CURLOPT_USERAGENT, $ua);
-   curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
-   curl_setopt($ch, CURLOPT_RETURNTRANSFER  ,1);  // RETURN THE CONTENTS OF THE CALL
-   curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-   curl_setopt($ch, CURLOPT_HTTPHEADER,$head);
-   curl_setopt($ch, CURLOPT_ENCODING,"");
-   curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
-   curl_setopt($ch, CURLOPT_TIMEOUT, 25);
+  $t1=explode('data-recaptcha-key="',$h);
+  $t2=explode('"',$t1[1]);
+  $key=$t2[0];
+  $t1=explode('data-id="',$h);  // only first
+  $t2=explode('"',$t1[1]);
+  $id=$t2[0];
+  preg_match_all("/data-id=\"(\d+)\"/",$h,$m);
+  for ($z=0;$z<count($m[0]);$z++) {
+  $ch = curl_init();
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
+  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+  curl_setopt($ch, CURLOPT_HTTPHEADER, $head);
+  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 25);
+  //$key="6LdBfTkbAAAAAL25IFRzcJzGj9Q-DKcrQCbVX__t";
+  //$key="6Lf2aYsgAAAAAFvU3-ybajmezOYy87U4fcEpWS4C"; // 24.06.2022
+  $co="aHR0cHM6Ly93d3cuMmVtYmVkLnJ1OjQ0Mw..";
+  $co="aHR0cHM6Ly93d3cuMmVtYmVkLnJ1OjQ0Mw..";
+  $loc="https://".$host;
+  $sa="get_link";
+  $id=$m[1][$z];
+  $token=rec($key,$co,$sa,$loc);
+  $l="https://".$host."/ajax/embed/play?id=".$id."&_token=".$token;
+  $head=array('Accept: */*',
+  'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
+  'Accept-Encoding: deflate',
+  'X-Requested-With: XMLHttpRequest',
+  'Connection: keep-alive',
+  'Referer: https://'.$host.'/embed/imdb/tv?id=tt9737326&s=1&e=3');
 
-   for ($k=0;$k<count($m[1]);$k++) {
-    if (!preg_match("/hydrax/i",$m[2][$k])) {
-    $l="https://www.2embed.ru/ajax/embed/play?id=".$m[1][$k]."&_token=";
-    curl_setopt($ch, CURLOPT_URL, $l);
-    $h = curl_exec($ch);
-    $x=json_decode($h,1);
+  curl_setopt($ch, CURLOPT_URL, $l);
+
+  $h = curl_exec($ch);
+  curl_close($ch);
+  $x=json_decode($h,1);
     //print_r ($x);
     if (isset($x['link'])) {
      $r[]=$x['link'];
      $s[]=parse_url($x['link'])['host'];
     }
-    }
-   }
-   curl_close ($ch);
   }
 //////////////////////////////////////////////////////////////////
-// apimdb.net
-$l="https://apimdb.net/e/tmdb/movie/".$link;
-if ($tip=="movie")
- $l="https://apimdb.net/e/movie/".$imdb;
-else
- $l="https://apimdb.net/e/tv/".$imdb."/".$sez."/".$ep;
-$head=array('Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
-'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
-'Accept-Encoding: deflate',
-'Connection: keep-alive',
-'Referer: https://moviewetrust.co/',
-'Upgrade-Insecure-Requests: 1');
-/*
+// apimdb.net   now openvids.io
+function get_link($o,$x) {
+if($o == "youtube") return "https://www.youtube.com/embed/".$x;
+if($o == "doodstream") return "https://dood.pm/e/".$x;
+if($o == "voe") return "https://voe.sx/e/".$x;
+if($o == "streamsb") return "https://sbembed.com/e/".$x;
+if($o == "mixdrop") return "https://mixdrop.co/e/".$x;
+if($o == "voxzer") return "https://player.voxzer.org/view/".$x;
+if($o == "vidcloud") return "https://membed.net/streaming.php?id=".$x;
+}
+if ($tip=="movie") {
+  $l="https://openvids.io/api/servers.json?imdb=".$imdb;
+  $head=array('Accept: */*',
+  'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
+  'Accept-Encoding: deflate',
+  'Referer: https://openvids.io/',
+  'updatedAt: 2034-06-03T22:00:55.605Z',
+  'title: 2222',
+  'year: 2222');
+} else {
+  $l="https://openvids.io/api/servers.json?imdb=".$imdb;
+  $head=array('Accept: */*',
+  'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
+  'Accept-Encoding: deflate',
+  'Referer: https://openvids.io/',
+  'updatedAt: 2034-06-03T22:00:55.605Z',
+  'title: 2222',
+  'year: 2222',
+  'e: '.$ep,
+  's: '.$sez);
+}
+  $ua="Mozilla/5.0 (Windows NT 10.0; rv:75.0) Gecko/20100101 Firefox/75.0";
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $l);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
   curl_setopt($ch, CURLOPT_USERAGENT, $ua);
   curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
-  curl_setopt($ch, CURLOPT_RETURNTRANSFER  ,1);  // RETURN THE CONTENTS OF THE CALL
+  //curl_setopt($ch, CURLOPT_REFERER,"https://openvids.io/movie/tt0371746");
+  //curl_setopt($ch, CURLOPT_HEADER,1);
+  curl_setopt($ch, CURLOPT_HTTPHEADER, $head);
   curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-  curl_setopt($ch, CURLOPT_HTTPHEADER,$head);
-  curl_setopt($ch, CURLOPT_HEADER,1);
-  curl_setopt($ch, CURLOPT_ENCODING,"");
   curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
   curl_setopt($ch, CURLOPT_TIMEOUT, 25);
   $h = curl_exec($ch);
-  curl_close ($ch);
-  */
-$opts = array(
-  'http'=>array(
-    'method'=>"GET",
-    'header'=>$head
-  )
-);
-$context = stream_context_create($opts);
-$h=@file_get_contents($l,false,$context);
-  preg_match_all("/data\-src\=\"(.*?)\"\>(.*?)\</",$h,$m);
-  for ($k=0;$k<count($m[1]);$k++) {
-   $r[]= "https://apimdb.net".$m[1][$k];
-   $s[]=trim($m[2][$k]);
+  //echo $h;
+  $z=json_decode($h,1)['servers'];
+  //print_r ($z);
+  foreach ($z as $key => $value) {
+    $s[]=$key;
+    $r[]=get_link($key,$value['code']);
   }
-
 ////////////////////////////////////////////////////////////
 // vidsrc.me
 if ($tip=="movie")
@@ -379,35 +401,9 @@ if ($tip=="movie") {
   $from="";
   $link_page="";
 }
-$sub_link ="from=".$from."&tip=".$tip."&sez=".$sez."&ep=".$ep."&imdb=".$imdbid."&title=".urlencode(fix_t($tit3))."&link=".$link_page."&ep_tit=".urlencode(fix_t($tit2))."&year=".$year;
-echo '<br>';
-echo '<table border="1" width="100%">';
-echo '<TR><TD style="background-color:#0a6996;color:#64c8ff;font-weight: bold;font-size: 1.5em" align="center" colspan="4">Alegeti o subtitrare</td></TR>';
-echo '<TR>';
-echo '<TD class="mp"><a id="opensub" href="opensubtitles.php?'.$sub_link.'">opensubtitles</a></td>';
-echo '<TD class="mp"><a id="titrari" href="titrari_main.php?page=1&'.$sub_link.'&page=1">titrari.ro</a></td>';
-echo '<TD class="mp"><a id="subs" href="subs_main.php?'.$sub_link.'">subs.ro</a></td>';
-echo '<TD class="mp"><a id="subtitrari" href="subtitrari_main.php?'.$sub_link.'">subtitrari_noi.ro</a></td>';
-echo '</TR></TABLE>';
-echo '<table border="1" width="100%">';
-echo '<TR><TD style="background-color:#0a6996;color:#64c8ff;font-weight: bold;font-size: 1.5em" align="center" colspan="4">Alegeti o subtitrare (cauta imdb id)</td></TR>';
-echo '<TR>';
-echo '<TD class="mp"><a id="opensub1" href="opensubtitles1.php?'.$sub_link.'">opensubtitles</a></td>';
-echo '<TD class="mp"><a id="titrari1" href="titrari_main1.php?page=1&'.$sub_link.'&page=1">titrari.ro</a></td>';
-echo '<TD class="mp"><a id="subs1" href="subs_main1.php?'.$sub_link.'">subs.ro</a></td>';
-echo '<TD class="mp"><a id="subtitrari1" href="subtitrari_main1.php?'.$sub_link.'">subtitrari_noi.ro</a></td>';
-echo '</TR></TABLE>';
 $imdbid=str_replace("tt","",$imdb);
 $sub_link ="from=".$from."&tip=".$tip."&sez=".$sez."&ep=".$ep."&imdb=".$imdbid."&title=".urlencode(fix_t($tit3))."&link=".$link_page."&ep_tit=".urlencode(fix_t($tit2))."&year=".$year;
-echo '<br>';
-echo '<table border="1" width="100%">';
-echo '<TR><TD style="background-color:#0a6996;color:#64c8ff;font-weight: bold;font-size: 1.5em" align="center" colspan="4">Alegeti o subtitrare (imdb)</td></TR>';
-echo '<TR>';
-echo '<TD class="mp"><a id="opensub" href="opensubtitles.php?'.$sub_link.'">opensubtitles</a></td>';
-echo '<TD class="mp"><a id="titrari" href="titrari_main.php?page=1&'.$sub_link.'&page=1">titrari.ro</a></td>';
-echo '<TD class="mp"><a id="subs" href="subs_main.php?'.$sub_link.'">subs.ro</a></td>';
-echo '<TD class="mp"><a id="subtitrari" href="subtitrari_main.php?'.$sub_link.'">subtitrari_noi.ro</a></td>';
-echo '</TR></TABLE>';
+include ("subs.php");
 echo '<table border="1" width="100%"><TR>';
 if ($tip=="movie")
   $openlink=urlencode(fix_t($tit3));

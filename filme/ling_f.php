@@ -9,6 +9,7 @@ include ("../common.php");
 /* =================================================== */
 $l="https://ling.online";
 $l="https://ling-online.com";
+// https://engvideo.net
 $host=parse_url($l)['host'];
 $page = $_GET["page"];
 $tip= $_GET["tip"];

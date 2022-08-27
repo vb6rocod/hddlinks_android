@@ -269,6 +269,7 @@ for ($k=0;$k<$c;$k++) {
   $title=$r[$k][0];
   $link=$r[$k][1];
   $image=$r[$k][2];
+  $image=str_replace("https","http",$image);
   if ($has_fs =="no")
   $fav_link="mod=add&title=".urlencode(fix_t($title))."&link=".urlencode($link)."&image=".urlencode($image)."&width=".$width."&height=".$height."&file=adult_link.php";
   else

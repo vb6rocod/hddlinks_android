@@ -220,7 +220,9 @@ if ($tip=="movie")
 $sub_link ="from=".$from."&tip=".$tip."&sez=".$sez."&ep=".$ep."&imdb=".$imdbid."&title=".urlencode(fix_t($tit))."&link=".$link_page."&ep_tit=".urlencode(fix_t($ep_tit))."&year=".$year;
 else
 $sub_link ="from=".$from."&tip=".$tip."&sez=".$sez."&ep=".$ep."&imdb=".$imdbid."&title=".urlencode(fix_t($tit))."&link=".$link_page."&ep_tit=".urlencode(fix_t($sez."x".$ep." - ".$ep_tit))."&year=".$year;
-echo '</table><br>';
+echo '</table>';
+/*
+echo '<br>';
 echo '<table border="1" width="100%">';
 echo '<TR><TD style="background-color:#0a6996;color:#64c8ff;text-align:center;vertical-align:middle;height:15px" colspan="4"><font size="4"><b>Alegeti o subtitrare</b></font></td></TR>';
 echo '<TR>';
@@ -229,6 +231,8 @@ echo '<TD align="center"><font size="4"><b><a id="titrari" href="titrari_main.ph
 echo '<TD align="center"><font size="4"><b><a id="subs" href="subs_main.php?'.$sub_link.'">subs.ro</a></b></font></td>';
 echo '<TD align="center"><font size="4"><b><a id="subtitrari" href="subtitrari_main.php?'.$sub_link.'">subtitrari_noi.ro</a></b></font></td>';
 echo '</TR><TR></TABLE>';
+*/
+include ("subs.php");
 if ($tip=="movie") {
 $openlink1="tip=movie&imdb=".$id."&title=".urlencode(fix_t($tit))."&image=".$image."&token=".$token."&year=".$year;
 } else {

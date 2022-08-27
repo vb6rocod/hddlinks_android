@@ -131,27 +131,92 @@ function off() {
 echo '<h2>'.$tit.$tit2.'</H2>';
 echo '<BR>';
 $r=array();
-if ($tip=="movie") {
-  $ua="Mozilla/5.0 (Windows NT 10.0; rv:75.0) Gecko/20100101 Firefox/75.0";
-
+//echo $link;
+$ua="Mozilla/5.0 (Windows NT 10.0; rv:89.0) Gecko/20100101 Firefox/89.0";
+$head=array('Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8',
+'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
+'Accept-Encoding: deflate',
+'Connection: keep-alive',
+'Referer: https://fastmovies.to/',
+'Cookie: PHPSESSID=');
+if ($tip == "movie") {
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $link);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
   curl_setopt($ch, CURLOPT_USERAGENT, $ua);
   curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+  curl_setopt($ch, CURLOPT_HTTPHEADER,$head);
   curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+  curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
   curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
   curl_setopt($ch, CURLOPT_TIMEOUT, 25);
   $h = curl_exec($ch);
   curl_close($ch);
-  if (!$h) $h=file_get_contents($link);
   //echo $h;
-  $t1=explode('class="video-container">',$h);
-  $t2=explode("src='",$t1[1]);
-  $t3=explode("'",$t2[1]);
-  $r[]=str_replace("&#038;","&",$t3[0]);
+  $id="";
+  $hash="";
+  $srt="";
+  $lang="";
+  if (preg_match("/id\:\s*\'(\d+)/",$h,$m))
+  $id=$m[1];
+  if (preg_match("/\"epi\"\:\{\"1\"\:\[\"([^\"]+)/",$h,$m))
+  $hash=$m[1];
+  //print_r ($m);
+  preg_match_all("/\"url\"\:\"([^\"]+)\"\,\"lang\"\:\"([^\"]+)\"/",$h,$m);
+  //print_r ($m);
+  $sub=array_combine($m[2], $m[1]);
+  if (isset($sub["Romanian"])) {
+   $srt=$sub["Romanian"];
+   $lang="Romanian";
+  } elseif (isset($sub["English"])) {
+   $srt=$sub["English"];
+   $lang="English";
+  } else {
+   $srt="";
+   $lang="";
+  }
 } else {
- $r[]=$link;
+  parse_str($link,$x);
+  //echo $link;
+  //print_r ($x);
+  $id=$x['id'];
+  $hash=$x['hash'];
+  $srt=$x['srt'];
+  $lang=$x['lang'];
+}
+if ($id && $hash) {
+$l="https://fastmovies.to/api/watch?id=".$id;
+$post="image=&hash=".$hash."&sub[0][url]=".$srt."&sub[0][lang]=".$lang;
+$head=array('Accept: application/json, text/javascript, */*; q=0.01',
+'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
+'Accept-Encoding: deflate',
+'Content-Type: application/x-www-form-urlencoded; charset=UTF-8',
+'X-Requested-With: XMLHttpRequest',
+'Content-Length: '.strlen($post),
+'Cookie: PHPSESSID=',
+'Origin: https://fastmovies.to',
+'Connection: keep-alive',
+'Referer: https://fastmovies.to/watch-the-stranger-in-our-bed-2022-fastmovies.html');
+  $ch = curl_init();
+  curl_setopt($ch, CURLOPT_URL, $l);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
+  //curl_setopt($ch,CURLOPT_REFERER,"https://dbgo.fun");
+  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+  curl_setopt($ch, CURLOPT_HTTPHEADER,$head);
+  curl_setopt($ch, CURLOPT_POST,1);
+  curl_setopt($ch, CURLOPT_POSTFIELDS,$post);
+  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+  curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 25);
+  $h = curl_exec($ch);
+  curl_close($ch);
+  //echo $h;
+  $x=json_decode($h,1);
+  $l=$x['embed'];
+  $r[]=$l;
+
 }
 echo '<table border="1" width="100%">';
 echo '<TR><TD class="mp">Alegeti un server: Server curent:<label id="server">'.parse_url($r[0])['host'].'</label>
@@ -204,23 +269,7 @@ if ($tip=="movie") {
    $year="";
   }
 $sub_link ="from=".$from."&tip=".$tip."&sez=".$sez."&ep=".$ep."&imdb=".$imdbid."&title=".urlencode(fix_t($tit3))."&link=".$link_page."&ep_tit=".urlencode(fix_t($tit2))."&year=".$year;
-echo '<br>';
-echo '<table border="1" width="100%">';
-echo '<TR><TD style="background-color:#0a6996;color:#64c8ff;font-weight: bold;font-size: 1.5em" align="center" colspan="4">Alegeti o subtitrare</td></TR>';
-echo '<TR>';
-echo '<TD class="mp"><a id="opensub" href="opensubtitles.php?'.$sub_link.'">opensubtitles</a></td>';
-echo '<TD class="mp"><a id="titrari" href="titrari_main.php?page=1&'.$sub_link.'&page=1">titrari.ro</a></td>';
-echo '<TD class="mp"><a id="subs" href="subs_main.php?'.$sub_link.'">subs.ro</a></td>';
-echo '<TD class="mp"><a id="subtitrari" href="subtitrari_main.php?'.$sub_link.'">subtitrari_noi.ro</a></td>';
-echo '</TR></TABLE>';
-echo '<table border="1" width="100%">';
-echo '<TR><TD style="background-color:#0a6996;color:#64c8ff;font-weight: bold;font-size: 1.5em" align="center" colspan="4">Alegeti o subtitrare (cauta imdb id)</td></TR>';
-echo '<TR>';
-echo '<TD class="mp"><a id="opensub1" href="opensubtitles1.php?'.$sub_link.'">opensubtitles</a></td>';
-echo '<TD class="mp"><a id="titrari1" href="titrari_main1.php?page=1&'.$sub_link.'&page=1">titrari.ro</a></td>';
-echo '<TD class="mp"><a id="subs1" href="subs_main1.php?'.$sub_link.'">subs.ro</a></td>';
-echo '<TD class="mp"><a id="subtitrari1" href="subtitrari_main1.php?'.$sub_link.'">subtitrari_noi.ro</a></td>';
-echo '</TR></TABLE>';
+include ("subs.php");
 echo '<table border="1" width="100%"><TR>';
 if ($tip=="movie")
   $openlink=urlencode(fix_t($tit3));
@@ -240,8 +289,8 @@ echo '<br>
 </b></font></TD></TR></TABLE>
 ';
 
-if (preg_match("/c\d?_file\=(http[\.\d\w\-\.\/\\\:\?\&\#\%\_\,]+)\&c\d?_label\=English/i",$r[0],$s)) {
- echo 'Cu subtitrare in Engleza.<BR>';
+if ($lang) {
+ echo 'Cu subtitrare in '.$lang.'<BR>';
 }
 include("../debug.html");
 echo '
