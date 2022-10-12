@@ -136,7 +136,7 @@ echo '<BR>';
 //echo $link;
   $r=array();
   $ua="Mozilla/5.0 (Windows NT 10.0; rv:80.0) Gecko/20100101 Firefox/80.0";
-  $r[]=$link;
+  //$r[]=$link;
   $t1=explode("?",$link);
   $host=parse_url($t1[0])['host'];
 

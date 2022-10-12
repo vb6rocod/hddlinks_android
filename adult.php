@@ -66,7 +66,7 @@ echo '
 <TR>
 <TD width="25%"><a href="adult/pornjam_main.php" target="_blank">pornjam</a></TD>
 <TD width="25%"><a href="adult/pornburst_main.php" target="_blank">pornburst</a></TD>
-<TD width="25%"><a href="tv/playlist.php?title=LxKBAFM2.m3u8" target="_blank">playlist xxx</a></TD>
+<TD width="25%"><a href="adult/xfreehd.php?tip=release&page=1&title=xfreehd&link=" target="_blank">xfreehd</a></TD>
 <TD width="25%"><a href="adult/incestvidz_main.php" target="_blank">incestvidz</a></TD>
 </TR>
 
@@ -95,7 +95,7 @@ echo '
 <TR>
 <TD width="25%"><a href="adult/youjizz_main.php" target="_blank">youjizz</a></TD>
 <TD width="25%"><a href="adult/drtuber_main.php" target="_blank">drtuber</a></TD>
-<TD width="25%"></TD>
+<TD width="25%"><a href="adult/2freesex_main.php" target="_blank">2freesex</a></TD>
 <TD width="25%"><a href="adult/tube8_main.php" target="_blank">tube8</a></TD>
 </TR>
 
@@ -107,8 +107,8 @@ echo '
 </TR>
 
 <TR>
-<TD width="25%"></TD>
-<TD width="25%"></TD>
+<TD width="25%"><a href="adult/fuqer.php?tip=release&page=1&title=fuqer&link=" target="_blank">fuqer</a></TD>
+<TD width="25%"><a href="adult/collectionofbestporn.php?tip=release&page=1&title=collectionofbestporn&link=" target="_blank">collectionofbestporn</a></TD>
 <TD width="25%"><a href="adult/porndroids_main.php" target="_blank">porndroids</a></TD>
 <TD width="25%"><a href="adult/youporn.php?tip=release&page=1&title=youporn&link=" target="_blank">youporn</a></TD>
 </TR>
@@ -123,7 +123,7 @@ echo '
 <TR>
 <TD width="25%"><a href="adult/pornhost_main.php" target="_blank">pornhost</a></TD>
 <TD width="25%"><a href="adult/handjobhub_main.php" target="_blank">handjobhub</a></TD>
-<TD width="25%"><a href="adult/vpornvideos_main.php" target="_blank">vpornvideos</a></TD>
+<TD width="25%"></TD>
 <TD width="25%"><a href="adult/dansmovies_main.php" target="_blank">dansmovies</a></TD>
 </TR>
 
@@ -131,13 +131,13 @@ echo '
 <TD width="25%"><a href="adult/pornheed_main.php" target="_blank">pornheed</a></TD>
 <TD width="25%"><a href="adult/pornrabbit_main.php" target="_blank">pornrabbit</a></TD>
 <TD width="25%"><a href="adult/eroxia_main.php" target="_blank">eroxia</a></TD>
-<TD width="25%"></TD>
+<TD width="25%"><a href="adult/tubepornclassic.php?tip=release&page=1&title=tubepornclassic&link=" target="_blank">tubepornclassic</a></TD>
 </TR>
 
 <TR>
 <TD width="25%"><a href="adult/trannytube_main.php" target="_blank">trannytube</a></TD>
 <TD width="25%"><a href="adult/eporner_main.php" target="_blank">eporner</a></TD>
-<TD width="25%"></TD>
+<TD width="25%"><a href="adult/gotporn.php?tip=release&page=1&title=gotporn&link=" target="_blank">gotporn</a></TD>
 <TD width="25%"><a href="adult/porntrex_main.php" target="_blank">porntrex</a></TD>
 </TR>
 

@@ -125,7 +125,7 @@ foreach($arr as $key => $value) {
 	$link = urldecode($arr[$key]["link"]);
     $title = unfix_t(urldecode($key));
     $image=urldecode($arr[$key]["image"]);
-    //$image=$host.parse_url($image)['path'];
+    $image=$host.parse_url($image)['path'];
   $rest = substr($title, -6);
   if (preg_match("/\(?(\d+)\)?/",$rest,$m)) {
    $year=$m[1];

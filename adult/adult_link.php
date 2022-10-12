@@ -73,7 +73,7 @@ $type="mp4";
 $cookie=$base_cookie."adultc.dat";
 //echo $host;
 // zbporn.com
-if (preg_match("/jizzbunker\.com|familyporn1\.tv|zbporn\.com|trannytube11\.net/",$host)) {
+if (preg_match("/jizzbunker\.com|familyporn1\.tv|zbporn\.com|trannytube11\.net|2freesex\.com/",$host)) {
    $arrContextOptions=array(
     "ssl"=>array(
         "verify_peer"=>false,
@@ -208,6 +208,11 @@ if (preg_match("/4tube\.com/",$host)) {
          $out=$r[$q]["token"];
       } else $out="";
  }
+} else if (preg_match("/2freesex\.com/",$host)) {
+//echo $h;
+$t1=explode("source src='",$h);
+$t2=explode("'",$t1[1]);
+$out=$t2[0];
 } else if (preg_match("/anybunny\.com/",$host)) {
 //echo $h;
 $t1=explode("source src='",$h);
@@ -309,6 +314,10 @@ $out=$t2[0];
   if ($flash <> "flash")
     $out=$out."|Referer=".urlencode("https://bravoporn.com")."&Origin=".urlencode("https://bravoporn.com");
   }
+} else if (preg_match("/collectionofbestporn\.com/",$host)) {
+  preg_match_all("/source\s*src\=\"([^\"]+)\"/",$h,$m);
+   $out=$m[1][count($m[1])-1];
+   $out=trim($out);
 } else if (preg_match("/dansmovies\.com/",$host)) {
   $t1=explode('source src="',$h);
   $t2=explode('"',$t1[1]);
@@ -400,6 +409,13 @@ $out=$t2[0];
       break;
    }
   }
+} else if (preg_match("/fuqer\./",$host)) {
+  preg_match("/source\s*src\=\'([^\']+)\'/",$h,$m);
+  //print_r ($m);
+  //echo $h;
+  $out=$m[1];
+  if ($flash <> "flash")
+    $out=$out."|Referer=".urlencode("https://www.fuqer.com/");
 } else if (preg_match("/familyporn\.tv/",$host)) {
   //echo $h;
   if (preg_match("/license_code:\s+\'(.*?)\'/ms",$h,$m)) {
@@ -443,6 +459,12 @@ $out=$t2[0];
      if ($out && $flash != "flash")
         $out=$out."|Referer=".urlencode('https://hellmoms.com')."&Origin=".urlencode('https://hellmoms.com');
   }
+} else if (preg_match("/gotporn\.com/",$host)) {
+  $t1=explode('source src="',$h);
+  $t2=explode('"',$t1[1]);
+  $out=$t2[0];
+  if ($out && $flash <> "flash")
+   $out .="|Referer=".urlencode("https://www.gotporn.com");
 } else if (preg_match("/jizzbunker\.com/",$host)) {
   $out = urldecode(str_between($h, "src:'", "'"));
   $out=str_replace("https","http",$out);
@@ -873,6 +895,19 @@ $head=array('Accept: */*',
   $out=trim(str_between($h,'videoUrlJS = "','"'));
   $out=str_replace("&amp;","&",$out);
   $out=str_replace("\\","",$out);
+} else if (preg_match("/tubepornclassic\./",$host)) {
+  $h=str_replace("\\u041c","M",$h);
+  $h=str_replace("\\u0410","A",$h);
+  $h=str_replace("\\u0412","B",$h);
+  $h=str_replace("\\u0421","C",$h);
+  $h=str_replace("\\u0415","E",$h);
+  $h=str_replace("~","=",$h);
+  $x=json_decode($h,1);
+  $l=$x[0]['video_url'];
+  $t=explode(",",$l);
+  $part1= base64_decode($t[0]);
+  $part2= base64_decode($t[1]);
+  $out="https://tubepornclassic.com".$part1."?".$part2;
 } else if (preg_match("/vporn\.com|pornone\.com/",$host)) {
   $t1=explode('source src="',$h);
   $t2=explode('"',$t1[1]);
@@ -905,6 +940,9 @@ $head=array('Accept: */*',
   if (preg_match_all("/html5player\.setVideoUrl(Low|High)\(\'(.*?)\'/ims",$h,$m)) {
      $out=$m[2][count($m[2])-1];
   }
+} else if (preg_match("/xfreehd\./",$host)) {
+  preg_match_all("/source src\=\"([^\"]+)\"/",$h,$m);
+  $out=$m[1][count($m[1])-1];
 } else if (preg_match("/youjizz\.com/",$host)) {
   $h=str_replace("\\","",$h);
   if (preg_match_all("/quality\"\:\"(1080|720|480|360|240)\"\,\"filename\"\:\"(.*?)\"/",$h,$m)) {
@@ -954,6 +992,7 @@ echo $c;
 } else {
 $out=str_replace("&amp;","&",$out);
 if (preg_match("/\.m3u8/",$out)) $type="m3u8";
+$title=str_replace('"','\\"',$title);
 echo '
 <!doctype html>
 <HTML>

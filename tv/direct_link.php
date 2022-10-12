@@ -70,39 +70,114 @@ if (strpos($link,"streamwat.ch") !== false) {
 if (strpos($link,"facebook") !== false) {
 function decode_code1($code){
     return preg_replace_callback(
-        "@\\\\(u)([0-9a-f]{4})@",
+        "@\\\\(u)([0-9a-fA-F]{4})@",
         function($m){
             return mb_convert_encoding(chr($m[1]?hexdec($m[2]):octdec($m[2])),'UTF-8');
         },
         $code
     );
 }
+function my_simple_crypt( $string, $secret_key,$secret_iv,$action = 'e' ) {
+
+    $output = false;
+    $encrypt_method = "AES-256-CBC";
+    $key = hash( 'sha256', $secret_key );
+    $iv = substr( hash( 'sha256', $secret_iv ), 0, 16 );
+
+    if( $action == 'e' ) {
+        $output = base64_encode( openssl_encrypt( $string, $encrypt_method, $key, 0, $iv ) );
+    }
+    else if( $action == 'd' ){
+        $output = openssl_decrypt( base64_decode( $string ), $encrypt_method, $key, 0, $iv );
+    }
+
+    return $output;
+}
+$cookie=$base_cookie."facebook.dat";
+
+if (file_exists($base_pass."facebook.txt") && file_exists($cookie)) {
+ $h=trim(file_get_contents($base_pass."facebook.txt"));
+ $t1=explode("|",trim($h));
+ $key=$t1[0];
+ $IV=$t1[1];
+ $h=file_get_contents($cookie);
+  //echo $h;
+  $dec=my_simple_crypt(trim($h),$key,$IV,"d");
+  $t2=explode("|",$dec);
+  $c_user=$t2[0];
+  $fb_dtsg=urldecode($t2[1]);
+  $xs=$t2[2];
+} else {
+ $c_user="";
+ $fb_dtsg="";
+ $xs="";
+}
+//echo $filelink;
 $pattern = '/(video_id=|videos\/)([0-9a-zA-Z]+)/';
 preg_match($pattern,$link,$m);
+$id=$m[2];
 $filelink="https://www.facebook.com/video/embed?video_id=".$m[2];
+//$filelink="https://www.facebook.com/watch/?v=".$id;
 //echo $filelink;
 // https://www.facebook.com/134093565449/videos/342521610130689/
 // https://www.facebook.com/watch/live/?v=342521610130689&ref=watch_permalink
-$filelink="https://www.facebook.com/watch/live/?v=".$m[2]."&ref=watch_permalink";
-//echo $filelink;
+//$filelink="https://www.facebook.com/watch/live/?v=".$m[2]."&ref=watch_permalink";
+//$filelink="https://www.facebook.com/Stelian.Ion.USR.PLUS/videos/2177983669024007/";
+//$filelink="https://www.facebook.com/watch/?v=2177983669024007";
+//$filelink="https://www.facebook.com/watch/live/?v=1254569611674582&ref=watch_permalink";
+//$filelink="https://www.facebook.com/134093565449/videos/958365288045890";
       $ua="Mozilla/5.0 (Windows NT 10.0; WOW64; rv:46.0) Gecko/20100101 Firefox/46.0";
       $ua="Mozilla/5.0 (Windows NT 10.0; rv:81.0) Gecko/20100101 Firefox/81.0";
+$head=array('Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8',
+'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
+'Accept-Encoding: deflate',
+'Alt-Used: www.facebook.com',
+'Connection: keep-alive',
+'Referer: https://www.facebook.com',
+'Cookie: c_user='.$c_user.';xs='.$xs,
+'Upgrade-Insecure-Requests: 1');
+//print_r ($head);
       $ch = curl_init();
       curl_setopt($ch, CURLOPT_URL, $filelink);
       curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
       curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
       curl_setopt($ch, CURLOPT_USERAGENT, $ua);
+      curl_setopt($ch, CURLOPT_HTTPHEADER, $head);
       curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
       curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
       curl_setopt($ch, CURLOPT_TIMEOUT, 25);
       $h1 = curl_exec($ch);
       curl_close($ch);
       $h1=str_replace("&amp;","&",$h1);
-      $h1=urldecode(str_replace("\\","",$h1));
+      $h1 = preg_replace_callback('/\\\\u([0-9a-fA-F]{4})/', function ($match) {
+    return mb_convert_encoding(pack('H*', $match[1]), 'UTF-8', 'UTF-16BE');
+    }, $h1);
+    $h1=decode_code1($h1);
+    $h1=str_replace("\\","",$h1);
       //echo $h1;
-      preg_match('/(?:hd_src|sd_src):\"([\w\-\.\_\/\&\=\:\?]+)/',$h1,$m);
+      preg_match_all("/FBQualityLabel\=\"(\d+)p\"\>\<BaseURL\>(.*?)\</",$h1,$m);
       //print_r ($m);
-      $link=$m[1];
+      preg_match_all("/\"(?:hd_src|sd_src)\":\"(.+?)\"/",$h1,$x);
+      //print_r ($x);
+      $link=$x[1][0];
+      /*
+      $r=array();
+      $r=array_combine($m[1],$m[2]);
+      krsort($r);
+      //print_r ($r);
+      $link =  reset($r);
+      // playable_url_quality_hd
+      // playable_url":"
+
+      if (preg_match("/\"playable\_url\_quality\_hd\"\:\"(.*?)\"/",$h1,$m))
+       $link=$m[1];
+      else if (preg_match("/\"playable\_url\"\:\"(.*?)\"/",$h1,$m))
+       $link=$m[1];
+      else if (preg_match("/og\:video\" content\=\"([^\"]+)\"/",$h1,$m))
+        $link=$m[1];
+      */
+      $link=str_replace("&amp;","&",$link);
+      $link=str_replace("\\","",$link);
 }
 if (preg_match("/media\.cms\.protvplus\.ro/",$link)) {
 //$link="https://media.cms.protvplus.ro/embed/9w1VHN18dnM?autoplay=any";

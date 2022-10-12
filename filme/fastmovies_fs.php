@@ -161,6 +161,7 @@ if ($tip == "movie") {
   $id=$m[1];
   if (preg_match("/\"epi\"\:\{\"1\"\:\[\"([^\"]+)/",$h,$m))
   $hash=$m[1];
+  //$hash="Q2k3Ris1cEYvM3RXTHVTZG51bkg4OEhSRDYyUVZqVUZEYm5iV1pwWnFkR0Fmak9QdmI5eDVSZldYKzh6cHZKeA==";
   //print_r ($m);
   preg_match_all("/\"url\"\:\"([^\"]+)\"\,\"lang\"\:\"([^\"]+)\"/",$h,$m);
   //print_r ($m);
@@ -216,6 +217,7 @@ $head=array('Accept: application/json, text/javascript, */*; q=0.01',
   $x=json_decode($h,1);
   $l=$x['embed'];
   $r[]=$l;
+  //echo $l;
 
 }
 echo '<table border="1" width="100%">';

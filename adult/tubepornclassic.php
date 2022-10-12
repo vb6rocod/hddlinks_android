@@ -12,9 +12,9 @@ $tip= $_GET["tip"];
 $tit=$_GET["title"];
 $link=$_GET["link"];
 $width="200px";
-$height=intval(200*(133/177))."px";
+$height=intval(200*(158/270))."px";
 /* ==================================================== */
-$has_main="yes";
+$has_main="no";
 $has_fav="no";
 $has_search="yes";
 $has_add="yes";
@@ -23,7 +23,7 @@ $fav_target="adult_fav.php";
 $add_target="adult_add.php";
 $add_file="";
 $fs_target="filme_link.php";
-$target="vpornvideos.php";
+$target="tubepornclassic.php";
 /* ==================================================== */
 $base=basename($_SERVER['SCRIPT_FILENAME']);
 $p=$_SERVER['QUERY_STRING'];
@@ -204,57 +204,38 @@ else
 echo '</TR>'."\r\n";
 
 if($tip=="release") {
-  if ($page>1)
-    $l = $link.$page;
-  else
-    $l = $link.$page;
+  $l="https://tubepornclassic.com/api/json/videos/14400/str/latest-updates/60/..".$page.".all...json";
 } else {
-  $search=str_replace(" ","+",$tit);
-  if ($page > 1)
-    $l= "https://www.vpornvideos.com/tag/".$search."/0/".$page;
-  else
-    $l= "https://www.vpornvideos.com/tag/".$search."/0/".$page;
+  $search=str_replace(" ","%20",$tit);
+  $l="https://tubepornclassic.com/api/videos.php?params=259200/str/relevance/60/search..".$page.".all..&s=".$search."&sort=latest-updates&date=all&type=all&duration=all";
 }
 $host=parse_url($l)['host'];
+$r=array();
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $l);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
   curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 10.0; rv:55.0) Gecko/20100101 Firefox/55.0');
-  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+  curl_setopt($ch,CURLOPT_REFERER,"https://tubepornclassic.com");
   curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
-  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
-  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+  curl_setopt($ch, CURLOPT_ENCODING,"");
+  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 25);
   $html = curl_exec($ch);
   curl_close($ch);
+  $r=json_decode($html,1)['videos'];
+  //print_r ($r);
+//echo $html;
 
-$r=array();
-$videos = explode('class="link"',$html);
-unset($videos[0]);
-$videos = array_values($videos);
-foreach($videos as $video) {
-  $t1=explode('href="',$video);
-  $t2 = explode('"', $t1[1]);
-  $link ="https://www.vpornvideos.com/".$t2[0];
-  $t1=explode('title="',$video);
-  $t3=explode('"',$t1[1]);
-  $title=$t3[0];
-  $title = trim(strip_tags($title));
-  $title = prep_tit($title);
-  $t1 = explode('src="', $video);
-  $t2 = explode('"', $t1[1]);
-  $image = "https://www.vpornvideos.com/".$t2[0];
-  $t1=explode('td align="left">',$video);
-  $t3=explode("<",$t1[1]);
-  $durata=trim($t3[0]);
-  $durata = preg_replace("/\n|\r/"," ",strip_tags($durata));
-  if ($durata) $title=$title." (".$durata.')';
-  if ($title) array_push($r ,array($title,$link, $image));
-}
+
 $c=count($r);
 for ($k=0;$k<$c;$k++) {
-  $title=$r[$k][0];
-  $link=$r[$k][1];
-  $image=$r[$k][2];
+  $title=$r[$k]['title'];
+  $durata=$r[$k]['duration'];
+  $title=$title." (".$durata.')';
+  $link=$r[$k]['video_id'];
+  $link="https://tubepornclassic.com/api/videofile.php?video_id=".$link."&lifetime=8640000";
+  $image=$r[$k]['scr'];
   if ($has_fs =="no")
   $fav_link="mod=add&title=".urlencode(fix_t($title))."&link=".urlencode($link)."&image=".urlencode($image)."&width=".$width."&height=".$height."&file=adult_link.php";
   else

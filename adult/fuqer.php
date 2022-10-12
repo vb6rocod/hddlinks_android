@@ -12,9 +12,9 @@ $tip= $_GET["tip"];
 $tit=$_GET["title"];
 $link=$_GET["link"];
 $width="200px";
-$height="110px";
+$height=intval(200*(158/270))."px";
 /* ==================================================== */
-$has_main="yes";
+$has_main="no";
 $has_fav="no";
 $has_search="yes";
 $has_add="yes";
@@ -23,7 +23,7 @@ $fav_target="adult_fav.php";
 $add_target="adult_add.php";
 $add_file="";
 $fs_target="filme_link.php";
-$target="xhamster.php";
+$target="fuqer.php";
 /* ==================================================== */
 $base=basename($_SERVER['SCRIPT_FILENAME']);
 $p=$_SERVER['QUERY_STRING'];
@@ -204,21 +204,16 @@ else
 echo '</TR>'."\r\n";
 
 if($tip=="release") {
-  if (preg_match("/-(\d+)\.html/",$link)) {
-    $s="-".$page.".html";
-    $l=preg_replace("/-(\d+)\.html/",$s,$link);
-  } else {
-    if ($page>1)
-     $l=$link."/".$page;
-    else
-     $l=$link;
-  }
-} else {
-  $search=str_replace(" ","+",$tit);
-  if ($page > 1)
-    $l="https://xhamster.com/search.php?q=".$search."&qcat=video&page=".$page;
+  if ($page==1)
+  $l="https://www.fuqer.com/page1.html";
   else
-    $l="https://xhamster.com/search.php?q=".$search."&qcat=video";
+  $l="https://www.fuqer.com/page".$page.".html".$page;
+} else {
+  $search=str_replace(" ","-",$tit);
+  if ($page==1)
+  $l="https://www.fuqer.com/search/videos/".$search."/page1.html";
+  else
+  $l="https://www.fuqer.com/search/videos/".$search."/page".$page.".html";
 }
 $host=parse_url($l)['host'];
   $ch = curl_init();
@@ -226,35 +221,33 @@ $host=parse_url($l)['host'];
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
   curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 10.0; rv:55.0) Gecko/20100101 Firefox/55.0');
   curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
-  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
-  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+  curl_setopt($ch, CURLOPT_ENCODING,"");
+  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 25);
   $html = curl_exec($ch);
   curl_close($ch);
 //echo $html;
 $r=array();
-$videos = explode('a class="video-thumb', $html);
+$videos = explode('div class="item video_item"',$html);
 unset($videos[0]);
 $videos = array_values($videos);
 foreach($videos as $video) {
   $t1 = explode('href="',$video);
   $t2 = explode('"', $t1[1]);
   $link = $t2[0];
-  if (strpos($link,"http") === false) $link="https://".$host.$link;
-  $t1 = explode('alt="', $video);
-  $t2 = explode('"', $t1[1]);
+
+  $t1=explode('title="',$video);
+  $t2=explode('"',$t1[1]);
   $title = trim(strip_tags($t2[0]));
-  $title = prep_tit($title);
-  $t1 = explode('src="', $video);
+  $t1 = explode('data-src="', $video);
   $t2 = explode('"', $t1[1]);
   $image = $t2[0];
-  if (strpos($image,"http") === false) $image="https:".$image;
-  //$t1 = explode('duration"',$video);
-  $t2 = explode ('video-duration">',$video);
-  $t3 = explode("<",$t2[1]);
-  $durata=trim($t3[0]);
-  $durata = preg_replace("/\n|\r/"," ",strip_tags($durata));
+  $t1=explode('label time">',$video);
+  $t2=explode('<',$t1[1]);
+  $durata = trim($t2[0]);
   if ($durata) $title=$title." (".$durata.')';
-  if ($title && strpos($title,"RTA ") === false) array_push($r ,array($title,$link, $image));
+  if ($title) array_push($r ,array($title,$link, $image));
 }
 $c=count($r);
 for ($k=0;$k<$c;$k++) {
@@ -265,7 +258,7 @@ for ($k=0;$k<$c;$k++) {
   $fav_link="mod=add&title=".urlencode(fix_t($title))."&link=".urlencode($link)."&image=".urlencode($image)."&width=".$width."&height=".$height."&file=adult_link.php";
   else
   $fav_link="mod=add&title=".urlencode(fix_t($title))."&link=".urlencode($link)."&image=".urlencode($image)."&width=".$width."&height=".$height."&file=filme_link.php";
-  if ($title) {
+  if (true) {
   if ($n==0) echo '<TR>'."\r\n";
   if ($tast == "NU" && $flash !="mp") {
    if ($has_fs=="no")

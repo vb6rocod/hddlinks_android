@@ -168,17 +168,19 @@ echo '</TR>'."\r\n";
 if ($tip == "search") {
 $q=urlencode($tit);
 $l="https://www.imdb.com/find?q=".$q."&s=tt";
+//echo $l;
   $ch = curl_init($l);
   curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows; U; Windows NT 6.1; en-US; rv:1.9.1.2) Gecko/20090729 Firefox/3.5.2 GTB5');
   //curl_setopt($ch,CURLOPT_REFERER,$l);
   curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER  ,1);  // RETURN THE CONTENTS OF THE CALL
   //curl_setopt($ch, CURLOPT_HEADER, true);
-  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
-  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 25);
   curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
   $h = curl_exec($ch);
   curl_close ($ch);
+  //$h=file_get_contents($l);
 //echo $h;
 $r=array();
 $videos=explode('td class="primary_photo"',$h);
@@ -191,8 +193,10 @@ foreach($videos as $video) {
  $t1=explode('src="',$video);
  $t2=explode('"',$t1[1]);
  $image=$t2[0];
+ if (preg_match("/\_V1/",$image)) {
  $t1=explode("_V1",$image);
  $image=$t1[0]."_V1_UY268_CR9,0,182,268_AL_.jpg";
+ }
  $t1=explode('class="result_text">',$video);
  $t2=explode(">",$t1[1]);
  $t3=explode("<",$t2[1]);

@@ -63,7 +63,27 @@ if (preg_match("/\((\d+)\)/",$rest,$m)) {
 $title=preg_replace("/\s*(\:|\-)\s+(season|sezon|minis)+(.*?)/i","",$title);
 $t1=explode(" - ",$title);
 $title=trim($t1[0]);
-//echo $imdb;
+if (isset($_GET['tmdb'])) {
+  $tmdb_id=$_GET['tmdb'];
+  $key = file_get_contents($f_TMDB);
+  if ($tip=="movie")
+    $l="https://api.themoviedb.org/3/movie/".$tmdb_id."?api_key=".$key."&append_to_response=external_ids";
+  else
+    $l="https://api.themoviedb.org/3/tv/".$tmdb_id."?api_key=".$key."&append_to_response=external_ids";
+  $ch = curl_init($l);
+  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
+  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER  ,1);  // RETURN THE CONTENTS OF THE CALL
+  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 25);
+  $html = curl_exec($ch);
+  curl_close ($ch);
+  $x=json_decode($html,1);
+  //print_r ($x);
+  //die();
+  $imdb=$x['external_ids']['imdb_id'];
+}
 if (!$imdb) {
   if ($tip == "tv") {
     if (!$year)

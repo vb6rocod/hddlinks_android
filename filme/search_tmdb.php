@@ -142,6 +142,7 @@ if (file_exists($base_pass."tmdb.txt"))
 else
   $key="";
 $l="https://api.themoviedb.org/3/search/multi?api_key=".$key."&language=en-US&query=".$q."&page=".$page."&include_adult=false";
+//echo $l;
   $ch = curl_init($l);
   curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows; U; Windows NT 6.1; en-US; rv:1.9.1.2) Gecko/20090729 Firefox/3.5.2 GTB5');
   //curl_setopt($ch,CURLOPT_REFERER,$l);

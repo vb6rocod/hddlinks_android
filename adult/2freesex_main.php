@@ -6,10 +6,10 @@ function str_between($string, $start, $end){
 	if ($ini == 0) return ""; $ini += strlen($start); $len = strpos($string,$end,$ini) - $ini;
 	return substr($string,$ini,$len);
 }
-$main_title="vpornvideos";
-$target="vpornvideos.php";
+$main_title="2freesex";
+$target="2freesex.php";
 $fav_target="";
-$recente="https://www.vpornvideos.com/browse/1/";
+$recente="http://2freesex.com/en/category/all/";
 ?>
 <html>
 <head>
@@ -55,7 +55,7 @@ echo '<TR><TD class="cat">'.'<a class ="nav" href="'.$target.'?page=1&tip=releas
 echo $form;
 echo '</TR>';
 $n=0;
-$l="https://www.vpornvideos.com/categories";
+$l="http://2freesex.com/en/";
 $ua = $_SERVER['HTTP_USER_AGENT'];
 $ua="Mozilla/5.0 (Windows NT 10.0; rv:68.0) Gecko/20100101 Firefox/68.0";
   $ch = curl_init();
@@ -68,17 +68,17 @@ $ua="Mozilla/5.0 (Windows NT 10.0; rv:68.0) Gecko/20100101 Firefox/68.0";
   curl_setopt($ch, CURLOPT_TIMEOUT, 15);
   $html = curl_exec($ch);
   curl_close($ch);
-$videos = explode('class="thumb"', $html);
+
+$videos = explode('href="/en/category', $html);
 unset($videos[0]);
 $videos = array_values($videos);
+
 foreach($videos as $video) {
-    $t=explode('href="',$video);
-    $t1=explode('"',$t[1]);
-    $link="https://www.vpornvideos.com/".$t1[0];
-    $link=substr($link, 0, -1);
-    $t2=explode('title="',$video);
-    $t3=explode('"',$t2[1]);
-  	$title=$t3[0];
+    $t1=explode('"',$video);
+    $link="http://2freesex.com/en/category".$t1[0];
+  	$t3=explode('title="',$video);
+  	$t4=explode('"',$t3[1]);
+  	$title=trim($t4[0]);
   	$title=prep_tit($title);
     $link=$target."?page=1&tip=release&link=".urlencode(fix_t($link))."&title=".urlencode(fix_t($title));
     if ($title) {

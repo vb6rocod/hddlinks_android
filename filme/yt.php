@@ -3,8 +3,10 @@
 //echo youtube_nou($file);
 function youtube_nou($file) {
 if(preg_match('/youtube\.com\/(v\/|watch\?v=|embed\/)([\w\-]+)/', $file, $match)) {
+
   $id = $match[2];
   $file = "https://www.youtube.com/watch?v=".$id;
+//echo $file."\n";
 $ua="Mozilla/5.0 (Windows NT 10.0; rv:93.0) Gecko/20100101 Firefox/93.0";
 $l="https://yt1s.com/api/ajaxSearch/index";
 $post="q=".$file."&vt=home";

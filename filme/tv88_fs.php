@@ -151,6 +151,10 @@ $head=array('Accept: */*',
   $h = curl_exec($ch);
   curl_close($ch);
   //echo $h;
+  $xx = json_decode($h,1);
+  $imdbid="";
+  $tmdb=$xx['tmdb']['movie']['movie_details']['id'];
+  $imdbid=$xx['tmdb']['movie']['movie_details']['imdb_id'];
   $f=json_decode($h,1)['streams'];
   //print_r ($f);
   foreach($f as $key => $value) {
@@ -188,17 +192,18 @@ if ($tip=="movie") {
   $tit2="";
   $sez="";
   $ep="";
-  $imdbid="";
+  //$imdbid="";
   $from="";
   $link_page="";
 } else {
   $tit3=$tit;
   $sez=$sez;
   $ep=$ep;
-  $imdbid="";
+  //$imdbid="";
   $from="";
   $link_page="";
 }
+  $imdbid=str_replace("tt","",$imdbid);
   $rest = substr($tit3, -6);
   if (preg_match("/\((\d+)\)/",$rest,$m)) {
    $year=$m[1];

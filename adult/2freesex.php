@@ -23,7 +23,7 @@ $fav_target="adult_fav.php";
 $add_target="adult_add.php";
 $add_file="";
 $fs_target="filme_link.php";
-$target="xhamster.php";
+$target="2freesex.php";
 /* ==================================================== */
 $base=basename($_SERVER['SCRIPT_FILENAME']);
 $p=$_SERVER['QUERY_STRING'];
@@ -204,21 +204,16 @@ else
 echo '</TR>'."\r\n";
 
 if($tip=="release") {
-  if (preg_match("/-(\d+)\.html/",$link)) {
-    $s="-".$page.".html";
-    $l=preg_replace("/-(\d+)\.html/",$s,$link);
-  } else {
-    if ($page>1)
-     $l=$link."/".$page;
-    else
-     $l=$link;
-  }
+  if ($page==1)
+   $l=$link;
+  else
+   $l=$link."ctr/".$page."/";
 } else {
   $search=str_replace(" ","+",$tit);
   if ($page > 1)
-    $l="https://xhamster.com/search.php?q=".$search."&qcat=video&page=".$page;
+    $l="http://2freesex.com/?search=".$search;
   else
-    $l="https://xhamster.com/search.php?q=".$search."&qcat=video";
+    $l="http://2freesex.com/?search=".$search;
 }
 $host=parse_url($l)['host'];
   $ch = curl_init();
@@ -231,28 +226,31 @@ $host=parse_url($l)['host'];
   $html = curl_exec($ch);
   curl_close($ch);
 //echo $html;
+$t1=explode('<div class="flt_thumbs">',$html);
+$t2=explode('</ul',$t1[1]);
+$html=$t2[0];
 $r=array();
-$videos = explode('a class="video-thumb', $html);
+$videos = explode('<li>', $html);
 unset($videos[0]);
 $videos = array_values($videos);
 foreach($videos as $video) {
   $t1 = explode('href="',$video);
   $t2 = explode('"', $t1[1]);
   $link = $t2[0];
-  if (strpos($link,"http") === false) $link="https://".$host.$link;
-  $t1 = explode('alt="', $video);
+  if (strpos($link,"http") === false) $link="http://2freesex.com".$link;
+  $t1 = explode('title="', $video);
   $t2 = explode('"', $t1[1]);
   $title = trim(strip_tags($t2[0]));
   $title = prep_tit($title);
   $t1 = explode('src="', $video);
   $t2 = explode('"', $t1[1]);
   $image = $t2[0];
-  if (strpos($image,"http") === false) $image="https:".$image;
+  if (strpos($image,"http") === false) $image="http://2freesex.com".$image;
   //$t1 = explode('duration"',$video);
-  $t2 = explode ('video-duration">',$video);
-  $t3 = explode("<",$t2[1]);
+  $t2 = explode ('class="fa fa-clock-o">',$video);
+  $t3 = explode("</span",$t2[1]);
   $durata=trim($t3[0]);
-  $durata = preg_replace("/\n|\r/"," ",strip_tags($durata));
+  $durata = strip_tags($durata);
   if ($durata) $title=$title." (".$durata.')';
   if ($title && strpos($title,"RTA ") === false) array_push($r ,array($title,$link, $image));
 }

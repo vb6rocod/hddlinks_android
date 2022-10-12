@@ -13,6 +13,7 @@ $link=$_GET["link"];
 $width="200px";
 $height="278px";
 $last_good="https://lookmovie.club";
+$last_good="https://lookmovie.studio";
 $host=parse_url($last_good)['host'];
 /* ==================================================== */
 $has_fav="yes";

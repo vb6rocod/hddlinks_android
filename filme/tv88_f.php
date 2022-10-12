@@ -13,6 +13,7 @@ $link=$_GET["link"];
 $width="200px";
 $height="278px";
 $last_good="https://tv88.to";
+// https://gowatchseries.ch/movies?page=2
 $host=parse_url($last_good)['host'];
 /* ==================================================== */
 $has_fav="yes";
@@ -203,6 +204,10 @@ foreach($f as $key => $value) {
 
   $link=$f[$key]['_id'];
   $image="https://api.tmdb.club/data/getimg/?_id=".$link;
+  if ($f[$key]['tmdb']['movie']['movie_details']['poster_path'])
+  $image="https://image.tmdb.org/t/p/w500".$f[$key]['tmdb']['movie']['movie_details']['poster_path'];
+  else
+  $image="blank.jpg";
   $year=$f[$key]['year'];
   $imdb="";
 
@@ -212,6 +217,7 @@ foreach($f as $key => $value) {
   if ($n==0) echo '<TR>'."\r\n";
   $val_imdb="tip=movie&title=".urlencode(fix_t($tit_imdb))."&year=".$year."&imdb=".$imdb;
   $fav_link="mod=add&title=".urlencode(fix_t($title))."&link=".urlencode($link)."&image=".urlencode($image)."&year=".$year;
+  //$image="r_m.php?file=".$image;
   if ($tast == "NU") {
     echo '<td class="mp" width="25%"><a href="'.$link_f.'" id="myLink'.$w.'" target="_blank" onmousedown="isKeyPressed(event)">
     <img id="myLink'.$w.'" src="'.$image.'" width="'.$width.'" height="'.$height.'"><BR>'.$title.'</a>

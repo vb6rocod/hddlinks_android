@@ -32,6 +32,32 @@ $fav_target_fix="lookmovie_f_fav.php?host=".$host."&fix=yes";
 
 <script type="text/javascript">
 var id_link="";
+function openlink1(link) {
+  msg="link1.php?file=" + link;
+  window.open(msg);
+}
+function openlink(link) {
+  on();
+  var request =  new XMLHttpRequest();
+  var the_data = "link=" + link;
+  //alert (the_data);
+  var php_file="link1.php";
+  request.open("POST", php_file, true);			// set the request
+
+  // adds a header to tell the PHP script to recognize the data as is sent via POST
+  request.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+  request.send(the_data);		// calls the send() method with datas as parameter
+
+  // Check request status
+  // If the response is received completely, will be transferred to the HTML tag with tagID
+  request.onreadystatechange = function() {
+    if (request.readyState == 4) {
+      off();
+      document.getElementById("mytest1").href=request.responseText;
+      document.getElementById("mytest1").click();
+    }
+  }
+}
 function ajaxrequest(link) {
   var request =  new XMLHttpRequest();
   var the_data = link;
@@ -61,6 +87,12 @@ function isValid(evt) {
      msg="imdb.php?" + val_imdb;
      document.getElementById("fancy").href=msg;
      document.getElementById("fancy").click();
+    } else if  (charCode == "52") {
+     id = "imdb_" + self.id;
+     id_link=self.id;
+     val_imdb=document.getElementById(id).value;
+     msg="http://imdb.com/imdb.php&" + val_imdb;
+     openlink (msg);
     } else if  (charCode == "51") {
       id = "fav_" + self.id;
       val_fav=document.getElementById(id).value;
@@ -87,13 +119,27 @@ function isKeyPressed(event) {
     msg="imdb.php?" + val_imdb;
     document.getElementById("fancy").href=msg;
     document.getElementById("fancy").click();
+  } else if (event.shiftKey) {
+    id = "imdb_" + event.target.id;
+    //alert (id);
+    val_imdb=document.getElementById(id).value;
+    msg="http://imdb.com/imdb.php&" + val_imdb;
+    openlink1(msg);
   }
+}
+function on() {
+    document.getElementById("overlay").style.display = "block";
+}
+
+function off() {
+    document.getElementById("overlay").style.display = "none";
 }
 $(document).on('keyup', '.imdb', isValid);
 document.onkeypress =  zx;
 </script>
 </head>
 <body>
+<a href='' id='mytest1'></a>
 <a id="fancy" data-fancybox data-type="iframe" href=""></a>
 <?php
 function str_between($string, $start, $end){
@@ -228,5 +274,8 @@ foreach($arr as $key => $value) {
 echo '</TABLE>';
 }
 ?>
+<div id="overlay">
+  <div id="text">Wait....</div>
+</div>
 </body>
 </html>
