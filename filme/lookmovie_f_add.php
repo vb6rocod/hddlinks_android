@@ -5,6 +5,7 @@ include ("../common.php");
 //$fav_link="mod=add&title=".urlencode(fix_t($title11))."&link=".$link1."&image=".$image;
 $mod=$_POST["mod"];
 $link=$_POST["link"];
+$link_p=parse_url(urldecode($link))['path'];
 $title=$_POST["title"];
 $image=urldecode($_POST["image"]);
 $file=$base_fav."lookmovie_f.dat";
@@ -19,8 +20,9 @@ if (file_exists($file)) {
       $tit=trim($a[0]);
       $l=trim($a[1]);
       $img=trim($a[2]);
-      $arr[$tit]["link"]=$l;
-      $arr[$tit]["image"]=$img;
+      //$arr[$tit]["link"]=$l;
+      //$arr[$tit]["image"]=$img;
+      $arr[$k]=array($tit,$l,$img);
     }
   }
 }
@@ -29,37 +31,42 @@ if ($mod=="add") {
   if ($arr) {
   $found=false;
   foreach($arr as $key => $value) {
-    if ($title == $key) {
+    //if ($title == $key) {
+    if ($title == $arr[$key][0] && $link_p == parse_url($arr[$key][1])['path']) {
       $found=true;
       break;
     }
   }
   if (!$found) {
-    $arr[$title]["link"]=$link;
-    $arr[$title]["image"]=$image;
+    //$arr[$title]["link"]=$link;
+    //$arr[$title]["image"]=$image;
+    $arr[]=array($title,$link,$image);
     echo "Am adaugat filmul ".unfix_t(urldecode($title));
   }
-  ksort($arr);
+  asort($arr);
   } else {
-    $arr[$title]["link"]=$link;
-    $arr[$title]["image"]=$image;
+    //$arr[$title]["link"]=$link;
+    //$arr[$title]["image"]=$image;
+    $arr[]=array($title,$link,$image);
     echo "Am adaugat filmul ".unfix_t(urldecode($title));
   }
   $out="";
   //print_r ($arr);
   foreach($arr as $key => $value) {
-    $out =$out.$key."#separator".$arr[$key]["link"]."#separator".$arr[$key]["image"]."\r\n";
+    //$out =$out.$key."#separator".$arr[$key]["link"]."#separator".$arr[$key]["image"]."\r\n";
+    $out =$out.$arr[$key][0]."#separator".$arr[$key][1]."#separator".$arr[$key][2]."\r\n";
   }
   //echo $out;
   if ($found) echo "Filmul a fost adaugat deja!";
   file_put_contents($file,$out);
-} else {
+} else {  // delete
   $found=false;
   //echo $title;
   if ($arr) {
   $found=false;
   foreach($arr as $key => $value) {
-    if ($title == $key) {
+    //if ($title == $key) {
+    if ($title == $arr[$key][0] && $link_p == parse_url($arr[$key][1])['path']) {
       $found=true;
       //echo $title;
       unset ($arr[$key]);
@@ -68,11 +75,12 @@ if ($mod=="add") {
     }
   }
   if ($arr) {
-    ksort($arr);
+    asort($arr);
     $out="";
     //print_r ($arr);
     foreach($arr as $key => $value) {
-      $out =$out.$key."#separator".$arr[$key]["link"]."#separator".$arr[$key]["image"]."\r\n";
+      //$out =$out.$key."#separator".$arr[$key]["link"]."#separator".$arr[$key]["image"]."\r\n";
+      $out =$out.$arr[$key][0]."#separator".$arr[$key][1]."#separator".$arr[$key][2]."\r\n";
     }
     file_put_contents($file,$out);
    }

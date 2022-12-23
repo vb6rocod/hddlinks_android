@@ -178,7 +178,7 @@ $l=$l.$q;
 $nn=count($subs);
 $k=intval($nn/10) + 1;
 $n=0;
-echo '<h2>'.$title.'</H2>';
+echo '<h2>'.$page_tit.'</H2>';
 echo '<table border="1" width="100%">
 <TR>';
 echo '<TD colspan="2" align="left">';

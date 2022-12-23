@@ -138,10 +138,10 @@ $head=array('Accept: text/html, */*; q=0.01',
 'Accept-Encoding: deflate',
 'X-Requested-With: XMLHttpRequest',
 'Connection: keep-alive',
-'Referer: https://moviehab.com/');
+'Referer: https://www.moviehab.com/');
 
 if ($tip == "series") {
-  $link="https://moviehab.com/embed/".$link;
+  $link="https://www.moviehab.com/embed/".$link;
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL,$link);
   curl_setopt($ch, CURLOPT_USERAGENT, $ua);
@@ -178,7 +178,8 @@ if ($tip == "series") {
   $t1=explode('movie?id=',$h);
   $t2=explode('"',$t1[1]);
   $id=$t2[0];
-  $link="https://moviehab.com/embed/".$id;
+  // https://www.moviehab.com/embed/movie?id=0g6gv
+  $link="https://www.moviehab.com/embed/".$id;
   //echo $link;
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL,$link);
@@ -210,7 +211,7 @@ $k=count($r);
 $x=0;
 for ($i=0;$i<$k;$i++) {
   if ($x==0) echo '<TR>';
-  $c_link="https://moviehab.com/ajax/get_stream_link?id=".$r[$i]."&movie=".$movie_id."&is_init=false&captcha=&ref=";
+  $c_link="https://www.moviehab.com/ajax/get_stream_link?id=".$r[$i]."&movie=".$movie_id."&is_init=false&captcha=&ref=";
   $openload=$s[$i];
   if (preg_match($indirect,$openload)) {
   echo '<TD class="mp"><a href="filme_link.php?file='.urlencode($c_link).'&title='.urlencode(unfix_t($tit.$tit2)).'" target="_blank">'.$openload.'</a></td>';

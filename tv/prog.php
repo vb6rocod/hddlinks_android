@@ -8,11 +8,17 @@ function str_between($string, $start, $end){
 }
 include ("../common.php");
 $n=0;
+$id_p="";
 if (isset($_POST["link"]))
   $id = unfix_t(urldecode($_POST["link"]));
 else
   $id = unfix_t(urldecode($_GET["link"]));
+if (isset($_POST["id"]))
+  $id_p = unfix_t(urldecode($_POST["id"]));
+elseif (isset($_GET["id"]))
+  $id_p = unfix_t(urldecode($_GET["id"]));
 $page_title = $id;
+//echo $id_p;
 ?>
 <html>
 <head>
@@ -37,6 +43,7 @@ $id=str_ireplace("Digi24","digi 24",$id);
 $id=strtolower(str_replace(" ","-",$id));
 */
 /* ======================================================== */
+if (!$id_p) {
 $find=$id;
   $url = "https://www.google.com/search?q=".rawurlencode($find)."+program+tv+cinemagia.ro";
   //echo $url;
@@ -46,10 +53,13 @@ $find=$id;
   curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 10.0; rv:88.0) Gecko/20100101 Firefox/88.0');
   curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
   curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
-  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 25);
   $h = curl_exec($ch);
   curl_close($ch);
+} else {
+  $h="https://www.cinemagia.ro/program-tv/post/".$id_p."/";
+}
   //echo $h;
   //https://www.cinemagia.ro/program-tv/digi-24/
   // https://www.cinemagia.ro/program-tv/hbo-2/
@@ -57,7 +67,7 @@ $find=$id;
    $id=$match[1];
 
 /* ========================================================= */
-
+//echo $id;
 $link="https://android.cinemagia.ro/program-tv/".$id."/";
 
   $ch = curl_init();
@@ -67,12 +77,31 @@ $link="https://android.cinemagia.ro/program-tv/".$id."/";
   curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
   curl_setopt ($ch, CURLOPT_REFERER, "https://android.cinemagia.ro/program-tv/");
   curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
-  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 25);
   //curl_setopt($ch, CURLOPT_COOKIEJAR, $cookie);
   //curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie);
   $html = curl_exec($ch);
   curl_close($ch);
+
+  $head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:75.0) Gecko/20100101 Firefox/75.0',
+  'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8',
+  'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
+  'Accept-Encoding: deflate',
+  'Referer : https://android.cinemagia.ro/program-tv/',
+  'Connection: keep-alive');
+  $options = array(
+        'http' => array(
+        'header'  => array($head),
+        'method'  => 'GET'
+    ),
+        "ssl"=>array(
+        "verify_peer"=>false,
+        "verify_peer_name"=>false,
+    )
+  );
+  //$context  = stream_context_create($options);
+  //$html = @file_get_contents($link, false, $context);
 //echo $html;
 $t1=explode('<title>',$html);
 $t2=explode('<',$t1[1]);

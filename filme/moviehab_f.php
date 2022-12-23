@@ -13,6 +13,8 @@ $link=$_GET["link"];
 $width="200px";
 $height="278px";
 $last_good="https://moviehab.com";
+$last_good="https://moviehab.net";
+$last_good="https://www.moviehab.com";
 $host=parse_url($last_good)['host'];
 /* ==================================================== */
 $has_fav="yes";

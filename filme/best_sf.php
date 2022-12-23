@@ -5,58 +5,44 @@ function str_between($string, $start, $end){
 	if ($ini == 0) return ""; $ini += strlen($start); $len = strpos($string,$end,$ini) - $ini;
 	return substr($string,$ini,$len);
 }
-include ("../common.php");;
-$page = $_GET["page"];
-$tip= $_GET["tip"];
+include ("../common.php");
+
 $tit=$_GET["title"];
 $link=$_GET["link"];
-$width="200px";
-$height="278px";
-$last_good="https://bmovies.vip";
-$host=parse_url($last_good)['host'];
+$tip="search";
+$width="100px";
+$height="136px";
 /* ==================================================== */
-$has_fav="yes";
-$has_search="yes";
-$has_add="yes";
+$has_fav="no";
+$has_search="no";
+$has_add="no";
 $has_fs="yes";
-$fav_target="bmovies_s_fav.php?host=".$last_good;;
-$add_target="bmovies_s_add.php";
+$fav_target="";
+$add_target="";
 $add_file="";
-$fs_target="bmovies_ep.php";
-$target="bmovies_s.php";
+$fs_target="moviewetrust_s.php";
+$target="best_sf.php";
 /* ==================================================== */
-$base=basename($_SERVER['SCRIPT_FILENAME']);
-$p=$_SERVER['QUERY_STRING'];
-parse_str($p, $output);
-
-if (isset($output['page'])) unset($output['page']);
-$p = http_build_query($output);
-if (!isset($_GET["page"]))
-  $page=1;
-else
-  $page=$_GET["page"];
-$next=$base."?page=".($page+1)."&".$p;
-$prev=$base."?page=".($page-1)."&".$p;
+$next="";
+$prev="";
+$page=1;
 /* ==================================================== */
 $tit=unfix_t(urldecode($tit));
 $link=unfix_t(urldecode($link));
 /* ==================================================== */
-if (file_exists($base_cookie."seriale.dat"))
-  $val_search=file_get_contents($base_cookie."seriale.dat");
+if (file_exists($base_cookie."filme.dat"))
+  $val_search=file_get_contents($base_cookie."filme.dat");
 else
   $val_search="";
 $form='<form action="'.$target.'" target="_blank">
-Cautare serial:  <input type="text" id="title" name="title" value="'.$val_search.'">
+Cautare film:  <input type="text" id="title" name="title" value="'.$val_search.'">
 <input type="hidden" name="page" id="page" value="1">
 <input type="hidden" name="tip" id="tip" value="search">
 <input type="hidden" name="link" id="link" value="">
 <input type="submit" id="send" value="Cauta...">
 </form>';
 /* ==================================================== */
-if ($tip=="search") {
-  $page_title = "Cautare: ".$tit;
-  if ($page == 1) file_put_contents($base_cookie."seriale.dat",$tit);
-} else
+
   $page_title=$tit;
 /* ==================================================== */
 
@@ -143,107 +129,46 @@ $n=0;
 echo '<H2>'.$page_title.'</H2>'."\r\n";
 
 echo '<table border="1px" width="100%" style="table-layout:fixed;">'."\r\n";
-echo '<TR>'."\r\n";
-if ($page==1) {
-   if ($tip == "release") {
-   if ($has_fav=="yes" && $has_search=="yes") {
-     echo '<TD class="nav"><a id="fav" href="'.$fav_target.'" target="_blank">Favorite</a></TD>'."\r\n";
-     echo '<TD class="form" colspan="2">'.$form.'</TD>'."\r\n";
-     echo '<TD class="nav" align="right"><a href="'.$next.'">&nbsp;&gt;&gt;&nbsp;</a></TD>'."\r\n";
-   } else if ($has_fav=="no" && $has_search=="yes") {
-     echo '<TD class="nav"><a id="fav" href="">Reload...</a></TD>'."\r\n";
-     echo '<TD class="form" colspan="2">'.$form.'</TD>'."\r\n";
-     echo '<TD class="nav" align="right"><a href="'.$next.'">&nbsp;&gt;&gt;&nbsp;</a></TD>'."\r\n";
-   } else if ($has_fav=="yes" && $has_search=="no") {
-     echo '<TD class="nav"><a id="fav" href="'.$fav_target.'" target="_blank">Favorite</a></TD>'."\r\n";
-     echo '<TD class="nav" colspan="3" align="right"><a href="'.$next.'">&nbsp;&gt;&gt;&nbsp;</a></TD>'."\r\n";
-   } else if ($has_fav=="no" && $has_search=="no") {
-     echo '<TD class="nav" colspan="4" align="right"><a href="'.$next.'">&nbsp;&gt;&gt;&nbsp;</a></TD>'."\r\n";
-   }
-   } else {
-     echo '<TD class="nav" colspan="4" align="right"><a href="'.$next.'">&nbsp;&gt;&gt;&nbsp;</a></TD>'."\r\n";
-   }
-} else {
-   echo '<TD class="nav" colspan="4" align="right"><a href="'.$prev.'">&nbsp;&lt;&lt;&nbsp;</a> | <a href="'.$next.'">&nbsp;&gt;&gt;&nbsp;</a></TD>'."\r\n";
-}
-echo '</TR>'."\r\n";
-if($tip=="release") {
-  $l="https://".$host."/movie/filter/series/".$page."/";
-} else {
-  $search=str_replace(" ","+",$tit);
-  $l = "https://".$host."/search/".$search;
-}
-///////////////////////////////////////////////
-$ua = $_SERVER['HTTP_USER_AGENT'];
-$ua="Mozilla/5.0 (Windows NT 10.0; rv:71.0) Gecko/20100101 Firefox/71.0";
 
+$f=array();
+$l="https://raw.githubusercontent.com/vb6rocod/hddlinks/master/best_sf.txt";
+$h=file_get_contents($l);
+$f=json_decode($h,1);
 
-$host=parse_url($l)['host'];
-  $ch = curl_init($l);
-  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
-  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
-  curl_setopt($ch, CURLOPT_RETURNTRANSFER  ,1);  // RETURN THE CONTENTS OF THE CALL
-  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
-  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
-  $html = curl_exec($ch);
-  curl_close ($ch);
-  
-$videos = explode('div class="ml-item', $html);
-unset($videos[0]);
-$videos = array_values($videos);
-foreach($videos as $video) {
-  $t1 = explode('load_info/',$video);
-  $t2 = explode('/', $t1[1]);
-  $link = $t2[0];
-  $t1 = explode('title="', $video);
-  $t2 = explode('"', $t1[1]);
-  $title = $t2[0];
-  $title = prep_tit($title);
-  $t1 = explode('data-original="', $video);
-  $t2 = explode('"', $t1[1]);
-  $image = $t2[0];
-  if (strpos($image,"http") === false) $image="https:".$image;
-  $year="";
+foreach($f as $key => $value) {
+  $title=$f[$key][0];
+  $link=$title;
+  $image=$f[$key][1];
   $imdb="";
-  $sez="";
-  if (preg_match("/(:|-)?\s+Season\s+(\d+)/i",$title,$m)) {
-  $tit_serial=trim(str_replace($m[0],"",$title));
-  $sez=$m[2];
-  $rest = substr($tit_serial, -6);
-  if (preg_match("/\((\d+)\)/",$rest,$m)) {
-   $year=$m[1];
-   $tit_imdb=trim(str_replace($m[0],"",$title));
-  } else {
-   $year="";
-   $tit_imdb=$tit_serial;
-  }
-  } else {
-    $tit_imdb=$title;
-  }
-  $link_f=$fs_target.'?tip=series&link='.urlencode($link).'&title='.urlencode(fix_t($title)).'&image='.$image."&sez=".$sez."&ep=&ep_tit=&year=".$year;
-  if ($title && strpos($link,"/show") === false) {
+  $year=$f[$key][3];
+  $desc=$f[$key][2];
+  $tit_imdb=$title;
+  $link_f=$fs_target.'?tip=search&page=1&link=&title='.urlencode($title);
+  if ($title) {
   if ($n==0) echo '<TR>'."\r\n";
   $val_imdb="tip=series&title=".urlencode(fix_t($tit_imdb))."&year=".$year."&imdb=".$imdb;
   $fav_link="mod=add&title=".urlencode(fix_t($title))."&link=".urlencode($link)."&image=".urlencode($image)."&year=".$year;
+  //$image="r_m.php?file=".$image;
   if ($tast == "NU") {
     echo '<td class="mp" width="25%"><a href="'.$link_f.'" id="myLink'.$w.'" target="_blank" onmousedown="isKeyPressed(event)">
-    <img id="myLink'.$w.'" src="'.$image.'" width="'.$width.'" height="'.$height.'"><BR>'.$title.'</a>
+    <img id="myLink'.$w.'" src="'.$image.'" width="'.$width.'" height="'.$height.'"><BR>'.$title.' ('.$year.')</a>
     <input type="hidden" id="imdb_myLink'.$w.'" value="'.$val_imdb.'">'."\r\n";
     if ($has_add=="yes")
       echo '<a onclick="ajaxrequest('."'".$fav_link."'".')" style="cursor:pointer;">*</a>'."\r\n";
     echo '</TD>'."\r\n";
   } else {
     echo '<td class="mp" width="25%"><a class ="imdb" id="myLink'.$w.'" href="'.$link_f.'" target="_blank">
-    <img src="'.$image.'" width="'.$width.'" height="'.$height.'"><BR>'.$title.'</a>
+    <img id="myLink'.$w.'" src="'.$image.'" width="'.$width.'" height="'.$height.'"><BR>'.$title.' ('.$year.')</a>
     <input type="hidden" id="imdb_myLink'.$w.'" value="'.$val_imdb.'">'."\r\n";
     if ($has_add == "yes")
       echo '<input type="hidden" id="fav_myLink'.$w.'" value="'.$fav_link.'"></a>'."\r\n";
     echo '</TD>'."\r\n";
   }
+  $n++;
+  echo '<td class="mp">'.$desc.'</TD>'."\r\n";
   $w++;
   $n++;
-  if ($n == 4) {
+  if ($n == 2) {
   echo '</tr>'."\r\n";
   $n=0;
   }
@@ -251,19 +176,13 @@ foreach($videos as $video) {
  }
 
 /* bottom */
-  if ($n < 4 && $n > 0) {
-    for ($k=0;$k<4-$n;$k++) {
+  if ($n < 2 && $n > 0) {
+    for ($k=0;$k<2-$n;$k++) {
       echo '<TD></TD>'."\r\n";
     }
     echo '</TR>'."\r\n";
   }
-echo '<tr>
-<TD class="nav" colspan="4" align="right">'."\r\n";
-if ($page > 1)
-  echo '<a href="'.$prev.'">&nbsp;&lt;&lt;&nbsp;</a> | <a href="'.$next.'">&nbsp;&gt;&gt;&nbsp;</a></TD>'."\r\n";
-else
-  echo '<a href="'.$next.'">&nbsp;&gt;&gt;&nbsp;</a></TD>'."\r\n";
-echo '</TR>'."\r\n";
+
 echo "</table>"."\r\n";
 echo "</table>";
 ?></body>

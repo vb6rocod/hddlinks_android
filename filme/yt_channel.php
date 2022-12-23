@@ -15,8 +15,8 @@ $image=$_GET["image"];
 $next="";
 $prev="";
 $page_title = $title;
-$key="AIzaSyDhpkA0op8Cyb_Yu1yQa1_aPSr7YtMacYU";
-if (file_exists($base_pass."youtube.txt"))
+$key="";
+if (file_exists($base_pass."youtube.txt")) {
   $key=trim(file_get_contents($base_pass."youtube.txt"));
  $pl=array();
 if (!$token){
@@ -56,7 +56,75 @@ $l2="https://www.googleapis.com/youtube/v3/search?part=snippet&channelId=".$id."
   $p=json_decode($html,1);
   if (isset($p["nextPageToken"])) $next=$p["nextPageToken"];
   if (isset($p["prevPageToken"])) $prev=$p["prevPageToken"];
+} else {
+$r=array();
+  $l1="https://www.youtube.com/channel/".$id;
+  $l="https://www.youtube.com/channel/".$id."/playlists";
+  $ua="'Mozilla/5.0 (Windows; U; Windows NT 6.1; en-US; rv:1.9.1.2) Gecko/20090729 Firefox/3.5.2 GTB5'";
+  $ch = curl_init();
+  curl_setopt($ch, CURLOPT_URL, $l);
+  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER  ,1);  // RETURN THE CONTENTS OF THE CALL
+  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 25);
+  $h = curl_exec($ch);
+  //curl_close($ch);
+  //echo $h;
+  $t1=explode("ytInitialData = ",$h);
+  $t2=explode(";</script>",$t1[1]);
+  $x=json_decode(trim($t2[0]),1);
+  if (isset($x['contents']['twoColumnBrowseResultsRenderer']['tabs'][2]['tabRenderer']['content']['sectionListRenderer']['contents'][0]['itemSectionRenderer']['contents'][0]['shelfRenderer']))
+    $y =$x['contents']['twoColumnBrowseResultsRenderer']['tabs'][2]['tabRenderer']['content']['sectionListRenderer']['contents'][0]['itemSectionRenderer']['contents'][0]['shelfRenderer']['content']['horizontalListRenderer']['items'];
+  elseif (isset($x['contents']['twoColumnBrowseResultsRenderer']['tabs'][2]['tabRenderer']['content']['sectionListRenderer']['contents'][0]['itemSectionRenderer']['contents'][0]['gridRenderer']['items']))
+    $y =$x['contents']['twoColumnBrowseResultsRenderer']['tabs'][2]['tabRenderer']['content']['sectionListRenderer']['contents'][0]['itemSectionRenderer']['contents'][0]['gridRenderer']['items'];        // ['gridRenderer']['items']
+  if (isset($y)) {
+  for ($k=0;$k<count($y);$k++) {
+    $tip="youtube#playlist";
+    if (isset($y[$k]['gridPlaylistRenderer'])) {
+    $id=$y[$k]['gridPlaylistRenderer']['playlistId'];
+    $title=$y[$k]['gridPlaylistRenderer']['title']['runs'][0]['text'];
+    $image=$y[$k]['gridPlaylistRenderer']['thumbnail']['thumbnails'][0]['url'];
+    $r[]=array($id,$title,$image,$tip);
+    }
+  }
+  }
+  curl_setopt($ch, CURLOPT_URL, $l1);
+  $h = curl_exec($ch);
+  curl_close($ch);
+  $t1=explode("ytInitialData = ",$h);
+  $t2=explode(";</script>",$t1[1]);
+  $x=json_decode(trim($t2[0]),1);
+  //print_r ($x);
+  $y =$x['contents']['twoColumnBrowseResultsRenderer']['tabs'][0]['tabRenderer']['content']['sectionListRenderer']['contents'];
+  //print_r ($y[2]);
+  for ($k=0;$k<count ($y); $k++) {
+   $yy=$y[$k]['itemSectionRenderer']['contents'][0];
+   //echo key($yy)."\n";
+   //print_r ($yy);
+   //echo "============"."\n";
+   if (isset($yy['channelVideoPlayerRenderer'])) {
+    $id=$yy['channelVideoPlayerRenderer']['videoId'];
+    $title=$yy['channelVideoPlayerRenderer']['title']['runs'][0]['text'];
+    $image="blank.jpg";
+    $r[]=array($id,$title,$image,"youtube#video");
+   } elseif (isset($yy['shelfRenderer']['content']['horizontalListRenderer']['items'])) {
+     $yyy=$yy['shelfRenderer']['content']['horizontalListRenderer']['items'];
+     //print_r ($yy['shelfRenderer']);
+     for ($kk=0;$kk<count($yyy);$kk++) {
+      if (isset($yyy[$kk]['gridVideoRenderer'])) {
+      $id=$yyy[$kk]['gridVideoRenderer']['videoId'];
+      $title=$yyy[$kk]['gridVideoRenderer']['title']['simpleText'];
+      $image=$yyy[$kk]['gridVideoRenderer']['thumbnail']['thumbnails'][0]['url'];
+      $r[]=array($id,$title,$image,"youtube#video");
+      }
+     }
+   }
+   
+   }
 
+}
 ?>
 <html><head>
 <meta http-equiv="content-type" content="text/html; charset=UTF-8">
@@ -177,9 +245,10 @@ if ($prev)
 echo '<a href="'.$prevpage.'">&nbsp;&lt;&lt;&nbsp;</a> | <a href="'.$nextpage.'">&nbsp;&gt;&gt;&nbsp;</a></TD></TR>';
 else
 echo '<a href="'.$nextpage.'">&nbsp;&gt;&gt;&nbsp;</a></TD></TR>';
+if (file_exists($base_pass."youtube.txt")) {
 if (!$token && $pl) {
 //
-//print_r ($pl);
+
  for ($k=0;$k<count($pl);$k++) {
   $title=$pl[$k]['snippet']['title'];
   $title="(playlist) ".$title;
@@ -263,6 +332,50 @@ for ($k=0;$k<min(sizeof($p["items"]),25);$k++) {
   }
   }
 }
+} else {
+$n=0;
+if ($n==0) echo '<TR>';
+ for ($k=0;$k<count($r);$k++) {
+
+  $kind=$r[$k][3];
+  $id=$r[$k][0];
+  $image=$r[$k][2];
+  $title=$r[$k][1];
+  if ($kind== "youtube#playlist") {
+  $add_fav="mod=add&kind=".str_replace("youtube#","",$kind)."&id=".$id."&title=".urlencode(fix_t($title))."&image=".$image;
+  $playlist="yt_playlist.php?token=&id=".$id."&kind=".str_replace("youtube#","",$kind)."&title=".urlencode(fix_t($title))."&image=".$image;
+  $title="(playlist) ".$title;
+  if ($tast == "NU")
+  echo '<td class="mp" align="center" width="20%"><a href="'.$playlist.'" target="_blank"><img src="'.$image.'" width="160px" height="90px"><BR>'.$title.'</a> <a onclick="ajaxrequest2('."'".$add_fav."'".')" style="cursor:pointer;">*</a></TD>';
+  else {
+  echo '<td class="mp" align="center" width="20%"><a class ="imdb" id="myLink'.($w*1).'" href="'.$playlist.'" target="_blank"><img src="'.$image.'" width="160px" height="90px"><BR>'.$title.'<input type="hidden" id="fav_myLink'.($w*1).'" value="'.$add_fav.'"></a></TD>';
+  $w++;
+  }
+  } else {
+  $add_fav="mod=add&kind=".str_replace("youtube#","",$kind)."&id=".$id."&title=".urlencode(fix_t($title))."&image=".$image;
+  $link1="".urlencode("http://www.youtube.com/watch?v=".$id)."&title=".urlencode($title);
+  if ($tast == "NU") {
+  if ($flash != "mp")
+  echo '<td class="mp" align="center" width="20%"><a onclick="ajaxrequest1('."'".$link1."'".')" style="cursor:pointer;"><img src="'.$image.'" width="160px" height="90px"><BR>'.$title.'</a> <a onclick="ajaxrequest2('."'".$add_fav."'".')" style="cursor:pointer;">*</a></TD>';
+  else
+  echo '<td class="mp" align="center" width="20%"><a onclick="ajaxrequest('."'".$link1."'".')" style="cursor:pointer;"><img src="'.$image.'" width="160px" height="90px"><BR>'.$title.'</a> <a onclick="ajaxrequest2('."'".$add_fav."'".')" style="cursor:pointer;">*</a></TD>';
+
+  } else {
+  if ($flash != "mp")
+  echo '<td class="mp" align="center" width="20%"><a class ="imdb" id="myLink'.($w*1).'" onclick="ajaxrequest1('."'".$link1."'".')" style="cursor:pointer;"><img src="'.$image.'" width="160px" height="90px"><BR>'.$title.'<input type="hidden" id="fav_myLink'.($w*1).'" value="'.$add_fav.'"></a></TD>';
+  else
+  echo '<td class="mp" align="center" width="20%"><a class ="imdb" id="myLink'.($w*1).'" onclick="ajaxrequest('."'".$link1."'".')" style="cursor:pointer;"><img src="'.$image.'" width="160px" height="90px"><BR>'.$title.'<input type="hidden" id="fav_myLink'.($w*1).'" value="'.$add_fav.'"></a></TD>';
+  $w++;
+  }
+  }
+  $n++;
+  if ($n == 5) {
+  echo '</tr>';
+  $n=0;
+  }
+}
+}
+
 echo '<tr><TD colspan="5" align="right">';
 if ($prev)
 echo '<a href="'.$prevpage.'">&nbsp;&lt;&lt;&nbsp;</a> | <a href="'.$nextpage.'">&nbsp;&gt;&gt;&nbsp;</a></TD></TR>';

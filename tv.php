@@ -93,6 +93,14 @@ $(document).on('keyup', '.imdb', isValid);
 <TD width="25%"><a href="tv/stream4free.php" target="_blank">stream4free</TD>
 <TD width="25%"><a href="tv/ustvgo.php" target="_blank">ustvgo</TD>
 </TR>
+
+<TR>
+<TD width="25%"><a href="tv/canalelive.php" target="_blank">Sport</a></TD>
+<TD width="25%"><a href="tv/program.php" target="_blank">ProgramTV</a></TD>
+<TD width="25%"></TD>
+<TD width="25%"></TD>
+</TR>
+
 <?php
 include ("common.php");
 if (file_exists($base_pass."tvplay.txt")) {
@@ -100,9 +108,8 @@ echo '
 <TR>
 <TD width="25%"><a href="filme/facebook1_fav.php" target="_blank">facebook1</a></TD>
 <TD width="25%"><a href="filme/facebook2_fav.php" target="_blank">facebook2</a></TD>
-<!--<TD width="25%"><a href="tv/ustream_main.php" target="_blank">ustream</TD>-->
-<TD width="25%"><a href="tv/playlist.php?link=https://m3u-editor.com/serve/dani7777&title=dani777" target="_blank">dani777</TD>
-<TD width="25%"><a href="tv/canalelive.php" target="_blank">Canale Live</a></TD>'
+<TD width="25%"></TD>
+<TD width="25%"></TD>'
 ;
 echo '</TR>';
 }

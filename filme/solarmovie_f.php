@@ -19,6 +19,7 @@ $has_add="yes";
 $has_fs="yes";
 $last_good="https://www2.solarmovie.to";
 $last_good="https://yesmovies.ag";
+// https://ww4.soap2dayhd.co
 $host=parse_url($last_good)['host'];
 $fav_target="solarmovie_f_fav.php?host=".$last_good;
 $add_target="solarmovie_f_add.php";

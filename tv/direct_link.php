@@ -409,6 +409,34 @@ if (strpos($link,"jurnaltv.md/JurnalTV") !== false) {
     if (!$link) $link=str_between($h,'file:"','"');
 }
 ///////////////////////////////////////////////
+if ($from=="sultanovic") {
+ $ua="Mozilla/5.0 (Windows NT 10.0; rv:89.0) Gecko/20100101 Firefox/89.0";
+ if (preg_match("/\?\w+\=(.+)/",$link,$m)) {
+  $link=$m[1];
+ } else {
+  $host="https://".parse_url($link)['host'];
+  $ch = curl_init();
+  curl_setopt($ch, CURLOPT_URL, $link);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
+  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+  curl_setopt($ch, CURLOPT_REFERER,"http://sultanovic.net");
+  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 25);
+  $h = curl_exec($ch);
+  curl_close($ch);
+  if (preg_match("/videoLink \= \'/",$h)) {
+   $t1=explode("videoLink = '",$h);
+   $t2=explode("'",$t1[1]);
+   $link=$host.$t2[0];
+   if ($flash <> "flash")
+    $link=$link."|Referer=".urlencode($host)."&Origin=".urlencode($host);
+  } else {
+    $link="";
+  }
+ }
+}
 if ($from=="canale.live") {
   $ua="Mozilla/5.0 (Windows NT 10.0; rv:89.0) Gecko/20100101 Firefox/89.0";
   $l="https://canale.live/embdr/".$link."/";

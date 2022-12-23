@@ -106,8 +106,9 @@ if (file_exists($file)) {
       $tit=trim($a[0]);
       $l=trim($a[1]);
       $img=trim($a[2]);
-      $arr[$tit]["link"]=$l;
-      $arr[$tit]["image"]=$img;
+      //$arr[$tit]["link"]=$l;
+      //$arr[$tit]["image"]=$img;
+      $arr[$k]=array($tit,$l,$img);
     }
   }
 }
@@ -143,10 +144,10 @@ $head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:95.0) Gecko/20100101 F
   curl_setopt($ch, CURLOPT_TIMEOUT, 25);
 foreach($arr as $key => $value) {
     $imdb="";
-	$link = urldecode($arr[$key]["link"]);
-    $title = unfix_t(urldecode($key));
-    $image=urldecode($arr[$key]["image"]);
-    $orig=urldecode($arr[$key]["image"]);
+	$link = urldecode($arr[$key][1]);
+    $title = unfix_t(urldecode($arr[$key][0]));
+    $image=urldecode($arr[$key][2]);
+    $orig=urldecode($arr[$key][2]);
     $link=$host.parse_url($link)['path'];
     //$image=$host.parse_url($image)['path'];
     // content/uploads/2020/09/eD1YeAGlYvdxab3PZV66wAyd2Dx-185x278.jpg
@@ -184,11 +185,12 @@ foreach($arr as $key => $value) {
   } else {
     //$image="blank.jpg";
     unset ($arr[$key]);
-    ksort($arr);
+    asort($arr);
     $out1="";
     //print_r ($arr);
     foreach($arr as $key => $value) {
-      $out1 =$out1.$key."#separator".$arr[$key]["link"]."#separator".$arr[$key]["image"]."\r\n";
+      //$out1 =$out1.$key."#separator".$arr[$key]["link"]."#separator".$arr[$key]["image"]."\r\n";
+      $out1 =$out.$arr[$key][0]."#separator".$arr[$key][1]."#separator".$arr[$key][2]."\r\n";
     }
     file_put_contents($file,$out1);
   }

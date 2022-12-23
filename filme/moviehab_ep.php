@@ -43,7 +43,7 @@ $head=array('Accept: text/html, */*; q=0.01',
 'Accept-Encoding: deflate',
 'X-Requested-With: XMLHttpRequest',
 'Connection: keep-alive',
-'Referer: https://moviehab.com/');
+'Referer: https://www.moviehab.com/');
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL,$link);
   curl_setopt($ch, CURLOPT_USERAGENT, $ua);

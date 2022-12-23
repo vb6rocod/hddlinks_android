@@ -8,7 +8,7 @@ function str_between($string, $start, $end){
 }
 include ("../common.php");
 /* =================================================== */
-$l="https://fsharetv.co";
+$l="https://fsharetv.io";
 $host=parse_url($l)['host'];
 $page = $_GET["page"];
 $tip= $_GET["tip"];
@@ -171,12 +171,12 @@ if ($page==1) {
 echo '</TR>'."\r\n";
 if($tip=="release") {
   if ($page==1)
-   $l="https://fsharetv.co/category/new";
+   $l="https://fsharetv.io/category/new";
   else
-   $l="https://fsharetv.co/category/new?page=".$page."&year=";
+   $l="https://fsharetv.io/category/new?page=".$page."&year=";
 } else {
   $search=str_replace(" ","+",$tit);
-  $l = "https://fsharetv.co/search?q=".$search;
+  $l = "https://fsharetv.io/search?q=".$search;
 }
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $l);
@@ -194,7 +194,7 @@ $videos = array_values($videos);
 foreach($videos as $video) {
   $t1=explode('href="',$video);
   $t2=explode('"',$t1[1]);
-  $link="https://fsharetv.co".$t2[0];
+  $link="https://fsharetv.io".$t2[0];
   $t1 = explode('<b>', $video);
   $t3 = explode('<',$t1[1]);
   $title = $t3[0];

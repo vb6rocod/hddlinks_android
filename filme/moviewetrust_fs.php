@@ -1,7 +1,7 @@
 <!doctype html>
 <?php
 include ("../common.php");
-error_reporting(0);
+//error_reporting(0);
 $list = glob($base_sub."*.srt");
    foreach ($list as $l) {
     str_replace(" ","%20",$l);
@@ -238,7 +238,7 @@ if($o == "voxzer") return "https://player.voxzer.org/view/".$x;
 if($o == "vidcloud") return "https://membed.net/streaming.php?id=".$x;
 }
 $ua="Mozilla/5.0 (Windows NT 10.0; rv:75.0) Gecko/20100101 Firefox/75.0";
-$l="https://openvids.io/api/servers";
+$l="https://openvids.to/api/servers";
 if ($tip=="movie") {
  $p=array(
    "type" => "movie",
@@ -271,13 +271,16 @@ if ($tip=="movie") {
    );
 }
 $post=json_encode($p);
-$head=array('Accept: */*',
+//echo $post;
+//$post='{"type":"movie","_id":"tt0371746","film":{"_id":"tt0371746","title":"Iron Man","overview":"After being held captive in an Afghan cave, billionaire engineer Tony Stark creates a unique weaponized suit of armor to fight evil.","tmdbId":1726,"backdrop":"/cyecB7godJ6kNHGONFjUyVN9OX5.jpg","releasedAt":"2008-04-30T00:00:00.000Z","updatedAt":"2000-05-23T03:03:26.787Z"}}';
+$head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:106.0) Gecko/20100101 Firefox/106.0',
+'Accept: */*',
 'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
 'Accept-Encoding: deflate',
-'Referer: https://openvids.io/',
+'Referer: https://openvids.to/',
 'Content-Type: application/json',
 'Content-Length: '.strlen($post),
-'Origin: https://openvids.io',
+'Origin: https://openvids.to',
 'Alt-Used: openvids.io',
 'Connection: keep-alive',
 'Sec-Fetch-Dest: empty',
@@ -286,7 +289,7 @@ $head=array('Accept: */*',
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $l);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
+  //curl_setopt($ch, CURLOPT_USERAGENT, $ua);
   curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
   curl_setopt($ch, CURLOPT_POST,1);
   curl_setopt($ch, CURLOPT_POSTFIELDS,$post);
@@ -294,15 +297,18 @@ $head=array('Accept: */*',
   //curl_setopt($ch, CURLOPT_HEADER,1);
   curl_setopt($ch, CURLOPT_HTTPHEADER, $head);
   curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+  curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
   curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
   curl_setopt($ch, CURLOPT_TIMEOUT, 25);
   $h = curl_exec($ch);
+  if (preg_match("/servers/",$h)) {
   $z=json_decode($h,1)['servers'];
-  //print_r ($z);
+
   foreach ($z as $key => $value) {
     //echo $key;
     $s[]=$value['name'];
     $r[]=get_link($value['name'],$value['code']);
+  }
   }
 ////////////////////////////////////////////////////////////
 // vidsrc.me
@@ -453,6 +459,8 @@ echo '<br>
 <BR>Scurtaturi: 7=opensubtitles, 8=titrari, 9=subs, 0=subtitrari (cauta imdb id)
 </b></font></TD></TR></TABLE>
 ';
+
+//echo '<a href="https://streamembed.net/play/YTF0TklLYXplRnRhdjNTcHBUQUxnUzd1amt0UkIrZTJTWUZlQk8wYXJsWXhlT2EzTkxaQkU0RU9HQ2ZwemhvPQ==">sasaasas</a>';
 include("../debug.html");
 echo '
 <div id="overlay">

@@ -227,6 +227,7 @@ $host=parse_url($l)['host'];
   curl_setopt($ch, CURLOPT_TIMEOUT, 25);
   $html = curl_exec($ch);
   curl_close($ch);
+  //echo $html;
 $r=array();
 if ($tip=="release") {
 $videos=explode('<article id="post-',$html);
@@ -241,7 +242,7 @@ foreach($videos as $video) {
   $title=$t2[0];
   $title = trim(strip_tags($title));
   $title = prep_tit($title);
-  $t1 = explode('data-src="', $video);
+  $t1 = explode('src="', $video);
   $t2 = explode('"', $t1[1]);
   $image = $t2[0];
   if (strpos($image,"http") === false) $image="https:".$image;
@@ -264,7 +265,7 @@ foreach($videos as $video) {
   $title=$t2[0];
   $title = trim(strip_tags($title));
   $title = prep_tit($title);
-  $t1 = explode('data-src="', $video);
+  $t1 = explode('src="', $video);
   $t2 = explode('"', $t1[1]);
   $image = $t2[0];
   if (strpos($image,"http") === false) $image="https:".$image;

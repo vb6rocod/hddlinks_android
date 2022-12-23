@@ -160,12 +160,14 @@ if (file_exists($file)) {
       $tit=trim($a[0]);
       $l=trim($a[1]);
       $img=trim($a[2]);
-      $arr[$tit]["link"]=$l;
-      $arr[$tit]["image"]=$img;
+      //$arr[$tit]["link"]=$l;
+      //$arr[$tit]["image"]=$img;
+      $arr[$k]=array($tit,$l,$img);
     }
   }
 }
 if ($arr) {
+asort($arr);
 $n=0;
 $w=0;
 $nn=count($arr);
@@ -186,9 +188,9 @@ echo '</table>';
 echo '<table border="1px" width="100%">'."\n\r";
 foreach($arr as $key => $value) {
     $imdb="";
-	$link = urldecode($arr[$key]["link"]);
-    $title = unfix_t(urldecode($key));
-    $image=urldecode($arr[$key]["image"]);
+	$link = urldecode($arr[$key][1]);
+    $title = unfix_t(urldecode($arr[$key][0]));
+    $image=urldecode($arr[$key][2]);
     // ="/images/b/w780/db88ada5d2083f50593d65b61d54d6a0.jpg"
     // https://lookmovie.ag/p/w300/05dee075be60af0893aa926c3977c38a.jpg
     $image=str_replace("////","//",$image);

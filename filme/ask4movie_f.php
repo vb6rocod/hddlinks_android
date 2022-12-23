@@ -17,6 +17,7 @@ $last_good="https://ask4movie.co";
 $last_good="https://ask4movie.cc";
 $last_good="https://ask4movie.io";
 $last_good="https://ask4movie.me";
+$last_good="https://ask4movie.mx";
 $host=parse_url($last_good)['host'];
 /* ==================================================== */
 $has_fav="yes";

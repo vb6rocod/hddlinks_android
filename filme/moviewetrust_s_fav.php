@@ -151,8 +151,9 @@ if (file_exists($file)) {
       $tit=trim($a[0]);
       $l=trim($a[1]);
       $img=trim($a[2]);
-      $arr[$tit]["link"]=$l;
-      $arr[$tit]["image"]=$img;
+      //$arr[$tit]["link"]=$l;
+      //$arr[$tit]["image"]=$img;
+      $arr[$k]=array($tit,$l,$img);
     }
   }
 }
@@ -169,9 +170,9 @@ echo '</TR></table>';
 echo '<table border="1px" width="100%">'."\n\r";
 foreach($arr as $key => $value) {
     $imdb="";
-	$link = urldecode($arr[$key]["link"]);
-    $title = unfix_t(urldecode($key));
-    $image=urldecode($arr[$key]["image"]);
+	$link = urldecode($arr[$key][1]);
+    $title = unfix_t(urldecode($arr[$key][0]));
+    $image=urldecode($arr[$key][2]);
     $tit_imdb=$title;
     //$image=$host.parse_url($image)['path'];
     $year="";

@@ -18,6 +18,8 @@ $has_search="yes";
 $has_add="yes";
 $has_fs="yes";
 $last_good="https://moviehab.com";
+$last_good="https://moviehab.net";
+$last_good="https://www.moviehab.com";
 $host=parse_url($last_good)['host'];
 $fav_target="moviehab_s_fav.php?host=".$last_good;
 $add_target="moviehab_s_add.php";

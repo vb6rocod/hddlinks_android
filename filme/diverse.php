@@ -81,6 +81,16 @@ echo '<TD style="text-align:center"><font size="4">'.'<a href="'.$link.'" target
 echo "<TD></TD>";
 echo "<TD></TD>";
 echo "</TR>"."\n\r";
+echo "<TR>"."\n\r";
+$link="best.php?link=https://www.menshealth.com/entertainment/g33352561/best-alien-movies/&title=best-alien-movies";
+echo '<TD style="text-align:center"><font size="4">'.'<a href="'.$link.'" target="_blank">best-alien-movies</a></font></TD>';
+$link="best.php?link=https://www.menshealth.com/entertainment/g34701308/best-thanksgiving-movies/&title=best-thanksgiving-movies";
+echo '<TD style="text-align:center"><font size="4">'.'<a href="'.$link.'" target="_blank">best-thanksgiving-movies</a></font></TD>';
+$link="best.php?link=https://www.menshealth.com/entertainment/g34497836/funny-christmas-movies/&title=funny-christmas-movies";
+echo '<TD style="text-align:center"><font size="4">'.'<a href="'.$link.'" target="_blank">funny-christmas-movies</a></font></TD>';
+$link="best_sf.php?link=&title=Best+SF+Series";
+echo '<TD style="text-align:center"><font size="4">'.'<a href="'.$link.'" target="_blank">Best SF Series</a></font></TD>';
+echo "</TR>"."\n\r";
  echo '</table>';
 ?>
 </body>

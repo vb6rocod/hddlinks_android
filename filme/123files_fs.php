@@ -150,7 +150,7 @@ if($o == "vidcloud") return "https://membed.net/streaming.php?id=".$x;
 }
 
 $ua="Mozilla/5.0 (Windows NT 10.0; rv:75.0) Gecko/20100101 Firefox/75.0";
-$l="https://openvids.io/api/servers";
+$l="https://openvids.to/api/servers";
 if ($tip=="movie") {
  $p=array(
    "type" => "movie",
@@ -186,11 +186,11 @@ $post=json_encode($p);
 $head=array('Accept: */*',
 'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
 'Accept-Encoding: deflate',
-'Referer: https://openvids.io/',
+'Referer: https://openvids.to/',
 'Content-Type: application/json',
 'Content-Length: '.strlen($post),
 'Origin: https://openvids.io',
-'Alt-Used: openvids.io',
+'Alt-Used: openvids.to',
 'Connection: keep-alive',
 'Sec-Fetch-Dest: empty',
 'Sec-Fetch-Mode: cors',

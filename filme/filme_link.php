@@ -212,7 +212,7 @@ if (preg_match("/filmeonlinegratis\.org/",$filelink)) {
   $t2=explode('"',$t1[1]);
   $id=$t2[0];
   }
-  $l="https://fsonline.to/wp-admin/admin-ajax.php";
+  $l="https://www4.fsonline.to/wp-admin/admin-ajax.php";
   $post="action=lazy_player&movieID=".$id;
   //echo $post;
   $head=array('Accept: */*',
@@ -223,7 +223,7 @@ if (preg_match("/filmeonlinegratis\.org/",$filelink)) {
   'Content-Length: '.strlen($post).'',
   'Origin: https://fsonline.to',
   'Connection: keep-alive',
-  'Referer: https://fsonline.to/');
+  'Referer: https://www4.fsonline.to/');
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $l);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
@@ -1390,7 +1390,7 @@ $s=$s."powvideo|povvideo|cloudvideo|vidtodo|vidcloud\.co|flashx\.|vidcloud\d*";
 $s=$s."|putload\.|event\.2target\.net|fembed\.com|streamcherry\.com|hideiframe\.com|";
 $s=$s."filmeonlinehd\.tv\/sharemovie|rovideo\.net\/video|flix555\.com|gamovideo\.com|playhd\.fun|idtbox\.com|";
 $s=$s."bitporno\.com|thevideobee\.to|mangovideo\.|smartshare\.tv|datoporn\.co|xstreamcdn\.com|onlystream\.tv|";
-$s=$s."database\.seriale|drive\.google\.com|videomega\.|vidload\.co|mixdrop\.|mystream\.to|mstream\.cloud";
+$s=$s."database\.seriale|drive\.google\.com|videomega\.|vidload\.co|mixdro?p\.|mystream\.to|mstream\.cloud";
 $s=$s."|hxload\.|bazavox\.com|cloud\.vidhubstr\.org|vidia\.tv|gomostream\.com|viduplayer\.com|leaked-celebrities\.";
 $s=$s."|prostream\.to|videobin\.co|upstream\.to|playtvid\.com|jetload\.net|vidfast\.co|clipwatching\.";
 $s=$s."|(video|player)\.filmeserialeonline\.org|streamwire\.|cloudvid\.icu|mstream\.xyz|streamhoe\.online|videyo\.";
@@ -1398,7 +1398,7 @@ $s=$s."|fastvid\.co|vidload\.net|rovideo\.net\/embed|eplayvid\.com|dood\.|medias
 $s=$s."|movcloud\.net|dogestream\.|streamtape\.|jawcloud\.|viphdvid\.|evoload\.|sendvid\.|easyload\.io|okstream\.";
 $s=$s."|youdbox\.com|filmele-online\.com|playtube\.|ninjastream\.to|userload\.co|goplayer\.online|videovard\.|cloudemb\.|streamlare\.";
 $s=$s."|sbembed\.com|sbembed1\.com|sbplay\.|sbvideo\.net|streamsb\.net|sbplay\.one|cloudemb\.com|playersb\.com|tubesb\.com|sbplay\d\.|embedsb\.com";
-$s=$s."|sblanh\.|sbfast\.com|sbfull\.|sbthe\.|sbspeed\.|tubeload\.|embedo\.|filemoon\./i";
+$s=$s."|sbanh\.|sblanh\.|sbfast\.com|sbfull\.|sbthe\.|sbspeed\.|tubeload\.|embedo\.|filemoon\./i";
 /////////////////////////////////////////////
 //$x=preg_grep($s,$links);
 //print_r ($x);

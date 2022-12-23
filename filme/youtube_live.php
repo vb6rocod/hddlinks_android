@@ -6,7 +6,7 @@ $search=$_GET["search"];
 $next="";
 $prev="";
 $page_title="Youtube Live";
-$key="AIzaSyDhpkA0op8Cyb_Yu1yQa1_aPSr7YtMacYU";
+$key="";
 if (file_exists($base_pass."youtube.txt"))
   $key=trim(file_get_contents($base_pass."youtube.txt"));
 if ($token)

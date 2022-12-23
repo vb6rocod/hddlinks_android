@@ -1,20 +1,57 @@
 <!DOCTYPE html>
 <?php
+function str_between($string, $start, $end){
+	$string = " ".$string; $ini = strpos($string,$start);
+	if ($ini == 0) return ""; $ini += strlen($start); $len = strpos($string,$end,$ini) - $ini;
+	return substr($string,$ini,$len);
+}
 include ("../common.php");
-$host=$_GET['host'];
-$page_title="Filme favorite";
-$width="200px";
-$height="278px";
-$add_target="bmovies_f_add.php";
-$fs_target="bmovies_fs.php";
-$file=$base_fav."bmovies_f.dat";
+
+$tit=$_GET["title"];
+$link=$_GET["link"];
+$tip="search";
+/* ==================================================== */
+$has_fav="no";
+$has_search="no";
+$has_add="no";
+$has_fs="yes";
+$fav_target="";
+$add_target="";
+$add_file="";
+$fs_target="moviewetrust_f.php";
+$target="best.php";
+/* ==================================================== */
+$next="";
+$prev="";
+$page=1;
+/* ==================================================== */
+$tit=unfix_t(urldecode($tit));
+$link=unfix_t(urldecode($link));
+/* ==================================================== */
+if (file_exists($base_cookie."filme.dat"))
+  $val_search=file_get_contents($base_cookie."filme.dat");
+else
+  $val_search="";
+$form='<form action="'.$target.'" target="_blank">
+Cautare film:  <input type="text" id="title" name="title" value="'.$val_search.'">
+<input type="hidden" name="page" id="page" value="1">
+<input type="hidden" name="tip" id="tip" value="search">
+<input type="hidden" name="link" id="link" value="">
+<input type="submit" id="send" value="Cauta...">
+</form>';
+/* ==================================================== */
+
+  $page_title=$tit;
+/* ==================================================== */
+
 ?>
-<html><head>
+<html>
+<head>
 <meta http-equiv="content-type" content="text/html; charset=UTF-8">
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate"/>
 <meta http-equiv="Pragma" content="no-cache"/>
 <meta http-equiv="Expires" content="0"/>
-      <title><?php echo $page_title; ?></title>
+<title><?php echo $page_title; ?></title>
 <script type="text/javascript" src="//code.jquery.com/jquery-3.2.1.min.js"></script>
 <script src="../jquery.fancybox.min.js"></script>
 <link rel="stylesheet" type="text/css" href="../jquery.fancybox.min.css">
@@ -37,7 +74,6 @@ function ajaxrequest(link) {
   request.onreadystatechange = function() {
     if (request.readyState == 4) {
       alert (request.responseText);
-      location.reload();
     }
   }
 }
@@ -86,81 +122,85 @@ document.onkeypress =  zx;
 <body>
 <a id="fancy" data-fancybox data-type="iframe" href=""></a>
 <?php
-function str_between($string, $start, $end){
-	$string = " ".$string; $ini = strpos($string,$start);
-	if ($ini == 0) return ""; $ini += strlen($start); $len = strpos($string,$end,$ini) - $ini;
-	return substr($string,$ini,$len);
-}
 $w=0;
 $n=0;
-echo '<H2>'.$page_title.'</H2>';
-$arr=array();
-$h="";
-if (file_exists($file)) {
-  $h=file_get_contents($file);
-  $t1=explode("\r\n",$h);
-  for ($k=0;$k<count($t1) -1;$k++) {
-    $a=explode("#separator",$t1[$k]);
-    if ($a) {
-      $tit=trim($a[0]);
-      $l=trim($a[1]);
-      $img=trim($a[2]);
-      $arr[$tit]["link"]=$l;
-      $arr[$tit]["image"]=$img;
-    }
+echo '<H2>'.$page_title.'</H2>'."\r\n";
+
+echo '<table border="1px" width="100%" style="table-layout:fixed;">'."\r\n";
+
+$f=array();
+$h=file_get_contents($link);
+//echo $h;
+/*
+$t1=explode('class="saswp-schema-markup-output">',$h);
+$t2=explode('</script>',$t1[1]);
+$r=json_decode(trim($t2[0]),1)[1]['articleBody'];
+//echo $r;
+$z=preg_split("/\d{1,2}\.\s+/",$r);
+print_r ($z);
+//echo "\n".urlencode($z[2]);
+$y = preg_split("/\s{2}/",$z[49]);
+print_r($y);
+die();
+*/
+$t1=explode('<script type="application/ld+json" id="json-ld">',$h);
+$t2=explode('</script>',$t1[1]);
+$r=json_decode($t2[0],1);
+$f = $r[0]['itemListElement'];
+//print_r ($f);
+foreach($f as $key => $value) {
+  $title=$f[$key]['item']['name'];
+  $desc=$f[$key]['item']['description'];
+  $title=strip_tags($title);
+  $link=$title;
+  $image="";
+  $imdb="";
+  if (preg_match("/\s*\(?([1-2]\d{3})\)?/",$title,$m)) {
+    $year=$m[1];
+    $title=trim(preg_replace("/\s*\(?([1-2]\d{3})\)?/","",$title));
   }
-}
-if ($arr) {
-$n=0;
-$w=0;
-$nn=count($arr);
-$k=intval($nn/10) + 1;
-echo '<table border="1px" width="100%"><tr>'."\n\r";
-for ($m=1;$m<$k;$m++) {
-   echo '<TD align="center"><a href="#myLink'.($m*10).'">Salt:'.($m*10).'</a></td>';
-}
-echo '</TR></table>';
-echo '<table border="1px" width="100%">'."\n\r";
-foreach($arr as $key => $value) {
-    $imdb="";
-	$link = urldecode($arr[$key]["link"]);
-    $title = unfix_t(urldecode($key));
-    $image=urldecode($arr[$key]["image"]);
-    //$image=$host.parse_url($image)['path'];
-    $year="";
-    //$link=$host.parse_url($link)['path'];
-    $link_f=$fs_target.'?tip=movie&link='.urlencode($link).'&title='.urlencode(fix_t($title)).'&image='.$image."&sez=&ep=&ep_tit=&year=".$year;
+  $tit_imdb=$title;
+  $link_f=$fs_target.'?tip=search&page=1&link=&title='.urlencode($title);
+  if ($title) {
   if ($n==0) echo '<TR>'."\r\n";
-  $val_imdb="tip=movie&title=".urlencode(fix_t($title))."&year=".$year."&imdb=".$imdb;
-  $fav_link="file=&mod=del&title=".urlencode(fix_t($title))."&link=".urlencode($link)."&image=".urlencode($image)."&year=".$year;
+  $val_imdb="tip=movie&title=".urlencode(fix_t($tit_imdb))."&year=".$year."&imdb=".$imdb;
+  $fav_link="mod=add&title=".urlencode(fix_t($title))."&link=".urlencode($link)."&image=".urlencode($image)."&year=".$year;
+  //$image="r_m.php?file=".$image;
   if ($tast == "NU") {
     echo '<td class="mp" width="25%"><a href="'.$link_f.'" id="myLink'.$w.'" target="_blank" onmousedown="isKeyPressed(event)">
-    <img id="myLink'.$w.'" src="'.$image.'" width="'.$width.'" height="'.$height.'"><BR>'.$title.'</a>
+    '.$title.' ('.$year.')</a>
     <input type="hidden" id="imdb_myLink'.$w.'" value="'.$val_imdb.'">'."\r\n";
-    echo '<a onclick="ajaxrequest('."'".$fav_link."'".')" style="cursor:pointer;">*</a>'."\r\n";
+    if ($has_add=="yes")
+      echo '<a onclick="ajaxrequest('."'".$fav_link."'".')" style="cursor:pointer;">*</a>'."\r\n";
     echo '</TD>'."\r\n";
   } else {
     echo '<td class="mp" width="25%"><a class ="imdb" id="myLink'.$w.'" href="'.$link_f.'" target="_blank">
-    <img src="'.$image.'" width="'.$width.'" height="'.$height.'"><BR>'.$title.'</a>
+    '.$title.' ('.$year.')</a>
     <input type="hidden" id="imdb_myLink'.$w.'" value="'.$val_imdb.'">'."\r\n";
-    echo '<input type="hidden" id="fav_myLink'.$w.'" value="'.$fav_link.'"></a>'."\r\n";
+    if ($has_add == "yes")
+      echo '<input type="hidden" id="fav_myLink'.$w.'" value="'.$fav_link.'"></a>'."\r\n";
     echo '</TD>'."\r\n";
   }
+  $n++;
+  echo '<td class="mp">'.$desc.'</TD>'."\r\n";
   $w++;
   $n++;
-  if ($n == 4) {
+  if ($n == 2) {
   echo '</tr>'."\r\n";
   $n=0;
   }
-}
-  if ($n < 4 && $n > 0) {
-    for ($k=0;$k<4-$n;$k++) {
+  }
+ }
+
+/* bottom */
+  if ($n < 2 && $n > 0) {
+    for ($k=0;$k<2-$n;$k++) {
       echo '<TD></TD>'."\r\n";
     }
     echo '</TR>'."\r\n";
   }
-echo '</TABLE>';
-}
-?>
-</body>
+
+echo "</table>"."\r\n";
+echo "</table>";
+?></body>
 </html>

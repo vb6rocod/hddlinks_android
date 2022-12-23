@@ -6,7 +6,7 @@ $search=$_GET["search"];
 $next="";
 $prev="";
 $page_title="Cautare: ".$search;
-if (file_exists($base_pass."youtube.txt"))
+if (file_exists($base_pass."youtube.txt")) {
   $key=trim(file_get_contents($base_pass."youtube.txt"));
 if ($token)
 $l2="https://www.googleapis.com/youtube/v3/search?part=snippet&order=relevance&maxResults=25&pageToken=".$token."&q=".urlencode($search)."&key=".$key;
@@ -27,7 +27,26 @@ $l2="https://www.googleapis.com/youtube/v3/search?part=snippet&order=relevance&m
   //print_r ($p);
   if (isset($p["nextPageToken"])) $next=$p["nextPageToken"];
   if (isset($p["prevPageToken"])) $prev=$p["prevPageToken"];
+} else {
+ $l="https://www.youtube.com/results?q=".urlencode($search)."&hl=en";
+  $ch = curl_init();
+  curl_setopt($ch, CURLOPT_URL, $l);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+  curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows; U; Windows NT 6.1; en-US; rv:1.9.1.2) Gecko/20090729 Firefox/3.5.2 GTB5');
+  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+  $h = curl_exec($ch);
+  curl_close($ch);
+  $t1=explode("ytInitialData = ",$h);
+  $t2=explode(";</script>",$t1[1]);
 
+  $x=json_decode(trim($t2[0]),1);
+  $y =$x['contents']['twoColumnSearchResultsRenderer']['primaryContents']['sectionListRenderer']['contents'];
+  //echo count($y[0]);
+  $zz=$y[0]['itemSectionRenderer']['contents'];
+}
 ?>
 <html><head>
 <meta http-equiv="content-type" content="text/html; charset=UTF-8">
@@ -145,7 +164,7 @@ if ($prev)
 echo '<a href="'.$prevpage.'">&nbsp;&lt;&lt;&nbsp;</a> | <a href="'.$nextpage.'">&nbsp;&gt;&gt;&nbsp;</a></TD></TR>';
 else
 echo '<a href="'.$nextpage.'">&nbsp;&gt;&gt;&nbsp;</a></TD></TR>';
-
+if (file_exists($base_pass."youtube.txt")) {
 for ($k=0;$k<min(sizeof($p["items"]),25);$k++) {
 	//$id = str_between($video,"<id>http://gdata.youtube.com/feeds/api/videos/","</id>");
   $link = "";
@@ -216,6 +235,112 @@ for ($k=0;$k<min(sizeof($p["items"]),25);$k++) {
   $n=0;
   }
   }
+}
+} else {  // no key
+  for ($k=0;$k<count($zz);$k++) {
+  $kind="video";
+  if (isset($zz[$k]['videoRenderer'])) {
+  $id=$zz[$k]['videoRenderer']['videoId'];
+  $title=$zz[$k]['videoRenderer']['title']['runs'][0]['text'];
+  $image= $zz[$k]['videoRenderer']['thumbnail']['thumbnails'][0]['url'];
+  $link1=urlencode("http://www.youtube.com/watch?v=".$id)."&title=".urlencode($title);
+  $add_fav="mod=add&kind=".str_replace("youtube#","",$kind)."&id=".$id."&title=".urlencode(fix_t($title))."&image=".$image;
+  if ($tast == "NU") {
+  if ($flash != "mp")
+  echo '<td class="mp" align="center" width="20%"><a onclick="ajaxrequest1('."'".$link1."'".')" style="cursor:pointer;"><img src="'.$image.'" width="160px" height="90px"><BR>'.$title.'</a> <a onclick="ajaxrequest2('."'".$add_fav."'".')" style="cursor:pointer;">*</a></TD>';
+  else
+  echo '<td class="mp" align="center" width="20%"><a onclick="ajaxrequest('."'".$link1."'".')" style="cursor:pointer;"><img src="'.$image.'" width="160px" height="90px"><BR>'.$title.'</a> <a onclick="ajaxrequest2('."'".$add_fav."'".')" style="cursor:pointer;">*</a></TD>';
+
+  } else {
+  if ($flash != "mp")
+  echo '<td class="mp" align="center" width="20%"><a class ="imdb" id="myLink'.($w*1).'" onclick="ajaxrequest1('."'".$link1."'".')" style="cursor:pointer;"><img src="'.$image.'" width="160px" height="90px"><BR>'.$title.'<input type="hidden" id="fav_myLink'.($w*1).'" value="'.$add_fav.'"></a></TD>';
+  else
+  echo '<td class="mp" align="center" width="20%"><a class ="imdb" id="myLink'.($w*1).'" onclick="ajaxrequest('."'".$link1."'".')" style="cursor:pointer;"><img src="'.$image.'" width="160px" height="90px"><BR>'.$title.'<input type="hidden" id="fav_myLink'.($w*1).'" value="'.$add_fav.'"></a></TD>';
+  $w++;
+  }
+  $n++;
+
+  if ($n == 5) {
+  echo '</tr>';
+  $n=0;
+  }
+  } elseif (isset($zz[$k]['shelfRenderer'])) {
+   $zzz=$zz[$k]['shelfRenderer']['content']['verticalListRenderer']['items'];
+   //print_r ($zzz);
+   for ($kk=0;$kk<count($zzz);$kk++) {
+  $id=$zzz[$kk]['videoRenderer']['videoId'];
+  $title=$zzz[$kk]['videoRenderer']['title']['runs'][0]['text'];
+  $image= $zzz[$kk]['videoRenderer']['thumbnail']['thumbnails'][0]['url'];
+  $link1=urlencode("http://www.youtube.com/watch?v=".$id)."&title=".urlencode($title);
+  $add_fav="mod=add&kind=".str_replace("youtube#","",$kind)."&id=".$id."&title=".urlencode(fix_t($title))."&image=".$image;
+  if ($tast == "NU") {
+  if ($flash != "mp")
+  echo '<td class="mp" align="center" width="20%"><a onclick="ajaxrequest1('."'".$link1."'".')" style="cursor:pointer;"><img src="'.$image.'" width="160px" height="90px"><BR>'.$title.'</a> <a onclick="ajaxrequest2('."'".$add_fav."'".')" style="cursor:pointer;">*</a></TD>';
+  else
+  echo '<td class="mp" align="center" width="20%"><a onclick="ajaxrequest('."'".$link1."'".')" style="cursor:pointer;"><img src="'.$image.'" width="160px" height="90px"><BR>'.$title.'</a> <a onclick="ajaxrequest2('."'".$add_fav."'".')" style="cursor:pointer;">*</a></TD>';
+
+  } else {
+  if ($flash != "mp")
+  echo '<td class="mp" align="center" width="20%"><a class ="imdb" id="myLink'.($w*1).'" onclick="ajaxrequest1('."'".$link1."'".')" style="cursor:pointer;"><img src="'.$image.'" width="160px" height="90px"><BR>'.$title.'<input type="hidden" id="fav_myLink'.($w*1).'" value="'.$add_fav.'"></a></TD>';
+  else
+  echo '<td class="mp" align="center" width="20%"><a class ="imdb" id="myLink'.($w*1).'" onclick="ajaxrequest('."'".$link1."'".')" style="cursor:pointer;"><img src="'.$image.'" width="160px" height="90px"><BR>'.$title.'<input type="hidden" id="fav_myLink'.($w*1).'" value="'.$add_fav.'"></a></TD>';
+  $w++;
+  }
+  $n++;
+
+  if ($n == 5) {
+  echo '</tr>';
+  $n=0;
+  }
+   }
+  } elseif (isset($zz[$k]['channelRenderer'])) {
+    $id=$zz[$k]['channelRenderer']['channelId'];
+    $title=$zz[$k]['channelRenderer']['title']['simpleText'];
+    $image=$zz[$k]['channelRenderer']['thumbnail']['thumbnails'][0]['url'];
+    $title="(channel) ".$title;
+	$link = $id;
+	$tip="channel";
+	$kind="youtube#channel";
+    $playlist="yt_channel.php?token=&id=".$id."&kind=".str_replace("youtube#","",$kind)."&title=".urlencode(fix_t($title))."&image=".$image;
+    $add_fav="mod=add&kind=".str_replace("youtube#","",$kind)."&id=".$id."&title=".urlencode(fix_t($title))."&image=".$image;
+  if ($tast == "NU")
+  echo '<td class="mp" align="center" width="20%"><a href="'.$playlist.'" target="_blank"><img src="'.$image.'" width="160px" height="90px"><BR>'.$title.'</a> <a onclick="ajaxrequest2('."'".$add_fav."'".')" style="cursor:pointer;">*</a></TD>';
+  else {
+  echo '<td class="mp" align="center" width="20%"><a class ="imdb" id="myLink'.($w*1).'" href="'.$playlist.'" target="_blank"><img src="'.$image.'" width="160px" height="90px"><BR>'.$title.'<input type="hidden" id="fav_myLink'.($w*1).'" value="'.$add_fav.'"></a></TD>';
+  $w++;
+  }
+  $n++;
+
+  if ($n == 5) {
+  echo '</tr>';
+  $n=0;
+  }
+  } elseif (isset($zz[$k]['playlistRenderer'])) {  // ?????
+    $id=$zz[$k]['playlistRenderer']['playlistId'];
+    $title=$zz[$k]['playlistRenderer']['title']['simpleText'];
+    $image=$zz[$k]['playlistRenderer']['thumbnails'][0]['thumbnails'][0]['url'];
+    $title="(playlist) ".$title;
+	$link = $id;
+	$tip="playlist";
+	$kind="youtube#playlist";
+    $playlist="yt_playlist.php?token=&id=".$id."&kind=".str_replace("youtube#","",$kind)."&title=".urlencode(fix_t($title))."&image=".$image;
+    $add_fav="mod=add&kind=".str_replace("youtube#","",$kind)."&id=".$id."&title=".urlencode(fix_t($title))."&image=".$image;
+  if ($tast == "NU")
+  echo '<td class="mp" align="center" width="20%"><a href="'.$playlist.'" target="_blank"><img src="'.$image.'" width="160px" height="90px"><BR>'.$title.'</a> <a onclick="ajaxrequest2('."'".$add_fav."'".')" style="cursor:pointer;">*</a></TD>';
+  else {
+  echo '<td class="mp" align="center" width="20%"><a class ="imdb" id="myLink'.($w*1).'" href="'.$playlist.'" target="_blank"><img src="'.$image.'" width="160px" height="90px"><BR>'.$title.'<input type="hidden" id="fav_myLink'.($w*1).'" value="'.$add_fav.'"></a></TD>';
+  $w++;
+  }
+  $n++;
+
+  if ($n == 5) {
+  echo '</tr>';
+  $n=0;
+  }
+  } ////
+  
+  }
+
 }
 echo '<tr><TD colspan="5" align="right">';
 if ($prev)
