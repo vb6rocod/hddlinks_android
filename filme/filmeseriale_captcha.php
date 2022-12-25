@@ -22,6 +22,7 @@ curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
 curl_setopt($ch, CURLOPT_USERAGENT, $ua);
 curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
 curl_setopt($ch, CURLOPT_HTTPHEADER, $head);
+curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
 //curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie);
 //curl_setopt($ch, CURLOPT_COOKIEJAR, $cookie);
 //curl_setopt($ch, CURLOPT_HEADER, 1);
@@ -55,6 +56,7 @@ $headers=array('Accept: text/html, */*; q=0.01',
   curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER  ,1);  // RETURN THE CONTENTS OF THE CALL
   curl_setopt($ch, CURLOPT_HEADER, true);
+  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
   curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
   curl_setopt($ch, CURLOPT_TIMEOUT, 15);
   $html = curl_exec($ch);
@@ -82,6 +84,7 @@ curl_setopt($ch, CURLOPT_USERAGENT, $ua);
 curl_setopt($ch, CURLOPT_REFERER, "http://www.filmeserialeonline.org");
 curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 0);
 curl_setopt($ch, CURLOPT_HTTPHEADER, $head);
+curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
 //curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie);
 //curl_setopt($ch, CURLOPT_COOKIEJAR, $cookie);
 curl_setopt($ch, CURLOPT_HEADER, 1);

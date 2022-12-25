@@ -129,7 +129,25 @@ echo '<H2>'.$page_title.'</H2>'."\r\n";
 echo '<table border="1px" width="100%" style="table-layout:fixed;">'."\r\n";
 
 $f=array();
-$h=file_get_contents($link);
+//$h=file_get_contents($link);
+  $head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:75.0) Gecko/20100101 Firefox/75.0',
+  'Accept: application/json, text/plain, */*',
+  'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
+  'Accept-Encoding: deflate',
+  'Referer : '.$link,
+  'Connection: keep-alive');
+  $options = array(
+        'http' => array(
+        'header'  => array($head),
+        'method'  => 'GET'
+    ),
+        "ssl"=>array(
+        "verify_peer"=>false,
+        "verify_peer_name"=>false,
+    )
+  );
+  $context  = stream_context_create($options);
+  $h = @file_get_contents($link, false, $context);
 //echo $h;
 /*
 $t1=explode('class="saswp-schema-markup-output">',$h);

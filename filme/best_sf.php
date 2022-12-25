@@ -132,7 +132,25 @@ echo '<table border="1px" width="100%" style="table-layout:fixed;">'."\r\n";
 
 $f=array();
 $l="https://raw.githubusercontent.com/vb6rocod/hddlinks/master/best_sf.txt";
-$h=file_get_contents($l);
+//$h=file_get_contents($l);
+  $head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:75.0) Gecko/20100101 Firefox/75.0',
+  'Accept: application/json, text/plain, */*',
+  'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
+  'Accept-Encoding: deflate',
+  'Referer : '.$l,
+  'Connection: keep-alive');
+  $options = array(
+        'http' => array(
+        'header'  => array($head),
+        'method'  => 'GET'
+    ),
+        "ssl"=>array(
+        "verify_peer"=>false,
+        "verify_peer_name"=>false,
+    )
+  );
+  $context  = stream_context_create($options);
+  $h = @file_get_contents($l, false, $context);
 $f=json_decode($h,1);
 
 foreach($f as $key => $value) {

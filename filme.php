@@ -83,7 +83,7 @@ else
 
 <TR>
 <TD width="25%"><a href="filme/lookmovie_f.php?page=1&tip=release&title=lookmovie&link=" target="_blank">lookmovie</a></TD>
-<TD width="25%"></TD>
+<TD width="25%"><a href="filme/2embed_f.php?page=1&tip=release&title=2embed&link=" target="_blank">2embed</a></TD>
 <TD width="25%"><a href="filme/vidcloud9_f.php?page=1&tip=release&title=vidcloud9&link=" target="_blank">vidcloud9</a></TD>
 <TD width="25%"><a href="filme/solarmovie_f.php?page=1&tip=release&title=solarmovie&link=" target="_blank">solarmovie</a></TD>
 </TR>
@@ -117,7 +117,7 @@ else
 </TR>
 <TR>
 <TD width="25%"><a href="filme/soap2day_f.php?page=1&tip=release&title=soap2day&link=" target="_blank">soap2day</a></TD>
-<TD width="25%"></TD>
+<TD width="25%"><a href="filme/moviehab_f.php?page=1&tip=release&title=moviehab&link=" target="_blank">moviehab</a></TD>
 <TD width="25%"><a href="filme/esubmovie.php?page=1&tip=release&title=esubmovie&link=" target="_blank">esubmovie</a></TD>
 <TD width="25%"><a href="filme/123files.php?page=1&tip=release&title=123files&link=" target="_blank">123files</a></TD>
 </TR>
@@ -131,16 +131,11 @@ else
 </TR>
 <TR>
 <TD width="25%"><a href="filme/fmovies_f.php?page=1&tip=release&title=fmovies&link=" target="_blank">fmovies.co</a></TD>
-<TD width="25%"></TD>
-<TD width="25%"><a href="filme/tv88_f.php?page=1&tip=release&title=tv88&link=" target="_blank">tv88</a></TD>
-<TD width="25%"></TD>
-</TR>
-<TR>
 <TD width="25%"><a href="filme/hdmoviebox_f.php?page=1&tip=release&title=hdmoviebox&link=" target="_blank">hdmoviebox</a></TD>
-<TD width="25%"><a href="filme/2embed_f.php?page=1&tip=release&title=2embed&link=" target="_blank">2embed</a></TD>
-<TD width="25%"><a href="filme/moviehab_f.php?page=1&tip=release&title=moviehab&link=" target="_blank">moviehab</a></TD>
+<TD width="25%"><a href="filme/tv88_f.php?page=1&tip=release&title=tv88&link=" target="_blank">tv88</a></TD>
 <TD width="25%"><a href="filme/fastmovies_f.php?page=1&tip=release&title=fastmovies&link=" target="_blank">fastmovies</a></TD>
 </TR>
+
 
 <?php
 if (file_exists($base_pass."tvplay.txt")) {

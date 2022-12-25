@@ -5245,6 +5245,78 @@ if (count($pl) > 1) {
   if ($link && $flash <> "flash")
   $link=$link."|Referer=".urlencode("https://v1.c1ne.co")."&User-Agent=".urlencode("Mozilla/5.0 (Windows NT 10.0; rv:88.0) Gecko/20100101 Firefox/88.0");
   }
+} elseif(preg_match("/utbrgebzvhfa\./",$filelink)) {
+  function hunter($h, $u, $n, $t, $e, $r) {
+    $r = "";
+    for($i = 0; $i < strlen($h);$i++) {
+        $s = "";
+        while($h[$i] !== $n[$e]) {
+            $s .= $h[$i];
+            $i++;
+        }
+        for($j = 0; $j < strlen($n);$j++) {
+          $s=str_replace($n[$j],$j,$s);
+        }
+        $r .= chr(abc($s, $e, 10) - $t);
+    }
+    return $r;
+  }
+  function abc($d, $e, $f) {
+    $g = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ+/';
+    $h = substr($g,0, $e);
+    $i = substr($g,0, $f);
+    $x=strrev($d);
+    $a=0;
+    $j=0;
+    for ($m=0;$m<strlen($x);$m++) {
+      $j +=strpos($h,$x[$m])*pow($e,$m);
+    }
+    $k = '';
+    while($j > 0) {
+        $k = $i[$j % $f].$k;
+        $j = ($j - ($j % $f)) / $f;
+    }
+    return $k;
+  }
+  $ch = curl_init();
+
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+  curl_setopt($ch, CURLOPT_USERAGENT, "Mozilla/5.0 (Windows NT 10.0; rv:65.0) Gecko/20100101 Firefox/65.0");
+  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+  curl_setopt($ch, CURLOPT_ENCODING, "");
+  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+  curl_setopt($ch, CURLOPT_URL, $filelink);
+  $h = curl_exec($ch);
+  curl_close($ch) ;
+
+  preg_match_all("/decodeURIComponent\(escape\(r\)\)\}\((.*?)\)\)/",$h,$m);
+
+  $out="";
+  for ($k=0;$k<count($m[1]);$k++) {
+   $c=str_replace('"',"",$m[1][$k]);
+   $t1=explode(",",$c);
+   $out .="\n".hunter($t1[0],$t1[1],$t1[2],$t1[3],$t1[4],$t1[5]);
+  }
+  $out=str_replace("\\","",$out);
+  if (preg_match("/src\=\"([^\"]+)\"\s+kind\=\"captions\"/",$out,$s))
+   $srt=$s[1];
+
+  preg_match("/var\s*res\s*\=\s*(\w+)\.replace\(\"([\w\=]+)\"/",$out,$m);
+
+  $find=$m[1];
+  $rep1=$m[2];
+  preg_match("/res\.replace\(\"([\w\=]+)\"/",$out,$m);
+  $rep2=$m[1];
+  $a="/".$find."\s*\=\s*\"([\w\=]+)\"/";
+  //echo $out;
+  preg_match($a,$out,$m);
+  $res=$m[1];
+  $res=str_replace($rep1,"",$res);
+  $res=str_replace($rep2,"",$res);
+  $link=base64_decode($res);
+
 } elseif(preg_match("/tubeload\.co|embedo\.co/",$filelink)) {
   // http://tubeload.co/e/z1rbloyecxw0/The_Batman_022_hd.mp4
   // https://embedo.co/e/9qrpnmupnbuj/Top_Gun_Maverick_022_kor.mp4
@@ -5759,14 +5831,15 @@ if (count($pl) > 1) {
   $link=$x['videoPreview']['video'];
   $link= $x['videoPreview']['alternativeResolutions'][0]['url'];
 //} elseif (strpos($filelink,"cloudemb.") !== false) {
-} else if (preg_match("/vidmovie\.|gdpress\.|watchsb\.|sbl?anh\.|sbthe\.|sbfast\.|sbfull\.|sbspeed\.|sbembed\.com|ssbstream|streamsss|sbembed1\.com|sbplay\.|sbvideo\.net|s?streamsb\.net|sbplay\.one|cloudemb\.com|playersb\.com|tubesb\.com|sbplay\d\.|embedsb\.com/",$filelink)) {
+} else if (preg_match("/vidmovie\.|gdpress\.|watchsb\.|sbl?anh\.|sbthe\.|sblongvu\.|sbfast\.|sbfull\.|sbspeed\.|sbembed\.com|ssbstream|streamsss|sbembed1\.com|sbplay\.|sbvideo\.net|s?streamsb\.net|sbplay\.one|cloudemb\.com|playersb\.com|tubesb\.com|sbplay\d\.|embedsb\.com/",$filelink)) {
   // https://cloudemb.com/e/snlcjicyu49f.html
   // ssbstream.net
+  // sblongvu.com
   // https://sbplay2.xyz/e/zxeqa7oa68o4?caption_1=https://msubload.com/sub/the-adam-project/the-adam-project.v1.vtt
   // https://sbfast.com/e/uqykbpajgp67?caption_1=https://seriale-online.net/subtitrarifilme/tt0082340.vtt&sub_1=Romana
   // https://watchsb.com/e/nk92su1bjavj?poster=https%3A%2F%2Fhdmoviesb.com%2Fupload%2Fhow-to-please-a-woman-cover.png&caption_1=https%3A%2F%2Fhdmoviesb.com%2Fsub%2FHow-To-Please-A-Woman-2022-WEBRip_English-CP.srt&sub_1=English
   //echo $filelink;
-  $pattern = "/(?:\/\/|\.)((?:tube|player|sbl?anh|sbfast|gdpress|vidmovie|sbfull|sbspeed|sbthe|watchsb|cloudemb|ssbstream|streamsss|s?stream)?s?b?(?:embed\d?|embedsb\d?|play\d?|video)?\.(?:com|net|org|one|\w+))\/(?:embed-|e|play|d)?\/?([0-9a-zA-Z]+)/";
+  $pattern = "/(?:\/\/|\.)((?:tube|player|sbl?anh|sbfast|sblongvu|gdpress|vidmovie|sbfull|sbspeed|sbthe|watchsb|cloudemb|ssbstream|streamsss|s?stream)?s?b?(?:embed\d?|embedsb\d?|play\d?|video)?\.(?:com|net|org|one|\w+))\/(?:embed-|e|play|d)?\/?([0-9a-zA-Z]+)/";
   preg_match($pattern,$filelink,$m);
   $host=$m[1];
   $id=$m[2];
@@ -11265,7 +11338,7 @@ function rec($site_key,$co,$sa,$loc) {
 }
 
 //} elseif (strpos($filelink,"vidcloud.") !== false) {
-} elseif (preg_match("/vidcloud\.|streamrapid\.ru|rabbitstream\.net|mzzcloud\./",$filelink)) {
+} elseif (preg_match("/vidcloud\.|streamrapid\.ru|rabbitstream\.net|mzzcloud\.|dokicloud\.one/",$filelink)) {
   // https://vidcloud.pro/embed4/47bkl9d1f7xz1?i=2c6b544306d5c1b81e0b7b86a000da4cb5572df056ec3727324f7db84611806ecdf5a2e3429a1483ca59e880d8e299ab
   // https://vidcloud.pro/embed/5e1b6063ccb14
   // https://vidcloud.msk.ru/embed4/54enm296il6tu?i=2c6b544306d5c1b81e0b7b86a000da4c2d52850a6e79371835929ac55d1155b6c045926b500d70e69163d8e81cf9c0c9&el=4236402
@@ -11273,6 +11346,8 @@ function rec($site_key,$co,$sa,$loc) {
   // https://streamrapid.ru/embed-4/XUjqcvZwXLxN?z=
   // https://streamrapid.ru/embed-5/4GqejHXbPtfK?z=
   // https://streamrapid.ru/embed-4/48Ym1UDbKV1y?z=
+  // https://dokicloud.one/embed-4/cuPOVD34pOrr?z=
+  // https://dokicloud.one/js/player/prod/e4-player.min.js?v=1671912131
   //echo $filelink;
   //die();
   //$filelink="https://streamrapid.ru/embed-4/VKQH3sE2cree?z=";
@@ -13013,7 +13088,27 @@ $ua="Mozilla/5.0 (Windows NT 10.0; rv:63.0) Gecko/20100101 Firefox/63.0";
   $dm=$t2[0];
   $l="https://www.dailymotion.com/player/metadata/video/".$id."?embedder=".urlencode($filelink);
   $l .="&dmV1st=".$dm."&dmTs=".$ts."&is_native_app=0&app=com.dailymotion.neon&client_type=website&section_type=player&component_style=_";
-  $h=file_get_contents($l);
+  //$h=file_get_contents($l);
+  //echo $h;
+  $head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:75.0) Gecko/20100101 Firefox/75.0',
+  'Accept: application/json, text/plain, */*',
+  'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
+  'Accept-Encoding: deflate',
+  'Referer : '.$filelink,
+  'Connection: keep-alive');
+  $options = array(
+        'http' => array(
+        'header'  => array($head),
+        'method'  => 'GET'
+    ),
+        "ssl"=>array(
+        "verify_peer"=>false,
+        "verify_peer_name"=>false,
+    )
+  );
+  $context  = stream_context_create($options);
+  $h = @file_get_contents($l, false, $context);
+  
   $r2=json_decode($h,1);
   $l_main=$r2['qualities']['auto'][0]['url'];
   $link=$l_main;
@@ -13595,7 +13690,7 @@ function abc($a52, $a10)
   $jsu = new JavaScriptUnpacker();
   $h .= $jsu->Unpack($t1[1]);
   //echo $h;
-  if (preg_match('/((http|https)[\.\d\w\-\.\/\\\:\?\&\#\%\_\,]*(v\.mp4|master\.m3u8))/', $h, $m)) {
+  if (preg_match('/sources\:\[\{file\:\"([^\"]+)\"/', $h, $m)) {
   $link=$m[1];
   if (preg_match('/([http|https][\.\d\w\-\.\/\\\:\?\&\#\%\_\,]*(\.(srt|vtt)))/', $h, $s)) {
   $srt=$s[1];
