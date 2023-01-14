@@ -143,12 +143,15 @@ $r=array();
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
   curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 10.0; rv:55.0) Gecko/20100101 Firefox/55.0');
   curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
   curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
   curl_setopt($ch, CURLOPT_TIMEOUT, 15);
   $html = curl_exec($ch);
   curl_close($ch);
+  $html=str_replace("&amp;","&",$html);
+  /*
   preg_match_all("/data\:text\/javascript\;base64\,(.*?)\"/",$html,$m);
-  $html=preg_replace_callback(
+  $html1=preg_replace_callback(
     "/data\:text\/javascript\;base64\,(.*?)\"/",  // "num" + num
     function ($m) {
       return base64_decode($m[1]);
@@ -166,7 +169,13 @@ $r=array();
   $t2=explode('src="',$t1[1]);
   $t3=explode('"',$t2[1]);
   $l=$t3[0];
-$r[]=$l;
+  */
+  if (preg_match_all("/data\-src\=\"([^\"]+)\"/",$html,$m)) {
+  //print_r ($m);
+  for ($k=0;$k<count($m[1]);$k++) {
+   $r[]=$m[1][$k];
+  }
+  }
 //echo $l;
 // https://cinegrabber.com/v/j-plrcdmym8dmpy
 echo '<table border="1" width="100%">';

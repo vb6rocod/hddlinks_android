@@ -67,6 +67,8 @@ function ajaxrequest(url) {
        document.getElementById("fancy").click();
      } else if (charCode == "48" && e.target.type != "text") {
        document.getElementById("manual1").click();
+     } else if (charCode == "50" && e.target.type != "text") {
+       window.open("https://fiber.google.com/speedtest/");
     }
    }
 document.onkeypress =  zx;

@@ -89,7 +89,7 @@ echo '
 <TD width="25%"><a href="adult/thumbzilla_main.php" target="_blank">thumbzilla</a></TD>
 <TD width="25%"><a href="adult/hellmoms_main.php" target="_blank">hellmoms</a></TD>
 <TD width="25%"><a href="adult/bitporno.php?tip=release&page=1&title=bitporno&link=" target="_blank">bitporno</a></TD>
-<TD width="25%"><a href="adult/pornhd_main.php" target="_blank">pornhd</a></TD>
+<TD width="25%"></TD>
 </TR>
 
 <TR>

@@ -62,13 +62,23 @@ function str_between($string, $start, $end){
 <script type="text/javascript">
 function openlink1(link) {
   link1=document.getElementById('file').value;
+  //alert (link1);
+  if (link1.match(/streamembed/gi)) {
+  msg="streamembed1.php?file=" + link1 + "&title=" + link + "&tip=flash";
+  window.open(msg);
+  } else {
   msg="link1.php?file=" + link1 + "&title=" + link;
   window.open(msg);
+  }
 }
 function openlink(link) {
+  link1=document.getElementById('file').value;
+  if (link1.match(/streamembed/gi)) {
+  msg="streamembed1.php?file=" + link1 + "&title=" + link + "&tip=mp";
+  window.open(msg);
+  } else {
   on();
   var request =  new XMLHttpRequest();
-  link1=document.getElementById('file').value;
   var the_data = "link=" + link1 + "&title=" + link;
   var php_file="link1.php";
   request.open("POST", php_file, true);			// set the request
@@ -88,6 +98,7 @@ function openlink(link) {
       document.getElementById("mytest1").href=request.responseText;
       document.getElementById("mytest1").click();
     }
+  }
   }
 }
 function changeserver(s,t) {
@@ -215,6 +226,7 @@ $l="https://fsapi.xyz/tv-tmdb/".$link."-".$sez."-".$ep;
 //die();
 //////////////////////////////////////////////////////////////////
 //olgply.xyz
+/*
 if ($tip == "movie")
   $l="https://olgply.xyz/".$link;
 else
@@ -224,7 +236,7 @@ else
 //$l="https://olgply.com/".$link;
   $s[]="olgply";
   $r[]=$l;
-
+*/
 
 //////////////////////////////////////////////////////////////////
 // apimdb.net   now openvids.io
@@ -298,8 +310,8 @@ $head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:106.0) Gecko/20100101 
   curl_setopt($ch, CURLOPT_HTTPHEADER, $head);
   curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
   curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
-  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
-  curl_setopt($ch, CURLOPT_TIMEOUT, 25);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 2);
   $h = curl_exec($ch);
   if (preg_match("/servers/",$h)) {
   $z=json_decode($h,1)['servers'];
@@ -307,9 +319,11 @@ $head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:106.0) Gecko/20100101 
   foreach ($z as $key => $value) {
     //echo $key;
     $s[]=$value['name'];
-    $r[]=get_link($value['name'],$value['code']);
+    $r[]="o. ".get_link($value['name'],$value['code']);
   }
   }
+  //print_r ($r);
+  //die();
 ////////////////////////////////////////////////////////////
 // vidsrc.me
 if ($tip=="movie")
@@ -360,9 +374,10 @@ else
     //echo $h;
     preg_match("/location\:\s+(.+)/i",$h,$m1);
     $r[]=trim($m1[1]);
-    $s[]=parse_url(trim($m1[1]))['host'];
+    $s[]="v. ".parse_url(trim($m1[1]))['host'];
    }
    curl_close ($ch);
+   //die();
    if ($tip=="movie")
      $r[]="https://voidboost.net/embed/".$imdb."?t=20&td=20&tlabel=English&cc=off&plang=en&poster=1";
    else
@@ -390,9 +405,25 @@ else
    $x=json_decode($h,1);
    //print_r ($x);
    for ($k=0;$k<count($x['results']);$k++) {
-     $r[]= $x['results'][$k]['url'];
-     $s[]= $x['results'][$k]['server'];
+     $y=$x['results'][$k]['url'];
+     $r[]= $y;
+     $s[]= "1. ".$x['results'][$k]['server'];
    }
+   $test=$x['results'][0]['url'];
+/// embedo.xyz
+  if ($tip=="movie")
+   $l="https://embedo.xyz/player.php?video_id=".$imdb;
+  else
+   $l="https://embedo.xyz/player.php?video_id=".$imdb."&s=".$sez."&e=".$ep;
+  //echo $l;
+
+////////////////////////////////////////////////////////////////////////
+  if ($tip=="movie")
+   $l="https://embedo.xyz/play/movie.php?imdb=".$imdb;
+  else
+   $l="https://embedo.xyz/play/series.php?imdb=".$imdb."&sea=".$sez."&epi=".$ep;
+  $r[]=$l;
+  $s[]="Vidcloud";
 ///////////////////////////////////////////
 //print_r ($r);
 echo '<table border="1" width="100%">';
@@ -405,8 +436,8 @@ for ($i=0;$i<$k;$i++) {
   if ($x==0) echo '<TR>';
   $c_link=$r[$i];
   $openload=$s[$i];
-  if (preg_match($indirect,$openload)) {
-  echo '<TD class="mp"><a href="filme_link.php?file='.urlencode($c_link).'&title='.urlencode(unfix_t($tit.$tit2)).'" target="_blank">'.$openload.'</a></td>';
+  if (preg_match("/streamembed1/",$c_link)) {
+  echo '<TD class="mp"><a href="streamembed1.php?file='.urlencode($c_link).'&title='.urlencode(unfix_t($tit.$tit2)).'&tip='.$flash.'" target="_blank">'.$openload.'</a></td>';
   } else
   echo '<TD class="mp"><a id="myLink" href="#" onclick="changeserver('."'".$openload."','".urlencode($c_link)."'".');return false;">'.$openload.'</a></td>';
   $x++;
@@ -446,10 +477,12 @@ if ($tip=="movie")
   $openlink=urlencode(fix_t($tit3));
 else
   $openlink=urlencode(fix_t($tit.$tit2));
+
  if ($flash != "mp")
    echo '<TD align="center" colspan="4"><a id="viz" onclick="'."openlink1('".$openlink."')".'"'." style='cursor:pointer;'>".'VIZIONEAZA !</a></td>';
  else
    echo '<TD align="center" colspan="4"><a id="viz" onclick="'."openlink('".$openlink."')".'"'." style='cursor:pointer;'>".'VIZIONEAZA !</a></td>';
+
 echo '</tr>';
 echo '</table>';
 echo '<br>
@@ -459,7 +492,6 @@ echo '<br>
 <BR>Scurtaturi: 7=opensubtitles, 8=titrari, 9=subs, 0=subtitrari (cauta imdb id)
 </b></font></TD></TR></TABLE>
 ';
-
 //echo '<a href="https://streamembed.net/play/YTF0TklLYXplRnRhdjNTcHBUQUxnUzd1amt0UkIrZTJTWUZlQk8wYXJsWXhlT2EzTkxaQkU0RU9HQ2ZwemhvPQ==">sasaasas</a>';
 include("../debug.html");
 echo '

@@ -228,7 +228,7 @@ $host=parse_url($l)['host'];
   curl_close($ch);
 //echo $html;
 $r=array();
-$videos = explode('data-video="',$html);
+$videos = explode('div class="item',$html);
 unset($videos[0]);
 $videos = array_values($videos);
 foreach($videos as $video) {
@@ -240,10 +240,10 @@ foreach($videos as $video) {
   $title=$t3[0];
   $title = trim(strip_tags($title));
   $title = prep_tit($title);
-  $t1 = explode('src="', $video);
+  $t1 = explode('data-original="', $video);
   $t2 = explode('"', $t1[1]);
   $image = $t2[0];
-  $t1=explode('sub-desc">',$video);
+  $t1=explode('class="duration">',$video);
   $t3=explode("<",$t1[1]);
   $durata=trim($t3[0]);
   $durata = preg_replace("/\n|\r/"," ",strip_tags($durata));

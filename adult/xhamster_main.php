@@ -68,19 +68,29 @@ $ua="Mozilla/5.0 (Windows NT 10.0; rv:68.0) Gecko/20100101 Firefox/68.0";
   curl_setopt($ch, CURLOPT_TIMEOUT, 15);
   $html = curl_exec($ch);
   curl_close($ch);
-$html=str_between($html,'<div class="letter-blocks page">','<div class="search">');
-$videos = explode('<a', $html);
-unset($videos[0]);
-$videos = array_values($videos);
+  //echo $html;
+  $t1=explode('window.initials=',$html);
+  $t2=explode(';</script>',$t1[1]);
+  $r=json_decode($t2[0],1);
+  //print_r ($r);
+  $r1=$r['pageStore']['popular']['assignable'];
+//$html=str_between($html,'<div class="letter-blocks page">','<div class="search">');
+//$videos = explode('<a', $html);
+//unset($videos[0]);
+//$videos = array_values($videos);
 
-foreach($videos as $video) {
-    $t1=explode('href="',$video);
-    $t2=explode('"',$t1[1]);
-    $link=$t2[0];
-  	$t3=explode(">",$t1[1]);
-  	$t4=explode("<",$t3[1]);
-  	$title=trim($t4[0]);
-  	$title=prep_tit($title);
+//foreach($videos as $video) {
+for ($z=0;$z<count($r1);$z++) {
+for ($j=0;$j<count($r1[$z]['items']);$j++) {
+    //$t1=explode('href="',$video);
+    //$t2=explode('"',$t1[1]);
+    //$link=$t2[0];
+    $link=$r1[$z]['items'][$j]['url'];
+  	//$t3=explode(">",$t1[1]);
+  	//$t4=explode("<",$t3[1]);
+  	//$title=trim($t4[0]);
+  	//$title=prep_tit($title);
+  	$title=$r1[$z]['items'][$j]['name'];
     $link=$target."?page=1&tip=release&link=".urlencode(fix_t($link))."&title=".urlencode(fix_t($title));
     if ($title) {
 	if ($n == 0) echo "<TR>"."\r\n";
@@ -91,7 +101,7 @@ foreach($videos as $video) {
      $n=0;
     }
     }
-}
+}}
   if ($n < 3 && $n > 0) {
     for ($k=0;$k<3-$n;$k++) {
       echo '<TD></TD>'."\r\n";

@@ -6,11 +6,6 @@ function str_between($string, $start, $end){
 	return substr($string,$ini,$len);
 }
 include ("../common.php");
-if (file_exists($base_pass."player.txt")) {
-$flash=trim(file_get_contents($base_pass."player.txt"));
-} else {
-$flash="direct";
-}
 $page = $_GET["page"];
 $tip= $_GET["tip"];
 $tit=$_GET["title"];
@@ -22,14 +17,13 @@ $has_fav="yes";
 $has_search="yes";
 $has_add="yes";
 $has_fs="yes";
-$last_good="https://yify.plus";
-$last_good="https://spacemov.site";
-$host=parse_url($last_good)['host'];
-$fav_target="yifytv_s_fav.php?host=".$last_good;
-$add_target="yifytv_s_add.php";
+$ref="https://onemagia.com";
+$host=parse_url($ref)['host'];
+$fav_target="onemagia_f_fav.php?host=".$ref;
+$add_target="onemagia_f_add.php";
 $add_file="";
-$fs_target="yifytv_ep.php";
-$target="yifytv_s.php";
+$fs_target="onemagia_fs.php";
+$target="onemagia_f.php";
 /* ==================================================== */
 $base=basename($_SERVER['SCRIPT_FILENAME']);
 $p=$_SERVER['QUERY_STRING'];
@@ -47,12 +41,12 @@ $prev=$base."?page=".($page-1)."&".$p;
 $tit=unfix_t(urldecode($tit));
 $link=unfix_t(urldecode($link));
 /* ==================================================== */
-if (file_exists($base_cookie."seriale.dat"))
-  $val_search=file_get_contents($base_cookie."seriale.dat");
+if (file_exists($base_cookie."filme.dat"))
+  $val_search=file_get_contents($base_cookie."filme.dat");
 else
   $val_search="";
 $form='<form action="'.$target.'" target="_blank">
-Cautare serial:  <input type="text" id="title" name="title" value="'.$val_search.'">
+Cautare film:  <input type="text" id="title" name="title" value="'.$val_search.'">
 <input type="hidden" name="page" id="page" value="1">
 <input type="hidden" name="tip" id="tip" value="search">
 <input type="hidden" name="link" id="link" value="">
@@ -61,7 +55,7 @@ Cautare serial:  <input type="text" id="title" name="title" value="'.$val_search
 /* ==================================================== */
 if ($tip=="search") {
   $page_title = "Cautare: ".$tit;
-  if ($page == 1) file_put_contents($base_cookie."seriale.dat",$tit);
+  if ($page == 1) file_put_contents($base_cookie."filme.dat",$tit);
 } else
   $page_title=$tit;
 /* ==================================================== */
@@ -146,8 +140,13 @@ document.onkeypress =  zx;
 <?php
 $w=0;
 $n=0;
-echo '<H2>'.$page_title.'</H2>'."\r\n";
+if (file_exists($base_pass."player.txt")) {
+$flash=trim(file_get_contents($base_pass."player.txt"));
+} else {
+$flash="direct";
+}
 
+echo '<H2>'.$page_title.'</H2>'."\r\n";
 echo '<table border="1px" width="100%" style="table-layout:fixed;">'."\r\n";
 echo '<TR>'."\r\n";
 if ($page==1) {
@@ -173,103 +172,122 @@ if ($page==1) {
    echo '<TD class="nav" colspan="4" align="right"><a href="'.$prev.'">&nbsp;&lt;&lt;&nbsp;</a> | <a href="'.$next.'">&nbsp;&gt;&gt;&nbsp;</a></TD>'."\r\n";
 }
 echo '</TR>'."\r\n";
-$f=array();
-if ($tip=="search") {
- $search= str_replace(" ","+",$tit);
- if ($page==1)
-  $l=$last_good."/?s=".$search;
- else
-  $l=$last_good."/page/".$page."/?s=".$search;
-} else {
- if ($page==1)
-  $l=$last_good."/tvseries/";
- else
-  $l=$last_good."/tvseries/page/".$page."/";
-}
-$cookie=$base_cookie."yify.dat";
- if (file_exists("/storage/emulated/0/Download/cookies.txt")) {
-  $h1=file_get_contents("/storage/emulated/0/Download/cookies.txt");
-  file_put_contents($cookie,$h1);
-  unlink ("/storage/emulated/0/Download/cookies.txt");
- } elseif (file_exists($base_cookie."cookies.txt")) {
-  $h1=file_get_contents($base_cookie."cookies.txt");
-  file_put_contents($cookie,$h1);
-  unlink ($base_cookie."cookies.txt");
- }
-if (file_exists($base_pass."firefox.txt"))
- $ua=file_get_contents($base_pass."firefox.txt");
-else
- $ua=$_SERVER['HTTP_USER_AGENT'];
 
+if($tip=="release") {
+  $l="https://onemagia.com/filter_movies/".$page;
+  $post="action=fetch_data&minimum_rating=0&maximum_rating=10&page=".$page;
+  $post="action=fetch_data&minimum_rating=0&maximum_rating=10&sort=desc&page=".$page;
+  $head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:108.0) Gecko/20100101 Firefox/108.0',
+  'Accept: application/json, text/javascript, */*; q=0.01',
+  'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
+  'Accept-Encoding: deflate',
+  'Content-Type: application/x-www-form-urlencoded; charset=UTF-8',
+  'X-Requested-With: XMLHttpRequest',
+  'Content-Length: '.strlen($post),
+  'Origin: https://onemagia.com',
+  'Alt-Used: onemagia.com',
+  'Connection: keep-alive',
+  'Referer: https://onemagia.com/movies.html',
+  'Cookie: ci_session=');
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $l);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
   curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+  curl_setopt($ch, CURLOPT_HTTPHEADER,$head);
+  curl_setopt($ch, CURLOPT_POST,1);
+  curl_setopt($ch, CURLOPT_POSTFIELDS,$post);
   curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-  curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie);
-  curl_setopt($ch, CURLOPT_COOKIEJAR, $cookie);
+  curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
   curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
   curl_setopt($ch, CURLOPT_TIMEOUT, 25);
   $h = curl_exec($ch);
   curl_close($ch);
-if (preg_match("/cf\-challenge/",$h)) {
-   if ($flash=="mp")
-    echo '<a href="intent:http://127.0.0.1:8080/scripts/filme/cf.php?site=https://'.$host.'&cookie='.$cookie.'#Intent;package=org.mozilla.firefox;S.title=Cloudflare;end">GET cloudflare cookie</a>';
-   else
-    header('Location: cf.php?site=https://'.$host.'&cookie='.$cookie);
+  $r=json_decode($h,1);
+  //print_r ($r);
+  $h=$r['movie_list'];
+} else {
+  $search=str_replace(" ","+",$tit);
+  $l="https://onemagia.com/search?q=".$search;
+  $ch = curl_init();
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+  curl_setopt($ch, CURLOPT_USERAGENT, "Mozilla/5.0 (Windows NT 10.0; rv:65.0) Gecko/20100101 Firefox/65.0");
+  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+  curl_setopt($ch, CURLOPT_ENCODING, "");
+  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+  curl_setopt($ch, CURLOPT_URL, $l);
+  $h = curl_exec($ch);
+  curl_close($ch) ;
+  //echo $h;
 }
 $host=parse_url($l)['host'];
-if ($tip=="release") {
-$videos = explode('<article id="post-', $h);
-unset($videos[0]);
-$videos = array_values($videos);
-foreach($videos as $video) {
- $t1=explode('"',$video);
- $fel=$t1[0];
- $t1=explode('href="',$video);
- $t2=explode('"',$t1[1]);
- $link=$t2[0];
- $t1=explode('src="',$video);
- $t2=explode('"',$t1[1]);
- $image=$t2[0];
- $t1=explode('alt="',$video);
- $t2=explode('"',$t1[1]);
- $title=trim($t2[0]);
-  if (!preg_match("/featured/",$fel) && preg_match("/\/tvseries\//",$link)) $f[] = array($title,$link,$image);
-}
-} else {
-$videos = explode('<article', $h);
-unset($videos[0]);
-$videos = array_values($videos);
-foreach($videos as $video) {
- $t1=explode('href="',$video);
- $t2=explode('"',$t1[1]);
- $link=$t2[0];
- $t1=explode('src="',$video);
- $t2=explode('"',$t1[1]);
- $image=$t2[0];
- $t1=explode('alt="',$video);
- $t2=explode('"',$t1[1]);
- $title=trim($t2[0]);
-  if (preg_match("/\/tvseries\//",$link)) $f[] = array($title,$link,$image);
-}
-}
-foreach($f as $key => $value) {
-  $title=$value[0];
-  $title=prep_tit($title);
-  $link=$value[1];
-  $image=$value[2];
-  $year="";
-  $imdb="";
-  $year="";
-  $sez="";
-  $tit_imdb=$title;
 
-  $link_f=$fs_target.'?tip=series&link='.urlencode($link).'&title='.urlencode(fix_t($title)).'&image='.$image."&sez=".$sez."&ep=&ep_tit=&year=".$year;
+
+//echo $html;
+$r=array();
+if ($tip=="release") {
+  $videos = explode('<div class="popup',$h);
+  unset($videos[0]);
+  $videos = array_values($videos);
+  foreach($videos as $video) {
+   $t1=explode('href="',$video);
+   $t2=explode('"',$t1[1]);
+   $link=$t2[0];
+   $t3 = explode('title="', $video);
+   $t4 = explode('"', $t3[1]);
+   $title = trim($t4[0]);
+   $title=prep_tit($title);
+   $t1 = explode("background-image: url('", $video);
+   $t2 = explode("'", $t1[1]);
+   $image = $t2[0];
+  $rest = substr($title, -6);
+  if (preg_match("/\(?(\d{4})\)?/",$rest,$m)) {
+   $year=$m[1];
+   $title=trim(str_replace($m[0],"",$title));
+  } else {
+   $year="";
+   $title=$title;
+  }
+   $r[]=array($link,$title,$image,$year);
+  }
+} else {
+  $videos = explode('<div class="popup',$h);
+  unset($videos[0]);
+  $videos = array_values($videos);
+  foreach($videos as $video) {
+   $t1=explode('href="',$video);
+   $t2=explode('"',$t1[1]);
+   $link=$t2[0];
+   $t3 = explode('title="', $video);
+   $t4 = explode('"', $t3[1]);
+   $title = trim($t4[0]);
+   $title=prep_tit($title);
+   $t1 = explode("background-image: url('", $video);
+   $t2 = explode("'", $t1[1]);
+   $image = $t2[0];
+  $rest = substr($title, -6);
+  if (preg_match("/\(?(\d{4})\)?/",$rest,$m)) {
+   $year=$m[1];
+   $title=trim(str_replace($m[0],"",$title));
+  } else {
+   $year="";
+   $title=$title;
+  }
+   $r[]=array($link,$title,$image,$year);
+  }
+}
+for ($k=0; $k<count($r);$k++) {
+  $link=$r[$k][0];
+  $title=$r[$k][1];
+  $image=$r[$k][2];
+  $year=$r[$k][3];
+  $imdb="";
+  $tit_imdb=$title;
+  $link_f=$fs_target.'?tip=movie&link='.urlencode($link).'&title='.urlencode(fix_t($title)).'&image='.$image."&sez=&ep=&ep_tit=&year=".$year;
   if ($title) {
   if ($n==0) echo '<TR>'."\r\n";
-  $val_imdb="tip=series&title=".urlencode(fix_t($tit_imdb))."&year=".$year."&imdb=".$imdb;
+  $val_imdb="tip=movie&title=".urlencode(fix_t($tit_imdb))."&year=".$year."&imdb=".$imdb;
   $fav_link="mod=add&title=".urlencode(fix_t($title))."&link=".urlencode($link)."&image=".urlencode($image)."&year=".$year;
   if ($tast == "NU") {
     echo '<td class="mp" width="25%"><a href="'.$link_f.'" id="myLink'.$w.'" target="_blank" onmousedown="isKeyPressed(event)">

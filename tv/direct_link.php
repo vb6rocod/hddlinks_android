@@ -605,8 +605,12 @@ if ($from=="stream4free") {
   curl_setopt($ch, CURLOPT_TIMEOUT, 25);
   $h = curl_exec($ch);
   curl_close($ch);
-    if (preg_match("/http.+\.m3u8/",$h,$m))
+  if (preg_match("/http.+\.m3u8/",$h,$m))
      $link=trim($m[0]);
+  if ($link && $flash <> "flash") {
+    $link .="|Referer=".urlencode("https://www.stream4free.live")."&Origin=".urlencode("https://www.stream4free.live");
+    $link .="&User-Agent=".urlencode($ua);
+  }
 }
 if ($from=="tvrlive") {
     $ch = curl_init();

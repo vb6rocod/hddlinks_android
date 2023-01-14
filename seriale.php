@@ -59,8 +59,8 @@ document.onkeypress =  zx;
 <TR>
 <TD width="25%"><a href="filme/diverse.php" target="_blank">diverse</a></TD>
 <TD width="25%"><a href="filme/moviewetrust_s.php?page=1&tip=release&title=moviewetrust&link=" target="_blank">moviewetrust</a></TD>
-<TD width="25%"><a href="filme/soap2day_s.php?page=1&tip=release&title=soap2day&link=" target="_blank">soap2day</a></TD>
-<TD width="25%"><a href="filme/yifytv_s.php?page=1&tip=release&title=yifytv&link=" target="_blank">yifytv</a></TD>
+<TD width="25%"><a href="filme/hdmoviebox_s.php?page=1&tip=release&title=hdmoviebox&link=" target="_blank">hdmoviebox</a></TD>
+<TD width="25%"><a href="filme/2embed_s.php?page=1&tip=release&title=2embed&link=" target="_blank">2embed</a></TD>
 </TR>
 
 <TR>
@@ -69,7 +69,7 @@ document.onkeypress =  zx;
 <!-- straine -->
 <TR>
 <TD width="25%"><a href="filme/tvseries_s.php?page=1&tip=release&title=tvseries&link=" target="_blank">tvseries</a></TD>
-<TD width="25%"><a href="filme/trailers_s.php?page=1&tip=release&title=trailers&link=" target="_blank">trailers</a></TD>
+<TD width="25%"><a href="filme/o2tvseries_s.php?page=1&tip=release&title=o2tvseries&link=" target="_blank">o2tvseries</a></TD>
 <TD width="25%"><a href="filme/solarmovie_s.php?page=1&tip=release&title=solarmovie&link=" target="_blank">solarmovie</a></TD>
 <TD width="25%"><a href="filme/lookmovie_s.php?page=1&tip=release&title=lookmovie&link=" target="_blank">lookmovie</a></TD>
 <!--<TD width="25%"><a href="filme/cl.php?host=https://lookmovie.io/favicon-16x16.png&cookie=lookmovie.dat&target=lookmovie_s.php&title=lookmovie" target="_blank">lookmovie</a></TD>-->
@@ -101,12 +101,6 @@ document.onkeypress =  zx;
 <TD width="25%"><a href="filme/streamlord_s.php?page=1&tip=release&title=streamlord&link=" target="_blank">streamlord</a></TD>
 </TR>
 
-<TR>
-<TD width="25%"><a href="filme/fastmovies_s.php?page=1&tip=release&title=fastmovies&link=" target="_blank">fastmovies</a></TD>
-<TD width="25%"><a href="filme/o2tvseries_s.php?page=1&tip=release&title=o2tvseries&link=" target="_blank">o2tvseries</a></TD>
-<TD width="25%"><a href="filme/hdmoviebox_s.php?page=1&tip=release&title=hdmoviebox&link=" target="_blank">hdmoviebox</a></TD>
-<TD width="25%"><a href="filme/2embed_s.php?page=1&tip=release&title=2embed&link=" target="_blank">2embed</a></TD>
-</TR>
 
 <?php
 if (file_exists($base_pass."tvplay.txt")) {

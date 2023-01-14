@@ -196,21 +196,27 @@ $host=parse_url($l)['host'];
   $html = curl_exec($ch);
   curl_close ($ch);
 
+if (preg_match("/class\=\"ml\-item/",$html))
 $videos = explode('div class="ml-item', $html);
+else
+$videos = explode('div class=ml-item', $html);
 unset($videos[0]);
 $videos = array_values($videos);
 foreach($videos as $video) {
-  $t1 = explode('href="',$video);
-  $t2 = explode('"', $t1[1]);
-  $link = $t2[0];
+  if (preg_match("/href\=\"?([^\s\"]+)/",$video,$t))
+  $link = $t[1];
   if (strpos($link,"http") === false) $link="https://".$host.$link;
-  $t1 = explode('title="', $video);
-  $t2 = explode('"', $t1[1]);
-  $title = $t2[0];
+  //$t1 = explode('title="', $video);
+  //$t2 = explode('"', $t1[1]);
+  if (preg_match("/title\=\"?([^\"\>]+)/",$video,$t))
+  $title = $t[1];
   $title = prep_tit($title);
-  $t1 = explode('data-original="', $video);
-  $t2 = explode('"', $t1[1]);
-  $image = $t2[0];
+  //$t1 = explode('data-original=', $video);
+  //$t2 = explode(' ', $t1[1]);
+  //if (preg_match("/data\-original\=\"?
+  if (preg_match("/data\-original\=\"?([^\"\>\s]+)/",$video,$t))
+  $image = $t[1];
+  //$image="r_m.php?file=".$image;
   if (strpos($image,"http") === false) $image="https:".$image;
   $year="";
   $imdb="";

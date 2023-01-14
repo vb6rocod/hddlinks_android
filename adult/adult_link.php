@@ -209,10 +209,10 @@ if (preg_match("/4tube\.com/",$host)) {
       } else $out="";
  }
 } else if (preg_match("/2freesex\.com/",$host)) {
-//echo $h;
 $t1=explode("source src='",$h);
 $t2=explode("'",$t1[1]);
 $out=$t2[0];
+if (!preg_match("/https\:/",$out)) $out="https:".$out;
 } else if (preg_match("/anybunny\.com/",$host)) {
 //echo $h;
 $t1=explode("source src='",$h);
@@ -619,6 +619,7 @@ $out=$t2[0];
   $out=str_replace("\\","",$out);
   if (strpos($out,"http") === false && $out) $out="https:".$out;
 } else if (preg_match("/pornhd\.com/",$host)) {
+//echo $h;
   if (preg_match("/source\s+src\=\"(.*?)\"/msi",$h,$p)) {
    $out=$p[1];
    $out=str_replace("&amp;","&",$out);
@@ -724,11 +725,54 @@ $head=array('Accept: */*',
   $out=str_replace("\\","",$out);
   if (strpos($out,"http") === false && $out) $out="https:".$out;
 } else if (preg_match("/pornrabbit\.com/",$host)) {
-//echo $h;
-  if(preg_match("/desktopFile\s*\=\s*\'(.*?)\'/",$h,$m)) {
-   $out=$m[1];
-   if (strpos($out,"http") === false && $out) $out="https:".$out;
-  }
+  if (strpos($h,"license_code:") !== false) {
+   $t1 = explode("license_code: '", $h);
+   $t2 = explode("'", $t1[1]);
+   $d = $t2[0];
+   $t1 = explode("function/0/", $h);
+   $t2 = explode("'", $t1[count($t1)-1]);
+   $orig = $t2[0];
+   $c = 16;
+
+   for ($f = "", $g = 1; $g < strlen($d); $g++)
+	{
+	$f.= preg_match("/[1-9]/", $d[$g]) ? $d[$g] : 1;
+	}
+
+  for ($j = intval(strlen($f) / 2) , $k = substr($f, 0, $j + 1) , $l = substr($f, $j) , $g = $l - $k, $g < 0 && ($g = - $g) , $f = $g, $g = $k - $l, $g < 0 && ($g = - $g) , $f+= $g, $f = $f * 2, $f = "" . $f, $i = $c / 2 + 2, $m = "", $g = 0; $g < $j + 1; $g++)
+	{
+	for ($h = 1; $h <= 4; $h++)
+		{
+		$n = $d[$g + $h] + $f[$g];
+		$n >= $i && ($n-= $i);
+		$m.= $n;
+		}
+	}
+
+ $t1 = explode("/", $orig);
+ $j = $t1[5];
+ $h = substr($j, 0, 32);
+ $i = $m;
+
+ for ($j = $h, $k = strlen($h) - 1; $k >= 0; $k--)
+	{
+	for ($l = $k, $m = $k; $m < strlen($i); $m++) $l+= $i[$m];
+	for (; $l >= strlen($h);) $l-= strlen($h);
+	for ($n = "", $o = 0; $o < strlen($h); $o++)
+		{
+		$n.= $o == $k ? $h[$l] : ($o == $l ? $h[$k] : $h[$o]);
+		}
+
+	$h = $n;
+	}
+
+ $out = str_replace($j, $h, $orig);
+ } else {
+ $out="";
+ }
+ //echo $out;
+ if ($out && $flash <> "flash")
+  $out=$out."|Referer=".urlencode("https://pornrabbit.com");
 } else if (preg_match("/pornrox\.com/",$host)) {
 //echo $h;
   if (preg_match_all("/source src\=\"(.*?)\"\s+type\=\'video\/mp4\' label\=\'(1080|720|480|360|240)p\'/ms",$h,$m)) {
