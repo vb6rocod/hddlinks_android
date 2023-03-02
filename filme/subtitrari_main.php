@@ -76,6 +76,8 @@ echo '</TR>';
   $ua="Mozilla/5.0 (Windows NT 10.0; rv:55.0) Gecko/20100101 Firefox/55.0";
 $l="https://subtitrari-noi.ro/paginare_filme.php";
 //search_q=1&query_q=G&cautare=G&tip=2&an=Toti anii&gen=Toate
+// search_q=1&query_q=9686790&cautare=9686790&tip=2&an=Toti anii&gen=Toate
+
 if ($imdbid)
    $post="search_q=".$page."&query_q=".$imdbid."&cautare=".$imdbid."&tip=2&an=Toti+anii&gen=Toate";
 else

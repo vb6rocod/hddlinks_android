@@ -123,6 +123,12 @@ if ($tip=="cineplex") {
  $fh = fopen($new_file, 'w');
  fwrite($fh, $txt);
  fclose($fh);
+} elseif ($tip=="opensubtitlesc") {
+ $txt=$user;
+ $new_file = $base_pass."opensubtitlesc.txt";
+ $fh = fopen($new_file, 'w');
+ fwrite($fh, $txt);
+ fclose($fh);
 } elseif ($tip=="movietv") {
  $txt=$user."|".$pass;
  $new_file = $base_pass."movietv.txt";
@@ -338,7 +344,7 @@ $mpc=trim(file_get_contents($f));
 $mpc="";
 }
 echo '
-<form action="settings.php">Cale VideoLan (vlc.exe) copiati aici<input type="text" name="user" id="user" size="50" value="'.$mpc.'">
+<form action="settings.php">Cale mpv.exe (mpv.exe) - folositi Unix style "C:/"<input type="text" name="user" id="user" size="50" value="'.$mpc.'">
 <input type="hidden" name="tip" value="vlc">
 <BR><input type="submit" value="Memoreaza">
 </form>
@@ -516,6 +522,22 @@ User:<input type="text" name="user" value="'.$user.'"></BR>
 Pass:<input type="password" name="pass" value="'.$pass.'"></BR>
 UserAgent:<input type="text" name="ua" value="'.$ua.'"></BR>
 <input type="hidden" name="tip" value="opensubtitles">
+<input type="submit" value="Memoreaza">
+</form>
+<hr>
+';
+$f=$base_pass."opensubtitlesc.txt";
+if (file_exists($f)) {
+$h=file_get_contents($f);
+$user=trim($h);
+} else {
+$user="";
+}
+echo '
+<h4>Setari opensubtitles (new api) (see https://opensubtitles.stoplight.io/)</h4>
+<form action="settings.php">
+API Key:<input type="text" name="user" value="'.$user.'"></BR>
+<input type="hidden" name="tip" value="opensubtitlesc">
 <input type="submit" value="Memoreaza">
 </form>
 <hr>

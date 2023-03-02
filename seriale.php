@@ -84,13 +84,13 @@ document.onkeypress =  zx;
 <TD width="25%"><a href="filme/allmoviesforyou_s.php?page=1&tip=release&title=allmoviesforyou&link=" target="_blank">allmoviesforyou</a></TD>
 <TD width="25%"><a href="filme/ling_s.php?page=1&tip=release&title=ling.online&link=" target="_blank">ling.online</a></TD>
 <TD width="25%"><a href="filme/vidcloud9_s.php?page=1&tip=release&title=vidcloud9&link=" target="_blank">vidcloud9</a></TD>
-<TD width="25%"></TD>
+<TD width="25%"><a href="filme/flixhq_s.php?page=1&tip=release&title=flixhq&link=" target="_blank">flixhq</a></TD>
 </TR>
 
 <TR>
 <TD width="25%"><a href="filme/moviehab_s.php?page=1&tip=release&title=moviehab&link=" target="_blank">moviehab</a></TD>
 <TD width="25%"><a href="filme/emovies_s.php?page=1&tip=release&title=emovies&link=" target="_blank">emovies</a></TD>
-<TD width="25%"><a href="filme/m4uhd_s.php?page=1&tip=release&title=m4uhd&link=" target="_blank">m4uhd</a></TD>
+<TD width="25%"><a href="filme/xemovies_s.php?page=1&tip=release&title=xemovies&link=" target="_blank">xemovies</a></TD>
 <TD width="25%"><a href="filme/sockshare_s.php?page=1&tip=release&title=sockshare&link=" target="_blank">sockshare</a></TD>
 </TR>
 
@@ -101,7 +101,12 @@ document.onkeypress =  zx;
 <TD width="25%"><a href="filme/streamlord_s.php?page=1&tip=release&title=streamlord&link=" target="_blank">streamlord</a></TD>
 </TR>
 
-
+<TR>
+<TD width="25%"><a href="filme/moviebox_s.php?page=1&tip=release&title=moviebox&link=" target="_blank">moviebox</a></TD>
+<TD width="25%"><a href="filme/bflix_s.php?page=1&tip=release&title=bflix&link=" target="_blank">bflix</a></TD>
+<TD width="25%"></TD>
+<TD width="25%"></TD>
+</TR>
 <?php
 if (file_exists($base_pass."tvplay.txt")) {
 echo '<TR>';

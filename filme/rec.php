@@ -39,6 +39,8 @@ function rec($site_key,$co,$sa,$loc) {
   $t1=explode("releases/",$h);
   $t2=explode("/",$t1[1]);
   $v=$t2[0];
+  //echo $v;
+  //$v="RGRQD9tdxHtnt-Bxkx9pM75S";
   //$v="-FJgYf1d3dZ_QPcZP7bd85hc";
   //$v="BT5UwN2jyUJCo7TdbwTYi_58";
   //$v="oqtdXEs9TE9ZUAIhXNz5JBt_";
@@ -91,6 +93,34 @@ function rec($site_key,$co,$sa,$loc) {
   $t1=explode('rresp","',$h);
   $t2=explode('"',$t1[1]);
   $r=$t2[0];
+
+  $l="https://www.google.com/recaptcha/api2/userverify?k=".$site_key;
+  $p=array('v' => $v,$c => $r);
+  $post=http_build_query($p);
+  $head=array(
+  'Accept: */*',
+  'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
+  'Accept-Encoding: deflate',
+  'Origin: https://www.google.com',
+  'Content-Type: application/x-www-form-urlencoded;charset=utf-8',
+  'Content-Length: '.strlen($post).'',
+  'Connection: keep-alive');
+  $ch = curl_init();
+  curl_setopt($ch, CURLOPT_URL, $l);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
+  curl_setopt($ch, CURLOPT_REFERER, "https://www.google.com");
+  curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 0);
+  curl_setopt($ch, CURLOPT_HTTPHEADER, $head);
+  curl_setopt ($ch, CURLOPT_POST, 1);
+  curl_setopt ($ch, CURLOPT_POSTFIELDS, $post);
+  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+  //$h = curl_exec($ch);
+  curl_close($ch);
+  //echo $h;
+  //$t1=explode('rresp","',$h);
+  //$t2=explode('"',$t1[1]);
+  //$r=$t2[0];
   return $r;
 }
 ?>

@@ -47,7 +47,23 @@ else
 $tip="series";
 }
 $imdbid="";
-
+/* ==================================================== */
+if (file_exists($base_pass."moviebox.txt")) {
+  $h=trim(file_get_contents($base_pass."moviebox.txt"));
+  $t1=explode("|",$h);
+  $l=$t1[0];
+  $appkey=$t1[1];
+  $key=$t1[2];
+  $iv=$t1[3];
+  $appid=$t1[4];
+}
+function random_token($chars = 32) {
+   $letters = '0123456789abcdef';
+   return substr(str_shuffle($letters), 0, $chars);
+}
+$exp=time() + 60 * 60 * 12;
+$encrypt_method = "DES-EDE3-CBC";
+/* ==================================================== */
 ?>
 <html>
 <head>
@@ -86,9 +102,10 @@ function openlink(link) {
     }
   }
 }
-function changeserver(s,t) {
+function changeserver(s,t,f) {
   document.getElementById('server').innerHTML = s;
   document.getElementById('file').value=t;
+  document.getElementById('filename').value=f;
 }
    function zx(e){
      var charCode = (typeof e.which == "number") ? e.which : e.keyCode
@@ -131,71 +148,97 @@ function off() {
 echo '<h2>'.$tit.$tit2.'</H2>';
 echo '<BR>';
 $r=array();
+$s=array();
+$ff=array();
 //echo $link;
-$ua="Mozilla/5.0 (Windows NT 10.0; rv:89.0) Gecko/20100101 Firefox/89.0";
-$host="https://".parse_url($link)['host'];
+if ($tip=="movie") {
+$qq=array(
+    "childmode" => "0",
+    "app_version" => "11.5",
+    "appid" => $appid,
+    "lang" => "en",
+    "expired_date" => $exp,
+    "platform" => "android",
+    "channel" => "Website",
+    "uid" => "",
+    "module" => "Movie_downloadurl_v3",
+    "mid" => $link,
+    "oss" => "1",
+    "group" => ""
+);
+} else {
+$qq=array("childmode" => "0",
+"app_version" => "11.5",
+"appid" => $appid,
+"lang" => "en",
+"expired_date" => $exp,
+"platform" => "android",
+"channel" => "Website",
+"uid" => "",
+"module" => "TV_downloadurl_v3",
+"episode" => $ep,
+"tid" => $link,
+"season" => $sez,
+"oss" => "1",
+"group" => "");
+}
+$dd=json_encode($qq);
+$data = openssl_encrypt( $dd, $encrypt_method, $key, 0, $iv );
+$vv=md5(md5("moviebox").$key.$data);
+
+$p=array("app_key" => $appkey,
+"verify" => $vv,
+"encrypt_data" => $data);
+$xx=base64_encode(json_encode($p));
+$post="data=".$xx."&appid=27&platform=android&version=129&medium=Website&token".random_token()."=";
+$head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/109.0',
+'Accept: */*',
+'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
+'Accept-Encoding: deflate',
+'Referer: https://movie.squeezebox.dev/',
+'Platform: android',
+'Content-Type: application/x-www-form-urlencoded',
+'Content-Length: '.strlen($post),
+'Origin: https://movie.squeezebox.dev',
+'Connection: keep-alive');
   $ch = curl_init();
-  curl_setopt($ch, CURLOPT_URL, $link);
+  curl_setopt($ch, CURLOPT_URL, $l);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
-  curl_setopt($ch,CURLOPT_REFERER,$link);
   curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+  curl_setopt($ch, CURLOPT_HTTPHEADER,$head);
+  curl_setopt($ch, CURLOPT_POST,1);
+  curl_setopt($ch, CURLOPT_POSTFIELDS,$post);
   curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+  curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
   curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
   curl_setopt($ch, CURLOPT_TIMEOUT, 25);
   $h = curl_exec($ch);
   curl_close($ch);
   //echo $h;
-  $t1=explode('data-id="',$h);
-  $t2=explode('"',$t1[1]);
-  $id=$t2[0];
-  $t1=explode('data-name="',$h);
-  $t2=explode('"',$t1[1]);
-  $d=$t2[0];
-  $post="d=".$d."&id=".$id;
-  $l="https://o2tvseries.co/streamvpaid.php";
-// d=3&id=252197
-$head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/110.0',
-'Accept: */*',
-'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
-'Accept-Encoding: deflate',
-'Content-Type: application/x-www-form-urlencoded; charset=UTF-8',
-'X-Requested-With: XMLHttpRequest',
-'Content-Length: '.strlen($post),
-'Origin: https://o2tvseries.co');
-/*
-  $ch = curl_init();
-  curl_setopt($ch, CURLOPT_URL, $l);
-  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
-  curl_setopt($ch, CURLOPT_HTTPHEADER, $head);
-  curl_setopt($ch, CURLOPT_POST,1);
-  curl_setopt($ch, CURLOPT_POSTFIELDS,$post);
-  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
-  curl_setopt($ch, CURLOPT_TIMEOUT, 25);
-  $h = curl_exec($ch);
-  curl_close($ch);
-  echo $h;
-*/
-
-  $r[]=$host."/streamvpaid.php"."?d=".$d."&id=".$id;
-
-
+  $z=json_decode($h,1);
+  //print_r ($z);
+  for ($k=0;$k<count($z['data']['list']);$k++) {
+   if ($z['data']['list'][$k]['path']) {
+     $s[]=$z['data']['list'][$k]['real_quality'];
+     $ff[]=$z['data']['list'][$k]['filename'];
+     $r[]="http://moviebox.com?file=".urlencode(urlencode($z['data']['list'][$k]['path']))."&tip=".$tip."&id=".$link."&fid=".$z['data']['list'][$k]['fid']."&sez=".$sez."&ep=".$ep;
+   }
+  }
 echo '<table border="1" width="100%">';
-echo '<TR><TD class="mp">Alegeti un server: Server curent:<label id="server">'.parse_url($r[0])['host'].'</label>
-<input type="hidden" id="file" value="'.urlencode($r[0]).'"></td></TR></TABLE>';
+echo '<TR><TD class="mp">Alegeti un server: Server curent:<label id="server">'.$s[0].'</label>
+<input type="hidden" id="file" value="'.urlencode($r[0]).'"></td>
+</TR></TABLE>';
 echo '<table border="1" width="100%"><TR>';
 $k=count($r);
 $x=0;
 for ($i=0;$i<$k;$i++) {
   if ($x==0) echo '<TR>';
   $c_link=$r[$i];
-  $openload=parse_url($r[$i])['host'];
+  $openload=$s[$i];
   if (preg_match($indirect,$openload)) {
   echo '<TD class="mp"><a href="filme_link.php?file='.urlencode($c_link).'&title='.urlencode(unfix_t($tit.$tit2)).'" target="_blank">'.$openload.'</a></td>';
   } else
-  echo '<TD class="mp"><a id="myLink" href="#" onclick="changeserver('."'".$openload."','".urlencode($c_link)."'".');return false;">'.$openload.'</a></td>';
+  echo '<TD class="mp"><a id="myLink" href="#" onclick="changeserver('."'".$openload."','".urlencode($c_link)."','".$ff[$i]."'".');return false;">'.$openload.'</a></td>';
   $x++;
   if ($x==6) {
     echo '</TR>';
@@ -253,9 +296,7 @@ echo '<br>
 </b></font></TD></TR></TABLE>
 ';
 
-if (preg_match("/c\d?_file\=(http[\.\d\w\-\.\/\\\:\?\&\#\%\_\,]+)\&c\d?_label\=English/i",$r[0],$s)) {
- echo 'Cu subtitrare in Engleza.<BR>';
-}
+echo '<label id="filename">'.$ff[0].'</label><BR>';
 include("../debug.html");
 echo '
 <div id="overlay">

@@ -34,6 +34,7 @@ if (preg_match("/(:|-)?\s+Season\s+(\d+)/i",$tit,$m)) {
   $tit=trim(str_replace($m[0],"",$tit));
 }
 echo '<h2>'.$tit.'</h2>';
+//echo $link;
   preg_match("/(\d+)\.html/",$link,$m);
   $id=$m[1];
   $episod="1";

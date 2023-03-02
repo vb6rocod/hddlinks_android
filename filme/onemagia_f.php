@@ -172,39 +172,25 @@ if ($page==1) {
    echo '<TD class="nav" colspan="4" align="right"><a href="'.$prev.'">&nbsp;&lt;&lt;&nbsp;</a> | <a href="'.$next.'">&nbsp;&gt;&gt;&nbsp;</a></TD>'."\r\n";
 }
 echo '</TR>'."\r\n";
-
+// https://onemagia.com/movies/all/newest.html
+// https://onemagia.com/movies/all/newest.html?page=2
 if($tip=="release") {
-  $l="https://onemagia.com/filter_movies/".$page;
-  $post="action=fetch_data&minimum_rating=0&maximum_rating=10&page=".$page;
-  $post="action=fetch_data&minimum_rating=0&maximum_rating=10&sort=desc&page=".$page;
-  $head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:108.0) Gecko/20100101 Firefox/108.0',
-  'Accept: application/json, text/javascript, */*; q=0.01',
-  'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
-  'Accept-Encoding: deflate',
-  'Content-Type: application/x-www-form-urlencoded; charset=UTF-8',
-  'X-Requested-With: XMLHttpRequest',
-  'Content-Length: '.strlen($post),
-  'Origin: https://onemagia.com',
-  'Alt-Used: onemagia.com',
-  'Connection: keep-alive',
-  'Referer: https://onemagia.com/movies.html',
-  'Cookie: ci_session=');
+  $l="https://onemagia.com/movies/all/newest.html?page=".$page;
   $ch = curl_init();
-  curl_setopt($ch, CURLOPT_URL, $l);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+  curl_setopt($ch, CURLOPT_USERAGENT, "Mozilla/5.0 (Windows NT 10.0; rv:65.0) Gecko/20100101 Firefox/65.0");
   curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
-  curl_setopt($ch, CURLOPT_HTTPHEADER,$head);
-  curl_setopt($ch, CURLOPT_POST,1);
-  curl_setopt($ch, CURLOPT_POSTFIELDS,$post);
+  curl_setopt($ch, CURLOPT_ENCODING, "");
   curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-  curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
-  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
-  curl_setopt($ch, CURLOPT_TIMEOUT, 25);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+  curl_setopt($ch, CURLOPT_URL, $l);
   $h = curl_exec($ch);
-  curl_close($ch);
-  $r=json_decode($h,1);
+  curl_close($ch) ;
+  //echo $h;
+  //$r=json_decode($h,1);
   //print_r ($r);
-  $h=$r['movie_list'];
+  //$h=$r['movie_list'];
 } else {
   $search=str_replace(" ","+",$tit);
   $l="https://onemagia.com/search?q=".$search;
@@ -225,21 +211,22 @@ $host=parse_url($l)['host'];
 
 
 //echo $html;
+// <a href="/movie/
 $r=array();
-if ($tip=="release") {
-  $videos = explode('<div class="popup',$h);
+
+  $videos = explode('<a href="/movie/',$h);
   unset($videos[0]);
   $videos = array_values($videos);
   foreach($videos as $video) {
-   $t1=explode('href="',$video);
-   $t2=explode('"',$t1[1]);
-   $link=$t2[0];
-   $t3 = explode('title="', $video);
+
+   $t2=explode('"',$video);
+   $link="https://onemagia.com/movie/".$t2[0];
+   $t3 = explode('alt="', $video);
    $t4 = explode('"', $t3[1]);
    $title = trim($t4[0]);
    $title=prep_tit($title);
-   $t1 = explode("background-image: url('", $video);
-   $t2 = explode("'", $t1[1]);
+   $t1 = explode('src="', $video);
+   $t2 = explode('"', $t1[1]);
    $image = $t2[0];
   $rest = substr($title, -6);
   if (preg_match("/\(?(\d{4})\)?/",$rest,$m)) {
@@ -251,32 +238,7 @@ if ($tip=="release") {
   }
    $r[]=array($link,$title,$image,$year);
   }
-} else {
-  $videos = explode('<div class="popup',$h);
-  unset($videos[0]);
-  $videos = array_values($videos);
-  foreach($videos as $video) {
-   $t1=explode('href="',$video);
-   $t2=explode('"',$t1[1]);
-   $link=$t2[0];
-   $t3 = explode('title="', $video);
-   $t4 = explode('"', $t3[1]);
-   $title = trim($t4[0]);
-   $title=prep_tit($title);
-   $t1 = explode("background-image: url('", $video);
-   $t2 = explode("'", $t1[1]);
-   $image = $t2[0];
-  $rest = substr($title, -6);
-  if (preg_match("/\(?(\d{4})\)?/",$rest,$m)) {
-   $year=$m[1];
-   $title=trim(str_replace($m[0],"",$title));
-  } else {
-   $year="";
-   $title=$title;
-  }
-   $r[]=array($link,$title,$image,$year);
-  }
-}
+
 for ($k=0; $k<count($r);$k++) {
   $link=$r[$k][0];
   $title=$r[$k][1];

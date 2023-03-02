@@ -12,18 +12,34 @@ $tit=$_GET["title"];
 $link=$_GET["link"];
 $width="200px";
 $height="278px";
+$last_good="";
+
 /* ==================================================== */
 $has_fav="yes";
 $has_search="yes";
 $has_add="yes";
 $has_fs="yes";
-$ref="https://uniquestream.net";
-$ref="https://uniquestreaming.net";
-$fav_target="uniquestream_s_fav.php?host=".$ref;
-$add_target="uniquestream_s_add.php";
+$fav_target="moviebox_f_fav.php?host=".$last_good;
+$add_target="moviebox_f_add.php";
 $add_file="";
-$fs_target="uniquestream_s_ep.php";
-$target="uniquestream_s.php";
+$fs_target="moviebox_fs.php";
+$target="moviebox_f.php";
+/* ==================================================== */
+if (file_exists($base_pass."moviebox.txt")) {
+  $h=trim(file_get_contents($base_pass."moviebox.txt"));
+  $t1=explode("|",$h);
+  $l=$t1[0];
+  $appkey=$t1[1];
+  $key=$t1[2];
+  $iv=$t1[3];
+  $appid=$t1[4];
+}
+function random_token($chars = 32) {
+   $letters = '0123456789abcdef';
+   return substr(str_shuffle($letters), 0, $chars);
+}
+$exp=time() + 60 * 60 * 12;
+$encrypt_method = "DES-EDE3-CBC";
 /* ==================================================== */
 $base=basename($_SERVER['SCRIPT_FILENAME']);
 $p=$_SERVER['QUERY_STRING'];
@@ -41,12 +57,12 @@ $prev=$base."?page=".($page-1)."&".$p;
 $tit=unfix_t(urldecode($tit));
 $link=unfix_t(urldecode($link));
 /* ==================================================== */
-if (file_exists($base_cookie."seriale.dat"))
-  $val_search=file_get_contents($base_cookie."seriale.dat");
+if (file_exists($base_cookie."filme.dat"))
+  $val_search=file_get_contents($base_cookie."filme.dat");
 else
   $val_search="";
 $form='<form action="'.$target.'" target="_blank">
-Cautare serial:  <input type="text" id="title" name="title" value="'.$val_search.'">
+Cautare film:  <input type="text" id="title" name="title" value="'.$val_search.'">
 <input type="hidden" name="page" id="page" value="1">
 <input type="hidden" name="tip" id="tip" value="search">
 <input type="hidden" name="link" id="link" value="">
@@ -55,7 +71,7 @@ Cautare serial:  <input type="text" id="title" name="title" value="'.$val_search
 /* ==================================================== */
 if ($tip=="search") {
   $page_title = "Cautare: ".$tit;
-  if ($page == 1) file_put_contents($base_cookie."seriale.dat",$tit);
+  if ($page == 1) file_put_contents($base_cookie."filme.dat",$tit);
 } else
   $page_title=$tit;
 /* ==================================================== */
@@ -167,109 +183,101 @@ if ($page==1) {
    echo '<TD class="nav" colspan="4" align="right"><a href="'.$prev.'">&nbsp;&lt;&lt;&nbsp;</a> | <a href="'.$next.'">&nbsp;&gt;&gt;&nbsp;</a></TD>'."\r\n";
 }
 echo '</TR>'."\r\n";
-$r=array();
-if($tip=="release") {
-  if ($page==1)
-   $l=$ref."/tvshows";
-  else
-   $l=$ref."/tvshows/page/".$page."/";
+$f=array();
+if ($tip=="search") {
+ $search= $tit;
+$qq=array("childmode" => "0",
+"app_version" => "11.5",
+"appid" => $appid,
+"lang" => "en",
+"expired_date" => $exp,
+"platform" => "android",
+"channel" => "Website",
+"module" => "Search3",
+"page" => $page,
+"type" => "movie",
+"keyword" => $search,
+"pagelimit" => "20");
 } else {
-  $search=str_replace(" ","+",$tit);
-  $l=$ref."/page/".$page."/?s=".$search;
+$qq=array("childmode" =>"0",
+"app_version" => "11.5",
+"appid" => $appid,
+"module" => "Home_list_type_v3",
+"channel" => "Website",
+"page" => $page,
+"lang" => "en",
+"type" => "all",
+"pagelimit" => "20",
+"expired_date" => $exp,
+"platform" => "android");
 }
-$host=parse_url($l)['host'];
+$dd=json_encode($qq);
+$data = openssl_encrypt( $dd, $encrypt_method, $key, 0, $iv );
+$vv=md5(md5("moviebox").$key.$data);
 
-$ua="Mozilla/5.0 (Windows NT 10.0; rv:80.0) Gecko/20100101 Firefox/80.0";
-
-$head=array('Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
+$p=array("app_key" => $appkey,
+"verify" => $vv,
+"encrypt_data" => $data);
+$xx=base64_encode(json_encode($p));
+$post="data=".$xx."&appid=27&platform=android&version=129&medium=Website&token".random_token()."=";
+$head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/109.0',
+'Accept: */*',
 'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
 'Accept-Encoding: deflate',
+'Referer: https://movie.squeezebox.dev/',
+'Platform: android',
+'Content-Type: application/x-www-form-urlencoded',
+'Content-Length: '.strlen($post),
+'Origin: https://movie.squeezebox.dev',
 'Connection: keep-alive');
-
-  $ch = curl_init($l);
-  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
+  $ch = curl_init();
+  curl_setopt($ch, CURLOPT_URL, $l);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
   curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
-  curl_setopt($ch, CURLOPT_RETURNTRANSFER  ,1);  // RETURN THE CONTENTS OF THE CALL
-  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
   curl_setopt($ch, CURLOPT_HTTPHEADER,$head);
-  curl_setopt($ch, CURLOPT_ENCODING,"");
-  //curl_setopt($ch, CURLOPT_COOKIEJAR, $cookie);
-  //curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie);
-  //curl_setopt($ch, CURLOPT_HEADER,1);
-  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
-  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
-  $html = curl_exec($ch);
-  curl_close ($ch);
-  //echo $html;
-///////////////////////////////////////////////////////////////////////////
-$r=array();
+  curl_setopt($ch, CURLOPT_POST,1);
+  curl_setopt($ch, CURLOPT_POSTFIELDS,$post);
+  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+  curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 25);
+  $h = curl_exec($ch);
+  curl_close($ch);
+  //echo $h;
+  $r=json_decode($h,1);
+  //print_r ($r);
+//echo $html;
 if ($tip=="release") {
-  $videos = explode('article id="post-',$html);
-  unset($videos[0]);
-  $videos = array_values($videos);
-  foreach($videos as $video) {
-   $t1=explode('"',$video);
-   $tip=$t1[0];
-   $t1=explode('href="',$video);
-   $t2=explode('"',$t1[1]);
-   $link=$t2[0];
-   $t3 = explode('alt="', $video);
-   $t4 = explode('"', $t3[1]);
-   $title = trim($t4[0]);
-   $title=prep_tit($title);
-   $t1 = explode('original-src="', $video);
-   $t2 = explode('"', $t1[1]);
-   $image = $t2[0];
-  $rest = substr($title, -6);
-  if (preg_match("/\(?(\d{4})\)?/",$rest,$m)) {
-   $year=$m[1];
-   $title=trim(str_replace($m[0],"",$title));
-  } else {
+ //print_r ($r['data'][6]);
+ for ($k=0;$k<count($r['data'][6]['list']);$k++) {
+   $link=$r['data'][6]['list'][$k]['id'];
+   $title=$r['data'][6]['list'][$k]['title'];
+   $image=$r['data'][6]['list'][$k]['poster'];
    $year="";
-   $title=$title;
-  }
-   if (strpos($tip,"feature") === false) $r[]=array($link,$title,$image,$year);
-  }
+   $f[] = array($title,$link,$image,$year);
+ }
 } else {
-  $videos = explode('div class="result-item',$html);
-  unset($videos[0]);
-  $videos = array_values($videos);
-  foreach($videos as $video) {
-   $t1 = explode('href="',$video);
-   $t2=explode('"',$t1[1]);
-   $link = $t2[0];
-   if (strpos($link,"http") === false) $link="https://".$host.$link;
-   $t3 = explode('alt="', $video);
-   $t5=explode('"',$t3[1]);
-   $title = trim($t5[0]);
-   $title=prep_tit($title);
-   $t1 = explode('src="', $video);
-   $t2 = explode('"', $t1[1]);
-   $image = $t2[0];
-  $rest = substr($title, -6);
-  if (preg_match("/\(?(\d{4})\)?/",$rest,$m)) {
-   $year=$m[1];
-   $title=trim(str_replace($m[0],"",$title));
-  } else {
-   $year="";
-   $title=$title;
-  }
-   if (strpos($image,"http") === false) $image="https://".$host.$image;
-   if (strpos($link,"/tvshows") !== false) $r[]=array($link,$title,$image,$year);
-  }
+ for ($k=0;$k<count($r['data']);$k++) {
+   $link=$r['data'][$k]['id'];
+   $title=$r['data'][$k]['title'];
+   $image=$r['data'][$k]['poster'];
+   $year=$r['data'][$k]['year'];
+   $f[] = array($title,$link,$image,$year);
+ }
 }
-$c=count($r);
-for ($k=0;$k<$c;$k++) {
-  $link=$r[$k][0];
-  $title=$r[$k][1];
-  $image=$r[$k][2];
-  $year=$r[$k][3];
-  $tit_imdb=$title;
+foreach($f as $key => $value) {
+  $title=$value[0];
+  $title=prep_tit($title);
+  $link=$value[1];
+  $image=$value[2];
+  $year=$value[3];
   $imdb="";
-  $link_f=$fs_target.'?tip=series&link='.urlencode($link).'&title='.urlencode(fix_t($title)).'&image='.$image."&sez=&ep=&ep_tit=&year=".$year;
+
+  $tit_imdb=$title;
+  $link_f=$fs_target.'?tip=movie&link='.urlencode($link).'&title='.urlencode(fix_t($title)).'&image='.$image."&sez=&ep=&ep_tit=&year=".$year;
   if ($title) {
   if ($n==0) echo '<TR>'."\r\n";
-  $val_imdb="tip=series&title=".urlencode(fix_t($tit_imdb))."&year=".$year."&imdb=".$imdb;
+  $val_imdb="tip=movie&title=".urlencode(fix_t($tit_imdb))."&year=".$year."&imdb=".$imdb;
   $fav_link="mod=add&title=".urlencode(fix_t($title))."&link=".urlencode($link)."&image=".urlencode($image)."&year=".$year;
   if ($tast == "NU") {
     echo '<td class="mp" width="25%"><a href="'.$link_f.'" id="myLink'.$w.'" target="_blank" onmousedown="isKeyPressed(event)">

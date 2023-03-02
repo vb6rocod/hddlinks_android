@@ -28,6 +28,11 @@ include ("../filme/yt.php");
 //http://gradajoven.es/spicenew.php
 //http://edge3.spicetvnetwork.de:1935/live/_definst_/mp4:spicetv/ro/6tv.stream/chunklist_w2087458837.m3u8?c=176&u=52409&e=1398753453&t=298944a96a9161b2300ae3ae072b85f4&d=android&i=1.30
 //http://edge1.spicetvnetwork.de:1935/live/_definst_/mp4:spicetv/ro/6tv.streamchunklist_w2087458837.m3u8?c=176&u=52560&e=1398777448&t=3869972b307e53bfd2e048f093fd5f1c&d=site&i=Android%2C+Safari
+if (file_exists($base_pass."player.txt")) {
+$flash=trim(file_get_contents($base_pass."player.txt"));
+} else {
+$flash="direct";
+}
 if (isset($_POST["link"])) {
 $link = unfix_t(urldecode($_POST["link"]));
 $link=str_replace(" ","%20",$link);
@@ -41,16 +46,67 @@ $link=str_replace(" ","%20",$link);
 $title = unfix_t(urldecode($_GET["title"]));
 $mod=$_GET["mod"];
 $from=$_GET["from"];
+//$filelink_mpc="link1.php?file=".urlencode($filelink)."&title=".urlencode($pg)."&flash=mpc";
+$filelink_mpc="direct_link.php?link=".urlencode($link)."&title=".urlencode($title)."&from=".$from."&mod=".$mod."&flash=mpc";
+if (isset($_GET['flash'])) $flash="mpc";
 }
-if (file_exists($base_pass."player.txt")) {
-$flash=trim(file_get_contents($base_pass."player.txt"));
-} else {
-$flash="direct";
-}
+
 //$link="https://cdn.drm.protv.ro/avod/2019/01/08/man:a121b208f4d2ceb191be29119e3a23b4:ef955898665ba80da15610d4c7b04804-7d017cb346b477351d97fe79378b111c.ism/man:a121b208f4d2ceb191be29119e3a23b4:ef955898665ba80da15610d4c7b04804-7d017cb346b477351d97fe79378b111c.m3u8";
 //$link="http://89.136.209.30:1935/liveedge/TVRMOLDOVA.stream/playlist.m3u8";
 //$link=urldecode("https%3A%2F%2Fwww.youtube.com%2Fwatch%3Fv%3Dr_d4ryn9UsA&title=Gaming%20Music%20Radio%20%E2%9A%A1%2024/7%20NCS%20Live%20Stream%20%E2%9A%A1%20Trap,%20Chill,%20Electro,%20Dubstep,%20Future%20Bass,%20EDM");
 //$mod="direct";
+if (preg_match("/play\.stirilepe\.net/",$link)) {
+ if ($flash <> "flash") $link .="|Referer=".urlencode("https://rds.live/");
+}
+if ($from == "rds.live") {
+  $ch = curl_init();
+  curl_setopt($ch, CURLOPT_URL, $link);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+  curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 10.0; rv:55.0) Gecko/20100101 Firefox/55.0');
+  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+  curl_setopt($ch, CURLOPT_ENCODING, "");
+  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+  //curl_setopt($ch,CURLOPT_HTTPHEADER,$head);
+  $h = curl_exec($ch);
+  //echo $h;
+  curl_close($ch);
+  $t1=explode('nonce":"',$h);
+  $t2=explode('"',$t1[1]);
+  $nonce=$t2[0];
+  $t1=explode('div id="player" class="content" data-id="',$h);
+  $t2=explode('"',$t1[1]);
+  $id=$t2[0];
+  $ua="Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/110.0";
+  $l="https://rds.live/wp-admin/admin-ajax.php";
+  $post="action=show_player&id=".$id."&nonce=".$nonce;
+  $head=array('Accept: */*',
+  'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
+  'Accept-Encoding: deflate',
+  'Referer: '.$link,
+  'Content-Type: application/x-www-form-urlencoded; charset=UTF-8',
+  'X-Requested-With: XMLHttpRequest',
+  'Content-Length: '.strlen($post),
+  'Origin: https://rds.live');
+      $ch = curl_init();
+      curl_setopt($ch, CURLOPT_URL, $l);
+      curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+      curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+      curl_setopt($ch, CURLOPT_USERAGENT, $ua);
+      curl_setopt($ch, CURLOPT_HTTPHEADER, $head);
+      curl_setopt($ch, CURLOPT_POST,1);
+      curl_setopt($ch, CURLOPT_POSTFIELDS,$post);
+      curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+      curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
+      curl_setopt($ch, CURLOPT_TIMEOUT, 25);
+      $h1 = curl_exec($ch);
+      curl_close($ch);
+      $t1=explode("src: '",$h1);
+      $t2=explode("'",$t1[1]);
+      $link=$t2[0];
+      if ($flash <> "flash") $link .="|Referer=".urlencode("https://rds.live/");
+}
 if (strpos($link,"streamwat.ch") !== false) {
       $ua="Mozilla/5.0 (Windows NT 10.0; rv:81.0) Gecko/20100101 Firefox/81.0";
       $ch = curl_init();
@@ -1956,6 +2012,7 @@ if (preg_match("/android|ipad/i",$user_agent) && preg_match("/chrome|firefox|mob
 $out=$link;
 //$flash="flash";
 //$out="http://127.0.0.1:8080/scripts/filme/lava.m3u8|Referer=https%3A%2F%2Ftr.vidlink.org&Origin=https%3A%2F%2Ftr.vidlink.org";
+if (isset($_GET['flash'])) $flash="mpc";
 if ($from=="arconaitv1") {
 header('Accept: */*');
 header('X-CustomHeader: videojs');
@@ -1963,10 +2020,48 @@ header('Origin: https://www.arconaitv.us');
 header('Referer: https://www.arconaitv.us/stream.php?id=157');
 header("Location: $out");
 } else if ($flash=="mpc") {
-  $mpc=trim(file_get_contents($base_pass."mpc.txt"));
-  $c='"'.$mpc.'" /fullscreen "'.$out.'"';
+  $mpc=trim(file_get_contents($base_pass."vlc.txt"));
+
+  $ua=$_SERVER['HTTP_USER_AGENT'];
+  $t1=explode("|",$out);
+  $movie=$t1[0];
+
+  parse_str(urldecode($t1[1]),$q);
+
+  if (isset($q['Referer']))
+   $host="https://".parse_url($q['Referer'])['host'];
+  elseif (isset($q['Origin']))
+   $host="https://".parse_url($q['Referer'])['host'];
+
+  if ($movie=="http://127.0.0.1:8080/scripts/filme/lava.m3u8") {
+  //echo $_SERVER['HTTP_REFERER'];
+  $t1=explode("?",$_SERVER['HTTP_REFERER']);
+  $p=dirname($t1[0]);
+  $movie = $p."/lava.m3u8";
+  }
+  $out1="";
+  if (isset($q['User-Agent'])) {
+   $ua=$q['User-Agent'];
+   unset ($q['User-Agent']);
+   $out1=' --user-agent="'.$ua.'"';
+  }
+  $out="";
+  foreach ($q as $key =>$value) {
+   $out .='"'.$key.": ".$value.'",';
+   //echo $out;
+  }
+  if ($out) {
+    $out=" --http-header-fields=".$out;
+    //echo $out;
+    $out = substr($out,0, -1);
+  }
+  $out2="";
+  if ($srt_name)
+   $out2=' --sub-file="'.$base_sub.$srt_name.'"';
+  $c = $mpc." ".'"'.$movie.'"'.' --volume=100 --fullscreen'.$out1.$out.$out2;
+  echo '<script>setTimeout(function(){ window.close(); }, 500);</script>';
   pclose(popen($c,"r"));
-  echo '<script type="text/javascript">window.close();</script>';
+
   die();
 } elseif ($flash == "mp") {
 $mod="direct";
@@ -2122,6 +2217,13 @@ player.addButton(
   //And finally, here we set the unique ID of the button itself.
   "download"
 );
+jwplayer().addButton("../mpv.svg", "Open with mpv", function() {
+    jwplayer().stop();
+    window,open("'.$filelink_mpc.'");
+}, "mpv");
+player.on("error", function() {
+  window,open("'.$filelink_mpc.'");
+});
 </script>
 </BODY>
 </HTML>

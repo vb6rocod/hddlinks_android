@@ -103,11 +103,13 @@ echo '</TR>';
   $ua="Mozilla/5.0 (Windows NT 10.0; rv:55.0) Gecko/20100101 Firefox/55.0";
 $l="https://subtitrari-noi.ro/paginare_filme.php";
 //search_q=1&query_q=G&cautare=G&tip=2&an=Toti anii&gen=Toate
+//echo $imdbid;
 if ($imdbid)
    $post="search_q=".$page."&query_q=".$imdbid."&cautare=".$imdbid."&tip=2&an=Toti+anii&gen=Toate";
 else
    $post="search_q=".$page."&query_q=".urlencode($title)."&cautare=".urlencode($title)."&tip=2&an=Toti+anii&gen=Toate";
 //echo $post;
+// search_q=1&query_q=9686790&cautare=9686790&tip=2&an=Toti anii&gen=Toate
   $head=array('X-Requested-With: XMLHttpRequest',
   'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
   'Accept-Language: ro-ro,ro;q=0.8,en-us;q=0.6,en-gb;q=0.4,en;q=0.2',
@@ -126,10 +128,12 @@ else
   curl_setopt ($ch, CURLOPT_POST, 1);
   curl_setopt ($ch, CURLOPT_POSTFIELDS, $post);
   //curl_setopt($ch, CURLOPT_HEADER,1);
-  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
-  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 25);
   $h = curl_exec($ch);
   curl_close($ch);
+  //echo $h;
 $videos=explode('div id="content">',$h);
 unset($videos[0]);
 $videos = array_values($videos);

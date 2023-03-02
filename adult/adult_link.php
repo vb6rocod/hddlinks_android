@@ -46,6 +46,7 @@ if (file_exists($base_pass."player.txt")) {
 } else {
   $flash="direct";
 }
+if (isset($_GET['flash'])) $flash="mpc";
 if (file_exists($base_pass."mx.txt")) {
    $mx=trim(file_get_contents($base_pass."mx.txt"));
 } else {
@@ -65,6 +66,8 @@ if (isset($_POST["link"])) {
   $title = unfix_t(urldecode($_GET["title"]));
 }
 $l=trim($l);
+$image="";
+$filelink_mpc='adult_link.php?link='.urlencode($l).'&title='.urlencode(fix_t($title)).'&image='.$image."&flash=mpc";
 //echo $l;
 $ua="Mozilla/5.0 (Windows NT 10.0; WOW64; rv:46.0) Gecko/20100101 Firefox/46.0";
 $host=parse_url($l)["host"];
@@ -107,10 +110,10 @@ if (preg_match("/jizzbunker\.com|familyporn1\.tv|zbporn\.com|trannytube11\.net|2
   curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
   //curl_setopt($ch, CURLOPT_REFERER, $l);
   curl_setopt($ch, CURLOPT_HTTPHEADER,$head);
-  curl_setopt($ch, CURLOPT_POST,1);
-  curl_setopt($ch, CURLOPT_POSTFIELDS,"");
+  //curl_setopt($ch, CURLOPT_POST,1);
+  //curl_setopt($ch, CURLOPT_POSTFIELDS,"");
   //curl_setopt($ch, CURLOPT_HEADER,1);
-  curl_setopt($ch, CURLOPT_POST_FIELDS,$post);
+  //curl_setopt($ch, CURLOPT_POST_FIELDS,$post);
   curl_setopt($ch, CURLOPT_COOKIEJAR, $cookie);
   curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie);
   curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
@@ -391,6 +394,8 @@ $out=$t2[0];
     $out = $r['sources']['mp4'][$key]['src'];
     if ($out) break;
   }
+    if ($flash <> "flash" && $out)
+   $link .="|Referer=".urlencode("https://www.eporner.com")."&Origin=".urlencode("https://www.eporner.com");
 } else if (preg_match("/eroxia\.com/",$host)) {
   $t1=explode('source src="',$h);
   $t2=explode('"',$t1[1]);
@@ -566,10 +571,11 @@ $out=$t2[0];
   }
 } else if (preg_match("/pefilme\.info|filmeleporno\.xxx/",$host)) {
 //echo $h;
-  $r=json_decode($h,1);
+  //$r=json_decode($h,1);
   //print_r ($r);
-  $out=$r['videoUrl'];
-
+  //$out=$r['videoUrl'];
+  if (preg_match("/source\s+src\=\"([^\"]+)\"/",$h,$m))
+   $out=$m[1];
 } else if (preg_match("/porn300\.com/",$host)) {
   $t1=explode('source src="',$h);
   $t2=explode('"',$t1[1]);
@@ -669,6 +675,8 @@ $out=$t2[0];
      }
     }
   $out=str_replace("\\","",$out);
+  if ($flash <> "flash")
+   $link .="|Referer=".urlencode("https://www.pornhost.com")."&Origin=".urlencode("https://www.pornhost.com");
   }
   if (strpos($out,"http") === false && $out) $out="https:".$out;
 } else if (preg_match("/pornhub\.com/",$host)) {
@@ -876,6 +884,7 @@ $head=array('Accept: */*',
   curl_setopt($ch,CURLOPT_ENCODING, '');
   curl_setopt($ch,CURLOPT_HTTPHEADER,$head);
   curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie);
+  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
   curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
   curl_setopt($ch, CURLOPT_TIMEOUT, 15);
   $x = curl_exec($ch);
@@ -1000,7 +1009,24 @@ $head=array('Accept: */*',
   $t2=explode('"',$t1[1]);
   $l="https://youporn.com".str_replace("\\","",$t2[0]);
   //echo $l;
-  $h = file_get_contents($l);
+  $head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:75.0) Gecko/20100101 Firefox/75.0',
+  'Accept: application/json, text/plain, */*',
+  'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
+  'Accept-Encoding: deflate',
+  'Referer : '.$l,
+  'Connection: keep-alive');
+  $options = array(
+        'http' => array(
+        'header'  => array($head),
+        'method'  => 'GET'
+    ),
+        "ssl"=>array(
+        "verify_peer"=>false,
+        "verify_peer_name"=>false,
+    )
+  );
+  $context  = stream_context_create($options);
+  $h = @file_get_contents($l, false, $context);
   $x=json_decode($h,1);
   $out=$x[0]['videoUrl'];
 } else if (preg_match("/zbporn\.com/",$host)) {
@@ -1016,14 +1042,54 @@ $head=array('Accept: */*',
 ///////////////////////////////////////////////////////////////////
 $out=str_replace("&amp;","&",$out);
 if (strpos($out,"http") === false) $out="";
+if (isset($_GET['flash'])) $flash="mpc";
 if ($flash=="mpc") {
-  $mpc=trim(file_get_contents($base_pass."mpc.txt"));
-  $c='"'.$mpc.'" /fullscreen "'.$out.'"';
+  $mpc=trim(file_get_contents($base_pass."vlc.txt"));
+  //echo $out;
+  $ua=$_SERVER['HTTP_USER_AGENT'];
+  $t1=explode("|",$out);
+  $movie=$t1[0];
+
+  parse_str(urldecode($t1[1]),$q);
+  //print_r ($q);
+  if (isset($q['Referer']))
+   $host="https://".parse_url($q['Referer'])['host'];
+  elseif (isset($q['Origin']))
+   $host="https://".parse_url($q['Referer'])['host'];
+
+  if ($movie=="http://127.0.0.1:8080/scripts/filme/lava.m3u8") {
+  //echo $_SERVER['HTTP_REFERER'];
+  $t1=explode("?",$_SERVER['HTTP_REFERER']);
+  $p=dirname($t1[0]);
+  $movie = $p."/lava.m3u8";
+  }
+  $out1="";
+  if (isset($q['User-Agent'])) {
+   $ua=$q['User-Agent'];
+   unset ($q['User-Agent']);
+   $out1=' --user-agent="'.$ua.'"';
+  }
+  $out="";
+  foreach ($q as $key =>$value) {
+   $out .='"'.$key.": ".$value.'",';
+   //echo $out;
+  }
+  if ($out) {
+    $out=" --http-header-fields=".$out;
+    //echo $out;
+    $out = substr($out,0, -1);
+  }
+  $out2="";
+  if ($srt_name)
+   $out2=' --sub-file="'.$base_sub.$srt_name.'"';
+  $c = $mpc." ".'"'.$movie.'"'.' --volume=100 --fullscreen'.$out1.$out.$out2;
+  //echo $c;
+  //die();
+  echo '<script>setTimeout(function(){ window.close(); }, 500);</script>';
   pclose(popen($c,"r"));
-  echo '<script type="text/javascript">window.close();</script>';
+
   die();
-}
-elseif ($flash == "direct") {
+} elseif ($flash == "direct") {
 header('Content-type: application/vnd.apple.mpegURL');
 header('Content-Disposition: attachment; filename="video/mp4"');
 header("Location: $out");
@@ -1092,6 +1158,13 @@ player.addButton(
   //And finally, here we set the unique ID of the button itself.
   "download"
 );
+jwplayer().addButton("../mpv.svg", "Open with mpv", function() {
+    jwplayer().stop();
+    window,open("'.$filelink_mpc.'");
+}, "mpv");
+player.on("error", function() {
+  window,open("'.$filelink_mpc.'");
+});
 </script>
 </div></body>
 </HTML>

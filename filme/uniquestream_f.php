@@ -20,6 +20,7 @@ $has_fs="yes";
 $ref="https://uniquestream.vip";
 $ref="https://uniquestream.net";
 $ref="https://uniquestream.net";
+$ref="https://uniquestreaming.net";
 $host=parse_url($ref)['host'];
 $fav_target="uniquestream_f_fav.php?host=".$ref;
 $add_target="uniquestream_f_add.php";

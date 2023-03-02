@@ -216,6 +216,7 @@ if ($tip == "release") {
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
   curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 10.0; rv:55.0) Gecko/20100101 Firefox/55.0');
   curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
   curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
   curl_setopt($ch, CURLOPT_TIMEOUT, 15);
   $html = curl_exec($ch);
@@ -239,6 +240,7 @@ if ($tip == "release") {
   curl_setopt($ch, CURLOPT_POST,1);
   curl_setopt($ch, CURLOPT_POSTFIELDS,$post);
   curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
   curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
   curl_setopt($ch, CURLOPT_TIMEOUT, 15);
   $html = curl_exec($ch);
@@ -247,7 +249,7 @@ if ($tip == "release") {
 }
 //echo $html;
 $r=array();
-$videos = explode('<div class="post"', $html);
+$videos = explode('<div class="video-item', $html);
 unset($videos[0]);
 $videos = array_values($videos);
 foreach($videos as $video) {
@@ -255,6 +257,7 @@ foreach($videos as $video) {
   $t2 = explode('"', $t1[1]);
   $link="https://pefilme.info/video.php?id=".$t2[0]."";
   $link="https://filmeleporno.xxx/fvd.php?id=".$t2[0]."";
+  $link="https://filmeleporno.xxx/porn_".$t2[0];
   //$link="https://filmeleporno.xxx".$t2[0];
   $t1 = explode('title="', $video);
   $t2 = explode('"', $t1[1]);
@@ -265,7 +268,7 @@ foreach($videos as $video) {
   $image=$t2[0];
   //$image = "r_m.php?file=".$t2[0];
   if (strpos($image,"http") === false) $image="https:".$image;
-  $t1=explode('class="hdxx">',$video);
+  $t1=explode('div class=istorie>',$video);
   $t2=explode('<',$t1[1]);
   $durata = trim($t2[0]);;
   if ($durata) $title=$title." (".$durata.')';

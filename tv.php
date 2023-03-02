@@ -91,13 +91,13 @@ $(document).on('keyup', '.imdb', isValid);
 <TD width="25%"><a href="tv/europalibera.php?page=1,,europalibera" target="_blank">europalibera</a></TD>
 <TD width="25%"><a href="tv/iptv.php" target="_blank">IPTV International</a></TD>
 <TD width="25%"><a href="tv/stream4free.php" target="_blank">stream4free</TD>
-<TD width="25%"><a href="tv/ustvgo.php" target="_blank">ustvgo</TD>
+<TD width="25%"></TD>
 </TR>
 
 <TR>
 <TD width="25%"><a href="tv/canalelive.php" target="_blank">Sport</a></TD>
 <TD width="25%"><a href="tv/program.php" target="_blank">ProgramTV</a></TD>
-<TD width="25%"></TD>
+<TD width="25%"><a href="tv/rds.php" target="_blank">rds.live</TD>
 <TD width="25%"></TD>
 </TR>
 

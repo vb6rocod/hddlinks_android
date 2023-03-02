@@ -77,9 +77,11 @@ else
   $t1=explode('name="antispam',$x);
   $t2=explode('value="',$t1[1]);
   $t3=explode('"',$t2[1]);
+  // https://subs.ro/ajax/search/?antispam=111a93db9c9954161bce9dfbb068e2597a302999&amp;termen-general=A+Girl+and+an+Astronaut
   $l="https://subs.ro/ajax/search/?search-text=".urlencode($title)."&amp;in=name&amp;antispam=".$t3[0];
+  $l="https://subs.ro/ajax/search/?antispam=".$t3[0]."&amp;termen-general=".urlencode($title);
   }
-
+  //echo $l;
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $l);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
@@ -91,7 +93,8 @@ else
   curl_setopt($ch, CURLOPT_TIMEOUT, 15);
   $h=curl_exec($ch);
   curl_close($ch);
-$videos=explode('<h2 class="title">',$h);
+  //echo $h;
+$videos=explode('<div class="flex-grow"',$h);
 unset($videos[0]);
 $videos = array_values($videos);
 

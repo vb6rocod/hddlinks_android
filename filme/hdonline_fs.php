@@ -211,15 +211,26 @@ $host=parse_url($link)['host'];
     $l=trim($m[1]);
     //echo $l;
     //echo $h;
+    $l=str_replace("newpage.php","",$l);
 ///////////////////////////////////////////////////////////////////////
 //$l="https://123streaming.rocks/?token=TWJ1NkJlRmR5MUJES3NJSHJRSnlZVTQ3NjMvbGgxb3hhajRTeDcwdEZ5cWIvSmhuWEU4RlljdzNURFVyMms1ampnbWVCTXZkMlN1bFdpd0p6blUzOUNuMHdUbz0=";
   $post="button-click=ZEhKMVpTLVF0LVBTLVF0Ti0wWTJMUy1Rei1QLTAtUHRMLTAtVjItUHpBeS1QelF4TnpBei1Qai1WLTU=";
+  $post="button-click=ZEhKMVpTLVF0LVBTLVF0TmotUDNMUy1Rek5qLVZ0TC0wLVYyTnpjLVFPLTBjM04tMC1WLVEtUERBLTU=&button-referer=";
+  $head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/110.0',
+'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8',
+'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
+'Accept-Encoding: deflate',
+'Content-Type: application/x-www-form-urlencoded',
+'Content-Length: '.strlen($post),
+'Origin: https://amazingstream.net',
+'Connection: keep-alive',
+'Referer: https://amazingstream.net');
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $l);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
+  //curl_setopt($ch, CURLOPT_USERAGENT, $ua);
   curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
-  curl_setopt($ch, CURLOPT_REFERER,"https://123stream.fun");
+  curl_setopt($ch, CURLOPT_HTTPHEADER, $head);
   curl_setopt($ch, CURLOPT_HEADER,1);
   curl_setopt($ch, CURLOPT_POST,1);
   curl_setopt($ch, CURLOPT_POSTFIELDS,$post);
@@ -241,6 +252,7 @@ $host=parse_url($link)['host'];
   $t2=explode('"',$t1[1]);
   $token=$t2[0];
   $l="https://2embedplayer.net/response.php";
+  $l="https://amazingstream.net/response.php";
   $post="token=".$token;
   $head=array('Accept: */*',
   'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
@@ -248,10 +260,9 @@ $host=parse_url($link)['host'];
   'Content-Type: application/x-www-form-urlencoded; charset=UTF-8',
   'X-Requested-With: XMLHttpRequest',
   'Content-Length: '.strlen($post),
-  'Origin: https://123stream.fun',
-  'Alt-Used: 123stream.fun',
+  'Origin: https://amazingstream.net',
   'Connection: keep-alive',
-  'Referer: https://2embedplayer.net');
+  'Referer: https://amazingstream.net');
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $l);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
@@ -271,7 +282,7 @@ $host=parse_url($link)['host'];
   for ($z=0;$z<count($m[1]);$z++) {
   $id1=$m[1][$z];
   $server=$m[2][$z];
-  $r[]="https://2embedplayer.net/playvideo.php?video_id=".$id1."&server_id=".$server."&token=".$token."&init=1";
+  $r[]="https://amazingstream.net/playvideo.php?video_id=".$id1."&server_id=".$server."&token=".$token."&init=1";
   $s[]=$s1[$server];
   }
   }

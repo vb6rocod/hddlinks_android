@@ -154,9 +154,11 @@ $head=array('Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image
   $html = curl_exec($ch);
   curl_close ($ch);
   //echo $html;
-  preg_match_all("/href\=\"([^\"]+)\" class\=\"btn btn-sm btn-inline btn-\w+\"\>Server/i",$html,$m);
+  //preg_match_all("/href\=\"([^\"]+)\" class\=\"btn btn-sm btn-inline btn-\w+\"\>Server/i",$html,$m);
   //print_r ($m);
-  $r=$m[1];
+  //$r=$m[1];
+  preg_match("/\/player\/[^\"]+/",$html,$m);
+  $r[]="https://onemagia.com".$m[0];
   //echo $html;
 echo '<table border="1" width="100%">';
 echo '<TR><TD class="mp">Alegeti un server: Server curent:<label id="server">'.parse_url($r[0])['host'].'</label>

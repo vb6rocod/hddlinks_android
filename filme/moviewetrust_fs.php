@@ -144,7 +144,7 @@ function off() {
 
 <a href='' id='mytest1'></a>
 <?php
-if ($flash=="flash") {
+if ($flash=="flash1") {
 echo '
 <script>
         setInterval(function(){
@@ -366,7 +366,20 @@ else
    curl_setopt($ch, CURLOPT_HEADER,1);
    curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
    curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+   if (preg_match("/player\_iframe\"\s+src\=\"([^\"]+)/",$h,$n)) {
+   if (substr($n[1],0,4)=="http")
+     $l=$n[1];
+   elseif (substr($n[1],0,2)=="//")
+     $l="https:".$n[1];
+   $r[]=$l;
+   $s[]="v. ".parse_url($l)['host'];
+   }
    for ($k=0;$k<count($m[1]);$k++) {
+   if (substr($m[1][$k],0,4)=="http")
+     $l=$m[1][$k];
+   elseif (substr($m[1][$k],0,2)=="//")
+     $l="https:".$m[1][$k];
+   else
     $l="https://".$host."/src/".$m[1][$k];
     //echo $l;
     curl_setopt($ch, CURLOPT_URL, $l);
@@ -422,6 +435,7 @@ else
    $l="https://embedo.xyz/play/movie.php?imdb=".$imdb;
   else
    $l="https://embedo.xyz/play/series.php?imdb=".$imdb."&sea=".$sez."&epi=".$ep;
+   //echo $l;
   $r[]=$l;
   $s[]="Vidcloud";
 ///////////////////////////////////////////

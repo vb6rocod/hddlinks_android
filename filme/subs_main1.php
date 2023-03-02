@@ -118,7 +118,7 @@ if (!$imdbid) {
   curl_setopt($ch, CURLOPT_TIMEOUT, 15);
   $h=curl_exec($ch);
   curl_close($ch);
-$videos=explode('<h2 class="title">',$h);
+$videos=explode('<div class="flex-grow"',$h);
 unset($videos[0]);
 $videos = array_values($videos);
 

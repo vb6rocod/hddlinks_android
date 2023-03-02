@@ -131,184 +131,39 @@ function off() {
 echo '<h2>'.$tit.$tit2.'</H2>';
 echo '<BR>';
 $r=array();
-$ua="Mozilla/5.0 (Windows NT 10.0; rv:89.0) Gecko/20100101 Firefox/89.0";
-$ua="Mozilla/5.0 (Windows NT 10.0; rv:95.0) Gecko/20100101 Firefox/95.0";
-$cookie=$base_cookie."streamm4u.dat";
+$s=array();
 //echo $link;
-// https://m4uhd.tv/watch-movie-1up-2022-268243.html
-if ($tip=="movie") {
-$head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:95.0) Gecko/20100101 Firefox/95.0',
-'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8',
-'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
-'Accept-Encoding: deflate',
-'Connection: keep-alive',
-'Upgrade-Insecure-Requests: 1',
-'Sec-Fetch-Dest: document',
-'Sec-Fetch-Mode: navigate',
-'Sec-Fetch-Site: none',
-'Sec-Fetch-User: ?1');
-  $ch = curl_init($link);
-  //curl_setopt($ch, CURLOPT_USERAGENT, $ua);
-  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
-  curl_setopt($ch, CURLOPT_RETURNTRANSFER  ,1);  // RETURN THE CONTENTS OF THE CALL
-  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-  curl_setopt($ch, CURLOPT_HTTPHEADER,$head);
-  curl_setopt($ch, CURLOPT_ENCODING,"");
-  curl_setopt($ch,CURLOPT_REFERER,"https://m4uhd.tv");
-  curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie);
-  curl_setopt($ch, CURLOPT_COOKIEJAR, $cookie);
-  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
-  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
-  $html = curl_exec($ch);
-  curl_close ($ch);
-  /*
-  $ch = curl_init();
-  curl_setopt($ch, CURLOPT_URL, $link);
-  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
-  curl_setopt($ch,CURLOPT_REFERER,"https://m4uhd.tv");
-  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
-  curl_setopt($ch, CURLOPT_HTTPHEADER,$head);
-  curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie);
-  curl_setopt($ch, CURLOPT_COOKIEJAR, $cookie);
-  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
-  curl_setopt($ch, CURLOPT_TIMEOUT, 25);
-  $html = curl_exec($ch);
-  curl_close($ch);
-  echo $html;
-  */
-  //echo $html;
-
-  $t1=explode('csrf-token" content="',$html);
-  $t2=explode('"',$t1[1]);
-  $token=$t2[0];
-  if (preg_match_all("/data\=\"([^\"]+)\"/",$html,$m)) {
-   //print_r ($m);
-   $l="https://m4uhd.tv/anhjax";
-   $l="https://m4uhd.tv/ajax";
-   $ch = curl_init();
-   curl_setopt($ch, CURLOPT_URL, $l);
-   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-   //curl_setopt($ch, CURLOPT_USERAGENT, $ua);
-   curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
-   curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie);
-  //curl_setopt($ch, CURLOPT_COOKIEJAR, $cookie);
-   //curl_setopt($ch, CURLOPT_HTTPHEADER,$head);
-   curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-   curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
-   curl_setopt($ch, CURLOPT_TIMEOUT, 25);
-   for ($j=0;$j<count($m[1]);$j++) {
-    $x=array("_token" => $token,
-    "m4u" => $m[1][$j]);
-    $post=http_build_query($x);
-    //echo $post."<BR>";
-    $head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:95.0) Gecko/20100101 Firefox/95.0',
-    'Accept: */*',
-    'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
-    'Accept-Encoding: deflate',
-    'Content-Type: application/x-www-form-urlencoded; charset=UTF-8',
-    'X-Requested-With: XMLHttpRequest',
-    'Content-Length: '.strlen($post),
-    'Origin: https://m4uhd.tv',
-    'Referer: https://m4uhd.tv',
-'Connection: keep-alive',
-'Upgrade-Insecure-Requests: 1',
-'Sec-Fetch-Dest: empty',
-'Sec-Fetch-Mode: cors',
-'Sec-Fetch-Site: same-origin');
-
-    curl_setopt($ch, CURLOPT_HTTPHEADER, $head);
-    curl_setopt($ch, CURLOPT_POST,1);
-    curl_setopt($ch, CURLOPT_POSTFIELDS,$post);
-    $h = curl_exec($ch);
-    //echo $h."=========="."\n";
-    if (preg_match("/iframe src\=\"([^\"]+)\"/",$h,$q))
-      $r[]=$q[1];
-    elseif (preg_match("/sources\:\s*\[\s*\{file\:\s*\"([^\"]+)\"/",$h,$u))
-      $r[]=$u[1];
-   }
-   curl_close($ch);
-  }
-} else {
-  parse_str($link,$v);
-  $token=$v['token'];
-  $id=$v['id'];
-  $l="http://streamm4u.com/anhjaxtv";
-  $l="https://m4uhd.tv/ajaxtv";
-  $x=array("_token" => $token,
-  "idepisode" => $id);
-  $post=http_build_query($x);
-
-$head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:95.0) Gecko/20100101 Firefox/95.0',
-'Accept: */*',
-'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
-'Accept-Encoding: deflate',
-'Content-Type: application/x-www-form-urlencoded; charset=UTF-8',
-'X-Requested-With: XMLHttpRequest',
-'Content-Length: '.strlen($post),
-'Origin: https://m4uhd.tv',
-'Connection: keep-alive',
-'Referer: https://m4uhd.tv');
+if ($tip=="movie")
+$l=$link."/watch";
+else
+$l=$link;
+$ua="Mozilla/5.0 (Windows NT 10.0; rv:75.0) Gecko/20100101 Firefox/75.0";
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $l);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-  //curl_setopt($ch, CURLOPT_USERAGENT, $ua);
+  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
   curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
-  //curl_setopt($ch, CURLOPT_HEADER,1);
-  curl_setopt($ch, CURLOPT_POST,1);
-  curl_setopt($ch, CURLOPT_POSTFIELDS,$post);
-  //curl_setopt($ch, CURLOPT_NOBODY,1);
-  curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie);
-  //curl_setopt($ch, CURLOPT_COOKIEJAR, $cookie);
-  curl_setopt($ch, CURLOPT_HTTPHEADER, $head);
   curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
   curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
   curl_setopt($ch, CURLOPT_TIMEOUT, 25);
-  $html = curl_exec($ch);
+  $h = curl_exec($ch);
   curl_close($ch);
-  if (preg_match_all("/data\=\"([^\"]+)\"/",$html,$m)) {
-   //print_r ($m);
-   $l="http://streamm4u.com/anhjax";
-   $l="https://m4uhd.tv/ajax";
-   $ch = curl_init();
-   curl_setopt($ch, CURLOPT_URL, $l);
-   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-   //curl_setopt($ch, CURLOPT_USERAGENT, $ua);
-   curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
-   curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie);
-   curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-   curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
-   curl_setopt($ch, CURLOPT_TIMEOUT, 25);
-   for ($j=0;$j<count($m[1]);$j++) {
-    $x=array("_token" => $token,
-    "m4u" => $m[1][$j]);
-    $post=http_build_query($x);
-    $head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:95.0) Gecko/20100101 Firefox/95.0',
-    'Accept: */*',
-    'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
-    'Accept-Encoding: deflate',
-    'Content-Type: application/x-www-form-urlencoded; charset=UTF-8',
-    'X-Requested-With: XMLHttpRequest',
-    'Content-Length: '.strlen($post),
-    'Origin: https://m4uhd.tv',
-    'Connection: keep-alive',
-    'Referer: https://m4uhd.tv');
-    curl_setopt($ch, CURLOPT_HTTPHEADER, $head);
-    curl_setopt($ch, CURLOPT_POST,1);
-    curl_setopt($ch, CURLOPT_POSTFIELDS,$post);
-    $h = curl_exec($ch);
-    //echo $h;
-    if (preg_match("/iframe src\=\"([^\"]+)\"/",$h,$q))
-      $r[]=$q[1];
-    elseif (preg_match("/sources\:\s*\[\s*\{file\:\s*\"([^\"]+)\"/",$h,$u))
-      $r[]=$u[1];
-   }
-   curl_close($ch);
-  }
-}
+  //echo $h;
+  $srt="";
+  $t1=explode('"kind": "subtitles"',$h);
+  $t2=explode('file": "',$t1[1]);
+  $t3=explode('"',$t2[1]);
+  $srt=$t3[0];
+  $t1=explode('"playlist',$h);
+  $t2=explode('file": "',$t1[1]);
+  $t3=explode('"',$t2[1]);
+  $r[]="https://xemovies.to?file=".urlencode($t3[0])."&srt=".urlencode($srt);
+  $s[]=parse_url($t3[0])['host'];
+
+
+//print_r ($r);
 echo '<table border="1" width="100%">';
-echo '<TR><TD class="mp">Alegeti un server: Server curent:<label id="server">'.parse_url($r[0])['host'].'</label>
+echo '<TR><TD class="mp">Alegeti un server: Server curent:<label id="server">'.$s[0].'</label>
 <input type="hidden" id="file" value="'.urlencode($r[0]).'"></td></TR></TABLE>';
 echo '<table border="1" width="100%"><TR>';
 $k=count($r);
@@ -316,7 +171,7 @@ $x=0;
 for ($i=0;$i<$k;$i++) {
   if ($x==0) echo '<TR>';
   $c_link=$r[$i];
-  $openload=parse_url($r[$i])['host'];
+  $openload=$s[$i];
   if (preg_match($indirect,$openload)) {
   echo '<TD class="mp"><a href="filme_link.php?file='.urlencode($c_link).'&title='.urlencode(unfix_t($tit.$tit2)).'" target="_blank">'.$openload.'</a></td>';
   } else

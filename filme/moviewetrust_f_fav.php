@@ -81,7 +81,7 @@ function isValid(evt) {
      id = "imdb_" + self.id;
      id_link=self.id;
      val_imdb=document.getElementById(id).value;
-     msg="http://imdb.com/imdb.php&" + val_imdb;
+     msg="imdb.php?" + val_imdb;
      openlink (msg);
     } else if  (charCode == "51") {
       id = "fav_" + self.id;
@@ -113,7 +113,7 @@ function isKeyPressed(event) {
     id = "imdb_" + event.target.id;
     //alert (id);
     val_imdb=document.getElementById(id).value;
-    msg="http://imdb.com/imdb.php&" + val_imdb;
+    msg="imdb.php?" + val_imdb;
     openlink1(msg);
   }
 }

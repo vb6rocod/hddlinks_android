@@ -119,16 +119,21 @@ else
 <TR>
 <TD width="25%"><a href="filme/c1ne_f.php?page=1&tip=release&title=c1ne&link=" target="_blank">c1ne</a></TD>
 <TD width="25%"><a href="filme/azseries_f.php?page=1&tip=release&title=azseries&link=" target="_blank">azseries</a></TD>
-<TD width="25%"><a href="filme/m4uhd_f.php?page=1&tip=release&title=m4uhd&link=" target="_blank">m4uhd</a></TD>
-<TD width="25%"><a href="filme/vexmovies_f.php?page=1&tip=release&title=vexmovies&link=" target="_blank">vexmovies</a></TD>
+<TD width="25%"><a href="filme/xemovies_f.php?page=1&tip=release&title=xemovies&link=" target="_blank">xemovies</a></TD>
+<TD width="25%"></TD>
 </TR>
 <TR>
 <TD width="25%"><a href="filme/fmovies_f.php?page=1&tip=release&title=fmovies&link=" target="_blank">fmovies.co</a></TD>
 <TD width="25%"><a href="filme/hdmoviebox_f.php?page=1&tip=release&title=hdmoviebox&link=" target="_blank">hdmoviebox</a></TD>
 <TD width="25%"><a href="filme/tv88_f.php?page=1&tip=release&title=tv88&link=" target="_blank">tv88</a></TD>
+<TD width="25%"><a href="filme/flixhq_f.php?page=1&tip=release&title=flixhq&link=" target="_blank">flixhq</a></TD>
+</TR>
+<TR>
+<TD width="25%"><a href="filme/moviebox_f.php?page=1&tip=release&title=moviebox&link=" target="_blank">moviebox</a></TD>
+<TD width="25%"><a href="filme/bflix_f.php?page=1&tip=release&title=bflix&link=" target="_blank">bflix</a></TD>
+<TD width="25%"></TD>
 <TD width="25%"></TD>
 </TR>
-
 
 <?php
 if (file_exists($base_pass."tvplay.txt")) {

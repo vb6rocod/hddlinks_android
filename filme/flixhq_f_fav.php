@@ -5,9 +5,9 @@ $host=$_GET['host'];
 $page_title="Filme favorite";
 $width="200px";
 $height="278px";
-$add_target="m4uhd_f_add.php";
-$fs_target="m4uhd_fs.php";
-$file=$base_fav."m4uhd_f.dat";
+$add_target="flixhq_f_add.php";
+$fs_target="flixhq_fs.php";
+$file=$base_fav."flixhq_f.dat";
 ?>
 <html><head>
 <meta http-equiv="content-type" content="text/html; charset=UTF-8">
