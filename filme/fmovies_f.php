@@ -14,6 +14,7 @@ $width="200px";
 $height="278px";
 $last_good="https://fmovies.co";
 $last_good="https://fmoviesf.co";
+$last_good="https://fmoviesto.mom";
 // $last_good="https://hdmoviesb.com";
 $host=parse_url($last_good)['host'];
 /* ==================================================== */
@@ -174,17 +175,11 @@ $f=array();
 //https://fmoviesf.co/search/?keyword=
 if ($tip=="search") {
   $search=str_replace(" ","%20",$tit);
- //$l="https://".$host."/search?keyword=".str_replace(" ","%20",$tit)."&page=".$page;
- if ($page==1)
-  $l="https://".$host."/search/?keyword=".$search;
- else
-  $l="https://".$host."/search/?keyword=".$search."&step=".$page;
+  $l=$last_good."/my-ajax?action=search&limit=40&page=".$page."&width=1280&keyword=".$search;
 } else {
- if ($page==1)
-  $l="https://".$host."/movies/";
- else
-  $l="https://".$host."/movies/page-".$page;
+  $l=$last_good."/my-ajax?action=movie_type&limit=40&page=".$page."&width=1263&type=1";
 }
+
 $ua="Mozilla/5.0 (Windows NT 10.0; rv:75.0) Gecko/20100101 Firefox/75.0";
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $l);
@@ -198,23 +193,21 @@ $ua="Mozilla/5.0 (Windows NT 10.0; rv:75.0) Gecko/20100101 Firefox/75.0";
   curl_close($ch);
   //echo $h;
   //if (!$h) $h=file_get_contents($l);
-
+$videos=json_decode($h,1)['data']['data'];
+//print_r ($videos);
 $host=parse_url($l)['host'];
-$videos = explode('<a class="poster"', $h);
-unset($videos[0]);
-$videos = array_values($videos);
+
 foreach($videos as $video) {
- $t1=explode('href="',$video);
- $t2=explode('"',$t1[1]);
- $link=$t2[0];
- $t1=explode('src="',$video);
- $t2=explode('"',$t1[1]);
- $image=$t2[0];
- $t1=explode('<a class="name"',$video);
- $t2=explode('>',$t1[1]);
- $t3=explode('<',$t2[1]);
- $title=trim($t3[0]);
-  if ($title && preg_match("/\/movie\//",$link)) $f[] = array($title,$link,$image);
+ $link=$video['url'];
+ $image=$video['image'];
+ if (preg_match("/url\=/",$image)) {
+ $t1=explode("url=",$image);
+ $image=urldecode($t1[1]);
+ }
+ $title=$video['post_title'];
+ $title=str_replace("\\","",$title);
+ $year=$video['year'];
+  if ($title && preg_match("/\/movie\//",$link)) $f[] = array($title,$link,$image,$year);
 }
 //echo $html;
 foreach($f as $key => $value) {
@@ -222,15 +215,14 @@ foreach($f as $key => $value) {
   $title=prep_tit($title);
   $link=$value[1];
   $image=$value[2];
-  $year="";
+  $year=$value[3];
   $imdb="";
-  $year="";
   $rest = substr($title, -6);
-  if (preg_match("/\((\d{4})\)/",$rest,$m)) {
+  if (preg_match("/\(?(\d{4})\)?/",$rest,$m)) {
    $year=$m[1];
    $tit_imdb=trim(str_replace($m[0],"",$title));
   } else {
-   $year="";
+   //$year="";
    $tit_imdb=$title;
   }
   $link_f=$fs_target.'?tip=movie&link='.urlencode($link).'&title='.urlencode(fix_t($title)).'&image='.$image."&sez=&ep=&ep_tit=&year=".$year;

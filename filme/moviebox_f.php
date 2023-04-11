@@ -34,6 +34,7 @@ if (file_exists($base_pass."moviebox.txt")) {
   $iv=$t1[3];
   $appid=$t1[4];
 }
+
 function random_token($chars = 32) {
    $letters = '0123456789abcdef';
    return substr(str_shuffle($letters), 0, $chars);

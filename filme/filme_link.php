@@ -191,7 +191,7 @@ if (preg_match("/filmeonlinegratis\.org/",$filelink)) {
   }
 
   //echo $html;
-} elseif (preg_match("/fsonline\.to/",$filelink)) {
+} elseif (preg_match("/fsonline\./",$filelink)) {
   $ua="Mozilla/5.0 (Windows NT 10.0; rv:82.0) Gecko/20100101 Firefox/82.0";
   if (preg_match("/id\=/",$filelink)) {
   $t1=explode("id=",$filelink);
@@ -213,6 +213,7 @@ if (preg_match("/filmeonlinegratis\.org/",$filelink)) {
   $id=$t2[0];
   }
   $l="https://www4.fsonline.to/wp-admin/admin-ajax.php";
+  $l="https://fsonline.app/wp-admin/admin-ajax.php";
   $post="action=lazy_player&movieID=".$id;
   //echo $post;
   $head=array('Accept: */*',
@@ -236,6 +237,7 @@ if (preg_match("/filmeonlinegratis\.org/",$filelink)) {
   curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
   curl_setopt($ch, CURLOPT_TIMEOUT, 25);
   $h = curl_exec($ch);
+  //echo $h;
   $videos=explode('data-vs="',$h);
   unset($videos[0]);
   $ch = curl_init();
@@ -250,9 +252,9 @@ if (preg_match("/filmeonlinegratis\.org/",$filelink)) {
     $t1=explode('"',$video);
     $l=$t1[0];
     curl_setopt($ch, CURLOPT_URL,$l);
-
+    //echo $l."\n";
     $h1 = curl_exec($ch);
-    //echo $h1;
+    //echo $h1."\n";
   if (preg_match("/Location\:\s+(.+)/i",$h1,$m)) {
   $h .='<iframe src="'.trim($m[1]).'"> ';
   }
@@ -1404,7 +1406,8 @@ $s=$s."|fastvid\.co|vidload\.net|rovideo\.net\/embed|eplayvid\.com|dood\.|medias
 $s=$s."|movcloud\.net|dogestream\.|streamtape\.|jawcloud\.|viphdvid\.|evoload\.|sendvid\.|easyload\.io|okstream\.";
 $s=$s."|youdbox\.com|filmele-online\.com|playtube\.|ninjastream\.to|userload\.co|goplayer\.online|videovard\.|cloudemb\.|streamlare\.";
 $s=$s."|sbembed\.com|sbembed1\.com|sbplay\.|sbvideo\.net|streamsb\.net|sbplay\.one|cloudemb\.com|playersb\.com|tubesb\.com|sbplay\d\.|embedsb\.com";
-$s=$s."|sbbrisk\.|sbanh\.|sblanh\.|sbchill\.|sbfast\.com|sblongvu\.com|sbfull\.|sbthe\.|sbspeed\.|tubeload\.|embedo\.|filemoon\.|utbrgebzvhfa\./i";
+$s=$s."|sb\w+\.|sbbrisk\.|sbanh\.|sblanh\.|sbchill\.|sbfast\.com|sblongvu\.com|sbfull\.|sbthe\.|sbspeed\.|tubeload\.|embedo\.|filemoon\.|utbrgebzvhfa\.";
+$s=$s."|streamhide\.|moonmov\.pro/i";
 /////////////////////////////////////////////
 //$x=preg_grep($s,$links);
 //print_r ($x);
@@ -1693,7 +1696,7 @@ for ($i=0;$i<count($links);$i++) {
    $pat="/hqq\.watch|xopenload\.me|hqq\.tv\/player\/script\.php|top\.mail\.ru|facebook|twitter|player\.swf";
    $pat .="|img\.youtube|youtube\.com\/user|radioarad|\.jpg|\.png|\.gif|jq\/(js|css)";
    $pat .="|fsplay\.net\?s|changejplayer\.js|validateemb\.php|restore_google\.php|clicksud\.biz|123formbuilder\.com|";
-   $pat .="ExoLoader.addZone|js\/api\/share\.js|hindipix\.in\/(js|style)|share\.php\?|brave\.com|affiliate\.rusvpn\.com|favicon\.ico/i";
+   $pat .="\.js|ExoLoader\.addZone|js\/api\/share\.js|hindipix\.in\/(js|style)|share\.php\?|brave\.com|affiliate\.rusvpn\.com|favicon\.ico/i";
    if (!preg_match($pat,$cur_link)) {
      $cur_link=str_replace(urldecode("%0A"),"",$cur_link);
      if ($cur_link) $link_f[]=$cur_link;

@@ -11,7 +11,7 @@ $sez=$_GET['sez'];
 /* ======================================= */
 $width="200px";
 $height="100px";
-$fs_target="solarmovie_fs.php";
+$fs_target="netfilm_fs.php";
 $has_img="no";
 ?>
 <html>
@@ -30,65 +30,55 @@ function str_between($string, $start, $end){
 	if ($ini == 0) return ""; $ini += strlen($start); $len = strpos($string,$end,$ini) - $ini;
 	return substr($string,$ini,$len);
 }
-if (preg_match("/(:|-)?\s+Season\s+(\d+)/i",$tit,$m)) {
+if (preg_match("/Season\s+(\d+)/i",$tit,$m)) {
   $tit=trim(str_replace($m[0],"",$tit));
 }
 echo '<h2>'.$tit.'</h2>';
-//echo $link;
-  preg_match("/(\d+)\.html/",$link,$m);
-  $id=$m[1];
-  $episod="1";
-  $season=$sez;
-  $host=parse_url($link)['host'];
-  $l="https://".$host."/movie_episodes/".$id;
-  //echo $l;
-  $ua="Mozilla/5.0 (Windows NT 10.0; rv:80.0) Gecko/20100101 Firefox/80.0";
-  $ch = curl_init($link);
-  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
+$head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/110.0',
+'Accept: application/json, text/plain, */*',
+'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
+'Accept-Encoding: deflate',
+'Connection: keep-alive',
+'appid: eyJhbGciOiJIUzI1NiJ9',
+'Referer: https://net-film.vercel.app/explore');
+$id_s=$link;
+$l="https://net-film.vercel.app/api/detail?id=".$link."&category=1";
+  $ch = curl_init();
+  curl_setopt($ch, CURLOPT_URL, $l);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
   curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
-  curl_setopt($ch, CURLOPT_RETURNTRANSFER  ,1);  // RETURN THE CONTENTS OF THE CALL
-  //curl_setopt($ch, CURLOPT_HTTPHEADER, $head);
+  curl_setopt($ch, CURLOPT_HTTPHEADER, $head);
   curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
-  curl_setopt($ch, CURLOPT_TIMEOUT, 25);
-  $html = curl_exec($ch);
-  curl_close ($ch);
-  //echo $html;
-  //$x=json_decode($html,1);
-  //print_r ($x);
-  //$html=$x['html'];
-  //echo $html;
-  //die();
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+  $h = curl_exec($ch);
+
+  //echo $h;
+  $r=json_decode($h,1);
+  if ($r['status'] != "200"){
+   $h = curl_exec($ch);
+   $r=json_decode($h,1);
+  }
+  if ($r['status'] != "200"){
+   $h = curl_exec($ch);
+   $r=json_decode($h,1);
+  }
+  curl_close($ch);
+//print_r ($r);
 $n=0;
 
 echo '<table border="1" width="100%">'."\n\r";
 echo '<TR><td class="sez" style="color:black;background-color:#0a6996;color:#64c8ff;text-align:center" colspan="3">Sezonul '.($sez).'</TD></TR>';
 
-$t1=explode("- Season",$tit);
-$tit1=trim($t1[0]);
-$t1 = explode("- Miniseries",$tit1);
-$tit1=trim($t1[0]);
-$html=str_between($html,'<ul id=episodes','</ul');
-$videos = explode('data-id=', $html);
-unset($videos[0]);
-//$videos = array_values($videos);
-$videos = array_reverse($videos);
-foreach($videos as $video) {
-  preg_match("/\d+/",$video,$t2);
-  $episod=$t2[0];
-  //$link = "https://".$host."/movie_embed/".$id."/".$episod."/";
-  //echo $link1;
-  $t3 = explode('title="', $video);
-  $t4 = explode('"', $t3[1]);
-  $title = trim($t4[0]);
-  if (preg_match("/Episode\s+\d+\:?(.+)/i",$title,$m)) {
-  $ep_tit=$m[1];
-  } else {
-   $ep_tit=$title;
-  }
-  $img_ep=$image;
-  $season=$sez;
+foreach($r['data']['episodeVo'] as $video) {
 
+  $link = "https://net-film.vercel.app/api/episode?id=".$id_s."&category=1&episode=".$video['id'];
+  $episod=$video['seriesNo'];
+
+  $img_ep="";
+  $ep_tit="";
+  $season=$sez;
+  //$ep_tit=$title;
 
   if ($ep_tit)
    $ep_tit_d=$season."x".$episod." ".$ep_tit;

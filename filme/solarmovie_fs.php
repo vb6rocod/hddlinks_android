@@ -140,13 +140,14 @@ $ua="Mozilla/5.0 (Windows NT 10.0; rv:80.0) Gecko/20100101 Firefox/80.0";
 $host=parse_url($link)['host'];
 //echo $host;
 //echo $link;
-if ($tip=="movie") {
   preg_match("/(\d+)\.html/",$link,$m);
   $id=$m[1];
-  $id_ep="1";
-
-  $post='{"m":"'.$id.'","e":"1","s":"1"}';
-  $l="https://yesmovies.ag/datas";
+if ($tip=="movie") {
+  $ep="1";
+}
+$k=1;
+$post='{"m":"'.$id.'","e":"'.$ep.'","s":"'.$k.'"}';
+  $l="https://".$host."/datas";
   $head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:108.0) Gecko/20100101 Firefox/108.0',
   'Accept: application/json, text/javascript, */*; q=0.01',
   'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
@@ -162,7 +163,7 @@ if ($tip=="movie") {
   curl_setopt($ch, CURLOPT_HTTPHEADER, $head);
   curl_setopt($ch, CURLOPT_POST,1);
   for ($k=1;$k<4;$k++) {
-  $post='{"m":"'.$id.'","e":"1","s":"'.$k.'"}';
+  $post='{"m":"'.$id.'","e":"'.$ep.'","s":"'.$k.'"}';
   curl_setopt($ch, CURLOPT_POSTFIELDS,$post);
   curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
   curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
@@ -172,7 +173,7 @@ if ($tip=="movie") {
   //echo $html;
   $x=json_decode($html,1);
   //print_r ($x);
-  $play_url = base64_decode("aHR0cHM6Ly92aWRjbG91ZDkub3Jn");
+  //$play_url = base64_decode("aHR0cHM6Ly92aWRjbG91ZDkub3Jn");
   $y=$x['url'];
   $r[]="https://vidcloud9.org/watch?v=".$y;
   $s[]="Server ".$k;
@@ -218,6 +219,7 @@ if ($tip=="movie") {
     $s[]=$svr_name;
   }
   */
+/*
 } else {
   $r=array();
   $s=array();
@@ -227,6 +229,7 @@ if ($tip=="movie") {
     $s[]="Server ".$k;
   }
 }
+*/
 echo '<table border="1" width="100%">';
 echo '<TR><TD class="mp">Alegeti un server: Server curent:<label id="server">'.$s[0].'</label>
 <input type="hidden" id="file" value="'.urlencode($r[0]).'"></td></TR></TABLE>';

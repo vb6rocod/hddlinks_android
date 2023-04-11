@@ -104,8 +104,8 @@ document.onkeypress =  zx;
 <TR>
 <TD width="25%"><a href="filme/moviebox_s.php?page=1&tip=release&title=moviebox&link=" target="_blank">moviebox</a></TD>
 <TD width="25%"><a href="filme/bflix_s.php?page=1&tip=release&title=bflix&link=" target="_blank">bflix</a></TD>
-<TD width="25%"></TD>
-<TD width="25%"></TD>
+<TD width="25%"><a href="filme/fmovies_s.php?page=1&tip=release&title=fmovies&link=" target="_blank">fmovies.co</a></TD>
+<TD width="25%"><a href="filme/netfilm_s.php?page=1&tip=release&title=netfilm&link=" target="_blank">netfilm</a></TD>
 </TR>
 <?php
 if (file_exists($base_pass."tvplay.txt")) {

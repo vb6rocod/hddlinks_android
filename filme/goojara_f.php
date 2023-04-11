@@ -20,6 +20,7 @@ $has_fs="yes";
 $ref="https://www.goojara.to";
 //$ref="https://supernova.to";
 //$ref="https://ww1.goojara.to";
+//$ref="https://goojara.club";
 $host=parse_url($ref)['host'];
 $fav_target="goojara_f_fav.php?host=".$ref;
 $add_target="goojara_f_add.php";

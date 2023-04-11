@@ -1,10 +1,13 @@
 <?php
 $t1 = dirname($_SERVER['SCRIPT_FILENAME']);
+$t1=str_replace("\\","/",$t1);
 $t1 = substr($t1, 0, strripos($t1,'/scripts'));
+
 if (file_exists("/data/data/ru.kslabs.ksweb/tmp/"))
   $base_cookie="/data/data/ru.kslabs.ksweb/tmp/";
 else
   $base_cookie=$t1."/cookie/";
+//echo $base_cookie;
 if (file_exists("/mnt/sdcard/www/public/cookie/"))
   $base_cookie="/mnt/sdcard/www/public/cookie/";
 $base_pass=$t1."/parole/";

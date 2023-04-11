@@ -12,6 +12,7 @@ $l="https://www.foumovies.me";
 //http://www.stupiddrive.com
 $l="https://www.foumovies.se";
 $l="https://www.foumovies.to";
+$l="https://www.foumovies.pw";
 $host=parse_url($l)['host'];
 $page = $_GET["page"];
 $tip= $_GET["tip"];

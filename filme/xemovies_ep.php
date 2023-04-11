@@ -52,7 +52,7 @@ $z=1;
 $path = parse_url($link)['path'];
 //echo $h;
 $host=parse_url($link)['host'];
-$videos = explode('<div class="list mt-2">', $h);
+$videos = explode('div class="season-item"', $h);
 $sezoane=array();
 $link_sez=array();
 //$link_sezoane=array();
@@ -71,7 +71,7 @@ foreach($videos as $video) {
   }
 }
 if (!isset($seazoane[0])) {
- $t1=explode('<div class="watch">',$h);
+ $t1=explode('div class="col-12 col-md-5',$h);
  $t2=explode('href="',$t1[1]);
  $t3=explode('"',$t2[1]);
  $link_sez[]=trim($t3[0]);
@@ -118,13 +118,13 @@ foreach($sezoane as $key => $value) {
   curl_setopt($ch, CURLOPT_URL,$link_sez[$key]);
   $h = curl_exec($ch);
   //echo $h;
-  $t1=explode('<div class="eposides">',$h);
-  $t2=explode('</div',$t1[1]);
-  $h=$t2[0];
+  //$t1=explode('<div class="eposides">',$h);
+  //$t2=explode('</div',$t1[1]);
+  //$h=$t2[0];
   //echo $h;
   $path = parse_url($link_sez[$key])['path'];
   //echo $h;
-  $vids = explode('a href="', $h);
+  $vids = explode('<a class="ep-item"', $h);
   unset($vids[0]);
   $vids = array_values($vids);
   //$vids = array_reverse($vids);
@@ -134,7 +134,8 @@ foreach($sezoane as $key => $value) {
   $ep_tit="";
   if (preg_match("/\-episode\-(\d+)/i",$vid,$e))
   $episod = $e[1];
-  $t2=explode('"',$vid);
+  $t1=explode('href="',$vid);
+  $t2=explode('"',$t1[1]);
   $link=$t2[0];
 
   $ep_tit = "Episode ".$episod;

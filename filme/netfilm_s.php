@@ -12,24 +12,77 @@ $tit=$_GET["title"];
 $link=$_GET["link"];
 $width="200px";
 $height="278px";
+$last_good="https://net-film.vercel.app";
+
 /* ==================================================== */
 $has_fav="yes";
 $has_search="yes";
 $has_add="yes";
 $has_fs="yes";
-$last_good="https://xemovies.to";
 $host=parse_url($last_good)['host'];
-$fav_target="xemovies_s_fav.php?host=".$last_good;
-$add_target="xemovies_s_add.php";
+$fav_target="netfilm_s_fav.php?host=".$last_good;
+$add_target="netfilm_s_add.php";
 $add_file="";
-$fs_target="xemovies_ep.php";
-$target="xemovies_s.php";
+$fs_target="netfilm_ep.php";
+$target="netfilm_s.php";
 /* ==================================================== */
+$f=array();
+if ($tip=="release")
+$l="https://net-film.vercel.app/api/category?area=&category=1&order=up&params=TV%2CSETI%2CMINISERIES&size=12&sort=".urlencode($link)."&subtitles=&year=";
+else
+$l="https://net-film.vercel.app/api/search?keyword=".urlencode($tit)."&sort=".urlencode($link)."&size=12&params=TV%2CSETI%2CMINISERIES";
+$head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/110.0',
+'Accept: application/json, text/plain, */*',
+'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
+'Accept-Encoding: deflate',
+'Connection: keep-alive',
+'appid: eyJhbGciOiJIUzI1NiJ9',
+'Referer: https://net-film.vercel.app/explore');
+  $ch = curl_init();
+  curl_setopt($ch, CURLOPT_URL, $l);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+  curl_setopt($ch, CURLOPT_HTTPHEADER, $head);
+  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+  $h = curl_exec($ch);
+
+  //echo $h;
+  $r=json_decode($h,1);
+  if ($r['status'] != "200"){
+   $h = curl_exec($ch);
+   $r=json_decode($h,1);
+  }
+  if ($r['status'] != "200"){
+   $h = curl_exec($ch);
+   $r=json_decode($h,1);
+  }
+  curl_close($ch);
+  //print_r ($r);
+  if ($tip=="release") {
+  for ($k=0;$k<count($r['data']);$k++) {
+    $f[] = array($r['data'][$k]['name'],$r['data'][$k]['id'],$r['data'][$k]['coverVerticalUrl'],"");
+    $link=$r['data'][$k]['sort'];
+  }
+  } else {
+  //print_r ($r);
+  for ($k=0;$k<count($r['data']['results']);$k++) {
+    if (preg_match("/tv|MINISERIES/i",$r['data']['results'][$k]['dramaType']['code']))
+    $f[] = array($r['data']['results'][$k]['name'],$r['data']['results'][$k]['id'],$r['data']['results'][$k]['coverVerticalUrl'],"");
+    $link=$r['data']['results'][$k]['sort'];
+  }
+  //die();
+  }
+/* ==================================================== */
+
 $base=basename($_SERVER['SCRIPT_FILENAME']);
+
 $p=$_SERVER['QUERY_STRING'];
 parse_str($p, $output);
 
 if (isset($output['page'])) unset($output['page']);
+$output['link']=$link;
 $p = http_build_query($output);
 if (!isset($_GET["page"]))
   $page=1;
@@ -167,62 +220,7 @@ if ($page==1) {
    echo '<TD class="nav" colspan="4" align="right"><a href="'.$prev.'">&nbsp;&lt;&lt;&nbsp;</a> | <a href="'.$next.'">&nbsp;&gt;&gt;&nbsp;</a></TD>'."\r\n";
 }
 echo '</TR>'."\r\n";
-$f=array();
-if ($tip=="search") {
- $search= str_replace(" ","+",$tit);
- if ($page==1)
-  $l=$last_good."/search?query=".$search."&_token=&q=".$search; //$l=$last_good."/search?_token=&q=".$search;
- else
-  $l=$last_good."/search?query=".$search."&_token=&q=".$search."&page=".$page;
-} else {
- if ($page==1)
-  $l=$last_good."/series";
- else
-  $l=$last_good."/series?page=".$page."";
-}
-$path = parse_url($l)['path'];
-//echo $h;
-$host=parse_url($l)['host'];
-$ua="Mozilla/5.0 (Windows NT 10.0; rv:75.0) Gecko/20100101 Firefox/75.0";
-  $ch = curl_init();
-  curl_setopt($ch, CURLOPT_URL, $l);
-  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
-  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
-  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
-  curl_setopt($ch, CURLOPT_TIMEOUT, 25);
-  $h = curl_exec($ch);
-  curl_close($ch);
-
-$host=parse_url($l)['host'];
-
-$videos = explode('<div class="stars', $h);
-unset($videos[0]);
-$videos = array_values($videos);
-foreach($videos as $video) {
- $t1=explode('href="',$video);
- $t2=explode('"',$t1[1]);
- $link=$t2[0];
-
- $t1=explode('src="',$video);
- $t2=explode('"',$t1[1]);
- $image=$t2[0];
- $t1=explode('class="no-wrap">',$video);
- $t2=explode('<',$t1[1]);
- $title=html_entity_decode(trim($t2[0]));
-
- $year="";
-  $rest = substr($title, -6);
-  if (preg_match("/\(?(\d+)\)?/",$rest,$m)) {
-   $year=$m[1];
-   $tit_imdb=trim(str_replace($m[0],"",$title));
-  } else {
-   $year="";
-   $tit_imdb=$title;
-  }
-  if (preg_match("/\/series\//",$link)) $f[] = array($title,$link,$image,$year);
-}
+//print_r ($f);
 foreach($f as $key => $value) {
   $title=$value[0];
   $title=prep_tit($title);
@@ -232,7 +230,17 @@ foreach($f as $key => $value) {
   $imdb="";
   $year="";
   $sez="";
-  $tit_imdb=$title;
+  $image=$image."?imageView2/1/w/190/h/266/format/webp/interlace/1/ignore-error/1/q/90!/format/webp";
+   if (preg_match("/Season\s*(\d+)/i",$title,$m)) {
+    $tit_serial=trim(str_replace($m[0],"",$title));
+    //$title=trim(str_replace($m[0],"",$title));
+    $sez=$m[1];
+    $tit_imdb=$tit_serial;
+   } else {
+     $sez=1;
+     $tit_serial=$title;
+     $tit_imdb=$tit_serial;
+   }
 
   $link_f=$fs_target.'?tip=series&link='.urlencode($link).'&title='.urlencode(fix_t($title)).'&image='.$image."&sez=".$sez."&ep=&ep_tit=&year=".$year;
   if ($title) {

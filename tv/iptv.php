@@ -27,6 +27,14 @@ $l="https://raw.githubusercontent.com/iptv-org/iptv/master/index.m3u";
 //$l="https://raw.githubusercontent.com/freearhey/iptv/master/index.m3u";
 $l="https://raw.githubusercontent.com/iptv-org/iptv/master/index.m3u";
 $l="https://github.com/iptv-org/iptv";
+// https://iptv-org.github.io/api/countries.json
+// https://iptv-org.github.io/api/regions.json
+// https://iptv-org.github.io/api/subdivisions.json
+// https://iptv-org.github.io/api/languages.json
+// https://iptv-org.github.io/api/categories.json
+// https://iptv-org.github.io/api/streams.json
+// https://iptv-org.github.io/api/guides.json
+// https://iptv-org.github.io/api/channels.json
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $l);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);

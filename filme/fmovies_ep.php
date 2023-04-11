@@ -11,7 +11,7 @@ $sez=$_GET['sez'];
 /* ======================================= */
 $width="200px";
 $height="100px";
-$fs_target="solarmovie_fs.php";
+$fs_target="fmovies_fs.php";
 $has_img="no";
 ?>
 <html>
@@ -30,65 +30,52 @@ function str_between($string, $start, $end){
 	if ($ini == 0) return ""; $ini += strlen($start); $len = strpos($string,$end,$ini) - $ini;
 	return substr($string,$ini,$len);
 }
-if (preg_match("/(:|-)?\s+Season\s+(\d+)/i",$tit,$m)) {
+if (preg_match("/\s*\-\s*Season\s*(\d+)(.*)/i",$tit,$m)) {
   $tit=trim(str_replace($m[0],"",$tit));
 }
 echo '<h2>'.$tit.'</h2>';
-//echo $link;
-  preg_match("/(\d+)\.html/",$link,$m);
-  $id=$m[1];
-  $episod="1";
-  $season=$sez;
-  $host=parse_url($link)['host'];
-  $l="https://".$host."/movie_episodes/".$id;
-  //echo $l;
-  $ua="Mozilla/5.0 (Windows NT 10.0; rv:80.0) Gecko/20100101 Firefox/80.0";
-  $ch = curl_init($link);
-  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
+$host=parse_url($link)['host'];
+$head=array('Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2');
+  $ch = curl_init();
+  curl_setopt($ch, CURLOPT_URL, $link);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+  //curl_setopt($ch,CURLOPT_REFERER,"https://vidembed.cc");
+  curl_setopt($ch,CURLOPT_HTTPHEADER,$head);
+  curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 10.0; rv:55.0) Gecko/20100101 Firefox/55.0');
   curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
-  curl_setopt($ch, CURLOPT_RETURNTRANSFER  ,1);  // RETURN THE CONTENTS OF THE CALL
-  //curl_setopt($ch, CURLOPT_HTTPHEADER, $head);
   curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
-  curl_setopt($ch, CURLOPT_TIMEOUT, 25);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
   $html = curl_exec($ch);
-  curl_close ($ch);
-  //echo $html;
-  //$x=json_decode($html,1);
-  //print_r ($x);
-  //$html=$x['html'];
-  //echo $html;
-  //die();
+  curl_close($ch);
+
+
 $n=0;
 
 echo '<table border="1" width="100%">'."\n\r";
 echo '<TR><td class="sez" style="color:black;background-color:#0a6996;color:#64c8ff;text-align:center" colspan="3">Sezonul '.($sez).'</TD></TR>';
-
-$t1=explode("- Season",$tit);
-$tit1=trim($t1[0]);
-$t1 = explode("- Miniseries",$tit1);
-$tit1=trim($t1[0]);
-$html=str_between($html,'<ul id=episodes','</ul');
-$videos = explode('data-id=', $html);
+$t1=explode('<ul id="list-eps',$html);
+$t2=explode('</ul',$t1[1]);
+$html=$t2[0];
+//echo $html;
+$videos = explode('<a title="', $html);
 unset($videos[0]);
-//$videos = array_values($videos);
 $videos = array_reverse($videos);
 foreach($videos as $video) {
-  preg_match("/\d+/",$video,$t2);
-  $episod=$t2[0];
-  //$link = "https://".$host."/movie_embed/".$id."/".$episod."/";
-  //echo $link1;
-  $t3 = explode('title="', $video);
-  $t4 = explode('"', $t3[1]);
-  $title = trim($t4[0]);
-  if (preg_match("/Episode\s+\d+\:?(.+)/i",$title,$m)) {
-  $ep_tit=$m[1];
+  $t1=explode('data-src="',$video);
+  $t2 = explode('"', $t1[1]);
+  $link = $t2[0];
+  $t1=explode('"',$video);
+  if (preg_match("/episode\s*(\d+)/i",$t1[0],$ee)) {
+  $episod=$ee[1];
   } else {
-   $ep_tit=$title;
+  $episod="0";
   }
+   $ep_tit="";
   $img_ep=$image;
   $season=$sez;
-
+  //$ep_tit=$title;
 
   if ($ep_tit)
    $ep_tit_d=$season."x".$episod." ".$ep_tit;

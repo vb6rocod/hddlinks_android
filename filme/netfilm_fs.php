@@ -131,104 +131,12 @@ function off() {
 echo '<h2>'.$tit.$tit2.'</H2>';
 echo '<BR>';
 $r=array();
-$s=array();
-if ($tip=="movie") {
-  $ua="Mozilla/5.0 (Windows NT 10.0; rv:75.0) Gecko/20100101 Firefox/75.0";
-  //echo $link;
-  $ch = curl_init();
-  curl_setopt($ch, CURLOPT_URL, $link);
-  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
-  curl_setopt($ch, CURLOPT_REFERER,$link);
-  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
-  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
-  curl_setopt($ch, CURLOPT_TIMEOUT, 25);
-  $h = curl_exec($ch);
-  curl_close($ch);
-  //if (!$h) $h=file_get_contents($link);
-  //echo $h;
-  $t1=explode('data-src="',$h);
-  $t2=explode('"',$t1[1]);
-  $l=$t2[0];
-  $x=parse_url($l)['query'];
-  parse_str($x,$y);
-  //print_r ($y);
-  //die();
-  $l="https://hdmoviesb.com/playerw?id=".$y['id'];
-  $l="https://hdmoviesb.com/streamw?id=".$y['id'];
-} else {
- $l=$link;
- $l=str_replace("playerw?","streamw?",$l);
-}
-//echo $l;
-  $head=array('Accept: application/json, text/javascript, */*; q=0.01',
-  'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
-  'Accept-Encoding: deflate',
-  'X-Requested-With: XMLHttpRequest',
-  'Connection: keep-alive',
-  'Referer: '.$link);
-  //echo $l;
-  $ch = curl_init();
-  curl_setopt($ch, CURLOPT_URL, $l);
-  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
-  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
-  curl_setopt($ch, CURLOPT_HTTPHEADER,$head);
-  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-  curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
-  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
-  curl_setopt($ch, CURLOPT_TIMEOUT, 25);
-  $h = curl_exec($ch);
-  curl_close($ch);
-  //echo $h;
-  $y=json_decode($h,1);
-  //print_r ($y);
-  $srt="";
-  $lang="";
-  if (isset($y['subtile'][0])) {
-  for ($k=0;$k<count($y['subtile']);$k++) {
-   if (preg_match("/Romanian/i",$y['subtile'][$k]['lang'])) {
-     $srt="https://hdmoviesb.com/sub/".$y['subtile'][$k]['file'];
-     $lang=$y['subtile'][$k]['lang'];
-   }
-  }
-  if (!$srt) {
-  for ($k=0;$k<count($y['subtile']);$k++) {
-   if (preg_match("/English/i",$y['subtile'][$k]['lang'])) {
-     $srt="https://hdmoviesb.com/sub/".$y['subtile'][$k]['file'];
-     $lang=$y['subtile'][$k]['lang'];
-   }
-  }
-  }
-  if (!$srt) {
-  $srt="https://hdmoviesb.com/sub/".$y['subtile'][0]['file'];
-  $lang=$y['subtile'][0]['lang'];
-  }
-  $ch = curl_init();
-  curl_setopt($ch, CURLOPT_URL, $srt);
-  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
-  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
-  curl_setopt($ch, CURLOPT_HTTPHEADER,$head);
-  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-  curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
-  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
-  curl_setopt($ch, CURLOPT_TIMEOUT, 25);
-  $h1 = curl_exec($ch);
-  curl_close($ch);
-  file_put_contents($base_sub."sub_extern.srt",$h1);
-  }
-  $x=json_decode($h,1)['server'];
-
-  $videos = array_values($videos);
-  foreach($x as $key=>$value) {
-   $s[]="Server ".$key;
-   $r[]=$value['link'];
-  }
-
+if ($tip=="movie")
+$r[]="https://net-film.vercel.app/api/episode?id=".$link;
+else
+$r[]=$link;
 echo '<table border="1" width="100%">';
-echo '<TR><TD class="mp">Alegeti un server: Server curent:<label id="server">'.$s[0].'</label>
+echo '<TR><TD class="mp">Alegeti un server: Server curent:<label id="server">'.parse_url($r[0])['host'].'</label>
 <input type="hidden" id="file" value="'.urlencode($r[0]).'"></td></TR></TABLE>';
 echo '<table border="1" width="100%"><TR>';
 $k=count($r);
@@ -236,7 +144,7 @@ $x=0;
 for ($i=0;$i<$k;$i++) {
   if ($x==0) echo '<TR>';
   $c_link=$r[$i];
-  $openload=$s[$i];
+  $openload=parse_url($r[$i])['host'];
   if (preg_match($indirect,$openload)) {
   echo '<TD class="mp"><a href="filme_link.php?file='.urlencode($c_link).'&title='.urlencode(unfix_t($tit.$tit2)).'" target="_blank">'.$openload.'</a></td>';
   } else
@@ -290,11 +198,7 @@ else
    echo '<TD align="center" colspan="4"><a id="viz" onclick="'."openlink('".$openlink."')".'"'." style='cursor:pointer;'>".'VIZIONEAZA !</a></td>';
 echo '</tr>';
 echo '</table>';
-echo '<br>';
-if ($lang) {
- echo '<b>Subtitles: '.$lang."</b><BR>";
-}
-echo '
+echo '<br>
 <table border="0px" width="100%">
 <TR>
 <TD><font size="4"><b>Scurtaturi: 1=opensubtitles, 2=titrari, 3=subs, 4=subtitrari, 5=vizioneaza

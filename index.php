@@ -5,7 +5,7 @@ function str_between($string, $start, $end){
 	if ($ini == 0) return ""; $ini += strlen($start); $len = strpos($string,$end,$ini) - $ini;
 	return substr($string,$ini,$len);
 }
-include ("common.php");
+require ("common.php");
 $f=$base_pass."adult.txt";
 if (!file_exists($f)) {
 $adult="NU";
@@ -119,6 +119,7 @@ function is_valid_date($value, $format = 'dd.mm.yyyy'){
     return false;
 }
 $p=$_SERVER['SCRIPT_FILENAME'];
+$p=str_replace("\\","/",$p);
 $script_directory = substr($p, 0, strrpos($p, '/'));
 $f_version=$script_directory."/version_m.txt";
 if (file_exists($f_version)) {

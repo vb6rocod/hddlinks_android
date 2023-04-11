@@ -17,13 +17,13 @@ $has_fav="yes";
 $has_search="yes";
 $has_add="yes";
 $has_fs="yes";
-$last_good="https://xemovies.to";
+$last_good="https://fmoviesto.mom";
 $host=parse_url($last_good)['host'];
-$fav_target="xemovies_s_fav.php?host=".$last_good;
-$add_target="xemovies_s_add.php";
+$fav_target="fmovies_s_fav.php?host=".$last_good;
+$add_target="fmovies_s_add.php";
 $add_file="";
-$fs_target="xemovies_ep.php";
-$target="xemovies_s.php";
+$fs_target="fmovies_ep.php";
+$target="fmovies_s.php";
 /* ==================================================== */
 $base=basename($_SERVER['SCRIPT_FILENAME']);
 $p=$_SERVER['QUERY_STRING'];
@@ -167,22 +167,16 @@ if ($page==1) {
    echo '<TD class="nav" colspan="4" align="right"><a href="'.$prev.'">&nbsp;&lt;&lt;&nbsp;</a> | <a href="'.$next.'">&nbsp;&gt;&gt;&nbsp;</a></TD>'."\r\n";
 }
 echo '</TR>'."\r\n";
-$f=array();
+$r=array();
+//https://fmovies.co/search?keyword=star&page=2
+//https://fmoviesf.co/search/?keyword=
 if ($tip=="search") {
- $search= str_replace(" ","+",$tit);
- if ($page==1)
-  $l=$last_good."/search?query=".$search."&_token=&q=".$search; //$l=$last_good."/search?_token=&q=".$search;
- else
-  $l=$last_good."/search?query=".$search."&_token=&q=".$search."&page=".$page;
+  $search=str_replace(" ","%20",$tit);
+  $l=$last_good."/my-ajax?action=search&limit=40&page=".$page."&width=1280&keyword=".$search;
 } else {
- if ($page==1)
-  $l=$last_good."/series";
- else
-  $l=$last_good."/series?page=".$page."";
+  $l=$last_good."/my-ajax?action=movie_type&limit=40&page=".$page."&width=1263&type=2";
 }
-$path = parse_url($l)['path'];
-//echo $h;
-$host=parse_url($l)['host'];
+
 $ua="Mozilla/5.0 (Windows NT 10.0; rv:75.0) Gecko/20100101 Firefox/75.0";
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $l);
@@ -194,46 +188,42 @@ $ua="Mozilla/5.0 (Windows NT 10.0; rv:75.0) Gecko/20100101 Firefox/75.0";
   curl_setopt($ch, CURLOPT_TIMEOUT, 25);
   $h = curl_exec($ch);
   curl_close($ch);
-
+//echo $h;
 $host=parse_url($l)['host'];
 
-$videos = explode('<div class="stars', $h);
-unset($videos[0]);
-$videos = array_values($videos);
+$videos=json_decode($h,1)['data']['data'];
+//print_r ($videos);
+$host=parse_url($l)['host'];
+
 foreach($videos as $video) {
- $t1=explode('href="',$video);
- $t2=explode('"',$t1[1]);
- $link=$t2[0];
-
- $t1=explode('src="',$video);
- $t2=explode('"',$t1[1]);
- $image=$t2[0];
- $t1=explode('class="no-wrap">',$video);
- $t2=explode('<',$t1[1]);
- $title=html_entity_decode(trim($t2[0]));
-
- $year="";
-  $rest = substr($title, -6);
-  if (preg_match("/\(?(\d+)\)?/",$rest,$m)) {
-   $year=$m[1];
-   $tit_imdb=trim(str_replace($m[0],"",$title));
-  } else {
-   $year="";
-   $tit_imdb=$title;
-  }
-  if (preg_match("/\/series\//",$link)) $f[] = array($title,$link,$image,$year);
+ $link=$video['url'];
+ $image=$video['image'];
+ if (preg_match("/url\=/",$image)) {
+ $t1=explode("url=",$image);
+ $image=urldecode($t1[1]);
+ }
+ $title=$video['post_title'];
+ $title=str_replace("\\","",$title);
+ $year=$video['year'];
+  if ($title && preg_match("/\/tv\//",$link)) $r[] = array($title,$link,$image,$year);
 }
-foreach($f as $key => $value) {
-  $title=$value[0];
-  $title=prep_tit($title);
-  $link=$value[1];
-  $image=$value[2];
-  $year=$value[3];
+$c=count($r);
+for ($k=0;$k<$c;$k++) {
+  $link=$r[$k][1];
+  $title=$r[$k][0];
+  $image=$r[$k][2];
+  $year=$r[$k][3];
+   if (preg_match("/\s*\-\s*Season\s*(\d+)(.*)/i",$title,$m)) {
+   $tit_serial=str_replace($m[0],"",$title);
+   $title=str_replace($m[2],"",$title);
+   $sez=$m[1];
+   $tit_imdb=$tit_serial;
+   } else {
+     $sez=1;
+     $tit_serial=$title;
+     $tit_imdb=$tit_serial;
+   }
   $imdb="";
-  $year="";
-  $sez="";
-  $tit_imdb=$title;
-
   $link_f=$fs_target.'?tip=series&link='.urlencode($link).'&title='.urlencode(fix_t($title)).'&image='.$image."&sez=".$sez."&ep=&ep_tit=&year=".$year;
   if ($title) {
   if ($n==0) echo '<TR>'."\r\n";

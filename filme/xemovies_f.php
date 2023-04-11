@@ -13,6 +13,7 @@ $link=$_GET["link"];
 $width="200px";
 $height="278px";
 $last_good="https://xemovies.to";
+// https://xemovies.to/
 $host=parse_url($last_good)['host'];
 /* ==================================================== */
 $has_fav="yes";
@@ -196,7 +197,7 @@ $path = parse_url($l)['path'];
 //echo $h;
 $host=parse_url($l)['host'];
 
-$videos = explode('<div class="item"', $h);
+$videos = explode('<div class="stars', $h);
 unset($videos[0]);
 $videos = array_values($videos);
 foreach($videos as $video) {
@@ -207,8 +208,8 @@ foreach($videos as $video) {
  $t1=explode('src="',$video);
  $t2=explode('"',$t1[1]);
  $image=$t2[0];
- $t1=explode('title="',$video);
- $t2=explode('"',$t1[1]);
+ $t1=explode('class="no-wrap">',$video);
+ $t2=explode('<',$t1[1]);
  $title=html_entity_decode(trim($t2[0]));
 
  $year="";

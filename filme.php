@@ -131,7 +131,7 @@ else
 <TR>
 <TD width="25%"><a href="filme/moviebox_f.php?page=1&tip=release&title=moviebox&link=" target="_blank">moviebox</a></TD>
 <TD width="25%"><a href="filme/bflix_f.php?page=1&tip=release&title=bflix&link=" target="_blank">bflix</a></TD>
-<TD width="25%"></TD>
+<TD width="25%"><a href="filme/netfilm_f.php?page=1&tip=release&title=netfilm&link=" target="_blank">netfilm</a></TD>
 <TD width="25%"></TD>
 </TR>
 

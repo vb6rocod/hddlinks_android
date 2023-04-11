@@ -2,6 +2,11 @@
 <?php
 //error_reporting(0);
 include ("../common.php");
+$list = glob($base_cookie."*.mcloud");
+   foreach ($list as $l) {
+    str_replace(" ","%20",$l);
+    unlink($l);
+}
 require_once("bunny.php");
 $key="DZmuZuXqa9O0z3b7";
 
@@ -60,10 +65,22 @@ $imdbid="";
 <script type="text/javascript">
 function openlink1(link) {
   link1=document.getElementById('file').value;
+  s=document.getElementById('server').innerHTML;
+  if (s.match(/vidstream|mycloud/gi)) {
+  msg="mcloud1.php?id=" + encodeURI(link1) + "&title=" + link + "&tip=flash";
+  window.open(msg);
+  } else {
   msg="link1.php?file=" + link1 + "&title=" + link;
   window.open(msg);
+  }
 }
 function openlink(link) {
+  link1=document.getElementById('file').value;
+  s=document.getElementById('server').innerHTML;
+  if (s.match(/vidstream|mycloud/gi)) {
+  msg="mcloud1.php?id=" + encodeURI(link1) + "&title=" + link + "&tip=mp";
+  window.open(msg);
+  } else {
   on();
   var request =  new XMLHttpRequest();
   link1=document.getElementById('file').value;
@@ -86,6 +103,7 @@ function openlink(link) {
       document.getElementById("mytest1").href=request.responseText;
       document.getElementById("mytest1").click();
     }
+  }
   }
 }
 function changeserver(s,t) {
@@ -185,16 +203,48 @@ $r=json_decode($t2[0],1);
 //print_r ($r);
 //print_r ($s);
 //echo $s[key($r)];
+foreach ($r as $kk => $v) {
+  $c_link="https://bflix.ru/ajax/episode/info?id=".$v;
+  $openload=$s[$kk];
+  if (preg_match("/vidstream|mycloud/i",$openload)) {
+  $head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/109.0',
+  'Accept: application/json, text/javascript, */*; q=0.01',
+  'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
+  'Accept-Encoding: deflate',
+  'Referer: '.$c_link,
+  'X-Requested-With: XMLHttpRequest',
+  'Connection: keep-alive');
+  $ch = curl_init();
+  curl_setopt($ch, CURLOPT_URL, $c_link);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+  curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
+  curl_setopt($ch, CURLOPT_HTTPHEADER,$head);
+  curl_setopt($ch, CURLOPT_ENCODING, "");
+  //curl_setopt($ch, CURLOPT_HEADER,1);
+  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+  $h = curl_exec($ch);
+  curl_close($ch);
+  $url=json_decode($h,1)['url'];
+  $mcloud=decodeVrf($url,$key);
+  $r[$kk]=$mcloud;
+  } else {
+  $r[$kk]="https://bflix.ru/ajax/episode/info?id=".$v;
+  }
+}
+reset($r);
 echo '<table border="1" width="100%">';
 echo '<TR><TD class="mp">Alegeti un server: Server curent:<label id="server">'.$s[key($r)].'</label>
-<input type="hidden" id="file" value="'."https://bflix.ru/ajax/episode/info?id=".$r[key($r)].'"></td></TR></TABLE>';
+<input type="hidden" id="file" value="'."".urlencode($r[key($r)]).'"></td></TR></TABLE>';
 echo '<table border="1" width="100%"><TR>';
 $k=count($r);
 $x=0;
 foreach ($r as $kk => $v) {
   if ($x==0) echo '<TR>';
-  $c_link="https://bflix.ru/ajax/episode/info?id=".$v;
+  $c_link=$v;
   $openload=$s[$kk];
+
   if (preg_match($indirect,$openload)) {
   echo '<TD class="mp"><a href="filme_link.php?file='.urlencode($c_link).'&title='.urlencode(unfix_t($tit.$tit2)).'" target="_blank">'.$openload.'</a></td>';
   } else
@@ -248,6 +298,39 @@ else
    echo '<TD align="center" colspan="4"><a id="viz" onclick="'."openlink('".$openlink."')".'"'." style='cursor:pointer;'>".'VIZIONEAZA !</a></td>';
 echo '</tr>';
 echo '</table>';
+//////////////////////////
+foreach ($r as $kk => $v) {
+  $c_link="https://bflix.ru/ajax/episode/info?id=".$v;
+  $openload=$s[$kk];
+  if (preg_match("/vidstream|mycloud/i",$openload)) {
+  $head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/109.0',
+  'Accept: application/json, text/javascript, */*; q=0.01',
+  'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
+  'Accept-Encoding: deflate',
+  'Referer: '.$c_link,
+  'X-Requested-With: XMLHttpRequest',
+  'Connection: keep-alive');
+  /*
+  $ch = curl_init();
+  curl_setopt($ch, CURLOPT_URL, $c_link);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+  curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
+  curl_setopt($ch, CURLOPT_HTTPHEADER,$head);
+  curl_setopt($ch, CURLOPT_ENCODING, "");
+  //curl_setopt($ch, CURLOPT_HEADER,1);
+  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+  $h = curl_exec($ch);
+  curl_close($ch);
+  $url=json_decode($h,1)['url'];
+  $mcloud=decodeVrf($url,$key);
+  //echo '<iframe src="mcloud.php?id='.$mcloud.'" style="display: none;"></iframe><BR>';
+  echo '<BR><a href="mcloud1.php?id='.$mcloud.'" target="_blank">'.$openload.'</a><BR>';
+  */
+  }
+}
+///////////////////////////
 echo '<br>
 <table border="0px" width="100%">
 <TR>

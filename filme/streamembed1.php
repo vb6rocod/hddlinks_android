@@ -1,19 +1,20 @@
 <!doctype html>
 <?php
+error_reporting(0);
 $filelink=urldecode($_GET['file']);
 $title=urldecode($_GET['title']);
 $tip=$_GET['tip'];
 //echo $filelink;
 //die();
+$host="https://".parse_url($filelink)['host'];
 $ua = $_SERVER['HTTP_USER_AGENT'];
 $head=array('User-Agent: '.$ua,
 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8',
 'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
 'Accept-Encoding: deflate',
-'Origin: https://streamembed.net',
-'Alt-Used: streamembed.net',
+'Origin: '.$host,
 'Connection: keep-alive',
-'Referer: https://streamembed.net',
+'Referer: '.$host,
 'Upgrade-Insecure-Requests: 1',
 'Sec-Fetch-Dest: document',
 'Sec-Fetch-Mode: navigate',

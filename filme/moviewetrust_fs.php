@@ -63,7 +63,7 @@ function str_between($string, $start, $end){
 function openlink1(link) {
   link1=document.getElementById('file').value;
   //alert (link1);
-  if (link1.match(/streamembed/gi)) {
+  if (link1.match(/streamembed|imwatchingmovies/gi)) {
   msg="streamembed1.php?file=" + link1 + "&title=" + link + "&tip=flash";
   window.open(msg);
   } else {
@@ -73,7 +73,7 @@ function openlink1(link) {
 }
 function openlink(link) {
   link1=document.getElementById('file').value;
-  if (link1.match(/streamembed/gi)) {
+  if (link1.match(/streamembed|imwatchingmovies/gi)) {
   msg="streamembed1.php?file=" + link1 + "&title=" + link + "&tip=mp";
   window.open(msg);
   } else {
@@ -186,17 +186,18 @@ $l="https://api.themoviedb.org/3/tv/".$link."?api_key=".$api_key."&append_to_res
   $imdb=$x['external_ids']['imdb_id'];
   //echo $imdb;
   //die();
+//////////////////////////////////////
+//https://databasegdriveplayer.xyz/player.php?imdb=tt9165824
+//https://databasegdriveplayer.xyz/player.php?type=series&imdb=tt0061265&season=1&episode=7
 if ($tip=="movie")
-$l="https://fsapi.xyz/tmdb-movie/".$link;
+$l="https://databasegdriveplayer.xyz/player.php?imdb=".$imdb;
 else
-$l="https://fsapi.xyz/tv-tmdb/".$link."-".$sez."-".$ep;
-//echo $l;
-//die();
+$l="https://databasegdriveplayer.xyz/player.php?type=series&imdb=".$imdb."&season=".$sez."&episode=".$ep;
   $head=array('Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
   'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
   'Accept-Encoding: deflate',
   'Connection: keep-alive');
-  /*
+
   $ch = curl_init($l);
   curl_setopt($ch, CURLOPT_USERAGENT, $ua);
   curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
@@ -209,121 +210,41 @@ $l="https://fsapi.xyz/tv-tmdb/".$link."-".$sez."-".$ep;
   $h = curl_exec($ch);
   curl_close ($ch);
   //echo $h;
-  preg_match_all("/url\=([a-zA-Z0-9\/\+\=]+)\"/si",$h,$m);
-  //print_r ($m);
-  for ($k=0;$k<count($m[1]);$k++) {
-   $z[]=base64_decode($m[1][$k]);
-   $l=base64_decode($m[1][$k]);
-   //echo $l."\n";
-   if (preg_match("/vidnext\.net|membed\./",$l)) {
-     if ($l[0] =="/") $l="https:".$l;
-     $r[]=$l;
-     $s[]="vidnext";
-   }
-  }
-  */
-  //print_r ($r);
-//die();
-//////////////////////////////////////////////////////////////////
-//olgply.xyz
-/*
-if ($tip == "movie")
-  $l="https://olgply.xyz/".$link;
-else
-  $l="https://olgply.xyz/".$link."/".$sez."/".$ep;
-//echo $l;
-//die();
-//$l="https://olgply.com/".$link;
-  $s[]="olgply";
+  $t1=explode('href="//',$h);
+  $t2=explode('"',$t1[1]);
+  $l="https://".$t2[0];
+  if (preg_match("/streaming\.php\?/",$l)) {
+  $host=parse_url($l)['host'];
+  $l=str_replace($host,"membed1.com",$l);
   $r[]=$l;
-*/
-
-//////////////////////////////////////////////////////////////////
-// apimdb.net   now openvids.io
-function get_link($o,$x) {
-if($o == "youtube") return "https://www.youtube.com/embed/".$x;
-if($o == "doodstream") return "https://dood.pm/e/".$x;
-if($o == "voe") return "https://voe.sx/e/".$x;
-if($o == "streamsb") return "https://sbembed.com/e/".$x;
-if($o == "mixdrop") return "https://mixdrop.co/e/".$x;
-if($o == "voxzer") return "https://player.voxzer.org/view/".$x;
-if($o == "vidcloud") return "https://membed.net/streaming.php?id=".$x;
-}
-$ua="Mozilla/5.0 (Windows NT 10.0; rv:75.0) Gecko/20100101 Firefox/75.0";
-$l="https://openvids.to/api/servers";
-if ($tip=="movie") {
- $p=array(
-   "type" => "movie",
-   "_id" => $imdb,
-   "film" => array(
-     "_id" => $imdb,
-     "title" => "",
-     "overview" => "",
-     "tmdbId" => "",
-     "backdrop" => "",
-     "releasedAt" => "2016-08-03T00:00:00.000Z",
-     "updatedAt" => "2000-05-23T03:03:26.787Z"),
-   );
-} else {
- $p=array(
-   "type" => "episode",
-   "_id" => $imdb."-".$sez."-".$ep,
-   "film" => array(
-     "_id" => $imdb."-".$sez."-".$ep,
-     "tvName" => "",
-     "season" => $sez,
-     "episode" => $ep,
-     "title" => "",
-     "overview" => "",
-     "tmdbId" => "",
-     "backdrop" => "",
-     "releasedAt" => "2016-08-03T00:00:00.000Z",
-     "episodeReleasedAt" => "2021-09-17T00:00:00.000Z",
-     "updatedAt" => "2000-05-23T03:03:26.787Z"),
-   );
-}
-$post=json_encode($p);
-//echo $post;
-//$post='{"type":"movie","_id":"tt0371746","film":{"_id":"tt0371746","title":"Iron Man","overview":"After being held captive in an Afghan cave, billionaire engineer Tony Stark creates a unique weaponized suit of armor to fight evil.","tmdbId":1726,"backdrop":"/cyecB7godJ6kNHGONFjUyVN9OX5.jpg","releasedAt":"2008-04-30T00:00:00.000Z","updatedAt":"2000-05-23T03:03:26.787Z"}}';
-$head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:106.0) Gecko/20100101 Firefox/106.0',
-'Accept: */*',
-'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
-'Accept-Encoding: deflate',
-'Referer: https://openvids.to/',
-'Content-Type: application/json',
-'Content-Length: '.strlen($post),
-'Origin: https://openvids.to',
-'Alt-Used: openvids.io',
-'Connection: keep-alive',
-'Sec-Fetch-Dest: empty',
-'Sec-Fetch-Mode: cors',
-'Sec-Fetch-Site: same-origin');
+  $s[]=$host;
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $l);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-  //curl_setopt($ch, CURLOPT_USERAGENT, $ua);
+  curl_setopt($ch,CURLOPT_REFERER,"https://vidembed.cc");
+  curl_setopt($ch,CURLOPT_HTTPHEADER,$head);
+  curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 10.0; rv:55.0) Gecko/20100101 Firefox/55.0');
   curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
-  curl_setopt($ch, CURLOPT_POST,1);
-  curl_setopt($ch, CURLOPT_POSTFIELDS,$post);
-  //curl_setopt($ch, CURLOPT_REFERER,"https://openvids.io/movie/tt0371746");
-  //curl_setopt($ch, CURLOPT_HEADER,1);
-  curl_setopt($ch, CURLOPT_HTTPHEADER, $head);
   curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-  curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
   curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
-  curl_setopt($ch, CURLOPT_TIMEOUT, 2);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
   $h = curl_exec($ch);
-  if (preg_match("/servers/",$h)) {
-  $z=json_decode($h,1)['servers'];
-
-  foreach ($z as $key => $value) {
-    //echo $key;
-    $s[]=$value['name'];
-    $r[]="o. ".get_link($value['name'],$value['code']);
+  curl_close($ch);
+  $videos=explode('data-video="',$h);
+  unset($videos[0]);
+  $videos = array_values($videos);
+  foreach($videos as $video) {
+    $t1=explode('"',$video);
+    $l=$t1[0];
+    if ($l) {
+     if (strpos($l,"http") === false)
+       $l="https:".$l;
+     $r[]=$l;
+     $s[]=parse_url($l)['host'];
+    }
   }
   }
-  //print_r ($r);
-  //die();
+//////////////////////////////////////
 ////////////////////////////////////////////////////////////
 // vidsrc.me
 if ($tip=="movie")
@@ -397,39 +318,128 @@ else
      $r[]="https://voidboost.net/embed/".$imdb."?&s=".$sez."&e=".$ep."&t=20&td=20&tlabel=English&cc=off&plang=en&poster=1";
    $s[]="voidboost";
    $imdbid=str_replace("tt","",$imdb);
-   if ($tip=="movie")
-     $l="https://seapi.link/?type=imdb&id=".$imdb."&max_results=1";
-   else
-     $l="https://seapi.link/?type=imdb&id=".$imdb."&season=".$sez."&episode=".$ep."&max_results=1";
-   //echo $l;
-   $ch = curl_init();
-   curl_setopt($ch, CURLOPT_URL, $l);
-   curl_setopt($ch, CURLOPT_USERAGENT, $ua);
-   curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
-   curl_setopt($ch, CURLOPT_RETURNTRANSFER  ,1);  // RETURN THE CONTENTS OF THE CALL
-   curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-   //curl_setopt($ch, CURLOPT_HTTPHEADER,$head);
-   curl_setopt($ch, CURLOPT_ENCODING,"");
-   //curl_setopt($ch, CURLOPT_HEADER,1);
-   curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
-   curl_setopt($ch, CURLOPT_TIMEOUT, 15);
-   $h = curl_exec($ch);
-   curl_close ($ch);
-   $x=json_decode($h,1);
-   //print_r ($x);
-   for ($k=0;$k<count($x['results']);$k++) {
-     $y=$x['results'][$k]['url'];
-     $r[]= $y;
-     $s[]= "1. ".$x['results'][$k]['server'];
-   }
-   $test=$x['results'][0]['url'];
+
 /// embedo.xyz
   if ($tip=="movie")
    $l="https://embedo.xyz/player.php?video_id=".$imdb;
   else
    $l="https://embedo.xyz/player.php?video_id=".$imdb."&s=".$sez."&e=".$ep;
   //echo $l;
+$ua="Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:108.0) Gecko/20100101 Firefox/108.0";
 
+$head=array('User-Agent: '.$ua,
+'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8',
+'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
+'Accept-Encoding: deflate',
+'Alt-Used: embedo.xyz',
+'Connection: keep-alive',
+'Upgrade-Insecure-Requests: 1',
+'Sec-Fetch-Dest: document',
+'Sec-Fetch-Mode: navigate',
+'Sec-Fetch-Site: none',
+'Sec-Fetch-User: ?1');
+//die();
+  $ch = curl_init();
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+  curl_setopt($ch, CURLOPT_ENCODING, "");
+  curl_setopt($ch, CURLOPT_HEADER,1);
+  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+  curl_setopt($ch, CURLOPT_URL, $l);
+  curl_setopt($ch, CURLOPT_HTTPHEADER,$head);
+  $h = curl_exec($ch);
+  curl_close($ch);
+  //echo $h;
+  if (preg_match("/location\:\s*(.+)/i",$h,$m))
+    $link=trim($m[1]);
+  $bk="dHJ1ZS-Qt-PS-QtNj-P3LS-Qz-PzItL-0-V2NzIwODUyO-0Ay-PjU-5";
+  //$bk="dHJ1ZS-Qt-PS-QtNj-P3LS-Qz-PzItL-0-V2NzIwODUyO-0Ay-PjU-4";
+  $post="button-click=".base64_encode($bk)."&button-referer=";
+  //echo base64_decode("ZEhKMVpTLVF0LVBTLVF0TmotUDNMUy1Rei1Qekl0TC0wLVYyTnpJd09EVXlPLTBBeS1QalUtNQ==");
+$head=array('User-Agent: '.$ua,
+'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8',
+'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
+'Accept-Encoding: deflate',
+'Content-Type: application/x-www-form-urlencoded',
+'Content-Length: '.strlen($post),
+'Origin: https://imwatchingmovies.com',
+'Connection: keep-alive',
+'Referer: '.$link,
+'Upgrade-Insecure-Requests: 1',
+'Sec-Fetch-Dest: document',
+'Sec-Fetch-Mode: navigate',
+'Sec-Fetch-Site: same-origin',
+'Sec-Fetch-User: ?1');
+  $ch = curl_init();
+  curl_setopt($ch, CURLOPT_URL, $link);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+  curl_setopt($ch, CURLOPT_ENCODING, "");
+  curl_setopt($ch, CURLOPT_POST,1);
+  curl_setopt($ch, CURLOPT_POSTFIELDS,$post);
+  curl_setopt($ch, CURLOPT_HEADER,1);
+  curl_setopt($ch, CURLOPT_HTTPHEADER,$head);
+  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+
+  $h = curl_exec($ch);
+  curl_close($ch);
+  //echo $h."\n";
+  //die();
+  preg_match("/load_sources\(\"([^\"]+)\"/",$h,$m);
+  $token=$m[1];
+  $l="https://imwatchingmovies.com/response.php";
+  //$l="https://streamembed.net/user_guard.php";
+  $post="token=".$token;
+
+$head=array('User-Agent: '.$ua,
+'Accept: */*',
+'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
+'Accept-Encoding: deflate',
+'Content-Type: application/x-www-form-urlencoded; charset=UTF-8',
+'X-Requested-With: XMLHttpRequest',
+'Content-Length: '.strlen($post),
+'Origin: https://imwatchingmovies.com',
+'Connection: keep-alive',
+'Referer: '.$link,
+'Sec-Fetch-Dest: empty',
+'Sec-Fetch-Mode: cors',
+'Sec-Fetch-Site: same-origin');
+//sleep (5);
+//print_r ($head);
+  $ch = curl_init();
+  curl_setopt($ch, CURLOPT_URL, $l);
+  //curl_setopt($ch, CURLOPT_USERAGENT, $ua);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+  curl_setopt($ch, CURLOPT_ENCODING, "");
+  curl_setopt($ch, CURLOPT_POST,1);
+  curl_setopt($ch, CURLOPT_POSTFIELDS,$post);
+  curl_setopt($ch, CURLOPT_HEADER,1);
+  curl_setopt($ch, CURLOPT_HTTPHEADER,$head);
+  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+  curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+  $h = curl_exec($ch);
+  curl_close($ch);
+  //echo $h;
+$videos = explode('li data-id="', $h);
+unset($videos[0]);
+$videos = array_values($videos);
+foreach($videos as $video) {
+ $t1=explode('"',$video);
+ $id=$t1[0];
+ $t1=explode('data-server="',$video);
+ $t2=explode('"',$t1[1]);
+ $ds=$t2[0];
+ $r[]="https://imwatchingmovies.com/playvideo.php?video_id=".$id."=&server_id=".$ds."&token=".$token."&init=1";
+ $t1=explode('</div>',$video);
+ $s[]="i.".trim($t1[1]);
+}
 ////////////////////////////////////////////////////////////////////////
   if ($tip=="movie")
    $l="https://embedo.xyz/play/movie.php?imdb=".$imdb;
