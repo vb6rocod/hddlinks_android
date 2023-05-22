@@ -94,7 +94,8 @@ else
   $h=curl_exec($ch);
   curl_close($ch);
   //echo $h;
-$videos=explode('<div class="flex-grow"',$h);
+//$videos=explode('<div class="flex-grow"',$h);
+$videos=explode('<div class="w-full grid',$h);
 unset($videos[0]);
 $videos = array_values($videos);
 
@@ -103,8 +104,10 @@ foreach($videos as $video) {
   $t2=explode(">",$t1[1]);
   $t3=explode("<",$t2[1]);
   $title=trim($t3[0]);
-  $t1=explode('class="sub-comment">',$video);
-  $t2=explode("</div",$t1[1]);
+  //$t1=explode('class="sub-comment">',$video);
+  $t1=explode('p class="text-sm font-base overflow-auto h-auto lg:h-16">',$video);
+  //$t2=explode("</div",$t1[1]);
+  $t2=explode('</p',$t1[1]);
   $desc=trim($t2[0]);
   $desc=str_replace('<span style="color: red;">',"",$desc);
   $desc=str_replace('<span style="color: blue;">',"",$desc);

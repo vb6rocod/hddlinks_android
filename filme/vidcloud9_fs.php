@@ -168,6 +168,7 @@ $head=array('Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q
   curl_setopt($ch, CURLOPT_TIMEOUT, 15);
   $h = curl_exec($ch);
   curl_close($ch);
+  //echo $h;
   $videos=explode('data-video="',$h);
   unset($videos[0]);
   $videos = array_values($videos);
@@ -179,6 +180,9 @@ $head=array('Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q
        $l="https:".$l;
      $r[]=urlencode($l);
     }
+  }
+  if (preg_match("/iframe\s*id\=\"embedvideo\"\s*src\=\"([^\"]+)\"/",$h,$m)) {
+   $r[]=urlencode($m[1]);
   }
 
 

@@ -59,7 +59,7 @@ document.onkeypress =  zx;
 <TR>
 <TD width="25%"><a href="filme/diverse.php" target="_blank">diverse</a></TD>
 <TD width="25%"><a href="filme/moviewetrust_s.php?page=1&tip=release&title=moviewetrust&link=" target="_blank">moviewetrust</a></TD>
-<TD width="25%"><a href="filme/hdmoviebox_s.php?page=1&tip=release&title=hdmoviebox&link=" target="_blank">hdmoviebox</a></TD>
+<TD width="25%"><a href="filme/yifytv_s.php?page=1&tip=release&title=ytsmovie&link=" target="_blank">ytsmovie</a></TD>
 <TD width="25%"><a href="filme/2embed_s.php?page=1&tip=release&title=2embed&link=" target="_blank">2embed</a></TD>
 </TR>
 
@@ -88,7 +88,7 @@ document.onkeypress =  zx;
 </TR>
 
 <TR>
-<TD width="25%"><a href="filme/moviehab_s.php?page=1&tip=release&title=moviehab&link=" target="_blank">moviehab</a></TD>
+<TD width="25%"></TD>
 <TD width="25%"><a href="filme/emovies_s.php?page=1&tip=release&title=emovies&link=" target="_blank">emovies</a></TD>
 <TD width="25%"><a href="filme/xemovies_s.php?page=1&tip=release&title=xemovies&link=" target="_blank">xemovies</a></TD>
 <TD width="25%"><a href="filme/sockshare_s.php?page=1&tip=release&title=sockshare&link=" target="_blank">sockshare</a></TD>
@@ -105,7 +105,13 @@ document.onkeypress =  zx;
 <TD width="25%"><a href="filme/moviebox_s.php?page=1&tip=release&title=moviebox&link=" target="_blank">moviebox</a></TD>
 <TD width="25%"><a href="filme/bflix_s.php?page=1&tip=release&title=bflix&link=" target="_blank">bflix</a></TD>
 <TD width="25%"><a href="filme/fmovies_s.php?page=1&tip=release&title=fmovies&link=" target="_blank">fmovies.co</a></TD>
-<TD width="25%"><a href="filme/netfilm_s.php?page=1&tip=release&title=netfilm&link=" target="_blank">netfilm</a></TD>
+<TD width="25%"></TD>
+</TR>
+<TR>
+<TD width="25%"><a href="filme/fmovies1_s.php?page=1&tip=release&title=fmovies&link=" target="_blank">fmovies</a></TD>
+<TD width="25%"><a href="filme/idlixian_s.php?page=1&tip=release&title=idlixian&link=" target="_blank">idlixian</a></TD>
+<TD width="25%"></TD>
+<TD width="25%"></TD>
 </TR>
 <?php
 if (file_exists($base_pass."tvplay.txt")) {

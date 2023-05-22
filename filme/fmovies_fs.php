@@ -220,11 +220,49 @@ if ($tip=="movie") {
   file_put_contents($base_sub."sub_extern.srt",$h1);
   }
   $x=json_decode($h,1)['server'];
-
+  //print_r ($x);
   $videos = array_values($videos);
   foreach($x as $key=>$value) {
+   if (!preg_match("/membed/",$value['link'])) {
    $s[]="Server ".$key;
    $r[]=$value['link'];
+   } else {
+/////////////////////////
+   $s[]="Server ".$key;
+   $r[]=$value['link'];
+  $ch = curl_init();
+  curl_setopt($ch, CURLOPT_URL, $value['link']);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+  curl_setopt($ch,CURLOPT_REFERER,"https://vidembed.cc");
+  curl_setopt($ch,CURLOPT_HTTPHEADER,$head);
+  curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 10.0; rv:55.0) Gecko/20100101 Firefox/55.0');
+  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+  $h = curl_exec($ch);
+  curl_close($ch);
+  //echo $h;
+  $videos=explode('data-video="',$h);
+  unset($videos[0]);
+  $videos = array_values($videos);
+  foreach($videos as $video) {
+    $t1=explode('"',$video);
+    $l=$t1[0];
+    if ($l) {
+     if (strpos($l,"http") === false)
+       $l="https:".$l;
+     $r[]=urlencode($l);
+     $s[]=parse_url($l)['host'];
+    }
+  }
+  if (preg_match("/iframe\s*id\=\"embedvideo\"\s*src\=\"([^\"]+)\"/",$h,$m)) {
+   $r[]=urlencode($m[1]);
+   //echo $m[1];
+   $s[]=parse_url($m[1])['host'];
+  }
+/////////////////////////
+   }
   }
 
 echo '<table border="1" width="100%">';

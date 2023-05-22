@@ -612,9 +612,16 @@ if (preg_match("/filmeonlinegratis\.org/",$filelink)) {
   if (preg_match("/id:\s+(\d+)/",$h2,$m)){
    $id=$m[1];
   }
+  /*
+  if (preg_match("/data\-id\=\"(\d+)/",$h2,$m)){
+   $id=$m[1];
+  }
+  */
+  //data-id="
 //wp-content/themes/grifus/includes/single/second.php
   if (strpos($h2,"grifus/includes") !== false) {
     //$id=str_between($h2,'data: {id: ',')');
+    // wp-content/themes/grifus/includes/single/second.php
     // wp-content/themes/grifus/includes/single/second.php
     $tip=1;
     $post="id=".$id."&logat=1";
@@ -680,6 +687,7 @@ $headers=array('Accept: text/html, */*; q=0.01',
       $h3 = curl_exec($ch);
       curl_close ($ch);
       //echo $h3."\n";
+      
       if (strpos($h3,"filmeserialeonline.org") !== false) {
         $t1=explode('src="',$h3);
         $t2=explode('"',$t1[1]);
@@ -696,7 +704,7 @@ $headers=array('Accept: text/html, */*; q=0.01',
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
         curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
         curl_setopt($ch, CURLOPT_TIMEOUT, 15);
-        $h3 = curl_exec($ch);
+        //$h3 = curl_exec($ch);
         curl_close ($ch);
         //echo $h3."========><><>";
       }
@@ -1398,16 +1406,16 @@ $s=$s."powvideo|povvideo|cloudvideo|vidtodo|vidcloud\.co|flashx\.|vidcloud\d*";
 $s=$s."|putload\.|event\.2target\.net|fembed\.com|streamcherry\.com|hideiframe\.com|";
 $s=$s."filmeonlinehd\.tv\/sharemovie|rovideo\.net\/video|flix555\.com|gamovideo\.com|playhd\.fun|idtbox\.com|";
 $s=$s."bitporno\.com|thevideobee\.to|mangovideo\.|smartshare\.tv|datoporn\.co|xstreamcdn\.com|onlystream\.tv|";
-$s=$s."database\.seriale|drive\.google\.com|videomega\.|vidload\.co|mixdro?p\.|mystream\.to|mstream\.cloud";
+$s=$s."database\.seriale|drive\.google\.com|videomega\.|vidload\.co|mixdro{0,}p\.|mystream\.to|mstream\.cloud";
 $s=$s."|hxload\.|bazavox\.com|cloud\.vidhubstr\.org|vidia\.tv|gomostream\.com|viduplayer\.com|leaked-celebrities\.";
 $s=$s."|prostream\.to|videobin\.co|upstream\.to|playtvid\.com|jetload\.net|vidfast\.co|clipwatching\.";
 $s=$s."|(video|player)\.filmeserialeonline\.org|streamwire\.|cloudvid\.icu|mstream\.xyz|streamhoe\.online|videyo\.";
-$s=$s."|fastvid\.co|vidload\.net|rovideo\.net\/embed|eplayvid\.com|dood\.|mediashore\.org|uptostream\.com";
+$s=$s."|fastvid\.co|vidload\.net|rovideo\.net\/embed|eplayvid\.com|do{2,}d\.|mediashore\.org|uptostream\.com";
 $s=$s."|movcloud\.net|dogestream\.|streamtape\.|jawcloud\.|viphdvid\.|evoload\.|sendvid\.|easyload\.io|okstream\.";
 $s=$s."|youdbox\.com|filmele-online\.com|playtube\.|ninjastream\.to|userload\.co|goplayer\.online|videovard\.|cloudemb\.|streamlare\.";
 $s=$s."|sbembed\.com|sbembed1\.com|sbplay\.|sbvideo\.net|streamsb\.net|sbplay\.one|cloudemb\.com|playersb\.com|tubesb\.com|sbplay\d\.|embedsb\.com";
-$s=$s."|sb\w+\.|sbbrisk\.|sbanh\.|sblanh\.|sbchill\.|sbfast\.com|sblongvu\.com|sbfull\.|sbthe\.|sbspeed\.|tubeload\.|embedo\.|filemoon\.|utbrgebzvhfa\.";
-$s=$s."|streamhide\.|moonmov\.pro/i";
+$s=$s."|lvturbo\.|sb\w+\.|sbbrisk\.|sbanh\.|sblanh\.|sbchill\.|sbfast\.com|sblongvu\.com|sbfull\.|sbthe\.|sbspeed\.|tubeload\.|embedo\.|filemoon\.|utbrgebzvhfa\.";
+$s=$s."|streamhide\.|moonmov\.pro|vgfplay\.|fslinks\./i";
 /////////////////////////////////////////////
 //$x=preg_grep($s,$links);
 //print_r ($x);

@@ -13,7 +13,7 @@ $link=$_POST["link"];
 $title=$_POST["title"];
 $image=urldecode($_POST["image"]);
 
-$file=$base_fav."hdmoviebox_s.dat";
+$file=$base_fav."yifytv_s.dat";
 $arr=array();
 $h="";
 if (file_exists($file)) {

@@ -231,6 +231,7 @@ $head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gec
 'Content-Length: '.strlen($post),
 'Origin: https://movie.squeezebox.dev',
 'Connection: keep-alive');
+
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $l);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);

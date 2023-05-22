@@ -12,77 +12,27 @@ $tit=$_GET["title"];
 $link=$_GET["link"];
 $width="200px";
 $height="278px";
-$last_good="https://net-film.vercel.app";
-
+$last_good="https://bflix.ru";
+$last_good="https://fmovies.to";
+require_once("bunny.php");
+$key="DZmuZuXqa9O0z3b7";
+$host=parse_url($last_good)['host'];
 /* ==================================================== */
 $has_fav="yes";
 $has_search="yes";
 $has_add="yes";
 $has_fs="yes";
-$host=parse_url($last_good)['host'];
-$fav_target="netfilm_s_fav.php?host=".$last_good;
-$add_target="netfilm_s_add.php";
+$fav_target="bflix_f_fav.php?host=".$last_good;
+$add_target="bflix_f_add.php";
 $add_file="";
-$fs_target="netfilm_ep.php";
-$target="netfilm_s.php";
+$fs_target="bflix_fs.php";
+$target="fmovies1_f.php";
 /* ==================================================== */
-$f=array();
-if ($tip=="release")
-$l="https://net-film.vercel.app/api/category?area=&category=1&order=up&params=TV%2CSETI%2CMINISERIES&size=12&sort=".urlencode($link)."&subtitles=&year=";
-else
-$l="https://net-film.vercel.app/api/search?keyword=".urlencode($tit)."&sort=".urlencode($link)."&size=12&params=TV%2CSETI%2CMINISERIES";
-$head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/110.0',
-'Accept: application/json, text/plain, */*',
-'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
-'Accept-Encoding: deflate',
-'Connection: keep-alive',
-'appid: eyJhbGciOiJIUzI1NiJ9',
-'Referer: https://net-film.vercel.app/explore');
-  $ch = curl_init();
-  curl_setopt($ch, CURLOPT_URL, $l);
-  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
-  curl_setopt($ch, CURLOPT_HTTPHEADER, $head);
-  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
-  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
-  $h = curl_exec($ch);
-
-  //echo $h;
-  $r=json_decode($h,1);
-  if ($r['status'] != "200"){
-   $h = curl_exec($ch);
-   $r=json_decode($h,1);
-  }
-  if ($r['status'] != "200"){
-   $h = curl_exec($ch);
-   $r=json_decode($h,1);
-  }
-  curl_close($ch);
-  //print_r ($r);
-  if ($tip=="release") {
-  for ($k=0;$k<count($r['data']);$k++) {
-    $f[] = array($r['data'][$k]['name'],$r['data'][$k]['id'],$r['data'][$k]['coverVerticalUrl'],"");
-    $link=$r['data'][$k]['sort'];
-  }
-  } else {
-  //print_r ($r);
-  for ($k=0;$k<count($r['data']['results']);$k++) {
-    if (preg_match("/tv|MINISERIES/i",$r['data']['results'][$k]['dramaType']['code']))
-    $f[] = array($r['data']['results'][$k]['name'],$r['data']['results'][$k]['id'],$r['data']['results'][$k]['coverVerticalUrl'],"");
-    $link=$r['data']['results'][$k]['sort'];
-  }
-  //die();
-  }
-/* ==================================================== */
-
 $base=basename($_SERVER['SCRIPT_FILENAME']);
-
 $p=$_SERVER['QUERY_STRING'];
 parse_str($p, $output);
 
 if (isset($output['page'])) unset($output['page']);
-$output['link']=$link;
 $p = http_build_query($output);
 if (!isset($_GET["page"]))
   $page=1;
@@ -94,12 +44,12 @@ $prev=$base."?page=".($page-1)."&".$p;
 $tit=unfix_t(urldecode($tit));
 $link=unfix_t(urldecode($link));
 /* ==================================================== */
-if (file_exists($base_cookie."seriale.dat"))
-  $val_search=file_get_contents($base_cookie."seriale.dat");
+if (file_exists($base_cookie."filme.dat"))
+  $val_search=file_get_contents($base_cookie."filme.dat");
 else
   $val_search="";
 $form='<form action="'.$target.'" target="_blank">
-Cautare serial:  <input type="text" id="title" name="title" value="'.$val_search.'">
+Cautare film:  <input type="text" id="title" name="title" value="'.$val_search.'">
 <input type="hidden" name="page" id="page" value="1">
 <input type="hidden" name="tip" id="tip" value="search">
 <input type="hidden" name="link" id="link" value="">
@@ -108,7 +58,7 @@ Cautare serial:  <input type="text" id="title" name="title" value="'.$val_search
 /* ==================================================== */
 if ($tip=="search") {
   $page_title = "Cautare: ".$tit;
-  if ($page == 1) file_put_contents($base_cookie."seriale.dat",$tit);
+  if ($page == 1) file_put_contents($base_cookie."filme.dat",$tit);
 } else
   $page_title=$tit;
 /* ==================================================== */
@@ -173,6 +123,8 @@ function isValid(evt) {
       document.getElementById("send").click();
      } else if (charCode == "50" && e.target.type != "text") {
       document.getElementById("fav").click();
+     } else if (charCode == "48" && e.target.type != "text") {
+       location.reload();
     }
    }
 function isKeyPressed(event) {
@@ -220,7 +172,68 @@ if ($page==1) {
    echo '<TD class="nav" colspan="4" align="right"><a href="'.$prev.'">&nbsp;&lt;&lt;&nbsp;</a> | <a href="'.$next.'">&nbsp;&gt;&gt;&nbsp;</a></TD>'."\r\n";
 }
 echo '</TR>'."\r\n";
-//print_r ($f);
+$f=array();
+if ($tip=="search") {
+ $search= str_replace(" ","+",$tit);
+ if ($page==1)
+  $l=$last_good."/search?keyword=".$search."&vrf=".encodeVrf(str_replace(" ","%20",$tit),$key);
+ else
+  $l=$last_good."/search?keyword=".$search."&vrf=".encodeVrf(str_replace(" ","%20",$tit),$key)."&page=".$page;
+} else {
+ if ($page==1)
+  $l=$last_good."/movies";
+ else
+  $l=$last_good."/movies?page=".$page;
+}
+$head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/109.0',
+'Accept: application/json, text/javascript, */*; q=0.01',
+'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
+'Accept-Encoding: deflate',
+'Referer: '.$last_good.'/movie/infiesto-ronmp',
+'X-Requested-With: XMLHttpRequest',
+'Connection: keep-alive');
+
+  $ch = curl_init();
+  curl_setopt($ch, CURLOPT_URL, $l);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+  curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
+  curl_setopt($ch, CURLOPT_HTTPHEADER,$head);
+  curl_setopt($ch, CURLOPT_ENCODING, "");
+  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 25);
+  $h = curl_exec($ch);
+  curl_close($ch);
+$path = parse_url($l)['path'];
+//echo $h;
+$host=parse_url($l)['host'];
+
+$videos = explode('div class="item"', $h);
+unset($videos[0]);
+$videos = array_values($videos);
+foreach($videos as $video) {
+ $t1=explode('href="',$video);
+ $t2=explode('"',$t1[1]);
+ $link=$last_good.$t2[0];
+
+ $t1=explode('src="',$video);
+ $t2=explode('"',$t1[1]);
+ $image=$t2[0];
+ $t1=explode('title="',$video);
+ $t2=explode('"',$t1[1]);
+ $title=trim($t2[0]);
+ if (preg_match("/div class\=\"meta\">/",$video)) {
+ $t1=explode('div class="meta">',$video);
+ $t2=explode('<',$t1[1]);
+ $year=trim($t2[0]);
+ } else {
+ $t1=explode('<span>',$video);
+ $t2=explode('<',$t1[1]);
+ $year=trim($t2[0]);
+ }
+  if (preg_match("/\/movie\//",$link)) $f[] = array($title,$link,$image,$year);
+}
+//echo $html;
 foreach($f as $key => $value) {
   $title=$value[0];
   $title=prep_tit($title);
@@ -228,24 +241,12 @@ foreach($f as $key => $value) {
   $image=$value[2];
   $year=$value[3];
   $imdb="";
-  $year="";
-  $sez="";
-  $image=$image."?imageView2/1/w/190/h/266/format/webp/interlace/1/ignore-error/1/q/90!/format/webp";
-   if (preg_match("/Season\s*(\d+)/i",$title,$m)) {
-    $tit_serial=trim(str_replace($m[0],"",$title));
-    //$title=trim(str_replace($m[0],"",$title));
-    $sez=$m[1];
-    $tit_imdb=$tit_serial;
-   } else {
-     $sez=1;
-     $tit_serial=$title;
-     $tit_imdb=$tit_serial;
-   }
 
-  $link_f=$fs_target.'?tip=series&link='.urlencode($link).'&title='.urlencode(fix_t($title)).'&image='.$image."&sez=".$sez."&ep=&ep_tit=&year=".$year;
+  $tit_imdb=$title;
+  $link_f=$fs_target.'?tip=movie&link='.urlencode($link).'&title='.urlencode(fix_t($title)).'&image='.$image."&sez=&ep=&ep_tit=&year=".$year;
   if ($title) {
   if ($n==0) echo '<TR>'."\r\n";
-  $val_imdb="tip=series&title=".urlencode(fix_t($tit_imdb))."&year=".$year."&imdb=".$imdb;
+  $val_imdb="tip=movie&title=".urlencode(fix_t($tit_imdb))."&year=".$year."&imdb=".$imdb;
   $fav_link="mod=add&title=".urlencode(fix_t($title))."&link=".urlencode($link)."&image=".urlencode($image)."&year=".$year;
   if ($tast == "NU") {
     echo '<td class="mp" width="25%"><a href="'.$link_f.'" id="myLink'.$w.'" target="_blank" onmousedown="isKeyPressed(event)">

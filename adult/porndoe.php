@@ -14,7 +14,7 @@ $link=$_GET["link"];
 $width="200px";
 $height=intval(200*(219/390))."px";
 /* ==================================================== */
-$has_main="yes";
+$has_main="no";
 $has_fav="no";
 $has_search="yes";
 $has_add="yes";
@@ -236,6 +236,8 @@ foreach($videos as $video) {
   $t2 = explode('"', $t1[1]);
   $link = "https://porndoe.com".$t2[0];
   //$t1=explode('title="',$video);
+  // /watch/pd1o0e8p2y0o
+  //$link=str_replace("/watch/","/video/embed/",$link);
   $link=str_replace("/video/","/video/embed/",$link);
   $t3=explode('title="',$video);
   $t4=explode('"',$t3[1]);
@@ -245,7 +247,7 @@ foreach($videos as $video) {
   $t1 = explode('data-src="', $video);
   $t2 = explode('"', $t1[1]);
   $image = $t2[0];
-  if (strpos($image,"http") === false) $image="https:".$image;
+  if (strpos($image,"http") === false) $image="https://porndoe.com/".$image;
   $t1=explode('data-duration="',$video);
   $t2=explode('"',$t1[1]);
   //$t3=explode("<",$t2[1]);

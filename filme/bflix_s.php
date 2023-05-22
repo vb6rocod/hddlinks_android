@@ -122,6 +122,8 @@ function isValid(evt) {
       document.getElementById("send").click();
      } else if (charCode == "50" && e.target.type != "text") {
       document.getElementById("fav").click();
+     } else if (charCode == "48" && e.target.type != "text") {
+       location.reload();
     }
    }
 function isKeyPressed(event) {
@@ -219,9 +221,15 @@ foreach($videos as $video) {
  $t1=explode('title="',$video);
  $t2=explode('"',$t1[1]);
  $title=trim($t2[0]);
+ if (preg_match("/div class\=\"meta\">/",$video)) {
+ $t1=explode('div class="meta">',$video);
+ $t2=explode('<',$t1[1]);
+ $year=trim($t2[0]);
+ } else {
  $t1=explode('<span>',$video);
  $t2=explode('<',$t1[1]);
- $year=$t2[0];
+ $year=trim($t2[0]);
+ }
   if (preg_match("/\/series\//",$link)) $f[] = array($title,$link,$image,$year);
 }
 foreach($f as $key => $value) {

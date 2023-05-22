@@ -210,6 +210,7 @@ $l="https://databasegdriveplayer.xyz/player.php?type=series&imdb=".$imdb."&seaso
   $h = curl_exec($ch);
   curl_close ($ch);
   //echo $h;
+  if (preg_match("/href\=\"\/\//",$h)) {
   $t1=explode('href="//',$h);
   $t2=explode('"',$t1[1]);
   $l="https://".$t2[0];
@@ -242,6 +243,7 @@ $l="https://databasegdriveplayer.xyz/player.php?type=series&imdb=".$imdb."&seaso
      $r[]=$l;
      $s[]=parse_url($l)['host'];
     }
+  }
   }
   }
 //////////////////////////////////////

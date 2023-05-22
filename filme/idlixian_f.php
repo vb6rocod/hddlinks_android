@@ -12,18 +12,19 @@ $tit=$_GET["title"];
 $link=$_GET["link"];
 $width="200px";
 $height="278px";
-$last_good="https://moviesnipipay.me";
+$last_good="https://88.210.14.111";
+
 $host=parse_url($last_good)['host'];
 /* ==================================================== */
 $has_fav="yes";
 $has_search="yes";
 $has_add="yes";
 $has_fs="yes";
-$fav_target="moviesnipipay_f_fav.php?host=".$last_good;
-$add_target="moviesnipipay_f_add.php";
+$fav_target="idlixian_f_fav.php?host=".$last_good;
+$add_target="idlixian_f_add.php";
 $add_file="";
-$fs_target="moviesnipipay_fs.php";
-$target="moviesnipipay_f.php";
+$fs_target="idlixian_fs.php";
+$target="idlixian_f.php";
 /* ==================================================== */
 $base=basename($_SERVER['SCRIPT_FILENAME']);
 $p=$_SERVER['QUERY_STRING'];
@@ -120,6 +121,8 @@ function isValid(evt) {
       document.getElementById("send").click();
      } else if (charCode == "50" && e.target.type != "text") {
       document.getElementById("fav").click();
+     } else if (charCode == "48" && e.target.type != "text") {
+       location.reload();
     }
    }
 function isKeyPressed(event) {
@@ -168,34 +171,60 @@ if ($page==1) {
 }
 echo '</TR>'."\r\n";
 $f=array();
-//https://moviesnipipay.me/page/2/?s=star
 if ($tip=="search") {
  $search= str_replace(" ","+",$tit);
  if ($page==1)
-  $l=$last_good."/?s=".$search;
+  $l=$last_good."/search/".str_replace(" ","%20",$tit);
  else
-  $l=$last_good."/page/".$page."/?s=".$search;
+  $l=$last_good."/search/".str_replace(" ","%20",$tit)."/page/".$page."/";
 } else {
  if ($page==1)
-  $l=$last_good."/latest-movies/";
+  $l=$last_good."/movie/";
  else
-  $l=$last_good."/latest-movies/page/".$page."/";
+  $l=$last_good."/movie/page/".$page."/";
 }
-$ua="Mozilla/5.0 (Windows NT 10.0; rv:75.0) Gecko/20100101 Firefox/75.0";
+$head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/112.0',
+'Accept: application/json, text/javascript, */*; q=0.01',
+'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
+'Accept-Encoding: deflate',
+'X-Requested-With: XMLHttpRequest',
+'Connection: keep-alive',
+'Referer: '.$last_good);
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $l);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
   curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+  curl_setopt($ch, CURLOPT_HTTPHEADER, $head);
   curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+  curl_setopt($ch, CURLOPT_ENCODING, "");
   curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
   curl_setopt($ch, CURLOPT_TIMEOUT, 25);
   $h = curl_exec($ch);
   curl_close($ch);
+
 $path = parse_url($l)['path'];
 //echo $h;
 $host=parse_url($l)['host'];
+if ($tip=="release") {
+$videos = explode('<article id="post-', $h);
+unset($videos[0]);
+$videos = array_values($videos);
+foreach($videos as $video) {
+ $t1=explode('href="',$video);
+ $t2=explode('"',$t1[1]);
+ $link=$t2[0];
+ //echo $link;
+ $t3=explode(">",$t1[2]);
+ $t4=explode("<",$t3[1]);
+ $title=trim($t4[0]);
+ $t1=explode('src="',$video);
+ $t2=explode('"',$t1[1]);
+ $image=$t2[0];
 
+ $year="";
+  if (preg_match("/\/movie\//",$link) && !preg_match("/data dfeatur/",$video)) $f[] = array($title,$link,$image,$year);
+}
+} else {
 $videos = explode('<article', $h);
 unset($videos[0]);
 $videos = array_values($videos);
@@ -203,31 +232,29 @@ foreach($videos as $video) {
  $t1=explode('href="',$video);
  $t2=explode('"',$t1[1]);
  $link=$t2[0];
- if ($link[0]=="/")
-  $link="https://moviesnipipay.me".$link;
- elseif (substr($link, 0, 4) == "http")
-  $link=$t2[0];
- else
-  $link="https://moviesnipipay.me".$path.$link;
+ if (preg_match("/\/movie\//",$link)) {
+ $t3=explode(">",$t1[2]);
+ $t4=explode("<",$t3[1]);
+ $title=trim($t4[0]);
  $t1=explode('src="',$video);
  $t2=explode('"',$t1[1]);
  $image=$t2[0];
- $t1=explode('entry-title" itemprop="headline">',$video);
- $t2=explode('<',$t1[1]);
- $title=trim($t2[0]);
-
  $year="";
- $f[] = array($title,$link,$image,$year);
+ }
+  if (preg_match("/\/movie\//",$link)) $f[] = array($title,$link,$image,$year);
 }
+}
+//print_r ($f);
 //echo $html;
 foreach($f as $key => $value) {
   $title=$value[0];
-  $title=prep_tit($title);
+  //$title=prep_tit($title);
+  //$title = trim(preg_replace("/(\[[^\]]+\])$/","",$title));
+  $title=html_entity_decode($title);
   $link=$value[1];
   $image=$value[2];
   $year=$value[3];
   $imdb="";
-  $year="";
   $rest = substr($title, -6);
   if (preg_match("/\((\d+)\)/",$rest,$m)) {
    $year=$m[1];
@@ -236,6 +263,7 @@ foreach($f as $key => $value) {
    $year="";
    $tit_imdb=$title;
   }
+  //$tit_imdb=$title;
   $link_f=$fs_target.'?tip=movie&link='.urlencode($link).'&title='.urlencode(fix_t($title)).'&image='.$image."&sez=&ep=&ep_tit=&year=".$year;
   if ($title) {
   if ($n==0) echo '<TR>'."\r\n";

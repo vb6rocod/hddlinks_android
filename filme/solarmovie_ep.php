@@ -68,7 +68,7 @@ $t1=explode("- Season",$tit);
 $tit1=trim($t1[0]);
 $t1 = explode("- Miniseries",$tit1);
 $tit1=trim($t1[0]);
-$html=str_between($html,'<ul id=episodes','</ul');
+$html=str_between($html,'<ul id="episodes','</ul');    //><ul id="episodes-sv-1
 $videos = explode('data-id=', $html);
 unset($videos[0]);
 //$videos = array_values($videos);

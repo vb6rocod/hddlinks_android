@@ -5,9 +5,9 @@ $host=$_GET['host'];
 $page_title="Seriale favorite";
 $width="200px";
 $height="278px";
-$add_target="netfilm_s_add.php";
-$fs_target="netfilm_ep.php";
-$file=$base_fav."netfilm_s.dat";
+$add_target="idlixian_s_add.php";
+$fs_target="idlixian_ep.php";
+$file=$base_fav."idlixian_s.dat";
 ?>
 <html><head>
 <meta http-equiv="content-type" content="text/html; charset=UTF-8">
@@ -176,20 +176,16 @@ foreach($arr as $key => $value) {
     $tit_imdb=$title;
     //$image=$host.parse_url($image)['path'];
     $year="";
-    if (!preg_match("/imageView2/",$image))
-    $image=$image."?imageView2/1/w/190/h/266/format/webp/interlace/1/ignore-error/1/q/90!/format/webp";
-   if (preg_match("/Season\s*(\d+)/i",$title,$m)) {
-    $tit_serial=trim(str_replace($m[0],"",$title));
-    //$title=trim(str_replace($m[0],"",$title));
-    $sez=$m[1];
-    $tit_imdb=$tit_serial;
-   } else {
-     $sez=1;
-     $tit_serial=$title;
-     $tit_imdb=$tit_serial;
-   }
+  $rest = substr($title, -6);
+  if (preg_match("/\((\d+)\)/",$rest,$m)) {
+   $year=$m[1];
+   $tit_imdb=trim(str_replace($m[0],"",$title));
+  } else {
+   $year="";
+   $tit_imdb=$title;
+  }
     //$link=$host.parse_url($link)['path'];
-    $link_f=$fs_target.'?tip=series&link='.urlencode($link).'&title='.urlencode(fix_t($title)).'&image='.$image."&sez=".$sez."&ep=&ep_tit=&year=".$year;
+    $link_f=$fs_target.'?tip=series&link='.urlencode($link).'&title='.urlencode(fix_t($title)).'&image='.$image."&sez=&ep=&ep_tit=&year=".$year;
   if ($n==0) echo '<TR>'."\r\n";
   $val_imdb="tip=series&title=".urlencode(fix_t($tit_imdb))."&year=".$year."&imdb=".$imdb;
   $fav_link="file=&mod=del&title=".urlencode(fix_t($title))."&link=".urlencode($link)."&image=".urlencode($image)."&year=".$year;

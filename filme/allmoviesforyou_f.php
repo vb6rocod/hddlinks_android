@@ -15,6 +15,7 @@ $height="278px";
 $last_good="https://allmoviesforyou.net";
 //$last_good="https://allmoviesforyou.co";
 // https://cinemashack.co/movies/
+$last_good="https://amfy.io";
 $host=parse_url($last_good)['host'];
 /* ==================================================== */
 $has_fav="yes";
@@ -205,20 +206,20 @@ foreach($videos as $video) {
  $t2=explode('"',$t1[1]);
  $link=$t2[0];
  if ($link[0]=="/")
-  $link="https://allmoviesforyou.net".$link;
+  $link="https://".$host.$link;
  elseif (substr($link, 0, 4) == "http")
   $link=$t2[0];
  else
-  $link="https://allmoviesforyou.net".$path.$link;
+  $link="https://".$host.$path.$link;
  $t1=explode('data-src="',$video);
  $t2=explode('"',$t1[1]);
  $image=$t2[0];
  $t1=explode('class="Title">',$video);
  $t2=explode('<',$t1[1]);
  $title=trim($t2[0]);
- $t1=explode('class="Qlty Yr">',$video);
- $t2=explode('<',$t1[1]);
- $year=$t2[0];
+ //$t1=explode('class="Qlty Yr">',$video);
+ //$t2=explode('<',$t1[1]);
+ $year="";
   if (preg_match("/\/movies\//",$link)) $f[] = array($title,$link,$image,$year);
 }
 //echo $html;

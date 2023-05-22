@@ -18,6 +18,7 @@ $has_search="yes";
 $has_add="yes";
 $has_fs="yes";
 $last_good="https://allmoviesforyou.net";
+$last_good="https://amfy.io";
 $host=parse_url($last_good)['host'];
 $fav_target="allmoviesforyou_s_fav.php?host=".$last_good;
 $add_target="allmoviesforyou_s_add.php";
@@ -206,20 +207,20 @@ foreach($videos as $video) {
  $t2=explode('"',$t1[1]);
  $link=$t2[0];
  if ($link[0]=="/")
-  $link="https://allmoviesforyou.net".$link;
+  $link="https://".$host.$link;
  elseif (substr($link, 0, 4) == "http")
   $link=$t2[0];
  else
-  $link="https://allmoviesforyou.net".$path.$link;
+  $link="https://".$host.$path.$link;
  $t1=explode('data-src="',$video);
  $t2=explode('"',$t1[1]);
  $image=$t2[0];
  $t1=explode('class="Title">',$video);
  $t2=explode('<',$t1[1]);
  $title=trim($t2[0]);
- $t1=explode('class="Qlty Yr">',$video);
- $t2=explode('<',$t1[1]);
- $year=$t2[0];
+ //$t1=explode('class="Qlty Yr">',$video);
+ //$t2=explode('<',$t1[1]);
+ $year="";
   if (preg_match("/\/series\//",$link)) $f[] = array($title,$link,$image,$year,$year);
 }
 foreach($f as $key => $value) {
