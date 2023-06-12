@@ -8,8 +8,7 @@ $list = glob($base_cookie."*.mcloud");
     unlink($l);
 }
 require_once("bunny.php");
-$key="DZmuZuXqa9O0z3b7";
-
+$key="MPPBJLgFwShfqIBx";
 if (file_exists($base_pass."debug.txt"))
  $debug=true;
 else
@@ -153,11 +152,11 @@ echo '<BR>';
 $r=array();
 $s=array();
 //echo $link;
+//die();
 if ($tip=="movie") {
 $last_good="https://".parse_url($link)['host'];
 $id = substr(strrchr($link, "-"), 1);
-$vrf=encodeVrf($id,$key);
-$l=$last_good."/ajax/film/servers?id=".$id."&vrf=".$vrf."&token=";
+//echo $link;
 $head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/109.0',
 'Accept: application/json, text/javascript, */*; q=0.01',
 'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
@@ -165,7 +164,77 @@ $head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gec
 'Referer: '.$link,
 'X-Requested-With: XMLHttpRequest',
 'Connection: keep-alive');
+  $ch = curl_init();
+  curl_setopt($ch, CURLOPT_URL, $link);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+  curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
+  curl_setopt($ch, CURLOPT_HTTPHEADER,$head);
+  curl_setopt($ch, CURLOPT_ENCODING, "");
+  ///curl_setopt($ch, CURLOPT_HEADER,1);
+  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 25);
+  $h = curl_exec($ch);
+  //echo $h;
+  $r=json_decode($h,1);
+  $h=$r["result"];
+  //echo $h;
+  $t1=explode('data-id="',$h);
+  $t2=explode('"',$t1[1]);
+  $id=$t2[0];
+  $vrf=encodeVrf($id,$key);
 
+//$l=$last_good."/ajax/film/servers?id=".$id."&vrf=".$vrf."&token=";
+//$l=$last_good."/ajax/server/list/".$id."?vrf=".$vrf;
+  $l=$last_good."/ajax/episode/list/".$id."?vrf=".$vrf;
+  curl_setopt($ch, CURLOPT_URL, $l);
+  $h = curl_exec($ch);
+  //echo $h;
+  $r=json_decode($h,1);
+  $h=$r["result"];
+  $t1=explode('data-id="',$h);
+  $t2=explode('"',$t1[1]);
+  $id1=$t2[0];
+  $vrf=encodeVrf($id1,$key);
+  $l=$last_good."/ajax/server/list/".$id1."?vrf=".$vrf;
+  curl_setopt($ch, CURLOPT_URL, $l);
+  $h = curl_exec($ch);
+  $r=json_decode($h,1);
+  $h=$r["result"];
+
+
+  curl_close($ch);
+
+  //echo $h;
+  //<li class="server
+$r=array();
+if (preg_match("/<div class\=\"film\-server\"/",$h))
+$videos = explode('<div class="film-server"', $h);
+else
+$videos=explode('<li class="server',$h);
+unset($videos[0]);
+$videos = array_values($videos);
+foreach($videos as $video) {
+ $t1=explode('data-link-id="',$video);
+ $t2=explode('"',$t1[1]);
+ $t3=explode('data-id="',$video);
+ $t4=explode('"',$t3[1]);
+ $r[$t4[0]]=$t2[0];
+}
+} else {
+  $t1=explode("&",$link);
+  $link=$t1[0];
+  $last_good=$t1[1];
+  $vrf=encodeVrf($link,$key);
+  $l=$last_good."/ajax/server/list/".$link."?vrf=".$vrf;
+  //echo $l;
+$head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/109.0',
+'Accept: application/json, text/javascript, */*; q=0.01',
+'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
+'Accept-Encoding: deflate',
+'Referer: '.$last_good,
+'X-Requested-With: XMLHttpRequest',
+'Connection: keep-alive');
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $l);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
@@ -180,31 +249,31 @@ $head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gec
   curl_close($ch);
   //echo $h;
   $r=json_decode($h,1);
-  $h=$r['html'];
-  //echo $h;
-$videos = explode('div class="server', $h);
+  $h=$r["result"];
+$r=array();
+if (preg_match("/<div class\=\"film\-server\"/",$h))
+$videos = explode('<div class="film-server"', $h);
+else
+$videos=explode('<li class="server',$h);
 unset($videos[0]);
 $videos = array_values($videos);
 foreach($videos as $video) {
- $t1=explode("<div>",$video);
- $t2=explode("<",$t1[1]);
+ $t1=explode('data-link-id="',$video);
+ $t2=explode('"',$t1[1]);
  $t3=explode('data-id="',$video);
  $t4=explode('"',$t3[1]);
- $s[$t4[0]]=$t2[0];
+ $r[$t4[0]]=$t2[0];
 }
-$t1=explode("data-ep='",$h);
-$t2=explode("'",$t1[1]);
 
-$r=json_decode($t2[0],1);
-} else {
- $r=json_decode($link,1);
- $s=array("41"=>"Vidstream","28"=>"MyCloud","45"=>"Filemoon","40"=>"Streamtape");
 }
+$s=array("41"=>"Vidstream","28"=>"MyCloud","45"=>"Filemoon","40"=>"Streamtape");
 //print_r ($r);
 //print_r ($s);
 //echo $s[key($r)];
 foreach ($r as $kk => $v) {
   $c_link="https://bflix.ru/ajax/episode/info?id=".$v;
+  $vrf=encodeVrf($v,$key);
+  $c_link=$last_good."/ajax/server/".$v."?vrf=".$vrf;
   $openload=$s[$kk];
   if (preg_match("/vidstream|mycloud/i",$openload)) {
   $head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/109.0',
@@ -226,11 +295,14 @@ foreach ($r as $kk => $v) {
   curl_setopt($ch, CURLOPT_TIMEOUT, 15);
   $h = curl_exec($ch);
   curl_close($ch);
-  $url=json_decode($h,1)['url'];
-  $mcloud=decodeVrf($url,$key);
+  //echo $h;
+  $url=json_decode($h,1)['result']['url'];
+  //echo $url."\n";
+  $key_dec="hlPeNwkncH0fq9so";
+  $mcloud=decodeVrf($url,$key_dec);
   $r[$kk]=$mcloud;
   } else {
-  $r[$kk]="https://bflix.ru/ajax/episode/info?id=".$v;
+  $r[$kk]=$last_good."/ajax/server/".$v."?vrf=".urlencode($vrf);
   }
 }
 reset($r);
@@ -300,7 +372,9 @@ echo '</tr>';
 echo '</table>';
 //////////////////////////
 foreach ($r as $kk => $v) {
-  $c_link="https://bflix.ru/ajax/episode/info?id=".$v;
+  $vrf=encodeVrf($v,$key);
+  $c_link=$last_good."/ajax/server/".$v."?vrf=".$vrf;
+
   $openload=$s[$kk];
   if (preg_match("/vidstream|mycloud/i",$openload)) {
   $head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/109.0',

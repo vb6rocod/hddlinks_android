@@ -13,6 +13,7 @@ $link=$_GET["link"];
 $width="200px";
 $height="278px";
 $last_good="https://88.210.14.111";
+$last_good="https://77.105.142.75";
 
 $host=parse_url($last_good)['host'];
 /* ==================================================== */

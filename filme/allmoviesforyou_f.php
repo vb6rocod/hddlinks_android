@@ -16,6 +16,7 @@ $last_good="https://allmoviesforyou.net";
 //$last_good="https://allmoviesforyou.co";
 // https://cinemashack.co/movies/
 $last_good="https://amfy.io";
+$last_good="https://allmovies.gg";
 $host=parse_url($last_good)['host'];
 /* ==================================================== */
 $has_fav="yes";

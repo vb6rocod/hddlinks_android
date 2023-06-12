@@ -12,19 +12,19 @@ $tit=$_GET["title"];
 $link=$_GET["link"];
 $width="200px";
 $height="278px";
-$last_good="https://sockshare1.com";
-$last_good="https://wat32.tv";
+$last_good="https://tugaflix.best";
+
 $host=parse_url($last_good)['host'];
 /* ==================================================== */
 $has_fav="yes";
 $has_search="yes";
 $has_add="yes";
 $has_fs="yes";
-$fav_target="sockshare_f_fav.php?host=".$last_good;
-$add_target="sockshare_f_add.php";
+$fav_target="tugaflix_f_fav.php?host=".$last_good;
+$add_target="tugaflix_f_add.php";
 $add_file="";
-$fs_target="sockshare_fs.php";
-$target="sockshare_f.php";
+$fs_target="tugaflix_fs.php";
+$target="tugaflix_f.php";
 /* ==================================================== */
 $base=basename($_SERVER['SCRIPT_FILENAME']);
 $p=$_SERVER['QUERY_STRING'];
@@ -121,6 +121,8 @@ function isValid(evt) {
       document.getElementById("send").click();
      } else if (charCode == "50" && e.target.type != "text") {
       document.getElementById("fav").click();
+     } else if (charCode == "48" && e.target.type != "text") {
+       location.reload();
     }
    }
 function isKeyPressed(event) {
@@ -168,54 +170,83 @@ if ($page==1) {
    echo '<TD class="nav" colspan="4" align="right"><a href="'.$prev.'">&nbsp;&lt;&lt;&nbsp;</a> | <a href="'.$next.'">&nbsp;&gt;&gt;&nbsp;</a></TD>'."\r\n";
 }
 echo '</TR>'."\r\n";
-if($tip=="release") {
-  $l=$last_good."/cinema-movies/page-".$page.".html";
+$f=array();
+if ($tip=="search") {
+ $search= str_replace(" ","+",$tit);
+ if ($page==1)
+  $l=$last_good."/filmes/?s=".search;
+ else
+  $l=$last_good."/filmes/page/".$page."/?s=".$search;
 } else {
-  $search=str_replace(" ","+",$tit);
-  $l = $last_good."/search-movies/".$search."/page-".$page.".html";
+ if ($page==1)
+  $l=$last_good."/filmes/";
+ else
+  $l=$last_good."/filmes/page/".$page."/";
 }
-///////////////////////////////////////////////
-$ua = $_SERVER['HTTP_USER_AGENT'];
-$ua="Mozilla/5.0 (Windows NT 10.0; rv:71.0) Gecko/20100101 Firefox/71.0";
-
-
-$host=parse_url($l)['host'];
-  $ch = curl_init($l);
-  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
+$head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/112.0',
+'Accept: application/json, text/javascript, */*; q=0.01',
+'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
+'Accept-Encoding: deflate',
+'X-Requested-With: XMLHttpRequest',
+'Connection: keep-alive',
+'Referer: '.$last_good);
+  $ch = curl_init();
+  curl_setopt($ch, CURLOPT_URL, $l);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
   curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
-  curl_setopt($ch, CURLOPT_RETURNTRANSFER  ,1);  // RETURN THE CONTENTS OF THE CALL
+  curl_setopt($ch, CURLOPT_HTTPHEADER, $head);
   curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+  curl_setopt($ch, CURLOPT_ENCODING, "");
   curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
   curl_setopt($ch, CURLOPT_TIMEOUT, 25);
-  $html = curl_exec($ch);
-  curl_close ($ch);
-//echo $html;
-$videos = explode('<div class="itemBody', $html);
+  $h = curl_exec($ch);
+  curl_close($ch);
+
+$path = parse_url($l)['path'];
+//echo $h;
+$host=parse_url($l)['host'];
+
+$videos = explode('div class="poster', $h);
 unset($videos[0]);
 $videos = array_values($videos);
 foreach($videos as $video) {
-  $t1 = explode('href="',$video);
-  $t2 = explode('"', $t1[1]);
-  $link = $t2[0];
-  $t1 = explode('class="title">', $video);
-  $t2 = explode('>', $t1[1]);
-  $t3=explode("<",$t2[1]);
-  $title = $t3[0];
-  $title = prep_tit($title);
-  $t1 = explode('src="', $video);
-  $t2 = explode('"', $t1[1]);
-  $image = $t2[0];
-  if (strpos($image,"http") === false) $image="https:".$image;
-  //$tit_imdb=$title;
-  //$imdb="";
-  if (preg_match("/status-year\"\>(\d{4}).*?\</",$video,$m))
-    $year=$m[1];
-  else
-    $year="";
-  $tit_imdb=$title;
+ $t1=explode('href="',$video);
+ $t2=explode('"',$t1[1]);
+ $link=$t2[0];
+ //echo $link;
+ $t3=explode('title="',$video);
+ $t4=explode('"',$t3[1]);
+ $title=trim($t4[0]);
+ $t1=explode('src="',$video);
+ $t2=explode('"',$t1[1]);
+ $image=$t2[0];
+
+ $year="";
+  if (preg_match("/\/filmes\//",$link)) $f[] = array($title,$link,$image,$year);
+}
+
+//print_r ($f);
+//echo $html;
+foreach($f as $key => $value) {
+  $title=$value[0];
+  //$title=prep_tit($title);
+  //$title = trim(preg_replace("/(\[[^\]]+\])$/","",$title));
+  $title=html_entity_decode($title);
+  $link=$value[1];
+  $image=$value[2];
+  $year=$value[3];
   $imdb="";
+  $rest = substr($title, -6);
+  if (preg_match("/\((\d+)\)/",$rest,$m)) {
+   $year=$m[1];
+   $tit_imdb=trim(str_replace($m[0],"",$title));
+  } else {
+   $year="";
+   $tit_imdb=$title;
+  }
+  //$tit_imdb=$title;
   $link_f=$fs_target.'?tip=movie&link='.urlencode($link).'&title='.urlencode(fix_t($title)).'&image='.$image."&sez=&ep=&ep_tit=&year=".$year;
-  if ($title && !preg_match("/season/i",$link)) {
+  if ($title) {
   if ($n==0) echo '<TR>'."\r\n";
   $val_imdb="tip=movie&title=".urlencode(fix_t($tit_imdb))."&year=".$year."&imdb=".$imdb;
   $fav_link="mod=add&title=".urlencode(fix_t($title))."&link=".urlencode($link)."&image=".urlencode($image)."&year=".$year;

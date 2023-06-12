@@ -133,6 +133,7 @@ echo '<BR>';
 $r=array();
 //echo $link;
 $host=parse_url($link)['host'];
+//$host="amfy.io";
 $ua="Mozilla/5.0 (Windows NT 10.0; rv:89.0) Gecko/20100101 Firefox/89.0";
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $link);
@@ -146,6 +147,7 @@ $ua="Mozilla/5.0 (Windows NT 10.0; rv:89.0) Gecko/20100101 Firefox/89.0";
   $h = curl_exec($ch);
   curl_close($ch);
   //echo $h;
+  //https://allmovies.gg/?trembed=1&#038;trid=34427&trtype=1
   if (preg_match("/trembed\=/",$h)) {
   $t1=explode("?trembed=",$h);
   $t2=explode('"',$t1[1]);

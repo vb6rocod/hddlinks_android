@@ -204,6 +204,7 @@ else
 echo '</TR>'."\r\n";
 // https://pornkino.cc/adult/page/2/?filter=latest
 // https://pornkino.cc/adult/genres/amateur/page/2
+//view-source:https://pandamovie.info/page/2/?s=mom
 if($tip=="release") {
   if ($page>1)
     $l=$link."/page/".$page;
@@ -212,9 +213,9 @@ if($tip=="release") {
 } else {
   $search=str_replace(" ","+",$tit);
   if ($page > 1)
-    $l="https://pandamovie.info/search/".$search."/page/".$page."/";
+    $l="https://pandamovie.info/page/".$page."/?s=".$search;
   else
-    $l="https://pandamovie.info/search/".$search;
+    $l="https://pandamovie.info/?s=".$search;
 }
 $host=parse_url($l)['host'];
   $ch = curl_init();
@@ -242,10 +243,10 @@ foreach($videos as $video) {
   $title=$t2[0];
   $title = trim(strip_tags($title));
   $title = prep_tit($title);
-  $t1 = explode('src="', $video);
+  $t1 = explode('original-src="', $video);
   $t2 = explode('"', $t1[1]);
   $image = $t2[0];
-  if (strpos($image,"http") === false) $image="https:".$image;
+  if (strpos($image,"http") === false && $image) $image="https:".$image;
   //$image="r.php?file=".$image;
   $durata="";
   $durata = preg_replace("/\n|\r/"," ",strip_tags($durata));
@@ -265,10 +266,10 @@ foreach($videos as $video) {
   $title=$t2[0];
   $title = trim(strip_tags($title));
   $title = prep_tit($title);
-  $t1 = explode('src="', $video);
+  $t1 = explode('original-src="', $video);
   $t2 = explode('"', $t1[1]);
   $image = $t2[0];
-  if (strpos($image,"http") === false) $image="https:".$image;
+  if (strpos($image,"http") === false && $image) $image="https:".$image;
   //$image="r.php?file=".$image;
   $durata="";
   $durata = preg_replace("/\n|\r/"," ",strip_tags($durata));

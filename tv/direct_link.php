@@ -1428,6 +1428,21 @@ if ($from=="tvrplus_y") {
  else
   $link=youtube("https://www.youtube.com/watch?v=".$link);
 }
+if ($from=="b98") {
+  $ch = curl_init();
+  curl_setopt($ch, CURLOPT_URL, $link);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+  curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows; U; Windows NT 6.1; en-US; rv:1.9.1.2) Gecko/20090729 Firefox/3.5.2 GTB5');
+  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+  $html = curl_exec($ch);
+  curl_close($ch);
+  $t1=explode('file: "',$html);
+  $t2=explode('"',$t1[1]);
+  $link=$t2[0];
+}
 if ($from=="protvstiri") {
 $ua = $_SERVER['HTTP_USER_AGENT'];
 $ua = 'Mozilla/5.0(Linux;Android 10.1.2) MXPlayer';

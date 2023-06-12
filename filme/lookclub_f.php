@@ -203,8 +203,11 @@ foreach($videos as $video) {
  $t1=explode('href="',$video);
  $t2=explode('"',$t1[1]);
  $link=$t2[0];
-
- $t1=explode('src="',$video);
+ $t0=explode("<img",$video);
+ if (preg_match("/data\-lazy\-src/",$video))
+ $t1=explode('data-lazy-src="',$t0[1]);
+ else
+ $t1=explode('src="',$t0[1]);
  $t2=explode('"',$t1[1]);
  $image=$t2[0];
  $t1=explode('rel="bookmark">',$video);

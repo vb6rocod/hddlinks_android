@@ -14,8 +14,7 @@ $width="200px";
 $height="278px";
 $last_good="https://bflix.ru";
 $last_good="https://fmovies.to";
-require_once("bunny.php");
-$key="DZmuZuXqa9O0z3b7";
+
 /* ==================================================== */
 $has_fav="yes";
 $has_search="yes";
@@ -176,14 +175,14 @@ $f=array();
 if ($tip=="search") {
  $search= str_replace(" ","+",$tit);
  if ($page==1)
-  $l=$last_good."/search?keyword=".$search."&vrf=".encodeVrf(str_replace(" ","%20",$tit),$key);
+  $l=$last_good."/filter?keyword=".$search."&type%5B%5D=tv&sort=most_relevance";
  else
-  $l=$last_good."/search?keyword=".$search."&vrf=".encodeVrf(str_replace(" ","%20",$tit),$key)."&page=".$page;
+  $l=$last_good."/filter?keyword=".$search."&type%5B%5D=tv&sort=most_relevance"."&page=".$page;
 } else {
  if ($page==1)
-  $l=$last_good."/tv-series";
+  $l=$last_good."/tv";
  else
-  $l=$last_good."/tv-series?page=".$page;
+  $l=$last_good."/tv?page=".$page;
 }
 $head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/109.0',
 'Accept: application/json, text/javascript, */*; q=0.01',
@@ -206,24 +205,26 @@ $head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gec
   curl_close($ch);
 $path = parse_url($l)['path'];
 //echo $h;
+$x=json_decode($h,1);
+$h=$x['result'];
 $host=parse_url($l)['host'];
-
-$videos = explode('div class="item"', $h);
+//echo $h;
+$videos = explode('<div class="item"', $h);
 unset($videos[0]);
 $videos = array_values($videos);
 foreach($videos as $video) {
  $t1=explode('href="',$video);
  $t2=explode('"',$t1[1]);
  $link=$last_good.$t2[0];
-
+ $t3=explode('>',$t1[2]);
+ $t4=explode('</',$t3[1]);
+ $title=trim($t4[0]);
  $t1=explode('src="',$video);
  $t2=explode('"',$t1[1]);
  $image=$t2[0];
- $t1=explode('title="',$video);
- $t2=explode('"',$t1[1]);
- $title=trim($t2[0]);
- if (preg_match("/div class\=\"meta\">/",$video)) {
- $t1=explode('div class="meta">',$video);
+
+ if (preg_match("/span class\=\"dot\">/",$video)) {
+ $t1=explode('span class="dot">',$video);
  $t2=explode('<',$t1[1]);
  $year=trim($t2[0]);
  } else {
@@ -231,7 +232,7 @@ foreach($videos as $video) {
  $t2=explode('<',$t1[1]);
  $year=trim($t2[0]);
  }
-  if (preg_match("/\/series\//",$link)) $f[] = array($title,$link,$image,$year);
+  if (preg_match("/\/tv\//",$link)) $f[] = array($title,$link,$image,$year);
 }
 foreach($f as $key => $value) {
   $title=$value[0];

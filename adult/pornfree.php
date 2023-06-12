@@ -206,17 +206,18 @@ echo '</TR>'."\r\n";
 // https://pornkino.cc/adult/genres/amateur/page/2
 if($tip=="release") {
   if ($page>1)
-    $l=$link."/page/".$page."/?filter=latest";
+    $l=$link."/page/".$page;
   else
-    $l=$link."/page/".$page."/?filter=latest";
+    $l=$link."/";
 } else {
   $search=str_replace(" ","+",$tit);
   if ($page > 1)
-    $l="https://pornkino.cc/search/".$search."/page/".$page."/";
+    $l="https://pornkino.cc/adult/page/".$page."/?s=".$search;
   else
-    $l="https://pornkino.cc/search/".$search;
+    $l="https://pornkino.cc/adult/?s=".$search;
 }
 $host=parse_url($l)['host'];
+//echo $l;
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $l);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
@@ -227,6 +228,7 @@ $host=parse_url($l)['host'];
   curl_setopt($ch, CURLOPT_TIMEOUT, 15);
   $html = curl_exec($ch);
   curl_close($ch);
+  //echo $html;
 $r=array();
 $videos=explode('data-post-id="',$html);
 unset($videos[0]);
@@ -243,7 +245,7 @@ foreach($videos as $video) {
   $t1 = explode('data-src="', $video);
   $t2 = explode('"', $t1[1]);
   $image = $t2[0];
-  if (strpos($image,"http") === false) $image="https:".$image;
+  if (strpos($image,"http") === false && $image) $image="https:".$image;
   //$image="r.php?file=".$image;
   $durata="";
   $durata = preg_replace("/\n|\r/"," ",strip_tags($durata));

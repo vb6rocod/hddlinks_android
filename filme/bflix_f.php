@@ -14,8 +14,6 @@ $width="200px";
 $height="278px";
 $last_good="https://bflix.ru";
 //$last_good="https://fmovies.to";
-require_once("bunny.php");
-$key="DZmuZuXqa9O0z3b7";
 $host=parse_url($last_good)['host'];
 /* ==================================================== */
 $has_fav="yes";
@@ -173,17 +171,19 @@ if ($page==1) {
 }
 echo '</TR>'."\r\n";
 $f=array();
+//https://bflix.ru/filter?keyword=star&page=2
+//https://bflix.ru/filter?keyword=star&type%5B%5D=movie&sort=most_relevance
 if ($tip=="search") {
  $search= str_replace(" ","+",$tit);
  if ($page==1)
-  $l=$last_good."/search?keyword=".$search."&vrf=".encodeVrf(str_replace(" ","%20",$tit),$key);
+  $l=$last_good."/filter?keyword=".$search."&type%5B%5D=movie&sort=most_relevance";
  else
-  $l=$last_good."/search?keyword=".$search."&vrf=".encodeVrf(str_replace(" ","%20",$tit),$key)."&page=".$page;
+  $l=$last_good."/filter?keyword=".$search."&type%5B%5D=movie&sort=most_relevance"."&page=".$page;
 } else {
  if ($page==1)
-  $l=$last_good."/movies";
+  $l=$last_good."/movie";
  else
-  $l=$last_good."/movies?page=".$page;
+  $l=$last_good."/movie?page=".$page;
 }
 $head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/109.0',
 'Accept: application/json, text/javascript, */*; q=0.01',
@@ -192,7 +192,7 @@ $head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gec
 'Referer: '.$last_good.'/movie/infiesto-ronmp',
 'X-Requested-With: XMLHttpRequest',
 'Connection: keep-alive');
-
+//echo $l;
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $l);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
@@ -206,9 +206,11 @@ $head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gec
   curl_close($ch);
 $path = parse_url($l)['path'];
 //echo $h;
+$x=json_decode($h,1);
+$h=$x['result'];
 $host=parse_url($l)['host'];
 
-$videos = explode('div class="item"', $h);
+$videos = explode('<div class="film"', $h);
 unset($videos[0]);
 $videos = array_values($videos);
 foreach($videos as $video) {
@@ -219,11 +221,11 @@ foreach($videos as $video) {
  $t1=explode('src="',$video);
  $t2=explode('"',$t1[1]);
  $image=$t2[0];
- $t1=explode('title="',$video);
- $t2=explode('"',$t1[1]);
+ $t1=explode('class="film-name">',$video);
+ $t2=explode('</',$t1[1]);
  $title=trim($t2[0]);
- if (preg_match("/div class\=\"meta\">/",$video)) {
- $t1=explode('div class="meta">',$video);
+ if (preg_match("/span class\=\"dot\">/",$video)) {
+ $t1=explode('span class="dot">',$video);
  $t2=explode('<',$t1[1]);
  $year=trim($t2[0]);
  } else {

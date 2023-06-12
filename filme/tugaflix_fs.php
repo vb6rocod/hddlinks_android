@@ -132,34 +132,38 @@ echo '<h2>'.$tit.$tit2.'</H2>';
 echo '<BR>';
 $r=array();
 //echo $link;
-$ua="Mozilla/5.0 (Windows NT 10.0; rv:89.0) Gecko/20100101 Firefox/89.0";
-$l="https://api.tv88.to/data/watch/?_id=".$link;
-$head=array('Accept: */*',
-'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
-'Accept-Encoding: deflate',
-'Referer: https://tv88.to/',
-'Origin: https://tv88.to');
+$host=parse_url($link)['host'];
+$post="play=";
+$head=array("User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/114.0",
+"Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8",
+"Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2",
+"Accept-Encoding: deflate",
+"Content-Type: application/x-www-form-urlencoded",
+"Content-Length: 5",
+"Origin: https://tugaflix.best",
+"Alt-Used: tugaflix.best",
+"Connection: keep-alive",
+"Referer: https://tugaflix.best/filmes/");
   $ch = curl_init();
-  curl_setopt($ch, CURLOPT_URL, $l);
-  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
-  curl_setopt($ch, CURLOPT_HTTPHEADER,$head);
+  curl_setopt($ch, CURLOPT_URL,$link);
   curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER  ,1);  // RETURN THE CONTENTS OF THE CALL
   curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
-  curl_setopt($ch, CURLOPT_TIMEOUT, 25);
+  curl_setopt($ch, CURLOPT_ENCODING,"");
+  curl_setopt($ch, CURLOPT_HTTPHEADER,$head);
+  curl_setopt($ch, CURLOPT_POST,1);
+  curl_setopt($ch, CURLOPT_POSTFIELDS,$post);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
   $h = curl_exec($ch);
   curl_close($ch);
   //echo $h;
-  $xx = json_decode($h,1);
-  $imdbid="";
-  $tmdb=$xx['tmdb']['movie']['movie_details']['id'];
-  $imdbid=$xx['tmdb']['movie']['movie_details']['imdb_id'];
-  $f=json_decode($h,1)['streams'];
-  //print_r ($f);
-  foreach($f as $key => $value) {
-   $r[]=$f[$key]['stream'];
-  }
+  $t1=explode('target="player',$h);
+  $t2=explode('file=',$t1[1]);
+  $t3=explode('&',$t2[1]);
+  $l="https://streamtape.com/v/".$t3[0];
+  $r[]=$l;
+//die();
 echo '<table border="1" width="100%">';
 echo '<TR><TD class="mp">Alegeti un server: Server curent:<label id="server">'.parse_url($r[0])['host'].'</label>
 <input type="hidden" id="file" value="'.urlencode($r[0]).'"></td></TR></TABLE>';
@@ -192,18 +196,17 @@ if ($tip=="movie") {
   $tit2="";
   $sez="";
   $ep="";
-  //$imdbid="";
+  $imdbid="";
   $from="";
   $link_page="";
 } else {
   $tit3=$tit;
   $sez=$sez;
   $ep=$ep;
-  //$imdbid="";
+  $imdbid="";
   $from="";
   $link_page="";
 }
-  $imdbid=str_replace("tt","",$imdbid);
   $rest = substr($tit3, -6);
   if (preg_match("/\((\d+)\)/",$rest,$m)) {
    $year=$m[1];

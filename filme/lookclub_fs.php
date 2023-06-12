@@ -131,7 +131,7 @@ function off() {
 echo '<h2>'.$tit.$tit2.'</H2>';
 echo '<BR>';
 $r=array();
-echo $link;
+//echo $link;
 $ua="Mozilla/5.0 (Windows NT 10.0; rv:89.0) Gecko/20100101 Firefox/89.0";
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $link);

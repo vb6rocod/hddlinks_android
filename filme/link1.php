@@ -344,7 +344,8 @@ if (preg_match("/jeniusplay\.com/",$filelink)) {
  if (preg_match("/video\/(\w+)/",$filelink,$m)) {
  $id=$m[1];
  $l="https://jeniusplay.com/player/index.php?data=".$id."&do=getVideo";
- $post="hash=".$h."&r=https://88.210.14.111/";
+ //$l="https://jeniusplay.com/player/index.php?data=c64c545aff0d17ad713c907fdada37d1&do=getVideo";
+ $post="hash=".$h."&r=https://77.105.142.75/";
  $head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/112.0',
  'Accept: */*',
  'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
@@ -422,6 +423,7 @@ if (preg_match("/xemovies\.to/",$filelink)) {
  //print_r ($r);
  $link=$r['file'];
  $srt=$r['srt'];
+ $filelink="";
 }
 if (preg_match("/net\-film\.vercel\.app/",$filelink)) {
   //$filelink="https://net-film.vercel.app/api/episode?id=215859";
@@ -484,9 +486,11 @@ $head=json_decode(file_get_contents($base_cookie."netfilm.dat"),1);
   }
   }
 }
-if (preg_match("/bflix\.ru|sflix\./",$filelink) && !preg_match("/sub\.info\=/",$filelink)) {
+if (preg_match("/bflix\.ru|sflix\.|fmovies\.to/",$filelink) && !preg_match("/sub\.info\=/",$filelink)) {
   require_once("bunny.php");
   $key="DZmuZuXqa9O0z3b7";
+  $key="hlPeNwkncH0fq9so";
+  //echo $filelink;
   $head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/109.0',
   'Accept: application/json, text/javascript, */*; q=0.01',
   'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
@@ -506,7 +510,8 @@ if (preg_match("/bflix\.ru|sflix\./",$filelink) && !preg_match("/sub\.info\=/",$
   curl_setopt($ch, CURLOPT_TIMEOUT, 15);
   $h = curl_exec($ch);
   curl_close($ch);
-  $url=json_decode($h,1)['url'];
+  //echo $h;
+  $url=json_decode($h,1)['result']['url'];
   $filelink=decodeVrf($url,$key);
   if (preg_match("/\?sub\.info\=/",$filelink)) {
    $t1=explode("?sub.info=",$filelink);
@@ -1374,8 +1379,8 @@ if (preg_match("/sockshare|wat32/",$filelink)) {
   curl_setopt($ch, CURLOPT_RETURNTRANSFER  ,1);  // RETURN THE CONTENTS OF THE CALL
   //curl_setopt($ch, CURLOPT_HTTPHEADER, $head);
   curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
-  curl_setopt($ch, CURLOPT_TIMEOUT, 25);
+  //curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 45);
   $html = curl_exec($ch);
   curl_close ($ch);
   //echo $html;
@@ -15976,7 +15981,7 @@ if (strpos($movie,"http") === false) $movie="";
 // Set HW+ mod //
 $hw="/hqq\.|hindipix\.|pajalusta\.|lavacdn\.xyz|mcloud\.to|putload\.|thevideobee\.";
 $hw .="|flixtor\.|0123netflix|mangovideo|waaw1?|lookmovie\.ag|onlystream\.|archive\.org|videomega\.|moviehdkh";
-$hw .="|hxload.|jetload\.net|azm\.to|movie4k\.ag|hlsplay\.com|videobin\.|moonline\.|dood(stream)?\.|dailymotion\.com|flowyourvideo\.com|streamtape\.|okstream\.|easyload\.io|youdbox\.com";
+$hw .="|hxload.|jetload\.net|azm\.to|movie4k\.ag|hlsplay\.com|videobin\.|moonline\.|do{2,}d(stream)?\.|dailymotion\.com|flowyourvideo\.com|streamtape\.|okstream\.|easyload\.io|youdbox\.com";
 $hw .="|ronemo\.com|rocdn\.|abcvideo\.|hdm\.|evoload\.|m4ufree\.yt|anilist1\.ir|animdl\.cf|noxx\.is|filmele-online\.com|playdrive\.xyz|ezylink\.co|gomoplayer\.";
 $hw .="|apimdb\_vip\.net|wootly\.ch|playdrive\.plyr\.xyz|msmoviesbd\.com|c1ne\.co|youtu|streamlare\.|rovideo\.";
 $hw .="|embed4free\.com|gdrivestream\.com|gdrvplayer\.com|o2tvseries\.co|tubeup\.xyz|xemovies\.to|jeniusplay\.|fslinks\.|vgfplay\./";

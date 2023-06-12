@@ -162,13 +162,17 @@ print_r($y);
 die();
 */
 $t1=explode('<script type="application/ld+json" id="json-ld">',$h);
+$t1=explode('type="application/json">',$h);
 $t2=explode('</script>',$t1[1]);
 $r=json_decode($t2[0],1);
-$f = $r[0]['itemListElement'];
+//print_r ($r);
+$f=$r['props']['pageProps']['slides'];
+//print_r ($x);
+//$f = $r[0]['itemListElement'];
 //print_r ($f);
 foreach($f as $key => $value) {
-  $title=$f[$key]['item']['name'];
-  $desc=$f[$key]['item']['description'];
+  $title=$f[$key]['metadata']['headline'];
+  $desc=$f[$key]['metadata']['dek'];
   $title=strip_tags($title);
   $link=$title;
   $image="";

@@ -248,7 +248,12 @@ foreach($videos as $video) {
   $t2 = explode('"', $t1[1]);
   $image = $t2[0];
   }
-  if (strpos($image,"http") === false) $image="https:".$image;
+  if (!$image) {
+  $t1 = explode('lazy" src="', $video);
+  $t2 = explode('"', $t1[1]);
+  $image = $t2[0];
+  }
+  if (strpos($image,"http") === false && $image) $image="https:".$image;
   $t1=explode('class="th-duration"',$video);
   $t2=explode('>',$t1[1]);
   $t3=explode("<",$t2[1]);

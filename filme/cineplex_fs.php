@@ -61,6 +61,16 @@ else
 $l="https://".$host."/series/getTvLink?id=".$id."&token=".$token."&s=".$sez."&e=".$ep."&oPid=&_=";
 $rh="https://".$host;
 //echo $l;
+//$l="https://senturion.to/movies/getMovieLink?id=17338&token=2n71u52vkeau66246q9be0q5e5&oPid=&_=1686382222416";
+$head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/114.0',
+'Accept: application/json, text/javascript, */*; q=0.01',
+'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
+'Accept-Encoding: deflate',
+'X-Requested-With: XMLHttpRequest',
+'Alt-Used: senturion.to',
+'Connection: keep-alive',
+'Referer: https://senturion.to/movies/17338-youre-killing-me',
+'Cookie: PHPSESSID=v5kapag6e3nce787it34c8i7ld; announcement=1686289427; notice=true');
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $l);
   curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 10.0; rv:55.0) Gecko/20100101 Firefox/55.0');
@@ -68,11 +78,13 @@ $rh="https://".$host;
   curl_setopt($ch,CURLOPT_REFERER,$rh);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
   curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie);
+  //curl_setopt($ch, CURLOPT_HEADER,1);
   curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
   curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
   curl_setopt($ch, CURLOPT_TIMEOUT, 15);
   $html = curl_exec($ch);
   curl_close($ch);
+  //echo $html;
   $r=json_decode($html,1);
   if (strpos($html,"&end=") !== false) $user="free";
   //print_r ($r);

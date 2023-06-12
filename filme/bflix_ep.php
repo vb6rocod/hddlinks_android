@@ -13,7 +13,7 @@ $ep_title=prep_tit($ep_title);
 $year=$_GET["year"];
 $last_good="https://bflix.ru";
 require_once("bunny.php");
-$key="DZmuZuXqa9O0z3b7";
+$key="MPPBJLgFwShfqIBx";
 /* ====================== */
 $fs_target = "bflix_fs.php";
 $width="200px";
@@ -41,9 +41,9 @@ echo '<table border="1" width="100%">'."\n\r";
 //echo '<TR><td style="color:#000000;background-color:deepskyblue;text-align:center" colspan="3" align="center">'.$tit.'</TD></TR>';
 //echo $link;
 $last_good="https://".parse_url($link)['host'];
-$id = substr(strrchr($link, "-"), 1);
-$vrf=encodeVrf($id,$key);
-$l=$last_good."/ajax/film/servers?id=".$id."&vrf=".$vrf."&token=";
+//$id = substr(strrchr($link, "-"), 1);
+//$vrf=encodeVrf($id,$key);
+//$l=$last_good."/ajax/film/servers?id=".$id."&vrf=".$vrf."&token=";
 $head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/109.0',
 'Accept: application/json, text/javascript, */*; q=0.01',
 'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
@@ -53,7 +53,7 @@ $head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gec
 'Connection: keep-alive');
 
   $ch = curl_init();
-  curl_setopt($ch, CURLOPT_URL, $l);
+  curl_setopt($ch, CURLOPT_URL, $link);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
   curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
   curl_setopt($ch, CURLOPT_HTTPHEADER,$head);
@@ -63,17 +63,29 @@ $head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gec
   curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
   curl_setopt($ch, CURLOPT_TIMEOUT, 25);
   $h = curl_exec($ch);
-  curl_close($ch);
-  //echo $h;
+
+
   $r=json_decode($h,1);
-  $h=$r['html'];
+  $h=$r['result'];
+  //echo $h;
+  $t1=explode('data-id="',$h);
+  $t2=explode('"',$t1[1]);
+  $id=$t2[0];
+  //https://bflix.ru/ajax/episode/list/23600?vrf=O09%2FYGJ3RHg%3D
+  $vrf=encodeVrf($id,$key);
+  $l=$last_good."/ajax/episode/list/".$id."?vrf=".$vrf;
+  curl_setopt($ch, CURLOPT_URL, $l);
+  $h = curl_exec($ch);
+  curl_close($ch);
+  $r=json_decode($h,1);
+  $h=$r['result'];
   //echo $h;
 $n=0;
 $z=1;
 $path = parse_url($link)['path'];
 //echo $h;
 $host=parse_url($link)['host'];
-$videos = explode('<div class="episodes"', $h);
+$videos = explode('<ul class="episodes"', $h);
 $sezoane=array();
 $link_sez=array();
 //$link_sezoane=array();
@@ -118,7 +130,7 @@ foreach($videos as $video) {
   echo '<TR><td class="sez" style="color:black;background-color:#0a6996;color:#64c8ff;text-align:center" colspan="3">Sezonul '.($sez).'</TD></TR>';
   $n=0;
 
-  $vids = explode('<div class="episode"', $video);
+  $vids = explode('<li>', $video);
   unset($vids[0]);
   $vids = array_values($vids);
   //$vids = array_reverse($vids);
@@ -126,17 +138,18 @@ foreach($videos as $video) {
   $img_ep="";
   $episod="";
   $ep_tit="";
-  $t1=explode('data-kname="',$vid);
-  $t2=explode("-",$t1[1]);
-  $t3=explode('"',$t2[1]);
+  $t1=explode('data-num="',$vid);
+  //$t2=explode("-",$t1[1]);
+  $t3=explode('"',$t1[1]);
   $episod = $t3[0];
-  $t1=explode("data-ep='",$vid);
-  $t2=explode("'",$t1[1]);
-  $link=$t2[0];
+  $t1=explode('data-id="',$vid);
+  $t2=explode('"',$t1[1]);
+  $link=$t2[0]."&".$last_good;
 
-  $t3=explode('class="name">',$vid);
-  $t4=explode('<',$t3[1]);
-  $ep_tit = $t4[0];
+  $t3=explode('class="num">',$vid);
+  $t4=explode('<span>',$t3[1]);
+  $t5=explode('</span',$t4[1]);
+  $ep_tit = $t5[0];
   $img_ep="blank.jpg";
 
 

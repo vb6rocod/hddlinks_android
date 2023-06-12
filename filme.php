@@ -60,7 +60,7 @@ else
 <TD width="25%"><a href="filme/filmeseriale_filme.php?page=1&tip=release&title=filmeseriale&link=" target="_blank">filmeseriale.online</a></TD>
 <TD width="25%"><a href="filme/filmeonline2016_main.php" target="_blank">filmeonline2016</a></TD>
 <TD width="25%"><a href="filme/serialeonline_f.php?page=1&tip=release&title=serialeonline&link=" target="_blank">serialeonline</a></TD>
-<TD width="25%"></TD>
+<TD width="25%"><a href="filme/tugaflix_f.php?page=1&tip=release&title=tugaflix&link=" target="_blank">tugaflix</a></TD>
 <!--<TD width="25%"><a href="filme/portalultautv_main.php" target="_blank">portalultautv</a></TD>-->
 </TR>
 
@@ -85,63 +85,45 @@ else
 <TD width="25%"><a href="filme/lookmovie_f.php?page=1&tip=release&title=lookmovie&link=" target="_blank">lookmovie</a></TD>
 <TD width="25%"><a href="filme/2embed_f.php?page=1&tip=release&title=2embed&link=" target="_blank">2embed</a></TD>
 <TD width="25%"><a href="filme/vidcloud9_f.php?page=1&tip=release&title=vidcloud9&link=" target="_blank">vidcloud9</a></TD>
-<TD width="25%"><a href="filme/solarmovie_f.php?page=1&tip=release&title=solarmovie&link=" target="_blank">solarmovie</a></TD>
+<TD width="25%"><a href="filme/azseries_f.php?page=1&tip=release&title=azseries&link=" target="_blank">azseries</a></TD>
 </TR>
 
 <TR>
 <TD width="25%"><a href="filme/zoechip_f.php?page=1&tip=release&title=zoechip&link=" target="_blank">zoechip</a></TD>
-<TD width="25%"><a href="filme/foumovies_f.php?page=1&tip=release&title=foumovies&link=" target="_blank">foumovies</a></TD>
+<TD width="25%"><a href="filme/idlixian_f.php?page=1&tip=release&title=idlixian&link=" target="_blank">idlixian</a></TD>
 <TD width="25%"><a href="filme/onionplay_f.php?page=1&tip=release&title=onionplay&link=" target="_blank">onionplay</a></TD>
 <TD width="25%"><a href="filme/streamlord_f.php?page=1&tip=release&title=streamlord&link=" target="_blank">streamlord</a></TD>
 </TR>
 
 <TR>
 <TD width="25%"><a href="filme/uniquestream_f.php?page=1&tip=release&title=uniquestream&link=" target="_blank">uniquestream</a></TD>
-<TD width="25%"><a href="filme/sockshare_f.php?page=1&tip=release&title=sockshare&link=" target="_blank">sockshare</a></TD>
+<TD width="25%"><a href="filme/c1ne_f.php?page=1&tip=release&title=c1ne&link=" target="_blank">c1ne</a></TD>
 <TD width="25%"><a href="filme/fsharetv.php?page=1&tip=release&title=fsharetv&link=" target="_blank">fsharetv</a></TD>
 <TD width="25%"><a href="filme/goojara_f.php?page=1&tip=release&title=goojara&link=" target="_blank">goojara</a></TD>
 </TR>
 
 <TR>
-<TD width="25%"><a href="filme/ask4movie_f.php?page=1&tip=release&title=ask4movie&link=" target="_blank">ask4movie</a></TD>
+<TD width="25%"><a href="filme/fmovies_f.php?page=1&tip=release&title=fmovies&link=" target="_blank">fmovies.co</a></TD>
 <TD width="25%"><a href="filme/flixtor_f.php?page=1&tip=release&title=flixtor&link=" target="_blank">flixtor</a></TD>
 <TD width="25%"><a href="filme/emovies_f.php?page=1&tip=release&title=emovies&link=" target="_blank">emovies</a></TD>
 <TD width="25%"><a href="filme/lookclub_f.php?page=1&tip=release&title=lookclub&link=" target="_blank">lookclub</a></TD>
 </TR>
 
 <TR>
-<TD width="25%"><a href="filme/c1ne_f.php?page=1&tip=release&title=c1ne&link=" target="_blank">c1ne</a></TD>
-<TD width="25%"><a href="filme/azseries_f.php?page=1&tip=release&title=azseries&link=" target="_blank">azseries</a></TD>
-<TD width="25%"><a href="filme/xemovies_f.php?page=1&tip=release&title=xemovies&link=" target="_blank">xemovies</a></TD>
-<TD width="25%"><a href="filme/idlixian_f.php?page=1&tip=release&title=idlixian&link=" target="_blank">idlixian</a></TD>
-</TR>
-<TR>
-<TD width="25%"><a href="filme/fmovies_f.php?page=1&tip=release&title=fmovies&link=" target="_blank">fmovies.co</a></TD>
+<TD width="25%"><a href="filme/fmovies1_f.php?page=1&tip=release&title=fmovies&link=" target="_blank">fmovies</a></TD>
 <TD width="25%"><a href="filme/yifytv_f.php?page=1&tip=release&title=ytsmovie&link=" target="_blank">ytsmovie</a></TD>
-<TD width="25%"><a href="filme/tv88_f.php?page=1&tip=release&title=tv88&link=" target="_blank">tv88</a></TD>
+<TD width="25%"><a href="filme/bflix_f.php?page=1&tip=release&title=bflix&link=" target="_blank">bflix</a></TD>
 <TD width="25%"><a href="filme/flixhq_f.php?page=1&tip=release&title=flixhq&link=" target="_blank">flixhq</a></TD>
 </TR>
 <TR>
 <TD width="25%"><a href="filme/moviebox_f.php?page=1&tip=release&title=moviebox&link=" target="_blank">moviebox</a></TD>
-<TD width="25%"><a href="filme/bflix_f.php?page=1&tip=release&title=bflix&link=" target="_blank">bflix</a></TD>
-<TD width="25%"><a href="filme/fmovies1_f.php?page=1&tip=release&title=fmovies&link=" target="_blank">fmovies</a></TD>
+<TD width="25%"></TD>
+<TD width="25%"></TD>
 <TD width="25%"></TD>
 </TR>
 
 
 <?php
-if (file_exists($base_pass."tvplay.txt")) {
-echo '
-<TR>
-<TD width="25%"><a href="filme/cineplex_f_main1.php" target="_blank">cineplex</a></TD>
-<TD width="25%"></TD>
-<TD width="25%"></TD>
-<TD width="25%"></TD>';
-echo '</TR>';
-} else {
-//echo '<TD width="25%"></TD><TD width="25%"></TD>';
-//echo '<TD width="25%"></TD><TD width="25%"></TD>';
-}
 ?>
 
 </TR>

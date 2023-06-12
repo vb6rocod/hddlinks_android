@@ -1,20 +1,24 @@
 <!DOCTYPE html>
 <?php
+error_reporting(0);
 include ("../common.php");
-$list = glob($base_sub."*.srt");
-   foreach ($list as $l) {
-    str_replace(" ","%20",$l);
-    unlink($l);
+$query = $_GET["page"];
+if($query) {
+   $queryArr = explode(',', $query);
+   $page = $queryArr[0];
+   $search = $queryArr[1];
+   $page_title=urldecode($queryArr[2]);
+   $search=str_replace("|","&",$search);
 }
 $width="200px";
-$height=intval(200*(753/1377))."px";
+$height=intval(200*(150/200))."px";
 ?>
 <html><head>
 <meta http-equiv="content-type" content="text/html; charset=UTF-8">
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate"/>
 <meta http-equiv="Pragma" content="no-cache"/>
 <meta http-equiv="Expires" content="0"/>
-      <title>Starea Natiei</title>
+      <title><?php echo $page_title; ?></title>
 <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.0/jquery.min.js"></script>
 <link rel="stylesheet" type="text/css" href="../custom.css" />
 <script type="text/javascript">
@@ -22,7 +26,7 @@ function ajaxrequest(link) {
   var request =  new XMLHttpRequest();
   on();
   var the_data = link;
-  var php_file='link1.php';
+  var php_file='direct_link.php';
   request.open('POST', php_file, true);			// set the request
 
   // adds a header to tell the PHP script to recognize the data as is sent via POST
@@ -52,6 +56,8 @@ function off() {
 }
 </script>
    <a href='' id='mytest1'></a>
+   <div id="mainnav">
+<H2></H2>
 <?php
 function str_between($string, $start, $end){
 	$string = " ".$string; $ini = strpos($string,$start);
@@ -73,45 +79,49 @@ if ($flash != "mp") {
 if (preg_match("/android|ipad/i",$user_agent) && preg_match("/chrome|firefox|mobile/i",$user_agent)) $flash="chrome";
 }
 $n=0;
-echo '<h2>Starea Natiei</H2>';
+echo '<h2>'.$page_title.'</H2>';
 echo '<table border="1px" width="100%">'."\n\r";
-$l="https://www.stareanatiei.ro/wp-json/sn-theme/v1/load-infinite";
-$post="offset=0&limit=100&args[category_name]=emisiuni-intregi&args[paged]=1&args[posts_per_page]=4&args[cat]=24&args[cache_results]=true&args[update_post_term_cache]=true&args[lazy_load_term_meta]=true&args[update_post_meta_cache]=true&args[comments_per_page]=15&args[order]=DESC";
-$l="https://www.stareanatiei.ro/wp-json/sn-theme/v1/load-more";
-$post="offset=0&limit=50&template=archive-posts&args[category_name]=emisiuni-intregi&args[paged]=1&args[posts_per_page]=12";
-  $ch = curl_init($l);
+echo '<tr><TD colspan="4" align="right">';
+if ($page > 1)
+echo '<a href="b98.php?page='.($page-1).','.$search.','.urlencode($page_title).'">&nbsp;&lt;&lt;&nbsp;</a> | <a href="protv_stiri.php?page='.($page+1).','.$search.','.urlencode($page_title).'">&nbsp;&gt;&gt;&nbsp;</a></TD></TR>';
+else
+echo '<a href="b98.php?page='.($page+1).','.$search.','.urlencode($page_title).'">&nbsp;&gt;&gt;&nbsp;</a></TD></TR>';
+
+$l="https://www.b98.tv/videos_categories/cartoons/page/".$page."/";
+  $ch = curl_init();
+  curl_setopt($ch, CURLOPT_URL, $l);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+  curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows; U; Windows NT 6.1; en-US; rv:1.9.1.2) Gecko/20090729 Firefox/3.5.2 GTB5');
   curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
-  curl_setopt($ch, CURLOPT_REFERER, $l);
-  curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 10.0; rv:55.0) Gecko/20100101 Firefox/55.0');
-  curl_setopt($ch, CURLOPT_RETURNTRANSFER  ,1);  // RETURN THE CONTENTS OF THE CALL
-  curl_setopt ($ch, CURLOPT_POST, 1);
-  curl_setopt ($ch, CURLOPT_POSTFIELDS, $post);
   curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
   curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
   curl_setopt($ch, CURLOPT_TIMEOUT, 15);
-  $h = curl_exec($ch);
+  $html = curl_exec($ch);
   curl_close($ch);
-  $r=json_decode($h,1);
-  $html=$r["html"];
   //echo $html;
-//$html = file_get_contents($link);
-$videos = explode('class="col-md-3', $html);
+$videos = explode('<article', $html);
+
 unset($videos[0]);
 $videos = array_values($videos);
+
 foreach($videos as $video) {
-    $t1=explode('href="',$video);
-    $t2=explode('"',$t1[1]);
-    $link=$t2[0];
-    $t1=explode('src="',$video);
-    $t2=explode('"',$t1[1]);
-    $image=$t2[0];
-    //$image=str_replace("https://ctns","https://ctnses",$image);
-    $t1=explode('class="title">',$video);
-    $t2=explode('<',$t1[1]);
-    $title=trim($t2[0]);
-    $link1="link1.php?file=".$link.",".urlencode($title);
-    $l="link=".urlencode(fix_t($link))."&title=".urlencode(fix_t($title));
-  if ($link <> "") {
+    $t1 = explode('href="', $video);
+    $t2 = explode('"', $t1[1]);
+    $link = $t2[0];
+
+    $t1 = explode('src="', $video);
+    $t2 = explode('"', $t1[1]);
+    $image = $t2[0];
+
+
+    $t1 = explode('class="title">', $video);
+    $t2 = explode('<', $t1[1]);
+    $title = $t2[0];
+//    $l1=explode("picture:",$image);
+//    $id=$l1[1];
+    $link1="direct_link.php?link=".$link."&title=".urlencode($title)."&from=b98&mod=direct";
+    $l="link=".urlencode(fix_t($link))."&title=".urlencode(fix_t($title))."&from=b98&mod=direct";
+  if ($link && $title) {
   if ($n==0) echo '<TR>';
   if ($flash != "mp")
   echo '<td class="mp" align="center" width="25%"><a href="'.$link1.'" target="_blank"><img src="'.$image.'" width="'.$width.'" height="'.$height.'"><BR>'.$title.'</a></TD>';
@@ -125,9 +135,13 @@ foreach($videos as $video) {
   }
   }
 }
+echo '<tr><TD colspan="4" align="right">';
+if ($page > 1)
+echo '<a href="b98.php?page='.($page-1).','.$search.','.urlencode($page_title).'">&nbsp;&lt;&lt;&nbsp;</a> | <a href="protv_stiri.php?page='.($page+1).','.$search.','.urlencode($page_title).'">&nbsp;&gt;&gt;&nbsp;</a></TD></TR>';
+else
+echo '<a href="b98.php?page='.($page+1).','.$search.','.urlencode($page_title).'">&nbsp;&gt;&gt;&nbsp;</a></TD></TR>';
 echo "</table>";
 ?>
-
 <div id="overlay"">
   <div id="text">Wait....</div>
 </div>

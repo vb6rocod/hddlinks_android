@@ -57,7 +57,7 @@ document.onkeypress =  zx;
 </TR>
 
 <TR>
-<TD width="25%"><a href="filme/diverse.php" target="_blank">diverse</a></TD>
+<TD width="25%"><a href="filme/idlixian_s.php?page=1&tip=release&title=idlixian&link=" target="_blank">idlixian</a></TD>
 <TD width="25%"><a href="filme/moviewetrust_s.php?page=1&tip=release&title=moviewetrust&link=" target="_blank">moviewetrust</a></TD>
 <TD width="25%"><a href="filme/yifytv_s.php?page=1&tip=release&title=ytsmovie&link=" target="_blank">ytsmovie</a></TD>
 <TD width="25%"><a href="filme/2embed_s.php?page=1&tip=release&title=2embed&link=" target="_blank">2embed</a></TD>
@@ -70,7 +70,7 @@ document.onkeypress =  zx;
 <TR>
 <TD width="25%"><a href="filme/tvseries_s.php?page=1&tip=release&title=tvseries&link=" target="_blank">tvseries</a></TD>
 <TD width="25%"><a href="filme/o2tvseries_s.php?page=1&tip=release&title=o2tvseries&link=" target="_blank">o2tvseries</a></TD>
-<TD width="25%"><a href="filme/solarmovie_s.php?page=1&tip=release&title=solarmovie&link=" target="_blank">solarmovie</a></TD>
+<TD width="25%"><a href="filme/emovies_s.php?page=1&tip=release&title=emovies&link=" target="_blank">emovies</a></TD>
 <TD width="25%"><a href="filme/lookmovie_s.php?page=1&tip=release&title=lookmovie&link=" target="_blank">lookmovie</a></TD>
 <!--<TD width="25%"><a href="filme/cl.php?host=https://lookmovie.io/favicon-16x16.png&cookie=lookmovie.dat&target=lookmovie_s.php&title=lookmovie" target="_blank">lookmovie</a></TD>-->
 </TR>
@@ -88,13 +88,6 @@ document.onkeypress =  zx;
 </TR>
 
 <TR>
-<TD width="25%"></TD>
-<TD width="25%"><a href="filme/emovies_s.php?page=1&tip=release&title=emovies&link=" target="_blank">emovies</a></TD>
-<TD width="25%"><a href="filme/xemovies_s.php?page=1&tip=release&title=xemovies&link=" target="_blank">xemovies</a></TD>
-<TD width="25%"><a href="filme/sockshare_s.php?page=1&tip=release&title=sockshare&link=" target="_blank">sockshare</a></TD>
-</TR>
-
-<TR>
 <TD width="25%"><a href="filme/uniquestream_s.php?page=1&tip=release&title=uniquestream&link=" target="_blank">uniquestream</a></TD>
 <TD width="25%"><a href="filme/flixtor_s.php?page=1&tip=release&title=flixtor&link=" target="_blank">flixtor</a></TD>
 <TD width="25%"><a href="filme/c1ne_s.php?page=1&tip=release&title=c1ne&link=" target="_blank">c1ne</a></TD>
@@ -105,23 +98,17 @@ document.onkeypress =  zx;
 <TD width="25%"><a href="filme/moviebox_s.php?page=1&tip=release&title=moviebox&link=" target="_blank">moviebox</a></TD>
 <TD width="25%"><a href="filme/bflix_s.php?page=1&tip=release&title=bflix&link=" target="_blank">bflix</a></TD>
 <TD width="25%"><a href="filme/fmovies_s.php?page=1&tip=release&title=fmovies&link=" target="_blank">fmovies.co</a></TD>
-<TD width="25%"></TD>
+<TD width="25%"><a href="filme/fmovies1_s.php?page=1&tip=release&title=fmovies&link=" target="_blank">fmovies</a></TD>
+
 </TR>
 <TR>
-<TD width="25%"><a href="filme/fmovies1_s.php?page=1&tip=release&title=fmovies&link=" target="_blank">fmovies</a></TD>
-<TD width="25%"><a href="filme/idlixian_s.php?page=1&tip=release&title=idlixian&link=" target="_blank">idlixian</a></TD>
+<TD width="25%"><a href="filme/diverse.php" target="_blank">diverse</a></TD>
+<TD width="25%"></TD>
 <TD width="25%"></TD>
 <TD width="25%"></TD>
 </TR>
 <?php
-if (file_exists($base_pass."tvplay.txt")) {
-echo '<TR>';
-echo '<TD width="25%"><a href="filme/cineplex_s_main1.php" target="_blank">cineplex</a></TD>';
-echo '<TD width="25%"></TD>';
-echo '<TD width="25%"></TD>';
-echo '<TD width="25%"></TD>';
-echo '</TR>';
-}
+
 if (file_exists($base_pass."debug.txt")) {
 if (file_exists($base_pass."mx.txt")) {
 $mx=trim(file_get_contents($base_pass."mx.txt"));

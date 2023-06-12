@@ -41,34 +41,14 @@ echo '<TD style="text-align:center"><font size="4">'.'<a href="'.$link.'" target
 $title="clicksud";
 $link="clicksud_main.php";
 echo '<TD style="text-align:center"><font size="4">'.'<a href="'.$link.'" target="_blank">'.$title.'</a></font></TD>';
-$title="Seriale Turcesti";
-$link="serialeturcesti.php?page=1&tip=release&title=serialeturcesti&link=";
-echo '<TD style="text-align:center"><font size="4">'.'<a href="'.$link.'" target="_blank">'.$title.'</a></font></TD>';
-echo "</TR>"."\n\r";
-$n=0;
-if ($n == 0) echo "<TR>"."\n\r";
+
+
 $title="rovideo";
 $link="rovideo.php?page=1&tip=release&title=rovideo&link=";
 echo '<TD style="text-align:center"><font size="4">'.'<a href="'.$link.'" target="_blank">'.$title.'</a></font></TD>';
 
-/*
-$title="peserialehd";
-$link="peserialehd_main.php";
-echo '<TD style="text-align:center"><font size="4">'.'<a href="'.$link.'" target="_blank">'.$title.'</a></font></TD>';
-*/
-// https://www.youtube.com/playlist?list=PL7pi6YA0cKGvq0avv-7RDGYtJuFMTYCSn
-$title="CINEMATOGRAFIA ROMANEASCA";
-$link="yt_channel.php?token=&id=UCOKEwOave88wtWJCPKs2mZA&kind=channel&title=(channel)+CINEMATOGRAFIA+ROMANEASCA&image=https://yt3.ggpht.com/a/AATXAJynQBFCnYb0qbwYGXKMFwnDYSiH1-izNKHu-5DW=s88-c-k-c0x00ffffff-no-rj";
-echo '<TD style="text-align:center"><font size="4">'.'<a href="'.$link.'" target="_blank">'.$title.'</a></font></TD>';
-/*
-$title="(channel) FILME HD Romanesti, Teatru Tv si Filme Straine";
-$link="yt_channel.php?token=&id=UCpwjXGhQSLjyDvTFrsYvoug&kind=channel&title=%28channel%29+FILME+HD+Romanesti%23virgula+Teatru+Tv+si+Filme+Straine&image=https://yt3.ggpht.com/-C-ZhAnaML8I/AAAAAAAAAAI/AAAAAAAAAAA/WwUsCIA-nLI/s88-c-k-no-mo-rj-c0xffffff/photo.jpg";
-echo '<TD style="text-align:center"><font size="4">'.'<a href="'.$link.'" target="_blank">'.$title.'</a></font></TD>';
-*/
-$title="ronemo";
-$link="ronemo.php?page=1&tip=release&title=ronemo&link=";
-echo '<TD style="text-align:center"><font size="4">'.'<a href="'.$link.'" target="_blank">'.$title.'</a></font></TD>';
-echo '<TD></TD>';
+
+
 echo "</TR>"."\n\r";
 echo "<TR>"."\n\r";
 $title="filme_yt";
@@ -78,7 +58,10 @@ $title="dailymotion";
 $link="dailymotion_fav.php";
 echo '<TD style="text-align:center"><font size="4">'.'<a href="'.$link.'" target="_blank">'.$title.'</a></font></TD>';
 
-echo "<TD></TD>";
+$title="Cartoons";
+$link="../tv/b98.php?page=1,,Cartoons";
+echo '<TD style="text-align:center"><font size="4">'.'<a href="'.$link.'" target="_blank">'.$title.'</a></font></TD>';
+
 $link="best_cs.php";
 echo '<TD style="text-align:center"><font size="4">'.'<a href="'.$link.'" target="_blank">Classic SciFi Movies</a></font></TD>';
 echo "</TR>"."\n\r";
