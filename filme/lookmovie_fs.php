@@ -221,6 +221,7 @@ $last_good="https://lookmovie2.to";
    //else
      //$ss=$sss[$k]['file'];
    //$srt1[$sss[$k]['language']] = $ss;
+   if (!isset($srt1[$sss[$key]['language']]))
    $srt1[$sss[$key]['language']] = $ss;
    }
   }
@@ -296,6 +297,7 @@ $s=array();
    //else
      //$ss=$sss[$k]['file'];
    //$srt1[$sss[$k]['language']] = $ss;
+   if (!isset($srt1[$sss[$key]['language']]))
    $srt1[$sss[$key]['language']] = $ss;
    }
   }

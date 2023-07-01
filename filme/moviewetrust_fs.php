@@ -190,6 +190,11 @@ $l="https://api.themoviedb.org/3/tv/".$link."?api_key=".$api_key."&append_to_res
 //https://databasegdriveplayer.xyz/player.php?imdb=tt9165824
 //https://databasegdriveplayer.xyz/player.php?type=series&imdb=tt0061265&season=1&episode=7
 if ($tip=="movie")
+ $r[]="https://fsa.remotestre.am/Movies/".$link."/".$link.".m3u8";
+else
+ $r[]="https://fsa.remotestre.am/Shows/".$link."/".$sez."/".$ep."/".$ep.".m3u8";
+ $s[]="remotestre";
+if ($tip=="movie")
 $l="https://databasegdriveplayer.xyz/player.php?imdb=".$imdb;
 else
 $l="https://databasegdriveplayer.xyz/player.php?type=series&imdb=".$imdb."&season=".$sez."&episode=".$ep;
@@ -450,6 +455,19 @@ foreach($videos as $video) {
    //echo $l;
   $r[]=$l;
   $s[]="Vidcloud";
+if ($tip=="movie") {
+ $r[]="https://www.2embed.cc/imdb/".$imdb;
+ $s[]="2embed";
+}
+///////////////////////////////
+if ($tip=="movie") {
+ $r[]="https://api.9animetv.live/player/cinema-player.php?id=".$imdb;
+ $s[]="9animetv";
+} else {
+ $r[]="https://api.9animetv.live/player/cinema-player.php?id=".$imdb."&s=".$sez."&e=".$ep;
+ $s[]="9animetv";
+}
+
 ///////////////////////////////////////////
 //print_r ($r);
 echo '<table border="1" width="100%">';

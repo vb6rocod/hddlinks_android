@@ -25,6 +25,8 @@
   curl_setopt($ch, CURLOPT_TIMEOUT, 25);
   $h = curl_exec($ch);
   curl_close($ch);
+  //echo $h;
+  //die();
   file_put_contents("vidsrc_time.txt",time());
   }
 header("location: $out");

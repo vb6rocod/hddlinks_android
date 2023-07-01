@@ -5,9 +5,9 @@ $host=$_GET['host'];
 $page_title="Filme favorite";
 $width="200px";
 $height="278px";
-$add_target="2embed_f_add.php";
-$fs_target="2embed_fs.php";
-$file=$base_fav."2embed_f.dat";
+$add_target="ridomovies_f_add.php";
+$fs_target="ridomovies_fs.php";
+$file=$base_fav."ridomovies_f.dat";
 ?>
 <html><head>
 <meta http-equiv="content-type" content="text/html; charset=UTF-8">
@@ -109,7 +109,6 @@ if (file_exists($file)) {
     }
   }
 }
-//echo $h;
 if ($arr) {
 $n=0;
 $w=0;
@@ -135,7 +134,7 @@ foreach($arr as $key => $value) {
    $year="";
    $tit_imdb=$title;
   }
-    //$link=$host.parse_url($link)['path'];
+    $link=$host.parse_url($link)['path'];
     $last_good="https://".$host;
     $link_f=$fs_target.'?tip=movie&link='.urlencode($link).'&title='.urlencode(fix_t($title)).'&image='.$image."&sez=&ep=&ep_tit=&year=".$year."&last=".$last_good;
   if ($n==0) echo '<TR>'."\r\n";

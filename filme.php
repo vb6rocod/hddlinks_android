@@ -83,7 +83,7 @@ else
 
 <TR>
 <TD width="25%"><a href="filme/lookmovie_f.php?page=1&tip=release&title=lookmovie&link=" target="_blank">lookmovie</a></TD>
-<TD width="25%"><a href="filme/2embed_f.php?page=1&tip=release&title=2embed&link=" target="_blank">2embed</a></TD>
+<TD width="25%"><a href="filme/streamflix_f.php?page=1&tip=release&title=streamflix&link=popular" target="_blank">streamflix</a></TD>
 <TD width="25%"><a href="filme/vidcloud9_f.php?page=1&tip=release&title=vidcloud9&link=" target="_blank">vidcloud9</a></TD>
 <TD width="25%"><a href="filme/azseries_f.php?page=1&tip=release&title=azseries&link=" target="_blank">azseries</a></TD>
 </TR>
@@ -96,7 +96,8 @@ else
 </TR>
 
 <TR>
-<TD width="25%"><a href="filme/uniquestream_f.php?page=1&tip=release&title=uniquestream&link=" target="_blank">uniquestream</a></TD>
+<!--<TD width="25%"><a href="filme/uniquestream_f.php?page=1&tip=release&title=uniquestream&link=" target="_blank">uniquestream</a></TD>-->
+<TD width="25%"><a href="filme/ridomovies_f.php?page=1&tip=release&title=ridomovies&link=" target="_blank">ridomovies</a></TD>
 <TD width="25%"><a href="filme/c1ne_f.php?page=1&tip=release&title=c1ne&link=" target="_blank">c1ne</a></TD>
 <TD width="25%"><a href="filme/fsharetv.php?page=1&tip=release&title=fsharetv&link=" target="_blank">fsharetv</a></TD>
 <TD width="25%"><a href="filme/goojara_f.php?page=1&tip=release&title=goojara&link=" target="_blank">goojara</a></TD>

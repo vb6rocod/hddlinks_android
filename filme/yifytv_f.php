@@ -21,6 +21,7 @@ $last_good="https://yify.plus";
 // https://spacemov.site/
 // https://spacemov.site/movies/secret-headquarters-2022/
 $last_good="https://ytsmovie.tv";
+//$last_good="https://ytsmovie.mx";
 $host=parse_url($last_good)['host'];
 /* ==================================================== */
 $has_fav="yes";

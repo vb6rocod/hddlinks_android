@@ -5,27 +5,23 @@ function str_between($string, $start, $end){
 	if ($ini == 0) return ""; $ini += strlen($start); $len = strpos($string,$end,$ini) - $ini;
 	return substr($string,$ini,$len);
 }
-include ("../common.php");
+include ("../common.php");;
 $page = $_GET["page"];
 $tip= $_GET["tip"];
 $tit=$_GET["title"];
 $link=$_GET["link"];
 $width="200px";
 $height="278px";
-$last_good="https://2embed.to";
-//$last_good="https://allmoviesforyou.co";
-// https://cinemashack.co/movies/
-$host=parse_url($last_good)['host'];
 /* ==================================================== */
 $has_fav="yes";
 $has_search="yes";
 $has_add="yes";
 $has_fs="yes";
-$fav_target="2embed_f_fav.php?host=".$last_good;
-$add_target="2embed_f_add.php";
+$fav_target="streamflix_s_fav.php?host=";
+$add_target="streamflix_s_add.php";
 $add_file="";
-$fs_target="2embed_fs.php";
-$target="2embed_f.php";
+$fs_target="streamflix_ep.php";
+$target="streamflix_s.php";
 /* ==================================================== */
 $base=basename($_SERVER['SCRIPT_FILENAME']);
 $p=$_SERVER['QUERY_STRING'];
@@ -43,12 +39,12 @@ $prev=$base."?page=".($page-1)."&".$p;
 $tit=unfix_t(urldecode($tit));
 $link=unfix_t(urldecode($link));
 /* ==================================================== */
-if (file_exists($base_cookie."filme.dat"))
-  $val_search=file_get_contents($base_cookie."filme.dat");
+if (file_exists($base_cookie."seriale.dat"))
+  $val_search=file_get_contents($base_cookie."seriale.dat");
 else
   $val_search="";
 $form='<form action="'.$target.'" target="_blank">
-Cautare film:  <input type="text" id="title" name="title" value="'.$val_search.'">
+Cautare serial:  <input type="text" id="title" name="title" value="'.$val_search.'">
 <input type="hidden" name="page" id="page" value="1">
 <input type="hidden" name="tip" id="tip" value="search">
 <input type="hidden" name="link" id="link" value="">
@@ -57,7 +53,7 @@ Cautare film:  <input type="text" id="title" name="title" value="'.$val_search.'
 /* ==================================================== */
 if ($tip=="search") {
   $page_title = "Cautare: ".$tit;
-  if ($page == 1) file_put_contents($base_cookie."filme.dat",$tit);
+  if ($page == 1) file_put_contents($base_cookie."seriale.dat",$tit);
 } else
   $page_title=$tit;
 /* ==================================================== */
@@ -77,6 +73,32 @@ if ($tip=="search") {
 
 <script type="text/javascript">
 var id_link="";
+function openlink1(link) {
+  msg="link1.php?file=" + link;
+  window.open(msg);
+}
+function openlink(link) {
+  on();
+  var request =  new XMLHttpRequest();
+  var the_data = "link=" + link;
+  //alert (the_data);
+  var php_file="link1.php";
+  request.open("POST", php_file, true);			// set the request
+
+  // adds a header to tell the PHP script to recognize the data as is sent via POST
+  request.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+  request.send(the_data);		// calls the send() method with datas as parameter
+
+  // Check request status
+  // If the response is received completely, will be transferred to the HTML tag with tagID
+  request.onreadystatechange = function() {
+    if (request.readyState == 4) {
+      off();
+      document.getElementById("mytest1").href=request.responseText;
+      document.getElementById("mytest1").click();
+    }
+  }
+}
 function ajaxrequest(link) {
   var request =  new XMLHttpRequest();
   var the_data = link;
@@ -105,6 +127,12 @@ function isValid(evt) {
      msg="imdb.php?" + val_imdb;
      document.getElementById("fancy").href=msg;
      document.getElementById("fancy").click();
+    } else if  (charCode == "52") {
+     id = "imdb_" + self.id;
+     id_link=self.id;
+     val_imdb=document.getElementById(id).value;
+     msg="http://imdb.com/imdb.php&" + val_imdb;
+     openlink (msg);
     } else if  (charCode == "51") {
       id = "fav_" + self.id;
       val_fav=document.getElementById(id).value;
@@ -131,17 +159,35 @@ function isKeyPressed(event) {
     msg="imdb.php?" + val_imdb;
     document.getElementById("fancy").href=msg;
     document.getElementById("fancy").click();
+  } else if (event.shiftKey) {
+    id = "imdb_" + event.target.id;
+    //alert (id);
+    val_imdb=document.getElementById(id).value;
+    msg="http://imdb.com/imdb.php&" + val_imdb;
+    openlink1(msg);
   }
+}
+function on() {
+    document.getElementById("overlay").style.display = "block";
+}
+
+function off() {
+    document.getElementById("overlay").style.display = "none";
 }
 $(document).on('keyup', '.imdb', isValid);
 document.onkeypress =  zx;
 </script>
 </head>
 <body>
+<a href='' id='mytest1'></a>
 <a id="fancy" data-fancybox data-type="iframe" href=""></a>
 <?php
 $w=0;
 $n=0;
+if (file_exists($base_pass."tmdb.txt"))
+  $api_key=file_get_contents($base_pass."tmdb.txt");
+else
+  $api_key="";
 echo '<H2>'.$page_title.'</H2>'."\r\n";
 
 echo '<table border="1px" width="100%" style="table-layout:fixed;">'."\r\n";
@@ -169,68 +215,74 @@ if ($page==1) {
    echo '<TD class="nav" colspan="4" align="right"><a href="'.$prev.'">&nbsp;&lt;&lt;&nbsp;</a> | <a href="'.$next.'">&nbsp;&gt;&gt;&nbsp;</a></TD>'."\r\n";
 }
 echo '</TR>'."\r\n";
-$r=array();
-if ($tip=="search") {
- $search= str_replace(" ","+",$tit);
- if ($page==1)
-  $l=$last_good."/library/search?keyword=".$search;
- else
-  $l=$last_good."/library/search?keyword=".$search."&page=".$page;
+if($tip=="release") {
+  $l="https://api.themoviedb.org/3/tv/popular?api_key=".$api_key."&language=en-US&page=".$page;
 } else {
-  $l=$last_good."/library";
+  $search=str_replace(" ","+",$tit);
+  $l="https://api.themoviedb.org/3/search/multi?api_key=".$api_key."&language=en-US&query=".$search."&page=".$page."&include_adult=false";
 }
-//https://www.2embed.to/library/search?keyword=star&page=2
-$host=parse_url($l)['host'];
-$ua="Mozilla/5.0 (Windows NT 10.0; rv:75.0) Gecko/20100101 Firefox/75.0";
-  $ch = curl_init();
-  curl_setopt($ch, CURLOPT_URL, $l);
-  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+///////////////////////////////////////////////
+$ua = $_SERVER['HTTP_USER_AGENT'];
+$ua="Mozilla/5.0 (Windows NT 10.0; rv:88.0) Gecko/20100101 Firefox/88.0";
+
+  $ch = curl_init($l);
   curl_setopt($ch, CURLOPT_USERAGENT, $ua);
   curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER  ,1);  // RETURN THE CONTENTS OF THE CALL
   curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
   curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
   curl_setopt($ch, CURLOPT_TIMEOUT, 25);
-  $h = curl_exec($ch);
-  curl_close($ch);
-$path = parse_url($l)['path'];
-//echo $h;
-$host=parse_url($l)['host'];
-
-$videos = explode('<div class="film-poster"', $h);
-unset($videos[0]);
-$videos = array_values($videos);
-foreach($videos as $video) {
- if (preg_match("/\/library\/movie\//",$video)) {
- $t1=explode('/library/movie/',$video);
- $t2=explode('"',$t1[1]);
- $link="https://www.2embed.to/embed/tmdb/movie?id=".$t2[0];
- $t3=explode('class="bop-name">',$video);
- $t4=explode('<',$t3[1]);
- $title=trim($t4[0]);
- $title=prep_tit($title);
- $t1=explode('src="',$video);
- $t2=explode('"',$t1[1]);
- $image=$t2[0];
-
- $year="";
- $r[] = array($title,$link,$image,$year);
+  $html = curl_exec($ch);
+  curl_close ($ch);
+  $x=json_decode($html,1);
+  //print_r ($x);
+  $r=array();
+if ($tip=="release") {
+ for ($k=0;$k<count($x['results']);$k++) {
+   $title=$x['results'][$k]['name'];
+   if ($x['results'][$k]['poster_path'])
+    $image="http://image.tmdb.org/t/p/w500".$x['results'][$k]['poster_path'];
+   else
+    $image="blank.jpg";
+   $link=$x['results'][$k]['id'];
+   $r[]=array($link,$title,$image,"");
+ }
+} else {
+ for ($k=0;$k<count($x['results']);$k++) {
+  if ($x['results'][$k]['media_type'] == "tv") {
+   $title=$x['results'][$k]['name'];
+   if (isset($x['results'][$k]['poster_path']))  // backdrop_path
+    $image="http://image.tmdb.org/t/p/w500".$x['results'][$k]['poster_path'];
+   else
+    $image="blank.jpg";
+   $link=$x['results'][$k]['id'];
+   $r[]=array($link,$title,$image,"");
+  } elseif ($x['results'][$k]['media_type'] == "person") {
+    $link=$x['results'][$k]['id'];
+    $title=$x['results'][$k]['name'];
+    if ($x['results'][$k]['profile_path'])
+    $image="http://image.tmdb.org/t/p/w500".$x['results'][$k]['profile_path'];
+    else
+    $image="blank.jpg";
+    $r[]=array($link,$title,$image,"p");
  }
 }
-//echo $html;
-$c=count($r);
-for ($k=0;$k<$c;$k++) {
-  $link=$r[$k][1];
-  $title=$r[$k][0];
+}
+for ($k=0; $k<count($r);$k++) {
+  $link=$r[$k][0];
+  $title=$r[$k][1];
   $image=$r[$k][2];
-  $year=$r[$k][3];
-  $imdb="";
-
+  $person=$r[$k][3];
   $tit_imdb=$title;
-  $link_f=$fs_target.'?tip=movie&link='.urlencode($link).'&title='.urlencode(fix_t($title)).'&image='.$image."&sez=&ep=&ep_tit=&year=".$year;
-  if ($title) {
+  $imdb="";
+  $year="";
+  $sez="";
+  $link_f=$fs_target.'?tip=series&link='.urlencode($link).'&title='.urlencode(fix_t($title)).'&image='.$image."&sez=".$sez."&ep=&ep_tit=&year=".$year;
+
   if ($n==0) echo '<TR>'."\r\n";
-  $val_imdb="tip=movie&title=".urlencode(fix_t($tit_imdb))."&year=".$year."&imdb=".$imdb;
+  $val_imdb="tip=series&title=".urlencode(fix_t($tit_imdb))."&year=".$year."&imdb=".$imdb."&tmdb=".$link;
   $fav_link="mod=add&title=".urlencode(fix_t($title))."&link=".urlencode($link)."&image=".urlencode($image)."&year=".$year;
+  if ($person == "") {
   if ($tast == "NU") {
     echo '<td class="mp" width="25%"><a href="'.$link_f.'" id="myLink'.$w.'" target="_blank" onmousedown="isKeyPressed(event)">
     <img id="myLink'.$w.'" src="'.$image.'" width="'.$width.'" height="'.$height.'"><BR>'.$title.'</a>
@@ -247,11 +299,16 @@ for ($k=0;$k<$c;$k++) {
     echo '</TD>'."\r\n";
   }
   $w++;
+  } else {
+    $link_f="streamflix_p.php?page=1&link=".$link."&title=".urlencode($title);
+    echo '<td class="mp" width="25%"><a class ="imdb" href="'.$link_f.'" target="_blank">
+    <img src="'.$image.'" width="'.$width.'" height="'.$height.'"><BR>'.$title.' (person)</a>';
+    echo '</TD>'."\r\n";
+  }
   $n++;
   if ($n == 4) {
   echo '</tr>'."\r\n";
   $n=0;
-  }
   }
  }
 
@@ -271,5 +328,9 @@ else
 echo '</TR>'."\r\n";
 echo "</table>"."\r\n";
 echo "</table>";
-?></body>
+?>
+<div id="overlay">
+  <div id="text">Wait....</div>
+</div>
+</body>
 </html>

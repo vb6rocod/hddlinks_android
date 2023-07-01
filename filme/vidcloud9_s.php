@@ -17,7 +17,8 @@ $has_fav="yes";
 $has_search="yes";
 $has_add="yes";
 $has_fs="yes";
-$fav_target="vidcloud9_s_fav.php?host=https://vidembed.cc";
+$last_good="https://membed1.com";
+$fav_target="vidcloud9_s_fav.php?host=".$last_good;
 $add_target="vidcloud9_s_add.php";
 $add_file="";
 $fs_target="vidcloud9_ep.php";
@@ -167,10 +168,10 @@ if ($page==1) {
 echo '</TR>'."\r\n";
 
 if($tip=="release") {
-  $l="https://vidembed.cc/series?page=".$page;
+  $l=$last_good."/series?page=".$page;
 } else {
   $search=str_replace(" ","%20",$tit);
-  $l="https://vidembed.cc/search.html?page=".$page."&keyword=".$search;
+  $l=$last_good."/search.html?page=".$page."&keyword=".$search;
 }
 $host=parse_url($l)['host'];
 $head=array('Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',

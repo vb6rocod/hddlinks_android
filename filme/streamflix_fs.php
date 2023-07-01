@@ -1,12 +1,13 @@
 <!doctype html>
 <?php
 include ("../common.php");
-error_reporting(0);
+//error_reporting(0);
 $list = glob($base_sub."*.srt");
    foreach ($list as $l) {
     str_replace(" ","%20",$l);
     unlink($l);
 }
+if (file_exists("vidsrc.txt")) unlink ("vidsrc.txt");
 if (file_exists($base_pass."debug.txt"))
  $debug=true;
 else
@@ -57,17 +58,27 @@ function str_between($string, $start, $end){
 <meta http-equiv="content-type" content="text/html; charset=UTF-8">
 <title><?php echo $tit.$tit2; ?></title>
 <link rel="stylesheet" type="text/css" href="../custom.css" />
-<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.0/jquery.min.js"></script>
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 <script type="text/javascript">
 function openlink1(link) {
   link1=document.getElementById('file').value;
+  //alert (link1);
+  if (link1.match(/streamembed|imwatchingmovies/gi)) {
+  msg="streamembed1.php?file=" + link1 + "&title=" + link + "&tip=flash";
+  window.open(msg);
+  } else {
   msg="link1.php?file=" + link1 + "&title=" + link;
   window.open(msg);
+  }
 }
 function openlink(link) {
+  link1=document.getElementById('file').value;
+  if (link1.match(/streamembed|imwatchingmovies/gi)) {
+  msg="streamembed1.php?file=" + link1 + "&title=" + link + "&tip=mp";
+  window.open(msg);
+  } else {
   on();
   var request =  new XMLHttpRequest();
-  link1=document.getElementById('file').value;
   var the_data = "link=" + link1 + "&title=" + link;
   var php_file="link1.php";
   request.open("POST", php_file, true);			// set the request
@@ -87,6 +98,7 @@ function openlink(link) {
       document.getElementById("mytest1").href=request.responseText;
       document.getElementById("mytest1").click();
     }
+  }
   }
 }
 function changeserver(s,t) {
@@ -129,80 +141,104 @@ function off() {
 </script>
 </head>
 <body>
+
 <a href='' id='mytest1'></a>
 <?php
+
 echo '<h2>'.$tit.$tit2.'</H2>';
 echo '<BR>';
+
 $r=array();
-$host=parse_url($link)['host'];
-$head=array('Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
-'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2');
-//echo $link."\n";
-  $ch = curl_init();
-  curl_setopt($ch, CURLOPT_URL, $link);
-  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-  curl_setopt($ch,CURLOPT_REFERER,"https://membed1.com");
-  curl_setopt($ch,CURLOPT_HTTPHEADER,$head);
-  curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 10.0; rv:55.0) Gecko/20100101 Firefox/55.0');
+$s=array();
+$ua="Mozilla/5.0 (Windows NT 10.0; rv:88.0) Gecko/20100101 Firefox/88.0";
+if (file_exists($base_pass."tmdb.txt"))
+  $api_key=file_get_contents($base_pass."tmdb.txt");
+else
+  $api_key="";
+///////////////////////////////////////////////////////
+if ($tip=="movie")
+$l="https://api.themoviedb.org/3/movie/".$link."?api_key=".$api_key."&append_to_response=external_ids";
+else
+$l="https://api.themoviedb.org/3/tv/".$link."?api_key=".$api_key."&append_to_response=external_ids";
+  $ch = curl_init($l);
+  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
   curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER  ,1);  // RETURN THE CONTENTS OF THE CALL
   curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
   curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
   curl_setopt($ch, CURLOPT_TIMEOUT, 25);
   $html = curl_exec($ch);
-  curl_close($ch);
-//echo $html."\n";
-//echo "==================================="."\n";
-  $t1=explode("streaming.php",$html);
-  $t2=explode('"',$t1[1]);
-  $l="https://".$host."/streaming.php".$t2[0];
-  //$t1=explode('iframe src="',$html);
-  //$t2=explode('"',$t1[1]);
-  //$l="https:".$t2[0];
-  //echo $l."\n";
-  $l=str_replace(" ","+",$l);
-  $r[]=urlencode($l);
+  curl_close ($ch);
+  $x=json_decode($html,1);
+  //print_r ($x);
+  //die();
+  $imdb=$x['external_ids']['imdb_id'];
+  //echo $imdb;
+  //die();
+//////////////////////////////////////
+if ($tip=="movie")
+$l="https://us-west2-compute-proxied.streamflix.one/api/player/movies?id=".$link;
+else
+$l="https://us-west2-compute-proxied.streamflix.one/api/player/tv?id=".$link."&s=".$sez."&e=".$ep;
+$ua="Mozilla/5.0 (Windows NT 10.0; rv:75.0) Gecko/20100101 Firefox/75.0";
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $l);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-  curl_setopt($ch,CURLOPT_REFERER,"https://membed1.com");
-  curl_setopt($ch,CURLOPT_HTTPHEADER,$head);
-  curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 10.0; rv:55.0) Gecko/20100101 Firefox/55.0');
+  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
   curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
   curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
   curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
   curl_setopt($ch, CURLOPT_TIMEOUT, 25);
   $h = curl_exec($ch);
   curl_close($ch);
-  //echo $h."\n";
-  $videos=explode('data-video="',$h);
-  unset($videos[0]);
-  $videos = array_values($videos);
-  foreach($videos as $video) {
-    $t1=explode('"',$video);
-    $l=$t1[0];
-    if ($l) {
-     if (strpos($l,"http") === false)
-       $l="https:".$l;
-     $r[]=urlencode($l);
-    }
+  //echo $h;
+  $x=json_decode($h,1);
+  //print_r ($x);
+  if (isset($x['sources'][0])) {
+   $ref=$x['headers']['Referer'];
+   for ($k=0;$k<count($x['sources']);$k++) {
+     if (!preg_match("/auto/i",$x['sources'][$k]['quality'])) {
+      $s[]= $x['sources'][$k]['quality'];
+      $r[]= $x['sources'][$k]['url'];
+     }
+   }
   }
-  if (preg_match("/iframe\s*id\=\"embedvideo\"\s*src\=\"([^\"]+)\"/",$h,$m)) {
-   $r[]=urlencode($m[1]);
+  $lang="";
+  $srt="";
+  if (isset($x['subtitles'][0])) {
+  $srt="";
+  $sss=$x['subtitles'];
+  foreach($sss as $key=>$value) {
+   if (preg_match("/romanian/i",$sss[$key]['lang'])) {
+     $srt=$sss[$key]['url'];
+     $lang="Romanian";
+   }
   }
-
+  if (!$srt) {
+  foreach($sss as $key=>$value) {
+   if (preg_match("/english/i",$sss[$key]['lang'])) {
+     $srt=$sss[$key]['url'];
+     $lang="English";
+   }
+  }
+  }
+  } else {
+   $srt="";
+  }
+///////////////////////////////////////////
 //print_r ($r);
 echo '<table border="1" width="100%">';
-echo '<TR><TD class="mp">Alegeti un server: Server curent:<label id="server">'.parse_url(urldecode($r[0]))['host'].'</label>
-<input type="hidden" id="file" value="'.urlencode($r[0]).'"></td></TR></TABLE>';
+echo '<TR><TD class="mp">Alegeti un server: Server curent:<label id="server">'.$s[0].'</label>
+<input type="hidden" id="file" value="'.urlencode("https://streamflix.one?link=".$r[0]."&sub=".$srt."&ref=".$ref).'"></td></TR></TABLE>';
 echo '<table border="1" width="100%"><TR>';
 $k=count($r);
 $x=0;
 for ($i=0;$i<$k;$i++) {
   if ($x==0) echo '<TR>';
-  $c_link=$r[$i];
-  $openload=parse_url(urldecode($r[$i]))['host'];
-  if (preg_match($indirect,$openload)) {
-  echo '<TD class="mp"><a href="filme_link.php?file='.urlencode($c_link).'&title='.urlencode(unfix_t($tit.$tit2)).'" target="_blank">'.$openload.'</a></td>';
+  $c_link="https://streamflix.one?link=".$r[$i]."&sub=".$srt."&ref=".$ref;
+  $openload=$s[$i];
+  if (preg_match("/streamembed1/",$c_link)) {
+  echo '<TD class="mp"><a href="streamembed1.php?file='.urlencode($c_link).'&title='.urlencode(unfix_t($tit.$tit2)).'&tip='.$flash.'" target="_blank">'.$openload.'</a></td>';
   } else
   echo '<TD class="mp"><a id="myLink" href="#" onclick="changeserver('."'".$openload."','".urlencode($c_link)."'".');return false;">'.$openload.'</a></td>';
   $x++;
@@ -234,10 +270,7 @@ if ($tip=="movie") {
   $from="";
   $link_page="";
 }
-  $rest = substr($tit3, -6);
-  if (preg_match("/\((\d+)\)/",$rest,$m)) {
-   $tit3=trim(str_replace($m[0],"",$tit3));
-  }
+$imdbid=str_replace("tt","",$imdb);
 $sub_link ="from=".$from."&tip=".$tip."&sez=".$sez."&ep=".$ep."&imdb=".$imdbid."&title=".urlencode(fix_t($tit3))."&link=".$link_page."&ep_tit=".urlencode(fix_t($tit2))."&year=".$year;
 include ("subs.php");
 echo '<table border="1" width="100%"><TR>';
@@ -245,10 +278,12 @@ if ($tip=="movie")
   $openlink=urlencode(fix_t($tit3));
 else
   $openlink=urlencode(fix_t($tit.$tit2));
+
  if ($flash != "mp")
    echo '<TD align="center" colspan="4"><a id="viz" onclick="'."openlink1('".$openlink."')".'"'." style='cursor:pointer;'>".'VIZIONEAZA !</a></td>';
  else
    echo '<TD align="center" colspan="4"><a id="viz" onclick="'."openlink('".$openlink."')".'"'." style='cursor:pointer;'>".'VIZIONEAZA !</a></td>';
+
 echo '</tr>';
 echo '</table>';
 echo '<br>
@@ -256,8 +291,12 @@ echo '<br>
 <TR>
 <TD><font size="4"><b>Scurtaturi: 1=opensubtitles, 2=titrari, 3=subs, 4=subtitrari, 5=vizioneaza
 <BR>Scurtaturi: 7=opensubtitles, 8=titrari, 9=subs, 0=subtitrari (cauta imdb id)
-</b></font></TD></TR></TABLE>
+</b></font></TD></TR></TABLE><BR>
 ';
+if ($lang) {
+ echo '<b>Subtitles: '.$lang."</b><BR>";
+}
+//echo '<a href="https://streamembed.net/play/YTF0TklLYXplRnRhdjNTcHBUQUxnUzd1amt0UkIrZTJTWUZlQk8wYXJsWXhlT2EzTkxaQkU0RU9HQ2ZwemhvPQ==">sasaasas</a>';
 include("../debug.html");
 echo '
 <div id="overlay">

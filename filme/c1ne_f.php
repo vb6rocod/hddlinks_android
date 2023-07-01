@@ -170,6 +170,9 @@ if ($page==1) {
 echo '</TR>'."\r\n";
 
 if($tip=="release") {
+  if ($page==1)
+  $l=$last_good."/tag/movies/";
+  else
   $l=$last_good."/tag/movies/?_page=".$page;
 } else {
   $search=$tit;
@@ -215,6 +218,7 @@ $ua="Mozilla/5.0 (Windows NT 10.0; rv:88.0) Gecko/20100101 Firefox/88.0";
 if ($tip=="release") {
 $head=array('Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
 'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2');
+//$l="https://c1ne.co/tag/movies/";
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $l);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);

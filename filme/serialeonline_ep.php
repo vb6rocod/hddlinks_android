@@ -42,7 +42,7 @@ $ua = $_SERVER['HTTP_USER_AGENT'];
   curl_setopt($ch, CURLOPT_TIMEOUT, 15);
   $h = curl_exec($ch);
   curl_close($ch);
-
+//echo $h;
 $n=0;
 $videos = explode('class="se-q">', $h);
 $sezoane=array();
@@ -102,6 +102,7 @@ foreach($videos as $video) {
   $t3=explode('<',$t2[1]);
   $title=$t3[0];
   $title=str_replace("&nbsp;"," ",$title);
+  $title=substr($title, 0, -3);
   $ep_tit=prep_tit($title);
   if ($ep_tit)
    $ep_tit_d=$season."x".$episod." ".$ep_tit;

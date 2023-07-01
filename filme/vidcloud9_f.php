@@ -17,7 +17,8 @@ $has_fav="yes";
 $has_search="yes";
 $has_add="yes";
 $has_fs="yes";
-$fav_target="vidcloud9_f_fav.php?host=https://vidembed.cc";
+$last_good="https://membed1.com";
+$fav_target="vidcloud9_f_fav.php?host=".$last_good;
 $add_target="vidcloud9_f_add.php";
 $add_file="";
 $fs_target="vidcloud9_fs.php";
@@ -167,10 +168,10 @@ if ($page==1) {
 echo '</TR>'."\r\n";
 
 if($tip=="release") {
-  $l="https://vidembed.cc/movies?page=".$page;
+  $l=$last_good."/movies?page=".$page;
 } else {
   $search=str_replace(" ","%20",$tit);
-  $l="https://vidembed.cc/search.html?page=".$page."&keyword=".$search;
+  $l=$last_good."/search.html?page=".$page."&keyword=".$search;
 }
 $host=parse_url($l)['host'];
 $head=array('Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
@@ -178,7 +179,7 @@ $head=array('Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $l);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-  curl_setopt($ch,CURLOPT_REFERER,"https://vidembed.cc");
+  curl_setopt($ch,CURLOPT_REFERER,$last_good);
   curl_setopt($ch,CURLOPT_HTTPHEADER,$head);
   curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 10.0; rv:55.0) Gecko/20100101 Firefox/55.0');
   curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);

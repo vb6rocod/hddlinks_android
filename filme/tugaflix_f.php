@@ -219,6 +219,8 @@ foreach($videos as $video) {
  $title=trim($t4[0]);
  $t1=explode('src="',$video);
  $t2=explode('"',$t1[1]);
+ if (preg_match("/\.png/",$t2[0]))
+  $t2=explode('"',$t1[2]);
  $image=$t2[0];
 
  $year="";

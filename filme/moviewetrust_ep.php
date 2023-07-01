@@ -52,12 +52,14 @@ $sezoane=array();
 $sezoane_id=array();
 for ($k=0; $k<count($s);$k++) {
   //$sezoane_name[]=$s[$k]['name'];  // See Babylon 5
+  if ($s[$k]['season_number'] != 0) {
   $sezoane[]=$s[$k]['season_number'];
   if ($s[$k]['season_number'] == 0)
     $sezoane_name[]="Specials";
   else
     $sezoane_name[]="Season ".$s[$k]['season_number'];
   $sezoane_id[]=$s[$k]['id'];
+  }
 }
 echo '<table border="1" width="100%">'."\n\r";
 

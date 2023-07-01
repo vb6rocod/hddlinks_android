@@ -10,8 +10,8 @@ $year=$_GET['year'];
 /* ======================================= */
 $width="200px";
 $height="100px";
-$fs_target="2embed_fs.php";
-$has_img="no";
+$fs_target="streamflix_fs.php";
+$has_img="yes";
 ?>
 <html>
 <head>
@@ -30,41 +30,36 @@ function str_between($string, $start, $end){
 	return substr($string,$ini,$len);
 }
 echo '<h2>'.$tit.'</h2>';
-$ua="Mozilla/5.0 (Windows NT 10.0; rv:80.0) Gecko/20100101 Firefox/80.0";
-
-$head=array('Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
-'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
-'Accept-Encoding: deflate',
-'Connection: keep-alive');
-//echo $link;
-  $ch = curl_init($link);
-  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
+if (file_exists($base_pass."tmdb.txt"))
+  $key=file_get_contents($base_pass."tmdb.txt");
+else
+  $key="";
+$l="https://api.themoviedb.org/3/tv/".$link."?api_key=".$key;
+  $ch = curl_init($l);
+  curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows; U; Windows NT 6.1; en-US; rv:1.9.1.2) Gecko/20090729 Firefox/3.5.2 GTB5');
   curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER  ,1);  // RETURN THE CONTENTS OF THE CALL
+  //curl_setopt($ch, CURLOPT_HEADER, true);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
   curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-  curl_setopt($ch, CURLOPT_HTTPHEADER,$head);
-  //curl_setopt($ch, CURLOPT_COOKIEJAR, $cookie);
-  //curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie);
-  //curl_setopt($ch, CURLOPT_HEADER,1);
-  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
-  curl_setopt($ch, CURLOPT_TIMEOUT, 25);
   $h = curl_exec($ch);
   curl_close ($ch);
-  //die();
-//echo $h;
-  $t1=explode('movie-tmdbid" value="',$h);
-  $t2=explode('"',$t1[1]);
-  $tmdb=$t2[0];
-$n=0;
-$videos = explode('<div class="edit-episodes"', $h);
+  $s=json_decode($h,1)['seasons'];
+  //print_r ($s);
+$sezoane_name=array();
 $sezoane=array();
-unset($videos[0]);
-$videos = array_values($videos);
-//$videos = array_reverse($videos);
-foreach($videos as $video) {
-  $t1=explode("ss-episodes-",$video);
-  $t2=explode('"',$t1[1]);
-  $sezoane[]=trim($t2[0]);
+$sezoane_id=array();
+for ($k=0; $k<count($s);$k++) {
+  //$sezoane_name[]=$s[$k]['name'];  // See Babylon 5
+  if ($s[$k]['season_number'] != 0) {
+  $sezoane[]=$s[$k]['season_number'];
+  if ($s[$k]['season_number'] == 0)
+    $sezoane_name[]="Specials";
+  else
+    $sezoane_name[]="Season ".$s[$k]['season_number'];
+  $sezoane_id[]=$s[$k]['id'];
+  }
 }
 echo '<table border="1" width="100%">'."\n\r";
 
@@ -72,7 +67,7 @@ $p=0;
 $c=count($sezoane);
 for ($k=0;$k<$c;$k++) {
 if ($p==0) echo '<TR>';
-echo '<td class="sez" style="color:black;text-align:center"><a href="#sez'.($sezoane[$k]).'">Sezonul '.($sezoane[$k]).'</a></TD>';
+echo '<td class="sez" style="color:black;text-align:center"><a href="#sez'.($sezoane[$k]).'">'.$sezoane_name[$k].'</a></TD>';
 $p++;
 if ($p == 10) {
  echo '</tr>';
@@ -87,37 +82,45 @@ if ($p < 10 && $p > 0 && $k > 9) {
 }
 echo '</TABLE>';
 
-foreach($videos as $video) {
-  $t1=explode("ss-episodes-",$video);
-  $t2=explode('"',$t1[1]);
-  $season=trim($t2[0]);
+for ($x=0; $x<count($sezoane);$x++) {
+  $season=$sezoane[$x];
   $sez = $season;
   echo '<table border="1" width="100%">'."\n\r";
-  echo '<TR><td class="sez" style="color:black;background-color:#0a6996;color:#64c8ff;text-align:center" colspan="3">Sezonul '.($sez).'</TD></TR>';
+  echo '<TR><td class="sez" style="color:black;background-color:#0a6996;color:#64c8ff;text-align:center" colspan="3">'.$sezoane_name[$x].'</TD></TR>';
   $n=0;
-  $vids = explode('data-number="', $video);
-  unset($vids[0]);
-  $vids = array_values($vids);
-  //$vids = array_reverse($vids);
-  foreach($vids as $vid) {
+  $l="https://api.themoviedb.org/3/tv/".$link."/season/".$sez."?api_key=".$key;
+  //$l="https://api.themoviedb.org/3/tv/".$sezoane_id[$k]."?api_key=".$key;
+  //echo $l;
+  //die();
+  $ch = curl_init();
+  curl_setopt($ch, CURLOPT_URL, $l);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+  curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows; U; Windows NT 6.1; en-US; rv:1.9.1.2) Gecko/20090729 Firefox/3.5.2 GTB5');
+  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT  ,10);
+  curl_setopt($ch, CURLOPT_REFERER, "https://api.themoviedb.org");
+  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+  $h = curl_exec($ch);
+  curl_close($ch);
+  //print_r (json_decode($h,1));
+  $r=json_decode($h,1)['episodes'];
+  //print_r ($r);
+  //die();
+  for ($j=0;$j<count($r);$j++) {
   $img_ep="";
-  $episod="";
-  $ep_tit="";
-  $img_ep="";
-  $t1=explode('"',$vid);
-  $episod=$t1[0];
-
-  $link="https://www.2embed.to/embed/tmdb/tv?id=".$tmdb."&s=".$sez."&e=".$episod;
-  $t3=explode('javascript:;">',$vid);
-  $t4=explode("<",$t3[1]);
-  $ep_tit=trim($t4[0]);
-  $ep_tit=preg_replace("/episode\s+\d+\s*\:?\s*/i","",$ep_tit);
-  
+  $episod=$r[$j]['episode_number'];
+  $ep_tit=$r[$j]['name'];
+  if (isset($r[$j]['still_path']))
+    $img_ep="http://image.tmdb.org/t/p/w185".$r[$j]['still_path'];
+  else
+    $img_ep="blank.jpg";
+  $year="";
   if ($ep_tit)
    $ep_tit_d=$season."x".$episod." ".$ep_tit;
   else
    $ep_tit_d=$season."x".$episod;
-
   $link_f=$fs_target.'?tip=series&link='.urlencode($link).'&title='.urlencode(fix_t($tit)).'&image='.$img_ep."&sez=".$season."&ep=".$episod."&ep_tit=".urlencode(fix_t($ep_tit))."&year=".$year;
    if ($n == 0) echo "<TR>"."\n\r";
    if ($has_img == "yes")
