@@ -58,49 +58,61 @@ $r=array();
 $s=array();
 $srt="";
 $lang="";
-if ($tip=="movie") {
-$ua = $_SERVER['HTTP_USER_AGENT'];
-$cookie=$base_cookie."hdpopcorns.dat";
+$ua="Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/115.0";
 $cookie=$base_cookie."lookmovie.txt";
-if (file_exists($base_pass."firefox.txt"))
- $ua=file_get_contents($base_pass."firefox.txt");
-else
- $ua="Mozilla/5.0 (Windows NT 10.0; rv:75.0) Gecko/20100101 Firefox/75.0";
-
+$info="";
+if ($tip=="movie") {
 $l=$link;
+//$l=str_replace("/view","/watch",$link);
 //echo $l;
+//die();
   //$ua = $_SERVER['HTTP_USER_AGENT'];
 $last_good="https://lookmovie.io";
 $last_good="https://lookmovie2.to";
+$head=array('Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8',
+'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
+'Accept-Encoding: deflate',
+'Referer: '.$l,
+'Connection: keep-alive');
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $l);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
   curl_setopt($ch, CURLOPT_USERAGENT, $ua);
-  curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie);
-  curl_setopt($ch, CURLOPT_COOKIEJAR, $cookie);
-  //curl_setopt($ch, CURLOPT_HTTPHEADER,$head);
-  curl_setopt($ch, CURLOPT_HEADER,1);
+  //curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie);
+  //curl_setopt($ch, CURLOPT_COOKIEJAR, $cookie);
+  curl_setopt($ch, CURLOPT_HTTPHEADER,$head);
   curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
   curl_setopt($ch, CURLOPT_TIMEOUT, 25);
   curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
   curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
   $h = curl_exec($ch);
   curl_close($ch);
+//echo $h;
+if (preg_match("/\<section/",$h)) {
+  $t1=explode('<section',$h);
+  $t2=explode('</section',$t1[1]);
+  $info_m=strip_tags("<section".$t2[0]);
+}
   if (preg_match("/href\=\s*\"\s*(https.*?\/play\/.*?)\"/",$h,$m)) {
     $l1=$m[1];
     $ref=parse_url($l1)['host'];
-  } else {
-    $l1="";
-    $ref="";
   }
+
+  if (preg_match("/player\-iframe\"\s+src\=\"([^\"]+)\"/i",$h,$m)) {
+    $l1=$m[1];
+    $ref=parse_url($l1)['host'];
+  }
+  $l1=str_replace("&amp;","&",$l1);
+  //echo $l1;
+////////////////////////////////////////  check threat-protection
+// check [url] => https://slavillibyer.monster/threat-protection?t=4a857e36ab6aea4b1701c5cbf8b4c2a4c0986585
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $l1);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
   curl_setopt($ch, CURLOPT_USERAGENT, $ua);
   curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie);
   curl_setopt($ch, CURLOPT_COOKIEJAR, $cookie);
-  //curl_setopt($ch, CURLOPT_HEADER,1);
-  //curl_setopt($ch, CURLOPT_HTTPHEADER,$head);
+
   curl_setopt($ch, CURLINFO_HEADER_OUT, true);
   curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
   curl_setopt($ch, CURLOPT_TIMEOUT, 25);
@@ -109,68 +121,61 @@ $last_good="https://lookmovie2.to";
   $h = curl_exec($ch);
   $info = curl_getinfo($ch);
   curl_close($ch);
-  //echo $h;
-  if (preg_match("/threat\-protection/",$info['url'])) {
-   require_once("rec.php");
-   $key="6Lc3OL0aAAAAAJhbmY4C3GvXoRvHizdk5YKZK7fg";
-   $co="aHR0cHM6Ly9sbXBsYXllcjE4Lnh5ejo0NDM.";
-   $sa="submit";
-   $loc="https://lookmovie2.to";
-   $token=rec($key,$co,$sa,$loc);
-   $t1=explode('hidden" name="_csrf" value="',$h);
-   $t2=explode('"',$t1[1]);
-   $csrf=$t2[0];
-   $post="_csrf=".$csrf."&tk=".$token;
-   //echo $post;
-   $l=$info['url'];
-   $head=array('Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
-   'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
-   'Accept-Encoding: deflate',
-   'Content-Type: application/x-www-form-urlencoded',
-   'Content-Length: '.strlen($post),
-   'Origin: https://'.$ref,
-   'Connection: keep-alive',
-   'Referer: '.$l,
-   'Upgrade-Insecure-Requests: 1');
-//print_r ($head);
-  $ch = curl_init();
-  curl_setopt($ch, CURLOPT_URL, $l);
-  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
-  //curl_setopt($ch,CURLOPT_REFERER,$l);
-  curl_setopt($ch, CURLOPT_HTTPHEADER, $head);
-  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,0);
-  //curl_setopt($ch, CURLOPT_HEADER,1);
-  curl_setopt($ch, CURLOPT_POST,1);
-  curl_setopt($ch, CURLOPT_POSTFIELDS,$post);
-  //curl_setopt($ch, CURLOPT_NOBODY,1);
-  curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie);
-  curl_setopt($ch, CURLOPT_COOKIEJAR, $cookie);
-  curl_setopt($ch, CURLOPT_HTTPHEADER, $head);
- //curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
- curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
-  //curl_setopt($ch, CURLOPT_SSL_CIPHER_LIST, implode(":", $DEFAULT_CIPHERS));
-  //curl_setopt($ch, CURLOPT_SSLVERSION,$ssl_version);
-  curl_setopt($ch, CURLINFO_HEADER_OUT, true);
-  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
-  curl_setopt($ch, CURLOPT_TIMEOUT, 25);
-  $h = curl_exec($ch);
-  $info = curl_getinfo($ch);
-  curl_close($ch);
-  //print_r ($info);
-  //echo $h;
-  if (isset($info['redirect_url'])) {
-  $l=$info['redirect_url'];
-  if (preg_match("/second/",$l)) {
-  file_put_contents($base_cookie."lookmovie_ref1.txt",$l."|".$ref."|".$csrf);
-   echo '<a href="look.html">Solve captcha</a>';
-  } else {
-   echo 'Try again';
-   echo '<script>setTimeout(function(){ history.go(-1); }, 2000);</script>';
+  $l=$info['url'];
+  if (preg_match("/threat\-protection/",$l)) {
+    $csrf="";
+    $key="";
+    if (preg_match("/\_csrf\"\s*value\=\"([^\"]+)\"/",$h,$c))
+      $csrf=$c[1];
+    if (preg_match("/grecaptcha\.execute\(\'([^\']+)\'/",$h,$k))
+      $key=$k[1];
+    require_once("rec.php");
+    $sa="submit";
+    $new_host="https://".parse_url($l)['host'].":443";
+    $co=str_replace("=",".",base64_encode($new_host));
+    $loc="https://".parse_url($l)['host'];
+    $token=rec($key,$co,$sa,$loc);
+    $post="_csrf=".$csrf."&tk=".$token;
+    $head=array('Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
+    'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
+    'Accept-Encoding: deflate',
+    'Content-Type: application/x-www-form-urlencoded',
+    'Content-Length: '.strlen($post),
+    'Origin: https://'.$ref,
+    'Connection: keep-alive',
+    'Referer: '.$l,
+    'Upgrade-Insecure-Requests: 1');
+    $ch = curl_init();
+    curl_setopt($ch, CURLOPT_URL, $l);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+    curl_setopt($ch, CURLOPT_USERAGENT, $ua);
+    curl_setopt($ch, CURLOPT_HTTPHEADER, $head);
+    curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,0);
+    curl_setopt($ch, CURLOPT_POST,1);
+    curl_setopt($ch, CURLOPT_POSTFIELDS,$post);
+    curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie);
+    curl_setopt($ch, CURLOPT_COOKIEJAR, $cookie);
+    curl_setopt($ch, CURLOPT_HTTPHEADER, $head);
+    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+    curl_setopt($ch, CURLINFO_HEADER_OUT, true);
+    curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
+    curl_setopt($ch, CURLOPT_TIMEOUT, 25);
+    $h = curl_exec($ch);
+    $info = curl_getinfo($ch);
+    curl_close($ch);
+    if (isset($info['redirect_url'])) {
+     $l=$info['redirect_url'];
+     if (preg_match("/second/",$l)) {
+     file_put_contents($base_cookie."lookmovie_ref1.txt",$l."|".$ref."|".$csrf);
+     echo '<a href="look.html">Solve captcha</a>';
+     } else {
+       echo 'Try again';
+       echo '<script>setTimeout(function(){ history.go(-1); }, 2000);</script>';
+     }
+     exit;
+    }
   }
-  exit;
-  }
-  } else {
+////////////////////////////////////////
   $id="";
   $hash="";
   $ex="";
@@ -181,17 +186,13 @@ $last_good="https://lookmovie2.to";
 
   if (preg_match("/expires\:?\s*\'?(\d+)/",$h,$m))
    $ex=$m[1];
-  $l="https://".$ref."/api/v1/security/movie-access?id_movie=".$id."&hash=".$hash."&expires=".$ex; //"&token=1&sk=&step=1";
 
-  //echo $l;
-  //die();
+  $l="https://".$ref."/api/v1/security/movie-access?id_movie=".$id."&hash=".$hash."&expires=".$ex; //"&token=1&sk=&step=1";
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $l);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
   curl_setopt($ch, CURLOPT_USERAGENT, $ua);
-  curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie);
-  //curl_setopt($ch, CURLOPT_HEADER,1);
-  //curl_setopt($ch, CURLOPT_HTTPHEADER,$head);
+  curl_setopt($ch, CURLOPT_REFERER,$l1);
   curl_setopt($ch, CURLINFO_HEADER_OUT, true);
   curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
   curl_setopt($ch, CURLOPT_TIMEOUT, 25);
@@ -212,6 +213,7 @@ $last_good="https://lookmovie2.to";
   $s=array();
   $srt="";
   $sss=$x['subtitles'];
+  //print_r ($sss);
   //for ($k=0;$k<count($sss);$k++) {
   foreach($sss as $key=>$value) {
    if ($sss[$key]['file'][0]=="/") {
@@ -225,6 +227,7 @@ $last_good="https://lookmovie2.to";
    $srt1[$sss[$key]['language']] = $ss;
    }
   }
+  //print_r ($srt1);
   if (isset($srt1["Romanian"])) {
     $srt=$srt1["Romanian"];
     $lang="Romanian";
@@ -244,30 +247,19 @@ $last_good="https://lookmovie2.to";
     $s[]=$key;
    }
   }
- }
+
 ////////////////////////////////////////////////////////////////////////////////////////
 } else {    // series
   $id=$link;
   $sub="";
-$cookie=$base_cookie."lookmovie.txt";
-if (file_exists($base_pass."firefox.txt"))
- $ua=file_get_contents($base_pass."firefox.txt");
-else
- $ua="Mozilla/5.0 (Windows NT 10.0; rv:75.0) Gecko/20100101 Firefox/75.0";
-$ref=file_get_contents($base_cookie."lookmovie_ref.txt");
+  $cookie=$base_cookie."lookmovie.txt";
+  $ua="Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/115.0";
+  //$ref=file_get_contents($base_cookie."lookmovie_ref.txt");
+  $ref=parse_url($link)['host'];
+  $r=array();
+  $s=array();
 
-$r=array();
-$s=array();
-//echo $srt;
-//$head=array('Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
-//'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2');
-  // https://lookmovie2.to/api/v1/security/episode-access?id_episode=15205
-  // https://lookmovie2.to/api/v1/security/episode-access?id=15205
-
-  //$l="https://lookmovie.io/api/v1/security/show-access?slug=".$slug."&token=&step=2";
-  $l="https://".$ref."/api/v1/security/episode-access?id_episode=".$link;
-  //$l="https://".$ref."/api/v1/security/episode-access?id=".$link;
-  //echo $l;
+  $l=$link;
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $l);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
@@ -280,8 +272,6 @@ $s=array();
   curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
   $h = curl_exec($ch);
   curl_close($ch);
-
-  //echo $h;
   $x=json_decode($h,1);
   if (isset($x['subtitles'])) {
   $srt1=array();
@@ -318,10 +308,6 @@ $s=array();
     $s[]=$key;
    }
   }
-  //}
-  //echo $sub;
-  //echo 'lookmovie_token.html?id='.$id.'&slug='.$slug;
-  // https://lookmovie.ag/api/v1/shows/episode-subtitles/?id_episode=96036
 }
 ?>
 <!doctype html>
@@ -481,6 +467,7 @@ echo '<table border="0px" width="100%">
 </b></font></TD></TR></TABLE>
 <!--<iframe src="lookmovie_token.html?id='.$id.'&slug='.$slug.'"></iframe>-->
 ';
+echo '<BR>'.$info_m;
 include("../debug.html");
 echo '
 <div id="overlay">

@@ -11,9 +11,8 @@ $ep=$_GET["ep"];
 $ep_title=unfix_t(urldecode($_GET["ep_tit"]));
 $ep_title=prep_tit($ep_title);
 $year=$_GET["year"];
-$last_good="https://bflix.ru";
-require_once("bunny.php");
-$key="MPPBJLgFwShfqIBx";
+require_once("bunny1.php");
+$bunny=new bunny();
 /* ====================== */
 $fs_target = "bflix_fs.php";
 $width="200px";
@@ -40,6 +39,7 @@ echo '<h2>'.$tit.'</h2><BR>';
 echo '<table border="1" width="100%">'."\n\r";
 //echo '<TR><td style="color:#000000;background-color:deepskyblue;text-align:center" colspan="3" align="center">'.$tit.'</TD></TR>';
 //echo $link;
+$info="";
 $last_good="https://".parse_url($link)['host'];
 //$id = substr(strrchr($link, "-"), 1);
 //$vrf=encodeVrf($id,$key);
@@ -68,11 +68,25 @@ $head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gec
   $r=json_decode($h,1);
   $h=$r['result'];
   //echo $h;
+////////////////////////
+  if (preg_match("/id\=\"film\-detail\"\>/",$h)) {
+  $t1=explode('id="film-detail">',$h);
+  $t2=explode('<div>Tags',$t1[1]);
+  $info= $t2[0];
+  $info=strip_tags($info);
+  } elseif (preg_match("/id\=\"w\-info\"\>/",$h)) {
+  $t1=explode('id="w-info">',$h);
+  $t2=explode('<div>Tags',$t1[1]);
+  $info= $t2[0];
+  $info=strip_tags($info);
+  }
+///////////////////////
   $t1=explode('data-id="',$h);
   $t2=explode('"',$t1[1]);
   $id=$t2[0];
   //https://bflix.ru/ajax/episode/list/23600?vrf=O09%2FYGJ3RHg%3D
-  $vrf=encodeVrf($id,$key);
+  //$vrf=encodeVrf($id,$key);
+  $vrf=$bunny->encodeVrf($id);
   $l=$last_good."/ajax/episode/list/".$id."?vrf=".$vrf;
   curl_setopt($ch, CURLOPT_URL, $l);
   $h = curl_exec($ch);
@@ -184,6 +198,7 @@ foreach($videos as $video) {
 }
 echo '</table>';
 curl_close($ch);
+//echo '<BR>'.$info;
 ?>
 </body>
 </html>

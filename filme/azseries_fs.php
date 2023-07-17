@@ -161,7 +161,8 @@ $head=array('Accept: */*',
   curl_setopt($ch, CURLOPT_TIMEOUT, 25);
   $html = curl_exec($ch);
   curl_close($ch);
-
+//echo $html;
+//die();
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
   curl_setopt($ch, CURLOPT_USERAGENT, $ua);
@@ -181,6 +182,7 @@ $head=array('Accept: */*',
   curl_setopt($ch, CURLOPT_URL, $t1[0]);
   $h = curl_exec($ch);
   //echo $h;
+  //die();
   if (preg_match("/location\:\s*(.+)/i",$h,$m))
   $r[]=trim($m[1]);
   }

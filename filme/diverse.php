@@ -43,8 +43,8 @@ $link="clicksud_main.php";
 echo '<TD style="text-align:center"><font size="4">'.'<a href="'.$link.'" target="_blank">'.$title.'</a></font></TD>';
 
 
-$title="rovideo";
-$link="rovideo.php?page=1&tip=release&title=rovideo&link=";
+$title="deseneledublate";
+$link="deseneledublate.php?page=1&tip=release&title=desenedublate&link=";
 echo '<TD style="text-align:center"><font size="4">'.'<a href="'.$link.'" target="_blank">'.$title.'</a></font></TD>';
 
 

@@ -57,49 +57,37 @@ document.onkeypress =  zx;
 </TR>
 
 <TR>
-<TD width="25%"><a href="filme/idlixian_s.php?page=1&tip=release&title=idlixian&link=" target="_blank">idlixian</a></TD>
+<TD width="25%"><a href="filme/tvseries_s.php?page=1&tip=release&title=tvseries&link=" target="_blank">tvseries</a></TD>
 <TD width="25%"><a href="filme/moviewetrust_s.php?page=1&tip=release&title=moviewetrust&link=" target="_blank">moviewetrust</a></TD>
-<TD width="25%"><a href="filme/yifytv_s.php?page=1&tip=release&title=ytsmovie&link=" target="_blank">ytsmovie</a></TD>
 <TD width="25%"><a href="filme/streamflix_s.php?page=1&tip=release&title=streamflix&link=" target="_blank">streamflix</a></TD>
+<TD width="25%"><a href="filme/o2tvseries_s.php?page=1&tip=release&title=o2tvseries&link=" target="_blank">o2tvseries</a></TD>
 </TR>
 
-<TR>
-
-</TR>
 <!-- straine -->
 <TR>
-<TD width="25%"><a href="filme/tvseries_s.php?page=1&tip=release&title=tvseries&link=" target="_blank">tvseries</a></TD>
-<TD width="25%"><a href="filme/o2tvseries_s.php?page=1&tip=release&title=o2tvseries&link=" target="_blank">o2tvseries</a></TD>
+<TD width="25%"><a href="filme/zoechip_s.php?page=1&tip=release&title=zoechip&link=" target="_blank">zoechip</a></TD>
+<TD width="25%"><a href="filme/goojara_s.php?page=1&tip=release&title=goojara&link=" target="_blank">goojara</a></TD>
 <TD width="25%"><a href="filme/emovies_s.php?page=1&tip=release&title=emovies&link=" target="_blank">emovies</a></TD>
 <TD width="25%"><a href="filme/lookmovie_s.php?page=1&tip=release&title=lookmovie&link=" target="_blank">lookmovie</a></TD>
-<!--<TD width="25%"><a href="filme/cl.php?host=https://lookmovie.io/favicon-16x16.png&cookie=lookmovie.dat&target=lookmovie_s.php&title=lookmovie" target="_blank">lookmovie</a></TD>-->
 </TR>
 <TR>
-<TD width="25%"><a href="filme/zoechip_s.php?page=1&tip=release&title=zoechip&link=" target="_blank">zoechip</a></TD>
-<TD width="25%"><a href="filme/watch-serieshd_s.php?page=1&tip=release&title=watch-serieshd&link=" target="_blank">watch-serieshd</a></TD>
-<TD width="25%"><a href="filme/goojara_s.php?page=1&tip=release&title=goojara&link=" target="_blank">goojara</a></TD>
 <TD width="25%"><a href="filme/cineplex_s_main.php" target="_blank">cineplex (cont)</a></TD>
-</TR>
-<TR>
+<TD width="25%"><a href="filme/watch-serieshd_s.php?page=1&tip=release&title=watch-serieshd&link=" target="_blank">watch-serieshd</a></TD>
 <TD width="25%"><a href="filme/allmoviesforyou_s.php?page=1&tip=release&title=allmoviesforyou&link=" target="_blank">allmoviesforyou</a></TD>
 <TD width="25%"><a href="filme/ling_s.php?page=1&tip=release&title=ling.online&link=" target="_blank">ling.online</a></TD>
+</TR>
+<TR>
 <TD width="25%"><a href="filme/vidcloud9_s.php?page=1&tip=release&title=vidcloud9&link=" target="_blank">vidcloud9</a></TD>
 <TD width="25%"><a href="filme/flixhq_s.php?page=1&tip=release&title=flixhq&link=" target="_blank">flixhq</a></TD>
-</TR>
-
-<TR>
-<TD width="25%"><a href="filme/uniquestream_s.php?page=1&tip=release&title=uniquestream&link=" target="_blank">uniquestream</a></TD>
 <TD width="25%"><a href="filme/flixtor_s.php?page=1&tip=release&title=flixtor&link=" target="_blank">flixtor</a></TD>
 <TD width="25%"><a href="filme/c1ne_s.php?page=1&tip=release&title=c1ne&link=" target="_blank">c1ne</a></TD>
-<TD width="25%"><a href="filme/streamlord_s.php?page=1&tip=release&title=streamlord&link=" target="_blank">streamlord</a></TD>
 </TR>
 
 <TR>
 <TD width="25%"><a href="filme/moviebox_s.php?page=1&tip=release&title=moviebox&link=" target="_blank">moviebox</a></TD>
 <TD width="25%"><a href="filme/bflix_s.php?page=1&tip=release&title=bflix&link=" target="_blank">bflix</a></TD>
-<TD width="25%"><a href="filme/fmovies_s.php?page=1&tip=release&title=fmovies&link=" target="_blank">fmovies.co</a></TD>
 <TD width="25%"><a href="filme/fmovies1_s.php?page=1&tip=release&title=fmovies&link=" target="_blank">fmovies</a></TD>
-
+<TD width="25%"><a href="filme/streamlord_s.php?page=1&tip=release&title=streamlord&link=" target="_blank">streamlord</a></TD>
 </TR>
 <TR>
 <TD width="25%"><a href="filme/diverse.php" target="_blank">diverse</a></TD>

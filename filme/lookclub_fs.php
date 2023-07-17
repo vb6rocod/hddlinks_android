@@ -146,7 +146,7 @@ $ua="Mozilla/5.0 (Windows NT 10.0; rv:89.0) Gecko/20100101 Firefox/89.0";
   curl_close($ch);
   //echo $h;
   $t1=explode("<iframe",$h);
-  $t2=explode('src="',$t1[1]);
+  $t2=explode('data-lazy-src="',$t1[1]);
   $t3=explode('"',$t2[1]);
   $r[]=$t3[0];
 

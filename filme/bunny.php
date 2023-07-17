@@ -50,11 +50,19 @@ function encrypt_bunny($input,$key) {
   }
   return $output;
 }
-function encodeVrf($text,$key) {
+function encodeVrf_old($text,$key) {
   $nineAnimeKey = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
   return urlencode(encrypt_bunny(ceva(encrypt_bunny(cipher($key,$text),$nineAnimeKey)),$nineAnimeKey));
 }
-
+function encodeVrf($text,$key) {
+ $nineAnimeKey = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
+ $a=cipher($key,$text);
+ $b=encrypt_bunny($a,$nineAnimeKey);
+ $c=encrypt_bunny($b,$nineAnimeKey);
+ $d=ceva1($c);
+ $e=encrypt_bunny($d,$nineAnimeKey);
+ return $e;
+}
 function decodeVrf($text,$key) {
   $nineAnimeKey = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
   $text=preg_replace('/[\t\n\f\r]/','',$text);
@@ -104,5 +112,29 @@ function ceva($t) {
   $n .=chr($u);
  }
 return strrev($n);
+}
+function ceva1($t) {
+ $nineAnimeKey = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
+ $i=6;
+ $n="";
+
+ for ($r=0;$r<strlen($t);$r++) {
+  $u=ord($t[$r]);
+  if ($r%$i==1) $u +=5;
+  elseif ($r % $i==5) $u -=6;
+  elseif ($r % $i==0 || $r%$i==4) $u +=6;
+  elseif ($r % $i !=3 || $r%$i !=2) $u -=5;
+  $n .=chr($u);
+
+ }
+ $n=encrypt_bunny($n,$nineAnimeKey);
+    $n=preg_replace_callback(
+    "/[a-zA-Z]/",
+    function ($a1) {
+     return chr(($a1[0] <= 'Z' ? 90 : 122) >= ($a1 = ord($a1[0]) + 13) ? $a1 : $a1 - 26);
+    },
+    $n
+    );
+return $n;
 }
 ?>

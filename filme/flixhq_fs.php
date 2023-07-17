@@ -133,6 +133,7 @@ echo '<BR>';
 $r=array();
 $s=array();
 //echo $link;
+$info="";
 if ($tip=="movie") {
 $mediaID = parse_url($link)['path'];
 $t1=explode("-",$link);

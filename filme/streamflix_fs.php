@@ -176,10 +176,13 @@ $l="https://api.themoviedb.org/3/tv/".$link."?api_key=".$api_key."&append_to_res
   //echo $imdb;
   //die();
 //////////////////////////////////////
+
 if ($tip=="movie")
 $l="https://us-west2-compute-proxied.streamflix.one/api/player/movies?id=".$link;
 else
 $l="https://us-west2-compute-proxied.streamflix.one/api/player/tv?id=".$link."&s=".$sez."&e=".$ep;
+//echo $l;
+//die();
 $ua="Mozilla/5.0 (Windows NT 10.0; rv:75.0) Gecko/20100101 Firefox/75.0";
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $l);
