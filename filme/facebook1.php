@@ -169,6 +169,7 @@ $w=0;
 
 $l="https://www.facebook.com/".$search."/videos";
 //echo $l;
+//die();
 $ua="Mozilla/5.0 (Windows NT 10.0; rv:81.0) Gecko/20100101 Firefox/83.0";
 $head=array('Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8',
 'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
@@ -193,7 +194,7 @@ $head=array('Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image
       $h1=str_replace('<!--','',$h1);
       $h1=str_replace('-->','',$h1);
       $h1 = html_entity_decode($h1,ENT_QUOTES);
-      //echo $h1;
+      //echo $h1."\n"."\n";
       //preg_match_all("/base64\,([^\"]+)/",$h1,$m);
       //print_r ($m);
 /*
@@ -211,8 +212,13 @@ $t1=explode('"all_videos":',$h1);
 $t2=explode(',"extensions":',$t1[1]);
 $h2='{"all_videos":'.$t2[0]."";
 //echo $h2;
+$t1=explode(',"errors',$h2);
+$h2=$t1[0];
 $dd=json_decode($h2,1);
+//print_r ($dd);
 $x =$dd['all_videos']['edges'];
+//preg_match_all("/node\"\:\{\"id\"\:\"\d+\"\,\"owner\"\:/",$h2,$m);
+//print_r ($m);
 //echo count($x);
 //print_r ($x);
 //die();

@@ -1,7 +1,7 @@
 <!doctype html>
 <?php
 include ("../common.php");
-//error_reporting(0);
+error_reporting(0);
 $list = glob($base_sub."*.srt");
    foreach ($list as $l) {
     str_replace(" ","%20",$l);
@@ -62,9 +62,13 @@ function str_between($string, $start, $end){
 <script type="text/javascript">
 function openlink1(link) {
   link1=document.getElementById('file').value;
+  s=document.getElementById('server').innerHTML;
   //alert (link1);
   if (link1.match(/streamembed|imwatchingmovies/gi)) {
   msg="streamembed1.php?file=" + link1 + "&title=" + link + "&tip=flash";
+  window.open(msg);
+  } else if (s.match(/vidstream|mycloud/gi)) {
+  msg="mcloud1.php?id=" + encodeURI(link1) + "&title=" + link + "&tip=flash";
   window.open(msg);
   } else {
   msg="link1.php?file=" + link1 + "&title=" + link;
@@ -73,8 +77,12 @@ function openlink1(link) {
 }
 function openlink(link) {
   link1=document.getElementById('file').value;
+  s=document.getElementById('server').innerHTML;
   if (link1.match(/streamembed|imwatchingmovies/gi)) {
   msg="streamembed1.php?file=" + link1 + "&title=" + link + "&tip=mp";
+  window.open(msg);
+  } else if (s.match(/vidstream|mycloud/gi)) {
+  msg="mcloud1.php?id=" + encodeURI(link1) + "&title=" + link + "&tip=mp";
   window.open(msg);
   } else {
   on();
@@ -156,10 +164,11 @@ if (file_exists($base_pass."tmdb.txt"))
 else
   $api_key="";
 ///////////////////////////////////////////////////////
+$tmdb=$link;
 if ($tip=="movie")
-$l="https://api.themoviedb.org/3/movie/".$link."?api_key=".$api_key."&append_to_response=external_ids";
+$l="https://api.themoviedb.org/3/movie/".$link."?api_key=".$api_key."&append_to_response=credits,external_ids";
 else
-$l="https://api.themoviedb.org/3/tv/".$link."?api_key=".$api_key."&append_to_response=external_ids";
+$l="https://api.themoviedb.org/3/tv/".$link."?api_key=".$api_key."&append_to_response=credits,external_ids";
   $ch = curl_init($l);
   curl_setopt($ch, CURLOPT_USERAGENT, $ua);
   curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
@@ -172,18 +181,89 @@ $l="https://api.themoviedb.org/3/tv/".$link."?api_key=".$api_key."&append_to_res
   $x=json_decode($html,1);
   //print_r ($x);
   //die();
+  $info="";
+  $overview=$x['overview'];
+  if (isset($x['first_air_date']))
+   $release_date=$x['first_air_date'];
+  else
+   $release_date=$x['release_date'];
+  preg_match("/\d{4}/",$release_date,$d);
+  $release_date=$d[0];
+  $vote=$x['vote_average'];
+  //$vote=$x['popularity'];
+  if (isset($x['runtime']))
+    $duration=$x['runtime'];
+  elseif (isset($x['episode_run_time'][0]))
+    $duration=$x['episode_run_time'][0];
+  else
+    $duration="";
+  $y=$x['credits']['cast'];
+  $z=$x['credits']['crew'];
+  //print_r ($z);
+  $actors=array();
+  $director=array();
+  $producer=array();
+  $writer=array();
+  for ($k=0;$k<count($y);$k++) {
+   $a=$y[$k]['known_for_department'];
+   //echo $a;
+   if ($a=="Acting") $actors[]=array($y[$k]['name'],$y[$k]['id']);
+  }
+  //print_r ($actors);
+  for ($k=0;$k<count($z);$k++) {
+    if (preg_match("/director/i",$z[$k]['job']))
+      $director[]=array($z[$k]['name'],$z[$k]['id']);
+    elseif (preg_match("/story|writer/i",$z[$k]['job']))
+      $writer[]=array($z[$k]['name'],$z[$k]['id']);
+    elseif (preg_match("/producer/i",$z[$k]['job']))
+      $producer[]=array($z[$k]['name'],$z[$k]['id']);
+   }
+  $genres="";
+  for ($k=0;$k<count($x['genres']);$k++) {
+    $genres .=$x['genres'][$k]['name'].",";
+  }
+  $genres = substr($genres, 0, -1);
+  $info .="<b>Release date:</b>".$release_date.".<b>Runtime:</b>".$duration." min.<b>TMDB</b>:".$vote.".".$genres.'.<BR>';
+  if (count($director)>0) {
+  $info .='<b><font color="yellow">Director:</font></b>';
+  for ($k=0;$k<min(10,count($director));$k++) {
+   $info .='<a href="streamflix_p.php?page=1&link='.$director[$k][1].'&title='.urlencode($director[$k][0]).'" target="_blank">'.$director[$k][0]."</a>,";
+  }
+  $info = substr($info, 0, -1).".<BR>";
+  }
+  if (count($producer)>0) {
+  $info .='<b><font color="yellow">Producer:</font></b>';
+  for ($k=0;$k<min(5,count($producer));$k++) {
+   $info .='<a href="streamflix_p.php?page=1&link='.$producer[$k][1].'&title='.urlencode($producer[$k][0]).'" target="_blank">'.$producer[$k][0]."</a>,";
+  }
+  $info = substr($info, 0, -1).".<BR>";
+  }
+  if (count($writer) > 0) {
+  $info .='<b><font color="yellow">Writer:</font></b>';
+  for ($k=0;$k<min(10,count($writer));$k++) {
+   $info .='<a href="streamflix_p.php?page=1&link='.$writer[$k][1].'&title='.urlencode($writer[$k][0]).'" target="_blank">'.$writer[$k][0]."</a>,";
+  }
+  $info = substr($info, 0, -1).".<BR>";
+  }
+  $info .='<b><font color="yellow">Cast:</font></b>';
+  for ($k=0;$k<min(15,count($actors));$k++) {
+   $info .='<a href="streamflix_p.php?page=1&link='.$actors[$k][1].'&title='.urlencode($actors[$k][0]).'" target="_blank">'.$actors[$k][0]."</a>,";
+  }
+  $info = substr($info, 0, -1).".<BR>";
+  $info .= '<b><font color="cyan">Overview:</font></b>'.$overview;
   $imdb=$x['external_ids']['imdb_id'];
   //echo $imdb;
   //die();
+$k=0;
 //////////////////////////////////////
-
+/*
 if ($tip=="movie")
 $l="https://us-west2-compute-proxied.streamflix.one/api/player/movies?id=".$link;
 else
 $l="https://us-west2-compute-proxied.streamflix.one/api/player/tv?id=".$link."&s=".$sez."&e=".$ep;
+$ua="Mozilla/5.0 (Windows NT 10.0; rv:75.0) Gecko/20100101 Firefox/75.0";
 //echo $l;
 //die();
-$ua="Mozilla/5.0 (Windows NT 10.0; rv:75.0) Gecko/20100101 Firefox/75.0";
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $l);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
@@ -228,17 +308,165 @@ $ua="Mozilla/5.0 (Windows NT 10.0; rv:75.0) Gecko/20100101 Firefox/75.0";
   } else {
    $srt="";
   }
+*/
 ///////////////////////////////////////////
 //print_r ($r);
+if ($tip=="movie") {
+$l="https://www.2embed.cc/embed/".$imdb;
+//echo $l;
+$head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/112.0',
+'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
+'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
+'Accept-Encoding: deflate',
+'Connection: keep-alive',
+'Referer: https://www.2embed.cc/',
+'Origin: https://www.2embed.cc',
+'Upgrade-Insecure-Requests: 1');
+  $ch = curl_init();
+  curl_setopt($ch, CURLOPT_URL,$l);
+  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER  ,1);  // RETURN THE CONTENTS OF THE CALL
+  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+  curl_setopt($ch, CURLOPT_HTTPHEADER,$head);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+  $h = curl_exec($ch);
+  curl_close($ch);
+  //echo $h;
+  preg_match_all("/onclick\=\"go\(\'([^\']+)\'/",$h,$m);
+  //print_r ($m[1]);
+  foreach ($m[1] as $key=>$value) {
+   $host=parse_url($value)['host'];
+   if (preg_match("/stream.2embed.cc/",$host)) {
+    $r[]=$value;
+    $s[]=$host;
+   } elseif (preg_match("/owns\?swid\=/",$value)) {
+     $t1=explode("?swid=",$value);
+     $r[]="https://stream.2embed.cc/e/".$t1[1];
+     $s[]="stream.2embed.cc";
+   }
+  }
+  /////////////////////////////////////
+  $l="https://gomo.to/movie/".$imdb;
+     require_once("gomo.php");
+     $g=new gomo();
+     $x=array();
+     $x=$g->gomo_r($l);
+     //print_r ($x);
+     foreach ($x as $y) {
+      if ($y) {
+       if (!preg_match("/hqq|gomo/",$y)) {
+       $r[]=$y;
+       $s[]="g.".parse_url($y)['host'];
+       }
+      }
+     }
+  //////////////////////////////
+  $l="https://vidsrc.me/embed/".$imdb;
+  $r[]=$l;
+  $s[]=parse_url($l)['host'];
+  ///////////////////////////////
+  $l="https://embed.smashystream.com/playere.php?imdb=".$imdb;
+  $ua="Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/112.0";
+  $ch = curl_init();
+  curl_setopt($ch, CURLOPT_URL,$l);
+  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
+  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER  ,1);  // RETURN THE CONTENTS OF THE CALL
+  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+  $h = curl_exec($ch);
+  curl_close($ch);
+  //echo $h;
+  if (preg_match("/\/f\w+\.php/",$h,$m)) {
+   $l="https://embed.smashystream.com".$m[0]."?tmdb=".$link;
+   $r[]=$l;
+   $s[]="smashystream";
+  }
+} else {
+  $l="https://gomo.to/show/".$imdb."/".sprintf("%02d",$sez)."-".sprintf("%02d",$ep);
+  //echo $l;
+     require_once("gomo.php");
+     $g=new gomo();
+     $x=array();
+     $x=$g->gomo_r($l);
+     //print_r ($x);
+     foreach ($x as $y) {
+      if ($y) {
+       if (!preg_match("/hqq|gomo/",$y)) {
+       $r[]=$y;
+       $s[]="g.".parse_url($y)['host'];
+       }
+      }
+     }
+  $l="https://vidsrc.me/embed/".$imdb."/".$sez."-".$ep."/";
+  $r[]=$l;
+  $s[]=parse_url($l)['host'];
+  $l="https://embed.smashystream.com/playere.php?tmdb=".$link."&season=".$sez."&episode=".$ep;
+  $ua="Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/112.0";
+  $ch = curl_init();
+  curl_setopt($ch, CURLOPT_URL,$l);
+  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
+  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER  ,1);  // RETURN THE CONTENTS OF THE CALL
+  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+  $h = curl_exec($ch);
+  curl_close($ch);
+  if (preg_match("/\/f\w+\.php[^\"]+/",$h,$m)) {
+   $l="https://embed.smashystream.com".$m[0];
+   $r[]=$l;
+   $s[]="smashystream";
+  }
+}
+////////////////////////////////////
+if ($tip=="movie")
+ $l="https://vidsrc.to/embed/movie/".$tmdb;
+else
+ $l="https://vidsrc.to/embed/tv/".$tmdb."/".$sez."/".$ep;
+$head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/109.0',
+'Accept: application/json, text/javascript, */*; q=0.01',
+'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
+'Accept-Encoding: deflate',
+'Referer: https://vidsrc.to',
+'X-Requested-With: XMLHttpRequest',
+'Connection: keep-alive');
+  $ch = curl_init();
+  curl_setopt($ch, CURLOPT_URL, $l);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+  curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
+  curl_setopt($ch, CURLOPT_HTTPHEADER,$head);
+  curl_setopt($ch, CURLOPT_ENCODING, "");
+  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 25);
+  $h = curl_exec($ch);
+  $h=json_decode($h,1)['result'];
+  //echo $h;
+  if (preg_match("/data\-id\=\"([^\"]+)\"/",$h,$m)) {
+  $id=$m[1];
+  $l="https://vidsrc.to/ajax/embed/episode/".$id."/sources";
+  curl_setopt($ch, CURLOPT_URL, $l);
+  $h = curl_exec($ch);
+  $z=json_decode($h,1)['result'];
+  for ($k=0;$k<count($z);$k++) {
+    $r[]="https://vidsrc.to/ajax/embed/source/".$z[$k]['id'];
+    $s[]=$z[$k]['title'];
+  }
+  }
+  curl_close($ch);
+//die();
 echo '<table border="1" width="100%">';
 echo '<TR><TD class="mp">Alegeti un server: Server curent:<label id="server">'.$s[0].'</label>
-<input type="hidden" id="file" value="'.urlencode("https://streamflix.one?link=".$r[0]."&sub=".$srt."&ref=".$ref).'"></td></TR></TABLE>';
+<input type="hidden" id="file" value="'.urlencode($r[0]).'"></td></TR></TABLE>';
 echo '<table border="1" width="100%"><TR>';
 $k=count($r);
 $x=0;
 for ($i=0;$i<$k;$i++) {
   if ($x==0) echo '<TR>';
-  $c_link="https://streamflix.one?link=".$r[$i]."&sub=".$srt."&ref=".$ref;
+  $c_link=$r[$i];
   $openload=$s[$i];
   if (preg_match("/streamembed1/",$c_link)) {
   echo '<TD class="mp"><a href="streamembed1.php?file='.urlencode($c_link).'&title='.urlencode(unfix_t($tit.$tit2)).'&tip='.$flash.'" target="_blank">'.$openload.'</a></td>';
@@ -296,9 +524,7 @@ echo '<br>
 <BR>Scurtaturi: 7=opensubtitles, 8=titrari, 9=subs, 0=subtitrari (cauta imdb id)
 </b></font></TD></TR></TABLE><BR>
 ';
-if ($lang) {
- echo '<b>Subtitles: '.$lang."</b><BR>";
-}
+echo $info;
 //echo '<a href="https://streamembed.net/play/YTF0TklLYXplRnRhdjNTcHBUQUxnUzd1amt0UkIrZTJTWUZlQk8wYXJsWXhlT2EzTkxaQkU0RU9HQ2ZwemhvPQ==">sasaasas</a>';
 include("../debug.html");
 echo '

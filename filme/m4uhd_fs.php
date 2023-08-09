@@ -1,15 +1,8 @@
 <!doctype html>
 <?php
-//error_reporting(0);
 include ("../common.php");
-$list = glob($base_cookie."*.mcloud");
-   foreach ($list as $l) {
-    str_replace(" ","%20",$l);
-    unlink($l);
-}
-require_once("bunny1.php");
-$bunny=new bunny();
-//hlPeNwkncH0fq9so
+
+error_reporting(0);
 if (file_exists($base_pass."debug.txt"))
  $debug=true;
 else
@@ -65,22 +58,10 @@ $imdbid="";
 <script type="text/javascript">
 function openlink1(link) {
   link1=document.getElementById('file').value;
-  s=document.getElementById('server').innerHTML;
-  if (s.match(/vidstream|mycloud/gi)) {
-  msg="mcloud1.php?id=" + encodeURI(link1) + "&title=" + link + "&tip=flash";
-  window.open(msg);
-  } else {
   msg="link1.php?file=" + link1 + "&title=" + link;
   window.open(msg);
-  }
 }
 function openlink(link) {
-  link1=document.getElementById('file').value;
-  s=document.getElementById('server').innerHTML;
-  if (s.match(/vidstream|mycloud/gi)) {
-  msg="mcloud1.php?id=" + encodeURI(link1) + "&title=" + link + "&tip=mp";
-  window.open(msg);
-  } else {
   on();
   var request =  new XMLHttpRequest();
   link1=document.getElementById('file').value;
@@ -103,7 +84,6 @@ function openlink(link) {
       document.getElementById("mytest1").href=request.responseText;
       document.getElementById("mytest1").click();
     }
-  }
   }
 }
 function changeserver(s,t) {
@@ -151,227 +131,193 @@ function off() {
 echo '<h2>'.$tit.$tit2.'</H2>';
 echo '<BR>';
 $r=array();
-$s=array();
+$ua="Mozilla/5.0 (Windows NT 10.0; rv:89.0) Gecko/20100101 Firefox/89.0";
+$ua="Mozilla/5.0 (Windows NT 10.0; rv:95.0) Gecko/20100101 Firefox/95.0";
+$cookie=$base_cookie."m4uhd.dat";
+$cf="https://basic-bundle-solitary-morning-4d74.quamatbanty02.workers.dev/?";
 //echo $link;
-//die();
-$info="";
+// https://m4uhd.tv/watch-movie-1up-2022-268243.html
 if ($tip=="movie") {
-$last_good="https://".parse_url($link)['host'];
-$id = substr(strrchr($link, "-"), 1);
-//echo $link;
-$head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/109.0',
-'Accept: application/json, text/javascript, */*; q=0.01',
+$head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:95.0) Gecko/20100101 Firefox/95.0',
+'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8',
 'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
 'Accept-Encoding: deflate',
-'Referer: '.$link,
-'X-Requested-With: XMLHttpRequest',
-'Connection: keep-alive');
+'Connection: keep-alive',
+'Upgrade-Insecure-Requests: 1',
+'Sec-Fetch-Dest: document',
+'Sec-Fetch-Mode: navigate',
+'Sec-Fetch-Site: none',
+'Sec-Fetch-User: ?1');
+  $ch = curl_init($cf.$link);
+  //curl_setopt($ch, CURLOPT_USERAGENT, $ua);
+  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER  ,1);  // RETURN THE CONTENTS OF THE CALL
+  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+  curl_setopt($ch, CURLOPT_HTTPHEADER,$head);
+  curl_setopt($ch, CURLOPT_ENCODING,"");
+  curl_setopt($ch,CURLOPT_REFERER,"https://m4uhd.tv");
+  curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie);
+  curl_setopt($ch, CURLOPT_COOKIEJAR, $cookie);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+  $html = curl_exec($ch);
+  curl_close ($ch);
+  /*
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $link);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-  curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
+  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
+  curl_setopt($ch,CURLOPT_REFERER,"https://m4uhd.tv");
+  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
   curl_setopt($ch, CURLOPT_HTTPHEADER,$head);
-  curl_setopt($ch, CURLOPT_ENCODING, "");
-  ///curl_setopt($ch, CURLOPT_HEADER,1);
+  curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie);
+  curl_setopt($ch, CURLOPT_COOKIEJAR, $cookie);
   curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
   curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
   curl_setopt($ch, CURLOPT_TIMEOUT, 25);
-  $h = curl_exec($ch);
-  //echo $h;
-  $r=json_decode($h,1);
-  $h=$r["result"];
-  //echo $h;
-  if (preg_match("/id\=\"film\-detail\"\>/",$h)) {
-  $t1=explode('id="film-detail">',$h);
-  $t2=explode('<div>Tags',$t1[1]);
-  $info= $t2[0];
-  $info=strip_tags($info);
-  } elseif (preg_match("/id\=\"w\-info\"\>/",$h)) {
-  $t1=explode('id="w-info">',$h);
-  $t2=explode('<div>Tags',$t1[1]);
-  $info= $t2[0];
-  $info=strip_tags($info);
-  }
-  $t1=explode('data-id="',$h);
-  $t2=explode('"',$t1[1]);
-  $id=$t2[0];
-  $vrf=$bunny->encodeVrf($id);
-//echo $vrf."\n";
-//die();
-//$l=$last_good."/ajax/film/servers?id=".$id."&vrf=".$vrf."&token=";
-//$l=$last_good."/ajax/server/list/".$id."?vrf=".$vrf;
-  $l=$last_good."/ajax/episode/list/".$id."?vrf=".$vrf;
-  curl_setopt($ch, CURLOPT_URL, $l);
-  $h = curl_exec($ch);
-  //echo $h;
-  $r=json_decode($h,1);
-  $h=$r["result"];
-  $t1=explode('data-id="',$h);
-  $t2=explode('"',$t1[1]);
-  $id1=$t2[0];
-  $vrf=$bunny->encodeVrf($id1);
-  $l=$last_good."/ajax/server/list/".$id1."?vrf=".$vrf;
-  curl_setopt($ch, CURLOPT_URL, $l);
-  $h = curl_exec($ch);
-  $r=json_decode($h,1);
-  $h=$r["result"];
-
-
+  $html = curl_exec($ch);
   curl_close($ch);
+  echo $html;
+  */
+  //echo $html;
 
-  //echo $h;
-  //<li class="server
-$r=array();
-if (preg_match("/<div class\=\"film\-server\"/",$h))
-$videos = explode('<div class="film-server"', $h);
-else
-$videos=explode('<li class="server',$h);
-unset($videos[0]);
-$videos = array_values($videos);
-foreach($videos as $video) {
- $t1=explode('data-link-id="',$video);
- $t2=explode('"',$t1[1]);
- $t3=explode('data-id="',$video);
- $t4=explode('"',$t3[1]);
- $r[$t4[0]]=$t2[0];
-}
+  $t1=explode('csrf-token" content="',$html);
+  $t2=explode('"',$t1[1]);
+  $token=$t2[0];
+  if (preg_match_all("/data\=\"([^\"]+)\"/",$html,$m)) {
+   //print_r ($m);
+   $l="https://m4uhd.tv/anhjax";
+   $l=$cf."https://m4uhd.tv/ajax";
+   $ch = curl_init();
+   curl_setopt($ch, CURLOPT_URL, $l);
+   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+   //curl_setopt($ch, CURLOPT_USERAGENT, $ua);
+   curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+   curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie);
+  //curl_setopt($ch, CURLOPT_COOKIEJAR, $cookie);
+   //curl_setopt($ch, CURLOPT_HTTPHEADER,$head);
+   curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+   curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
+   curl_setopt($ch, CURLOPT_TIMEOUT, 25);
+   for ($j=0;$j<count($m[1]);$j++) {
+    $x=array("_token" => $token,
+    "m4u" => $m[1][$j]);
+    $post=http_build_query($x);
+    //echo $post."<BR>";
+    $head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:95.0) Gecko/20100101 Firefox/95.0',
+    'Accept: */*',
+    'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
+    'Accept-Encoding: deflate',
+    'Content-Type: application/x-www-form-urlencoded; charset=UTF-8',
+    'X-Requested-With: XMLHttpRequest',
+    'Content-Length: '.strlen($post),
+    'Origin: https://m4uhd.tv',
+    'Referer: https://m4uhd.tv',
+'Connection: keep-alive',
+'Upgrade-Insecure-Requests: 1',
+'Sec-Fetch-Dest: empty',
+'Sec-Fetch-Mode: cors',
+'Sec-Fetch-Site: same-origin');
+
+    curl_setopt($ch, CURLOPT_HTTPHEADER, $head);
+    curl_setopt($ch, CURLOPT_POST,1);
+    curl_setopt($ch, CURLOPT_POSTFIELDS,$post);
+    $h = curl_exec($ch);
+    echo $h."=========="."\n";
+    if (preg_match("/iframe src\=\"([^\"]+)\"/",$h,$q))
+      $r[]=$q[1];
+    elseif (preg_match("/sources\:\s*\[\s*\{file\:\s*\"([^\"]+)\"/",$h,$u))
+      $r[]=$u[1];
+   }
+   curl_close($ch);
+  }
 } else {
-  $t1=explode("&",$link);
-  $link=$t1[0];
-  $last_good=$t1[1];
-  $vrf=$bunny->encodeVrf($link);
-  $l=$last_good."/ajax/server/list/".$link."?vrf=".$vrf;
-  //echo $l;
-$head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/109.0',
-'Accept: application/json, text/javascript, */*; q=0.01',
+  parse_str($link,$v);
+  $token=$v['token'];
+  $id=$v['id'];
+  $l="http://streamm4u.com/anhjaxtv";
+  $l=$cf."https://m4uhd.tv/ajaxtv";
+  $x=array("_token" => $token,
+  "idepisode" => $id);
+  $post=http_build_query($x);
+
+$head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:95.0) Gecko/20100101 Firefox/95.0',
+'Accept: */*',
 'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
 'Accept-Encoding: deflate',
-'Referer: '.$last_good,
+'Content-Type: application/x-www-form-urlencoded; charset=UTF-8',
 'X-Requested-With: XMLHttpRequest',
-'Connection: keep-alive');
+'Content-Length: '.strlen($post),
+'Origin: https://m4uhd.tv',
+'Connection: keep-alive',
+'Referer: https://m4uhd.tv');
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $l);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-  curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
-  curl_setopt($ch, CURLOPT_HTTPHEADER,$head);
-  curl_setopt($ch, CURLOPT_ENCODING, "");
-  ///curl_setopt($ch, CURLOPT_HEADER,1);
+  //curl_setopt($ch, CURLOPT_USERAGENT, $ua);
+  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+  //curl_setopt($ch, CURLOPT_HEADER,1);
+  curl_setopt($ch, CURLOPT_POST,1);
+  curl_setopt($ch, CURLOPT_POSTFIELDS,$post);
+  //curl_setopt($ch, CURLOPT_NOBODY,1);
+  curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie);
+  //curl_setopt($ch, CURLOPT_COOKIEJAR, $cookie);
+  curl_setopt($ch, CURLOPT_HTTPHEADER, $head);
   curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
   curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
   curl_setopt($ch, CURLOPT_TIMEOUT, 25);
-  $h = curl_exec($ch);
+  $html = curl_exec($ch);
   curl_close($ch);
-  //echo $h;
-  $r=json_decode($h,1);
-  $h=$r["result"];
-$r=array();
-if (preg_match("/<div class\=\"film\-server\"/",$h))
-$videos = explode('<div class="film-server"', $h);
-else
-$videos=explode('<li class="server',$h);
-unset($videos[0]);
-$videos = array_values($videos);
-foreach($videos as $video) {
- $t1=explode('data-link-id="',$video);
- $t2=explode('"',$t1[1]);
- $t3=explode('data-id="',$video);
- $t4=explode('"',$t3[1]);
- $r[$t4[0]]=$t2[0];
-}
-
-}
-$s=array("41"=>"Vidstream","28"=>"MyCloud","45"=>"Filemoon","40"=>"Streamtape");
-//print_r ($r);
-//print_r ($s);
-//echo $s[key($r)];
-$mcloud="";
-$lang="";
-foreach ($r as $kk => $v) {
-  $vrf=$bunny->encodeVrf($v);
-  $c_link=$last_good."/ajax/server/".$v."?vrf=".$vrf;
-  $openload=$s[$kk];
-  if (preg_match("/vidstream|mycloud/i",$openload)) {
-  $head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/109.0',
-  'Accept: application/json, text/javascript, */*; q=0.01',
-  'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
-  'Accept-Encoding: deflate',
-  'Referer: '.$c_link,
-  'X-Requested-With: XMLHttpRequest',
-  'Connection: keep-alive');
-
-  $ch = curl_init();
-  curl_setopt($ch, CURLOPT_URL, $c_link);
-  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-  curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
-  curl_setopt($ch, CURLOPT_HTTPHEADER,$head);
-  curl_setopt($ch, CURLOPT_ENCODING, "");
-  //curl_setopt($ch, CURLOPT_HEADER,1);
-  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
-  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
-  $h = curl_exec($ch);
-  curl_close($ch);
-  //echo $h;
-  $url=json_decode($h,1)['result']['url'];
-  //echo $url."\n";
-  $mcloud=$bunny->decodeVrf($url);
-  //echo $mcloud;
-  //$r[$kk]=$mcloud;
-
-  $r[$kk]=$last_good."/ajax/server/".$v."?vrf=".urlencode($vrf);
-  } else {
-  $r[$kk]=$last_good."/ajax/server/".$v."?vrf=".urlencode($vrf);
-  }
-}
-reset($r);
-//////////////////////////
-  $srt="";
-  if (preg_match("/\?sub\.info\=/",$mcloud)) {
-   $t1=explode("?sub.info=",$mcloud);
-   
-  $ch = curl_init();
-  curl_setopt($ch, CURLOPT_URL, urldecode($t1[1]));
-  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-  curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
-  curl_setopt($ch, CURLOPT_HTTPHEADER,$head);
-  curl_setopt($ch, CURLOPT_ENCODING, "");
-  //curl_setopt($ch, CURLOPT_HEADER,1);
-  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
-  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
-  $h = curl_exec($ch);
-  curl_close($ch);
-  $ss=json_decode($h,1);
-  //print_r ($ss);
-  for ($k=0;$k<count($ss);$k++) {
-   if (preg_match("/romanian/i",$ss[$k]['label'])) {
-    $lang="Romanian";
-    break;
+  if (preg_match_all("/data\=\"([^\"]+)\"/",$html,$m)) {
+   //print_r ($m);
+   $l="http://streamm4u.com/anhjax";
+   $l=$cf."https://m4uhd.tv/ajax";
+   $ch = curl_init();
+   curl_setopt($ch, CURLOPT_URL, $l);
+   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+   //curl_setopt($ch, CURLOPT_USERAGENT, $ua);
+   curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+   curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie);
+   curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+   curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
+   curl_setopt($ch, CURLOPT_TIMEOUT, 25);
+   for ($j=0;$j<count($m[1]);$j++) {
+    $x=array("_token" => $token,
+    "m4u" => $m[1][$j]);
+    $post=http_build_query($x);
+    $head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:95.0) Gecko/20100101 Firefox/95.0',
+    'Accept: */*',
+    'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
+    'Accept-Encoding: deflate',
+    'Content-Type: application/x-www-form-urlencoded; charset=UTF-8',
+    'X-Requested-With: XMLHttpRequest',
+    'Content-Length: '.strlen($post),
+    'Origin: https://m4uhd.tv',
+    'Connection: keep-alive',
+    'Referer: https://m4uhd.tv');
+    curl_setopt($ch, CURLOPT_HTTPHEADER, $head);
+    curl_setopt($ch, CURLOPT_POST,1);
+    curl_setopt($ch, CURLOPT_POSTFIELDS,$post);
+    $h = curl_exec($ch);
+    //echo $h;
+    if (preg_match("/iframe src\=\"([^\"]+)\"/",$h,$q))
+      $r[]=$q[1];
+    elseif (preg_match("/sources\:\s*\[\s*\{file\:\s*\"([^\"]+)\"/",$h,$u))
+      $r[]=$u[1];
    }
+   curl_close($ch);
   }
-  if (!$lang) {
-  for ($k=0;$k<count($ss);$k++) {
-   if (preg_match("/english/i",$ss[$k]['label'])) {
-    $lang="English";
-    break;
-   }
-  }
-  }
-  }
-
-
-/////////////////////////
+}
 echo '<table border="1" width="100%">';
-echo '<TR><TD class="mp">Alegeti un server: Server curent:<label id="server">'.$s[key($r)].'</label>
-<input type="hidden" id="file" value="'."".urlencode($r[key($r)]).'"></td></TR></TABLE>';
+echo '<TR><TD class="mp">Alegeti un server: Server curent:<label id="server">'.parse_url($r[0])['host'].'</label>
+<input type="hidden" id="file" value="'.urlencode($r[0]).'"></td></TR></TABLE>';
 echo '<table border="1" width="100%"><TR>';
 $k=count($r);
 $x=0;
-foreach ($r as $kk => $v) {
+for ($i=0;$i<$k;$i++) {
   if ($x==0) echo '<TR>';
-  $c_link=$v;
-  $openload=$s[$kk];
-
+  $c_link=$r[$i];
+  $openload=parse_url($r[$i])['host'];
   if (preg_match($indirect,$openload)) {
   echo '<TD class="mp"><a href="filme_link.php?file='.urlencode($c_link).'&title='.urlencode(unfix_t($tit.$tit2)).'" target="_blank">'.$openload.'</a></td>';
   } else
@@ -425,12 +371,6 @@ else
    echo '<TD align="center" colspan="4"><a id="viz" onclick="'."openlink('".$openlink."')".'"'." style='cursor:pointer;'>".'VIZIONEAZA !</a></td>';
 echo '</tr>';
 echo '</table>';
-//////////////////////////
-echo '<br>';
-if ($lang) {
- echo '<b>Subtitles: '.$lang."</b><BR>";
-}
-///////////////////////////
 echo '<br>
 <table border="0px" width="100%">
 <TR>
@@ -438,7 +378,10 @@ echo '<br>
 <BR>Scurtaturi: 7=opensubtitles, 8=titrari, 9=subs, 0=subtitrari (cauta imdb id)
 </b></font></TD></TR></TABLE>
 ';
-echo '<BR>'.$info;
+
+if (preg_match("/c\d?_file\=(http[\.\d\w\-\.\/\\\:\?\&\#\%\_\,]+)\&c\d?_label\=English/i",$r[0],$s)) {
+ echo 'Cu subtitrare in Engleza.<BR>';
+}
 include("../debug.html");
 echo '
 <div id="overlay">

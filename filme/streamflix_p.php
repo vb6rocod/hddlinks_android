@@ -198,20 +198,19 @@ else
 echo '<H2>'.$page_title.'</H2>'."\r\n";
 
 echo '<table border="1px" width="100%" style="table-layout:fixed;">'."\r\n";
-echo '<TR>'."\r\n";
-if ($page==1) {
 
-     echo '<TD class="nav" colspan="4" align="right"><a href="'.$next.'">&nbsp;&gt;&gt;&nbsp;</a></TD>'."\r\n";
-
-} else {
-   echo '<TD class="nav" colspan="4" align="right"><a href="'.$prev.'">&nbsp;&lt;&lt;&nbsp;</a> | <a href="'.$next.'">&nbsp;&gt;&gt;&nbsp;</a></TD>'."\r\n";
-}
-echo '</TR>'."\r\n";
 
 ///////////////////////////////////////////////
 $l="https://api.themoviedb.org/3/person/".$link."/combined_credits?api_key=".$api_key."&language=en-US&page=".$page;
 $ua="Mozilla/5.0 (Windows NT 10.0; rv:88.0) Gecko/20100101 Firefox/88.0";
-
+//append_to_response=
+$l="https://api.themoviedb.org/3/person/".$link."?api_key=".$api_key."&language=en-US&page=".$page."&append_to_response=combined_credits";
+$l="https://api.themoviedb.org/3/discover/movie?api_key=".$api_key."&with_people=".$link."&page=".$page;
+//$link="irwin,allen";
+$l="https://api.themoviedb.org/3/discover/tv?api_key=".$api_key."&with_keywords=".$link."&page=".$page;
+$l="https://api.themoviedb.org/3/person/".$link."/tv_credits?api_key=".$api_key."&language=en-US&page=".$page;
+$l="https://api.themoviedb.org/3/person/".$link."?api_key=".$api_key."&language=en-US&append_to_response=movie_credits,tv_credits";
+//echo $l;
   $ch = curl_init($l);
   curl_setopt($ch, CURLOPT_USERAGENT, $ua);
   curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
@@ -221,35 +220,81 @@ $ua="Mozilla/5.0 (Windows NT 10.0; rv:88.0) Gecko/20100101 Firefox/88.0";
   curl_setopt($ch, CURLOPT_TIMEOUT, 25);
   $html = curl_exec($ch);
   curl_close ($ch);
-  $x=json_decode($html,1);
-  //print_r ($x);
-  $r=array();
-
- for ($k=0;$k<count($x['cast']);$k++) {
-  if ($x['cast'][$k]['media_type'] == "tv") {
-   $title=$x['cast'][$k]['name'];
-   if (isset($x['cast'][$k]['poster_path']))  // backdrop_path
-    $image="http://image.tmdb.org/t/p/w500".$x['cast'][$k]['poster_path'];
-   else
-    $image="blank.jpg";
-   $link=$x['cast'][$k]['id'];
-   $r[]=array($link,$title,$image,$x['cast'][$k]['media_type']);
-  } elseif ($x['cast'][$k]['media_type'] == "movie") {
-   $title=$x['cast'][$k]['title'];
-   if (isset($x['cast'][$k]['poster_path']))  // backdrop_path
-    $image="http://image.tmdb.org/t/p/w500".$x['cast'][$k]['poster_path'];
-   else
-    $image="blank.jpg";
-   $link=$x['cast'][$k]['id'];
-   $r[]=array($link,$title,$image,$x['cast'][$k]['media_type']);
+  $y=json_decode($html,1);
+  //print_r ($y);
+  $p_name=$y['name'];
+  $p_image=$y['profile_path'];
+    if ($p_image)
+     $p_image="http://image.tmdb.org/t/p/w500".$p_image;
+    else
+     $p_image="blank.jpg";
+  //die();
+  //[movie_credits]
+  //[tv_credits]
+  $zz=$y['movie_credits'];
+  $movie=array();
+  $x=$zz['crew'];
+  for ($k=0;$k<count ($x);$k++) {
+    $id=$x[$k]['id'];
+    $name=$x[$k]['title'];
+    $image=$x[$k]['poster_path']; // [backdrop_path]
+    //$image1=$x[$k]['backdrop_path'];
+    if ($image)
+     $image="http://image.tmdb.org/t/p/w500".$image;
+    else
+     $image="blank.jpg";
+    $movie[$id]=array($id,$name,$image,"movie");
   }
- }
+  $x=$zz['cast'];
+  for ($k=0;$k<count ($x);$k++) {
+    $id=$x[$k]['id'];
+    $name=$x[$k]['title'];
+    $image=$x[$k]['poster_path']; // [backdrop_path]
+    if ($image)
+     $image="http://image.tmdb.org/t/p/w500".$image;
+    else
+     $image="blank.jpg";
+    //$image1=$x[$k]['backdrop_path'];
+    $movie[$id]=array($id,$name,$image,"movie");
+  }
+  //die();
+  $zz=$y['tv_credits'];
+  //$tv1=array();
+  $x=$zz['crew'];
+  for ($k=0;$k<count ($x);$k++) {
+    $id=$x[$k]['id'];
+    $name=$x[$k]['name'];
+    $image=$x[$k]['poster_path']; // [backdrop_path]
+    //$image1=$x[$k]['backdrop_path'];
+    if ($image)
+     $image="http://image.tmdb.org/t/p/w500".$image;
+    else
+     $image="blank.jpg";
+    $movie[$id]=array($id,$name,$image,"tv");
+  }
+  //print_r ($tv);
+  $x=$zz['cast'];
+  for ($k=0;$k<count ($x);$k++) {
+    $id=$x[$k]['id'];
+    $name=$x[$k]['name'];
+    $image=$x[$k]['poster_path']; // [backdrop_path]
+    if ($image)
+     $image="http://image.tmdb.org/t/p/w500".$image;
+    else
+     $image="blank.jpg";
+    //$image1=$x[$k]['backdrop_path'];
+    $movie[$id]=array($id,$name,$image,"tv");
+  }
+  //$r[]=array($link,$title,$image,$x['cast'][$k]['media_type']);
 
-for ($k=0; $k<count($r);$k++) {
-  $link=$r[$k][0];
-  $title=$r[$k][1];
-  $image=$r[$k][2];
-  $tv=$r[$k][3];
+$n=1;
+echo '<TR><td class="mp" width="25%">';
+echo '<img src="'.$p_image.'" width="'.$width.'" height="'.$height.'"><BR>'.$p_name.'</TD>';
+foreach ($movie as $key=>$value) {
+  $link=$movie[$key][0];
+  $title=$movie[$key][1];
+  $image=$movie[$key][2];
+  $tv=$movie[$key][3];
   $tit_imdb=$title;
   $imdb="";
   $year="";
@@ -315,13 +360,7 @@ for ($k=0; $k<count($r);$k++) {
     }
     echo '</TR>'."\r\n";
   }
-echo '<tr>
-<TD class="nav" colspan="4" align="right">'."\r\n";
-if ($page > 1)
-  echo '<a href="'.$prev.'">&nbsp;&lt;&lt;&nbsp;</a> | <a href="'.$next.'">&nbsp;&gt;&gt;&nbsp;</a></TD>'."\r\n";
-else
-  echo '<a href="'.$next.'">&nbsp;&gt;&gt;&nbsp;</a></TD>'."\r\n";
-echo '</TR>'."\r\n";
+
 echo "</table>"."\r\n";
 echo "</table>";
 ?>

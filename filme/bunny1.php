@@ -3,8 +3,10 @@ class bunny
 {
   //private $key_enc="MPPBJLgFwShfqIBx";
   //private $key_dec="hlPeNwkncH0fq9so";
-  private $key_enc="rzyKmquwICPaYFkU"; //09.07.2023
-  private $key_dec="8z5Ag5wgagfsOuhz"; //09.07.2023
+  //private $key_enc="rzyKmquwICPaYFkU"; //09.07.2023
+  //private $key_dec="8z5Ag5wgagfsOuhz"; //09.07.2023
+  private $key_enc="FWsfu0KQd9vxYGNB"; //30.07.2023
+  private $key_dec="8z5Ag5wgagfsOuhz"; //30.07.2023
   private $nineAnimeKey = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
   private function cipher($key,$text) {
    $u=0;
@@ -55,8 +57,10 @@ class bunny
    return $output;
   }
   private function decrypt_bunny($input,$key) {
-   $input=preg_replace('/[\t\n\f\r]/','',$input);
-   $input=preg_replace("/\=?+/","",$input);
+   //$input=preg_replace('/[\t\n\f\r]/','',$input);
+   //$input=preg_replace("/\=?+/","",$input);
+   $input=str_replace("_","/",$input);
+   $input=str_replace("-","+",$input);
    $r="";
    $e=0;
    $u=0;
@@ -88,6 +92,28 @@ class bunny
   }
 
   private function ceva($t) {
+   $t=preg_replace_callback(
+    "/[a-zA-Z]/",
+    function ($a1) {
+     return chr(($a1[0] <= 'Z' ? 90 : 122) >= ($a1 = ord($a1[0]) + 13) ? $a1 : $a1 - 26);
+    },
+    $t
+   );
+  $t=$this->encrypt_bunny($t,$this->nineAnimeKey);
+  $o=5;
+  $s="";
+  for ($h=0;$h<strlen($t);$h++) {
+   $c=ord($t[$h]);
+   if ($h%$o==1 ||$h%$o==4) $c -=2;
+   if ($h%$o==3) $c +=5;
+   if ($h%$o==0) $c -=4;
+   if ($h%$o==2) $c -=6;
+   $s .=chr($c);
+  }
+
+  return ($s);
+  }
+  private function ceva_f($t) {
    $i=7;
    $n="";
    for ($r=0;$r<strlen($t);$r++) {
@@ -101,6 +127,8 @@ class bunny
    }
    return strrev($n);
   }
+   
+  
   private function ceva1($t) {
    $i=6;
    $n="";
@@ -128,11 +156,12 @@ class bunny
   }
   function encodeVrf($text) {
    $a=$this->cipher($this->key_enc,$text);
+
    $b=$this->encrypt_bunny($a,$this->nineAnimeKey);
-   $c=$this->encrypt_bunny($b,$this->nineAnimeKey);
-   $d=$this->ceva1($c);
-   $e=$this->encrypt_bunny($d,$this->nineAnimeKey);
-   return $e;
+
+   $d=$this->ceva($b);
+
+   return $d;
   }
   function decodeVrf($text) {
     $text=preg_replace('/[\t\n\f\r]/','',$text);

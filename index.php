@@ -65,8 +65,6 @@ function ajaxrequest(url) {
        msg="tv/w.php";
        document.getElementById("fancy").href=msg;
        document.getElementById("fancy").click();
-     } else if (charCode == "48" && e.target.type != "text") {
-       document.getElementById("manual1").click();
      } else if (charCode == "50" && e.target.type != "text") {
        window.open("https://fiber.google.com/speedtest/");
     }
@@ -77,9 +75,6 @@ document.onkeypress =  zx;
 </head>
 <body>
 <a id="fancy" data-fancybox data-type="iframe" href=""></a>
-<a id="manual1" href="my_sister.jpg" data-fancybox data-caption="in memoriam...">
-
-</a>
 <script>
 function on() {
     document.getElementById("overlay").style.display = "block";
@@ -159,6 +154,8 @@ $parent_url= dirname($base_url);
 if (!file_exists($parent_url."/data"))  @mkdir($parent_url."/data", 0777);
 if (!file_exists($parent_url."/cookie"))  @mkdir($parent_url."/cookie", 0777);
 if (!file_exists($parent_url."/parole"))  @mkdir($parent_url."/parole", 0777);
+$dr=$_SERVER['DOCUMENT_ROOT'];
+if (!file_exists($dr."/e"))  @mkdir($dr."/e", 0777);
 ?>
 <BR><BR>
 <table align="center" width="90%">

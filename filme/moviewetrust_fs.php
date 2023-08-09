@@ -158,7 +158,7 @@ echo '
 }
 echo '<h2>'.$tit.$tit2.'</H2>';
 echo '<BR>';
-
+$tmdb=$link;
 $r=array();
 $s=array();
 $ua="Mozilla/5.0 (Windows NT 10.0; rv:88.0) Gecko/20100101 Firefox/88.0";
@@ -168,9 +168,9 @@ else
   $api_key="";
 ///////////////////////////////////////////////////////
 if ($tip=="movie")
-$l="https://api.themoviedb.org/3/movie/".$link."?api_key=".$api_key."&append_to_response=external_ids";
+$l="https://api.themoviedb.org/3/movie/".$link."?api_key=".$api_key."&append_to_response=credits,external_ids";
 else
-$l="https://api.themoviedb.org/3/tv/".$link."?api_key=".$api_key."&append_to_response=external_ids";
+$l="https://api.themoviedb.org/3/tv/".$link."?api_key=".$api_key."&append_to_response=credits,external_ids";
   $ch = curl_init($l);
   curl_setopt($ch, CURLOPT_USERAGENT, $ua);
   curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
@@ -183,7 +183,80 @@ $l="https://api.themoviedb.org/3/tv/".$link."?api_key=".$api_key."&append_to_res
   $x=json_decode($html,1);
   //print_r ($x);
   //die();
+  $info="";
+  $overview=$x['overview'];
+  if (isset($x['first_air_date']))
+   $release_date=$x['first_air_date'];
+  else
+   $release_date=$x['release_date'];
+  preg_match("/\d{4}/",$release_date,$d);
+  $release_date=$d[0];
+  $vote=$x['vote_average'];
+  //$vote=$x['popularity'];
+  if (isset($x['runtime']))
+    $duration=$x['runtime'];
+  elseif (isset($x['episode_run_time'][0]))
+    $duration=$x['episode_run_time'][0];
+  else
+    $duration="";
+  $y=$x['credits']['cast'];
+  $z=$x['credits']['crew'];
+  //print_r ($z);
+  $actors=array();
+  $director=array();
+  $producer=array();
+  $writer=array();
+  for ($k=0;$k<count($y);$k++) {
+   $a=$y[$k]['known_for_department'];
+   //echo $a;
+   if ($a=="Acting") $actors[]=array($y[$k]['name'],$y[$k]['id']);
+  }
+  //print_r ($actors);
+  for ($k=0;$k<count($z);$k++) {
+    if (preg_match("/director/i",$z[$k]['job']))
+      $director[]=array($z[$k]['name'],$z[$k]['id']);
+    elseif (preg_match("/story|writer/i",$z[$k]['job']))
+      $writer[]=array($z[$k]['name'],$z[$k]['id']);
+    elseif (preg_match("/producer/i",$z[$k]['job']))
+      $producer[]=array($z[$k]['name'],$z[$k]['id']);
+   }
+  $genres="";
+  for ($k=0;$k<count($x['genres']);$k++) {
+    $genres .=$x['genres'][$k]['name'].",";
+  }
+  $genres = substr($genres, 0, -1);
+  $info .="<b>Release date:</b>".$release_date.".<b>Runtime:</b>".$duration." min.<b>TMDB</b>:".$vote.".".$genres.'.<BR>';
+  if (count($director)>0) {
+  $info .='<b><font color="yellow">Director:</font></b>';
+  for ($k=0;$k<min(10,count($director));$k++) {
+   $info .='<a href="moviewetrust_p.php?page=1&link='.$director[$k][1].'&title='.urlencode($director[$k][0]).'" target="_blank">'.$director[$k][0]."</a>,";
+  }
+  $info = substr($info, 0, -1).".<BR>";
+  }
+  if (count($producer)>0) {
+  $info .='<b><font color="yellow">Producer:</font></b>';
+  for ($k=0;$k<min(5,count($producer));$k++) {
+   $info .='<a href="moviewetrust_p.php?page=1&link='.$producer[$k][1].'&title='.urlencode($producer[$k][0]).'" target="_blank">'.$producer[$k][0]."</a>,";
+  }
+  $info = substr($info, 0, -1).".<BR>";
+  }
+  if (count($writer) > 0) {
+  $info .='<b><font color="yellow">Writer:</font></b>';
+  for ($k=0;$k<min(10,count($writer));$k++) {
+   $info .='<a href="moviewetrust_p.php?page=1&link='.$writer[$k][1].'&title='.urlencode($writer[$k][0]).'" target="_blank">'.$writer[$k][0]."</a>,";
+  }
+  $info = substr($info, 0, -1).".<BR>";
+  }
+  $info .='<b><font color="yellow">Cast:</font></b>';
+  for ($k=0;$k<min(15,count($actors));$k++) {
+   $info .='<a href="moviewetrust_p.php?page=1&link='.$actors[$k][1].'&title='.urlencode($actors[$k][0]).'" target="_blank">'.$actors[$k][0]."</a>,";
+  }
+  $info = substr($info, 0, -1).".<BR>";
+  $info .= '<b><font color="cyan">Overview:</font></b>'.$overview;
   $imdb=$x['external_ids']['imdb_id'];
+  //echo $imdb;
+  //die();
+$k=0;
   //echo $imdb;
   //die();
 //////////////////////////////////////
@@ -194,14 +267,16 @@ if ($tip=="movie")
 else
  $r[]="https://fsa.remotestre.am/Shows/".$link."/".$sez."/".$ep."/".$ep.".m3u8";
  $s[]="remotestre";
-if ($tip=="movie")
-$l="https://databasegdriveplayer.xyz/player.php?imdb=".$imdb;
-else
-$l="https://databasegdriveplayer.xyz/player.php?type=series&imdb=".$imdb."&season=".$sez."&episode=".$ep;
   $head=array('Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
   'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
   'Accept-Encoding: deflate',
   'Connection: keep-alive');
+/*
+if ($tip=="movie")
+$l="https://databasegdriveplayer.xyz/player.php?imdb=".$imdb;
+else
+$l="https://databasegdriveplayer.xyz/player.php?type=series&imdb=".$imdb."&season=".$sez."&episode=".$ep;
+
 
   $ch = curl_init($l);
   curl_setopt($ch, CURLOPT_USERAGENT, $ua);
@@ -214,7 +289,6 @@ $l="https://databasegdriveplayer.xyz/player.php?type=series&imdb=".$imdb."&seaso
   curl_setopt($ch, CURLOPT_TIMEOUT, 15);
   $h = curl_exec($ch);
   curl_close ($ch);
-  //echo $h;
   if (preg_match("/href\=\"\/\//",$h)) {
   $t1=explode('href="//',$h);
   $t2=explode('"',$t1[1]);
@@ -222,8 +296,8 @@ $l="https://databasegdriveplayer.xyz/player.php?type=series&imdb=".$imdb."&seaso
   if (preg_match("/streaming\.php\?/",$l)) {
   $host=parse_url($l)['host'];
   $l=str_replace($host,"membed1.com",$l);
-  $r[]=$l;
-  $s[]=$host;
+  //$r[]=$l;
+  //$s[]=$host;
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $l);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
@@ -251,6 +325,7 @@ $l="https://databasegdriveplayer.xyz/player.php?type=series&imdb=".$imdb."&seaso
   }
   }
   }
+*/
 //////////////////////////////////////
 ////////////////////////////////////////////////////////////
 // vidsrc.me
@@ -332,6 +407,12 @@ else
   else
    $l="https://embedo.xyz/player.php?video_id=".$imdb."&s=".$sez."&e=".$ep;
   //echo $l;
+  if ($tip=="movie")
+   $l="https://multiembed.mov/?video_id=".$imdb;
+  else
+   $l="https://multiembed.mov/?video_id=".$imdb."&s=".$sez."&e=".$ep;
+   //echo $l;
+   //https://www.superembed.stream/?c=embed
 $ua="Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:108.0) Gecko/20100101 Firefox/108.0";
 
 $head=array('User-Agent: '.$ua,
@@ -453,13 +534,14 @@ foreach($videos as $video) {
   else
    $l="https://embedo.xyz/play/series.php?imdb=".$imdb."&sea=".$sez."&epi=".$ep;
    //echo $l;
-  $r[]=$l;
-  $s[]="Vidcloud";
+  //$r[]=$l;
+  //$s[]="Vidcloud";
 if ($tip=="movie") {
- $r[]="https://www.2embed.cc/imdb/".$imdb;
- $s[]="2embed";
+ //$r[]="https://www.2embed.cc/imdb/".$imdb;
+ //$s[]="2embed";
 }
 ///////////////////////////////
+/*
 if ($tip=="movie") {
  $r[]="https://api.9animetv.live/player/cinema-player.php?id=".$imdb;
  $s[]="9animetv";
@@ -467,7 +549,15 @@ if ($tip=="movie") {
  $r[]="https://api.9animetv.live/player/cinema-player.php?id=".$imdb."&s=".$sez."&e=".$ep;
  $s[]="9animetv";
 }
-
+*/
+//aniwave.to
+/////////////////////////////////////////////
+if ($tip=="movie")
+ $l="https://moviesapi.club/movie/".$tmdb;
+else
+ $l="https://moviesapi.club/tv/".$tmdb."-".$sez."-".$ep;
+$r[]=$l;
+$s[]="moviesapi";
 ///////////////////////////////////////////
 //print_r ($r);
 echo '<table border="1" width="100%">';
@@ -536,6 +626,7 @@ echo '<br>
 <BR>Scurtaturi: 7=opensubtitles, 8=titrari, 9=subs, 0=subtitrari (cauta imdb id)
 </b></font></TD></TR></TABLE>
 ';
+echo $info;
 //echo '<a href="https://streamembed.net/play/YTF0TklLYXplRnRhdjNTcHBUQUxnUzd1amt0UkIrZTJTWUZlQk8wYXJsWXhlT2EzTkxaQkU0RU9HQ2ZwemhvPQ==">sasaasas</a>';
 include("../debug.html");
 echo '

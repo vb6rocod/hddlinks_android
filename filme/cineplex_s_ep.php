@@ -30,6 +30,8 @@ function str_between($string, $start, $end){
 }
 echo '<h2>'.$tit2.'</h2>';
 echo '<table border="1" width="100%">'."\n\r";
+
+//echo $link;
 //echo '<TR><td style="color:#000000;background-color:deepskyblue;text-align:center" colspan="3" align="center">'.$tit.'</TD></TR>';
 ///flixanity_s_ep.php?tip=serie&file=http://flixanity.watch/the-walking-dead&title=The Walking Dead&image=http://flixanity.watch/thumbs/show_85a60e7d66f57fb9d75de9eefe36c42c.jpg
 $id=str_between($link,"series/","-");
@@ -40,22 +42,39 @@ else
   $host="cinogen.net";
 $episoade=array();
 $sez="1";
-while (true) {
-  $l="https://".$host."/series/season?id=".$id."&s=".$sez."&token=".$token."&_";
-  //echo $l;
-  //echo $post;
+
+$l=str_replace(parse_url($link)['host'],$host,$link);
+
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $l);
   curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 10.0; rv:55.0) Gecko/20100101 Firefox/55.0');
   //curl_setopt($ch,CURLOPT_HTTPHEADER,$head);
-  curl_setopt($ch,CURLOPT_REFERER,"https://cineplex.to");
+  curl_setopt($ch,CURLOPT_REFERER,"https://".$host);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
   curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie);
   curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
   curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
   curl_setopt($ch, CURLOPT_TIMEOUT, 15);
   $html = curl_exec($ch);
-  curl_close($ch);
+  $t1=explode('class="movie-description">',$html);
+  $t2=explode('</p',$t1[1]);
+  $info=$t2[0];
+  //echo $html;
+  //echo $info;
+  preg_match_all("/data\-season\=\"(\d+)\"/",$html,$mm);
+
+  //print_r ($mm);
+  //die();
+foreach ($mm[1] as $key=>$value) {
+  $sez=$value;
+  $l="https://".$host."/series/season?id=".$id."&s=".$sez."&token=".$token."&_";
+  //https://senturion.to/series/season?id=11929&s=undefined&token=qt353lvv5tgge27ea4igoecl1e&_=1689666410097
+  //echo $l;
+  //echo $post;
+
+  curl_setopt($ch, CURLOPT_URL, $l);
+  $html = curl_exec($ch);
+
   $r=json_decode($html,1);
   //print_r ($r);
   //die();
@@ -69,11 +88,10 @@ while (true) {
   $title=$season."x".$episod." - ".$ep_tit;
   $episoade[$sez][]=array("episod"=>$episod,"img_ep"=>$img_ep,"ep_tit"=>$ep_tit);
   }
-  $sez++;
-  } else {
-    break;
+
   }
 }
+curl_close($ch);
 //print_r ($episoade);
 //die();
 echo '<table border="1" width="100%">'."\n\r";

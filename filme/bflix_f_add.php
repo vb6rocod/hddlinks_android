@@ -30,7 +30,7 @@ if ($mod=="add") {
   if ($arr) {
   $found=false;
   foreach($arr as $key => $value) {
-    if ($title == $arr[$key][0] && $link == $arr[$key][1]) {
+    if ($title == $arr[$key][0] && parse_url($link)['path'] == parse_url($arr[$key][1])['patch']) {
       $found=true;
       break;
     }
@@ -63,12 +63,12 @@ if ($mod=="add") {
   if ($arr) {
   $found=false;
   foreach($arr as $key => $value) {
-    if ($title == $arr[$key][0] && $link==$arr[$key][1]) {
+    if ($title == $arr[$key][0] && parse_url($link)['path'] == parse_url($arr[$key][1])['patch']) {
       $found=true;
       //echo $title;
       unset ($arr[$key]);
       echo "Am sters filmul ".unfix_t(urldecode($title));
-      break;
+      //break;
     }
   }
   if ($arr) {

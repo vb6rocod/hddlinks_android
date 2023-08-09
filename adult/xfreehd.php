@@ -233,7 +233,10 @@ $videos = array_values($videos);
 foreach($videos as $video) {
   $t1 = explode('href="',$video);
   $t2 = explode('"', $t1[1]);
-  $link = "https://www.xfreehd.com".$t2[0];
+  if (substr($t2[0], 0, 4)=="http")
+   $link=$t2[0];
+  else
+   $link = "https://www.xfreehd.com".$t2[0];
 
   $t1=explode('alt="',$video);
   $t2=explode('"',$t1[1]);

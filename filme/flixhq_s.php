@@ -18,6 +18,7 @@ $has_search="yes";
 $has_add="yes";
 $has_fs="yes";
 $last_good="https://flixhq.to";
+//$last_good="https://1hd.to";
 $host=parse_url($last_good)['host'];
 $fav_target="flixhq_s_fav.php?host=".$last_good;
 $add_target="flixhq_s_add.php";
@@ -194,10 +195,11 @@ $ua="Mozilla/5.0 (Windows NT 10.0; rv:75.0) Gecko/20100101 Firefox/75.0";
   curl_setopt($ch, CURLOPT_TIMEOUT, 25);
   $h = curl_exec($ch);
   curl_close($ch);
-
+  //echo $h;
 $host=parse_url($l)['host'];
 
 $videos = explode('<div class="flw-item', $h);
+//$videos = explode('div class="item-film', $h);
 unset($videos[0]);
 $videos = array_values($videos);
 foreach($videos as $video) {
@@ -219,7 +221,7 @@ foreach($videos as $video) {
  $t1=explode('class="fdi-item">',$video);
  $t2=explode('<',$t1[1]);
  $year=$t2[0];
-  if (preg_match("/\/tv\//",$link)) $f[] = array($title,$link,$image,$year);
+ if (preg_match("/\/(tv|series)\//",$link)) $f[] = array($title,$link,$image,$year);
 }
 foreach($f as $key => $value) {
   $title=$value[0];

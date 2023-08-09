@@ -294,10 +294,177 @@ if ($tip=="movie")
   echo $h;
   */
 }
+if (preg_match("/vidsrc\.me/",$filelink)) {
+  $ua="Mozilla/5.0 (Windows NT 10.0; rv:88.0) Gecko/20100101 Firefox/88.0";
+  $ch = curl_init($filelink);
+  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
+  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER  ,1);  // RETURN THE CONTENTS OF THE CALL
+  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+  //curl_setopt($ch, CURLOPT_HTTPHEADER,$head);
+  curl_setopt($ch, CURLOPT_ENCODING,"");
+  //curl_setopt($ch, CURLOPT_HEADER,1);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+  $h = curl_exec($ch);
+  curl_close ($ch);
+   if (preg_match("/player\_iframe\"\s+src\=\"([^\"]+)/",$h,$n)) {
+   if (substr($n[1],0,4)=="http")
+     $filelink=$n[1];
+   elseif (substr($n[1],0,2)=="//")
+     $filelink="https:".$n[1];
+   }
+}
+if (preg_match("/vidsrc\.to/",parse_url($filelink)['host'])) {
+  $head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/109.0',
+  'Accept: application/json, text/javascript, */*; q=0.01',
+  'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
+  'Accept-Encoding: deflate',
+  'Referer: https://vidsrc.to',
+  'X-Requested-With: XMLHttpRequest',
+  'Connection: keep-alive');
+  $ch = curl_init();
+  curl_setopt($ch, CURLOPT_URL, $filelink);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+  curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
+  curl_setopt($ch, CURLOPT_HTTPHEADER,$head);
+  curl_setopt($ch, CURLOPT_ENCODING, "");
+  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 25);
+  $h = curl_exec($ch);
+  curl_close ($ch);
+  //echo $h;
+  $url=json_decode($h,1)['result']['url'];
+  //echo $url;
+  require_once("bunny1.php");
+  $bunny=new bunny();
+  $filelink = $bunny->decodeVrf($url);
+  //echo $filelink;
+}
+if (preg_match("/stream\.2embed\.cc/",$filelink)) {
+  $head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/112.0',
+  'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
+  'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
+  'Accept-Encoding: deflate',
+  'Connection: keep-alive',
+  'Referer: https://soap2dayz.xyz/',
+  'Origin: https://soap2dayz.xyz',
+  'Upgrade-Insecure-Requests: 1');
+  $ch = curl_init();
+  curl_setopt($ch, CURLOPT_URL,$filelink);
+  //curl_setopt($ch, CURLOPT_USERAGENT, $ua);
+  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER  ,1);  // RETURN THE CONTENTS OF THE CALL
+  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+  //curl_setopt($ch, CURLOPT_ENCODING,"");
+  //curl_setopt($ch, CURLOPT_COOKIEJAR, $cookie);
+  //curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie);
+  curl_setopt($ch, CURLOPT_HEADER,1);
+  curl_setopt($ch, CURLOPT_HTTPHEADER,$head);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+  $h = curl_exec($ch);
+  require_once("JavaScriptUnpacker.php");
+  $jsu = new JavaScriptUnpacker();
+  $out = $jsu->Unpack($h);
+  //echo $out;
+  $filelink="";
+  if (preg_match("/sources\:\s*\[\{file\:\s*\"([^\"]+)\"/",$out,$m)) {
+   $link=$m[1];
+  }
+}
+if (strpos($filelink,"embed.smashystream.com") !== false) {
+//echo $filelink;
+  $head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/112.0',
+  'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
+  'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
+  'Accept-Encoding: deflate',
+  'Connection: keep-alive',
+  'Referer: https://embed.smashystream.com',
+  'Origin: https://embed.smashystream.com',
+  'Upgrade-Insecure-Requests: 1');
+  $ch = curl_init();
+  curl_setopt($ch, CURLOPT_URL,$filelink);
+  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER  ,1);  // RETURN THE CONTENTS OF THE CALL
+  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+  //curl_setopt($ch, CURLOPT_HEADER,1);
+  curl_setopt($ch, CURLOPT_HTTPHEADER,$head);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+  $h = curl_exec($ch);
+  curl_close($ch);
+  $h=str_replace("\\","",$h);
+  //echo $h;
+  if (preg_match("/imw\.php|f\w+\.php/",$filelink)) {
+
+  //$file=$r['file'];
+  if (preg_match("/\[\w+\]([^\,]+)\,/",$h,$l))
+   $link=$l[1];
+  else
+   $link="";
+
+  $sub=explode(",",$h);
+  $s=preg_grep("/\[(english|romanian).*\](http[^\[]+\.vtt)/i",$sub);
+  $srt="";
+
+  foreach($s as $v) {
+   if (preg_match("/\[romanian.*\](http.+)/i",$v,$ss)) {
+    $srt=$ss[1];
+    break;
+   } elseif (preg_match("/\[english.*\](http.+)/i",$v,$ss)) $srt=$ss[1];
+  }
+  } elseif (preg_match("/2cc\.php/",$filelink)) {
+  require_once("JavaScriptUnpacker.php");
+  $host="https://streamwish.to";
+  $jsu = new JavaScriptUnpacker();
+  $out = $jsu->Unpack($h);
+  $out .=$h;
+  //echo $out;
+  //die();
+  if (preg_match("/file\:\"([^\"]+)\",label\:\"\w+\"\,kind\:\"captions\"/",$out,$m))
+   $srt=$m[1];
+  //sources:[{file:"
+  if (preg_match('/sources\:\s*\[\{file\:\"([^\"]+)\"/', $out, $m)) {
+   $link=$m[1];
+  } else
+   $link="";
+  if ($link) {
+  $ch = curl_init();
+  curl_setopt($ch, CURLOPT_URL, $link);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+  curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:108.0) Gecko/20100101 Firefox/108.0');
+  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+  curl_setopt($ch, CURLOPT_ENCODING,"");
+  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+  $h = curl_exec($ch);
+  curl_close($ch);
+  //echo $h;
+  $link=get_max_res($h,$link);
+  }
+  if ($link && $flash <> "flash")  {
+   $link .="|Referer=".urlencode($host)."&Origin=".urlencode($host);
+  }
+  } elseif (preg_match("/eemovie\.php/",$filelink)) {
+    if (preg_match("/file\:\s*\"([^\"]+)\"/",$h,$m))
+     $link=$m[1];
+  } elseif (preg_match("/void\.php/",$filelink)) {
+    $t1=explode('iframe src="',$h);
+    $t2=explode('"',$t1[1]);
+    $filelink=$t2[0];
+  }
+}
 if (preg_match("/9animetv\./",$filelink)) {
   parse_str(parse_url($filelink)['query'],$r);
   $id=$r['id'];
+  //$filelink=str_replace("9animetv.live","aniwave.to",$filelink);
+  //echo $filelink;
   $l="https://api.9animetv.live/player-json-api.php?id=".$id;
+  //$l=str_replace("9animetv.live","aniwave.to",$l);
+  //echo $l;
   $head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/112.0',
   'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
   'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
@@ -306,6 +473,7 @@ if (preg_match("/9animetv\./",$filelink)) {
   'Referer: https://api.9animetv.live',
   'Origin: https://api.9animetv.live',
   'Upgrade-Insecure-Requests: 1');
+  //echo $l;
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL,$l);
   curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
@@ -399,11 +567,14 @@ if (preg_match("/freedrivemovie\./",$filelink)) {
 }
 if (preg_match("/jeniusplay\.com/",$filelink)) {
    //echo $filelink;
+ $t1=explode("&ref=",$filelink);
+ $filelink=$t1[0];
+ $r="https://".$t1[1]."/";
  if (preg_match("/video\/(\w+)/",$filelink,$m)) {
  $id=$m[1];
  $l="https://jeniusplay.com/player/index.php?data=".$id."&do=getVideo";
  //$l="https://jeniusplay.com/player/index.php?data=c64c545aff0d17ad713c907fdada37d1&do=getVideo";
- $post="hash=".$h."&r=https://77.105.142.75/";
+ $post="hash=".$h."&r=".$r;
  $head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/112.0',
  'Accept: */*',
  'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
@@ -544,7 +715,7 @@ $head=json_decode(file_get_contents($base_cookie."netfilm.dat"),1);
   }
   }
 }
-if (preg_match("/bflix\.|sflix\.|fmovies\.to/",$filelink) && !preg_match("/sub\.info\=/",$filelink)) {
+if (preg_match("/bflix\.|sflix\.|fmovies\.to/",parse_url($filelink)['host'])) {
   require_once("bunny1.php");
   $head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/109.0',
   'Accept: application/json, text/javascript, */*; q=0.01',
@@ -567,8 +738,11 @@ if (preg_match("/bflix\.|sflix\.|fmovies\.to/",$filelink) && !preg_match("/sub\.
   curl_close($ch);
   //echo $h;
   $url=json_decode($h,1)['result']['url'];
+  //echo $url."\n";
   $b=new bunny();
   $filelink=$b->decodeVrf($url);
+  //echo $filelink;
+  //die();
   if (preg_match("/\?sub\.info\=/",$filelink)) {
    $t1=explode("?sub.info=",$filelink);
    $filelink=$t1[0];
@@ -880,7 +1054,7 @@ if (preg_match("/afdah\./",$filelink)) {
   }
 }
 if (preg_match("/api\.consumet\.org/",$filelink)) {
-//echo $filelink;
+//echo urldecode($filelink);
 //$filelink="https://api.consumet.org/movies/flixhq/watch?episodeId=39533&mediaId=".urlencode("/watch-tv/watch-star-trek-discovery-39533.4848658");
 //$filelink="https://api.consumet.org/movies/flixhq/watch?episodeId=1219894&mediaId=tv%2Fwatch-star-trek-discovery-39533";
   $ch = curl_init();
@@ -2388,6 +2562,7 @@ if (preg_match("/hls\.ezylink\.co/",$filelink)) {
 if (preg_match("/uniquestream/",$filelink)) {
 //echo $filelink;
 // uniquestreaming.net
+ $cf="https://basic-bundle-solitary-morning-4d74.quamatbanty02.workers.dev/?";
  $t1=explode("id=",$filelink);
  $t2=explode("&",$t1[1]);
  $id=$t2[0];
@@ -2396,6 +2571,7 @@ if (preg_match("/uniquestream/",$filelink)) {
  $host=parse_url($filelink)['host'];
  $ua="Mozilla/5.0 (Windows NT 10.0; rv:80.0) Gecko/20100101 Firefox/80.0";
  $l="https://".$host."/wp-admin/admin-ajax.php";
+ $l=$cf.$l;
  $post="action=doo_player_ajax&post=".$id."&nume=1&type=".$type;
  //echo $post;
  //$post="action=doo_player_ajax&post=300522&nume=1&type=movie";
@@ -5362,19 +5538,91 @@ if (preg_match("/imwatchingmovies\.com/",$filelink)) {
   $h = curl_exec($ch);
   curl_close($ch);
   //echo $h;
-  if (!preg_match("/value\=\"([^\"]+)\"\s+name\=\"captcha_id/",$h,$m) && !preg_match("/jwplayer/",$h)) {
+  if (!preg_match("/value\=\"([^\"]+)\"\s+name\=\"captcha_id/",$h,$m) && !preg_match("/function\(h\,u\,n\,t\,e\,r\)/",$h)) {
   $t1=explode("window.atob('",$h);
   $t2=explode("'",$t1[1]);
   $filelink=base64_decode($t2[0]);
   //echo $filelink;
-  } elseif (preg_match("/jwplayer/",$h)) { // vipstream.php
-    //echo $n;
-    if (preg_match("/file\"\:\s*\"([^\"]+)\"/",$h,$m))
-     $link=$m[1];
-    if (preg_match("/file\"\:\s*\"([^\"]+)\"\,\"label\"\:\s*\"Romanian\"/i",$h,$s))
-      $srt=$s[1];
-    elseif (preg_match("/file\"\:\s*\"([^\"]+)\"\,\"label\"\:\s*\"English\"/i",$h,$s))
-      $srt=$s[1];
+  } elseif (preg_match("/function\(h\,u\,n\,t\,e\,r\)/",$h)) { // vipstream.php
+  //echo $h;
+  function hunter($h, $u, $n, $t, $e, $r) {
+    $r = "";
+    for($i = 0; $i < strlen($h);$i++) {
+        $s = "";
+        while($h[$i] !== $n[$e]) {
+            $s .= $h[$i];
+            $i++;
+        }
+        for($j = 0; $j < strlen($n);$j++) {
+          $s=str_replace($n[$j],$j,$s);
+        }
+        $r .= chr(abc($s, $e, 10) - $t);
+    }
+    return $r;
+  }
+  function abc($d, $e, $f) {
+    $g = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ+/';
+    $h = substr($g,0, $e);
+    $i = substr($g,0, $f);
+    $x=strrev($d);
+    $a=0;
+    $j=0;
+    for ($m=0;$m<strlen($x);$m++) {
+      $j +=strpos($h,$x[$m])*pow($e,$m);
+    }
+    $k = '';
+    while($j > 0) {
+        $k = $i[$j % $f].$k;
+        $j = ($j - ($j % $f)) / $f;
+    }
+    return $k;
+  }
+  preg_match_all("/decodeURIComponent\(escape\(r\)\)\}\((.*?)\)\)/",$h,$m);
+  //print_r ($m);
+  $out="";
+  for ($k=0;$k<count($m[1]);$k++) {
+   $c=str_replace('"',"",$m[1][$k]);
+   $t1=explode(",",$c);
+   $out .=hunter($t1[0],$t1[1],$t1[2],$t1[3],$t1[4],$t1[5]);
+  }
+  //$out=str_replace("\\","",$out);
+  //echo $out;
+  //$t1=explode('setup(',$out);
+  /*
+  $t1=explode('new Playerjs(',$out);
+  $t2=explode(');',$t1[1]);
+  echo $t2[0];
+  $xx=json_decode($t2[0],1);
+  print_r ($xx);
+  if (preg_match("/src\=\"([^\"]+)\"\s+kind\=\"captions\"/",$out,$s))
+   $srt=$s[1];
+
+  if (isset($xx['playlist'][0]['sources'][0]['file']))
+   $link=$xx['playlist'][0]['sources'][0]['file'];
+  //echo $link;
+////////////////////////////////////////////////////////////////////
+  $ss=$xx['playlist'][0]['tracks'];
+  for ($k=0;$k<count($ss);$k++) {
+   if (preg_match("/romanian/i",$ss[$k]['label'])) {
+     $srt=$ss[$k]['file'];
+     break;
+   } elseif (preg_match("/english/i",$ss[$k]['label'])) {
+     $srt=$ss[$k]['file'];
+   }
+  }
+  */
+  if (preg_match("/file\:\"([^\"]+)\"/",$out,$m))
+   $link=$m[1];
+  $sub=explode(",",$out);
+  $s=preg_grep("/\[(english|romanian).*\](http[^\[]+\.vtt)/i",$sub);
+  $srt="";
+  //echo $out;
+  foreach($s as $v) {
+   if (preg_match("/\[romanian.*\](http.+)/i",$v,$ss)) {
+    $srt=$ss[1];
+    break;
+   } elseif (preg_match("/\[english.*\](http.+)/i",$v,$ss)) $srt=$ss[1];
+  }
   }
   //echo $link."\n".$srt;
 }
@@ -5907,8 +6155,8 @@ $head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:104.0) Gecko/20100101 
   $r=json_decode($rest,1);
   //print_r ($r);
   $q=array();
-  for ($k=0;$k<count($r['streams']);$k++) {
-   $q[$r['streams'][$k]['Label']]=$r['streams'][$k]['URL'];
+  for ($k=0;$k<count($r['stream']);$k++) {
+   $q[$r['stream'][$k]['Label']]=$r['stream'][$k]['URL'];
   }
   if (isset($q['1080p']))
    $l=$q['1080p'];
@@ -5920,7 +6168,7 @@ $head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:104.0) Gecko/20100101 
    $l=$q['360p'];
   elseif (isset($q['auto']))
    $l=$q['auto'];
-  $t1=explode("token=",$l);
+  $t1=explode("sig=",$l);
   $t2=explode("&",$t1[1]);
   $token=$t2[0];
   $token1=substr(base64_decode(kk($token,2,16)),5);
@@ -5929,15 +6177,19 @@ $head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:104.0) Gecko/20100101 
   $link=str_replace($token,$token2,$l);
   if ($link && $flash <> "flash")
     $link .="|Referer=".urlencode($host)."&Origin=".urlencode($host);
-} elseif (preg_match("/streamhide\.|movhide\.pro|filelions\.to|streamwish\.to/",$filelink)) {
+} elseif (preg_match("/streamhide\.|movhide\.pro|filelions\.to|streamwish\.to|guccihide\.com/",$filelink)) {
 //echo $filelink;
   $host="https://".parse_url($filelink)['host'];
+  $head=array('Referer: https://stream.2embed.cc',
+  'Origin: https://stream.2embed.cc');
+  $ua='Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:108.0) Gecko/20100101 Firefox/108.0';
   require_once("JavaScriptUnpacker.php");
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $filelink);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
   curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:108.0) Gecko/20100101 Firefox/108.0');
   curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+  //curl_setopt($ch, CURLOPT_HTTPHEADER,$head);
   curl_setopt($ch, CURLOPT_ENCODING,"");
   curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
   curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
@@ -5975,6 +6227,7 @@ $head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:104.0) Gecko/20100101 
   if ($link && $flash <> "flash")  {
    $link .="|Referer=".urlencode($host)."&Origin=".urlencode($host);
   }
+  //."&User-Agent=".urlencode($ua);
 } elseif (preg_match("/vtplay\./",$filelink)) {
   // https://vtplay.net/embed-g1jc7lv7aoaw.html
   //$filelink="https://vtube.to/embed-nqt5gqcbg124.html";
@@ -6238,16 +6491,20 @@ if (count($pl) > 1) {
   $t1=explode('source src="',$h);
   $t2=explode('"',$t1[1]);
   $link=$t2[0];
-} elseif (preg_match("/bestx\.stream|moviesapi\.club/",$filelink)) {
+} elseif (preg_match("/bestx\.stream|moviesapi\.club|watchx\.php/",$filelink)) {
   // $l="https://bestx.stream/v/D6Rj6gBwm42V/";
+  //https://embed.smashystream.com/watchx.php?tmdb=447365 ???/
+  //https://w1.moviesapi.club
+  //echo $filelink;
   $host="https://".parse_url($filelink)['host'];
+
   $head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/112.0',
   'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
   'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
   'Accept-Encoding: deflate',
   'Connection: keep-alive',
-  'Referer: https://pressplay.top',
-  'Origin: https://pressplay.top',
+  'Referer: '.$host,
+  'Origin: '.$host,
   'Upgrade-Insecure-Requests: 1');
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL,$filelink);
@@ -6258,6 +6515,10 @@ if (count($pl) > 1) {
   curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
   curl_setopt($ch, CURLOPT_TIMEOUT, 25);
   $h = curl_exec($ch);
+  if (preg_match("/class\=\"vidframe\"\s+src\=\"([^\"]+)\"/",$h,$m)) {   //https://moviesapi.club/movie/447365
+  curl_setopt($ch, CURLOPT_URL,$m[1]);
+  $h = curl_exec($ch);
+  }
   curl_close($ch);
   //echo $h;
   if (preg_match("/MasterJS\s*\=\s*[\'\"]([^\'\"]+)[\'\"]/i",$h,$m)) {
@@ -8866,9 +9127,35 @@ function xor_string($string, $key) {
     $link=$link."|Referer=".urlencode("https://playtube.ws")."&Origin=".urlencode("https://playtube.ws");
 } elseif (preg_match("/filemoon\.|moonmov\.pro|furher\./",$filelink)) {
    //echo $filelink;
+  $ua="Mozilla/5.0 (Windows NT 10.0; rv:81.0) Gecko/20100101 Firefox/81.0";
   $y = parse_url($filelink)['query'];
   parse_str($y,$r);
   //print_r ($r);
+  if (isset($r['sub_info'])) {
+   $ch = curl_init();
+   curl_setopt($ch, CURLOPT_URL, $r['sub_info']);
+   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+   curl_setopt($ch, CURLOPT_USERAGENT, $ua);
+   curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+   curl_setopt($ch, CURLOPT_ENCODING,"");
+   curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+   curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
+   curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
+   curl_setopt($ch, CURLOPT_TIMEOUT, 25);
+   $h = curl_exec($ch);
+   curl_close($ch);
+   $x=json_decode($h,1);
+   //print_r ($x);
+   for ($k=0;$k<count($x);$k++) {
+    if (preg_match("/romanian/i",$x[$k]['label'])) {
+    $srt=$x[$k]['file'];
+    break;
+    } elseif (preg_match("/english/i",$x[$k]['label'])) {
+    $srt=$x[$k]['file'];
+    }
+   }
+  }
+  //echo $srt;
   // filemoon.to
   // https://filemoon.sx/e/re09uiwgwgve?c1_file=https://seriale-online.net/subtitrarifilme/tt11291274.vtt&c1_label=Romana
   // https://filemoon.to/e/dk86vk0iouf2?sub.info=https://fmovies.to/ajax/episode/subtitles/0b5d2788859f1833c7f39eb5f5b02122?&autostart=true
@@ -8878,8 +9165,8 @@ function xor_string($string, $key) {
    //require_once ("tear.php");
    $t1=explode("?",$filelink);
    $host="https://".parse_url($t1[0])['host'];
-   $ua="Mozilla/5.0 (Windows NT 10.0; rv:81.0) Gecko/20100101 Firefox/81.0";
 
+   //echo $filelink;
    $ch = curl_init();
    curl_setopt($ch, CURLOPT_URL, $filelink);
    curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
@@ -10676,18 +10963,32 @@ $head=array('Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q
   $srt=urldecode($t1[1]);
 //} elseif (strpos($filelink,"mcloud") !== false) {
 } elseif (preg_match("/(mcloud|vidstream|vizcloud)\./",$filelink)) {
+  $dr=$_SERVER['DOCUMENT_ROOT'];
+  if (preg_match("/\/(?:f|e|embed)\/([a-z0-9]+)/i",$filelink,$m))
+  $id=$m[1];
+
+  if (file_exists($dr."/e/".$id)) {
+  $list = glob($dr."/e/".$id."/*.*");
+   foreach ($list as $l) {
+    str_replace(" ","%20",$l);
+    unlink($l);
+   }
+  rmdir($dr."/e/".$id);
+  }
+
   $host="https://".parse_url($filelink)['host'];
   //echo $host."\n";
   //echo $filelink;
   //die();
   if (preg_match("/sub\.file\=/",$filelink)) {
-  $t1=explode("&sub.file=",$filelink);
+  $t1=explode("sub.file=",$filelink);
   $t2=explode("&",$t1[1]);
   $srt=urldecode($t2[0]);
   if ($srt && strpos($srt,"http") === false) $srt="https:".$srt;
   }
-  if (preg_match("/\?sub\.info\=/",$filelink)) {
-   $t1=explode("?sub.info=",$filelink);
+  if (preg_match("/sub\.info\=/",$filelink)) {
+   $t1=explode("sub.info=",$filelink);
+   //echo $t1[1];
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, urldecode($t1[1]));
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
@@ -10700,6 +11001,7 @@ $head=array('Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q
   curl_setopt($ch, CURLOPT_TIMEOUT, 15);
   $h = curl_exec($ch);
   curl_close($ch);
+  //echo $h;
   $s=json_decode($h,1);
   //print_r ($s);
   $srt="";
@@ -10720,50 +11022,20 @@ $head=array('Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q
   }
 //echo $srt;
 //die();
- if (preg_match("/\/(?:f|e|embed)\/([a-z0-9]+)/i",$filelink,$m))
-   $file=$m[1].".mcloud";
- if (file_exists($base_cookie.$file)) {
-  $h=file_get_contents($base_cookie.$file);
-  //$t1=explode("REDIRECT_URL=",$h);
-  $t1=explode("mcloud.php?id=",$h);
-  $t2=explode("\n",$t1[1]);
-  $ref=trim($t2[0]);
-  $t1=explode("REQUEST_URI=",$h);
-  $t2=explode("/filme/",$t1[1]);
-  $t3=explode("\n",$t2[1]);
-  $l=$host."/".trim($t3[0]);
-  //echo $l."\n";
-  $head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/109.0',
-  'Accept: application/json, text/javascript, */*; q=0.01',
-  'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
-  'Accept-Encoding: deflate',
-  'Referer: '.$ref,
-  'X-Requested-With: XMLHttpRequest',
-  'Connection: keep-alive');
 
-  $ch = curl_init();
-  curl_setopt($ch, CURLOPT_URL, $l);
-  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-  curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
-  curl_setopt($ch, CURLOPT_HTTPHEADER,$head);
-  //curl_setopt($ch, CURLOPT_ENCODING, "");
-  //curl_setopt($ch, CURLOPT_HEADER,1);
-  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
-  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
-  $h = curl_exec($ch);
-  curl_close($ch);
-  //echo $h;
-  //die();
+ $file="vid.txt";
+ if (file_exists("vid.txt")) {
+  $h=file_get_contents("vid.txt");
+  //unlink ("vid.txt");
   $r=json_decode($h,1);
   //print_r ($r);
-  if (isset($r['data']['media']['sources'][0]['file']))
-    $link=$r['data']['media']['sources'][0]['file'];
+  if (isset($r['result']['sources'][0]['file']))
+    $link=$r['result']['sources'][0]['file'];
   else
     $link="";
  }
   if ($link && $flash != "flash1") {
-   $ua="Mozilla/5.0 (Windows NT 10.0; rv:87.0) Gecko/20100101 Firefox/87.0";
+   $ua="Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/115.0";
    $head=array("Origin: ".$host);
    $ch = curl_init();
    curl_setopt($ch, CURLOPT_URL, $link);
@@ -10780,7 +11052,41 @@ $head=array('Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q
    //echo $h;
    //die();
    $link=get_max_res($h,$link);
-     $link=$link."|Referer=".urlencode($host)."&Origin=".urlencode($host);
+   //echo $link;
+   //die();
+      if ($flash == "flash" && preg_match("/vidstream/",$host)) {
+      $t1=explode("?",$_SERVER['HTTP_REFERER']);
+      $p=dirname($t1[0]);
+      $ch = curl_init();
+      curl_setopt($ch, CURLOPT_URL, $link);
+      curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+      //curl_setopt($ch, CURLOPT_USERAGENT, $ua);
+      curl_setopt($ch, CURLOPT_HTTPHEADER,$head);
+      curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,0);
+      //curl_setopt($ch, CURLOPT_HEADER,1);
+      curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+      curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
+      curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
+      curl_setopt($ch, CURLOPT_TIMEOUT, 25);
+      $h = curl_exec($ch);
+      curl_close($ch);
+      //echo $h;
+      //die();
+      $dd=dirname($link)."/";
+      $out=preg_replace_callback(
+      "/\d+\.jpg/",
+      function ($m) {
+        global $dd;
+        return "vvv.php?file=".urlencode($dd.$m[0]);
+      //return $m[0];
+      },
+      $h
+      );
+      file_put_contents("lava.m3u8",$out);
+      $link = $p."/lava.m3u8";
+      }
+   if ($link && $flash <> "flash")
+     $link=$link."|Referer=".urlencode($host."/")."&Origin=".urlencode($host); //."&User-Agent=".urlencode($ua);
   }
 } elseif (preg_match("/hls\d+x\.vidcloud9\.com/",$filelink)) {
   $link=$filelink;
@@ -12940,6 +13246,7 @@ function rec($site_key,$co,$sa,$loc) {
   // https://streamrapid.ru/embed-4/48Ym1UDbKV1y?z=
   // https://dokicloud.one/embed-4/cuPOVD34pOrr?z=
   // https://dokicloud.one/js/player/prod/e4-player.min.js?v=1671912131
+  ///js/player/prod/e4-player.min.js?v=1690572245
   //echo $filelink;
   // https://dokicloud.one/embed-4/NWm2Me4y5gqf?z=
   // https://rabbitstream.net/embed-4/tnI4F7ds9D51?z=
@@ -13053,6 +13360,7 @@ function rec($site_key,$co,$sa,$loc) {
   }
   }
   */
+  $file=$x["sources"];
   if (substr($x["sources"],0,2) == "U2") {
   //echo "asasass";
    require_once("CryptoJSAES_decrypt.php");
@@ -13067,9 +13375,21 @@ function rec($site_key,$co,$sa,$loc) {
   curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
   curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
   curl_setopt($ch, CURLOPT_TIMEOUT, 15);
-  $password = curl_exec($ch);
+  $h1 = curl_exec($ch);
   curl_close($ch);
-   $x=CryptoJSAES_decrypt($x["sources"],$password);
+  $y=json_decode($h1,1);
+  $offset=0;
+  $decryptedKey="";
+  $encryptedString=$file;
+  foreach($y as $t) {
+   $start=$t[0];
+   $end=$t[1];
+   $decryptedKey .=substr($encryptedString,$start-$offset,$end-$start);
+   $encryptedString = substr($encryptedString,0,$start-$offset).substr($encryptedString,$end-$offset);
+   $offset +=$end-$start;
+  }
+   $x=CryptoJSAES_decrypt($encryptedString,$decryptedKey);
+   //echo $x;
    if ($x) {
      $xx=json_decode($x,1);
      $link=$xx[0]['file'];
@@ -14913,6 +15233,9 @@ $ua="Mozilla/5.0 (Windows NT 10.0; rv:63.0) Gecko/20100101 Firefox/63.0";
   $h = curl_exec($ch);
   curl_close($ch);
   $z=json_decode($h,1);
+  //print_r ($z);
+  ///////////
+
   /*
   $h=str_replace("&quot;",'"',$h);
   //$t1=explode('data-options="',$h);
@@ -14925,6 +15248,8 @@ $ua="Mozilla/5.0 (Windows NT 10.0; rv:63.0) Gecko/20100101 Firefox/63.0";
   $y= $x["flashvars"]["metadata"];
   $z=json_decode($y,1);
   */
+  //$link=$l;
+
   $vids=$z["videos"];
   $c=count($vids);
   $link=$vids[$c-1]["url"];
@@ -14932,6 +15257,7 @@ $ua="Mozilla/5.0 (Windows NT 10.0; rv:63.0) Gecko/20100101 Firefox/63.0";
     $t1=explode("?",$link);
     $link=$t1[0]."/ok.mp4?".$t1[1];
   }
+
 } elseif (strpos($filelink,"entervideo.net") !==false) {
    //http://entervideo.net/watch/4752dfc86f5df23
    //echo $filelink;
