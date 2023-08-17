@@ -1410,12 +1410,12 @@ $s=$s."database\.seriale|drive\.google\.com|videomega\.|vidload\.co|mixdro{0,}p\
 $s=$s."|hxload\.|bazavox\.com|cloud\.vidhubstr\.org|vidia\.tv|gomostream\.com|viduplayer\.com|leaked-celebrities\.";
 $s=$s."|prostream\.to|videobin\.co|upstream\.to|playtvid\.com|jetload\.net|vidfast\.co|clipwatching\.";
 $s=$s."|(video|player)\.filmeserialeonline\.org|streamwire\.|cloudvid\.icu|mstream\.xyz|streamhoe\.online|videyo\.";
-$s=$s."|fastvid\.co|vidload\.net|rovideo\.net\/embed|eplayvid\.com|do{2,}d\.|mediashore\.org|uptostream\.com";
+$s=$s."|fastvid\.co|vidload\.net|rovideo\.net\/embed|eplayvid\.com|do{2,}ds?\.|mediashore\.org|uptostream\.com";
 $s=$s."|movcloud\.net|dogestream\.|streamtape\.|jawcloud\.|viphdvid\.|evoload\.|sendvid\.|easyload\.io|okstream\.";
 $s=$s."|youdbox\.com|filmele-online\.com|playtube\.|ninjastream\.to|userload\.co|goplayer\.online|videovard\.|cloudemb\.|streamlare\.";
 $s=$s."|sbembed\.com|sbembed1\.com|sbplay\.|sbvideo\.net|streamsb\.net|sbplay\.one|cloudemb\.com|playersb\.com|tubesb\.com|sbplay\d\.|embedsb\.com";
 $s=$s."|\w+ssb\.|lvturbo\.|sb\w+\.|sbbrisk\.|sbanh\.|sblanh\.|sbchill\.|sbfast\.com|sblongvu\.com|sbfull\.|sbthe\.|sbspeed\.|tubeload\.|embedo\.|filemoon\.|utbrgebzvhfa\.";
-$s=$s."|streamhide\.|moonmov\.pro|vgfplay\.|fslinks\.|furher\./i";
+$s=$s."|streamhide\.|moonmov\.pro|vgfplay\.|fslinks\.|furher\.|truepoweroflove\./i";
 /////////////////////////////////////////////
 //$x=preg_grep($s,$links);
 //print_r ($x);
@@ -1548,7 +1548,7 @@ for ($i=0;$i<count($links);$i++) {
    }
  }
   //if (strpos($links[$i],"database.serialeonline.to") !== false) {
-  if (preg_match("/database\.serialeonline\.to|database\.seriale\-online\.net/",$links[$i])) {
+  if (preg_match("/database\.serialeonline\.to|database\.seriale\-online\./",$links[$i])) {
   if (strpos($links[$i],"https://database") === false)
   $l=trim("https:".$links[$i]);
   else
@@ -1577,6 +1577,7 @@ for ($i=0;$i<count($links);$i++) {
     if (strpos($cur_link,"database.seriale") !== false) {
      $cur_link="";
     }
+    if ($cur_link) $h_debug .=' <iframe src="'.$cur_link.'"></iframe> ';
    } else
     $cur_link="";
   }

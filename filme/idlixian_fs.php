@@ -55,17 +55,18 @@ $imdbid="";
 <title><?php echo $tit.$tit2; ?></title>
 <link rel="stylesheet" type="text/css" href="../custom.css" />
 <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.0/jquery.min.js"></script>
+<script type="text/javascript" src="cryptojsonaes.js"></script>
 <script type="text/javascript">
 function openlink1(link) {
   link1=document.getElementById('file').value;
-  msg="link1.php?file=" + link1 + "&title=" + link;
+  msg="link1.php?file=" + encodeURIComponent(link1) + "&title=" + link;
   window.open(msg);
 }
 function openlink(link) {
   on();
   var request =  new XMLHttpRequest();
   link1=document.getElementById('file').value;
-  var the_data = "link=" + link1 + "&title=" + link;
+  var the_data = "link=" + encodeURIComponent(link1) + "&title=" + link;
   var php_file="link1.php";
   request.open("POST", php_file, true);			// set the request
 
@@ -127,6 +128,7 @@ function off() {
 </head>
 <body>
 <a href='' id='mytest1'></a>
+
 <?php
 echo '<h2>'.$tit.$tit2.'</H2>';
 echo '<BR>';
@@ -156,60 +158,50 @@ $head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gec
   if (preg_match("/data\-post\=\'/",$h)) {
   $t1=explode("data-post='",$h);
   $t2=explode("'",$t1[1]);
-
+  $post="action=dooplay_viewcounter&post_id=93525";
   $post="action=doo_player_ajax&post=".$t2[0]."&nume=1&type=movie";
+  $id=$t2[0];
+  //$cf="https://basic-bundle-solitary-morning-4d74.quamatbanty02.workers.dev/?";
+  //$cf="https://embed.smashystream.com/cors.php?";
+  //$cf="https://basic-bundle-fancy-sky-d60a.rustedcorn.workers.dev/?";
   $l="https://".$host."/wp-admin/admin-ajax.php";
-  //echo $link;
+echo '
+<script>
+//post=93599&nume=1&type=movie
+var e="'.$id.'";
+var nume="1";
+var type="movie";
+$.ajax({
+                type: "POST",
+                url: "admin-ajax.php",
+                data: {
+                    action: "doo_player_ajax",
+                    post: e,
+                    nume: nume,
+                    type: type,
+                    host: "'.$host.'"
+                },
+                success: function(t) {
+t= JSON.parse(t);
+z = CryptoJSAesJson.decrypt(t.embed_url, t.key);
+const url = new URL(z);
+document.getElementById("server").innerHTML =url.host;
+document.getElementById("file").value=(z + "&ref='.$host.'");
+                }
+});
+</script>
+';
 
-  $ch = curl_init();
-  curl_setopt($ch, CURLOPT_URL, $l);
-  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-  curl_setopt($ch, CURLOPT_HTTPHEADER, $head);
-  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
-  curl_setopt($ch, CURLOPT_POST,1);
-  curl_setopt($ch, CURLOPT_POSTFIELDS,$post);
-  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
-  curl_setopt($ch, CURLOPT_TIMEOUT, 25);
-  $h = curl_exec($ch);
-  curl_close($ch);
-  //echo $h;
-  $r1=json_decode($h,1);
-  //print_r ($r);
-  $link=$r1['embed_url'];
-
+////////////////////////////////////
   if (strpos($link,"http") === false) $link="https:".$link;
   $link=$link."&ref=".$host;
   $r[]=$link;
   }
 
 echo '<table border="1" width="100%">';
-echo '<TR><TD class="mp">Alegeti un server: Server curent:<label id="server">'.parse_url($r[0])['host'].'</label>
-<input type="hidden" id="file" value="'.urlencode($r[0]).'"></td></TR></TABLE>';
-echo '<table border="1" width="100%"><TR>';
-$k=count($r);
-$x=0;
-for ($i=0;$i<$k;$i++) {
-  if ($x==0) echo '<TR>';
-  $c_link=$r[$i];
-  $openload=parse_url($r[$i])['host'];
-  if (preg_match($indirect,$openload)) {
-  echo '<TD class="mp"><a href="filme_link.php?file='.urlencode($c_link).'&title='.urlencode(unfix_t($tit.$tit2)).'" target="_blank">'.$openload.'</a></td>';
-  } else
-  echo '<TD class="mp"><a id="myLink" href="#" onclick="changeserver('."'".$openload."','".urlencode($c_link)."'".');return false;">'.$openload.'</a></td>';
-  $x++;
-  if ($x==6) {
-    echo '</TR>';
-    $x=0;
-  }
-}
-if ($x < 6 && $x > 0 & $k>6) {
- for ($k=0;$k<6-$x;$k++) {
-   echo '<TD></TD>'."\r\n";
- }
- echo '</TR>'."\r\n";
-}
-echo '</TABLE>';
+echo '<TR><TD class="mp">Server curent:<label id="server"></label>
+<input type="hidden" id="file" value=""></td></TR></TABLE>';
+
 if ($tip=="movie") {
   $tit3=$tit;
   $tit2="";

@@ -1,7 +1,6 @@
 <?php
 include ("../common.php");
 //error_reporting(0);
-$cookie=$base_cookie."hdpopcorns.dat";
 $list = glob($base_sub."*.srt");
    foreach ($list as $l) {
     str_replace(" ","%20",$l);
@@ -59,7 +58,7 @@ $s=array();
 $srt="";
 $lang="";
 $ua="Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/115.0";
-$cookie=$base_cookie."lookmovie.txt";
+$cookie=$base_cookie."watchonline.dat";
 $info="";
 if ($tip=="movie") {
 $l=$link;
@@ -67,8 +66,7 @@ $l=$link;
 //echo $l;
 //die();
   //$ua = $_SERVER['HTTP_USER_AGENT'];
-$last_good="https://lookmovie.io";
-$last_good="https://lookmovie2.to";
+$last_good="https://watchonline.ag";
 $head=array('Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8',
 'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
 'Accept-Encoding: deflate',
@@ -90,109 +88,26 @@ $head=array('Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image
 //echo $h;
 if (preg_match("/\<section/",$h)) {
   $t1=explode('<section',$h);
-  $t2=explode('</section',$t1[1]);
+  $t2=explode('<div class="movie__message-playback-issue',$t1[1]);
   $info_m=trim(strip_tags("<section".$t2[0]));
 }
-  if (preg_match("/href\=\s*\"\s*(https.*?\/play\/.*?)\"/",$h,$m)) {
-    $l1=$m[1];
-    $ref=parse_url($l1)['host'];
-  }
 
-  if (preg_match("/player\-iframe\"\s+src\=\"([^\"]+)\"/i",$h,$m)) {
-    $l1=$m[1];
-    $ref=parse_url($l1)['host'];
-  }
-  $l1=str_replace("&amp;","&",$l1);
-  //echo $l1;
-////////////////////////////////////////  check threat-protection
-// check [url] => https://slavillibyer.monster/threat-protection?t=4a857e36ab6aea4b1701c5cbf8b4c2a4c0986585
-  $ch = curl_init();
-  curl_setopt($ch, CURLOPT_URL, $l1);
-  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
-  curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie);
-  curl_setopt($ch, CURLOPT_COOKIEJAR, $cookie);
 
-  curl_setopt($ch, CURLINFO_HEADER_OUT, true);
-  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
-  curl_setopt($ch, CURLOPT_TIMEOUT, 25);
-  curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
-  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-  $h = curl_exec($ch);
-  $info = curl_getinfo($ch);
-  curl_close($ch);
-  $l=$info['url'];
-  if (preg_match("/threat\-protection/",$l)) {
-    $csrf="";
-    $key="";
-    if (preg_match("/\_csrf\"\s*value\=\"([^\"]+)\"/",$h,$c))
-      $csrf=$c[1];
-    if (preg_match("/grecaptcha\.execute\(\'([^\']+)\'/",$h,$k))
-      $key=$k[1];
-    require_once("rec.php");
-    $sa="submit";
-    $new_host="https://".parse_url($l)['host'].":443";
-    $co=str_replace("=",".",base64_encode($new_host));
-    $loc="https://".parse_url($l)['host'];
-    $token=rec($key,$co,$sa,$loc);
-    $post="_csrf=".$csrf."&tk=".$token;
-    $head=array('Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
-    'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
-    'Accept-Encoding: deflate',
-    'Content-Type: application/x-www-form-urlencoded',
-    'Content-Length: '.strlen($post),
-    'Origin: https://'.$ref,
-    'Connection: keep-alive',
-    'Referer: '.$l,
-    'Upgrade-Insecure-Requests: 1');
-    $ch = curl_init();
-    curl_setopt($ch, CURLOPT_URL, $l);
-    curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-    curl_setopt($ch, CURLOPT_USERAGENT, $ua);
-    curl_setopt($ch, CURLOPT_HTTPHEADER, $head);
-    curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,0);
-    curl_setopt($ch, CURLOPT_POST,1);
-    curl_setopt($ch, CURLOPT_POSTFIELDS,$post);
-    curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie);
-    curl_setopt($ch, CURLOPT_COOKIEJAR, $cookie);
-    curl_setopt($ch, CURLOPT_HTTPHEADER, $head);
-    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-    curl_setopt($ch, CURLINFO_HEADER_OUT, true);
-    curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
-    curl_setopt($ch, CURLOPT_TIMEOUT, 25);
-    $h = curl_exec($ch);
-    $info = curl_getinfo($ch);
-    curl_close($ch);
-    if (isset($info['redirect_url'])) {
-     $l=$info['redirect_url'];
-     if (preg_match("/second/",$l)) {
-     file_put_contents($base_cookie."lookmovie_ref1.txt",$l."|".$ref."|".$csrf);
-     echo '<a href="look.html">Solve captcha</a>';
-     } else {
-       echo 'Try again';
-       echo '<script>setTimeout(function(){ history.go(-1); }, 2000);</script>';
-     }
-     exit;
-    }
-  }
 ////////////////////////////////////////
   $id="";
-  $hash="";
-  $ex="";
   if (preg_match("/id_movie\:?\s*\'?(\d+)/",$h,$m))
    $id=$m[1];
-  if (preg_match("/hash\:\s*[\"|\']([^\"\']+)[\'\"]/",$h,$n))
-    $hash=$n[1];
-
-  if (preg_match("/expires\:?\s*\'?(\d+)/",$h,$m))
-   $ex=$m[1];
-
-  $l="https://".$ref."/api/v1/security/movie-access?id_movie=".$id."&hash=".$hash."&expires=".$ex; //"&token=1&sk=&step=1";
+  $hash="";
+  $ex=time();
+  $ref="watchonline.ag";
+  //$ref="cloudcdn.monster";
+  $l="https://watchonline.ag/api/v1/security/movie-access?id_movie=".$id;
+  //$l="https://".$ref."/api/v1/security/movie-access?id_movie=".$id."&hash=".$hash."&expires=".$ex;
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $l);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
   curl_setopt($ch, CURLOPT_USERAGENT, $ua);
-  curl_setopt($ch, CURLOPT_REFERER,$l1);
+  curl_setopt($ch, CURLOPT_REFERER,$link);
   curl_setopt($ch, CURLINFO_HEADER_OUT, true);
   curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
   curl_setopt($ch, CURLOPT_TIMEOUT, 25);
@@ -216,17 +131,18 @@ if (preg_match("/\<section/",$h)) {
   //print_r ($sss);
   //for ($k=0;$k<count($sss);$k++) {
   foreach($sss as $key=>$value) {
-   if ($sss[$key]['file'][0]=="/") {
-   //if ($sss[$k]['file'][0] == "/") {
-     //$ss= "https://".$ref.$sss[$k]['file'];
-     $ss= "https://".$ref.$sss[$key]['file'];
-   //else
-     //$ss=$sss[$k]['file'];
-   //$srt1[$sss[$k]['language']] = $ss;
+  //echo $key;
+  if (preg_match("/opensubtitle/",$key)) {
+  //print_r ($value);
+   if ($sss[$key]['url'][0]=="/")
+     $ss= "https://".$ref.$sss[$key]['url'];
+   elseif (!is_array($sss[$key]['url']))
+     $ss= "https://".$ref."/".$sss[$key]['url'];
    if (!isset($srt1[$sss[$key]['language']]))
    $srt1[$sss[$key]['language']] = $ss;
    }
   }
+
   //print_r ($srt1);
   if (isset($srt1["Romanian"])) {
     $srt=$srt1["Romanian"];
@@ -237,7 +153,8 @@ if (preg_match("/\<section/",$h)) {
   } else
     $srt="";
   }
-
+  $srt="";
+  $lang="";
   $x=$x['streams'];
   //print_r ($x);
 
@@ -398,13 +315,13 @@ echo '<BR>';
 //$r[]=$l;
 echo '<table border="1" width="100%">';
 echo '<TR><TD class="mp">Alegeti un server: Server curent:<label id="server">'.$s[0].'</label>
-<input type="hidden" id="file" value="'.urlencode("https://lookmovie.ag?link=".$r[0]."&sub=".$srt).'"></td></TR></TABLE>';
+<input type="hidden" id="file" value="'.urlencode("https://watchonline.ag?link=".$r[0]."&sub=".$srt).'"></td></TR></TABLE>';
 echo '<table border="1" width="100%"><TR>';
 $k=count($r);
 $x=0;
 for ($i=0;$i<$k;$i++) {
   if ($x==0) echo '<TR>';
-  $c_link="https://lookmovie.ag?link=".$r[$i]."&sub=".$srt;
+  $c_link="https://watchonline.ag?link=".$r[$i]."&sub=".$srt;
   $openload=$s[$i];
   if (preg_match($indirect,$openload)) {
   echo '<TD class="mp"><a href="filme_link.php?file='.urlencode($c_link).'&title='.urlencode(unfix_t($tit.$tit2)).'" target="_blank">'.$openload.'</a></td>';

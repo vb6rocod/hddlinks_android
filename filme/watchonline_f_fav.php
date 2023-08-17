@@ -1,13 +1,23 @@
 <!DOCTYPE html>
 <?php
 include ("../common.php");
+set_time_limit(300);
 $host=$_GET['host'];
-$page_title="Seriale favorite";
+$page_title="Filme favorite";
 $width="200px";
 $height="278px";
-$add_target="bflix_s_add.php";
-$fs_target="bflix_ep.php";
-$file=$base_fav."bflix_s.dat";
+$add_target="watchonline_f_add.php";
+$fs_target="watchonline_fs.php";
+$file=$base_fav."watchonline_f.dat";
+if (isset($_GET['fix']))
+ $fix="yes";
+else
+ $fix="no";
+if (file_exists($base_pass."tmdb.txt"))
+  $api_key=file_get_contents($base_pass."tmdb.txt");
+else
+  $api_key="";
+$fav_target_fix="watchonline_f_fav.php?host=".$host."&fix=yes";
 ?>
 <html><head>
 <meta http-equiv="content-type" content="text/html; charset=UTF-8">
@@ -117,8 +127,6 @@ function isKeyPressed(event) {
     openlink1(msg);
   }
 }
-$(document).on('keyup', '.imdb', isValid);
-document.onkeypress =  zx;
 function on() {
     document.getElementById("overlay").style.display = "block";
 }
@@ -126,6 +134,8 @@ function on() {
 function off() {
     document.getElementById("overlay").style.display = "none";
 }
+$(document).on('keyup', '.imdb', isValid);
+document.onkeypress =  zx;
 </script>
 </head>
 <body>
@@ -139,8 +149,7 @@ function str_between($string, $start, $end){
 }
 $w=0;
 $n=0;
-echo '<H2>'.$page_title.'</H2>';
-$arr=array();
+echo '<H2>'.$page_title.' <a href="'.$fav_target_fix.'">(fix image)</a></H2>';
 $h="";
 if (file_exists($file)) {
   $h=file_get_contents($file);
@@ -158,28 +167,45 @@ if (file_exists($file)) {
   }
 }
 if ($arr) {
+asort($arr);
 $n=0;
 $w=0;
 $nn=count($arr);
+
 $k=intval($nn/10) + 1;
-echo '<table border="1px" width="100%"><tr>'."\n\r";
+$p=0;
+echo '<table border="1px" width="100%">'."\n\r";
 for ($m=1;$m<$k;$m++) {
+if ($p==0) echo '<TR>';
    echo '<TD align="center"><a href="#myLink'.($m*10).'">Salt:'.($m*10).'</a></td>';
+   $p++;
+  if ($p == 14) {
+  echo '</tr>';
+  $p=0;
+  }
 }
-echo '</TR></table>';
+echo '</table>';
 echo '<table border="1px" width="100%">'."\n\r";
 foreach($arr as $key => $value) {
     $imdb="";
 	$link = urldecode($arr[$key][1]);
     $title = unfix_t(urldecode($arr[$key][0]));
     $image=urldecode($arr[$key][2]);
-    $tit_imdb=$title;
+
+
     //$image=$host.parse_url($image)['path'];
-    $year="";
+  $rest = substr($title, -6);
+  if (preg_match("/\((\d+)\)/",$rest,$m)) {
+   $year=$m[1];
+   $tit_imdb=trim(str_replace($m[0],"",$title));
+  } else {
+   $year="";
+   $tit_imdb=$title;
+  }
     $link=$host.parse_url($link)['path'];
-    $link_f=$fs_target.'?tip=series&link='.urlencode($link).'&title='.urlencode(fix_t($title)).'&image='.$image."&sez=&ep=&ep_tit=&year=".$year;
+    $link_f=$fs_target.'?tip=movie&link='.urlencode($link).'&title='.urlencode(fix_t($title)).'&image='.$image."&sez=&ep=&ep_tit=&year=".$year;
   if ($n==0) echo '<TR>'."\r\n";
-  $val_imdb="tip=series&title=".urlencode(fix_t($tit_imdb))."&year=".$year."&imdb=".$imdb;
+  $val_imdb="tip=movie&title=".urlencode(fix_t($tit_imdb))."&year=".$year."&imdb=".$imdb;
   $fav_link="file=&mod=del&title=".urlencode(fix_t($title))."&link=".urlencode($link)."&image=".urlencode($image)."&year=".$year;
   if ($tast == "NU") {
     echo '<td class="mp" width="25%"><a href="'.$link_f.'" id="myLink'.$w.'" target="_blank" onmousedown="isKeyPressed(event)">

@@ -328,9 +328,22 @@ reset($r);
   $srt="";
   if (preg_match("/\?sub\.info\=/",$mcloud)) {
    $t1=explode("?sub.info=",$mcloud);
-   
+   $l1=urldecode($t1[1]);
+   $t1=explode("&",$l1);
+   //echo $l1;
+  //https://bflix.to/ajax/episode/subtitles/11951
+  $host1="https://bflix.to";
+  $head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/116.0',
+  'Accept: application/json, text/javascript, */*; q=0.01',
+  'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
+  'Accept-Encoding: deflate',
+  'Origin: '.$host1,
+  'Connection: keep-alive',
+  'Referer: '.$host1.'/');
+  //print_r ($head);
+  // urldecode($t1[1])
   $ch = curl_init();
-  curl_setopt($ch, CURLOPT_URL, urldecode($t1[1]));
+  curl_setopt($ch, CURLOPT_URL,urldecode($t1[0]));
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
   curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
   curl_setopt($ch, CURLOPT_HTTPHEADER,$head);
@@ -341,6 +354,7 @@ reset($r);
   curl_setopt($ch, CURLOPT_TIMEOUT, 15);
   $h = curl_exec($ch);
   curl_close($ch);
+  //echo $h;
   $ss=json_decode($h,1);
   //print_r ($ss);
   for ($k=0;$k<count($ss);$k++) {

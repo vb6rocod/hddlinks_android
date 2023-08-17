@@ -1,47 +1,34 @@
-<!DOCTYPE html>
 <?php
+error_reporting(0);
 function str_between($string, $start, $end){
 	$string = " ".$string; $ini = strpos($string,$start);
 	if ($ini == 0) return ""; $ini += strlen($start); $len = strpos($string,$end,$ini) - $ini;
 	return substr($string,$ini,$len);
 }
 include ("../common.php");
+if (file_exists($base_pass."player.txt")) {
+$flash=trim(file_get_contents($base_pass."player.txt"));
+} else {
+$flash="direct";
+}
 $page = $_GET["page"];
 $tip= $_GET["tip"];
 $tit=$_GET["title"];
 $link=$_GET["link"];
 $width="200px";
 $height="278px";
-$last_good="";
-
 /* ==================================================== */
 $has_fav="yes";
 $has_search="yes";
 $has_add="yes";
 $has_fs="yes";
-$fav_target="moviebox_f_fav.php?host=".$last_good;
-$add_target="moviebox_f_add.php";
-$add_file="";
-$fs_target="moviebox_fs.php";
-$target="moviebox_f.php";
-/* ==================================================== */
-if (file_exists($base_pass."moviebox.txt")) {
-  $h=trim(file_get_contents($base_pass."moviebox.txt"));
-  $t1=explode("|",$h);
-  $l=$t1[0];
-  $appkey=$t1[1];
-  $key=$t1[2];
-  $iv=$t1[3];
-  $appid=$t1[4];
-}
 
-$fast_url="mp4.shegu.net";
-function random_token($chars = 32) {
-   $letters = '0123456789abcdef';
-   return substr(str_shuffle($letters), 0, $chars);
-}
-$exp=time() + 60 * 60 * 12;
-$encrypt_method = "DES-EDE3-CBC";
+$last_good="https://watchonline.ag";
+$fav_target="watchonline_f_fav.php?host=".$last_good;
+$add_target="watchonline_f_add.php";
+$add_file="";
+$fs_target="watchonline_fs.php";
+$target="watchonline_f.php";
 /* ==================================================== */
 $base=basename($_SERVER['SCRIPT_FILENAME']);
 $p=$_SERVER['QUERY_STRING'];
@@ -77,8 +64,46 @@ if ($tip=="search") {
 } else
   $page_title=$tit;
 /* ==================================================== */
+$ua = $_SERVER['HTTP_USER_AGENT'];
+$ua="Mozilla/5.0 (Windows NT 10.0; rv:86.0) Gecko/20100101 Firefox/86.0";
+if($tip=="release") {
+  $l=$last_good."/movies/page/".$page."?per-page=30";
+  //$l=$last_good."/movies/page/".$page;
+
+} else {
+  $search=str_replace(" ","%20",$tit);
+  $l=$last_good."/movies/search/?p=".$page."&q=".$search;
+  $l=$last_good."/movies/search?like=".$search."&page=".$page;
+}
+//https://lookmovie2.to/movies/page/2?per-page=30
+// https://lookmovie2.to/movies/search/?like=star
+// https://lookmovie2.to/movies/search?like=star&page=2
+//https://watchonline.ag/movies/page/2?per-page=30
+$host=parse_url($l)['host'];
+
+$cookie=$base_cookie."watchonline.dat";
+$ua="Mozilla/5.0 (Windows NT 10.0; rv:86.0) Gecko/20100101 Firefox/86.0";
+$head=array('Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2');
+//echo $l;
+  $ch = curl_init();
+  curl_setopt($ch, CURLOPT_URL, $l);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+  curl_setopt($ch,CURLOPT_REFERER,$last_good);
+  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
+  curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie);
+  curl_setopt($ch, CURLOPT_COOKIEJAR, $cookie);
+  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 25);
+  $html = curl_exec($ch);
+  curl_close($ch);
+  //echo $html;
+  //die();
 
 ?>
+<!DOCTYPE html>
 <html>
 <head>
 <meta http-equiv="content-type" content="text/html; charset=UTF-8">
@@ -93,6 +118,32 @@ if ($tip=="search") {
 
 <script type="text/javascript">
 var id_link="";
+function openlink1(link) {
+  msg="link1.php?file=" + link;
+  window.open(msg);
+}
+function openlink(link) {
+  on();
+  var request =  new XMLHttpRequest();
+  var the_data = "link=" + link;
+  //alert (the_data);
+  var php_file="link1.php";
+  request.open("POST", php_file, true);			// set the request
+
+  // adds a header to tell the PHP script to recognize the data as is sent via POST
+  request.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+  request.send(the_data);		// calls the send() method with datas as parameter
+
+  // Check request status
+  // If the response is received completely, will be transferred to the HTML tag with tagID
+  request.onreadystatechange = function() {
+    if (request.readyState == 4) {
+      off();
+      document.getElementById("mytest1").href=request.responseText;
+      document.getElementById("mytest1").click();
+    }
+  }
+}
 function ajaxrequest(link) {
   var request =  new XMLHttpRequest();
   var the_data = link;
@@ -121,6 +172,12 @@ function isValid(evt) {
      msg="imdb.php?" + val_imdb;
      document.getElementById("fancy").href=msg;
      document.getElementById("fancy").click();
+    } else if  (charCode == "52") {
+     id = "imdb_" + self.id;
+     id_link=self.id;
+     val_imdb=document.getElementById(id).value;
+     msg="http://imdb.com/imdb.php&" + val_imdb;
+     openlink (msg);
     } else if  (charCode == "51") {
       id = "fav_" + self.id;
       val_fav=document.getElementById(id).value;
@@ -147,13 +204,27 @@ function isKeyPressed(event) {
     msg="imdb.php?" + val_imdb;
     document.getElementById("fancy").href=msg;
     document.getElementById("fancy").click();
+  } else if (event.shiftKey) {
+    id = "imdb_" + event.target.id;
+    //alert (id);
+    val_imdb=document.getElementById(id).value;
+    msg="http://imdb.com/imdb.php&" + val_imdb;
+    openlink1(msg);
   }
+}
+function on() {
+    document.getElementById("overlay").style.display = "block";
+}
+
+function off() {
+    document.getElementById("overlay").style.display = "none";
 }
 $(document).on('keyup', '.imdb', isValid);
 document.onkeypress =  zx;
 </script>
 </head>
 <body>
+<a href='' id='mytest1'></a>
 <a id="fancy" data-fancybox data-type="iframe" href=""></a>
 <?php
 $w=0;
@@ -185,103 +256,74 @@ if ($page==1) {
    echo '<TD class="nav" colspan="4" align="right"><a href="'.$prev.'">&nbsp;&lt;&lt;&nbsp;</a> | <a href="'.$next.'">&nbsp;&gt;&gt;&nbsp;</a></TD>'."\r\n";
 }
 echo '</TR>'."\r\n";
-$f=array();
-if ($tip=="search") {
- $search= $tit;
-$qq=array("childmode" => "0",
-"app_version" => "11.5",
-"appid" => $appid,
-"lang" => "en",
-"expired_date" => $exp,
-"platform" => "android",
-"channel" => "Website",
-"module" => "Search3",
-"page" => $page,
-"type" => "movie",
-"keyword" => $search,
-"pagelimit" => "20");
-} else {
-$qq=array("childmode" =>"0",
-"app_version" => "11.5",
-"appid" => $appid,
-"module" => "Home_list_type_v3",
-"channel" => "Website",
-"page" => $page,
-"lang" => "en",
-"type" => "all",
-"pagelimit" => "20",
-"expired_date" => $exp,
-"platform" => "android");
-}
-$dd=json_encode($qq);
-$data = openssl_encrypt( $dd, $encrypt_method, $key, 0, $iv );
-$vv=md5(md5("moviebox").$key.$data);
-
-$p=array("app_key" => $appkey,
-"verify" => $vv,
-"encrypt_data" => $data);
-$xx=base64_encode(json_encode($p));
-$post="data=".$xx."&appid=27&platform=android&version=129&medium=Website&token".random_token()."=";
-$head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/109.0',
-'Accept: */*',
-'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
-'Accept-Encoding: deflate',
-'Referer: https://movie.squeezebox.dev/',
-'Platform: android',
-'Content-Type: application/x-www-form-urlencoded',
-'Content-Length: '.strlen($post),
-'Origin: https://movie.squeezebox.dev',
-'Connection: keep-alive');
-
-  $ch = curl_init();
-  curl_setopt($ch, CURLOPT_URL, $l);
-  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
-  curl_setopt($ch, CURLOPT_HTTPHEADER,$head);
-  curl_setopt($ch, CURLOPT_POST,1);
-  curl_setopt($ch, CURLOPT_POSTFIELDS,$post);
-  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-  curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
-  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
-  curl_setopt($ch, CURLOPT_TIMEOUT, 25);
-  $h = curl_exec($ch);
-  curl_close($ch);
-  //echo $h;
-  $r=json_decode($h,1);
-  //print_r ($r);
-//echo $html;
-if ($tip=="release") {
- //print_r ($r['data'][6]);
- for ($k=0;$k<count($r['data'][6]['list']);$k++) {
-   $link=$r['data'][6]['list'][$k]['id'];
-   $title=$r['data'][6]['list'][$k]['title'];
-   $image=$r['data'][6]['list'][$k]['poster'];
-   $year="";
-   $f[] = array($title,$link,$image,$year);
- }
-} else {
- for ($k=0;$k<count($r['data']);$k++) {
-   $link=$r['data'][$k]['id'];
-   $title=$r['data'][$k]['title'];
-   $image=$r['data'][$k]['poster'];
-   $year=$r['data'][$k]['year'];
-   $f[] = array($title,$link,$image,$year);
- }
-}
-foreach($f as $key => $value) {
-  $title=$value[0];
+/*
+if (strpos($html,'div class="movie-list-detailed mobile') === false)
+$videos = explode('div class="movie-', $html);
+else
+$videos=explode('div class="movie-list-detailed mobile',$html);
+*/
+//print_r ($videos);
+// div class="movie-card"
+$videos = explode('<div class="movie-card-side', $html);
+unset($videos[0]);
+$videos = array_values($videos);
+//print_r ($videos);
+foreach($videos as $video) {
+  $t1 = explode('href="',$video);
+  $t2=explode('"',$t1[1]);
+  $link = $t2[0];
+  if (strpos($link,"http") === false) $link="https://".$host.$link;
+  /*
+  if (strpos($video,'detailed__title">') === false) {
+  $t3 = explode('>', $t1[3]);
+  $t4 = explode('<', $t3[1]);
+  } else {
+  $t3=explode('detailed__title">',$video);
+  $t4=explode('<',$t3[1]);
+  }
+  */
+  $t3 = explode('movie-card-title">', $video);
+  $t4 = explode('</div', $t3[1]);
+  $title = trim(strip_tags($t4[0]));
   $title=prep_tit($title);
-  $link=$value[1];
-  $image=$value[2];
-  $year=$value[3];
-  $imdb="";
+  $imamge="";
+  $t1 = explode('data-src="', $video);
+  $t2 = explode('"', $t1[1]);
+  $image=$t2[0];
+  if (strpos($image,"http") === false && $image) $image="https://".$host.$image;
+  if (!$image) $image="blank.jpg";
+  //$t1=explode('data-src="'
+  //$image=str_replace("w342","w300",$image);
+  //$image="https://image.tmdb.org/t/p/w342/zfxZSe4cGPYj3XUOgJO8OBRy47n.jpg";
+  $rest = substr($title, -6);
+  if (preg_match("/\((\d+)\)/",$rest,$m)) {
+   $year=$m[1];
+   $tit_imdb=trim(str_replace($m[0],"",$title));
+  } else {
+   $year="";
+   $tit_imdb=$title;
+  }
+  $t1=explode('class="movie-stats__item">',$video);
+  $t2=explode('</div',$t1[1]);
+  $year=trim(strip_tags($t2[0]));
+  /*
+  if (strpos($video,'year-intitle">') !== false) {
+  $t1=explode('class="year">',$video);
+  $t2=explode('<',$t1[1]);
+  } else {
+  $t1=explode('year-intitle">',$video);
+  $t2=explode('<',$t1[1]);
+  }
+  $year=$t2[0];
+  */
 
-  $tit_imdb=$title;
+  $imdb="";
   $link_f=$fs_target.'?tip=movie&link='.urlencode($link).'&title='.urlencode(fix_t($title)).'&image='.$image."&sez=&ep=&ep_tit=&year=".$year;
-  if ($title) {
+  if ($title && strpos($link,"/movie") !== false) {
   if ($n==0) echo '<TR>'."\r\n";
   $val_imdb="tip=movie&title=".urlencode(fix_t($tit_imdb))."&year=".$year."&imdb=".$imdb;
   $fav_link="mod=add&title=".urlencode(fix_t($title))."&link=".urlencode($link)."&image=".urlencode($image)."&year=".$year;
+  //$image="r_m.php?file=".$image;
   if ($tast == "NU") {
     echo '<td class="mp" width="25%"><a href="'.$link_f.'" id="myLink'.$w.'" target="_blank" onmousedown="isKeyPressed(event)">
     <img id="myLink'.$w.'" src="'.$image.'" width="'.$width.'" height="'.$height.'"><BR>'.$title.'</a>
@@ -322,5 +364,9 @@ else
 echo '</TR>'."\r\n";
 echo "</table>"."\r\n";
 echo "</table>";
-?></body>
+?>
+<div id="overlay">
+  <div id="text">Wait....</div>
+</div>
+</body>
 </html>

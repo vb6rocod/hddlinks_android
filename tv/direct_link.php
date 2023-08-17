@@ -482,6 +482,7 @@ if ($from=="sultanovic") {
   curl_setopt($ch, CURLOPT_TIMEOUT, 25);
   $h = curl_exec($ch);
   curl_close($ch);
+  //echo $h;
   if (preg_match("/videoLink \= \'/",$h)) {
    $t1=explode("videoLink = '",$h);
    $t2=explode("'",$t1[1]);
