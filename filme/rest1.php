@@ -16,16 +16,7 @@ if ($ep_tit)
 else
   $page_tit=$title;
 $link=$_GET["link"];
-$p=$_SERVER['QUERY_STRING'];
-parse_str($p, $output);
-if (isset($output['page'])) unset($output['page']);
-$p = http_build_query($output);
-if (!isset($_GET["page"]))
-  $page=1;
-else
-  $page=$_GET["page"];
-$next="opensubtitles1_new.php?page=".($page+1)."&".$p;
-$prev="opensubtitles1_new.php?page=".($page-1)."&".$p;
+
 ?>
 <html><head>
 <meta http-equiv="content-type" content="text/html; charset=UTF-8">
@@ -63,7 +54,7 @@ function changeserver(link) {
   // create pairs index=value with data that must be sent to server
   //var the_data = {mod:add,title:title, link:link}; //Array
   var the_data = "id="+ link;
-  var php_file="opensubtitles_new_sub.php";
+  var php_file="rest_sub.php";
   request.open("POST", php_file, true);			// set the request
 
   // adds a header to tell the PHP script to recognize the data as is sent via POST
@@ -87,6 +78,8 @@ function changeserver(link) {
 <body><div id="mainnav">
 <H2></H2>
 <?php
+
+//echo $sub_link ="from=".$from."&tip=".$tip."&sez=".$sez."&ep=".$ep."&imdb=".$imdbid."&title=".$title."&link=".$link;
 $year="";
 if (!$imdbid) {
   if ($tip == "series") {
@@ -114,154 +107,106 @@ if (!$imdbid) {
   if (preg_match('/https:\/\/www.imdb.com\/title\/(tt\d+)/ms', $h, $match))
    $imdbid=str_replace("tt","",$match[1]);
 }
-if (file_exists($base_pass."opensubtitlesc.txt")) {
- $key=file_get_contents($base_pass."opensubtitlesc.txt");
-} else {
- $key="";
-}
-if (file_exists($base_pass."opensubtitles.txt")) {
- $h=file_get_contents($base_pass."opensubtitles.txt");
- $t1=explode("|",$h);
- $user=$t1[0];
- $pass=$t1[1];
- $user_ag=$t1[2];
-} else {
- $user="";
- $pass="";
- $user_ag="";
-}
-$ww=$key;
-if ($imdbid) $imdbid=round($imdbid);
+if ($imdbid) $imdbid=sprintf("%07d", $imdbid);
 if ($tip=="movie") {
  if (!$imdbid) {
-  $search=array(
-   'query' => $title,
-   'type' => 'movie',
-   'languages' => 'ro,en',
-   'order_by' => 'language',
-   'page' => $page
-  );
+  $l_rum="https://rest.opensubtitles.org/search/query-".urlencode($title)."/sublanguageid-rum";
+  $l_eng="https://rest.opensubtitles.org/search/query-".urlencode($title)."/sublanguageid-eng";
  } else {
-  $search=array(
-   'type' => 'movie',
-   'imdb_id' => $imdbid,
-   'languages' => 'ro,en',
-   'order_by' => 'language',
-   'page' => $page
-  );
+  $l_rum="https://rest.opensubtitles.org/search/imdbid-".$imdbid."/sublanguageid-rum";
+  $l_eng="https://rest.opensubtitles.org/search/imdbid-".$imdbid."/sublanguageid-eng";
  }
 } else { //episode
  if (!$imdbid) {
-  $search=array(
-   'query' => $title,
-   'type' => 'episode',
-   'episode_number' => $ep,
-   'season_number' => $sez,
-   'languages' => 'ro,en',
-   'order_by' => 'language',
-   'page' => $page
-  );
+   $l_rum="https://rest.opensubtitles.org/search/episode-".$ep."/query-".urlencode($title)."/season-".$sez."/sublanguageid-rum";
+   $l_eng="https://rest.opensubtitles.org/search/episode-".$ep."/query-".urlencode($title)."/season-".$sez."/sublanguageid-eng";
  } else {
-  $search=array(
-   'type' => 'episode',
-   'parent_imdb_id' => $imdbid,
-   'episode_number' => $ep,
-   'season_number' => $sez,
-   'languages' => 'ro,en',
-   'order_by' => 'language',
-   'page' => $page
-  );
+   $l_rum="https://rest.opensubtitles.org/search/episode-".$ep."/imdbid-".$imdbid."/season-".$sez."/sublanguageid-rum";
+   $l_eng="https://rest.opensubtitles.org/search/episode-".$ep."/imdbid-".$imdbid."/season-".$sez."/sublanguageid-eng";
  }
 }
-$ua = $_SERVER['HTTP_USER_AGENT'];
-$l="https://api.opensubtitles.com/api/v1/subtitles?";
-$head=array('Accept: */*',
-'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
-'Accept-Encoding: deflate',
-'Referer: https://opensubtitles.stoplight.io/',
-'Content-Type: application/json',
-'Api-Key: '.$key,
-'User-Agent: '.$user_ag,
-'Origin: https://opensubtitles.stoplight.io',
-'Connection: keep-alive');
-$q=http_build_query($search);
-$l=$l.$q;
+ $key=base64_decode("dHJhaWxlcnMudG8tVUE=");
+$head=array('X-Requested-With: XMLHttpRequest',
+"X-User-Agent: ".$key);
+//$head=array
+  $ua="Mozilla/5.0 (Windows NT 10.0; rv:98.0) Gecko/20100101 Firefox/98.0";
   $ch = curl_init();
-  curl_setopt($ch, CURLOPT_URL, $l);
-  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
   curl_setopt($ch, CURLOPT_USERAGENT, $ua);
   curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
-  curl_setopt($ch, CURLOPT_HTTPHEADER, $head);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER  ,1);  // RETURN THE CONTENTS OF THE CALL
   curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+  curl_setopt($ch, CURLOPT_HTTPHEADER,$head);
   curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
   curl_setopt($ch, CURLOPT_TIMEOUT, 25);
-  $h = curl_exec($ch);
-  curl_close($ch);
+  curl_setopt($ch, CURLOPT_URL, $l_rum);
+  $h_rum = curl_exec($ch);
+  curl_setopt($ch, CURLOPT_URL, $l_eng);
+  $h_eng = curl_exec($ch);
+  curl_close ($ch);
   //echo $h;
-  $res=json_decode($h,1);
-  //print_r ($res);
-  $subs=array();
-  for ($k=0;$k<count($res['data']);$k++) {
-   $subs[]=array($res['data'][$k]['attributes']['language'],
-     $res['data'][$k]['attributes']['files'][0]['file_id'],
-     $res['data'][$k]['attributes']['files'][0]['file_name'],
-     $res['data'][$k]['attributes']['release'],
-     $res['data'][$k]['attributes']['comments']
-   );
-  }
-  //print_r ($subs);
-//arsort($arrsub);
-//print_r ($arrsub);
-$nn=count($subs);
+  $r_rum=json_decode($h_rum,1);
+  $r_eng=json_decode($h_eng,1);
+$s_rum=array();
+$s_eng=array();
+if ($tip=="movie") {
+for ($z=0;$z<count($r_rum);$z++) {
+ if ($r_rum[$z]['SeriesSeason']==0 ) {
+  $s_rum[]=array($r_rum[$z]['SubFileName'],$r_rum[$z]['SubDownloadLink']);
+ }
+}
+
+for ($z=0;$z<count($r_eng);$z++) {
+ if ($r_eng[$z]['SeriesSeason']==0 ) {
+  $s_eng[]=array($r_eng[$z]['SubFileName'],$r_eng[$z]['SubDownloadLink']);
+ }
+}
+} else {
+for ($z=0;$z<count($r_rum);$z++) {
+  $s_rum[]=array($r_rum[$z]['SubFileName'],$r_rum[$z]['SubDownloadLink']);
+}
+
+for ($z=0;$z<count($r_eng);$z++) {
+  $s_eng[]=array($r_eng[$z]['SubFileName'],$r_eng[$z]['SubDownloadLink']);
+}
+}
+$nn=max(count($s_rum),count($s_eng));
 $k=intval($nn/10) + 1;
 $n=0;
 echo '<h2>'.$page_tit.'</H2>';
-echo '<table border="1" width="100%">
-<TR>';
-echo '<TD colspan="2" align="left">';
-if ($page>1)
-echo '<a href="'.$prev.'"><font size="4">&nbsp;&lt;&lt;&nbsp;</font></a> | <a href="'.$next.'"><font size="4">&nbsp;&gt;&gt;&nbsp;</font></a></TD>';
-else
-echo '<a href="'.$next.'"><font size="4">&nbsp;&gt;&gt;&nbsp;</font></a></TD>';
-echo '</TR>';
-echo '</table>';
 echo '<table border="1" width="100%">';
 echo '<TR>';
 for ($m=1;$m<$k;$m++) {
    echo '<TD align="center"><font size="4"><a href="#myLink'.($m*10).'">Salt:'.($m*10).'</a></font></td>';
 }
-echo '<TD></TD></TR>';
-foreach ($subs as $key => $val) {
-  if ($subs[$key][4]) {
-   if ($subs[$key][2])
-     $display=$subs[$key][0]." - ".$subs[$key][2]." (".$subs[$key][4].")";
-   else
-     $display=$subs[$key][0]." - ".$subs[$key][3]." (".$subs[$key][4].")";
+echo '</TR>';
+echo '</table>';
+echo '<table border="1" width="100%">';
+for ($m=0;$m<$nn;$m++) {
+  if (isset($s_rum[$m])) {
+    $display=$s_rum[$m][1];
+    $display1="ro-".$s_rum[$m][0];
   } else {
-   if ($subs[$key][2])
-    $display=$subs[$key][0]." - ".$subs[$key][2];
-   else
-    $display=$subs[$key][0]." - ".$subs[$key][3];
+    $display="";
+    $display1="";
   }
-  echo '<TR><TD colspan="'.($k-1).'"><font size="4"><a id="myLink'.($n*1).'" href="#" onclick="changeserver('."'".$subs[$key][1]."'".');return false;">'.$display.'</a></font></TD><TD>'.($n+1).'</TD></TR>'."\r\n";
+  if (isset($s_eng[$m])) {
+    $display2=$s_eng[$m][1];
+    $display3="en-".$s_eng[$m][0];
+  } else {
+    $display2="";
+    $display3="";
+  }
+  echo '<TR><TD>'.($n+1).'</TD>
+  <TD><font size="4"><a id="myLink'.($n*1).'" href="#" onclick="changeserver('."'".$display."'".');return false;">'.$display1.'</a></font></TD>
+  <TD><font size="4"><a id="myLink'.($n*1).'" href="#" onclick="changeserver('."'".$display2."'".');return false;">'.$display3.'</a></font></TD>
+
+  </TR>'."\r\n";
   $n++;
   //if ($n >9)
 }
 echo '</table>';
-echo '<table border="1" width="100%">';
-echo '<tr>';
-echo '<TD colspan="2" align="left">';
-if ($page>1)
-echo '<a href="'.$prev.'"><font size="4">&nbsp;&lt;&lt;&nbsp;</font></a> | <a href="'.$next.'"><font size="4">&nbsp;&gt;&gt;&nbsp;</font></a></TD>';
-else
-echo '<a href="'.$next.'"><font size="4">&nbsp;&gt;&gt;&nbsp;</font></a></TD>';
-echo '</TR>';
-echo '</table>';
-if (!$ww) {
-echo '<br><p>';
-echo 'Visit https://opensubtitles.stoplight.io/docs/opensubtitles-api, get an API-KEY.
-Put this key in file "opensubtitlesc.txt" and copy this file to "parole" folder.</p>';
-}
+
+
 echo '</body></html>';
 
 ?>

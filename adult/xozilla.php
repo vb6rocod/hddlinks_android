@@ -254,6 +254,8 @@ foreach($videos as $video) {
   if ($durata) $title=$title." (".$durata.')';
   if ($title) array_push($r ,array($title,$link, $image));
 }
+//$flash="mp";
+//$tast="DA";
 $c=count($r);
 for ($k=0;$k<$c;$k++) {
   $title=$r[$k][0];
@@ -265,7 +267,7 @@ for ($k=0;$k<$c;$k++) {
   $fav_link="mod=add&title=".urlencode(fix_t($title))."&link=".urlencode($link)."&image=".urlencode($image)."&width=".$width."&height=".$height."&file=filme_link.php";
   if (true) {
   if ($n==0) echo '<TR>'."\r\n";
-  if ($tast == "NU" && $flash !="mp") {
+  if ($tast == "NU" && $flash =="flash") {
    if ($has_fs=="no")
     $link_f='adult_link.php?link='.urlencode($link).'&title='.urlencode(fix_t($title)).'&image='.$image;
    else
@@ -274,7 +276,7 @@ for ($k=0;$k<$c;$k++) {
     <img id="myLink'.$w.'" src="'.$image.'" width="'.$width.'" height="'.$height.'"><BR>'.$title.'</a>'."\r\n";
     echo '<a onclick="add_fav('."'".$fav_link."'".')" style="cursor:pointer;">*</a>'."\r\n";
     echo '</TD>'."\r\n";
-  } else if ($tast == "NU" && $flash == "mp") {
+  } else if ($tast == "NU" && $flash <> "flash") {
    if ($has_fs=="yes") {
     $link_f='../filme/filme_link.php?file='.urlencode($link).'&title='.urlencode(fix_t($title)).'&image='.$image;
     echo '<td class="mp" width="25%"><a class="imdb" href="'.$link_f.'" id="myLink'.$w.'" target="_blank">
@@ -288,7 +290,7 @@ for ($k=0;$k<$c;$k++) {
     echo '<a onclick="add_fav('."'".$fav_link."'".')" style="cursor:pointer;">*</a>'."\r\n";
     echo '</TD>'."\r\n";
    }
-  } else if ($tast == "DA" && $flash !="mp") {
+  } else if ($tast == "DA" && $flash =="flash") {
    if ($has_fs=="no")
     $link_f='adult_link.php?link='.urlencode($link).'&title='.urlencode(fix_t($title)).'&image='.$image;
    else

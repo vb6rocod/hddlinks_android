@@ -110,7 +110,7 @@ echo '
 <TD width="25%"><a href="adult/fuqer.php?tip=release&page=1&title=fuqer&link=" target="_blank">fuqer</a></TD>
 <TD width="25%"><a href="adult/collectionofbestporn.php?tip=release&page=1&title=collectionofbestporn&link=" target="_blank">collectionofbestporn</a></TD>
 <TD width="25%"><a href="adult/porndroids_main.php" target="_blank">porndroids</a></TD>
-<TD width="25%"><a href="adult/youporn.php?tip=release&page=1&title=youporn&link=" target="_blank">youporn</a></TD>
+<TD width="25%"></TD>
 </TR>
 
 <TR>
@@ -121,7 +121,7 @@ echo '
 </TR>
 
 <TR>
-<TD width="25%"><a href="adult/pornhost_main.php" target="_blank">pornhost</a></TD>
+<TD width="25%"></TD>
 <TD width="25%"><a href="adult/handjobhub_main.php" target="_blank">handjobhub</a></TD>
 <TD width="25%"><a href="adult/streamporn_main.php" target="_blank">streamporn</a></TD>
 <TD width="25%"><a href="adult/xopenload_main.php" target="_blank">xopenload</a></TD>

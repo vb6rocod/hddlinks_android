@@ -374,10 +374,23 @@ if ($flash=="mpc") {
     $x=file_get_contents($base_sub."orig.srt");
     file_put_contents($base_sub.$srt_name,$x);
  }
-  $mpc=trim(file_get_contents($base_pass."mpc.txt"));
-  $c='"'.$mpc.'" /fullscreen "'.$movie_mpc.'"';
-  pclose(popen($c,"r"));
-  echo '<script type="text/javascript">window.close();</script>';
+  $mpc=trim(file_get_contents($base_pass."vlc.txt"));
+  $movie=str_replace("%","%%",$movie);
+  $c = $mpc." ".'"'.$movie.'"'.' --volume=100 --fullscreen';
+  if ($srt_name) {
+    $out2=' --sub-file="'.$base_sub.$srt_name.'"';
+    $c .=$out2;
+  }
+  $mpv_path=dirname($mpc)."/run_in_mpv.bat";
+  $out='@echo off
+title: running mpv
+start '.$c;
+//file_put_contents($mpv_path,$out);
+$handle = fopen($mpv_path, "w");
+fwrite($handle,$out);
+fclose($handle);
+$link="mpv://run";
+echo $link;
   die();
 }
 if ($flash == "direct") {

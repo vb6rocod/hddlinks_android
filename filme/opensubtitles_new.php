@@ -94,6 +94,17 @@ if (file_exists($base_pass."opensubtitlesc.txt")) {
 } else {
  $key="";
 }
+if (file_exists($base_pass."opensubtitles.txt")) {
+ $h=file_get_contents($base_pass."opensubtitles.txt");
+ $t1=explode("|",$h);
+ $user=$t1[0];
+ $pass=$t1[1];
+ $user_ag=$t1[2];
+} else {
+ $user="";
+ $pass="";
+ $user_ag="";
+}
 $ww=$key;
 if ($imdbid) $imdbid=round($imdbid);
 if ($tip=="movie") {
@@ -145,10 +156,13 @@ $head=array('Accept: */*',
 'Referer: https://opensubtitles.stoplight.io/',
 'Content-Type: application/json',
 'Api-Key: '.$key,
+'User-Agent: '.$user_ag,
 'Origin: https://opensubtitles.stoplight.io',
 'Connection: keep-alive');
 $q=http_build_query($search);
 $l=$l.$q;
+//echo $l;
+//print_r ($head);
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $l);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);

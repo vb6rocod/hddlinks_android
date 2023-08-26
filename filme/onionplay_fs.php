@@ -11,6 +11,7 @@ if (file_exists($base_pass."debug.txt"))
  $debug=true;
 else
  $debug=false;
+//$debug=true;
 if (file_exists($base_pass."player.txt")) {
 $flash=trim(file_get_contents($base_pass."player.txt"));
 } else {
@@ -80,6 +81,7 @@ function openlink(link) {
   // If the response is received completely, will be transferred to the HTML tag with tagID
   request.onreadystatechange = function() {
     if (request.readyState == 4) {
+    //alert (request.responseText);
       off();
       <?php
       if ($debug) echo "document.getElementById('debug').innerHTML = request.responseText.match(/http.+#/g);"."\r\n";
@@ -557,7 +559,7 @@ if ($tip=="movie")
   $openlink=urlencode(fix_t($tit3));
 else
   $openlink=urlencode(fix_t($tit.$tit2));
- if ($flash != "mp")
+ if ($flash == "flash")
    echo '<TD align="center" colspan="4"><a id="viz" onclick="'."openlink1('".$openlink."')".'"'." style='cursor:pointer;'>".'VIZIONEAZA !</a></td>';
  else
    echo '<TD align="center" colspan="4"><a id="viz" onclick="'."openlink('".$openlink."')".'"'." style='cursor:pointer;'>".'VIZIONEAZA !</a></td>';

@@ -6,6 +6,28 @@ function str_between($string, $start, $end){
 	return substr($string,$ini,$len);
 }
 require ("common.php");
+if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
+    $os="win";
+} else {
+    $os="linux";
+}
+// seting tast
+$f=$base_pass."tastatura.txt";
+if ($os=="win")
+  file_put_contents($f,"NU");
+else
+  file_put_contents($f,"DA");
+// mod player
+$f=$base_pass."player.txt";
+// cale mpv
+$f=$base_pass."vlc.txt";
+$h=@file_get_contents($f);
+$info_update="";
+if ($os=="win") {
+if (!file_exists($f) || !file_exists($h) || !file_exists(dirname($h)."/add_url_protocol_mpv.reg")) {
+$info_update="<p>Pentru o buna vizionare instalati mpv! Citeste cum, la <b>Sfaturi</b></p>";
+}
+}
 $f=$base_pass."adult.txt";
 if (!file_exists($f)) {
 $adult="NU";
@@ -203,6 +225,7 @@ echo '
 <table border="0px" align="center" width="90%">
 <TR><TD align="right"><a href="info.html"><font size="5">Sfaturi</font></a></TR></TABLE>
 <?php
+echo $info_update;
 if (file_exists($base_pass."player.txt")) {
    $mod=file_get_contents($base_pass."player.txt");
 } else

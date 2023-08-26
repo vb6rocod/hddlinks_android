@@ -1,17 +1,18 @@
 <!doctype html>
 <?php
 include ("../common.php");
-include ("../cloudflare.php");
-//error_reporting(0);
+
+error_reporting(0);
+if (file_exists($base_pass."debug.txt"))
+ $debug=true;
+else
+ $debug=false;
+
 $list = glob($base_sub."*.srt");
    foreach ($list as $l) {
     str_replace(" ","%20",$l);
     unlink($l);
 }
-if (file_exists($base_pass."debug.txt"))
- $debug=true;
-else
- $debug=false;
 if (file_exists($base_pass."player.txt")) {
 $flash=trim(file_get_contents($base_pass."player.txt"));
 } else {
@@ -47,11 +48,6 @@ $tip="series";
 }
 $imdbid="";
 
-function str_between($string, $start, $end){
-	$string = " ".$string; $ini = strpos($string,$start);
-	if ($ini == 0) return ""; $ini += strlen($start); $len = strpos($string,$end,$ini) - $ini;
-	return substr($string,$ini,$len);
-}
 ?>
 <html>
 <head>
@@ -89,6 +85,10 @@ function openlink(link) {
       document.getElementById("mytest1").click();
     }
   }
+}
+function changeserver(s,t) {
+  document.getElementById('server').innerHTML = s;
+  document.getElementById('file').value=t;
 }
    function zx(e){
      var charCode = (typeof e.which == "number") ? e.which : e.keyCode
@@ -130,101 +130,96 @@ function off() {
 <?php
 echo '<h2>'.$tit.$tit2.'</H2>';
 echo '<BR>';
-$ua = $_SERVER['HTTP_USER_AGENT'];
-$cookie=$base_cookie."flixtor.dat";
-$requestLink=$link;
-$html=cf_pass($link,$cookie);
-if ($tip=="movie") {
- preg_match("/watch\/movie\/(\d+)/",$link,$m);
- $l="https://flixtor.to/ajax/v4/m/".$m[1];
-} else {
- preg_match("/watch\/tv\/(\d+)\/.+\/season\/(\d+)\/episode\/(\d+)/",$link,$m);
- $l="https://flixtor.to/ajax/v4/e/".$m[1]."/".$m[2]."/".$m[3];
-}
-//echo $l;
-////////////////////////////////////////////////////////////////////////////
-$head=array('Accept: text/plain, */*; q=0.01',
+$r=array();
+$s=array();
+//echo $link;
+$info_m="";
+$head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/116.0',
+'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8',
 'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
 'Accept-Encoding: deflate',
-'Referer: https://flixtor.to/watch/tv/4467058/watchmen/season/1/episode/7',
-'X-Requested-With: XMLHttpRequest',
-'Connection: keep-alive');
+'Connection: keep-alive',
+'Referer: https://www.hdwatched.xyz/movies');
   $ch = curl_init();
-  curl_setopt($ch, CURLOPT_URL, $l);
+  curl_setopt($ch, CURLOPT_URL, $link);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
-  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
-  curl_setopt($ch, CURLOPT_HEADER,0);
   curl_setopt($ch, CURLOPT_HTTPHEADER, $head);
-  curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie);
+  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
   curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
   curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
   curl_setopt($ch, CURLOPT_TIMEOUT, 25);
   $h = curl_exec($ch);
   curl_close($ch);
   //echo $h;
-  $x=base64_decode(str_rot13($h));
-  $out="";
-  for ($k=0;$k<strlen($x);$k++) {
-    $k1 = ord($x[$k]);
-    if (($k1>=33)&&($k1<=126))
-    $t = chr(33 + ($k1 + 14) % 94);
-    else
-    $t =chr($k1);
-    $out .=$t;
+  //die();
+  if (preg_match("/Release Date/",$h)) {
+  $t1=explode("Release Date",$h);
+  $t2=explode("Tags:",$t1[1]);
+  $info_m=trim(strip_tags("Release Date".$t2[0]));
   }
-  $y=json_decode($out,1);
-  //print_r ($y);
-  //$link=$y['file'];
-  $srt="";
-  for ($k=0;$k<count($y['tracks']);$k++) {
-    if ($y['tracks'][$k]['kind'] == "captions") {
-      if ($y['tracks'][$k]['label'] == "Romanian") $srt= "Cu subtitrare in romana.";
-    }
-  }
-  if (!$srt) {
-  for ($k=0;$k<count($y['tracks']);$k++) {
-    if ($y['tracks'][$k]['kind'] == "captions") {
-      if ($y['tracks'][$k]['label'] == "English") $srt= "Cu subtitrare in engleza.";
-    }
-  }
-  }
-  if (!isset($y['file'])) $srt="VIP Only!";
-////////////////////////////////////////////////////////////////////////////
-//echo $l;
-$r=array();
-$r[]=urlencode($l);
+  //echo $info_m;
+  $t1=explode('<iframe',$h);
+  $t2=explode('src="',$t1[1]);
+  $t3=explode('"',$t2[1]);
+  $l=$t3[0];
 
-echo '<input type="hidden" id="file" value="'.urlencode($r[0]).'">';
+  $r[]=$l;
+  $s[]=parse_url($l)['host'];
+  $imdbid="";
+   //echo $imdbid;
+//die();
 
+
+//print_r ($r);
 echo '<table border="1" width="100%">';
+echo '<TR><TD class="mp">Alegeti un server: Server curent:<label id="server">'.$s[0].'</label>
+<input type="hidden" id="file" value="'.urlencode($r[0]).'"></td></TR></TABLE>';
+echo '<table border="1" width="100%"><TR>';
 $k=count($r);
 $x=0;
-  $c_link=$r[0];
-  $openload=parse_url(urldecode($r[0]))['host'];
-
-if ($srt)
-echo '<TR><TD class="mp">'.$srt.'</TD></TR>';
+for ($i=0;$i<$k;$i++) {
+  if ($x==0) echo '<TR>';
+  $c_link=$r[$i];
+  $openload=$s[$i];
+  if (preg_match($indirect,$openload)) {
+  echo '<TD class="mp"><a href="filme_link.php?file='.urlencode($c_link).'&title='.urlencode(unfix_t($tit.$tit2)).'" target="_blank">'.$openload.'</a></td>';
+  } else
+  echo '<TD class="mp"><a id="myLink" href="#" onclick="changeserver('."'".$openload."','".urlencode($c_link)."'".');return false;">'.$openload.'</a></td>';
+  $x++;
+  if ($x==6) {
+    echo '</TR>';
+    $x=0;
+  }
+}
+if ($x < 6 && $x > 0 & $k>6) {
+ for ($k=0;$k<6-$x;$k++) {
+   echo '<TD></TD>'."\r\n";
+ }
+ echo '</TR>'."\r\n";
+}
 echo '</TABLE>';
 if ($tip=="movie") {
   $tit3=$tit;
   $tit2="";
   $sez="";
   $ep="";
-  $imdbid="";
+  //$imdbid="";
   $from="";
   $link_page="";
 } else {
   $tit3=$tit;
   $sez=$sez;
   $ep=$ep;
-  $imdbid="";
+  //$imdbid="";
   $from="";
   $link_page="";
 }
   $rest = substr($tit3, -6);
   if (preg_match("/\((\d+)\)/",$rest,$m)) {
+   $year=$m[1];
    $tit3=trim(str_replace($m[0],"",$tit3));
+  } else {
+   $year="";
   }
 $sub_link ="from=".$from."&tip=".$tip."&sez=".$sez."&ep=".$ep."&imdb=".$imdbid."&title=".urlencode(fix_t($tit3))."&link=".$link_page."&ep_tit=".urlencode(fix_t($tit2))."&year=".$year;
 include ("subs.php");
@@ -233,7 +228,7 @@ if ($tip=="movie")
   $openlink=urlencode(fix_t($tit3));
 else
   $openlink=urlencode(fix_t($tit.$tit2));
- if ($flash != "mp")
+ if ($flash == "flash")
    echo '<TD align="center" colspan="4"><a id="viz" onclick="'."openlink1('".$openlink."')".'"'." style='cursor:pointer;'>".'VIZIONEAZA !</a></td>';
  else
    echo '<TD align="center" colspan="4"><a id="viz" onclick="'."openlink('".$openlink."')".'"'." style='cursor:pointer;'>".'VIZIONEAZA !</a></td>';
@@ -246,14 +241,12 @@ echo '<br>
 <BR>Scurtaturi: 7=opensubtitles, 8=titrari, 9=subs, 0=subtitrari (cauta imdb id)
 </b></font></TD></TR></TABLE>
 ';
+echo $info_m;
+
 include("../debug.html");
 echo '
 <div id="overlay">
   <div id="text">Wait....</div>
 </div>
-<BR>
-Free user:<BR>
-Filme: Doar cele publicate in ultimele 6 luni.<BR>
-Seriale: Doar episoadele publicate in ultimele 3 luni sau primele 3 episoade din sezonul 1.
 </body>
 </html>';

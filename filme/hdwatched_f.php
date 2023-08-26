@@ -5,25 +5,25 @@ function str_between($string, $start, $end){
 	if ($ini == 0) return ""; $ini += strlen($start); $len = strpos($string,$end,$ini) - $ini;
 	return substr($string,$ini,$len);
 }
-error_reporting(0);
 include ("../common.php");
-include ("../cloudflare.php");
 $page = $_GET["page"];
 $tip= $_GET["tip"];
 $tit=$_GET["title"];
 $link=$_GET["link"];
 $width="200px";
 $height="278px";
+$last_good="https://www.hdwatched.xyz";
+$host=parse_url($last_good)['host'];
 /* ==================================================== */
 $has_fav="yes";
 $has_search="yes";
 $has_add="yes";
 $has_fs="yes";
-$fav_target="flixtor_f_fav.php?host=https://flixtor.to";
-$add_target="flixtor_f_add.php";
+$fav_target="hdwatched_f_fav.php?host=".$last_good;
+$add_target="hdwatched_f_add.php";
 $add_file="";
-$fs_target="flixtor_fs.php";
-$target="flixtor_f.php";
+$fs_target="hdwatched_fs.php";
+$target="hdwatched_f.php";
 /* ==================================================== */
 $base=basename($_SERVER['SCRIPT_FILENAME']);
 $p=$_SERVER['QUERY_STRING'];
@@ -167,65 +167,79 @@ if ($page==1) {
    echo '<TD class="nav" colspan="4" align="right"><a href="'.$prev.'">&nbsp;&lt;&lt;&nbsp;</a> | <a href="'.$next.'">&nbsp;&gt;&gt;&nbsp;</a></TD>'."\r\n";
 }
 echo '</TR>'."\r\n";
-
-if($tip=="release") {
-  $l="https://flixtor.to/ajax/show/movies/all/from/1900/to/2099/rating/0/votes/0/language/all/type/all/genre/all/latest/page/".$page;
+$f=array();
+if ($tip=="search") {
+ $search= str_replace(" ","+",$tit);
+ if ($page==1)
+  $l=$last_good."/search/".$search."?type=1";
+ else
+  $l=$last_good."/search/".$search."?type=1&page=".$page;
 } else {
-  $search=str_replace(" ","%20",$tit);
-  $l="https://flixtor.to/ajax/show/search/".$search."/from/1900/to/2099/rating/0/votes/0/language/all/type/movies/genre/all/relevance/page/".$page;
+ if ($page==1)
+  $l=$last_good."/movies";
+ else
+  $l=$last_good."/movies?page=".$page;
 }
-//////////////////////////////////////
-$ua = $_SERVER['HTTP_USER_AGENT'];
-$cookie=$base_cookie."flixtor.dat";
-if ($page==1 && $tip !="search") {
-
-$html=cf_pass($l,$cookie);
-}
-//////////////////////////////////////
-$host=parse_url($l)['host'];
-$ua = $_SERVER['HTTP_USER_AGENT'];
+//https://www.hdwatched.xyz/movies?page=2
+//https://www.hdwatched.xyz/search/star?type=1&page=2
+$ua="Mozilla/5.0 (Windows NT 10.0; rv:75.0) Gecko/20100101 Firefox/75.0";
+$head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/116.0',
+'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8',
+'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
+'Accept-Encoding: deflate',
+'Connection: keep-alive',
+'Referer: https://www.hdwatched.xyz/movies');
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $l);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
+  curl_setopt($ch, CURLOPT_HTTPHEADER, $head);
   curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
-  //curl_setopt($ch, CURLOPT_HTTPHEADER, $head);
-  curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie);
   curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
-  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
-  $html = curl_exec($ch);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 25);
+  $h = curl_exec($ch);
   curl_close($ch);
-  //echo $html;
+  //echo $h;
+$path = parse_url($l)['path'];
+//echo $h;
+$host=parse_url($l)['host'];
 
-$videos = explode('data-href="', $html);
+$videos = explode('i-container">', $h);
 unset($videos[0]);
 $videos = array_values($videos);
+//print_r ($videos);
 foreach($videos as $video) {
-  $t1 = explode('"', $video);
-  $link = $t1[0];
-  if (strpos($link,"http") === false) $link="https://".$host.$link;
-  $t1 = explode('alt="', $video);
-  $t2 = explode('"', $t1[1]);
-  $title = $t2[0];
-  $title=str_replace("\\","",$title);
-  $title = prep_tit($title);
-  $t1 = explode('src="', $video);
-  $t2 = explode('"', $t1[1]);
-  $image = $t2[0];
-  if (strpos($image,"http") === false) $image="https:".$image;
-  $year="";
+ //$t1=explode('href="',$video);
+ //$t2=explode('"',$t1[1]);
+ //$link=$t2[0];
+ preg_match("/href\=\"?([^\s\"]+)\"?/",$video,$s);
+ $link=$s[1];
+ if ($link[0]=="/") $link=$last_good.$link;
+ //$t1=explode('data-src="',$video);
+ //$t2=explode('"',$t1[1]);
+ //$image=$t2[0];
+ preg_match("/src\=\"?([^\s\"]+)/",$video,$s);
+ $image=$s[1];
+ //$t1=explode('title="',$video);
+ //$t2=explode('"',$t1[1]);
+ //$title=trim($t2[0]);
+ preg_match("/title\=\"?([^\>\"]+)/",$video,$s);
+ $title=$s[1];
+ $year="";
+ if (!preg_match("/series/",$link))$f[] = array($title,$link,$image,$year);
+}
+//echo $html;
+foreach($f as $key => $value) {
+  $title=$value[0];
+  $title=prep_tit($title);
+  $link=$value[1];
+  $image=$value[2];
+  $year=$value[3];
   $imdb="";
-  $rest = substr($title, -6);
-  if (preg_match("/\((\d+)\)/",$rest,$m)) {
-   $year=$m[1];
-   $tit_imdb=trim(str_replace($m[0],"",$title));
-  } else {
-   $year="";
-   $tit_imdb=$title;
-  }
+
+  $tit_imdb=$title;
   $link_f=$fs_target.'?tip=movie&link='.urlencode($link).'&title='.urlencode(fix_t($title)).'&image='.$image."&sez=&ep=&ep_tit=&year=".$year;
-  if ($title && strpos($link,"/movie") !== false) {
+  if ($title) {
   if ($n==0) echo '<TR>'."\r\n";
   $val_imdb="tip=movie&title=".urlencode(fix_t($tit_imdb))."&year=".$year."&imdb=".$imdb;
   $fav_link="mod=add&title=".urlencode(fix_t($title))."&link=".urlencode($link)."&image=".urlencode($image)."&year=".$year;

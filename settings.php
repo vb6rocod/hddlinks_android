@@ -8,12 +8,13 @@
       <title>Setari</title>
 
 
-	  
+
 </head>
 <body>
 <H2>Setari</H2>
 <?php
 error_reporting(0);
+$add_reg="";
 include ("common.php");
 $tip=$_GET["tip"];
 if ($tip) {
@@ -27,6 +28,34 @@ if ($tip=="cineplex") {
  $fh = fopen($new_file, 'w');
  fwrite($fh, $txt);
  fclose($fh);
+} elseif ($tip=="reg") {
+$f=$base_pass."vlc.txt";
+if (file_exists($f)) {
+$mpc=trim(file_get_contents($f));
+} else {
+$mpc="";
+}
+$p=dirname($mpc);
+$file=$p."/add_url_protocol_mpv.reg";
+//C:\\EasyPhp\\localweb\\mobile1\\mpv\\run_in_mpv.bat
+$run=$p."/run_in_mpv.bat";
+$run=str_replace("/","\\\\",$run);
+$out='Windows Registry Editor Version 5.00
+
+[HKEY_CLASSES_ROOT\mpv]
+@="URL: mpv"
+"URL Protocol"=""
+
+[HKEY_CLASSES_ROOT\mpv\shell]
+@=""
+
+[HKEY_CLASSES_ROOT\mpv\shell\open]
+@=""
+
+[HKEY_CLASSES_ROOT\mpv\shell\open\command]
+@="\"'.$run.'\" \"%1\""';
+file_put_contents($file,$out);
+$add_reg="click dreapta --> merge pe fisierul ".$file;
 } elseif ($tip=="cineplex_serv") {
  $txt=$user;
  $new_file = $base_pass."cineplex_host.txt";
@@ -275,65 +304,33 @@ echo '
 <form action="settings.php">
 Selecteaza mod player: <select id="user" name="user">
 ';
-if ($user=="direct") {
+if ($user=="flash") {
 echo '
-<option value="direct" selected>direct</option>
-<option value="flash">flash</option>
-<option value="html5">html5</option>
-<option value="mpc">mpc|vlc</option>
-<option value="mp">mediaplayer</option>';
-} elseif ($user=="flash") {
-echo '
-<option value="direct">direct</option>
 <option value="flash" selected>flash</option>
-<option value="html5">html5</option>
-<option value="mpc">mpc|vlc</option>
-<option value="mp">mediaplayer</option>';
-} elseif ($user=="html5") {
-echo '
-<option value="direct">direct</option>
-<option value="flash">flash</option>
-<option value="html5" selected>html5</option>
-<option value="mpc">mpc|vlc</option>
+<option value="mpc">mpv</option>
 <option value="mp">mediaplayer</option>';
 } elseif ($user=="mp") {
 echo '
-<option value="direct">direct</option>
 <option value="flash">flash</option>
-<option value="html5">html5</option>
-<option value="mpc">mpc|vlc</option>
+<option value="mpc">mpv</option>
 <option value="mp" selected>mediaplayer</option>';
+} elseif ($user="mpc") {
+echo '
+<option value="flash">flash</option>
+<option value="mpc" selected>mpv</option>
+<option value="mp">mediaplayer</option>';
 } else {
 echo '
-<option value="direct">direct</option>
 <option value="flash">flash</option>
-<option value="html5">html5</option>
-<option value="mpc" selected>mpc|vlc</option>
+<option value="mpc" selected>mpv</option>
 <option value="mp">mediaplayer</option>';
 }
 echo '</select>
-</BR>
 <input type="hidden" name="tip" value="player">
 <input type="submit" value="Memoreaza">
 </form>
-<BR>
+<hr>
 ';
-$user="";
-$pass="";
-$f=$base_pass."mpc.txt";
-if (file_exists($f)) {
-$mpc=trim(file_get_contents($f));
-} else {
-$mpc="";
-}
-echo '
-<form action="settings.php">Cale Media Player Clasic -HC (mpc-hc.exe) copiati aici<input type="text"  size="50" name="user" id="user" value="'.$mpc.'">
-<input type="hidden" name="tip" value="mpc">
-<BR><input type="submit" value="Memoreaza">
-</form>
-<BR>
-</form>
-<BR>';
 
 $user="";
 $pass="";
@@ -344,46 +341,21 @@ $mpc=trim(file_get_contents($f));
 $mpc="";
 }
 echo '
+<p>Instalare mpv (vezi <a href="info.html"><b>Sfaturi</b></a>)</p>
 <form action="settings.php">Cale mpv.exe (mpv.exe) - folositi Unix style "C:/"<input type="text" name="user" id="user" size="50" value="'.$mpc.'">
 <input type="hidden" name="tip" value="vlc">
-<BR><input type="submit" value="Memoreaza">
-</form>
-<BR>
-</form>
-<BR>';
-$f=$base_pass."tastatura.txt";
-if (file_exists($f)) {
-$h=file_get_contents($f);
-$t1=explode("|",$h);
-$user=$t1[0];
-if (sizeof ($t1) > 1 )
-	$pass=$t1[1];
-} else {
-$user="NU";
-$pass="";
-}
-echo '
-<h4>Tastatura:</h4>
-<form action="settings.php">
-Folosesc tastatura/telecomanda: <select id="user" name="user">
-';
-if ($user=="DA") {
-echo '
-<option value="DA" selected>DA</option>
-<option value="NU">NU</option>';
-} elseif ($user=="NU") {
-echo '
-<option value="DA">DA</option>
-<option value="NU" selected>NU</option>';
-}
-echo '</select>
-</BR>
-<input type="hidden" name="tip" value="tastatura">
 <input type="submit" value="Memoreaza">
 </form>
-<BR>
-<hr>
 ';
+if (file_exists($mpc) && preg_match("/mpv\.exe/",$mpc) && !preg_match("/\\\\/",$mpc)) {
+echo '
+<form action="settings.php">
+<input type="hidden" name="tip" value="reg">
+<input type="submit" value="Genereaza reg file">
+</form>';
+echo $add_reg;
+}
+echo '<hr>';
 $f=$base_pass."mx.txt";
 if (file_exists($f)) {
 $h=file_get_contents($f);
@@ -410,11 +382,9 @@ echo '
 <option value="ad" selected>ad</option>';
 }
 echo '</select>
-</BR>
 <input type="hidden" name="tip" value="mx">
 <input type="submit" value="Memoreaza">
 </form>
-<BR>
 <hr>
 ';
 
@@ -433,50 +403,8 @@ $pass="";
 echo '
 <h4>TMDB Api Key (https://www.themoviedb.org/settings/api)</h4>
 <form action="settings.php">
-cod:<input type="text" name="user" value="'.$user.'" size="40"></BR>
+cod:<input type="text" name="user" value="'.$user.'" size="40">
 <input type="hidden" name="tip" value="tmdb">
-<input type="submit" value="Memoreaza">
-</form>
-<hr>
-';
-$f=$base_pass."videospider.txt";
-if (file_exists($f)) {
-$h=file_get_contents($f);
-$t1=explode("|",$h);
-$user=$t1[0];
-if (sizeof ($t1) > 1 )
-	$pass=$t1[1];
-} else {
-$user="";
-$pass="";
-}
-
-echo '
-<h4>videospider Api Key (https://videospider.in)</h4>
-<form action="settings.php">
-cod:<input type="text" name="user" value="'.$user.'" size="40"></BR>
-<input type="hidden" name="tip" value="videospider">
-<input type="submit" value="Memoreaza">
-</form>
-<hr>
-';
-$f=$base_pass."omdb.txt";
-if (file_exists($f)) {
-$h=file_get_contents($f);
-$t1=explode("|",$h);
-$user=$t1[0];
-if (sizeof ($t1) > 1 )
-	$pass=$t1[1];
-} else {
-$user="";
-$pass="";
-}
-
-echo '
-<h4>OMDB Api Key (http://www.omdbapi.com/apikey.aspx)</h4>
-<form action="settings.php">
-cod:<input type="text" name="user" value="'.$user.'" size="40"></BR>
-<input type="hidden" name="tip" value="omdb">
 <input type="submit" value="Memoreaza">
 </form>
 <hr>
@@ -496,7 +424,7 @@ $pass="";
 echo '
 <h4>Youtube Api Key</h4>
 <form action="settings.php">
-cod:<input type="text" name="user" value="'.$user.'" size="40"></BR>
+cod:<input type="text" name="user" value="'.$user.'" size="40">
 <input type="hidden" name="tip" value="youtube">
 <input type="submit" value="Memoreaza">
 </form>
@@ -519,8 +447,8 @@ echo '
 <h4>Setari opensubtitles (see https://www.opensubtitles.org)</h4>
 <form action="settings.php">
 User:<input type="text" name="user" value="'.$user.'"></BR>
-Pass:<input type="password" name="pass" value="'.$pass.'"></BR>
-UserAgent:<input type="text" name="ua" value="'.$ua.'"></BR>
+Pass:<input type="text" name="pass" value="'.$pass.'"></BR>
+UserAgent:<input type="text" name="ua" value="'.$ua.'">
 <input type="hidden" name="tip" value="opensubtitles">
 <input type="submit" value="Memoreaza">
 </form>
@@ -536,29 +464,8 @@ $user="";
 echo '
 <h4>Setari opensubtitles (new api) (see https://opensubtitles.stoplight.io/)</h4>
 <form action="settings.php">
-API Key:<input type="text" name="user" value="'.$user.'"></BR>
+API Key:<input type="text" name="user" value="'.$user.'">
 <input type="hidden" name="tip" value="opensubtitlesc">
-<input type="submit" value="Memoreaza">
-</form>
-<hr>
-';
-$f=$base_pass."tvhd-online.txt";
-if (file_exists($f)) {
-$h=file_get_contents($f);
-$t1=explode("|",$h);
-$user=$t1[0];
-if (sizeof ($t1) > 1 )
-	$pass=$t1[1];
-} else {
-$user="";
-$pass="";
-}
-echo '
-<h4>Cont tvhd-online</h4>
-<form action="settings.php">
-User:<input type="text" name="user" value="'.$user.'"></BR>
-Pass:<input type="password" name="pass" value="'.$pass.'"></BR>
-<input type="hidden" name="tip" value="tvhd-online">
 <input type="submit" value="Memoreaza">
 </form>
 <hr>
@@ -578,7 +485,7 @@ echo '
 <h4>Cont cineplex.to</h4>
 <form action="settings.php">
 User:<input type="text" name="user" value="'.$user.'"></BR>
-Pass:<input type="password" name="pass" value="'.$pass.'"></BR>
+Pass:<input type="text" name="pass" value="'.$pass.'">
 <input type="hidden" name="tip" value="cineplex">
 <input type="submit" value="Memoreaza">
 </form>
@@ -599,7 +506,7 @@ $pass="";
 echo '
 <h4>Server cineplex.to</h4>
 <form action="settings.php">
-cod:<input type="text" name="user" value="'.$user.'" size="40"></BR>
+cod:<input type="text" name="user" value="'.$user.'" size="40">
 <input type="hidden" name="tip" value="cineplex_serv">
 <input type="submit" value="Memoreaza">
 </form>
@@ -622,7 +529,7 @@ $pass="";
 echo '
 <h4>Cod Localitate (https://weather.codes/romania/)</h4>
 <form action="settings.php">
-cod:<input type="text" name="user" value="'.$user.'" size="40"></BR>
+cod:<input type="text" name="user" value="'.$user.'" size="40">
 <input type="hidden" name="tip" value="weather">
 <input type="submit" value="Memoreaza">
 </form>
@@ -656,11 +563,9 @@ echo '
 <option value="NU" selected>NU</option>';
 }
 echo '</select>
-</BR>
 <input type="hidden" name="tip" value="adult">
 <input type="submit" value="Memoreaza">
 </form>
-<BR>
 <hr>
 ';
 

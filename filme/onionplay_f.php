@@ -297,6 +297,9 @@ $opts = array(
               "Referer: ".$ref."\r\n"
   )
 );
+//$cf="https://embed.smashystream.com/cors.php?";
+//$l=$cf.$l;
+//echo $l;
 $context = stream_context_create($opts);
 $html=@file_get_contents($l,false,$context);
 }

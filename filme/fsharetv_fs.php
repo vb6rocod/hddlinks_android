@@ -197,7 +197,7 @@ if ($tip=="movie")
   $openlink=urlencode(fix_t($tit3));
 else
   $openlink=urlencode(fix_t($tit.$tit2));
- if ($flash != "mp")
+ if ($flash == "flash")
    echo '<TD align="center" colspan="4"><a id="viz" onclick="'."openlink1('".$openlink."')".'"'." style='cursor:pointer;'>".'VIZIONEAZA !</a></td>';
  else
    echo '<TD align="center" colspan="4"><a id="viz" onclick="'."openlink('".$openlink."')".'"'." style='cursor:pointer;'>".'VIZIONEAZA !</a></td>';

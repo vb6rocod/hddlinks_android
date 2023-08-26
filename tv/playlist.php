@@ -168,57 +168,47 @@ if (isset($_GET['link'])) {
   curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
   curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
   curl_setopt($ch, CURLOPT_TIMEOUT, 15);
-  $html = curl_exec($ch);
+  $m3ufile = curl_exec($ch);
   curl_close($ch);
-  $m3uFile=explode("\n",$html);
 } else {
-$m3uFile = file($m3uFile);
+$m3ufile = file_get_contents($m3uFile);
 }
-foreach($m3uFile as $key => $line) {
-  $line=trim($line);
-  if(strtoupper(substr($line, 0, 7)) === "#EXTINF") {
-    if (preg_match("/tvg\-name\=\"(.*?)\"/i",$line,$m)) {
-      $title=$m[1];
-      if (!$title) {
-        $t1=explode(",",$line);
-        $title=trim($t1[1]);
-      }
-    } else {
-    $t1=explode(",",$line);
-    $title=trim($t1[1]);
-    }
-    $file = trim($m3uFile[$key + 1]);
-    if ($file[0]=="#")  $file = trim($m3uFile[$key + 2]);
-    if ($pg_tit=="alltvn.m3u")
-      $tip_stream="http";
-    else {
-    $u=parse_url($file);
-    $tip_stream=$u["scheme"];
-    }
+// Thanks to https://github.com/onigetoc/m3u8-PHP-Parser/blob/master/m3u-parser.php
+$re = '/#EXTINF:(.+?)[,]\s?(.+?)[\r\n]+?((?:https?|rtmp):\/\/(?:\S*?\.\S*?)(?:[\s)\[\]{};"\'<]|\.\s|$))/';
+$re = '/#EXTINF:(.+?)[,]\s?(.+?)[\r\n]+?((?:https?|rtmp):\/\/(?:\S*?\.\S*?)(?:[\s)\[\]{};"\'<]|\.\s|$))/';
+//$attributes = '/([a-zA-Z0-9\-]+?)="([^"]*)"/';
+$attributes = '/([a-zA-Z0-9\-\_]+?)="([^"]*)"/';
+
+
+$m3ufile = str_replace('tvg-logo', 'thumb_square', $m3ufile);
+$m3ufile = str_replace('tvg-id', 'id', $m3ufile);
+//$m3ufile = str_replace('tvg-name', 'group', $m3ufile);
+//$m3ufile = str_replace('tvg-name', 'name', $m3ufile);
+$m3ufile = str_replace('tvg-name', 'author', $m3ufile);
+$m3ufile = str_replace('group-title', 'group', $m3ufile);
+$m3ufile = str_replace('tvg-country', 'country', $m3ufile);
+$m3ufile = str_replace('tvg-language', 'language', $m3ufile);
+
+//print_r($m3ufile);
+
+//$m3ufile = str_replace(' ', '_', $m3ufile); // FOR GROUP
+
+preg_match_all($re, $m3ufile, $matches);
+//print_r ($m3uFile);
+for ($z=0;$z<count($matches[2]);$z++) {
+    $title=trim($matches[2][$z]);
+    $file = trim($matches[3][$z]);
     $mod="direct";
     $from="fara";
     $t1=preg_replace("/^\|?RO\s*\|\s*/","",$title);
     //echo $t1;
     $val_prog="link=".urlencode(fix_t($t1));
-    if (substr($file, 0, 4) == "http" || $pg_tit == "alltvn.m3u") {
-    if (preg_match("/\.m3u8|\.mp4|\.flv|\.ts/",$file))
-      $mod="direct";
-    else
-      $mod="indirect";
-    if (strpos($file,"telekomtv.ro") !== false) {
-      $mod="indirect";
-      $from="fara";
-    } elseif ($pg_tit=="alltvn.m3u") {
-      $mod="direct";
-      $from="gazw";
-    }
     $link="direct_link.php?link=".urlencode(fix_t($file))."&title=".urlencode(fix_t($title))."&from=".$from."&mod=direct";
     $l="link=".urlencode(fix_t($file))."&title=".urlencode(fix_t($title))."&from=".$from."&mod=".$mod;
     $fav_link="mod=add&title=".urlencode(fix_t($title))."&link=".urlencode($file);
-    if (strpos($link,"html1")=== false) {
     if ($n == 0) echo "<TR>"."\n\r";
     //if ($tast == "NU")
-    if ($flash != "mp")
+    if ($flash == "flash")
     echo '<TD class="cat" width="20%">'.'<a class ="imdb" id="myLink'.($w*1).'" href="'.$link.'" target="_blank">'.$title
     .'<input type="hidden" id="imdb_myLink'.($w*1).'" value="'.$val_prog.'">
     <input type="hidden" id="fav_myLink'.($w*1).'" value="'.$fav_link.'">
@@ -230,29 +220,8 @@ foreach($m3uFile as $key => $line) {
     </a>';
     $n++;
     $w++;
-    }
-  } elseif ($tip_stream=="acestream") {
-    if ($n == 0) echo "<TR>"."\n\r";
-    $link2="intent:".$file."#Intent;package=org.acestream.media.atv;S.title=".urlencode($title).";end";
-    if ($flash == "mp" || $flash=="chrome")
-    echo '<TD class="cat" width="20%">'.'<a class ="imdb" id="myLink'.($w*1).'" href="'.$link2.'" target="_blank">'.$title.'<input type="hidden" id="imdb_myLink'.($w*1).'" value="'.$val_prog.'"></a>';
-    else
-    echo '<TD class="cat" width="20%">'.'<a class ="imdb" id="myLink'.($w*1).'" href="'.$file.'" target="_blank">'.$title.'<input type="hidden" id="imdb_myLink'.($w*1).'" value="'.$val_prog.'"></a>';
-    $n++;
-    $w++;
-  } elseif ($tip_stream=="sop") {
-    if ($n == 0) echo "<TR>"."\n\r";
-    //$link2="intent:".$file."#Intent;package=org.acestream.media.atv;S.title=".urlencode($title).";end";
-    $link2=$file;
-    $link3="sop_link.php?file=".$file."&title=".urlencode($title);
-    if ($flash == "mp" || $flash=="chrome" || $flash=="direct")
-    echo '<TD class="cat" width="20%">'.'<a class ="imdb" id="myLink'.($w*1).'" href="'.$link2.'" target="_blank">'.$title.'<input type="hidden" id="imdb_myLink'.($w*1).'" value="'.$val_prog.'"></a>';
-    else
-    echo '<TD class="cat" width="20%">'.'<a class ="imdb" id="myLink'.($w*1).'" href="'.$link3.'" target="_blank">'.$title.'<input type="hidden" id="imdb_myLink'.($w*1).'" value="'.$val_prog.'"></a>';
-    $n++;
-    $w++;
-  }
-    if ($tip_stream == "http" || $tip_stream == "https" || $tip_stream=="acestream" || $tip_stream=="sop") {
+
+    //if ($tip_stream == "http" || $tip_stream == "https" || $tip_stream=="acestream" || $tip_stream=="sop") {
     $t1=preg_replace("/^\|?RO\s*\|\s*/","",$title);
     $l_prog="link=".urlencode(fix_t($t1));
     if ($tast == "NU") {
@@ -270,8 +239,8 @@ foreach($m3uFile as $key => $line) {
      $n=0;
     }
     }
-   }
-  }
+   //}
+  //}
 }
 
  echo '</table>';

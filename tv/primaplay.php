@@ -119,7 +119,7 @@ foreach($videos as $video) {
     $link1="direct_link.php?link=".$link."&title=".urlencode($title)."&from=primaplay&mod=direct";
     $l="link=".urlencode(fix_t($link))."&title=".urlencode(fix_t($title))."&from=primaplay&mod=direct";
   if ($n==0) echo '<TR>';
-  if ($flash != "mp")
+  if ($flash == "flash")
   echo '<td class="mp" align="center" width="25%"><a href="'.$link1.'" target="_blank"><img src="'.$image.'" width="'.$width.'" height="'.$height.'"><BR>'.$title.'</a></TD>';
     else
   echo '<td class="mp" align="center" width="25%">'.'<a onclick="ajaxrequest('."'".$l."')".'"'." style='cursor:pointer;'>".'<img src="'.$image.'" width="'.$width.'" height="'.$height.'"><BR>'.$title.'</a></TD>';

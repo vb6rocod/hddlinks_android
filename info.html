@@ -24,14 +24,9 @@ html { height: 100%;}
 <table align="center" width="90%">
 <TR><TD>SFATURI</TD></TR>
 <TR><TD>Intrati in setari si setati urmatoarele:<BR>
-MOD Player:<BR>Pentru PC setati "flash" sau "mpc". Daca setati mpc trebuie sa aveti instalate MPC si VLC. Setati manual calea la fisierele exe, de exemplu "C:\Program Files\MPC-HC\mpc-hc.exe". La MPC setati la subtitari calea /scrips/subs<BR>
-PE ANDROID setati "direct" daca aveti o versiune mai veche si/sau folositi browserul nativ<BR>
-Setati "mp" daca aveti o versiune mai noua sau daca folositi un alt browser (de exemplu Chrome)<BR><BR>
-Mod contur link:<BR>
-Pe PC setati "Fara contur". Pe Android, daca browserul suporta navigarea su sageti (adica puteti muta selectia de la un link la altul cu tastele sageti) iar selectia implicita nu e destul de vizibila, selectati "MOD MEDIA PLAYER"<BR><BR>
-TASTATURA:<BR>
-Daca folositi o tastarura sau telecomanda (media player de exemplu), iar browser-ul folosit
-suporta navigarea cu sageti, setati pe DA.<BR><BR>
+MOD Player:<BR>Pentru PC setati "flash" sau "mpv".Setati manual calea la fisierele exe, de exemplu "C:/EasyPhp/localweb/mobile1/mpv/mpv.exe".<BR>
+PE ANDROID setati "mediaplayer".<BR>
+
 SETARI MX Player:<BR>
 Setati tip MX Player pe "pro" (achizitionat) sau "ad" daca folositi versiuea free.<BR>
 Deschideti MX Player si setati:<BR>
@@ -41,6 +36,18 @@ La dosarul cu fonturi selectati "/scripts". Daca nu vreti sa folositi fontul imp
 fontul "arialrb.ttf". Daca folositi acest font va recomand setarile: Marime 46-48, ingrosat=nu (debifat), contur=da (bifat) marime 100-120%, aliniere verticala pusa pe 0.<BR>
 <b>Alegeti dosarul cu subtitrari "/scripts/subs" (IMPORTANT!)<b>
 </Td></TR>
+<TR><TD>
+<H3>Instalare mpv. <a href="https://mpv.io/">Pagina oficiala</a></H3>
+Pentru ca nu toate link-urile pot fi vizionate in "clasicul" flash player, solutia e folosirea unui player extern.<BR>
+1. Descarcati ultima versiune disponibila de <a href="https://sourceforge.net/projects/mpv-player-windows/files/">aici.</a> Selectati 64(v)/32 bit si apoi alegeti cea mai noua versiune (ex. mpv-x86_64-v3-20230820-git-19384e0.7z)<BR>
+2. Dezarhivati fisierul. NU puneti arhiva pe vreun folder "special" gen "Desktop", alegeti un folder "normal", de exemplu "C:/mpv".<BR>
+3. Copiati "calea" fisierului mpv.exe. (De exemplu "C:/mpv/mpv.exe").<BR>
+4. Mergeti in "Setari", completati ("paste") campul pentru "cale mpv.exe", si apasati "memoreaza".<BR>
+5. Acum apasati pe "Genereaza reg file".<BR>
+6. In folderul de instalare (ex. C:/mpv) o sa gasiti acum fisierul "add_url_protocol_mpv.reg".Click dreapta --> selectati "merge".<BR>
+7. In Setari selectati "mod player" --> mpv. Apasati "memoreaza".
+</TD>
+<TR>
 </TABLE>
 </div>
 </BODY>

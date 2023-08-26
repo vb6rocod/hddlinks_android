@@ -213,9 +213,10 @@ foreach($videos as $video) {
  $t1=explode('rel="bookmark">',$video);
  $t2=explode('<',$t1[1]);
  $title=trim($t2[0]);
- $t1=explode('category tag">',$video);
- $t2=explode('<',$t1[1]);
- $year=$t2[0];
+ //$t1=explode('category tag">',$video);
+ //$t2=explode('<',$t1[1]);
+ //$year=$t2[0];
+ $year="";
  $f[] = array($title,$link,$image,$year);
 }
 //echo $html;
@@ -227,7 +228,14 @@ foreach($f as $key => $value) {
   $year=$value[3];
   $imdb="";
 
-  $tit_imdb=$title;
+  $rest = substr($title, -6);
+  if (preg_match("/\(?(\d{4})\)?/",$rest,$m)) {
+   $year=$m[1];
+   $tit_imdb=trim(str_replace($m[0],"",$title));
+  } else {
+   $year="";
+   $tit_imdb=$title;
+  }
   $link_f=$fs_target.'?tip=movie&link='.urlencode($link).'&title='.urlencode(fix_t($title)).'&image='.$image."&sez=&ep=&ep_tit=&year=".$year;
   if ($title) {
   if ($n==0) echo '<TR>'."\r\n";

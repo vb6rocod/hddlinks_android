@@ -24,9 +24,7 @@ $mx=trim(file_get_contents($base_pass."mx.txt"));
 $mx="ad";
 }
 $user_agent     =   $_SERVER['HTTP_USER_AGENT'];
-if ($flash != "mp") {
-if (preg_match("/android|ipad/i",$user_agent) && preg_match("/chrome|firefox|mobile/i",$user_agent)) $flash="chrome";
-}
+
 $tit=unfix_t(urldecode($_GET["title"]));
 $tit=prep_tit($tit);
 $image=$_GET["image"];
@@ -232,7 +230,7 @@ if ($tip=="movie")
   $openlink=urlencode(fix_t($tit3));
 else
   $openlink=urlencode(fix_t($tit.$tit2));
- if ($flash != "mp")
+ if ($flash == "flash")
    echo '<TD align="center" colspan="4"><a id="viz" onclick="'."openlink1('".$openlink."')".'"'." style='cursor:pointer;'>".'VIZIONEAZA !</a></td>';
  else
    echo '<TD align="center" colspan="4"><a id="viz" onclick="'."openlink('".$openlink."')".'"'." style='cursor:pointer;'>".'VIZIONEAZA !</a></td>';

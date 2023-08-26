@@ -1,4 +1,15 @@
 # hddlinks_android
+<h2>NOU: Pentru versiunea PC instalati ca player mpv</h2>
+<H3>Instalare mpv. <a href="https://mpv.io/">Pagina oficiala</a></H3>
+Pentru ca nu toate link-urile pot fi vizionate in "clasicul" flash player, solutia e folosirea unui player extern.<BR>
+Solutia e o adaptare dupa ideea de <a href="https://github.com/b01o/mpv-url-proto">aici.</a><BR>
+1. Descarcati ultima versiune disponibila de <a href="https://sourceforge.net/projects/mpv-player-windows/files/">aici.</a> Selectati 64(v)/32 bit si apoi alegeti cea mai noua versiune (ex. mpv-x86_64-v3-20230820-git-19384e0.7z)<BR>
+2. Dezarhivati fisierul. NU puneti arhiva pe vreun folder "special" gen "Desktop", alegeti un folder "normal", de exemplu "C:/mpv".<BR>
+3. Copiati "calea" fisierului mpv.exe. (De exemplu "C:/mpv/mpv.exe").<BR>
+4. Mergeti in "Setari", completati ("paste") campul pentru "cale mpv.exe", si apasati "memoreaza".<BR>
+5. Acum apasati pe "Genereaza reg file".<BR>
+6. In folderul de instalare (ex. C:/mpv) o sa gasiti acum fisierul "add_url_protocol_mpv.reg".Click dreapta --> selectati "merge".<BR>
+7. In Setari selectati "mod player" --> mpv. Apasati "memoreaza".
 <h2>NOU: Server_for_PHP_7.3.3_HD4ALL.apk</h2>
 Descarcati <a href="https://www.mediafire.com/file/bcw65ycm3wwp6ad/Server_for_PHP_7.3.3_HD4ALL.apk/file">Server_for_PHP_7.3.3_HD4ALL.apk</a>.
 

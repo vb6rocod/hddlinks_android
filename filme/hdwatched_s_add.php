@@ -7,7 +7,7 @@ $mod=$_POST["mod"];
 $link=$_POST["link"];
 $title=$_POST["title"];
 $image=urldecode($_POST["image"]);
-$file=$base_fav."flixtor_f.dat";
+$file=$base_fav."hdwatched_s.dat";
 $arr=array();
 $h="";
 if (file_exists($file)) {
@@ -19,60 +19,71 @@ if (file_exists($file)) {
       $tit=trim($a[0]);
       $l=trim($a[1]);
       $img=trim($a[2]);
-      $arr[$tit]["link"]=$l;
-      $arr[$tit]["image"]=$img;
+      $arr[$k]=array($tit,$l,$img);
+      //$arr[$tit]["link"]=$l;
+      //$arr[$tit]["image"]=$img;
     }
   }
 }
+//asort ($arr);
+//print_r ($arr);
+//die();
 if ($mod=="add") {
   $found=false;
   if ($arr) {
   $found=false;
   foreach($arr as $key => $value) {
-    if ($title == $key) {
+    if ($title == $arr[$key][0] && $link == $arr[$key][1]) {
       $found=true;
       break;
     }
   }
+  //echo $found;
+  //die();
   if (!$found) {
-    $arr[$title]["link"]=$link;
-    $arr[$title]["image"]=$image;
-    echo "Am adaugat filmul ".unfix_t(urldecode($title));
+    //$arr[$title]["link"]=$link;
+    //$arr[$title]["image"]=$image;
+    $arr[]=array($title,$link,$image);
+    echo "Am adaugat serialul ".unfix_t(urldecode($title));
   }
-  ksort($arr);
+  //ksort($arr);
   } else {
-    $arr[$title]["link"]=$link;
-    $arr[$title]["image"]=$image;
-    echo "Am adaugat filmul ".unfix_t(urldecode($title));
+    //$arr[$title]["link"]=$link;
+    //$arr[$title]["image"]=$image;
+    $arr[]=array($title,$link,$image);
+    echo "Am adaugat serialul ".unfix_t(urldecode($title));
   }
   $out="";
   //print_r ($arr);
+  asort ($arr);
+  //print_r ($arr);
+  //die();
   foreach($arr as $key => $value) {
-    $out =$out.$key."#separator".$arr[$key]["link"]."#separator".$arr[$key]["image"]."\r\n";
+    $out =$out.$arr[$key][0]."#separator".$arr[$key][1]."#separator".$arr[$key][2]."\r\n";
   }
   //echo $out;
-  if ($found) echo "Filmul a fost adaugat deja!";
+  if ($found) echo "Serialul a fost adaugat deja!";
   file_put_contents($file,$out);
-} else {
+} else { // delete
   $found=false;
   //echo $title;
   if ($arr) {
   $found=false;
   foreach($arr as $key => $value) {
-    if ($title == $key) {
+    if ($title == $arr[$key][0] && $link==$arr[$key][1]) {
       $found=true;
       //echo $title;
       unset ($arr[$key]);
-      echo "Am sters filmul ".unfix_t(urldecode($title));
+      echo "Am sters serialul ".unfix_t(urldecode($title));
       break;
     }
   }
   if ($arr) {
-    ksort($arr);
+    asort($arr);
     $out="";
     //print_r ($arr);
     foreach($arr as $key => $value) {
-      $out =$out.$key."#separator".$arr[$key]["link"]."#separator".$arr[$key]["image"]."\r\n";
+      $out =$out.$arr[$key][0]."#separator".$arr[$key][1]."#separator".$arr[$key][2]."\r\n";
     }
     file_put_contents($file,$out);
    }

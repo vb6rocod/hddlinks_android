@@ -107,7 +107,7 @@ foreach($videos as $video) {
     $l="link=".urlencode(fix_t($link))."&title=".urlencode(fix_t($title))."&from=sultanovic&mod=direct";
   if ($link && $title) {
   if ($n==0) echo '<TR>';
-  if ($flash != "mp")
+  if ($flash == "flash")
   echo '<td class="mp" align="center" width="25%"><a href="'.$link1.'" target="_blank">'.$title.'</a></TD>';
     else
   echo '<td class="mp" align="center" width="25%">'.'<a onclick="ajaxrequest('."'".$l."')".'"'." style='cursor:pointer;'>".''.$title.'</a></TD>';

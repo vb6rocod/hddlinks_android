@@ -106,7 +106,7 @@ foreach($videos as $video) {
 
   if (strpos($link,"/inregistrari") !== false) {
   if ($n == 0) echo "<TR>"."\n\r";
-  if ($flash != "mp")
+  if ($flash == "flash")
   echo '<td class="mp" width="25%"><a href="'.$link1.'" target="_blank">'.$title.'</a></TD>';
   else
   echo '<TD class="mp"  width="25%">'.'<a onclick="ajaxrequest('."'".$l."')".'"'." style='cursor:pointer;'>".''.$title.'</a></TD>';

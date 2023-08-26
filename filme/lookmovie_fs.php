@@ -61,9 +61,10 @@ $lang="";
 $ua="Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/115.0";
 $cookie=$base_cookie."lookmovie.txt";
 $info="";
+$info_m="";
 if ($tip=="movie") {
 $l=$link;
-//$l=str_replace("/view","/watch",$link);
+
 //echo $l;
 //die();
   //$ua = $_SERVER['HTTP_USER_AGENT'];
@@ -74,6 +75,7 @@ $head=array('Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image
 'Accept-Encoding: deflate',
 'Referer: '.$l,
 'Connection: keep-alive');
+
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $l);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
@@ -93,6 +95,7 @@ if (preg_match("/\<section/",$h)) {
   $t2=explode('</section',$t1[1]);
   $info_m=trim(strip_tags("<section".$t2[0]));
 }
+/*
   if (preg_match("/href\=\s*\"\s*(https.*?\/play\/.*?)\"/",$h,$m)) {
     $l1=$m[1];
     $ref=parse_url($l1)['host'];
@@ -103,11 +106,14 @@ if (preg_match("/\<section/",$h)) {
     $ref=parse_url($l1)['host'];
   }
   $l1=str_replace("&amp;","&",$l1);
+*/
   //echo $l1;
 ////////////////////////////////////////  check threat-protection
 // check [url] => https://slavillibyer.monster/threat-protection?t=4a857e36ab6aea4b1701c5cbf8b4c2a4c0986585
+$l=str_replace("/view","/play",$link);
+$ref="lookmovie2.to";
   $ch = curl_init();
-  curl_setopt($ch, CURLOPT_URL, $l1);
+  curl_setopt($ch, CURLOPT_URL, $l);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
   curl_setopt($ch, CURLOPT_USERAGENT, $ua);
   curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie);
@@ -121,6 +127,8 @@ if (preg_match("/\<section/",$h)) {
   $h = curl_exec($ch);
   $info = curl_getinfo($ch);
   curl_close($ch);
+
+
   $l=$info['url'];
   if (preg_match("/threat\-protection/",$l)) {
     $csrf="";
@@ -192,7 +200,7 @@ if (preg_match("/\<section/",$h)) {
   curl_setopt($ch, CURLOPT_URL, $l);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
   curl_setopt($ch, CURLOPT_USERAGENT, $ua);
-  curl_setopt($ch, CURLOPT_REFERER,$l1);
+  curl_setopt($ch, CURLOPT_REFERER,$l);
   curl_setopt($ch, CURLINFO_HEADER_OUT, true);
   curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
   curl_setopt($ch, CURLOPT_TIMEOUT, 25);
@@ -209,6 +217,7 @@ if (preg_match("/\<section/",$h)) {
   //$x=json_decode($h,1);
   //print_r ($x);
   if (isset($x['subtitles'])) {
+  //print_r ($x['subtitles']);
   $srt1=array();
   $s=array();
   $srt="";
@@ -450,7 +459,7 @@ if ($tip=="movie")
   $openlink=urlencode(fix_t($tit3));
 else
   $openlink=urlencode(fix_t($tit.$tit2));
- if ($flash != "mp")
+ if ($flash == "flash")
    echo '<TD align="center" colspan="4"><a id="viz" onclick="'."openlink1('".$openlink."')".'"'." style='cursor:pointer;'>".'VIZIONEAZA !</a></td>';
  else
    echo '<TD align="center" colspan="4"><a id="viz" onclick="'."openlink('".$openlink."')".'"'." style='cursor:pointer;'>".'VIZIONEAZA !</a></td>';

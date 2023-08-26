@@ -67,7 +67,7 @@ $ua = 'Mozilla/5.0 (Windows NT 10.0; rv:88.0) Gecko/20100101 Firefox/88.0';
   curl_setopt($ch, CURLOPT_TIMEOUT, 25);
   $html = curl_exec($ch);
   curl_close($ch);
-  //echo $html;
+  $html=str_replace(urldecode("%CE"),"O",$html);
 $videos = explode('<span class="mobfoot2n2">', $html);
 unset($videos[0]);
 $videos = array_values($videos);
@@ -100,6 +100,12 @@ $n=0;
     $ora=trim(strip_tags($t2[0]));
     } else {
      $ora="0:0";
+    }
+    if (preg_match("/appt34live\"\>/",$vid)) {
+      $t1=explode('appt34live">',$vid);
+      $t2=explode('<',$t1[1]);
+      $min=$t2[0];
+      $ora='<font color="red">'.$ora." (".$min.")</font>";
     }
     $t1=explode('title="',$vid);
     $t2=explode('"',$t1[1]);

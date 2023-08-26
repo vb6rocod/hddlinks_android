@@ -229,7 +229,7 @@ $host=parse_url($l)['host'];
   curl_close($ch);
 
 $r=array();
-$videos = explode('data-item-id="', $html);
+$videos = explode('<li class="item"', $html);
 unset($videos[0]);
 $videos = array_values($videos);
 foreach($videos as $video) {
@@ -241,12 +241,12 @@ foreach($videos as $video) {
   $title=$t3[0];
   $title = trim(strip_tags($title));
   $title = prep_tit($title);
-  $t1 = explode('data-original="', $video);
+  $t1 = explode('data-webp="', $video);
   $t2 = explode('"', $t1[1]);
   $image = $t2[0];
   if (strpos($image,"http") === false) $image="https:".$image;
-  $t1=explode('class="icon-time">',$video);
-  $t3=explode("</span",$t1[1]);
+  $t1=explode('class="duration">',$video);
+  $t3=explode("<",$t1[1]);
   $durata=trim($t3[0]);
   $durata = preg_replace("/\n|\r/"," ",strip_tags($durata));
   if ($durata) $title=$title." (".$durata.')';
@@ -263,7 +263,7 @@ for ($k=0;$k<$c;$k++) {
   $fav_link="mod=add&title=".urlencode(fix_t($title))."&link=".urlencode($link)."&image=".urlencode($image)."&width=".$width."&height=".$height."&file=filme_link.php";
   if (true) {
   if ($n==0) echo '<TR>'."\r\n";
-  if ($tast == "NU" && $flash !="mp") {
+  if ($tast == "NU" && $flash =="flash") {
    if ($has_fs=="no")
     $link_f='adult_link.php?link='.urlencode($link).'&title='.urlencode(fix_t($title)).'&image='.$image;
    else
@@ -272,7 +272,7 @@ for ($k=0;$k<$c;$k++) {
     <img id="myLink'.$w.'" src="'.$image.'" width="'.$width.'" height="'.$height.'"><BR>'.$title.'</a>'."\r\n";
     echo '<a onclick="add_fav('."'".$fav_link."'".')" style="cursor:pointer;">*</a>'."\r\n";
     echo '</TD>'."\r\n";
-  } else if ($tast == "NU" && $flash == "mp") {
+  } else if ($tast == "NU" && $flash <> "flash") {
    if ($has_fs=="yes") {
     $link_f='../filme/filme_link.php?file='.urlencode($link).'&title='.urlencode(fix_t($title)).'&image='.$image;
     echo '<td class="mp" width="25%"><a class="imdb" href="'.$link_f.'" id="myLink'.$w.'" target="_blank">
@@ -286,7 +286,7 @@ for ($k=0;$k<$c;$k++) {
     echo '<a onclick="add_fav('."'".$fav_link."'".')" style="cursor:pointer;">*</a>'."\r\n";
     echo '</TD>'."\r\n";
    }
-  } else if ($tast == "DA" && $flash !="mp") {
+  } else if ($tast == "DA" && $flash =="flash") {
    if ($has_fs=="no")
     $link_f='adult_link.php?link='.urlencode($link).'&title='.urlencode(fix_t($title)).'&image='.$image;
    else

@@ -384,13 +384,14 @@ else
      $l="https:".$m[1][$k];
    else
     $l="https://".$host."/src/".$m[1][$k];
-    //echo $l;
+    //echo "\n".$l."\n";
     curl_setopt($ch, CURLOPT_URL, $l);
     $h = curl_exec($ch);
     //echo $h;
-    preg_match("/location\:\s+(.+)/i",$h,$m1);
+    if (preg_match("/location\:\s+(.+)/i",$h,$m1)) {
     $r[]=trim($m1[1]);
     $s[]="v. ".parse_url(trim($m1[1]))['host'];
+    }
    }
    curl_close ($ch);
    //die();
@@ -612,7 +613,7 @@ if ($tip=="movie")
 else
   $openlink=urlencode(fix_t($tit.$tit2));
 
- if ($flash != "mp")
+ if ($flash =="flash")
    echo '<TD align="center" colspan="4"><a id="viz" onclick="'."openlink1('".$openlink."')".'"'." style='cursor:pointer;'>".'VIZIONEAZA !</a></td>';
  else
    echo '<TD align="center" colspan="4"><a id="viz" onclick="'."openlink('".$openlink."')".'"'." style='cursor:pointer;'>".'VIZIONEAZA !</a></td>';

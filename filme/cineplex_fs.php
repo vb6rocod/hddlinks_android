@@ -258,7 +258,7 @@ echo '<TR>';
 foreach ($arr as $key => $value) {
   //print_r ($value);
   //echo $key;
-  if ($flash != "mp") {
+  if ($flash == "flash") {
   $openload=$arr[$key]["label"].'|Part1';
   $openlink=$openlink1."&q=".$openload;
   echo '<TD align="center"><font size="4"><b><a href="#" onclick="openlink('."'".$openlink."'".');return false;">'.$openload.'</a></b></font></td>';
@@ -282,7 +282,7 @@ echo '<TR>';
 $w=0;
 foreach ($arr as $key => $value) {
   //print_r ($value);
-  if ($flash != "mp") {
+  if ($flash == "flash") {
   $openload=$arr[$key]["label"];
   $openlink=$openlink1."&q=".$openload;
   echo '<TD align="center"><font size="4"><b><a id="v'.$w.'" href="#" onclick="openlink('."'".$openlink."'".');return false;">'.$openload.'</a></b></font></td>';

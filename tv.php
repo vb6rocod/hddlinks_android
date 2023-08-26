@@ -184,12 +184,7 @@ echo '
 <table border="1" align="center" width="90%"><TR><TD>
 Apasati tasta 1 pentru a sterge playlist-ul selectat</TD></TR></TABLE>';
 }
-echo '<BR><table border="1" align="center" width="90%"><TR><TD>';
-echo 'Pentru vizionare stream-uri "acestream" instalati Ace Stream Media din Google Play sau de <a href="http://www.mediafire.com/file/8uyifuly87gbuwv/ace-stream-media-3-1-31-0.apk/file">aici</a>.<BR>
-Setati la Output format pe "original".<BR>
-Pentru stream-uri "sop" instalati Sopcast sau "sop to http" recomandat versiunea 5.41.<BR>
-Puteti descarca de <a href="http://www.mediafire.com/file/d9s46xoewb604ds/Sop_to_Http-5.41.apk/file">aici.</a>.<BR>
-Debifati "auto restart player".</TD></TR></TABLE>';
+
 ?>
 </BODY>
 </HTML>

@@ -33,10 +33,11 @@ echo '<h2>'.$tit.'</h2>';
 $cookie=$base_cookie."lookmovie.txt";
 
 $ua="Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/115.0";
- //$link=str_replace("/view/","/play/",$link);
+// $link=str_replace("/view/","/play/",$link);
 //$link=str_replace("/view","/watch",$link);
 //echo $link;
 //print_r ($head);
+/*
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $link);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
@@ -62,9 +63,12 @@ $ua="Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/
     $ref=parse_url($l1)['host'];
   }
   $l1=str_replace("&amp;","&",$l1);
+  */
   //echo $l1;
 ////////////////////////////////////////  check threat-protection
 // check [url] => https://slavillibyer.monster/threat-protection?t=4a857e36ab6aea4b1701c5cbf8b4c2a4c0986585
+ $l1=str_replace("/view/","/play/",$link);
+ $ref="lookmovie2.to";
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $l1);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);

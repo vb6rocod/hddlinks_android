@@ -367,6 +367,7 @@ $head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gec
   $s[]=parse_url($l)['host'];
   ///////////////////////////////
   $l="https://embed.smashystream.com/playere.php?imdb=".$imdb;
+  //echo $l;
   $ua="Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/112.0";
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL,$l);
@@ -379,6 +380,8 @@ $head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gec
   $h = curl_exec($ch);
   curl_close($ch);
   //echo $h;
+   //preg_match_all("/data\-id\=\"(http[^\"]+)/",$h,$m);
+   //print_r ($m[1]);
   if (preg_match("/\/f\w+\.php/",$h,$m)) {
    $l="https://embed.smashystream.com".$m[0]."?tmdb=".$link;
    $r[]=$l;
@@ -415,6 +418,8 @@ $head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gec
   curl_setopt($ch, CURLOPT_TIMEOUT, 15);
   $h = curl_exec($ch);
   curl_close($ch);
+  //preg_match_all("/data\-id\=\"(http[^\"]+)/",$h,$m);
+  //print_r ($m[1]);
   if (preg_match("/\/f\w+\.php[^\"]+/",$h,$m)) {
    $l="https://embed.smashystream.com".$m[0];
    $r[]=$l;
@@ -510,7 +515,7 @@ if ($tip=="movie")
 else
   $openlink=urlencode(fix_t($tit.$tit2));
 
- if ($flash != "mp")
+ if ($flash == "flash")
    echo '<TD align="center" colspan="4"><a id="viz" onclick="'."openlink1('".$openlink."')".'"'." style='cursor:pointer;'>".'VIZIONEAZA !</a></td>';
  else
    echo '<TD align="center" colspan="4"><a id="viz" onclick="'."openlink('".$openlink."')".'"'." style='cursor:pointer;'>".'VIZIONEAZA !</a></td>';

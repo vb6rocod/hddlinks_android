@@ -294,6 +294,57 @@ if ($tip=="movie")
   echo $h;
   */
 }
+if (preg_match("/hdwatched\.xyz/",$filelink)) {
+  $head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/116.0',
+  'Accept: image/avif,image/webp,*/*',
+  'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
+  'Accept-Encoding: deflate',
+  'Alt-Used: www.hdwatched.xyz',
+  'Connection: keep-alive',
+  'Sec-Fetch-Dest: image',
+  'Sec-Fetch-Mode: no-cors',
+  'Sec-Fetch-Site: same-origin');
+  $ch = curl_init();
+  curl_setopt($ch, CURLOPT_URL, $filelink);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+  curl_setopt($ch, CURLOPT_HTTPHEADER, $head);
+  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 25);
+  $h = curl_exec($ch);
+  curl_close($ch);
+  if (preg_match("/source\s+src\=\"([^\"]+)\"/",$h,$m))
+   $link=$m[1];
+  if ($link && $flash == "flash2") {
+  $head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/116.0',
+  'Accept: video/webm,video/ogg,video/*;q=0.9,application/ogg;q=0.7,audio/*;q=0.6,*/*;q=0.5',
+  'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
+  'Range: bytes=0-',
+  'Connection: keep-alive',
+  'Sec-Fetch-Dest: video',
+  'Sec-Fetch-Mode: no-cors',
+  'Sec-Fetch-Site: cross-site');
+  $ch = curl_init();
+  curl_setopt($ch, CURLOPT_URL, $link);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+  curl_setopt($ch, CURLOPT_HTTPHEADER, $head);
+  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+  curl_setopt($ch, CURLOPT_NOBODY,1);
+  curl_setopt($ch, CURLOPT_HEADER,1);
+  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 25);
+  $h = curl_exec($ch);
+  curl_close($ch);
+  if (preg_match("/location\:\s*(.+)/i",$h,$m))
+   $link=trim($m[1]);
+   //$link .="|User-Agent=".urlencode("Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/116.0");
+   //$link .="&Accept=".urlencode("video/webm,video/ogg,video/*;q=0.9,application/ogg;q=0.7,audio/*;q=0.6,*/*;q=0.5");
+   //$link .="&Range=".urlencode("bytes=0-");
+   //$link .="&Referer=".urlencode("https://yandex.net/")."&Origin=".urlencode("https://yandex.net");
+  }
+}
 if (preg_match("/vidsrc\.me/",$filelink)) {
   $ua="Mozilla/5.0 (Windows NT 10.0; rv:88.0) Gecko/20100101 Firefox/88.0";
   $ch = curl_init($filelink);
@@ -398,13 +449,13 @@ if (strpos($filelink,"embed.smashystream.com") !== false) {
   $h=str_replace("\\","",$h);
   //echo $h;
   if (preg_match("/imw\.php|f\w+\.php/",$filelink)) {
-
+  //echo $h;
   //$file=$r['file'];
-  if (preg_match("/\[\w+\]([^\,]+)\,/",$h,$l))
-   $link=$l[1];
+  if (preg_match("/\[(1080|720|480|360)\]([^\,]+)\,/",$h,$l))
+   $link=$l[2];
   else
    $link="";
-
+  //print_r ($l);
   $sub=explode(",",$h);
   $s=preg_grep("/\[(english|romanian).*\](http[^\[]+\.vtt)/i",$sub);
   $srt="";
@@ -7390,6 +7441,8 @@ $head=array('Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image
       //$link .="&Accept= ".urlencode("*/*");
       $link .="&Accept-Language=".urlencode("ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2");
       //$link .="&Accept-Encoding=".urlencode("gzip, deflate, br");
+      $link .="&Access-Control-Request-Method=GET";
+      $link .="&Access-Control-Request-Headers=dnt-f";
       $link .="&Origin=".urlencode("https://vidsrc.stream");
       $link .="&Referer=".urlencode("https://vidsrc.stream/");
   }
@@ -16634,8 +16687,23 @@ if ($flash== "mpc") {
   // &Accept-Language=".urlencode("ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2");
   // ,"Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2"
   //$c = $mpc." ".'"'.$movie.'"'.' --fullscreen --user-agent="'.$ua.'" --http-header-fields="Referer: '.$host.'","Origin: '.$host.'" --sub-file="'.$base_sub.$srt_name.'"';
-  $c = $mpc." ".' --volume=100 --fullscreen'.$out1.$out.$out2.' "'.$movie.'"';
-  //$c .=" --log-file=output.txt";
+  //$movie=urldecode($movie);
+  //$movie=str_replace(" ","+",$movie);
+  //$movie=str_replace("https:","",$movie);
+  //$movie=urlencode($movie);
+  //$movie=str_replace("%3A",":",$movie);
+  //$movie=str_replace("%2C",urldecode("%2C"),$movie);
+  //$movie=str_replace("mime=video%2Fmp4","",$movie);
+  //$movie=str_replace("%3D","=",$video);
+  //$movie=urldecode($movie);
+  $movie=str_replace("%","%%",$movie);
+  $c = $mpc." ".'"'.$movie.'"'.' --volume=100 --fullscreen'.$out1.$out.$out2;
+  $c .=" --force-window=immediate";
+  //exec ($c);
+  //echo '<script>setTimeout(function(){ window.close(); }, 500);</script>';
+  //die();
+  //$c = $mpc." ".'"'.$movie.'"';
+  $c .=" --log-file=".dirname($mpc)."/output.txt";
   //echo $c;
   //die();
 
@@ -16650,9 +16718,26 @@ if ($flash== "mpc") {
   //$output = shell_exec($c);
   //print_r ($output);
   //echo '<script>setTimeout(function(){ window.close(); }, 500);</script>';
-  pclose(popen($c,"r"));
-  echo '<script>setTimeout(function(){ window.close(); }, 500);</script>';
-  //echo '<script type="text/javascript">window.close();</script>';
+  //pclose(popen($c,"r"));
+  //echo '<script>setTimeout(function(){ window.close(); }, 500);</script>';
+  //die();
+  $mpv_path=dirname($mpc)."/run_in_mpv.bat";
+  $out='@echo off
+title: running mpv
+start '.$c;
+//file_put_contents($mpv_path,$out);
+$handle = fopen($mpv_path, "w");
+fwrite($handle,$out);
+fclose($handle);
+$link="mpv://".$movie."#";
+echo $link;
+die();
+echo '<script>
+let myWindow;
+ myWindow = window.open("mpv://run");
+ myWindow.close();
+ window.close();
+ </script>';
   die();
 } elseif ($flash == "direct") {
    $movie_file=substr(strrchr($movie, "/"), 1);
@@ -16850,13 +16935,7 @@ player.setup({
 jwplayer().addButton("../download.svg", "Download Video", function() {
     window.location.href = player.getPlaylistItem()["file"];
 }, "download");
-jwplayer().addButton("../mpv.svg", "Open with mpv", function() {
-    jwplayer().stop();
-    window,open("'.$filelink_mpc.'");
-}, "mpv");
-player.on("error", function() {
-  window,open("'.$filelink_mpc.'");
-});
+
  </script>';
 
 echo '

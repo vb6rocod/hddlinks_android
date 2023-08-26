@@ -335,6 +335,7 @@ $out=$t2[0];
   $t2=explode("'",$t1[1]);
   $out=$t2[0];
 } else if (preg_match("/drtuber\.com|proporn\.com/",$host)) {
+//echo $h;
   $r=json_decode($h,1);
   if (isset($r["files"])) {
   if (isset($r["files"]["hq"]))
@@ -847,13 +848,15 @@ $head=array('Accept: */*',
   $out=$m[1][0];
   $out=str_replace("\\","",$out);
   //echo $out;
-  if (strpos($out,"http") === false && $out) $out="http:".$out;
+  //if (strpos($out,"http") === false && $out) $out="http:".$out;
   //$out=str_replace("https","http",$out);
+  $out="https://www.redtube.com".$out;
       $ch = curl_init();
       curl_setopt($ch, CURLOPT_URL, $out);
       curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
       curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 10.0; WOW64; rv:46.0) Gecko/20100101 Firefox/46.0');
       curl_setopt($ch, CURLOPT_REFERER, "https://www.redtube.com");
+      curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
       curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
       curl_setopt($ch, CURLOPT_TIMEOUT, 15);
       $ret = curl_exec($ch);
@@ -1038,8 +1041,11 @@ $head=array('Accept: */*',
   //echo $h;
   $t1=explode('videoUrl":"',$h);
   $t2=explode('"',$t1[1]);
-  $l="https://youporn.com".str_replace("\\","",$t2[0]);
+  $l=str_replace("\\","",$t2[0]);
   //echo $l;
+  $out=$l;
+  if ($flash <> "flash")
+    $out .="|Referer=".urlencode("https://www.youporn.com/")."&Origin=".urlencode("https://www.youporn.com");
   $head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:75.0) Gecko/20100101 Firefox/75.0',
   'Accept: application/json, text/plain, */*',
   'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
@@ -1057,9 +1063,10 @@ $head=array('Accept: */*',
     )
   );
   $context  = stream_context_create($options);
-  $h = @file_get_contents($l, false, $context);
-  $x=json_decode($h,1);
-  $out=$x[0]['videoUrl'];
+  //$h = @file_get_contents($l, false, $context);
+  //echo $h;
+  //$x=json_decode($h,1);
+  //$out=$x[0]['videoUrl'];
 } else if (preg_match("/zbporn\.com/",$host)) {
 //echo "===".$h;
   $t1=explode("video_url: '",$h);
@@ -1113,13 +1120,20 @@ if ($flash=="mpc") {
   $out2="";
   if ($srt_name)
    $out2=' --sub-file="'.$base_sub.$srt_name.'"';
+  $movie=str_replace("%","%%",$movie);
   $c = $mpc." ".'"'.$movie.'"'.' --volume=100 --fullscreen'.$out1.$out.$out2;
-  //echo $c;
-  //die();
-  echo '<script>setTimeout(function(){ window.close(); }, 500);</script>';
-  pclose(popen($c,"r"));
+  $c .=" --force-window=immediate";
 
-  die();
+  $mpv_path=dirname($mpc)."/run_in_mpv.bat";
+  $out='@echo off
+title: running mpv
+start '.$c;
+//file_put_contents($mpv_path,$out);
+$handle = fopen($mpv_path, "w");
+fwrite($handle,$out);
+fclose($handle);
+$link="mpv://".$movie."#";
+echo $link;
 } elseif ($flash == "direct") {
 header('Content-type: application/vnd.apple.mpegURL');
 header('Content-Disposition: attachment; filename="video/mp4"');
@@ -1189,13 +1203,6 @@ player.addButton(
   //And finally, here we set the unique ID of the button itself.
   "download"
 );
-jwplayer().addButton("../mpv.svg", "Open with mpv", function() {
-    jwplayer().stop();
-    window,open("'.$filelink_mpc.'");
-}, "mpv");
-player.on("error", function() {
-  window,open("'.$filelink_mpc.'");
-});
 </script>
 </div></body>
 </HTML>

@@ -14,6 +14,7 @@ $width="200px";
 $height="278px";
 $last_good="https://fsonline.to";
 $last_good="https://www4.fsonline.to";
+$last_good="https://www1.fsonline.app";
 $host=parse_url($last_good)['host'];
 /* ==================================================== */
 $has_fav="no";
@@ -206,7 +207,7 @@ $ua = $_SERVER['HTTP_USER_AGENT'];
     $t1=explode('href="',$video);
     $t2=explode('"',$t1[1]);
     $link1=$t2[0];
-    $link="https://fsonline.to/wp-admin/admin-ajax.php?id=".$id;
+    $link=$last_good."/wp-admin/admin-ajax.php?id=".$id;
     $t1=explode('alt="',$video);
     $t2=explode('"',$t1[1]);
     $title=trim($t2[0]);
@@ -228,7 +229,7 @@ $ua = $_SERVER['HTTP_USER_AGENT'];
     $t2=explode('"',$t1[1]);
     $link1=$t2[0];
 
-    $link="https://fsonline.to/wp-admin/admin-ajax.php?id=".$id;
+    $link=$last_good."/wp-admin/admin-ajax.php?id=".$id;
     $t1=explode('alt="',$video);
     $t2=explode('"',$t1[1]);
     $title=trim($t2[0]);

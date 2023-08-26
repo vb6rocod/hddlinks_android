@@ -15,6 +15,7 @@ $height="278px";
 $last_good="https://88.210.14.111";
 $last_good="https://77.105.142.75";
 $last_good="https://tv.idlixprime.com";
+//$last_good="https://tv.idlixplus.com";
 $host=parse_url($last_good)['host'];
 /* ==================================================== */
 $has_fav="yes";

@@ -35,6 +35,8 @@ $l="https://github.com/iptv-org/iptv";
 // https://iptv-org.github.io/api/streams.json
 // https://iptv-org.github.io/api/guides.json
 // https://iptv-org.github.io/api/channels.json
+//$l="https://iptv-org.github.io/iptv/index.country.m3u";
+//$l="https://iptv-org.github.io/iptv/index.country.m3u";
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $l);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
@@ -47,6 +49,10 @@ $l="https://github.com/iptv-org/iptv";
   curl_setopt($ch, CURLOPT_TIMEOUT, 15);
   $html = curl_exec($ch);
   curl_close($ch);
+
+  $t1=explode('align="left">Country',$html);
+  $t2=explode('</table>',$t1[1]);
+  $html=$t2[0];
   //echo $html;
 /*
 $m3uFile=explode("\n",$html);
@@ -71,16 +77,17 @@ foreach($m3uFile as $key => $line) {
  }
 }
 */
-  $videos = explode('<g-emoji', $html);
+  $videos = explode('<tr><td>', $html);
   unset($videos[0]);
   $videos = array_values($videos);
   foreach($videos as $video) {
-   $t1=explode('</g-emoji>',$video);
-   $t2=explode('<',$t1[1]);
-   $title=trim($t2[0]);
+   $t1=explode('</td>',$video);
+   //$t2=explode('<',$t1[1]);
+   $title=trim($t1[0]);
    $t1=explode('<code>',$video);
    $t2=explode('</code',$t1[1]);
    $file=$t2[0];
+   if (!preg_match("/subdivisions/",$file)) {
     $link="playlist.php?title=".urlencode($title)."&link=".$file;
     if ($title) {
 	if ($n == 0) echo "<TR>"."\n\r";
@@ -91,6 +98,7 @@ foreach($m3uFile as $key => $line) {
      $n=0;
     }
  }
+  }
   }
  if ($n<5) echo "</TR>"."\n\r";
  echo '</table>';

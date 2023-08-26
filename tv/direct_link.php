@@ -631,6 +631,8 @@ if ($from=="ustvgo") {
   }
 }
 if ($from=="primaplay") {
+//echo $link;
+  $link=str_replace("/play/","/show/",$link);
  $ua="Mozilla/5.0 (Windows NT 10.0; rv:87.0) Gecko/20100101 Firefox/87.0";
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $link);
@@ -642,9 +644,19 @@ if ($from=="primaplay") {
   curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
   curl_setopt($ch, CURLOPT_TIMEOUT, 25);
   $h = curl_exec($ch);
-  $t1=explode("var videoSrc = '",$h);
-  $z =  count($t1) -1;
-  $t2=explode("'",$t1[$z]);
+  //echo $h;
+  //die();
+  $t1=explode('class="container-video">',$h);
+  $t2=explode('src="',$t1[1]);
+  $t3=explode('"',$t2[1]);
+  $l=$t3[0];
+  //echo $l;
+  curl_setopt($ch, CURLOPT_URL, $l);
+  $h1 = curl_exec($ch);
+  curl_close($ch);
+  //echo $h1;
+  $t1=explode('data-playurl","',$h1);
+  $t2=explode('"',$t1[1]);
   $link=$t2[0];
 }
 if ($from=="stream4free") {
@@ -2028,14 +2040,8 @@ if (preg_match("/android|ipad/i",$user_agent) && preg_match("/chrome|firefox|mob
 $out=$link;
 //$flash="flash";
 //$out="http://127.0.0.1:8080/scripts/filme/lava.m3u8|Referer=https%3A%2F%2Ftr.vidlink.org&Origin=https%3A%2F%2Ftr.vidlink.org";
-if (isset($_GET['flash'])) $flash="mpc";
-if ($from=="arconaitv1") {
-header('Accept: */*');
-header('X-CustomHeader: videojs');
-header('Origin: https://www.arconaitv.us');
-header('Referer: https://www.arconaitv.us/stream.php?id=157');
-header("Location: $out");
-} else if ($flash=="mpc") {
+
+if ($flash=="mpc") {
   $mpc=trim(file_get_contents($base_pass."vlc.txt"));
 
   $ua=$_SERVER['HTTP_USER_AGENT'];
@@ -2074,11 +2080,25 @@ header("Location: $out");
   $out2="";
   if ($srt_name)
    $out2=' --sub-file="'.$base_sub.$srt_name.'"';
+  $movie=str_replace("%","%%",$movie);
   $c = $mpc." ".'"'.$movie.'"'.' --volume=100 --fullscreen'.$out1.$out.$out2;
-  echo '<script>setTimeout(function(){ window.close(); }, 500);</script>';
-  pclose(popen($c,"r"));
+  $c .=" --force-window=immediate";
 
-  die();
+  $mpv_path=dirname($mpc)."/run_in_mpv.bat";
+  $out='@echo off
+title: running mpv
+start '.$c;
+//file_put_contents($mpv_path,$out);
+$handle = fopen($mpv_path, "w");
+fwrite($handle,$out);
+fclose($handle);
+$link="mpv://".$movie."#";
+echo $link;
+die();
+  //echo '<script>window.close();</script>';
+  //echo '<script>setTimeout(function(){ window.close(); }, 500);</script>';
+  //pclose(popen($c,"r"));
+
 } elseif ($flash == "mp") {
 $mod="direct";
 if (preg_match("/\.m3u8/",$out)) {
@@ -2136,30 +2156,7 @@ $c="intent:".$out."#Intent;type=video/mp4;package=com.mxtech.videoplayer.".$mx."
 
 echo $c;
 die();
-} elseif ($flash == "direct") {
-if ($mod=="direct") {
-header('Content-type: application/vnd.apple.mpegURL');
-header("Location: $out");
-} else {
-$out1="#EXTINF:-1, ".$title."\r\n".$out;
-//$out1="#EXTM3U"."\r\n"."#EXTINF:-1, ".$title."\r\n".$out;
-$out1="http://127.0.0.1:8080/scripts/subs/out.m3u";
-header('Content-type: application/vnd.apple.mpegURL');
-header("Location: $out1");
-}
-} elseif ($flash == "chrome") {
-$mod="direct";
-if (!preg_match("/http/",$out)) $mod="indirect";
-if ($mod=="direct") {
-$c="intent:".$out."#Intent;type=video/mp4;package=com.mxtech.videoplayer.".$mx.";S.title=".urlencode($title).";end";
-} else {
-$out1="#EXTM3U"."\r\n"."#EXTINF:-1, ".$title."\r\n".$out;
-file_put_contents($base_sub."out.m3u",$out1);
-$out1="http://127.0.0.1:8080/scripts/subs/out.m3u";
-  $c="intent:".$out1."#Intent;package=com.mxtech.videoplayer.".$mx.";S.title=".urlencode($title).";end";
-  header('Content-type: application/vnd.apple.mpegURL');
-  header("Location: $c");
-}
+
 } else {
 $out=str_replace("&amp;","&",$out);
 if (strpos($out,"realitatea") !== false)
@@ -2233,13 +2230,6 @@ player.addButton(
   //And finally, here we set the unique ID of the button itself.
   "download"
 );
-jwplayer().addButton("../mpv.svg", "Open with mpv", function() {
-    jwplayer().stop();
-    window,open("'.$filelink_mpc.'");
-}, "mpv");
-player.on("error", function() {
-  window,open("'.$filelink_mpc.'");
-});
 </script>
 </BODY>
 </HTML>

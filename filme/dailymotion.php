@@ -159,7 +159,7 @@ while (true) {
     $l="link=".urlencode(fix_t($link))."&title=".urlencode(fix_t($title));
   //if ($tip=="shortfilms") {
   if ($n==0) echo '<TR>';
-  if ($flash != "mp") {
+  if ($flash == "flash") {
   echo '<td class="mp" align="center" width="25%"><a class ="imdb" id="myLink'.($w*1).'" href="'.$link1.'" target="_blank" onmousedown="isKeyPressed(event)">
   '.$title.'<input type="hidden" id="imdb_myLink'.($w*1).'" value="'.$val_prog.'"></a>
   <a onclick="prog('."'".$val_prog."')".'"'." style='cursor:pointer;'>"." *".'</a>

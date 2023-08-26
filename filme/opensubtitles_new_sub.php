@@ -8,6 +8,17 @@ if (file_exists($base_pass."opensubtitlesc.txt")) {
 } else {
  $key="";
 }
+if (file_exists($base_pass."opensubtitles.txt")) {
+ $h=file_get_contents($base_pass."opensubtitles.txt");
+ $t1=explode("|",$h);
+ $user=$t1[0];
+ $pass=$t1[1];
+ $user_ag=$t1[2];
+} else {
+ $user="";
+ $pass="";
+ $user_ag="";
+}
 $ua = $_SERVER['HTTP_USER_AGENT'];
 $link_down="";
   $d=array(
@@ -22,6 +33,7 @@ $head=array('Accept: */*',
 'Referer: https://opensubtitles.stoplight.io/',
 'Content-Type: application/json',
 'Api-Key: '.$key,
+'User-Agent: '.$user_ag,
 'Origin: https://opensubtitles.stoplight.io',
 'Connection: keep-alive');
   $l="https://api.opensubtitles.com/api/v1/download";
