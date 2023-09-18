@@ -175,6 +175,7 @@ foreach($arr as $key => $value) {
     $image=urldecode($arr[$key][2]);
     $tit_imdb=$title;
     //$image=$host.parse_url($image)['path'];
+    $link=$host.parse_url($link)['path'];
     $year="";
   $rest = substr($title, -6);
   if (preg_match("/\((\d+)\)/",$rest,$m)) {

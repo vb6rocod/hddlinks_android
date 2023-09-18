@@ -6,6 +6,10 @@ $tip=$_GET["tip"];
 $sez=$_GET["sez"];
 $ep=$_GET["ep"];
 $imdbid=$_GET["imdb"];
+if (isset($_GET['year']))
+  $year=$_GET['year'];
+else
+  $year="";
 if (isset($_GET["ep_tit"]))
  $ep_tit=unfix_t(urldecode($_GET["ep_tit"]));
 else
@@ -88,6 +92,12 @@ function changeserver(link) {
 <H2></H2>
 <?php
 $year="";
+$tt=$base_cookie."tt.txt";
+if (file_exists($tt)) {
+ $imdbid=file_get_contents($tt);
+ $imdbid=str_replace("tt","",$imdbid);
+ //echo $imdbid;
+}
 if (!$imdbid) {
   if ($tip == "series") {
     if (!$year)
@@ -101,6 +111,7 @@ if (!$imdbid) {
      $find=$title." movie ".$year;
   }
   $url = "https://www.google.com/search?q=imdb+" . rawurlencode($find);
+  //https://www.imdb.com/find/?q=lost%20in%20space%20tv%20series%20(1998)&s=tt&ttype=tv&ref_=fn_tv
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $url);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
@@ -111,6 +122,7 @@ if (!$imdbid) {
   curl_setopt($ch, CURLOPT_TIMEOUT, 15);
   $h = curl_exec($ch);
   curl_close($ch);
+  //echo $h;
   if (preg_match('/https:\/\/www.imdb.com\/title\/(tt\d+)/ms', $h, $match))
    $imdbid=str_replace("tt","",$match[1]);
 }
@@ -232,17 +244,19 @@ for ($m=1;$m<$k;$m++) {
 }
 echo '<TD></TD></TR>';
 foreach ($subs as $key => $val) {
+  /*
   if ($subs[$key][4]) {
    if ($subs[$key][2])
      $display=$subs[$key][0]." - ".$subs[$key][2]." (".$subs[$key][4].")";
    else
      $display=$subs[$key][0]." - ".$subs[$key][3]." (".$subs[$key][4].")";
   } else {
+  */
    if ($subs[$key][2])
     $display=$subs[$key][0]." - ".$subs[$key][2];
    else
     $display=$subs[$key][0]." - ".$subs[$key][3];
-  }
+  //}
   echo '<TR><TD colspan="'.($k-1).'"><font size="4"><a id="myLink'.($n*1).'" href="#" onclick="changeserver('."'".$subs[$key][1]."'".');return false;">'.$display.'</a></font></TD><TD>'.($n+1).'</TD></TR>'."\r\n";
   $n++;
   //if ($n >9)

@@ -6,6 +6,10 @@ $tip=$_GET["tip"];
 $sez=$_GET["sez"];
 $ep=$_GET["ep"];
 $imdbid=$_GET["imdb"];
+if (isset($_GET['year']))
+  $year=$_GET['year'];
+else
+  $year="";
 if (isset($_GET["ep_tit"]))
  $ep_tit=unfix_t(urldecode($_GET["ep_tit"]));
 else
@@ -80,7 +84,13 @@ function changeserver(link) {
 <?php
 
 //echo $sub_link ="from=".$from."&tip=".$tip."&sez=".$sez."&ep=".$ep."&imdb=".$imdbid."&title=".$title."&link=".$link;
-$year="";
+//$year="";
+$tt=$base_cookie."tt.txt";
+if (file_exists($tt)) {
+ $imdbid=file_get_contents($tt);
+ $imdbid=str_replace("tt","",$imdbid);
+ //echo $imdbid;
+}
 if (!$imdbid) {
   if ($tip == "series") {
     if (!$year)

@@ -221,11 +221,15 @@ if($tip=="release") {
     $l="https://xhamster.com/search.php?q=".$search."&qcat=video";
 }
 $host=parse_url($l)['host'];
+$ua="Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/116.0";
+$head=array('Cookie: lang=ro; contest_region=europe; prs=--; ss=%7B%22domainAccessibility%22%3Atrue%2C%22botDetection%22%3Anull%7D; parental-control=yes; cookie_accept=%7B%22e%22%3A1%2C%22n%22%3A1%2C%22tp%22%3A1%7D;');
+
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $l);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-  curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 10.0; rv:55.0) Gecko/20100101 Firefox/55.0');
+  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
   curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+  curl_setopt($ch, CURLOPT_HTTPHEADER,$head);
   curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
   curl_setopt($ch, CURLOPT_TIMEOUT, 15);
   curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);

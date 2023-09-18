@@ -55,8 +55,704 @@ if (isset($_GET['flash'])) $flash="mpc";
 //$link="http://89.136.209.30:1935/liveedge/TVRMOLDOVA.stream/playlist.m3u8";
 //$link=urldecode("https%3A%2F%2Fwww.youtube.com%2Fwatch%3Fv%3Dr_d4ryn9UsA&title=Gaming%20Music%20Radio%20%E2%9A%A1%2024/7%20NCS%20Live%20Stream%20%E2%9A%A1%20Trap,%20Chill,%20Electro,%20Dubstep,%20Future%20Bass,%20EDM");
 //$mod="direct";
+if (preg_match("/porstream\.de|sportybite\.top/",$link)) {
+  $head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/110.0',
+  'Accept: */*',
+  'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
+  'Accept-Encoding: deflate',
+  'Referer: https://porstream.de/',
+  'Origin: https://porstream.de'
+  );
+  $ch = curl_init();
+  curl_setopt($ch, CURLOPT_URL, $link);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+  curl_setopt($ch, CURLOPT_HTTPHEADER, $head);
+  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+  $h = curl_exec($ch);
+  curl_close($ch);
+  if (preg_match("/\<iframe.*?src\=\"([^\"]+)\"/i",$h,$m))
+   $link = fixurl($m[1]);
+  else
+   $link="";
+  //echo $link;
+}
+if (preg_match("/primasport\.one/",$link)) {
+  $head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/110.0',
+  'Accept: */*',
+  'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
+  'Accept-Encoding: deflate',
+  'Referer: https://primasport.one/',
+  'Origin: https://primasport.one'
+  );
+  $ch = curl_init();
+  curl_setopt($ch, CURLOPT_URL, $link);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+  curl_setopt($ch, CURLOPT_HTTPHEADER, $head);
+  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+  $h = curl_exec($ch);
+  curl_close($ch);
+  if (preg_match("/\<iframe.*?src\=\"([^\"]+)\"/i",$h,$m))
+   $link = $m[1];
+  else
+   $link="";
+}
 if (preg_match("/play\.stirilepe\.net/",$link)) {
  if ($flash <> "flash") $link .="|Referer=".urlencode("https://rds.live/");
+}
+if ($from == "time4tv") {
+$head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/110.0',
+'Accept: */*',
+'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
+'Accept-Encoding: deflate'
+);
+//https://ddolahdplay.xyz
+//https://www.sports-stream.click
+//https://sportybite.top/
+  $ch = curl_init();
+  curl_setopt($ch, CURLOPT_URL, $link);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+  //curl_setopt($ch, CURLOPT_HEADER,1);
+  curl_setopt($ch, CURLOPT_HTTPHEADER, $head);
+  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 25);
+  $h = curl_exec($ch);
+  $link="";
+  preg_match("/allowfullscreen src\=\"([^\"]+)\"/i",$h,$z);
+  $l=fixurl($z[1]);
+  $l_1=$l;
+  //echo $l."\n";;
+  curl_setopt($ch, CURLOPT_URL, $l);
+  $h = curl_exec($ch);
+  //echo $h;
+  preg_match("/\<iframe.*?src\=\"([^\"]+)\"/i",$h,$m);
+  //echo $m[1]."\n";
+  $l=fixurl($m[1],$l);
+  //$l=str_replace("///","//",$l);
+  //echo $l."\n";
+  //die();
+  if (preg_match("/player\.licenses4\.me/",$l)) {
+    $link=$l;
+    $l1="";
+  } elseif (preg_match("/123ecast\./",$l)) {
+    $link=$l;
+    $l1="";
+  } elseif (preg_match("/cricplay/",$l)) {
+    $link=$l;
+    $l1="";
+  } elseif (preg_match("/extrafreetv/",$l)) {
+  $chh=parse_url($l)['query'];
+  $l2="https://tvpclive.com/embed/stream-".$chh.".php";
+  curl_setopt($ch, CURLOPT_REFERER,"https://extrafreetv.com");
+  curl_setopt($ch, CURLOPT_URL, $l2);
+  $h = curl_exec($ch);
+  //echo $h;
+  preg_match("/\<iframe.*?src\=\"([^\"]+)\"/i",$h,$m);
+  $link=fixurl($m[1]);
+  //echo $link;
+  } elseif (preg_match("/sportskart\./",$l)) {
+  $chh=parse_url($l_1)['query'];
+  $l2="https://sportskart.click/embed/stream-".$chh.".php";
+  curl_setopt($ch, CURLOPT_REFERER,"https://sportskart.click");
+  curl_setopt($ch, CURLOPT_URL, $l2);
+  $h = curl_exec($ch);
+  //echo $h;
+  preg_match("/\<iframe.*?src\=\"([^\"]+)\"/i",$h,$m);
+  $l3=fixurl($m[1]);
+  if (preg_match("/godzlive\.com|ddolahdplay\./",$l3)) {
+   $link=$l3;
+  } else {
+   $link="";;
+  }
+  } elseif (preg_match("/tvpclive\./",$l)) {
+  $chh=parse_url($l_1)['query'];
+  $l2="https://tvpclive.com/embed/stream-".$chh.".php";
+  curl_setopt($ch, CURLOPT_REFERER,"https://tvpclive.com");
+  curl_setopt($ch, CURLOPT_URL, $l2);
+  $h = curl_exec($ch);
+  //echo $h;
+  preg_match("/\<iframe.*?src\=\"([^\"]+)\"/i",$h,$m);
+  $l3=fixurl($m[1]);
+  if (preg_match("/godzlive\.com|ddolahdplay\./",$l3)) {
+   $link=$l3;
+  } else {
+   $link="";;
+  }
+  } elseif (preg_match("/sports\-stream\./",$l)) {
+  curl_setopt($ch, CURLOPT_REFERER,"https://www.sports-stream.click");
+  curl_setopt($ch, CURLOPT_URL, $l);
+  $h = curl_exec($ch);
+  preg_match("/\<iframe.*?src\=\"([^\"]+)\"/i",$h,$m);
+  $l3=fixurl($m[1],$l);
+  curl_setopt($ch, CURLOPT_URL, $l3);
+  $h = curl_exec($ch);
+  preg_match("/\<iframe.*?src\=\"([^\"]+)\"/i",$h,$m);
+  $link=fixurl($m[1]);
+  $l1="";
+  } elseif (preg_match("/embedstream\./",$l)) { //https://extrafreetv.com/embed/espnusa/2.php //https://embedstream.me/espn-stream-1
+  curl_setopt($ch, CURLOPT_REFERER,"https://extrafreetv.com");
+  curl_setopt($ch, CURLOPT_URL, $l);
+  $h = curl_exec($ch);
+  //echo $h;
+  preg_match("/\<iframe.*?src\=\"([^\"]+)\"/i",$h,$m);
+  $l3=fixurl($m[1],$l);
+  //echo $l3;
+  } elseif (preg_match("/1l1l\./",$l)) {
+  curl_setopt($ch, CURLOPT_REFERER,"https://extrafreetv.com");
+  curl_setopt($ch, CURLOPT_URL, $l);
+  $h = curl_exec($ch);
+  $t1=explode("fid='",$h);
+  $t2=explode("'",$t1[1]);
+  $fid=$t2[0];
+  $l="https://jewelavid.com/embed2.php?player=desktop&live=".$fid;
+  //echo $l;
+  $head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/110.0',
+  'Accept: */*',
+  'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
+  'Accept-Encoding: deflate',
+  'Referer: https://1l1l.to/',
+  'Origin: https://1l1l.to');
+  curl_setopt($ch, CURLOPT_HTTPHEADER, $head);
+  curl_setopt($ch, CURLOPT_URL, $l);
+  $h = curl_exec($ch);
+  //echo $h;
+  $t1=explode("return([",$h);
+  $t2=explode("]",$t1[1]);
+  $t3=explode(",",$t2[0]);
+  $x=implode("",$t3);
+  //echo $x;
+  $x=str_replace('"',"",$x);
+  $x=str_replace("\\","",$x);
+  $x=str_replace("////","//",$x);
+  //echo $x;
+  $link=$x;
+  if ($link && $flash <> "flash")
+    $link=$link."|Referer=".urlencode("https://1l1l.to")."&Origin=".urlencode("https://1l1l.to");
+  } elseif (preg_match("/wikisport\./",$l)) {
+  //echo $l;
+  curl_setopt($ch, CURLOPT_REFERER,"https://extrafreetv.com");
+  curl_setopt($ch, CURLOPT_URL, $l);
+  $h = curl_exec($ch);
+  $t1=explode('fid="',$h);
+  $t2=explode('"',$t1[1]);
+  $fid=$t2[0];
+  $l="https://fiveyardlab.com/wiki.php?player=desktop&live=".$fid;
+  //echo $l;
+  $head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/110.0',
+  'Accept: */*',
+  'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
+  'Accept-Encoding: deflate',
+  'Referer: https://wikisport.click/',
+  'Origin: https://wikisport.click');
+  curl_setopt($ch, CURLOPT_HTTPHEADER, $head);
+  curl_setopt($ch, CURLOPT_URL, $l);
+  $h = curl_exec($ch);
+  //echo $h;
+  $t1=explode("return([",$h);
+  $t2=explode("]",$t1[1]);
+  $t3=explode(",",$t2[0]);
+  $x=implode("",$t3);
+  //echo $x;
+  $x=str_replace('"',"",$x);
+  $x=str_replace("\\","",$x);
+  $x=str_replace("////","//",$x);
+  //echo $x;
+  $link=$x;
+  if ($link && $flash <> "flash")
+    $link=$link."|Referer=".urlencode("https://wikisport.click")."&Origin=".urlencode("https://wikisport.click");
+  } else {
+  curl_setopt($ch, CURLOPT_URL, $l);
+  $h = curl_exec($ch);
+  //echo $h;
+  preg_match("/\<iframe.*?src\=\"([^\"]+)\"/i",$h,$m);
+  $l1=fixurl($m[1]);
+  }
+  //echo $l1."\n";
+  if (preg_match("/godzlive\.com/",$l1)) { ///////////////////////////////////
+   $link=$l1;
+  } elseif (preg_match("/daddylivehd\./",$l1)) { ////////////////////////////////
+    //https://daddylivehd.sx/embed/stream-'+channel+'.php
+   $chh=parse_url($l)['query'];
+   $l2="https://daddylivehd.sx/embed/stream-".$chh.".php";
+   curl_setopt($ch, CURLOPT_REFERER,"https://daddylivehd.sx");
+   curl_setopt($ch, CURLOPT_URL, $l2);
+   $h = curl_exec($ch);
+   preg_match("/\<iframe.*?src\=\"([^\"]+)\"/i",$h,$m);
+   $l3=fixurl($m[1]); //https://livehdplay.ru/premiumtv/daddyhd.php?id=113
+  curl_setopt($ch, CURLOPT_REFERER,"https://daddylivehd.sx");
+  curl_setopt($ch, CURLOPT_URL, $l3);
+  $h = curl_exec($ch);
+  if (preg_match("/source\:\s*\'([^\']+)\'/",$h,$m))
+    $link=$m[1];
+  else
+    $link="";
+  if ($link && $flash <> "flash")
+    $link=$link."|Referer=".urlencode("https://livehdplay.ru/")."&Origin=".urlencode("https://livehdplay.ru");
+  } elseif (preg_match("/maxsport\.one/",$l1)) { ////////////////////////////////
+  $chh=parse_url($l)['query'];
+  $l2="https://maxsport.one/".$chh;
+  curl_setopt($ch, CURLOPT_REFERER,"https://extrafreetv.com");
+  curl_setopt($ch, CURLOPT_URL, $l2);
+  $h = curl_exec($ch);
+  preg_match("/\<iframe.*?src\=\"([^\"]+)\"/i",$h,$m);
+  $l3=fixurl($m[1]);
+  if (preg_match("/godzlive\.com|ddolahdplay\./",$l3)) {
+   $link=$l3;
+  } else {
+   $link="";
+  }
+  } elseif (preg_match("/sportskart\.click/",$l1)) {  //////////////////////////////////////////////
+  $chh=parse_url($l)['query'];
+  $l2="https://sportskart.click/embed/stream-".$chh.".php";
+  curl_setopt($ch, CURLOPT_REFERER,"https://sportskart.click");
+  curl_setopt($ch, CURLOPT_URL, $l2);
+  $h = curl_exec($ch);
+  //echo $h;
+  preg_match("/\<iframe.*?src\=\"([^\"]+)\"/i",$h,$m);
+  $l3=fixurl($m[1]);
+  //echo $l3;
+  if (preg_match("/godzlive\.com|ddolahdplay\./",$l3)) {
+   $link=$l3;
+  } else {
+   $link="";;
+  }
+  } elseif (preg_match("/streamingnow\./",$l1)) {  ///////////////////////////////////////////
+  $chh=parse_url($l)['query'];
+  $l2="https://streamingnow.pro/tvon.php?hd=".$chh;
+
+  curl_setopt($ch, CURLOPT_REFERER,"https://streamingnow.pro");
+  curl_setopt($ch, CURLOPT_URL, $l2);
+  $h = curl_exec($ch);
+
+  $t1=explode('fid="',$h);
+  $t2=explode('"',$t1[1]);
+  $fid=$t2[0];
+  $link="https://b4ucast.com/dhonka.php?player=desktop&live=".$fid;
+  } elseif (preg_match("/lovesomecommunity\./",$l1)) {  ///////////////////////////////////////////
+  curl_setopt($ch, CURLOPT_REFERER,"https://www.sports-stream.click/");
+  curl_setopt($ch, CURLOPT_URL, $l1);
+  $h = curl_exec($ch);
+  $t1=explode("return([",$h);
+  $t2=explode("]",$t1[1]);
+  $t3=explode(",",$t2[0]);
+  $x=implode("",$t3);
+  //echo $x;
+  $x=str_replace('"',"",$x);
+  $x=str_replace("\\","",$x);
+  $x=str_replace("////","//",$x);
+  //echo $x;
+  $link=$x;
+  if ($link && $flash <> "flash")
+    $link=$link."|Referer=".urlencode("https://www.sports-stream.click")."&Origin=".urlencode("https://www.sports-stream.click");
+  }
+
+  curl_close($ch);
+  //die();
+}
+///////////// link-ri
+if (preg_match("/streamingnow\.|freeviplive\./",$link)) {
+  //https://streamingnow.pro/stream.php?hd=20
+  //https://freeviplive.com/stream.php?hd=20
+  $head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/110.0',
+  'Accept: */*',
+  'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
+  'Referer: https://www.sports-stream.click',
+  'Accept-Encoding: deflate',
+  'Referer: https://primasport.one/',
+  'Origin: https://primasport.one'
+  );
+  $ch = curl_init();
+  curl_setopt($ch, CURLOPT_URL, $link);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+  curl_setopt($ch, CURLOPT_HTTPHEADER, $head);
+  curl_setopt($ch, CURLOPT_HEADER,1);
+  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 25);
+  $h = curl_exec($ch);
+  curl_close($ch);
+  $t1=explode('fid="',$h);
+  $t2=explode('"',$t1[1]);
+  $fid=$t2[0];
+  $link="https://b4ucast.com/dhonka.php?player=desktop&live=".$fid;  // to next step
+}
+if (preg_match("/sportskart\.click/",$link)) { // to second link!
+  //https://sportskart.click/embed/stream-501.php
+  $head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/110.0',
+  'Accept: */*',
+  'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
+  'Referer: https://www.sports-stream.click',
+  'Accept-Encoding: deflate',
+  'Referer: https://primasport.one/',
+  'Origin: https://primasport.one'
+  );
+  $ch = curl_init();
+  curl_setopt($ch, CURLOPT_URL, $link);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+  curl_setopt($ch, CURLOPT_HTTPHEADER, $head);
+  curl_setopt($ch, CURLOPT_HEADER,1);
+  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 25);
+  $h = curl_exec($ch);
+  curl_close($ch);
+  if (preg_match("/\<iframe.*?src\=\"([^\"]+)\"/i",$h,$m))
+    $link=fixurl($m[1]);
+  else
+    $link="";
+}
+if (preg_match("/sportsonline\./",parse_url($link)['host'])) {
+  //https://sportsonline.so/channels/hd/hd1.php
+  $head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/110.0',
+  'Accept: */*',
+  'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
+  'Referer: https://www.sports-stream.click',
+  'Accept-Encoding: deflate',
+  'Referer: https://primasport.one/',
+  'Origin: https://primasport.one'
+  );
+  $ch = curl_init();
+  curl_setopt($ch, CURLOPT_URL, $link);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+  curl_setopt($ch, CURLOPT_HTTPHEADER, $head);
+  curl_setopt($ch, CURLOPT_HEADER,1);
+  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 25);
+  $h = curl_exec($ch);
+  if (preg_match("/\<iframe.*?src\=\"([^\"]+)\"/i",$h,$m)) {
+   $l=$m[1];
+  }
+  $head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/110.0',
+  'Accept: */*',
+  'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
+  'Accept-Encoding: deflate',
+  'Referer: https://sportsonline.so/',
+  'Origin: https://sportsonline.so'
+  );
+  curl_setopt($ch, CURLOPT_HTTPHEADER, $head);
+  curl_setopt($ch, CURLOPT_URL, $l);
+  $h = curl_exec($ch);
+  curl_close($ch);
+  require_once("../filme/JavaScriptUnpacker.php");
+  $jsu = new JavaScriptUnpacker();
+  $out = $jsu->Unpack($h);
+  //echo $out;
+  if (preg_match("/var src\=\"([^\"]+)\"/",$out,$m))
+   $link=$m[1];
+  else
+   $link="";
+  if ($link && $flash <> "flash")
+   $link=$link."|Referer=".urlencode("https://sportsonline.so/")."&Origin=".urlencode("https://sportsonline.so");
+}
+if (preg_match("/iweb\.\w+\.shop/",parse_url($link)['host'])) {
+  // https://iweb.ijttgbt.shop/embed/e8GplfEKWQOE
+  // iweb.hctnzec.shop
+  $head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/110.0',
+  'Accept: */*',
+  'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
+  'Referer: https://www.sports-stream.click',
+  'Accept-Encoding: deflate',
+  'Referer: https://primasport.one/',
+  'Origin: https://primasport.one'
+  );
+  $ch = curl_init();
+  curl_setopt($ch, CURLOPT_URL, $link);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+  curl_setopt($ch, CURLOPT_HTTPHEADER, $head);
+  curl_setopt($ch, CURLOPT_HEADER,1);
+  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 25);
+  $h = curl_exec($ch);
+  curl_close($ch);
+  require_once("../filme/JavaScriptUnpacker.php");
+  $jsu = new JavaScriptUnpacker();
+  $out = $jsu->Unpack($h);
+  if (preg_match("/source\:\s*\"([^\"]+)\"/",$out,$m))
+    $link=$m[1];
+  else
+    $link="";
+  if ($link && $flash <> "flash")
+    $link=$link."|Referer=".urlencode("https://iweb.ijttgbt.shop/")."&Origin=".urlencode("https://iweb.ijttgbt.shop");
+}
+if (preg_match("/truyenxalo\./",parse_url($link)['host'])) {
+  //https://vwrc.truyenxalo.com/embed/ysu7YZKDyF5L
+  $head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/110.0',
+  'Accept: */*',
+  'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
+  'Referer: https://www.sports-stream.click',
+  'Accept-Encoding: deflate',
+  'Referer: https://primasport.one/',
+  'Origin: https://primasport.one'
+  );
+  $ref="https://".parse_url($link)['host'];
+  $ch = curl_init();
+  curl_setopt($ch, CURLOPT_URL, $link);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+  curl_setopt($ch, CURLOPT_HTTPHEADER, $head);
+  curl_setopt($ch, CURLOPT_HEADER,1);
+  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 25);
+  $h = curl_exec($ch);
+  curl_close($ch);
+  require_once("../filme/JavaScriptUnpacker.php");
+  $jsu = new JavaScriptUnpacker();
+  $out = $jsu->Unpack($h);
+  if (preg_match("/source\:\s*\"([^\"]+)\"/",$out,$m))
+    $link=$m[1];
+  else
+    $link="";
+  if ($link && $flash <> "flash")
+    $link=$link."|Referer=".urlencode($ref."/")."&Origin=".urlencode($ref);
+}
+if (preg_match("/livehdplay\.ru/",parse_url($link)['host'])) {
+  // $l="https://livehdplay.ru/maxsport.php?id=cnmyfeed21";
+  $head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/110.0',
+  'Accept: */*',
+  'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
+  'Referer: https://www.sports-stream.click',
+  'Accept-Encoding: deflate',
+  'Referer: https://primasport.one/',
+  'Origin: https://primasport.one'
+  );
+  $ch = curl_init();
+  curl_setopt($ch, CURLOPT_URL, $link);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+  curl_setopt($ch, CURLOPT_HTTPHEADER, $head);
+  curl_setopt($ch, CURLOPT_HEADER,1);
+  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 25);
+  $h = curl_exec($ch);
+  curl_close($ch);
+  if (preg_match("/source:\s*\'([^\']+)/",$h,$m))
+   $link=trim($m[1]);
+  else
+   $link="";
+  if ($link && $flash <> "flash")
+    $link=$link."|Referer=".urlencode("https://livehdplay.ru/")."&Origin=".urlencode("https://livehdplay.ru");
+}
+if (preg_match("/tvpclive\./",parse_url($link)['host'])) {
+  $head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/110.0',
+  'Accept: */*',
+  'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
+  'Referer: https://www.sports-stream.click',
+  'Accept-Encoding: deflate',
+  'Referer: https://tvpclive.com/'
+  );
+  $ch = curl_init();
+  curl_setopt($ch, CURLOPT_URL, $link);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+  curl_setopt($ch, CURLOPT_HTTPHEADER, $head);
+  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 25);
+  $h = curl_exec($ch);
+  curl_close($ch);
+  preg_match("/\<iframe.*?src\=\"([^\"]+)\"/i",$h,$m);
+  $l3=fixurl($m[1]);
+  if (preg_match("/godzlive\.com|ddolahdplay\./",$l3)) {
+   $link=$l3;
+  } else {
+   $link="";;
+  }
+}
+//echo $link;
+if (preg_match("/lovesomecommunity\./",parse_url($link)['host'])) {  ///////////////////////////////////////////
+  $head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/110.0',
+  'Accept: */*',
+  'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
+  'Referer: https://primasport.one/',
+  'Accept-Encoding: deflate'
+  );
+  //echo $link;
+  $ch = curl_init();
+  curl_setopt($ch, CURLOPT_URL, $link);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+  curl_setopt($ch, CURLOPT_HTTPHEADER, $head);
+  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 25);
+  $h = curl_exec($ch);
+  curl_close($ch);
+  //echo $h;
+  $t1=explode("return([",$h);
+  $t2=explode("]",$t1[1]);
+  $t3=explode(",",$t2[0]);
+  $x=implode("",$t3);
+  //echo $x;
+  $x=str_replace('"',"",$x);
+  $x=str_replace("\\","",$x);
+  $x=str_replace("////","//",$x);
+  //echo $x;
+  $link=$x;
+  if ($link && $flash <> "flash")
+    $link=$link."|Referer=".urlencode("https://lovesomecommunity.com")."&Origin=".urlencode("https://lovesomecommunity.com");
+}
+if (preg_match("/123ecast\.xyz/",parse_url($link)['host'])) {
+  $head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/110.0',
+  'Accept: */*',
+  'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
+  'Accept-Encoding: deflate'
+  );
+  $ch = curl_init();
+  curl_setopt($ch, CURLOPT_URL, $link);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+  curl_setopt($ch, CURLOPT_HTTPHEADER, $head);
+  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 25);
+  $h = curl_exec($ch);
+  curl_close($ch);
+  if (preg_match("/source\:\s*\'([^\']+)\'/",$h,$m))
+    $link=$m[1];
+  else
+    $link="";
+  if ($link && $flash <> "flash")
+    $link=$link."|Referer=".urlencode("https://123ecast.xyz")."&Origin=".urlencode("https://123ecast.xyz");
+}
+if (preg_match("/cricplay/",parse_url($link)['host'])) {
+  $head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:98.0) Gecko/20100101 Firefox/98.0',
+  'Accept: */*',
+  'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
+  'Accept-Encoding: deflate',
+  'Origin: null',
+  'Referer: https://fsro.io');
+  $ch = curl_init();
+  curl_setopt($ch, CURLOPT_URL, $link);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+  curl_setopt($ch, CURLOPT_HTTPHEADER, $head);
+  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 25);
+  $h = curl_exec($ch);
+  //curl_close($ch);
+  $t1=explode('fid="',$h);
+  $t2=explode('"',$t1[1]);
+  $fid=$t2[0];
+  $l="https://lovesomecommunity.com/embedcr.php?player=desktop&live=".$fid;
+  //echo $l;
+  $head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/110.0',
+  'Accept: */*',
+  'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
+  'Accept-Encoding: deflate',
+  'Referer: https://cricplay2.xyz/',
+  'Origin: https://cricplay2.xyz');
+  curl_setopt($ch, CURLOPT_HTTPHEADER, $head);
+  curl_setopt($ch, CURLOPT_URL, $l);
+  $h = curl_exec($ch);
+  curl_close($ch);
+  $t1=explode("return([",$h);
+  $t2=explode("]",$t1[1]);
+  $t3=explode(",",$t2[0]);
+  $x=implode("",$t3);
+  //echo $x;
+  $x=str_replace('"',"",$x);
+  $x=str_replace("\\","",$x);
+  $x=str_replace("////","//",$x);
+  //echo $x;
+  $link=$x;
+  if ($link && $flash <> "flash")
+    $link=$link."|Referer=".urlencode("https://cricplay2.xyz")."&Origin=".urlencode("https://cricplay2.xyz");
+}
+if (preg_match("/player\.licenses4\.me/",parse_url($link)['host'])) {
+  $head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:98.0) Gecko/20100101 Firefox/98.0',
+  'Accept: */*',
+  'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
+  'Accept-Encoding: deflate',
+  'Origin: null',
+  'Referer: https://fsro.io');
+  $ch = curl_init();
+  curl_setopt($ch, CURLOPT_URL, $link);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+  curl_setopt($ch, CURLOPT_HTTPHEADER, $head);
+  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 25);
+  $h = curl_exec($ch);
+  curl_close($ch);
+  //echo $h;
+  if (preg_match("/source\:\s*\"([^\"]+)\"/",$h,$m))
+   $link=$m[1];
+  if ($link && $flash <> "flash")
+    $link=$link."|Referer=".urlencode("https://player.licenses4.me")."&Origin=".urlencode("https://player.licenses4.me");
+}
+
+if (preg_match("/ddolahdplay\./",parse_url($link)['host'])) {
+
+//https://ddolahdplay.xyz
+  $head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/110.0',
+  'Accept: */*',
+  'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
+  'Accept-Encoding: deflate',
+  'Referer: https://sportskart.click/',
+  'Origin: https://sportskart.click');
+  $ch = curl_init();
+  curl_setopt($ch, CURLOPT_URL, $link);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+  curl_setopt($ch, CURLOPT_HTTPHEADER, $head);
+  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 25);
+  $h = curl_exec($ch);
+  curl_close($ch);
+  //echo $h;
+  if (preg_match("/source\:\'([^\']+)\'/",$h,$m))
+    $link=$m[1];
+  if ($link && $flash<>"flash")
+   $link .="|Referer=".urlencode("https://ddolahdplay.xyz/")."&Origin=".urlencode("https://ddolahdplay.xyz");
+}
+if (preg_match("/godzlive\.com|b4ucast\.com/",parse_url($link)['host'])) {
+  $ref="https://".parse_url($link)['host'];
+  $head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/110.0',
+  'Accept: */*',
+  'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
+  'Accept-Encoding: deflate',
+  'Referer: '.$ref.'/');
+  //echo $link;
+  $ch = curl_init();
+  curl_setopt($ch, CURLOPT_URL, $link);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+  curl_setopt($ch, CURLOPT_HTTPHEADER, $head);
+  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 25);
+  $h = curl_exec($ch);
+  curl_close($ch);
+  $t1=explode("return([",$h);
+  $t2=explode("]",$t1[1]);
+  $t3=explode(",",$t2[0]);
+  $x=implode("",$t3);
+  //echo $x;
+  $x=str_replace('"',"",$x);
+  $x=str_replace("\\","",$x);
+  $x=str_replace("////","//",$x);
+  //echo $x;
+  $link=$x;
+  if ($link && $flash<>"flash")
+   $link .="|Referer=".urlencode($ref."/")."&Origin=".urlencode($ref);
 }
 if ($from == "rds.live") {
   $ch = curl_init();

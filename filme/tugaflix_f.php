@@ -174,7 +174,7 @@ $f=array();
 if ($tip=="search") {
  $search= str_replace(" ","+",$tit);
  if ($page==1)
-  $l=$last_good."/filmes/?s=".search;
+  $l=$last_good."/filmes/?s=".$search;
  else
   $l=$last_good."/filmes/page/".$page."/?s=".$search;
 } else {
@@ -183,27 +183,33 @@ if ($tip=="search") {
  else
   $l=$last_good."/filmes/page/".$page."/";
 }
+
+//echo $l;
+//$l=$last_good;
+
 $head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/112.0',
 'Accept: application/json, text/javascript, */*; q=0.01',
 'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
 'Accept-Encoding: deflate',
 'X-Requested-With: XMLHttpRequest',
 'Connection: keep-alive',
-'Referer: '.$last_good);
+'Referer: '.$last_good.'/filmes/');
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $l);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
   curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
   curl_setopt($ch, CURLOPT_HTTPHEADER, $head);
   curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+  curl_setopt($ch, CURLOPT_HEADER,1);
   curl_setopt($ch, CURLOPT_ENCODING, "");
   curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
   curl_setopt($ch, CURLOPT_TIMEOUT, 25);
   $h = curl_exec($ch);
   curl_close($ch);
+//echo $h;
 
 $path = parse_url($l)['path'];
-//echo $h;
+
 $host=parse_url($l)['host'];
 
 $videos = explode('div class="poster', $h);
@@ -217,6 +223,13 @@ foreach($videos as $video) {
  $t3=explode('title="',$video);
  $t4=explode('"',$t3[1]);
  $title=trim($t4[0]);
+ $title = preg_replace_callback(
+   "/(\&\#[0-9]+\;?)/",
+   function($m) {
+    return mb_convert_encoding(substr($m[1],-1) ==";" ? $m[1]:$m[1].";", "UTF-8", "HTML-ENTITIES");
+   },
+   $title
+ );
  $t1=explode('src="',$video);
  $t2=explode('"',$t1[1]);
  if (preg_match("/\.png/",$t2[0]))

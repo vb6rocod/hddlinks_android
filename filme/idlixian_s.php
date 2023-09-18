@@ -15,6 +15,7 @@ $height="278px";
 $last_good="https://88.210.14.111";
 $last_good="https://77.105.142.75";
 $last_good="https://tv.idlixprime.com";
+$last_good="https://tv.idlixplus.net";
 /* ==================================================== */
 $has_fav="yes";
 $has_search="yes";
@@ -184,6 +185,13 @@ if ($tip=="search") {
  else
   $l=$last_good."/tvseries/page/".$page."/";
 }
+$cf="https://basic-bundle-solitary-morning-4d74.quamatbanty02.workers.dev/?";
+$cf="https://cors-anywhere.azm.workers.dev/";
+$path = parse_url($l)['path'];
+//echo $h;
+$host=parse_url($l)['host'];
+
+//$l=$cf.$l;
 $head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/112.0',
 'Accept: application/json, text/javascript, */*; q=0.01',
 'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
@@ -203,9 +211,7 @@ $head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gec
   $h = curl_exec($ch);
   curl_close($ch);
 
-$path = parse_url($l)['path'];
-//echo $h;
-$host=parse_url($l)['host'];
+
 if ($tip=="release") {
 $videos = explode('<article id="post-', $h);
 unset($videos[0]);

@@ -448,13 +448,18 @@ $head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gec
   curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
   curl_setopt($ch, CURLOPT_TIMEOUT, 25);
   $h = curl_exec($ch);
-  $h=json_decode($h,1)['result'];
+  //echo $h;
+  $x=json_decode($h,1);
+  //print_r ($x);
+  $h .=json_decode($h,1)['result'];
   //echo $h;
   if (preg_match("/data\-id\=\"([^\"]+)\"/",$h,$m)) {
   $id=$m[1];
   $l="https://vidsrc.to/ajax/embed/episode/".$id."/sources";
+  //echo $l;
   curl_setopt($ch, CURLOPT_URL, $l);
   $h = curl_exec($ch);
+  //echo $h;
   $z=json_decode($h,1)['result'];
   for ($k=0;$k<count($z);$k++) {
     $r[]="https://vidsrc.to/ajax/embed/source/".$z[$k]['id'];

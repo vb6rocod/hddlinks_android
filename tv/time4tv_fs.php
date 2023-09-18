@@ -56,17 +56,18 @@ $imdbid="";
 <link rel="stylesheet" type="text/css" href="../custom.css" />
 <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.0/jquery.min.js"></script>
 <script type="text/javascript">
+//$l="link=".urlencode(fix_t($link))."&title=".urlencode(fix_t($title))."&from=time4tv&mod=direct";
 function openlink1(link) {
   link1=document.getElementById('file').value;
-  msg="link1.php?file=" + link1 + "&title=" + link;
+  msg="direct_link.php?link=" + link1 + "&title=" + link + "&from=time4tv&mod=direct";
   window.open(msg);
 }
 function openlink(link) {
   on();
   var request =  new XMLHttpRequest();
   link1=document.getElementById('file').value;
-  var the_data = "link=" + link1 + "&title=" + link;
-  var php_file="link1.php";
+  var the_data = "link=" + link1 + "&title=" + link + "&from=time4tv&mod=direct";
+  var php_file="direct_link.php";
   request.open("POST", php_file, true);			// set the request
 
   // adds a header to tell the PHP script to recognize the data as is sent via POST
@@ -93,24 +94,8 @@ function changeserver(s,t) {
    function zx(e){
      var charCode = (typeof e.which == "number") ? e.which : e.keyCode
      //alert (charCode);
-     if (charCode == "49") {
-      document.getElementById("opensub").click();
-     } else if (charCode == "50") {
-      document.getElementById("titrari").click();
-     } else if (charCode == "51") {
-      document.getElementById("subs").click();
-     } else if (charCode == "52") {
-      document.getElementById("subtitrari").click();
-     } else if (charCode == "53") {
+     if (charCode == "53") {
       document.getElementById("viz").click();
-     } else if (charCode == "55") {
-      document.getElementById("opensub1").click();
-     } else if (charCode == "56") {
-      document.getElementById("titrari1").click();
-     } else if (charCode == "57") {
-      document.getElementById("subs1").click();
-     } else if (charCode == "48") {
-      document.getElementById("subtitrari1").click();
      }
    }
 document.onkeypress =  zx;
@@ -133,44 +118,44 @@ echo '<BR>';
 $r=array();
 $s=array();
 //echo $link;
-$info_m="";
-$head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/116.0',
-'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8',
+$host=parse_url($link)['host'];
+//$host="amfy.io";
+$head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/110.0',
+'Accept: */*',
 'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
-'Accept-Encoding: deflate',
-'Connection: keep-alive',
-'Referer: https://www.hdwatched.xyz/movies');
+'Accept-Encoding: deflate'
+);
+//https://ddolahdplay.xyz
+//https://www.sports-stream.click
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $link);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-  curl_setopt($ch, CURLOPT_HTTPHEADER, $head);
   curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+  curl_setopt($ch, CURLOPT_HEADER,1);
+  curl_setopt($ch, CURLOPT_HTTPHEADER, $head);
   curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
   curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
   curl_setopt($ch, CURLOPT_TIMEOUT, 25);
   $h = curl_exec($ch);
-  curl_close($ch);
+  preg_match("/javascript\:window\.open\(\'([^\']+)\'/",$h,$n);
+  $l=$n[1];
+  //echo $l."\n";  //http://time4tv.stream/watch1/sports/bein-sports-1.php
+  curl_setopt($ch, CURLOPT_URL, $l);
+  $h = curl_exec($ch);
   //echo $h;
-  //die();
-  if (preg_match("/Release Date/",$h)) {
-  $t1=explode("Release Date",$h);
-  $t2=explode("Tags:",$t1[1]);
-  $info_m=trim(strip_tags("Release Date".$t2[0]));
+  preg_match("/allowfullscreen SRC\=\"([^\"]+)\"/i",$h,$z);
+  $l=fixurl($z[1]);
+  //echo $l;
+  curl_setopt($ch, CURLOPT_URL, $l);
+  $h = curl_exec($ch);
+  preg_match_all("/stream_link\" href=\"([^\"]+)\"\>([^\<]+)\</i",$h,$m);
+  curl_close($ch);
+
+  for ($k=0;$k<count($m[1]);$k++) {
+   $r[]=fixurl($m[1][$k]);
+   $s[]=$m[2][$k];
   }
-  //echo $info_m;
-  $t1=explode('<iframe',$h);
-  $t2=explode('src="',$t1[1]);
-  $t3=explode('"',$t2[1]);
-  $l=$t3[0];
 
-  $r[]=$l;
-  $s[]=parse_url($l)['host'];
-  $imdbid="";
-   //echo $imdbid;
-//die();
-
-
-//print_r ($r);
 echo '<table border="1" width="100%">';
 echo '<TR><TD class="mp">Alegeti un server: Server curent:<label id="server">'.$s[0].'</label>
 <input type="hidden" id="file" value="'.urlencode($r[0]).'"></td></TR></TABLE>';
@@ -203,14 +188,14 @@ if ($tip=="movie") {
   $tit2="";
   $sez="";
   $ep="";
-  //$imdbid="";
+  $imdbid="";
   $from="";
   $link_page="";
 } else {
   $tit3=$tit;
   $sez=$sez;
   $ep=$ep;
-  //$imdbid="";
+  $imdbid="";
   $from="";
   $link_page="";
 }
@@ -221,8 +206,6 @@ if ($tip=="movie") {
   } else {
    $year="";
   }
-$sub_link ="from=".$from."&tip=".$tip."&sez=".$sez."&ep=".$ep."&imdb=".$imdbid."&title=".urlencode(fix_t($tit3))."&link=".$link_page."&ep_tit=".urlencode(fix_t($tit2))."&year=".$year;
-include ("subs.php");
 echo '<table border="1" width="100%"><TR>';
 if ($tip=="movie")
   $openlink=urlencode(fix_t($tit3));
@@ -237,11 +220,9 @@ echo '</table>';
 echo '<br>
 <table border="0px" width="100%">
 <TR>
-<TD><font size="4"><b>Scurtaturi: 1=opensubtitles, 2=titrari, 3=subs, 4=subtitrari, 5=vizioneaza
-<BR>Scurtaturi: 7=opensubtitles, 8=titrari, 9=subs, 0=subtitrari (cauta imdb id)
+<TD><font size="4"><b>Scurtaturi: 5=vizioneaza
 </b></font></TD></TR></TABLE>
 ';
-echo $info_m;
 
 include("../debug.html");
 echo '

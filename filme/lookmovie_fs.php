@@ -93,7 +93,12 @@ $head=array('Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image
 if (preg_match("/\<section/",$h)) {
   $t1=explode('<section',$h);
   $t2=explode('</section',$t1[1]);
-  $info_m=trim(strip_tags("<section".$t2[0]));
+  $t3=preg_replace("/\<script.+\<\/script\>/si","",$t2[0]);
+  preg_match("/\<div class\=\"cast\"\>(.+)\<div class\=\"movie-btn/s",$h,$m);
+  $t3=$t3." ".$m[1];
+  $info_m=trim(strip_tags("<section".$t3));
+  $t4=explode('Watch Later',$info_m);
+  $info_m=$t4[0];
 }
 /*
   if (preg_match("/href\=\s*\"\s*(https.*?\/play\/.*?)\"/",$h,$m)) {

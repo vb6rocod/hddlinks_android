@@ -70,35 +70,34 @@ $(document).on('keyup', '.imdb', isValid);
 <TR>
 <TD width="25%"><a href="tv/privesc.php?page=1&link=https://www.privesc.eu/arhiva/categorii/Toate&title=privesc.eu" target="_blank">privesc.eu</a></TD>
 <TD width="25%"><a href="tv/b1_main.php?page=1&link=&title=B1TV" target="_blank">B1 Emisiuni</a></TD>
-<TD width="25%"><a href="filme/yt_channel.php?token=&id=UChdrIsYOHZXgEyCLaOHc2Ew&kind=channel&title=(channel)+TVR&image=https://yt3.ggpht.com/ytc/AAUvwnj2psS6y8NO4ze0BR7gSRJ2OcpwzEWxJOY_m0cj=s88-c-k-c0xffffffff-no-rj-mo" target="_blank">TVR+ (youtube)</a></TD>
+<TD width="25%"><a href="tv/europalibera.php?page=1,,europalibera" target="_blank">europalibera</a></TD>
 <TD width="25%"><a href="tv/tvrplus_main.php" target="_blank">TVR+ (Emisiuni)</a></TD>
 </TR>
 <TR>
-<TD width="25%"><a href="filme/yt_playlist.php?token=&id=UC6Sn1XzRBCBl8UMyAb8_5PA&kind=channel&title=%28channel%29+PrimaTV+Romania&image=https://yt3.ggpht.com/-hMQUv-XEccM/AAAAAAAAAAI/AAAAAAAAAAA/Tek8sw-tzhU/s88-c-k-no-mo-rj-c0xffffff/photo.jpg" target="_blank">PrimaTV</a></TD>
+<TD width="25%"><a href="tv/program.php" target="_blank">ProgramTV</a></TD>
+<TD width="25%"><a href="tv/primaplay.php?page=1&link=&title=primaplay" target="_blank">primaplay</a></TD>
 <TD width="25%"><a href="tv/protvmd.php?page=1,,ProTV Moldova" target="_blank">PROTV Moldova</a></TD>
-<TD width="25%"><a href="tv/moldova-in-direct.php" target="_blank">Moldova in Direct</a></TD>
 <TD width="25%"><a href="tv/inprofunzime.php?page=1,,IN+PROfunzime" target="_blank">IN PROfunzime</a></TD>
 </TR>
 <TR>
 <TD width="25%"><a href="filme/youtube_fav.php" target="_blank">youtube</a></TD>
-<TD width="25%"><a href="filme/yt_playlist.php?token=&id=UCANDAWMJQsxMlaDMGlCdKpg&kind=channel&title=DanceTelevision&image=https://yt3.ggpht.com/-K4rbFp56pRQ/AAAAAAAAAAI/AAAAAAAAAAA/UKcWkGWWeOU/s88-c-k-no-mo-rj-c0xffffff/photo.jpg" target="_blank">Dance Television</a></TD>
 <TD width="25%"><a href="filme/youtube_live.php?token=&search=" target="_blank">youtube live</a></TD>
-<TD width="25%"><a href="tv/primaplay.php?page=1&link=&title=primaplay" target="_blank">primaplay</a></TD>
-
-</TR>
-
-<TR>
-<TD width="25%"><a href="tv/europalibera.php?page=1,,europalibera" target="_blank">europalibera</a></TD>
 <TD width="25%"><a href="tv/iptv.php" target="_blank">IPTV International</a></TD>
 <TD width="25%"><a href="tv/stream4free.php" target="_blank">stream4free</TD>
-<TD width="25%"></TD>
 </TR>
 
 <TR>
 <TD width="25%"><a href="tv/canalelive.php" target="_blank">Sport</a></TD>
-<TD width="25%"><a href="tv/program.php" target="_blank">ProgramTV</a></TD>
+<!--<TD width="25%"><a href="tv/time4tv.php?page=1&tip=release&title=time4tv&link=" target="_blank">time4tv</a></TD>-->
+<TD width="25%"><a href="tv/primasport.php" target="_blank">Primasport</TD>
 <TD width="25%"><a href="tv/telefootball.php" target="_blank">FOTBAL LA TV</TD>
 <TD width="25%"><a href="tv/rds.php" target="_blank">rds.live</TD>
+</TR>
+<TR>
+<TD width="25%"><a href="tv/sportybite.php" target="_blank">sportybite</a></TD>
+<TD width="25%"></TD>
+<TD width="25%"></TD>
+<TD width="25%"></TD>
 </TR>
 
 <?php

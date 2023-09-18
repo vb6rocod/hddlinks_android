@@ -19,7 +19,6 @@ $file=$base_fav."moviebox_f.dat";
 <script src="../jquery.fancybox.min.js"></script>
 <link rel="stylesheet" type="text/css" href="../jquery.fancybox.min.css">
 <link rel="stylesheet" type="text/css" href="../custom.css" />
-
 <script type="text/javascript">
 var id_link="";
 function openlink1(link) {
@@ -126,6 +125,8 @@ function off() {
 }
 $(document).on('keyup', '.imdb', isValid);
 document.onkeypress =  zx;
+
+
 </script>
 </head>
 <body>

@@ -114,6 +114,7 @@ function isValid(evt) {
    function zx(e){
      var instance = $.fancybox.getInstance();
      var charCode = (typeof e.which == "number") ? e.which : e.keyCode
+     //alert (charCode);
      if (charCode == "13"  && instance !== false) {
        $.fancybox.close();
        setTimeout(function(){ document.getElementById(id_link).focus(); }, 500);

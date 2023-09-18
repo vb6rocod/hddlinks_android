@@ -20,6 +20,7 @@ $has_fs="yes";
 $last_good="https://allmoviesforyou.net";
 $last_good="https://amfy.io";
 $last_good="https://allmovies.gg";
+$last_good="https://anymovie.cc";
 $host=parse_url($last_good)['host'];
 $fav_target="allmoviesforyou_s_fav.php?host=".$last_good;
 $add_target="allmoviesforyou_s_add.php";
@@ -179,9 +180,9 @@ if ($tip=="search") {
   $l=$last_good."/page/".$page."/?s=".$search;
 } else {
  if ($page==1)
-  $l=$last_good."/shows/";
+  $l=$last_good."/series/";
  else
-  $l=$last_good."/shows/page/".$page."/";
+  $l=$last_good."/series/page/".$page."/";
 }
 $path = parse_url($l)['path'];
 //echo $h;

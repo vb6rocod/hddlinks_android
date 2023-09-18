@@ -238,9 +238,11 @@ function getIMDBDetail($tt_imdb)
     curl_close($ch);
     $arr = array();
     preg_match("/class=\"titlereference-primary-image\".*?src\=\"(.*?)\"/ms", $h, $m);
-    if (isset($m[1]))
-        $arr["poster"] = $m[1];
-    else
+    if (isset($m[1])) {
+        $t1=explode("._V1",$m[1]);
+        $i=$t1[0]."._V1_FMjpg_UX500_.jpg";
+        $arr["poster"] = $i;
+    } else
         $arr["poster"] = "blank.jpg";
     preg_match('/<title>.*?\(.*?(\d{4}).*?\).*?<\/title>/ms', $h, $m);
     if (isset($m[1]))
@@ -298,5 +300,272 @@ function getIMDBDetail($tt_imdb)
     } else
             $arr['Actors'] = "N/A";
     return $arr;
+}
+function getTMDBDetail($tmdb="",$imdb="",$key,$tip="movie",$start=0,$end=0) {
+//echo '<link rel="stylesheet" type="text/css" href="../custom.css" />';
+  if ($imdb) {
+  $l="https://api.themoviedb.org/3/find/".$imdb."?external_source=imdb_id"."&api_key=".$key;
+  $ch = curl_init();
+  curl_setopt($ch, CURLOPT_URL, $l);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+  curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows; U; Windows NT 6.1; en-US; rv:1.9.1.2) Gecko/20090729 Firefox/3.5.2 GTB5');
+  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+  curl_setopt($ch, CURLOPT_REFERER, "https://api.themoviedb.org");
+  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+  $h = curl_exec($ch);
+  curl_close($ch);
+  $x=json_decode($h,1);
+  //print_r ($x);
+  if (isset ($x['movie_results'][0]['id'])) {
+    $tmdb=$x['movie_results'][0]['id'];
+    $tip="movie";
+  } elseif (isset ($x['tv_results'][0]['id'])) {
+    $tmdb=$x['tv_results'][0]['id'];
+    $tip="tv";
+  }
+  }
+  if ($tmdb) {
+  $l="https://api.themoviedb.org/3/".$tip."/".$tmdb."?api_key=".$key."&append_to_response=credits";
+  //echo $l;
+  $ch = curl_init();
+  curl_setopt($ch, CURLOPT_URL, $l);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+  curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows; U; Windows NT 6.1; en-US; rv:1.9.1.2) Gecko/20090729 Firefox/3.5.2 GTB5');
+  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+  curl_setopt($ch, CURLOPT_REFERER, "https://api.themoviedb.org");
+  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+  $h = curl_exec($ch);
+  curl_close($ch);
+   $p=json_decode($h,1);
+   //print_r ($p);
+   if ($p["poster_path"])
+    $img="http://image.tmdb.org/t/p/w500".$p["poster_path"];
+   else
+    $img="blank.jpg";
+   $desc=$p["overview"];
+   $imdb=$p["vote_average"];
+   if ($tip == "movie") {
+     $tit=$p["title"];
+     if (!$tit) $tit=$p["name"];
+   } else {
+     $tit=$p["original_name"];
+     if (!$tit) $tit=$p["name"];
+   }
+
+   if (isset($p["release_date"])) {
+     $y= $p["release_date"];
+     $y=substr($y, 0, 4);
+   } else {
+    $y=$p["first_air_date"]." - ".$p["last_air_date"];
+    $y1 = substr($p["first_air_date"],0,4);
+    $y2 = substr($p["last_air_date"],0,4);
+    $y=$y1;
+   }
+   $year=$y;
+   $c=count($p["genres"]);
+   $g="";
+   for ($k=0;$k<$c;$k++) {
+    $g .=$p["genres"][$k]["name"].",";
+   }
+   $gen=$g;
+   $gen=substr($gen, 0, -1);
+   if (isset($p["runtime"]))
+     $d=$p["runtime"];
+   else if (isset($p["episode_run_time"][0]))
+     $d=$p["episode_run_time"][0];
+   else
+     $d="";
+   if (!$d) {
+    if (isset($p['last_episode_to_air']['runtime']))
+     $d=$p['last_episode_to_air']['runtime'];
+   }
+   $durata=$d;
+   $cast="";
+   $r=$p['credits'];
+   $c=count($r["cast"]);
+   if ($c>20) $c=20;
+   for ($k=0;$k<$c;$k++) {
+    $cast .=$r["cast"][$k]["name"].",";
+   }
+   $cast = substr($cast, 0, -1);
+/////////////////////////////////
+  $y=$p['credits']['cast'];
+  $z=$p['credits']['crew'];
+  $actors=array();
+  $director=array();
+  $producer=array();
+  $writer=array();
+  for ($k=0;$k<count($y);$k++) {
+   $a=$y[$k]['known_for_department'];
+   //echo $a;
+   if ($a=="Acting") $actors[]=array($y[$k]['name'],$y[$k]['id']);
+  }
+  //print_r ($actors);
+  for ($k=0;$k<count($z);$k++) {
+    if (preg_match("/director/i",$z[$k]['job']))
+      $director[]=array($z[$k]['name'],$z[$k]['id']);
+    elseif (preg_match("/story|writer/i",$z[$k]['job']))
+      $writer[]=array($z[$k]['name'],$z[$k]['id']);
+    elseif (preg_match("/producer/i",$z[$k]['job']))
+      $producer[]=array($z[$k]['name'],$z[$k]['id']);
+   }
+   $dir="";
+   for ($k=0;$k<min(5,count($director));$k++) {
+     $dir .= $director[$k][0].",";
+   }
+   $dir = substr($dir, 0, -1);
+   $pro="";
+   for ($k=0;$k<min(5,count($producer));$k++) {
+    $pro .=$producer[$k][0].",";
+   }
+   $pro = substr($pro, 0, -1);
+   
+/////////////////////////////////////
+$ttxml="";
+if ($end==1)
+$ttxml .="<H2>".$tit."</H2><BR>"; //title
+else
+$ttxml .="<H2>".$tit." (".$start."/".$end.")</H2><BR>"; //title
+$ttxml .="Year: ".$year."<BR>";     //an
+$ttxml .="Genre: ".$gen."<BR>"; //gen
+if ($durata && $durata != "N/A")
+ $ttxml .="Duration: ".$durata." min.<BR>"; //
+else
+ $ttxml .="Duration: ".$durata."<BR>";
+$ttxml .="TMDB: ".$imdb."<BR>"; //imdb
+$ttxml .="<font color='yellow'>Cast:</font> ".$cast; //actori
+if (count($director)>0) {
+$ttxml .="<BR><font color='yellow'>Director:</font> ".$dir;
+}
+if (count($producer)>0) {
+$ttxml .="<BR><font color='yellow'>Producer:</font> ".$pro;
+}
+$out ='<table  width="100%">'."\n\r";
+$out .='<TR>';
+$out .='<TD width="250px" style="vertical-align:top"><img src="'.$img.'" width="250px" height="375px"></TD>';
+$out .='<TD class="cat" style="vertical-align:top">'.$ttxml.'</TD><TD width="5px"></TD></TR>';
+$out .='<TR><TD class="nav" colspan="3"><BR>'.$desc.'</TD></TR>';
+$out .='</TABLE>';
+} else {
+$out="";
+$out=getIMDBDetail1($imdb,$start,$end);
+}
+return $out;
+}
+function getIMDBDetail1($tt_imdb,$start,$end)
+{
+//echo '<link rel="stylesheet" type="text/css" href="../custom.css" />';
+    $l  = "https://www.imdb.com/title/" . $tt_imdb . "/reference";
+    //echo $l;
+    $ch = curl_init($l);
+    curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows; U; Windows NT 6.1; en-US; rv:1.9.1.2) Gecko/20090729 Firefox/3.5.2 GTB5');
+    curl_setopt($ch, CURLOPT_REFERER, $l);
+    curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1); // RETURN THE CONTENTS OF THE CALL
+    //curl_setopt($ch, CURLOPT_HEADER, true);
+    curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+    curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+    //curl_setopt($ch, CURLOPT_HEADER, 1);
+    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+    $h = curl_exec($ch);
+    curl_close($ch);
+    $arr = array();
+    preg_match("/class=\"titlereference-primary-image\".*?src\=\"(.*?)\"/ms", $h, $m);
+    if (isset($m[1])) {
+        $t1=explode("._V1",$m[1]);
+        $i=$t1[0]."._V1_FMjpg_UX500_.jpg";
+        $arr["poster"] = $i;
+    } else
+        $arr["poster"] = "blank.jpg";
+    preg_match('/<title>.*?\(.*?(\d{4}).*?\).*?<\/title>/ms', $h, $m);
+    if (isset($m[1]))
+        $arr["Year"] = trim($m[1]);
+    else
+        $arr["Year"] = "N/A";
+    preg_match('/<title>(IMDb \- )*(.*?) \(.*?<\/title>/ms', $h, $m);
+    if (isset($m[2]))
+        $arr['Title'] = trim($m[2]);
+    else
+        $arr["Title"] = "N/A";
+    preg_match('/<\/svg>.*?<\/span>.*?<span class="ipl-rating-star__rating">(.*?)<\/span>/ms', $h, $m);
+    if (isset($m[1]))
+        $arr["imdbRating"] = $m[1];
+    else
+        $arr["imdbRating"] = "";
+    preg_match('/Runtime<\/td>.*?(\d+ min).*?<\/li>/ms', $h, $m);
+    if (isset($m[1]))
+        $arr["Runtime"] = trim($m[1]);
+    else
+        $arr["Runtime"] = "";
+    if (preg_match("/titlereference-section-overview\"\>(.*?)\<div class=\"titlereference-overview-section/ms", $h, $m)) {
+    $p = strip_tags($m[1]);
+    preg_match_all("/\d{4}+\n/ms", $p, $x);
+    if (isset($x[0]) && count($x[0]) > 0) {
+        $t1 = explode($x[0][count($x[0]) - 1], $p);
+        $p  = $t1[1];
+    }
+    $t1 = explode("See all &raquo;", $p);
+    if (isset($t1)) {
+        $plot = $t1[count($t1) - 1];
+    } else {
+        $plot = trim($p);
+    }
+    } else
+    $plot="";
+    $t3          = explode("See more &raquo;", $plot);
+    $plot        = trim($t3[0]);
+    $arr["plot"] = $plot;
+    preg_match('/Genres<\/td>.*?<td>(.*?)<\/td>/ms', $h, $m);
+    if (isset($m[0])) {
+        preg_match_all('/<a.*?\>(.*?)<\/a>/ms', $m[0], $n);
+        if (isset($n[1]))
+            $arr['Genre'] = implode(", ", $n[1]);
+        else
+            $arr['Genre'] = "N/A";
+    } else {
+        $arr['Genre'] = "N/A";
+    }
+    preg_match_all("/class\=\"primary_photo\"\>.*?itemprop\=\"name\"\>(.*?)\<\/span/ms",$h,$m);
+    if (isset($m[1])) {
+       if (count($m[1]) > 20)
+        $act=array_slice($m[1], 0, 20);
+       else
+        $act=$m[1];
+       $arr['Actors'] = implode(", ", $act);
+    } else
+            $arr['Actors'] = "N/A";
+  $img=$arr['poster'];
+  $tit=$arr["Title"];
+  $desc=$arr['plot'];
+  $year=$arr["Year"];
+  $imdb=$arr["imdbRating"];
+  $cast=$arr["Actors"];
+  $durata=$arr["Runtime"];
+  $durata = preg_replace("/\s+min/","",$durata);
+  $gen=$arr["Genre"];
+$ttxml="";
+if ($end==1)
+$ttxml .="<H2>".$tit."</H2><BR>"; //title
+else
+$ttxml .="<H2>".$tit." (".$start."/".$end.")</H2><BR>"; //title
+$ttxml .="Year: ".$year."<BR>";     //an
+$ttxml .="Genre: ".$gen."<BR>"; //gen
+if ($durata && $durata != "N/A")
+ $ttxml .="Duration: ".$durata." min.<BR>"; //
+else
+ $ttxml .="Duration: ".$durata."<BR>";
+$ttxml .="IMDB: ".$imdb."<BR>"; //imdb
+$ttxml .="Cast: ".$cast; //actori
+$out ='<table  width="100%">'."\n\r";
+$out .='<TR>';
+$out .='<TD width="250px" style="vertical-align:top"><img src="'.$img.'" width="250px" height="375px"></TD>';
+$out .='<TD class="cat" style="vertical-align:top">'.$ttxml.'</TD><TD width="5px"></TD></TR>';
+$out .='<TR><TD class="nav" colspan="3"><BR>'.$desc.'</TD></TR>';
+$out .='</TABLE>';
+return $out;
 }
 ?>

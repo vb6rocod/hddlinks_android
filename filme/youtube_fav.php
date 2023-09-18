@@ -125,9 +125,17 @@ echo '<TD align="right"><a href="https://developers.google.com/youtube/v3/gettin
 $file=$base_fav."youtube.dat";
 
 $h="";
+//channel#separatorUCfnP_igK3BPLst-QTmIh0Wg#separator(channel) AGERPRES#separatorhttps://yt3.ggpht.com/-GjLgNVsl05g/AAAAAAAAAAI/AAAAAAAAAAA/c1epEzX1wak/s88-c-k-no-mo-rj-c0xffffff/photo.jpg
+//playlist#separatorPLxO8-C91Lp91fCJs_qqdQpAwveEFtsQbs#separator(playlist) Exclusiv în România#separatorhttps://i.ytimg.com/vi/yGHEkUJwiwg/default.jpg
+$h .="channel#separatorUChdrIsYOHZXgEyCLaOHc2Ew#separator(channel) TVR+#separatorhttps://yt3.ggpht.com/ytc/AAUvwnj2psS6y8NO4ze0BR7gSRJ2OcpwzEWxJOY_m0cj=s88-c-k-c0xffffffff-no-rj-mo"."\r\n";
+$h .="channel#separatorUC6Sn1XzRBCBl8UMyAb8_5PA#separator(channel) PrimaTV#separatorhttps://yt3.ggpht.com/-hMQUv-XEccM/AAAAAAAAAAI/AAAAAAAAAAA/Tek8sw-tzhU/s88-c-k-no-mo-rj-c0xffffff/photo.jpg"."\r\n";
+$h .="channel#separatorUCANDAWMJQsxMlaDMGlCdKpg#separator(channel) DanceTelevision#separatorhttps://yt3.ggpht.com/-K4rbFp56pRQ/AAAAAAAAAAI/AAAAAAAAAAA/UKcWkGWWeOU/s88-c-k-no-mo-rj-c0xffffff/photo.jpg"."\r\n";
+
 if (file_exists($file)) {
 echo '<table border="1px" width="100%">'."\n\r";
-  $h=trim(file_get_contents($file));
+  $h .=trim(file_get_contents($file));
+  //echo $h;
+
   $t1=explode("\r\n",$h);
   for ($k=0;$k<count($t1);$k++) {
     $kind="";

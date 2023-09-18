@@ -12,18 +12,18 @@ $tit=$_GET["title"];
 $link=$_GET["link"];
 $width="200px";
 $height="278px";
-$last_good="https://www.hdwatched.xyz";
+$last_good="https://time4tv.stream";
+$host=parse_url($last_good)['host'];
 /* ==================================================== */
 $has_fav="yes";
 $has_search="yes";
 $has_add="yes";
 $has_fs="yes";
-$host=parse_url($last_good)['host'];
-$fav_target="hdwatched_s_fav.php?host=".$last_good;
-$add_target="hdwatched_s_add.php";
+$fav_target="time4tv_fav.php?host=".$last_good;
+$add_target="time4tv_add.php";
 $add_file="";
-$fs_target="hdwatched_ep.php";
-$target="hdwatched_s.php";
+$fs_target="time4tv_fs.php";
+$target="time4tv.php";
 /* ==================================================== */
 $base=basename($_SERVER['SCRIPT_FILENAME']);
 $p=$_SERVER['QUERY_STRING'];
@@ -41,12 +41,12 @@ $prev=$base."?page=".($page-1)."&".$p;
 $tit=unfix_t(urldecode($tit));
 $link=unfix_t(urldecode($link));
 /* ==================================================== */
-if (file_exists($base_cookie."seriale.dat"))
-  $val_search=file_get_contents($base_cookie."seriale.dat");
+if (file_exists($base_cookie."filme.dat"))
+  $val_search=file_get_contents($base_cookie."filme.dat");
 else
   $val_search="";
 $form='<form action="'.$target.'" target="_blank">
-Cautare serial:  <input type="text" id="title" name="title" value="'.$val_search.'">
+Cautare film:  <input type="text" id="title" name="title" value="'.$val_search.'">
 <input type="hidden" name="page" id="page" value="1">
 <input type="hidden" name="tip" id="tip" value="search">
 <input type="hidden" name="link" id="link" value="">
@@ -55,7 +55,7 @@ Cautare serial:  <input type="text" id="title" name="title" value="'.$val_search
 /* ==================================================== */
 if ($tip=="search") {
   $page_title = "Cautare: ".$tit;
-  if ($page == 1) file_put_contents($base_cookie."seriale.dat",$tit);
+  if ($page == 1) file_put_contents($base_cookie."filme.dat",$tit);
 } else
   $page_title=$tit;
 /* ==================================================== */
@@ -120,8 +120,6 @@ function isValid(evt) {
       document.getElementById("send").click();
      } else if (charCode == "50" && e.target.type != "text") {
       document.getElementById("fav").click();
-     } else if (charCode == "48" && e.target.type != "text") {
-       location.reload();
     }
    }
 function isKeyPressed(event) {
@@ -173,97 +171,57 @@ $f=array();
 if ($tip=="search") {
  $search= str_replace(" ","+",$tit);
  if ($page==1)
-  $l=$last_good."/search/".$search."?type=2";
+  $l=$last_good."/?s=".$search;
  else
-  $l=$last_good."/search/".$search."?type=2&page=".$page;
+  $l=$last_good."/page/".$page."/?s=".$search;
 } else {
- if ($page==1)
-  $l=$last_good."/tv-shows";
- else
-  $l=$last_good."/tv-shows?page=".$page;
+  $l="https://time4tv.stream/tv-channels.php";
 }
-//https://www.hdwatched.xyz/movies?page=2
-//https://www.hdwatched.xyz/search/star?type=1&page=2
-$ua="Mozilla/5.0 (Windows NT 10.0; rv:75.0) Gecko/20100101 Firefox/75.0";
-$head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/116.0',
-'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8',
+$head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/110.0',
+'Accept: */*',
 'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
-'Accept-Encoding: deflate',
-'Connection: keep-alive',
-'Referer: https://www.hdwatched.xyz/tv-shows');
+'Accept-Encoding: deflate'
+);
+//https://ddolahdplay.xyz
+//https://www.sports-stream.click
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $l);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-  curl_setopt($ch, CURLOPT_HTTPHEADER, $head);
   curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+  curl_setopt($ch, CURLOPT_HEADER,1);
+  curl_setopt($ch, CURLOPT_HTTPHEADER, $head);
   curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
   curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
   curl_setopt($ch, CURLOPT_TIMEOUT, 25);
   $h = curl_exec($ch);
   curl_close($ch);
-  //echo $h;
-$path = parse_url($l)['path'];
-//echo $h;
-$host=parse_url($l)['host'];
-
-$videos = explode('i-container">', $h);
-unset($videos[0]);
-$videos = array_values($videos);
-//print_r ($videos);
-foreach($videos as $video) {
- //$t1=explode('href="',$video);
- //$t2=explode('"',$t1[1]);
- //$link=$t2[0];
- preg_match("/href\=\"?([^\s\"]+)\"?/",$video,$s);
- $link=$s[1];
- if ($link[0]=="/") $link=$last_good.$link;
- //$t1=explode('data-src="',$video);
- //$t2=explode('"',$t1[1]);
- //$image=$t2[0];
- preg_match("/src\=\"?([^\s\"]+)/",$video,$s);
- $image=$s[1];
- //$t1=explode('title="',$video);
- //$t2=explode('"',$t1[1]);
- //$title=trim($t2[0]);
- preg_match("/title\=\"?([^\>\"]+)/",$video,$s);
- $title=$s[1];
- $year="";
- if (preg_match("/series/",$link))$f[] = array($title,$link,$image,$year);
-}
-foreach($f as $key => $value) {
-  $title=$value[0];
-  $title=prep_tit($title);
-  $link=$value[1];
-  $image=$value[2];
-  $year=$value[3];
-  $imdb="";
-  $year="";
-  $sez="";
-  $rest = substr($title, -6);
-  if (preg_match("/\((\d+)\)/",$rest,$m)) {
-   $year=$m[1];
-   $tit_imdb=trim(str_replace($m[0],"",$title));
-  } else {
-   $year="";
-   $tit_imdb=$title;
+  preg_match_all("/\<li\>\<a href\=\"([^\"]+)\"\>([^\<]+)/",$h,$m);
+  for ($k=0;$k<count($m[1]);$k++) {
+    if (substr($m[1][$k],0,4)=="http")
+     $f[] = array($m[2][$k],$m[1][$k]);
   }
 
-  $link_f=$fs_target.'?tip=series&link='.urlencode($link).'&title='.urlencode(fix_t($title)).'&image='.$image."&sez=".$sez."&ep=&ep_tit=&year=".$year;
+
+foreach($f as $key => $value) {
+  $title=$value[0];
+  $link=$value[1];
+  $imdb="";
+  $image="";
+  $year="";
+  $tit_imdb=$title;
+  $link_f=$fs_target.'?tip=movie&link='.urlencode($link).'&title='.urlencode(fix_t($title)).'&image='.$image."&sez=&ep=&ep_tit=&year=".$year;
   if ($title) {
   if ($n==0) echo '<TR>'."\r\n";
-  $val_imdb="tip=series&title=".urlencode(fix_t($tit_imdb))."&year=".$year."&imdb=".$imdb;
   $fav_link="mod=add&title=".urlencode(fix_t($title))."&link=".urlencode($link)."&image=".urlencode($image)."&year=".$year;
   if ($tast == "NU") {
-    echo '<td class="mp" width="25%"><a href="'.$link_f.'" id="myLink'.$w.'" target="_blank" onmousedown="isKeyPressed(event)">
-    <img id="myLink'.$w.'" src="'.$image.'" width="'.$width.'" height="'.$height.'"><BR>'.$title.'</a>
-    <input type="hidden" id="imdb_myLink'.$w.'" value="'.$val_imdb.'">'."\r\n";
+    echo '<td class="mp" width="25%"><a href="'.$link_f.'" id="myLink'.$w.'" target="_blank">
+    '.$title.'</a>'."\r\n";
     if ($has_add=="yes")
       echo '<a onclick="ajaxrequest('."'".$fav_link."'".')" style="cursor:pointer;">*</a>'."\r\n";
     echo '</TD>'."\r\n";
   } else {
     echo '<td class="mp" width="25%"><a class ="imdb" id="myLink'.$w.'" href="'.$link_f.'" target="_blank">
-    <img src="'.$image.'" width="'.$width.'" height="'.$height.'"><BR>'.$title.'</a>
-    <input type="hidden" id="imdb_myLink'.$w.'" value="'.$val_imdb.'">'."\r\n";
+    '.$title.'</a>'."\r\n";
     if ($has_add == "yes")
       echo '<input type="hidden" id="fav_myLink'.$w.'" value="'.$fav_link.'"></a>'."\r\n";
     echo '</TD>'."\r\n";
@@ -284,13 +242,6 @@ foreach($f as $key => $value) {
     }
     echo '</TR>'."\r\n";
   }
-echo '<tr>
-<TD class="nav" colspan="4" align="right">'."\r\n";
-if ($page > 1)
-  echo '<a href="'.$prev.'">&nbsp;&lt;&lt;&nbsp;</a> | <a href="'.$next.'">&nbsp;&gt;&gt;&nbsp;</a></TD>'."\r\n";
-else
-  echo '<a href="'.$next.'">&nbsp;&gt;&gt;&nbsp;</a></TD>'."\r\n";
-echo '</TR>'."\r\n";
 echo "</table>"."\r\n";
 echo "</table>";
 ?></body>

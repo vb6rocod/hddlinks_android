@@ -162,7 +162,7 @@ unset($videos[0]);
 $videos = array_values($videos);
 foreach($videos as $video) {
  $t1=explode('"',$video);
- if (preg_match("/gserver|oserver/i",$t1[0])) {
+ if (preg_match("/gserver|oserver/i",$t1[0])) {  // |vsserver|ebserver|iserver
  $s[]=$t1[0];
  $t1=explode('episode_id=',$video);
  $t2=explode('"',$t1[1]);

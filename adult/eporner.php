@@ -243,6 +243,10 @@ foreach($videos as $video) {
   $t1 = explode('src="', $video);
   $t2 = explode('"', $t1[1]);
   $image = $t2[0];
+  if (preg_match("/base64/",$image)) {
+  $t2 = explode('"', $t1[2]);
+  $image = $t2[0];
+  }
   $t1=explode('class="mbtim"',$video);
   $t2=explode('>',$t1[1]);
   $t3=explode(">",$t2[1]);

@@ -312,7 +312,7 @@ for ($k=0; $k<count($r);$k++) {
   $link_f=$fs_target.'?tip=series&link='.urlencode($link).'&title='.urlencode(fix_t($title)).'&image='.$image."&sez=".$sez."&ep=&ep_tit=&year=".$year;
   if ($title) {
   if ($n==0) echo '<TR>'."\r\n";
-  $val_imdb="tip=series&title=".urlencode(fix_t($tit_imdb))."&year=".$year."&imdb=".$imdb;
+  $val_imdb="tip=series&title=".urlencode(fix_t($tit_serial))."&year=".$year."&imdb=".$imdb;
   $fav_link="mod=add&title=".urlencode(fix_t($title))."&link=".urlencode($link)."&image=".urlencode($image)."&year=".$year;
   if (preg_match("/^https\:\/\/i\.imgur\.com/",$image))
     $image="https://res.cloudinary.com/practicaldev/image/fetch/w_120,h_178,c_scale,f_auto,q_auto/".$image;

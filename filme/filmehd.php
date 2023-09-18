@@ -15,7 +15,7 @@ $width="200px";
 $height="278px";
 /* ==================================================== */
 $has_fav="no";
-$has_search="no";
+$has_search="yes";
 $has_add="yes";
 $has_fs="no";
 $fav_target="";
@@ -165,9 +165,9 @@ echo '</TR>'."\r\n";
 
 if($tip=="release") {
  if ($page>1)
-  $l=$link."/page/".$page;
+  $l="https://filmehd.se"."/page/".$page;
  else
-  $l=$link;
+  $l="https://filmehd.se";
 } else {
   $search=str_replace(" ","+",$tit);
   if ($page > 1)

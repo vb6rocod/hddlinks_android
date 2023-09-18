@@ -131,7 +131,11 @@ function isKeyPressed(event) {
 }
 $(document).on('keyup', '.imdb', isValid);
 document.onkeypress =  zx;
+
+
 </script>
+
+
 </head>
 <body>
 <a id="fancy" data-fancybox data-type="iframe" href=""></a>

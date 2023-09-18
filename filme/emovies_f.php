@@ -213,6 +213,17 @@ foreach($videos as $video) {
  $t2=explode('"',$t1[1]);
  $title=trim($t2[0]);
 
+ $title=html_entity_decode($title,ENT_QUOTES);
+ $title=htmlspecialchars_decode($title,ENT_QUOTES);
+ $title = preg_replace_callback(
+   "/(\&\#[0-9]+\;?)/",
+   function($m) {
+    return mb_convert_encoding(substr($m[1],-1) ==";" ? $m[1]:$m[1].";", "UTF-8", "HTML-ENTITIES");
+   },
+   $title
+ );
+
+
  $year="";
   if (!preg_match("/class\=\"mli\-eps\"\>/",$video)) $f[] = array($title,$link,$image,$year);
 }

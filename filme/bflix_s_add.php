@@ -33,7 +33,7 @@ if ($mod=="add") {
   if ($arr) {
   $found=false;
   foreach($arr as $key => $value) {
-    if ($title == $arr[$key][0] && $link == $arr[$key][1]) {
+    if ($title == $arr[$key][0] && parse_url($link)['path']==parse_url($arr[$key][1])['path']) {
       $found=true;
       break;
     }
@@ -70,7 +70,7 @@ if ($mod=="add") {
   if ($arr) {
   $found=false;
   foreach($arr as $key => $value) {
-    if ($title == $arr[$key][0] && $link==$arr[$key][1]) {
+    if ($title == $arr[$key][0] && parse_url($link)['path']==parse_url($arr[$key][1])['path']) {
       $found=true;
       //echo $title;
       unset ($arr[$key]);

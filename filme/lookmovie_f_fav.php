@@ -104,7 +104,9 @@ function isValid(evt) {
      var instance = $.fancybox.getInstance();
      var charCode = (typeof e.which == "number") ? e.which : e.keyCode
      if (charCode == "13"  && instance !== false) {
+
        $.fancybox.close();
+       //$.fancybox.close();
        setTimeout(function(){ document.getElementById(id_link).focus(); }, 500);
      } else if (charCode == "53" && e.target.type != "text") {
       document.getElementById("send").click();
@@ -137,6 +139,7 @@ function off() {
 $(document).on('keyup', '.imdb', isValid);
 document.onkeypress =  zx;
 </script>
+
 </head>
 <body>
 <a href='' id='mytest1'></a>

@@ -171,6 +171,7 @@ echo '<table border="1px" width="100%">'."\n\r";
 foreach($arr as $key => $value) {
     $imdb="";
 	$link = urldecode($arr[$key][1]);
+	$link=$host.parse_url($link)['path'];
     $title = unfix_t(urldecode($arr[$key][0]));
     $image=urldecode($arr[$key][2]);
     //$image=$host.parse_url($image)['path'];

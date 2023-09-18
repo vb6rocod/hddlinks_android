@@ -53,7 +53,9 @@ $imdbid="";
 <title><?php echo $tit.$tit2; ?></title>
 <link rel="stylesheet" type="text/css" href="../custom.css" />
 <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.0/jquery.min.js"></script>
-<script type="text/javascript" src="cryptojsonaes.js"></script>
+<!--<script type="text/javascript" src="cryptojsonaes.js"></script>-->
+<script src='cryptojs-aes.min.js?ver=3.1.2' id='cryptojs-aes-js'></script>
+<script src='cryptojs-aes-format.js?ver=3.1.2' id='cryptojs-aes-format-js'></script>
 <script type="text/javascript">
 function openlink1(link) {
   link1=document.getElementById('file').value;
@@ -132,7 +134,32 @@ echo '<h2>'.$tit.$tit2.'</H2>';
 echo '<BR>';
 $r=array();
 //echo $link;
+    function decrypt($jsonStr, $passphrase)
+    {
+        $json = json_decode($jsonStr, true);
+//print_r ($json);
+        $salt = hex2bin($json["s"]);
+        $iv = hex2bin($json["iv"]);
+        $ct = base64_decode($json["ct"]);
+        //echo $json["ct"]."\n";
+        $concatedPassphrase = $passphrase . $salt;
+        $md5 = [];
+        $md5[0] = md5($concatedPassphrase, true);
+        $result = $md5[0];
+        $i = 1;
+        while (strlen($result) < 32) {
+            $md5[$i] = md5($md5[$i - 1] . $concatedPassphrase, true);
+            $result .= $md5[$i];
+            $i++;
+        }
+        $key = substr($result, 0, 32);
+        $data = openssl_decrypt($ct, 'aes-256-cbc', $key, OPENSSL_RAW_DATA, $iv);
+        return json_decode($data, true);
+    }
 $host=parse_url($link)['host'];
+$cf="https://basic-bundle-solitary-morning-4d74.quamatbanty02.workers.dev/?";
+$cf="https://cors-anywhere.azm.workers.dev/";
+//$link=$cf.$link;
 $ua="Mozilla/5.0 (Windows NT 10.0; rv:89.0) Gecko/20100101 Firefox/89.0";
 $head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/112.0',
 'Accept: application/json, text/javascript, */*; q=0.01',
@@ -163,6 +190,7 @@ $head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gec
   //$cf="https://embed.smashystream.com/cors.php?";
   //$cf="https://basic-bundle-fancy-sky-d60a.rustedcorn.workers.dev/?";
   $l="https://".$host."/wp-admin/admin-ajax.php";
+
 echo '
 <script>
 //post=93599&nume=1&type=movie
@@ -180,8 +208,11 @@ $.ajax({
                     host: "'.$host.'"
                 },
                 success: function(t) {
+                //alert (t);
 t= JSON.parse(t);
+//alert (t.key);
 z = CryptoJSAesJson.decrypt(t.embed_url, t.key);
+//alert (z);
 const url = new URL(z);
 document.getElementById("server").innerHTML =url.host;
 document.getElementById("file").value=(z + "&ref='.$host.'");

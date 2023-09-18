@@ -294,12 +294,12 @@ if ($tip=="movie")
   echo $h;
   */
 }
-if (preg_match("/hdwatched\.xyz/",$filelink)) {
+if (preg_match("/hdwatched.*?\./",$filelink)) {
+//echo $filelink;
   $head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/116.0',
   'Accept: image/avif,image/webp,*/*',
   'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
   'Accept-Encoding: deflate',
-  'Alt-Used: www.hdwatched.xyz',
   'Connection: keep-alive',
   'Sec-Fetch-Dest: image',
   'Sec-Fetch-Mode: no-cors',
@@ -314,6 +314,7 @@ if (preg_match("/hdwatched\.xyz/",$filelink)) {
   curl_setopt($ch, CURLOPT_TIMEOUT, 25);
   $h = curl_exec($ch);
   curl_close($ch);
+  //echo $h;
   if (preg_match("/source\s+src\=\"([^\"]+)\"/",$h,$m))
    $link=$m[1];
   if ($link && $flash == "flash2") {
@@ -1217,7 +1218,7 @@ if (preg_match("/emovies\./",$filelink)) {
    $l="https:".$y['value'];
   else
    $l=$y['value'];
-   
+  //echo $l;
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $l);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
@@ -6155,6 +6156,31 @@ $head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:104.0) Gecko/20100101 
   if ($flash <> "flash")
    $link .="|Referer=".urlencode("https://olgply.xyz")."&Origin=".urlencode("https://olgply.xyz");
   $filelink="";
+} elseif (preg_match("/streamdav\.com/",$filelink)) {
+  //echo $filelink;
+  // http://streamdav.com/e/kctFKdlCXV99
+  $head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/112.0',
+  'Accept: */*',
+  'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
+  'Accept-Encoding: deflate',
+  'Connection: keep-alive',
+  'Referer: https://www.filmeserialeonline.org',
+  'Upgrade-Insecure-Requests: 1');
+  $ch = curl_init();
+  curl_setopt($ch, CURLOPT_URL,$filelink);
+  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER  ,1);
+  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+  curl_setopt($ch, CURLOPT_ENCODING,"");
+  curl_setopt($ch, CURLOPT_HTTPHEADER,$head);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 25);
+  $h = curl_exec($ch);
+  //echo $h;
+  if (preg_match("/source src\=\"([^\"]+)\"/",$h,$m))
+    $link=html_entity_decode($m[1]);
+  if (preg_match("/captions\" src\=\"([^\"]+)\"/",$h,$s))
+    $srt=html_entity_decode($s[1]);
 } elseif (preg_match("/vgfplay\.|fslinks\./",$filelink)) {
   //https://fslinks.org/e/gqM1VOPXwMOo4kY?&c1_file=http://filmeserialeonline.org/srt/tt5264838.srt&c1_label=RO&c2_file=http://filmeserialeonline.org/srt/tt5264838_EN.srt&c2_label=EN
   //echo $filelink;
@@ -6586,15 +6612,21 @@ if (count($pl) > 1) {
   $h = curl_exec($ch);
   }
   curl_close($ch);
-  //echo $h;
+  //echo $h."\n";
+  //MasterJS = '{"
   if (preg_match("/MasterJS\s*\=\s*[\'\"]([^\'\"]+)[\'\"]/i",$h,$m)) {
   $enc=$m[1];
-  //echo $enc;
+  $t1=explode("MasterJS = '",$h);
+  $t2=explode("';</",$t1[1]);
+  $enc=$t2[0];
+  $x=json_decode($enc,1);
+  //print_r ($x);
   require_once("cryptoJsAesDecrypt.php");
   $js=new cryptoJsAesDecrypt();
   //$pass="4VqE3#N7zt&HEP^a";
   $pass="11x&W5UBrcqn\$9Yl";
-  $out = $js->decrypt2($pass,base64_decode($enc));
+  $pass="m4H6D9%0\$N&F6rQ&";
+  $out = $js->decrypt1($pass,$enc);
   //echo $out;
   $link="";
   $srt="";

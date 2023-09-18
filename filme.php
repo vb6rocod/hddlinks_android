@@ -50,15 +50,15 @@ else
 <TR>
 
 
-<TD width="25%"><a href="filme/voxfilmeonline_main.php" target="_blank">voxfilmeonline</a></TD>
-<TD width="25%"><a href="filme/topfilmeonline_main.php" target="_blank">topfilmeonline</a></TD>
+<TD width="25%"><a href="filme/voxfilmeonline.php?page=1&tip=release&title=voxfilmeonline&link=" target="_blank">voxfilmeonline</a></TD>
+<TD width="25%"><a href="filme/topfilmeonline.php?page=1&tip=release&title=topfilmeonline&link=" target="_blank">topfilmeonline</a></TD>
 <TD width="25%"><a href="filme/divxfilmeonline.php?page=1&tip=release&title=divxfilmeonline&link=" target="_blank">divxfilmeonline</a></TD>
-<TD width="25%"><a href="filme/filmehd_main.php" target="_blank">filmehd</a></TD>
+<TD width="25%"><a href="filme/filmehd.php?page=1&tip=release&title=filmehd&link=" target="_blank">filmehd</a></TD>
 
 </TR>
 <TR>
 <TD width="25%"><a href="filme/filmeseriale_filme.php?page=1&tip=release&title=filmeseriale&link=" target="_blank">filmeseriale.online</a></TD>
-<TD width="25%"><a href="filme/filmeonline2016_main.php" target="_blank">filmeonline2016</a></TD>
+<TD width="25%"><a href="filme/filmeonline2016.php?page=1&tip=release&title=filmeonline2016&link=" target="_blank">filmeonline2016</a></TD>
 <TD width="25%"><a href="filme/serialeonline_f.php?page=1&tip=release&title=serialeonline&link=" target="_blank">serialeonline</a></TD>
 <TD width="25%"><a href="filme/fsonline_f.php?page=1&tip=release&title=fsonline&link=" target="_blank">fsonline</a></TD>
 <!--<TD width="25%"><a href="filme/portalultautv_main.php" target="_blank">portalultautv</a></TD>-->
@@ -67,7 +67,7 @@ else
 
 <!--- desene si filme...-->
 <TR>
-<TD width="25%"><a href="filme/hdwatched_f.php?page=1&tip=release&title=hdwatched&link=" target="_blank">hdwatched</a></TD>
+<TD width="25%"></TD>
 <TD width="25%"><a href="filme/emovies_f.php?page=1&tip=release&title=emovies&link=" target="_blank">emovies</a></TD>
 <TD width="25%"><a href="filme/tugaflix_f.php?page=1&tip=release&title=tugaflix&link=" target="_blank">tugaflix</a></TD>
 <TD width="25%"><a href="filme/allmoviesforyou_f.php?page=1&tip=release&title=allmoviesforyou&link=" target="_blank">allmoviesforyou</a></TD>
@@ -84,7 +84,7 @@ else
 <TR>
 <TD width="25%"><a href="filme/lookmovie_f.php?page=1&tip=release&title=lookmovie&link=" target="_blank">lookmovie</a></TD>
 <TD width="25%"><a href="filme/streamflix_f.php?page=1&tip=release&title=streamflix&link=popular" target="_blank">streamflix</a></TD>
-<TD width="25%"><a href="filme/vidcloud9_f.php?page=1&tip=release&title=vidcloud9&link=" target="_blank">vidcloud9</a></TD>
+<TD width="25%"></TD>
 <TD width="25%"><a href="filme/azseries_f.php?page=1&tip=release&title=azseries&link=" target="_blank">azseries</a></TD>
 </TR>
 
@@ -112,7 +112,7 @@ else
 
 <TR>
 <TD width="25%"><a href="filme/idlixian_f.php?page=1&tip=release&title=idlixian&link=" target="_blank">idlixian</a></TD>
-<TD width="25%"><a href="filme/watchonline_f.php?page=1&tip=release&title=watchonline&link=" target="_blank">watchonline</a></TD>
+<TD width="25%"></TD>
 <TD width="25%"></TD>
 <TD width="25%"></TD>
 </TR>

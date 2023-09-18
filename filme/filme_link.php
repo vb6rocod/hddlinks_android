@@ -595,7 +595,9 @@ if (preg_match("/filmeonlinegratis\.org/",$filelink)) {
 } elseif (strpos($filelink,"filmeserialeonline.org") !== false) {
 //echo $filelink;
 //die();
+  $host="http://".parse_url($filelink)['host'];
   $ua = $_SERVER['HTTP_USER_AGENT'];
+  //$ua="Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/117.0";
   $ch = curl_init($filelink);
   curl_setopt($ch, CURLOPT_USERAGENT, $ua);
   curl_setopt($ch,CURLOPT_REFERER,$filelink);
@@ -609,48 +611,28 @@ if (preg_match("/filmeonlinegratis\.org/",$filelink)) {
   curl_setopt($ch, CURLOPT_TIMEOUT, 15);
   $h2 = curl_exec($ch);
   curl_close ($ch);
-  $id=str_between($h2,'post_id":"','"');
+  $id="";
+  $url="";
   //echo $h2;
   if (preg_match("/id:\s+(\d+)/",$h2,$m)){
    $id=$m[1];
   }
-  /*
-  if (preg_match("/data\-id\=\"(\d+)/",$h2,$m)){
-   $id=$m[1];
-  }
-  */
-  //data-id="
-//wp-content/themes/grifus/includes/single/second.php
-  if (strpos($h2,"grifus/includes") !== false) {
-    //$id=str_between($h2,'data: {id: ',')');
-    // wp-content/themes/grifus/includes/single/second.php
-    // wp-content/themes/grifus/includes/single/second.php
-    $tip=1;
-    $post="id=".$id."&logat=1";
-    $post="id=".$id;
-    $l="http://www.filmeserialeonline.org/wp-content/themes/grifus/includes/single/second.php";
-    $l="http://www.filmeserialeonline.org/wp-content/themes/grifus/includes/single/second.php";
-  } else {
-    //$id=str_between($h2,'data: {id: ','}');
-    $tip=2;
-    $post="id=".$id;
-    $l="http://www.filmeserialeonline.org/wp-content/themes/grifus/loop/second.php";
-  }
-  //$post="call=03";
-  //$post="id=".$id."&logat=1";
-  //echo $l.$post;
-$headers=array('Accept: text/html, */*; q=0.01',
-'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
-'Accept-Encoding: deflate',
-'Content-Type: application/x-www-form-urlencoded; charset=UTF-8',
-'X-Requested-With: XMLHttpRequest',
-'Content-Length: '.strlen($post).'',
-'Origin: http://www.filmeserialeonline.org',
-'Connection: keep-alive',
-'Referer: '.$filelink.''
-);
+  if (preg_match("/url\:\s*\"([^\"]+)\"/",$h2,$m))
+   $url=$host."/".$m[1];
+  $post="id=".$id;
+  $headers=array('Accept: text/html, */*; q=0.01',
+  'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
+  'Accept-Encoding: deflate',
+  'Content-Type: application/x-www-form-urlencoded; charset=UTF-8',
+  'X-Requested-With: XMLHttpRequest',
+  'Content-Length: '.strlen($post).'',
+  'Origin: http://www.filmeserialeonline.org',
+  'Connection: keep-alive',
+  'Referer: '.$filelink.''
+  );
 //print_r ($headers);
-  $ch = curl_init($l);
+  $ch = curl_init();
+  curl_setopt($ch, CURLOPT_URL, $url);
   curl_setopt($ch, CURLOPT_USERAGENT, $ua);
   //curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows; U; Windows NT 6.1; en-US; rv:1.9.1.2) Gecko/20090729 Firefox/3.5.2 GTB5');
   curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
@@ -665,54 +647,47 @@ $headers=array('Accept: text/html, */*; q=0.01',
   $html = curl_exec($ch);
   curl_close ($ch);
   //echo $html;
-  if (strpos($html,"second_id.php") !== false) {
+  if (!preg_match("/grecaptcha\.getResponse/",$html)) {
+    $ch = curl_init();
+    curl_setopt($ch, CURLOPT_USERAGENT, $ua);
+    curl_setopt($ch,CURLOPT_REFERER,$filelink);
+    curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER  ,1);  // RETURN THE CONTENTS OF THE CALL
+    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+    curl_setopt($ch, CURLOPT_HEADER, true);
+    curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+    curl_setopt($ch, CURLOPT_TIMEOUT, 15);
     $videos=explode('url: "',$html);
     unset($videos[0]);
     $videos = array_values($videos);
     foreach($videos as $video) {
       $t1=explode('"',$video);
       $l="http://www.filmeserialeonline.org/".$t1[0];
-      //echo $l;
-      $ch = curl_init($l);
-      curl_setopt($ch, CURLOPT_USERAGENT, $ua);
-      //curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows; U; Windows NT 6.1; en-US; rv:1.9.1.2) Gecko/20090729 Firefox/3.5.2 GTB5');
-      curl_setopt($ch,CURLOPT_REFERER,$filelink);
-      //curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
-      //curl_setopt ($ch, CURLOPT_POST, 1);
-      //curl_setopt ($ch, CURLOPT_POSTFIELDS, $post);
-      curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
-      curl_setopt($ch, CURLOPT_RETURNTRANSFER  ,1);  // RETURN THE CONTENTS OF THE CALL
-      //curl_setopt($ch, CURLOPT_HEADER, true);
-      curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-      curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
-      curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+      curl_setopt($ch, CURLOPT_URL, $l);
+      curl_setopt($ch, CURLOPT_NOBODY,0);
       $h3 = curl_exec($ch);
-      curl_close ($ch);
+      $html .=$h3;
       //echo $h3."\n";
-      
       if (strpos($h3,"filmeserialeonline.org") !== false) {
         $t1=explode('src="',$h3);
         $t2=explode('"',$t1[1]);
         $l=$t2[0];
-        //echo $l."==============";
-        $ch = curl_init($l);
-        curl_setopt($ch, CURLOPT_USERAGENT, $ua);
-        //curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows; U; Windows NT 6.1; en-US; rv:1.9.1.2) Gecko/20090729 Firefox/3.5.2 GTB5');
-        curl_setopt($ch,CURLOPT_REFERER,$filelink);
-        curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER  ,1);  // RETURN THE CONTENTS OF THE CALL
-        curl_setopt($ch, CURLOPT_HEADER, true);
-        curl_setopt($ch, CURLOPT_NOBODY,true);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
-        curl_setopt($ch, CURLOPT_TIMEOUT, 15);
-        //$h3 = curl_exec($ch);
-        curl_close ($ch);
-        //echo $h3."========><><>";
+        curl_setopt($ch, CURLOPT_URL, $l);
+        curl_setopt($ch, CURLOPT_NOBODY,1);
+        $h4 = curl_exec($ch);
+        //echo $h4;
+        if (preg_match("/Location\:\s+(.+)/i",$h4,$m)) {
+          if (preg_match("/\//",$m[1]))
+          $h4 .='<iframe src="'.trim($m[1]).'"> ';
+          $html .=$h4;
+        }
       }
-      $html .=$h3;
     }
+
+    curl_close ($ch);
   }
+  //}
+
   //echo $html;
 } elseif (strpos($filelink,"filmehd.to") !== false) {
   $ch = curl_init();
@@ -1417,7 +1392,7 @@ $s=$s."|movcloud\.net|dogestream\.|streamtape\.|jawcloud\.|viphdvid\.|evoload\.|
 $s=$s."|youdbox\.com|filmele-online\.com|playtube\.|ninjastream\.to|userload\.co|goplayer\.online|videovard\.|cloudemb\.|streamlare\.";
 $s=$s."|sbembed\.com|sbembed1\.com|sbplay\.|sbvideo\.net|streamsb\.net|sbplay\.one|cloudemb\.com|playersb\.com|tubesb\.com|sbplay\d\.|embedsb\.com";
 $s=$s."|\w+ssb\.|lvturbo\.|sb\w+\.|sbbrisk\.|sbanh\.|sblanh\.|sbchill\.|sbfast\.com|sblongvu\.com|sbfull\.|sbthe\.|sbspeed\.|tubeload\.|embedo\.|filemoon\.|utbrgebzvhfa\.";
-$s=$s."|streamhide\.|moonmov\.pro|vgfplay\.|fslinks\.|furher\.|truepoweroflove\./i";
+$s=$s."|streamhide\.|moonmov\.pro|vgfplay\.|fslinks\.|furher\.|truepoweroflove\.|streamdav\./i";
 /////////////////////////////////////////////
 //$x=preg_grep($s,$links);
 //print_r ($x);
@@ -1915,7 +1890,6 @@ echo '<br>
 <TR>
 <TD><font size="4"><b>Scurtaturi: 1=opensubtitles, 2=titrari, 3=subs, 4=subtitrari
 <BR>Scurtaturi: 7=opensubtitles, 8=titrari, 9=subs, 0=subtitrari (cauta imdb id)<BR>
-Instructiuni pentru "Captcha" gasiti <a href="hqq_exp.html">aici.</a>
 </b></font></TD></TR></TABLE>
 ';
 echo '

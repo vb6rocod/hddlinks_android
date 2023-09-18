@@ -12,8 +12,9 @@ $year=$_GET['year'];
 $width="200px";
 $height="100px";
 $fs_target="filme_link.php";
-$has_img="yes";
+$has_img="no";
 /* ======================================= */
+/*
 $f=$base_pass."tmdb.txt";
 if (file_exists($f)) {
    $api_key = file_get_contents($f);
@@ -79,6 +80,7 @@ else
 } else {
   $id_m="";
 }
+*/
 ?>
 <html>
 <head>
@@ -113,7 +115,7 @@ $ua = $_SERVER['HTTP_USER_AGENT'];
   $t2=explode('content="',$t1[1]);
   $t3=explode('"',$t2[1]);
   $img_ep_o=$t3[0];
-
+  //echo $html;
 $n=0;
 $videos = explode('span class="se-t', $html);
 $sezoane=array();
@@ -151,6 +153,7 @@ foreach($videos as $video) {
   $t2=explode('<',$t1[1]);
   $season=trim($t2[0]);
   $sez = $season;
+  /*
   if ($id_m) {
        $l="https://api.themoviedb.org/3/tv/".$id_m."/season/".$sez."?api_key=".$api_key;
        //echo $l;
@@ -171,6 +174,7 @@ foreach($videos as $video) {
   } else {
     $r=getIMDBSeason($imdb,$sez);
   }
+  */
   echo '<table border="1" width="100%">'."\n\r";
   echo '<TR><td class="sez" style="color:black;background-color:#0a6996;color:#64c8ff;text-align:center" colspan="3">Sezonul '.($sez).'</TD></TR>';
   $n=0;
@@ -188,12 +192,13 @@ foreach($videos as $video) {
   $t1=explode('href="',$vid);
   $t2=explode('"',$t1[1]);
   $link=$t2[0];
-  if (!$imdb) {
+  //if (!$imdb) {
   $t3=explode(">",$t1[1]);
   $t4=explode('<',$t3[1]);
   $title=$t4[0];
   $title=str_replace("&nbsp;"," ",$title);
   $ep_tit=prep_tit($title);
+  /*
   } else if (!$user && $r) {  // imdb
     $ep_tit = $r[$episod]['title'];
     $img_ep= $r[$episod]['poster'];
@@ -204,6 +209,7 @@ foreach($videos as $video) {
      else
       $img_ep=$img_ep_o;
   }
+  */
   if ($ep_tit)
    $ep_tit_d=$season."x".$episod." ".$ep_tit;
   else

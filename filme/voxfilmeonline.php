@@ -14,7 +14,7 @@ $width="200px";
 $height="278px";
 /* ==================================================== */
 $has_fav="no";
-$has_search="no";
+$has_search="yes";
 $has_add="yes";
 $has_fs="no";
 $fav_target="";
@@ -138,6 +138,52 @@ document.onkeypress =  zx;
 <?php
 $w=0;
 $n=0;
+if ($page==1 && $tip=="release") {
+$l="https://voxfilmeonline.biz/";
+$cookie=$base_cookie."hdpopcorns.dat";
+//$cookie=$base_cookie."biz.dat";
+require( 'cryptoHelpers.php');
+require( 'aes_small.php');
+$ua = $_SERVER['HTTP_USER_AGENT'];
+//$ua="Mozilla/5.0 (Windows NT 10.0; rv:75.0) Gecko/20100101 Firefox/75.0";
+
+$head=array('Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
+'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
+'Accept-Encoding: deflate',
+'Connection: keep-alive',
+'Upgrade-Insecure-Requests: 1');
+
+  $ch = curl_init();
+  curl_setopt($ch, CURLOPT_URL, $l);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
+  curl_setopt($ch, CURLOPT_HTTPHEADER,$head);
+  curl_setopt($ch, CURLOPT_COOKIEFILE,$cookie);
+  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+  $html = curl_exec($ch);
+  //echo $html;
+  curl_close($ch);
+  if(preg_match_all('/toNumbers\(\"(\w+)\"/',$html,$m)) {
+   $a=cryptoHelpers::toNumbers($m[1][0]);
+   $b=cryptoHelpers::toNumbers($m[1][1]);
+   $c=cryptoHelpers::toNumbers($m[1][2]);
+   $d=AES::decrypt($c,16,2,$a,16,$b);
+   //print_r ($m);
+   $test=cryptoHelpers::toHex($d);
+   //echo $test;
+   $domain = 'voxfilmeonline.biz';
+   $expire = time() + 36000;
+   $name   = 'OHLALA';
+   $value = $test;
+   file_put_contents($cookie, "\n$domain\tTRUE\t/\tFALSE\t$expire\t$name\t$value\n", FILE_APPEND);
+   //curl_setopt($ch, CURLOPT_COOKIEFILE,$cookie);
+   //$html = curl_exec($ch);
+ }
+ //curl_close($ch);
+ }
 echo '<H2>'.$page_title.'</H2>'."\r\n";
 
 echo '<table border="1px" width="100%" style="table-layout:fixed;">'."\r\n";
@@ -164,9 +210,9 @@ echo '</TR>'."\r\n";
 
 if($tip=="release") {
  if ($page>1)
-  $l=$link."page/".$page."/";
+  $l="https://voxfilmeonline.biz/"."page/".$page."/";
  else
-  $l=$link;
+  $l="https://voxfilmeonline.biz/";
 } else {
   $search=str_replace(" ","+",$tit);
   if ($page > 1)
@@ -176,6 +222,7 @@ if($tip=="release") {
 }
 $ua = $_SERVER['HTTP_USER_AGENT'];
 $cookie=$base_cookie."hdpopcorns.dat";
+//echo $l;
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $l);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
