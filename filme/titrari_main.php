@@ -93,6 +93,7 @@ echo '</TR>';
   else
   $l="https://".$host."/index.php?page=cautarecutare&z1=".($page1*20)."&z2=&z3=-1&z4=-1&z5=&z6=0&z7=".urlencode($title)."&z8=1&z9=All&z10=&z11=0";
   }
+//https://titrari.ro/index.php?page=cautare&z1=0&z2=star&z3=2&z4=1
   //$l="https://www.xn--titrri-l0a.ro/index.php?page=cautareavansata&z1=".$page1."&z2=&z3=-1&z4=-1&z5=&z6=0&z7=".urlencode($title)."&z8=1&z9=All&z10=&z11=0";
 // https://www.xn--titrri-l0a.ro/index.php?page=cautare&z1=0&z2=The+Christmas+Chronicles&z3=1&z4=1
 
@@ -111,11 +112,12 @@ echo '</TR>';
   curl_setopt($ch, CURLOPT_TIMEOUT, 15);
   $h=curl_exec($ch);
   curl_close($ch);
-  //echo $h;
+$cc="0";
+$videos=array();
 $videos=explode('<h1><a style=color:black',$h);
 unset($videos[0]);
 $videos = array_values($videos);
-
+$cc=count($videos);
 foreach($videos as $video) {
   $t1=explode(">",$video);
   $t2=explode("<",$t1[1]);
@@ -131,7 +133,7 @@ foreach($videos as $video) {
   $link=$t2[0];
   echo '<TR>';
   //echo '<TD><font size="4"><a id="myLink" href="#" onclick="changeserver('."'".$link."'".');return false;">'.$title.'</a></font></TD><TD>'.$desc.'</TD></TR>'."\r\n";
-  echo '<TD width="33%"><a id="myLink" href="titrari_sub.php?'.$link.'&title='.urlencode(fix_t($title)).'&page_tit='.urlencode(fix_t($page_tit)).'">'.$title.'</a></TD><TD>'.$desc.'</TD></TR>'."\r\n";
+  echo '<TD width="33%"><a id="myLink" href="titrari_sub.php?'.$link.'&title='.urlencode(fix_t($title)).'&page_tit='.urlencode(fix_t($page_tit)).'&cc='.$cc.'">'.$title.'</a></TD><TD>'.$desc.'</TD></TR>'."\r\n";
 
 }
 echo '<TR><TD colspan="2" align="left">';
@@ -143,5 +145,11 @@ echo '</TR>';
 ?>
 </TABLE>
 <BR>
+<?php
+if ($cc==0) {
+    echo "Nu am gasit subtitrari.";
+    echo '<script>setTimeout(function(){ history.go(-1); }, 1500);</script>';
+}
+?>
 </div></body>
 </HTML>

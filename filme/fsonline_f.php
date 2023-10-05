@@ -15,6 +15,7 @@ $height="278px";
 $last_good="https://fsonline.to";
 $last_good="https://www4.fsonline.to";
 $last_good="https://www1.fsonline.app";
+$last_good="https://www2.fsonline.app";
 $host=parse_url($last_good)['host'];
 /* ==================================================== */
 $has_fav="no";

@@ -2,12 +2,12 @@
 <?php
 error_reporting(0);
 
-$pg_tit="sportybite";
+$pg_tit="sportsonline";
 ?>
 <html>
 <head>
 <meta charset="utf-8">
-<title>sportybite</title>
+<title>sportsonline</title>
 <script type="text/javascript" src="//code.jquery.com/jquery-3.2.1.min.js"></script>
 <script src="../jquery.fancybox.min.js"></script>
 <link rel="stylesheet" type="text/css" href="../jquery.fancybox.min.css">
@@ -81,13 +81,13 @@ if (preg_match("/android|ipad/i",$user_agent) && preg_match("/chrome|firefox|mob
 $n=0;
 $w=0;
 $r=array();
-$l="https://sportybite.top/";
+$l="https://sportsonline.so/247.txt";
 $head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/110.0',
 'Accept: */*',
 'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
 'Accept-Encoding: deflate',
-'Referer: https://sportybite.top/',
-'Origin: https://sportybite.top'
+'Referer: https://sportsonline.so/',
+'Origin: https://sportsonline.so'
 );
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $l);
@@ -99,74 +99,16 @@ $head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gec
   curl_setopt($ch, CURLOPT_TIMEOUT, 15);
   $h = curl_exec($ch);
   curl_close($ch);
-  //$h=file_get_contents("C:/EasyPhp/localweb/mobile1/nou/sport.htm");
-
- //<div class="channels">
-$r=array();
-  $videos=explode('<div class="channels">',$h);
-  unset($videos[0]);
-$videos = array_values($videos);
-foreach($videos as $video) {
- $t1=explode('href="',$video);
- $t2=explode('"',$t1[1]);
- $l=$t2[0];
- $t3=explode('>',$t1[1]);
- $t4=explode('<',$t3[1]);
- $title=trim($t4[0]);
- if ($title)
-  $r[]=array($l,$title);
-}
-
-echo '<h2>CHANNEL TV 24/7</H2>';
-$n=0;
-
-echo '<table border="1px" width="100%">';
-for ($z=0;$z<count($r);$z++) {
-    $title=trim($r[$z][1]);
-    $file = trim($r[$z][0]);
-
-    $mod="direct";
-    $from="fara";
-    $link="direct_link.php?link=".urlencode(fix_t($file))."&title=".urlencode(fix_t($title))."&from=".$from."&mod=direct";
-    $l="link=".urlencode(fix_t($file))."&title=".urlencode(fix_t($title))."&from=".$from."&mod=".$mod;
-    if ($n == 0) echo "<TR>"."\n\r";
-    //if ($tast == "NU")
-    if ($flash == "flash")
-    echo '<TD class="mp" width="20%">'.'<a class ="imdb" id="myLink'.($w*1).'" href="'.$link.'" target="_blank">'.$title.
-    '</a>';
-    else
-    echo '<TD class="mp" width="20%">'.'<a class ="imdb" id="myLink'.($w*1).'" onclick="ajaxrequest('."'".$l."')".'"'." style='cursor:pointer;'>".$title.
-    '</a>';
-    $n++;
-    $w++;
-
-    if ($n > 3) {
-     echo '</TR>'."\n\r";
-     $n=0;
-    }
-
-   //}
-  //}
-}
- echo '</table>';
-//////////////////////
-$r=array();
-$n=0;
-  $t1=explode('<script type="application/ld+json">',$h);
-  $t2=explode('</script>',$t1[1]);
-  $x=trim($t2[0]);
-  //echo $x;
-  $videos=explode('@context',$x);
+  //echo $h;
+  $videos=explode("\n",$h);
+  
   unset($videos[0]);
   $videos = array_values($videos);
   foreach($videos as $video) {
-    preg_match("/name\"\:\s*\"([^\"]+)\"/",$video,$m1);
-    preg_match("/url event\"\:\s*\"([^\"]+)\"/",$video,$m2);
-    preg_match("/startDate\"\:\s*\"([^\"]+)\"/",$video,$m3);
-    preg_match("/sport\"\:\s*\"([^\"]+)\"/",$video,$m4);
-    preg_match("/league\"\:\s*\"([^\"]+)\"/",$video,$m5);
-    print_r ($m);
-    $r[]=array($m1[1],$m2[1],$m3[1],$m4[1],$m5[1]);
+    if (preg_match("/https/",$video)) {
+    $t1=explode("-",$video);
+    $r[]=array(trim($t1[0]),trim($t1[1]));
+    }
   }
   /*
   die();
@@ -178,20 +120,13 @@ $n=0;
     $r[]=array($y[$k]['name'],$y[$k]['location']['url event'],$y[$k]['startDate'],$y[$k]['location']['sport'],$y[$k]['location']['league']);
   }
   */
-$n=0;
-echo '<h2>Sports Event</H2>';
+
+echo '<h2>CHANNEL TV 24/7</H2>';
 echo '<table border="1px" width="100%">';
 for ($z=0;$z<count($r);$z++) {
     $title=trim($r[$z][0]);
     $file = trim($r[$z][1]);
-    $time=$r[$z][2];
-    //echo $time;
-    //2023-09-17T15:00:00
-    preg_match("/(\d+)\-(\d+)\-(\d+)T(\d+)\:(\d+)\:(\d+)/",trim($time),$m);
-    //print_r ($m);
-    $time=mktime($m[4]+1,$m[5],$m[6],$m[2],$m[3],$m[1]);
-    $time=date("d-m-Y H:i",$time);
-    $sport=$r[$z][3]." - ".$r[$z][4];
+
     $mod="direct";
     $from="fara";
     $link="direct_link.php?link=".urlencode(fix_t($file))."&title=".urlencode(fix_t($title))."&from=".$from."&mod=direct";
@@ -199,11 +134,9 @@ for ($z=0;$z<count($r);$z++) {
     if ($n == 0) echo "<TR>"."\n\r";
     //if ($tast == "NU")
     if ($flash == "flash")
-    echo '<TD class="mp" width="20%">'.'<a class ="imdb" id="myLink'.($w*1).'" href="'.$link.'" target="_blank">'.$title.
-    '<BR>'.$sport."<BR>".$time.'</a>';
+    echo '<TD class="mp" width="20%">'.'<a class ="imdb" id="myLink'.($w*1).'" href="'.$link.'" target="_blank">'.$title.'</a>';
     else
-    echo '<TD class="mp" width="20%">'.'<a class ="imdb" id="myLink'.($w*1).'" onclick="ajaxrequest('."'".$l."')".'"'." style='cursor:pointer;'>".$title.
-    '<BR>'.$sport."<BR>".$time.'</a>';
+    echo '<TD class="mp" width="20%">'.'<a class ="imdb" id="myLink'.($w*1).'" onclick="ajaxrequest('."'".$l."')".'"'." style='cursor:pointer;'>".$title.'</a>';
     $n++;
     $w++;
 
@@ -217,6 +150,75 @@ for ($z=0;$z<count($r);$z++) {
 }
 
  echo '</table>';
+ //<div class="channels">
+$r=array();
+$link="https://sportsonline.gl/prog.txt";
+  $head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/110.0',
+  'Accept: */*',
+  'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
+  'Accept-Encoding: deflate',
+  'Referer: https://primasport.one/',
+  'Origin: https://primasport.one'
+  );
+  $ch = curl_init();
+  curl_setopt($ch, CURLOPT_URL, $link);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+  curl_setopt($ch, CURLOPT_HTTPHEADER, $head);
+  //curl_setopt($ch, CURLOPT_HEADER,1);
+  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 25);
+  $h = curl_exec($ch);
+  //$h=preg_replace("/\n/","",$h);
+  //echo $h;
+$ev=array();
+preg_match_all("/(Monday|Tuesday|Wednesday|Thursday|Friday|Saturday|Sunday)/si",$h,$d);
+$m=preg_split("/Monday|Tuesday|Wednesday|Thursday|Friday|Saturday|Sunday/i",$h);
+for ($z=0;$z<count($d[0]);$z++) {
+ $e=array();
+  if (preg_match_all("/(\d{1,2}\:\d{2})\s+([^\|]+)\|\s*(.+)/",$m[$z+1],$e)) {
+    for ($y=0;$y<count($e[0]);$y++) {
+      $ev[$d[0][$z]][]=array($e[1][$y],trim($e[2][$y]),trim($e[3][$y]));
+    }
+  }
+ }
+
+echo '<h2>Sports Event (PT time)</H2>';
+$n=0;
+foreach ($ev as $key=>$value) {
+echo '<h3 style="text-align:center;background-color:DodgerBlue;">'.$key.'</h3>';
+echo '<table border="1px" width="100%">';
+for ($z=0;$z<count($ev[$key]);$z++) {
+    $title=$ev[$key][$z][0]." ".$ev[$key][$z][1];
+    $file = $ev[$key][$z][2];
+
+    $mod="direct";
+    $from="fara";
+    $link="direct_link.php?link=".urlencode(fix_t($file))."&title=".urlencode(fix_t($title))."&from=".$from."&mod=direct";
+    $l="link=".urlencode(fix_t($file))."&title=".urlencode(fix_t($title))."&from=".$from."&mod=".$mod;
+    if ($n == 0) echo "<TR>"."\n\r";
+    //if ($tast == "NU")
+    if ($flash == "flash")
+    echo '<TD class="mp" width="20%">'.'<a class ="imdb" id="myLink'.($w*1).'" href="'.$link.'" target="_blank">'.$title.
+    '</a>';
+    else
+    echo '<TD class="mp" width="20%">'.'<a class ="imdb" id="myLink'.($w*1).'" onclick="ajaxrequest('."'".$l."')".'"'." style='cursor:pointer;'>".$title.
+    '</a>';
+    $n++;
+    $w++;
+
+    if ($n > 3) {
+     echo '</TR>'."\n\r";
+     $n=0;
+    }
+
+   //}
+  //}
+}
+echo '</table>';
+$n=0;
+}
 ?>
 
 <div id="overlay"">

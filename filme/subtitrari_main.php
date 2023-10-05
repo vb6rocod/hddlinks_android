@@ -105,11 +105,12 @@ else
   curl_setopt($ch, CURLOPT_TIMEOUT, 15);
   $h = curl_exec($ch);
   curl_close($ch);
-  //echo $h;
+$videos=array();
+$cc="0";
 $videos=explode('div id="content">',$h);
 unset($videos[0]);
 $videos = array_values($videos);
-
+$cc=count($videos);
 foreach($videos as $video) {
   $t1=explode("href='",$video);
   $t2=explode(">",$t1[1]);
@@ -126,7 +127,7 @@ foreach($videos as $video) {
   $link=$t3[0];
   echo '<TR>';
   //echo '<TD><font size="4"><a id="myLink" href="#" onclick="changeserver('."'".$link."'".');return false;">'.$title.'</a></font></TD><TD>'.$desc.'</TD></TR>'."\r\n";
-  echo '<TD width="33%"><a id="myLink" href="subtitrari_sub.php?id='.$link.'&title='.urlencode(fix_t($title)).'&page_tit='.urlencode(fix_t($page_tit)).'">'.$title.'</a></TD><TD>'.$desc.'</TD></TR>'."\r\n";
+  echo '<TD width="33%"><a id="myLink" href="subtitrari_sub.php?id='.$link.'&title='.urlencode(fix_t($title)).'&page_tit='.urlencode(fix_t($page_tit)).'&cc='.$cc.'">'.$title.'</a></TD><TD>'.$desc.'</TD></TR>'."\r\n";
 }
 echo '<TR><TD colspan="2" align="left">';
 if ($page>1)
@@ -138,5 +139,11 @@ echo '</TR>';
 
 </TABLE>
 <BR>
+<?php
+if ($cc==0) {
+    echo "Nu am gasit subtitrari.";
+    echo '<script>setTimeout(function(){ history.go(-1); }, 1500);</script>';
+}
+?>
 </div></body>
 </HTML>

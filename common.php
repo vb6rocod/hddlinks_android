@@ -88,5 +88,5 @@ function fixurl($link,$from="") {
    return $p."/".$link;
  }
 }
-$indirect="/cdn1\.fastvid\.co|streamplay1\.|thevideo\.|vev\.|vidup\.|hindipix\.in|waaw|hqq\.|pajalusta\.|playtube22\./";
+$indirect="/hindipix\.in|waaw\.|hqq\.|realyplayonli\.|strcdn\.org|netu\.wiztube\.xyz|netu\.|div\.str1\.site|fshd\d+\.club|video\.filmeonline/";
 ?>

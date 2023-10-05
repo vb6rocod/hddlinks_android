@@ -95,8 +95,8 @@ $(document).on('keyup', '.imdb', isValid);
 </TR>
 <TR>
 <TD width="25%"><a href="tv/sportybite.php" target="_blank">sportybite</a></TD>
-<TD width="25%"></TD>
-<TD width="25%"></TD>
+<TD width="25%"><a href="tv/sportsonline.php" target="_blank">sportsonline</a></TD>
+<TD width="25%"><a href="tv/dlhd.php" target="_blank">DaddyLiveHD</a></TD>
 <TD width="25%"></TD>
 </TR>
 

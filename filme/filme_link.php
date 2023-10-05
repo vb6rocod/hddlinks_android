@@ -11,44 +11,7 @@ $filelink = $_GET["file"];
 $link_f =  array();
 $type = "mp4";
 $pg="";
-// hqq
-if (file_exists("/storage/emulated/0/Download/cookies.txt")) {
-$h1=file_get_contents("/storage/emulated/0/Download/cookies.txt");
-if (preg_match("/hqq\.tv	\w+	\/	\w+	(\d+)	gt	([a-zA-Z0-9]+)/",$h1,$m)) {
-  $t= $m[1]-time();
-  if ($t>0) {
-    file_put_contents($base_cookie."max_time_hqq.txt",$m[1]);
-    file_put_contents($base_cookie."hqq.txt",$m[2]);
-  }
-}
-unlink ("/storage/emulated/0/Download/cookies.txt");
-}
-//
-if (file_exists($base_cookie."cookies.txt")) {
-$h1=file_get_contents($base_cookie."cookies.txt");
-if (preg_match("/hqq\.tv	\w+	\/	\w+	(\d+)	gt	([a-zA-Z0-9]+)/",$h1,$m)) {
-  $t= $m[1]-time();
-  if ($t>0) {
-    file_put_contents($base_cookie."max_time_hqq.txt",$m[1]);
-    file_put_contents($base_cookie."hqq.txt",$m[2]);
-  }
-}
-unlink ($base_cookie."cookies.txt");
-}
-if (file_exists($base_cookie."max_time_hqq.txt")) {
-$time_now=time();
-$time_exp=file_get_contents($base_cookie."max_time_hqq.txt");
-   if ($time_exp > $time_now) {
-     $minutes = intval(($time_exp-$time_now)/60);
-     $seconds= ($time_exp-$time_now) - $minutes*60;
-     if ($seconds < 10) $seconds = "0".$seconds;
-     $msg_captcha=" | Expira in ".$minutes.":".$seconds." min.";
-   } else
-     $msg_captcha="";
-} else {
-   $msg_captcha="";
-}
-/////////////////////////////
+
 if (file_exists($base_pass."debug.txt"))
  $debug=true;
 else
@@ -73,22 +36,7 @@ $list = glob($base_sub."*.srt");
      unlink($l);
     }
 }
-/*
-if (file_exists("../../cookie/max_time_hqq.txt")) {
-   $time_exp=file_get_contents("../../cookie/max_time_hqq.txt");
-   $time_now=time();
-   if ($time_exp > $time_now) {
-     $minutes = intval(($time_exp-$time_now)/60);
-     $seconds= ($time_exp-$time_now) - $minutes*60;
-     if ($seconds < 10) $seconds = "0".$seconds;
-     $msg_captcha=" | Expira in ".$minutes.":".$seconds." min.";
-   } else
-     $msg_captcha="";
-} else {
-   $msg_captcha="";
-}
-*/
-/**####################################**/
+
 if (preg_match("/(.*?)\s+\(?((1|2)\d{3})\)?\s+(\d+)x(\d+)/",$pg,$m)) { // series and year
   $tip="series";
   $tit=$m[1];
@@ -217,6 +165,7 @@ if (preg_match("/filmeonlinegratis\.org/",$filelink)) {
   $l=$last_good."/wp-admin/admin-ajax.php";
   $post="action=lazy_player&movieID=".$id;
   //echo $post;
+  //echo $l;
   $head=array('Accept: */*',
   'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
   'Accept-Encoding: deflate',
@@ -1344,9 +1293,9 @@ $html=str_replace("&amp;","&",$html);
 $html=str_replace("&quot;","'",$html);
 //echo $html;
 /* alias */
-$html=str_replace('http://realyplayonli.xyz',"http://hqq.to",$html);
-$html=str_replace('http://player.filmehd.se',"http://hqq.to",$html);
-$html=str_replace('https://cdn1.fastvid.co',"http://hqq.to",$html);
+//$html=str_replace('http://realyplayonli.xyz',"http://hqq.to",$html);
+//$html=str_replace('http://player.filmehd.se',"http://hqq.to",$html);
+//$html=str_replace('https://cdn1.fastvid.co',"http://hqq.to",$html);
 /* end alias */
 if(preg_match_all("/(\/\/.*?)(\"|\'|\s)+/si",$html,$matches)) {
 $links=$matches[1];
@@ -1369,6 +1318,7 @@ $s=$s."|trilulilu|proplayer\/playlist-controller.php|viki\.com|modovideo\.com|ro
 $s=$s."stagevu\.com|vidup\.me|vidup\.io";
 $s=$s."|filebox\.com|glumbouploads\.com|uploadc\.com|sharefiles4u\.com|zixshare\.com|uploadboost\.com|";
 $s=$s."netu\.wiztube\.xyz|hqq\.tv|hqq\.to|hqq\.watch|waaw1?\.|waaws|hindipix\.in|pajalusta\.club|vidtodo\.com|vshare\.eu|bit\.ly";
+$s=$s."|realyplayonli\.|strcdn\.org|div\.str1\.site|fshd\d+\.club|video\.filmeonline";
 $s=$s."|nowvideo\.eu|nowvideo\.co|vreer\.com|180upload\.com|dailymotion\.com|nosvideo\.com|vidbull\.com|";
 $s=$s."purevid\.com|videobam\.com|streamcloud\.eu|donevideo\.com|upafile\.com|docs\.google|mail\.ru|";
 $s=$s."superweb|moviki\.ru|entervideos\.com";
@@ -1702,9 +1652,8 @@ $mx=trim(file_get_contents($base_pass."mx.txt"));
 $mx="ad";
 }
 $user_agent     =   $_SERVER['HTTP_USER_AGENT'];
-if ($flash != "mp") {
-if (preg_match("/android|ipad/i",$user_agent) && preg_match("/chrome|firefox|mobile/i",$user_agent)) $flash="chrome";
-}
+
+//$flash="flash";
 //print_r ($link_f);
 $link_f=array_unique($link_f);
 //print_r ($link_f);
@@ -1722,12 +1671,7 @@ echo '
 <script src="../jquery.fancybox.min.js"></script>
 <link rel="stylesheet" type="text/css" href="../jquery.fancybox.min.css">
 <script type="text/javascript">
-function playtube(title,link) {
-  document.getElementById("server").innerHTML = '."'".'<font size="6" color="red">Asteptati..................</font>'."'".';
-     //document.getElementById("fancy").href="playtube.php?link=" + link + "&title=" + title;
-     //document.getElementById("fancy").click();
-     document.getElementById("myframe").src="playtube.php?link=" + link + "&title=" + title;
-}
+
 function ajaxrequest2(title, link) {
   var request =  new XMLHttpRequest();
   var the_data = "title="+ title +"&file="+link;
@@ -1777,30 +1721,7 @@ function ajaxrequest(title, link) {
     }
   }
 }
-function ajaxrequest1(link) {
-  var request =  get_XmlHttp();		// call the function for the XMLHttpRequest instance
 
-  // create pairs index=value with data that must be sent to server
-  //var the_data = {mod:add,title:title, link:link}; //Array
-  document.getElementById("server").innerHTML = '."'".'<font size="6" color="red">Asteptati..................</font>'."'".';
-  var the_data = link;
-  var php_file="hqq2.php";
-  request.open("POST", php_file, true);			// set the request
-
-  // adds a header to tell the PHP script to recognize the data as is sent via POST
-  request.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-  request.send(the_data);		// calls the send() method with datas as parameter
-
-  // Check request status
-  // If the response is received completely, will be transferred to the HTML tag with tagID
-  request.onreadystatechange = function() {
-    if (request.readyState == 4) {
-       //alert (request.responseText);
-       document.getElementById("server").innerHTML = '."'".'<font size="6" color="lightblue">Alegeti un server</font>'."'".';
-
-    }
-  }
-}
 
    function zx(e){
      var charCode = (typeof e.which == "number") ? e.which : e.keyCode
@@ -1837,7 +1758,6 @@ td.link {
 <!--font-family: Arial, Helvetica, sans-serif;-->
 </head>
 <body>';
-echo '<iframe id="myframe" src="" style="display: none;"></iframe>';
 echo '<a id="fancy" data-fancybox data-type="iframe" href=""></a>';
 //$out1="http://127.0.0.1:8080/scripts/subs/out.m3u";
 //$title="play...";
@@ -1853,7 +1773,9 @@ $cap=0;
 foreach($link_f as $k=>$val) {
 $server="";
 $server = parse_url($link_f[$k])["host"];
-
+if (preg_match($indirect,$server)) {
+    echo '<TR><td class="link"><a href="hqq.php?file='.urlencode($link_f[$k]).'&title='.urlencode($pg).'" target="_blank">'.$server.'</a></TD></TR>';
+} else {
  if ($flash =="flash")  {
    //echo $link_f[$k];
 
@@ -1863,27 +1785,10 @@ $server = parse_url($link_f[$k])["host"];
 
      echo '<TR><td class="link"><a onclick="ajaxrequest('."'".urlencode($pg)."', '".urlencode($link_f[$k])."')".'"'." style='cursor:pointer;'>".$server.'</a></TD></TR>';
    }
+ }
 }
 echo '</TABLE>';
-//echo '<img id="load" src= "load.jpg" width="450px" height="450px">';
 
-/*
-echo '<BR><table border="1" width="100%">';
-echo '<TR>';
-echo '<TD class="mp"><a id="opensub" href="opensubtitles.php?'.$sub_link.'">opensubtitles</a></td>';
-echo '<TD class="mp"><a id="titrari" href="titrari_main.php?page=1&'.$sub_link.'&page=1">titrari.ro</a></td>';
-echo '<TD class="mp"><a id="subs" href="subs_main.php?'.$sub_link.'">subs.ro</a></td>';
-echo '<TD class="mp"><a id="subtitrari" href="subtitrari_main.php?'.$sub_link.'">subtitrari_noi.ro</a></td>';
-echo '</TR></TABLE>';
-echo '<table border="1" width="100%">';
-echo '<TR><TD style="background-color:#0a6996;color:#64c8ff;font-weight: bold;font-size: 1em" align="center" colspan="4">Alegeti o subtitrare (cauta imdb id)</td></TR>';
-echo '<TR>';
-echo '<TD class="mp"><a id="opensub1" href="opensubtitles1.php?'.$sub_link.'">opensubtitles</a></td>';
-echo '<TD class="mp"><a id="titrari1" href="titrari_main1.php?page=1&'.$sub_link.'&page=1">titrari.ro</a></td>';
-echo '<TD class="mp"><a id="subs1" href="subs_main1.php?'.$sub_link.'">subs.ro</a></td>';
-echo '<TD class="mp"><a id="subtitrari1" href="subtitrari_main1.php?'.$sub_link.'">subtitrari_noi.ro</a></td>';
-echo '</TR></TABLE>';
-*/
 include ("subs.php");
 echo '<br>
 <table border="0px" width="100%">
@@ -1896,7 +1801,7 @@ echo '
 <div id="debug" style="vertical-align:top;height:auto;width:100%;word-wrap: break-word;"></div>
 <BR>
 ';
-echo '<br></div></body>';
+echo '<br></body>';
 echo '</html>';
 } else {
 echo '
@@ -1910,7 +1815,7 @@ echo '
 <body>';
 echo '<h2>'.$pg."</H2>";
 echo "<H2>Nu s-au gasit servere!?</H2>";
-echo '<br></div></body>
+echo '<br></body>
 </html>';
 }
 if (file_exists($base_pass."debug.txt")) {

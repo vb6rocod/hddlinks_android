@@ -2,12 +2,12 @@
 <?php
 error_reporting(0);
 
-$pg_tit="primasport";
+$pg_tit="DaddyLiveHD";
 ?>
 <html>
 <head>
 <meta charset="utf-8">
-<title>primasport</title>
+<title>DaddyLiveHD</title>
 <script type="text/javascript" src="//code.jquery.com/jquery-3.2.1.min.js"></script>
 <script src="../jquery.fancybox.min.js"></script>
 <link rel="stylesheet" type="text/css" href="../jquery.fancybox.min.css">
@@ -60,7 +60,7 @@ function off() {
 </script>
 <a href='' id='mytest1'></a>
 <a id="fancy" data-fancybox data-type="iframe" href=""></a>
-<h2><?php echo $pg_tit; ?></H2>
+<h2><?php echo $pg_tit; ?> (Schedule Time UK GMT+1) - <a href="#all">See all 24/7 Channels</a></H2>
 
 <table border="1px" width="100%">
 <?php
@@ -90,14 +90,15 @@ $user_agent     =   $_SERVER['HTTP_USER_AGENT'];
 $n=0;
 $w=0;
 $r=array();
-$l="https://primasport.one/";
-//https://dlhd.sx/24-7-channels.php
+echo '<table border="1px" width="100%" style="table-layout:fixed;">'."\r\n";
+$l="https://dlhd.sx/";
+$l1="https://dlhd.sx/24-7-channels.php";
 $head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/110.0',
 'Accept: */*',
 'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
 'Accept-Encoding: deflate',
-'Referer: https://primasport.one/',
-'Origin: https://primasport.one'
+'Referer: https://dlhd.sx/',
+'Origin: https://dlhd.sx'
 );
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $l);
@@ -109,20 +110,94 @@ $head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gec
   curl_setopt($ch, CURLOPT_TIMEOUT, 15);
   $h = curl_exec($ch);
   curl_close($ch);
-  $videos=explode('div class="grid-item">',$h);
+  $zz=0;
+  $videos=explode('<h2 style="background-color:cyan">',$h);
+  unset($videos[0]);
 $videos = array_values($videos);
+preg_match_all("/\<h2 style\=\"background-color:cyan\"\>([^\<]+)\</",$h,$a);
+//print_r ($a[1]);
+echo '<TR><TD colspan="2"><b>Jump to:</b>';
+for ($z=0;$z<count($a[1]);$z++) {
+ if (!preg_match("/PPV|Live/i",$a[1][$z])) echo '<a href="#'.$a[1][$z].'">'.$a[1][$z].'</a>,';
+}
+echo '</TD></TR>';
+foreach($videos as $video) {
+ $t1=explode('<',$video);
+ $sport=$t1[0];
+ //echo $video."\n";
+
+ if (preg_match_all("/<hr>([^\<]+)\</",$video,$y)) {
+
+ echo '<TH colspan="2" style="background-color:cyan;color:red"><a id="'.$sport.'"></a>'.$sport.'</TH>';
+ //echo $sport."\n";
+ $t1=explode('<hr>',$video);
+ for ($k=0;$k<count($y[1]);$k++) {
+ $event=trim($y[1][$k]);
+ echo  '<TR>'."\n";
+ echo '<TD class="cat"><a href="#">'.$event.'</a></TD>';
+ if (preg_match_all("/href\=\"([^\"]+)\" target\=\"_blank\" rel\=\"noopener\"\>([^\<']+)\</m",$t1[$k+1],$x)) {
+
+ echo '<TD>';
+ for ($z=0;$z<count($x[2]);$z++) {
+  $title=trim($x[2][$z]);
+  if (preg_match("/CH-\d+/",$title,$m))
+   $title=$m[0];
+  $file=fixurl($x[1][$z],$l1);
+  $link="direct_link.php?link=".urlencode(fix_t($file))."&title=".urlencode(fix_t($title))."&from=".$from."&mod=direct";
+  $l="link=".urlencode(fix_t($file))."&title=".urlencode(fix_t($title))."&from=".$from."&mod=".$mod;
+    if ($flash == "flash")
+    echo '<a href="'.$link.'" target="_blank"><font color="yellow">|=|'.$title.'</font></a>';
+    else
+    echo '<a onclick="ajaxrequest('."'".$l."')".'"'." style='cursor:pointer;'><font color='yellow'>|=|</font>".$title.'</a>';
+
+  //echo $x[2][$z]." ";
+ }
+ echo '</TD>';
+ //print_r ($x);
+
+ }
+ echo '</TR>';
+ }
+ }
+}
+echo '</TABLE>';
+
+///////// all channel
+$l1="https://dlhd.sx/24-7-channels.php";
+$head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/110.0',
+'Accept: */*',
+'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
+'Accept-Encoding: deflate',
+'Referer: https://dlhd.sx/',
+'Origin: https://dlhd.sx'
+);
+  $ch = curl_init();
+  curl_setopt($ch, CURLOPT_URL, $l1);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+  curl_setopt($ch, CURLOPT_HTTPHEADER, $head);
+  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+  $h = curl_exec($ch);
+  curl_close($ch);
+  $videos=explode('<div class="grid-item"',$h);
+  unset($videos[0]);
+$videos = array_values($videos);
+$n=0;
+$r=array();
 foreach($videos as $video) {
  $t1=explode('href="',$video);
  $t2=explode('"',$t1[1]);
- $l="https://primasport.one".$t2[0];
- $t1=explode('<strong>',$video);
- $t2=explode('</',$t1[1]);
- $title=$t2[0];
- if (preg_match("/\.php/",$l) && $title)
-  $r[]=array($l,$title);
+ $l2=fixurl($t2[0],$l1);
+ $t3=explode('<strong>',$video);
+ $t4=explode('<',$t3[1]);
+ $title=$t4[0];
+ $r[]=array($l2,$title);
 }
-//print_r ($r);
-//print_r ($m3uFile);
+echo '<h2>24/7 Channels</h2>';
+echo '<a id="all"></a>';
+echo '<table border="1px" width="100%" style="table-layout:fixed;">'."\r\n";
 for ($z=0;$z<count($r);$z++) {
     $title=trim($r[$z][1]);
     $file = trim($r[$z][0]);
@@ -150,6 +225,7 @@ for ($z=0;$z<count($r);$z++) {
 }
 
  echo '</table>';
+
 ?>
 
 <div id="overlay"">

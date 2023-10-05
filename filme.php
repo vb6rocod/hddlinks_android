@@ -67,7 +67,7 @@ else
 
 <!--- desene si filme...-->
 <TR>
-<TD width="25%"></TD>
+<TD width="25%"><a href="filme/upmovies_f.php?page=1&tip=release&title=upmovies&link=" target="_blank">upmovies</a></TD>
 <TD width="25%"><a href="filme/emovies_f.php?page=1&tip=release&title=emovies&link=" target="_blank">emovies</a></TD>
 <TD width="25%"><a href="filme/tugaflix_f.php?page=1&tip=release&title=tugaflix&link=" target="_blank">tugaflix</a></TD>
 <TD width="25%"><a href="filme/allmoviesforyou_f.php?page=1&tip=release&title=allmoviesforyou&link=" target="_blank">allmoviesforyou</a></TD>

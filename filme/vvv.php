@@ -1,16 +1,19 @@
 <?php
 $l=urldecode($_GET['file']);
+//$host=urldecode($_GET['host']);
 $l=str_replace(" ","+",$l);
 $l=str_replace("%20","+",$l);
 //echo $l."\n";
+$host="https://".parse_url($l)['host'];
+$host="https://vidplay.site";
 $ua="Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/115.0";
 $head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/115.0',
 'Accept: */*',
 'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
 'Accept-Encoding: gzip, deflate, br',
-'Origin: https://vidstream.pro',
+'Origin: '.$host,
 'Connection: keep-alive',
-'Referer: https://vidstream.pro/',
+'Referer: '.$host."/",
 'Sec-Fetch-Dest: empty',
 'Sec-Fetch-Mode: cors',
 'Sec-Fetch-Site: cross-site');

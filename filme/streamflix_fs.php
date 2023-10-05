@@ -67,7 +67,7 @@ function openlink1(link) {
   if (link1.match(/streamembed|imwatchingmovies/gi)) {
   msg="streamembed1.php?file=" + link1 + "&title=" + link + "&tip=flash";
   window.open(msg);
-  } else if (s.match(/vidstream|mycloud/gi)) {
+  } else if (s.match(/vidstream|mycloud|vidplay/gi)) {
   msg="mcloud1.php?id=" + encodeURI(link1) + "&title=" + link + "&tip=flash";
   window.open(msg);
   } else {
@@ -81,7 +81,7 @@ function openlink(link) {
   if (link1.match(/streamembed|imwatchingmovies/gi)) {
   msg="streamembed1.php?file=" + link1 + "&title=" + link + "&tip=mp";
   window.open(msg);
-  } else if (s.match(/vidstream|mycloud/gi)) {
+  } else if (s.match(/vidstream|mycloud|vidplay/gi)) {
   msg="mcloud1.php?id=" + encodeURI(link1) + "&title=" + link + "&tip=mp";
   window.open(msg);
   } else {

@@ -36,9 +36,7 @@ $mx=trim(file_get_contents($base_pass."mx.txt"));
 $mx="ad";
 }
 $user_agent     =   $_SERVER['HTTP_USER_AGENT'];
-if ($flash != "mp") {
-if (preg_match("/android|ipad/i",$user_agent) && preg_match("/chrome|firefox|mobile/i",$user_agent)) $flash="chrome";
-}
+
 //moviesplanet_link.php?file=planet&page=https%253A%252F%252Fwww.moviesplanet.tv%252Fmovie%252Favengers-infinity-war-online-free
 //&image=r_m.php%3Ffile%3Dhttps%3A%2F%2Fwww.moviesplanet.tv%2Fthumbs%2Fmovie_8e22366d932d7f0c90ac219d7468797e.jpg,Avengers%3A+Infinity+War
 //title=Eat%23virgula+Pray%23virgula+Love

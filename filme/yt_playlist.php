@@ -18,6 +18,7 @@ $page_title = $title;
 $key="";
 if (file_exists($base_pass."youtube.txt")) {
   $key=trim(file_get_contents($base_pass."youtube.txt"));
+
 if ($kind=="channel") {
 $l1="https://www.googleapis.com/youtube/v3/channels?part=contentDetails&id=".$id."&key=".$key;
 //echo $l1;

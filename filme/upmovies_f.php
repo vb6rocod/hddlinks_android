@@ -12,16 +12,18 @@ $tit=$_GET["title"];
 $link=$_GET["link"];
 $width="200px";
 $height="278px";
+$last_good="https://upmovies.to";
+$host=parse_url($last_good)['host'];
 /* ==================================================== */
-$has_fav="no";
+$has_fav="yes";
 $has_search="yes";
 $has_add="yes";
-$has_fs="no";
-$fav_target="";
-$add_target="filme_add.php";
+$has_fs="yes";
+$fav_target="upmovies_f_fav.php?host=".$last_good;
+$add_target="upmovies_f_add.php";
 $add_file="";
-$fs_target="";
-$target="voxfilmeonline.php";
+$fs_target="upmovies_fs.php";
+$target="upmovies_f.php";
 /* ==================================================== */
 $base=basename($_SERVER['SCRIPT_FILENAME']);
 $p=$_SERVER['QUERY_STRING'];
@@ -138,57 +140,12 @@ document.onkeypress =  zx;
 <?php
 $w=0;
 $n=0;
-if ($page==1 && $tip=="release") {
-$l="https://voxfilmeonline.biz/";
-$cookie=$base_cookie."hdpopcorns.dat";
-//$cookie=$base_cookie."biz.dat";
-require( 'cryptoHelpers.php');
-require( 'aes_small.php');
-$ua = $_SERVER['HTTP_USER_AGENT'];
-//$ua="Mozilla/5.0 (Windows NT 10.0; rv:75.0) Gecko/20100101 Firefox/75.0";
-
-$head=array('Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
-'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
-'Accept-Encoding: deflate',
-'Connection: keep-alive',
-'Upgrade-Insecure-Requests: 1');
-
-  $ch = curl_init();
-  curl_setopt($ch, CURLOPT_URL, $l);
-  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
-  curl_setopt($ch, CURLOPT_HTTPHEADER,$head);
-  curl_setopt($ch, CURLOPT_COOKIEFILE,$cookie);
-  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
-  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
-  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
-  $html = curl_exec($ch);
-  //echo $html;
-  curl_close($ch);
-  if(preg_match_all('/toNumbers\(\"(\w+)\"/',$html,$m)) {
-   $a=cryptoHelpers::toNumbers($m[1][0]);
-   $b=cryptoHelpers::toNumbers($m[1][1]);
-   $c=cryptoHelpers::toNumbers($m[1][2]);
-   $d=AES::decrypt($c,16,2,$a,16,$b);
-   //print_r ($m);
-   $test=cryptoHelpers::toHex($d);
-   //echo $test;
-   $domain = 'voxfilmeonline.biz';
-   $expire = time() + 36000;
-   $name   = 'OHLALA';
-   $value = $test;
-   file_put_contents($cookie, "\n$domain\tTRUE\t/\tFALSE\t$expire\t$name\t$value\n", FILE_APPEND);
-   //curl_setopt($ch, CURLOPT_COOKIEFILE,$cookie);
-   //$html = curl_exec($ch);
- }
- //curl_close($ch);
- }
 echo '<H2>'.$page_title.'</H2>'."\r\n";
 
 echo '<table border="1px" width="100%" style="table-layout:fixed;">'."\r\n";
 echo '<TR>'."\r\n";
 if ($page==1) {
+   if ($tip == "release") {
    if ($has_fav=="yes" && $has_search=="yes") {
      echo '<TD class="nav"><a id="fav" href="'.$fav_target.'" target="_blank">Favorite</a></TD>'."\r\n";
      echo '<TD class="form" colspan="2">'.$form.'</TD>'."\r\n";
@@ -203,79 +160,97 @@ if ($page==1) {
    } else if ($has_fav=="no" && $has_search=="no") {
      echo '<TD class="nav" colspan="4" align="right"><a href="'.$next.'">&nbsp;&gt;&gt;&nbsp;</a></TD>'."\r\n";
    }
+   } else {
+     echo '<TD class="nav" colspan="4" align="right"><a href="'.$next.'">&nbsp;&gt;&gt;&nbsp;</a></TD>'."\r\n";
+   }
 } else {
    echo '<TD class="nav" colspan="4" align="right"><a href="'.$prev.'">&nbsp;&lt;&lt;&nbsp;</a> | <a href="'.$next.'">&nbsp;&gt;&gt;&nbsp;</a></TD>'."\r\n";
 }
 echo '</TR>'."\r\n";
-
-if($tip=="release") {
- if ($page>1)
-  $l="https://voxfilmeonline.biz/"."page/".$page."/";
+$f=array();
+if ($tip=="search") {
+ $search= str_replace(" ","+",$tit);
+ if ($page==1)
+  $l=$last_good."/search-movies/".$search.".html";
  else
-  $l="https://voxfilmeonline.biz/";
+  $l=$last_good."/search-movies/".$search."/page-".$page.".html";
 } else {
-  $search=str_replace(" ","+",$tit);
-  if ($page > 1)
-     $l="https://voxfilmeonline.biz/page/".$page."/?s=".$search;
-  else
-     $l="https://voxfilmeonline.biz/?s=".$search;
+ if ($page==1)
+  $l=$last_good."/cinema-movies.html";
+ else
+  $l=$last_good."/cinema-movies/page-".$page.".html";
 }
-$ua = $_SERVER['HTTP_USER_AGENT'];
-$cookie=$base_cookie."hdpopcorns.dat";
-//echo $l;
+$ua="Mozilla/5.0 (Windows NT 10.0; rv:75.0) Gecko/20100101 Firefox/75.0";
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $l);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
   curl_setopt($ch, CURLOPT_USERAGENT, $ua);
-  curl_setopt($ch, CURLOPT_COOKIEFILE,$cookie);
+  curl_setopt($ch, CURLOPT_REFERER,$last_good);
+  curl_setopt($ch, CURLOPT_ENCODING,"");
   curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
   curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
-  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
-  $html = curl_exec($ch);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 25);
+  $h = curl_exec($ch);
   curl_close($ch);
+  //echo $h;
+$path = parse_url($l)['path'];
+//echo $h;
+$host=parse_url($l)['host'];
 
-//echo $html;
-//$html=file_get_contents($l);
-$videos = explode('article id="post-', $html);
-
+$videos = explode('<div class="div-flex', $h);
 unset($videos[0]);
 $videos = array_values($videos);
-
 foreach($videos as $video) {
-  $t1 = explode('href="', $video);
-  $t2 = explode('"', $t1[1]);
-  $link = $t2[0];
+ $t1=explode('href="',$video);
+ $t2=explode('"',$t1[1]);
+ $link=$t2[0];
+ $t3=explode(">",$t1[2]);
+ $t4=explode("<",$t3[1]);
+ $title=$t4[0];
 
-  $t1=explode('class="hcover-title">',$video);
-  //$t2=explode('>',$t1[1]);
-  $t2_0=explode('<',$t1[1]);
-  $t3=str_replace("Vizioneaza Film Online","",$t2_0[0]);
-  $t4=explode("&#8211;",$t3);
-  $title=trim($t4[0]);
-  $title=prep_tit($title);
+ $t1=explode('src="',$video);
+ $t2=explode('"',$t1[1]);
+ $image=$t2[0];
+
+ $title=html_entity_decode($title,ENT_QUOTES);
+ $title=htmlspecialchars_decode($title,ENT_QUOTES);
+ $title=preg_replace("/\((tv)?\s*short/i","(",$title);
+ $title = preg_replace_callback(
+   "/(\&\#[0-9]+\;?)/",
+   function($m) {
+    return mb_convert_encoding(substr($m[1],-1) ==";" ? $m[1]:$m[1].";", "UTF-8", "HTML-ENTITIES");
+   },
+   $title
+ );
+
+ if (preg_match("/Year\:\s*(\d{4})/i",$video,$y))
+  $year=$y[1];
+ else
   $year="";
+  if (!preg_match("/class\=\"film\_esp\"/",$video)) $f[] = array($title,$link,$image,$year);
+}
+//echo $html;
+foreach($f as $key => $value) {
+  $title=$value[0];
+  $title=prep_tit($title);
+  $link=$value[1];
+  $image=$value[2];
+  $year=$value[3];
   $imdb="";
-  if (preg_match("/\(?((1|2)\d{3})\)?/",$title,$r)) {
-     $year=$r[1];
-  }
-  $t1=explode(" - ",$title);
-  $t=$t1[0];
-  $t=preg_replace("/\(?((1|2)\d{3})\)?/","",$t);
-  $tit_imdb=trim($t);
-  if (preg_match("/https\:\/\/voxfilmeonline\S+\.jpg/",$video,$m)) {
-  $image=$m[0];
-  $image="r_m.php?file=".$image;
+  $rest = substr($title, -6);
+  if (preg_match("/\(?(\d{4})\)?/",$rest,$m)) {
+   $year=$m[1];
+   $tit_imdb=trim(str_replace($m[0],"",$title));
   } else {
-   $image="blank.jpg";
+   $year="";
+   $tit_imdb=$title;
   }
-  if ($has_fs == "no")
-    $link_f='filme_link.php?file='.urlencode($link).'&title='.urlencode(fix_t($title));
-  else
-    $link_f=$fs_target.'?tip=movie&link='.urlencode($link).'&title='.urlencode(fix_t($tit)).'&image='.$image."&sez=&ep=&ep_tit=&year=".$year;
+  $link_f=$fs_target.'?tip=movie&link='.urlencode($link).'&title='.urlencode(fix_t($title)).'&image='.$image."&sez=&ep=&ep_tit=&year=".$year;
+  if ($title) {
   if ($n==0) echo '<TR>'."\r\n";
   $val_imdb="tip=movie&title=".urlencode(fix_t($tit_imdb))."&year=".$year."&imdb=".$imdb;
-  $fav_link="file=".$add_file."&mod=add&title=".urlencode(fix_t($title))."&link=".urlencode($link)."&image=".urlencode($image)."&year=".$year;
+  $fav_link="mod=add&title=".urlencode(fix_t($title))."&link=".urlencode($link)."&image=".urlencode($image)."&year=".$year;
   if ($tast == "NU") {
     echo '<td class="mp" width="25%"><a href="'.$link_f.'" id="myLink'.$w.'" target="_blank" onmousedown="isKeyPressed(event)">
     <img id="myLink'.$w.'" src="'.$image.'" width="'.$width.'" height="'.$height.'"><BR>'.$title.'</a>
@@ -297,7 +272,10 @@ foreach($videos as $video) {
   echo '</tr>'."\r\n";
   $n=0;
   }
-}
+  }
+ }
+
+/* bottom */
   if ($n < 4 && $n > 0) {
     for ($k=0;$k<4-$n;$k++) {
       echo '<TD></TD>'."\r\n";
@@ -312,6 +290,6 @@ else
   echo '<a href="'.$next.'">&nbsp;&gt;&gt;&nbsp;</a></TD>'."\r\n";
 echo '</TR>'."\r\n";
 echo "</table>"."\r\n";
-?>
-<br></body>
+echo "</table>";
+?></body>
 </html>

@@ -92,8 +92,8 @@ if (!isset($_GET["page"]))
   $page=1;
 else
   $page=$_GET["page"];
-$next="titrari_main.php?page=".($page+1)."&".$p;
-$prev="titrari_main.php?page=".($page-1)."&".$p;
+$next="titrari_main1.php?page=".($page+1)."&".$p;
+$prev="titrari_main1.php?page=".($page-1)."&".$p;
 echo '<TD colspan="2" align="left">';
 if ($page>1)
 echo '<a href="'.$prev.'"><font size="4">&nbsp;&lt;&lt;&nbsp;</font></a> | <a href="'.$next.'"><font size="4">&nbsp;&gt;&gt;&nbsp;</font></a></TD>';
@@ -131,10 +131,12 @@ echo '</TR>';
   curl_setopt($ch, CURLOPT_TIMEOUT, 15);
   $h=curl_exec($ch);
   curl_close($ch);
+$cc="0";
+$videos=array();
 $videos=explode('<h1><a style=color:black',$h);
 unset($videos[0]);
 $videos = array_values($videos);
-
+$cc=count($videos);
 foreach($videos as $video) {
   $t1=explode(">",$video);
   $t2=explode("<",$t1[1]);
@@ -150,7 +152,7 @@ foreach($videos as $video) {
   $link=$t2[0];
   echo '<TR>';
   //echo '<TD><font size="4"><a id="myLink" href="#" onclick="changeserver('."'".$link."'".');return false;">'.$title.'</a></font></TD><TD>'.$desc.'</TD></TR>'."\r\n";
-  echo '<TD width="33%"><a id="myLink" href="titrari_sub.php?'.$link.'&title='.urlencode(fix_t($title)).'&page_tit='.urlencode(fix_t($page_tit)).'">'.$title.'</a></TD><TD>'.$desc.'</TD></TR>'."\r\n";
+  echo '<TD width="33%"><a id="myLink" href="titrari_sub.php?'.$link.'&title='.urlencode(fix_t($title)).'&page_tit='.urlencode(fix_t($page_tit)).'&cc='.$cc.'">'.$title.'</a></TD><TD>'.$desc.'</TD></TR>'."\r\n";
 
 }
 echo '<TR><TD colspan="2" align="left">';
@@ -162,5 +164,11 @@ echo '</TR>';
 ?>
 </TABLE>
 <BR>
+<?php
+if ($cc==0) {
+    echo "Nu am gasit subtitrari.";
+    echo '<script>setTimeout(function(){ history.go(-1); }, 1500);</script>';
+}
+?>
 </div></body>
 </HTML>

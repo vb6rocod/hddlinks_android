@@ -8,6 +8,10 @@ if (isset($_GET["page_tit"]))
  $page_tit=unfix_t(urldecode($_GET["page_tit"]));
 else
  $page_tit="";
+if (isset($_GET['cc']))
+ $cc=$_GET['cc'];
+else
+ $cc="1";
 //if (file_exists($base_sub."sub.zip")) unlink($base_sub."sub.zip");
 //if (file_exists($base_sub."sub.rar")) unlink($base_sub."sub.rar");
 ?>
@@ -53,16 +57,15 @@ function changeserver(link) {
        alert (request.responseText);
        //document.getElementById("mytest1").href=request.responseText;
       //document.getElementById("mytest1").click();
-      history.back();
+      history.go(-2);
     }
   }
 }
 </script>
 </head>
-<body><div id="mainnav">
-<H2></H2>
+<body>
 <?php
-
+$arrsub=array();
 
 function str_between($string, $start, $end){
 	$string = " ".$string; $ini = strpos($string,$start);
@@ -75,213 +78,60 @@ function decode_entities($text) {
     $text= preg_replace('/&#x([a-f0-9]+);/msi',"chr(0x\\1)",$text);  #hex notation
     return $text;
 }
-function fix_srt($contents) {
-$n=1;
-$output="";
-$bstart=false;
-$file_array=explode("\n",$contents);
-  foreach($file_array as $line)
-  {
-    $line = trim($line);
-        if(preg_match('/(\d\d):(\d\d):(\d\d)(\.|,)(\d\d\d) --> (\d\d):(\d\d):(\d\d)(\.|,)(\d\d\d)/', $line) && !$bstart)
-        {
-          $output .= $n;
-          $output .= PHP_EOL;
-          $output .= $line.PHP_EOL;
-          $bstart=true;
-        } elseif($line != '' && $bstart) {
-          $output .= $line.PHP_EOL;
-          //$n++;
-        } elseif ($line == '' && $bstart) {
-          $output .= $line.PHP_EOL;
-          $bstart=false;
-          $n++;
-        }
-  }
-return $output;
-}
-    function split_vtt($contents)
-    {
-        $lines = explode("\n", $contents);
-        if (count($lines) === 1) {
-            $lines = explode("\r\n", $contents);
-            if (count($lines) === 1) {
-                $lines = explode("\r", $contents);
-            }
-        }
-        return $lines;
-    }
-function prepare_sub($h) {
- if (function_exists("mb_convert_encoding")) {
-    $enc=mb_detect_encoding($h);
- if (mb_detect_encoding($h, 'UTF-8', true)== false) $h=mb_convert_encoding($h, 'UTF-8','ISO-8859-2');
-    /*
-    $h = str_replace("ª","Ş",$h);
-    $h = str_replace("º","ş",$h);
-    $h = str_replace("Þ","Ţ",$h);
-    $h = str_replace("þ","ţ",$h);
-	$h = str_replace("ã","ă",$h);
-	//$h = str_replace("Ã","Ă",$h);
-
-    $h = str_replace("Å£","ţ",$h);
-    $h = str_replace("Å¢","Ţ",$h);
-    $h = str_replace("Å","ş",$h);
-	$h = str_replace("Ă®","î",$h);
-	$h = str_replace("Ă¢","â",$h);
-	$h = str_replace("Ă","Î",$h);
-	//$h = str_replace("Ã","Â",$h);
-	$h = str_replace("Ä","ă",$h);
-	*/
-} else {
-    $h = str_replace("�","S",$h);
-    $h = str_replace("�","s",$h);
-    $h = str_replace("�","T",$h);
-    $h = str_replace("�","t",$h);
-    $h=str_replace("�","a",$h);
-	$h=str_replace("�","a",$h);
-	$h=str_replace("�","i",$h);
-	$h=str_replace("�","A",$h);
-}
-
-if (strpos($h,"WEBVTT") !== false) {
-  //convert to srt;
-
-    function convert_vtt($contents)
-    {
-        $lines = split_vtt($contents);
-        array_shift($lines); // removes the WEBVTT header
-        $output = '';
-        $i = 0;
-        foreach ($lines as $line) {
-            /*
-             * at last version subtitle numbers are not working
-             * as you can see that way is trustful than older
-             *
-             *
-             * */
-            $pattern1 = '#(\d{2}):(\d{2}):(\d{2})\.(\d{3})#'; // '01:52:52.554'
-            $pattern2 = '#(\d{2}):(\d{2})\.(\d{3})#'; // '00:08.301'
-            $m1 = preg_match($pattern1, $line);
-            if (is_numeric($m1) && $m1 > 0) {
-                $i++;
-                $output .= $i;
-                $output .= PHP_EOL;
-                $line = preg_replace($pattern1, '$1:$2:$3,$4' , $line);
-            }
-            else {
-                $m2 = preg_match($pattern2, $line);
-                if (is_numeric($m2) && $m2 > 0) {
-                    $i++;
-                    $output .= $i;
-                    $output .= PHP_EOL;
-                    $line = preg_replace($pattern2, '00:$1:$2,$3', $line);
-                }
-            }
-            $output .= $line . PHP_EOL;
-        }
-        return $output;
-    }
-    $h=convert_vtt($h);
-}
-
-//echo $h;
-   $h=fix_srt($h);
-   //echo $h1;
-   return $h;
+$hh="";
+$sub_extern="sub_extern.srt";
+$ext="";
+$file_save=$base_sub."sub.sub";
+$file_srt=$base_sub."sub_extern.srt";
+$file_zip=$base_sub."sub.zip";
+$file_rar=$base_sub."sub.rar";
+if (file_exists($file_save)) unlink ($file_save);
+function header_callback($ch, $header_line)
+{
+    global $hh;
+    $hh .= $header_line;
+    return strlen($header_line);
 }
 $ua="Mozilla/5.0 (Windows NT 10.0; rv:55.0) Gecko/20100101 Firefox/55.0";
 $l="https://www.titrari.ro/get.php?id=".$id_sub;
 $l="https://www.xn--titrri-l0a.ro/get.php?id=".$id_sub;
-//echo $l;
-//$l="https://www.titrari.ro/get.php?id=114012";
-  $ch = curl_init();
-  curl_setopt($ch, CURLOPT_URL, $l);
-  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
-  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
-  curl_setopt ($ch, CURLOPT_REFERER, "https://www.titrari.ro");
-  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-  curl_setopt($ch, CURLOPT_NOBODY,1);
-  curl_setopt($ch, CURLOPT_HEADER,1);
-  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
-  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
-  $response=curl_exec($ch);
-  curl_close($ch);
-  //echo $response;
-  $t1=explode('filename="',$response);
-  $t2=explode('"',$t1[1]);
-  $filename=$t2[0];
-  $ext = substr(strrchr($filename, '.'), 1);
-if (preg_match("/(srt|txt|vtt)/i",$ext)) {
-   $file_srt=$base_sub."sub_extern.srt";
-   //$fp = fopen($file_srt, 'w');
+   $fp = fopen($file_save, 'w');
    $ch = curl_init();
    curl_setopt($ch, CURLOPT_URL, $l);
    curl_setopt($ch, CURLOPT_USERAGENT, $ua);
-   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-   curl_setopt($ch, CURLOPT_HEADER, false);
-   curl_setopt($ch,CURLOPT_REFERER,"https://www.titrari.ro");
-   curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-   //curl_setopt($ch, CURLOPT_FILE, $fp);
-  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
-  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
-   $h1=curl_exec($ch);
-   curl_close($ch);
-   //fclose($fp);
-   if ($h1) {
-   $h1=prepare_sub($h1);
-   $fh = fopen($file_srt, 'w');
-   fwrite($fh, $h1);
-   fclose($fh);
-   echo "Am salvat subtitrarea";
-   } else
-   echo "Nu am putut salva subtitrarea!";
-} else if (preg_match("/(sub)/i",$ext)) {
-   $file_srt=$base_sub."sub_extern.srt";
-   //$fp = fopen($file_srt, 'w');
-   $ch = curl_init();
-   curl_setopt($ch, CURLOPT_URL, $l);
-   curl_setopt($ch, CURLOPT_USERAGENT, $ua);
-   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-   curl_setopt($ch, CURLOPT_HEADER, false);
-   curl_setopt($ch,CURLOPT_REFERER,"https://www.titrari.ro");
-   curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-   //curl_setopt($ch, CURLOPT_FILE, $fp);
-  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
-  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
-   $h1=curl_exec($ch);
-   curl_close($ch);
-   //fclose($fp);
-   if ($h1) {
-   //$h1=prepare_sub($h1);
-   $fh = fopen($file_srt, 'w');
-   fwrite($fh, $h1);
-   fclose($fh);
-   echo "Am salvat subtitrarea";
-   } else
-   echo "Nu am putut salva subtitrarea!";
-} else if (preg_match("/zip/i",$ext)) {
-   $file_srt=$base_sub."sub.zip";
-
-   $fp = fopen($file_srt, 'w');
-   $ch = curl_init();
-   curl_setopt($ch, CURLOPT_URL, $l);
-   curl_setopt($ch, CURLOPT_USERAGENT, $ua);
-   curl_setopt($ch, CURLOPT_HEADER, false);
+   curl_setopt($ch, CURLOPT_HEADER, 0);
    curl_setopt($ch,CURLOPT_REFERER,"https://www.titrari.ro");
    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
    curl_setopt($ch, CURLOPT_FILE, $fp);
-  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
-  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+   //curl_setopt($ch, CURLOPT_WRITEHEADER, $file_header);
+   curl_setopt($ch, CURLOPT_HEADERFUNCTION, 'header_callback');
+   curl_setopt($ch, CURLINFO_HEADER_OUT, true);
+   curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
+   curl_setopt($ch, CURLOPT_TIMEOUT, 25);
    curl_exec($ch);
    curl_close($ch);
    fclose($fp);
-   //echo $file_srt;
 
-$zip = new ZipArchive;
-if ($zip->open($file_srt) === true) {
-    for($i = 0; $i < $zip->numFiles; $i++) {
-$sub= mb_convert_encoding(
+   if (preg_match("/filename\=(.+)/",$hh,$m)) {
+    $filename=trim($m[1]);
+    $ext = substr(strrchr($filename, '.'), 1);
+   } else {
+    echo "Server error!";
+    if ($cc=="1")
+    echo '<script>setTimeout(function(){ history.go(-2); }, 1500);</script>';
+    else
+    echo '<script>setTimeout(function(){ history.go(-1); }, 1500);</script>';
+    die();
+   }
+
+if (preg_match("/(srt|txt|vtt|sub)/i",$ext)) {
+   rename($file_save,$file_srt);
+} else if (preg_match("/zip/i",$ext)) {
+ rename($file_save,$file_zip);
+ $zip = new ZipArchive;
+ if ($zip->open($file_zip) === true) {
+  for($i = 0; $i < $zip->numFiles; $i++) {
+   $sub= mb_convert_encoding(
     htmlentities(
         $zip->getNameIndex($i),
         ENT_COMPAT,
@@ -289,62 +139,56 @@ $sub= mb_convert_encoding(
     ),
     "HTML-ENTITIES",
     "UTF-8"
-);
-      //$sub=$zip->getNameIndex($i);
-      if (preg_match('/(\.srt|\.txt|\.sub)/i', basename($sub))) {
-        //$zip->extractTo('path/to/extraction/', array($zip->getNameIndex($i)));
-        $arrsub[]=$sub;
-        // here you can run a custom function for the particular extracted file
-
-    }
-}
-$zip->close();
-}
-$nn=count($arrsub);
-$k=intval($nn/10) + 1;
-$n=0;
-echo '<h2>'.$page_tit.'</h2>';
-echo '<table border="1" width="100%">';
-echo '<TR>';
-for ($m=1;$m<$k;$m++) {
+   );
+   //echo $sub;
+   if (preg_match("/\.(srt|txt|vtt|sub)/i",$sub)) $arrsub[]=$sub;
+   }
+  $zip->close();
+ } else {
+  echo "Nu am putut deschide arhiva zip!";
+  if ($cc=="1")
+  echo '<script>setTimeout(function(){ history.go(-2); }, 1500);</script>';
+  else
+  echo '<script>setTimeout(function(){ history.go(-1); }, 1500);</script>';
+  die();
+ }
+ $nn=count($arrsub);
+ $k=intval($nn/10) + 1;
+ $n=0;
+ echo '<table border="1" width="100%">';
+ echo '<TR>';
+ for ($m=1;$m<$k;$m++) {
    echo '<TD align="center"><font size="4"><a href="#myLink'.($m*10).'">Salt:'.($m*10).'</a></font></td>';
-}
-echo '<TD></TD></TR>';
-foreach ($arrsub as $key => $val) {
-
+ }
+ echo '<TD></TD></TR>';
+ foreach ($arrsub as $key => $val) {
   echo '<TR><TD colspan="'.($k-1).'"><font size="4"><a id="myLink'.($n*1).'" href="#" onclick="changeserver('."'".urlencode($val)."&mod=zip"."'".');return false;">'.$val.'</a></font></TD><TD>'.($n+1).'</TD></TR>'."\r\n";
   $n++;
-  //if ($n >9)
-}
-echo '</table><BR>';
+ }
+ echo '</table><BR>';
 } else if (preg_match("/rar/i",$ext)) {
-   $file_srt=$base_sub."sub.rar";
-
-   $fp = fopen($file_srt, 'w');
-   $ch = curl_init();
-   curl_setopt($ch, CURLOPT_URL, $l);
-   curl_setopt($ch, CURLOPT_USERAGENT, $ua);
-   curl_setopt($ch, CURLOPT_HEADER, false);
-   curl_setopt($ch,CURLOPT_REFERER,"https://www.titrari.ro");
-   curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-   curl_setopt($ch, CURLOPT_FILE, $fp);
-  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
-  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
-   curl_exec($ch);
-   curl_close($ch);
-   fclose($fp);
-
-$rar_arch = rar_open($file_srt);
-if ($rar_arch === FALSE)
-    die("Could not open RAR archive.");
-
-$rar_entries = rar_list($rar_arch);
-
-if ($rar_entries === FALSE)
-    die("Could retrieve entries.");
-
-foreach ($rar_entries as $e) {
-$sub= mb_convert_encoding(
+ if (function_exists("rar_open")) {
+ rename($file_save,$file_rar);
+ $rar_arch = rar_open($file_rar);
+ if ($rar_arch === FALSE) {
+    echo "Could not open RAR archive.";
+    if ($cc=="1")
+    echo '<script>setTimeout(function(){ history.go(-2); }, 1500);</script>';
+    else
+    echo '<script>setTimeout(function(){ history.go(-1); }, 1500);</script>';
+    die();
+ }
+ $rar_entries = rar_list($rar_arch);
+ if ($rar_entries === FALSE) {
+    echo "Could retrieve entries.";
+    if ($cc=="1")
+    echo '<script>setTimeout(function(){ history.go(-2); }, 1500);</script>';
+    else
+    echo '<script>setTimeout(function(){ history.go(-1); }, 1500);</script>';
+    die();
+ }
+ foreach ($rar_entries as $e) {
+  $sub= mb_convert_encoding(
     htmlentities(
         $e->getName(),
         ENT_COMPAT,
@@ -352,36 +196,41 @@ $sub= mb_convert_encoding(
     ),
     "HTML-ENTITIES",
     "UTF-8"
-);
-if (preg_match('/(\.srt|\.txt|\.sub)/i', basename($sub))) {
-if (strpos($base_sub,":") !== false) $sub=str_replace("\\","/",$sub);
-$arrsub[] = $sub;
-}
-}
-rar_close($rar_arch);
-//print_r ($rar_entries);
-//print_r ($arrsub);
-$nn=count($arrsub);
-$k=intval($nn/10) + 1;
-$n=0;
-echo '<H2>'.$page_tit.'</H2>';
-echo '<table border="1" width="100%">';
-echo '<TR>';
-for ($m=1;$m<$k;$m++) {
+  );
+  if (strpos($base_sub,":") !== false) $sub=str_replace("\\","/",$sub);
+  if (preg_match("/\.(srt|txt|vtt|sub)/i",$sub)) $arrsub[]=$sub;
+ }
+ rar_close($rar_arch);
+ } else {
+    echo "Missing RAR module!.";
+    if ($cc=="1")
+    echo '<script>setTimeout(function(){ history.go(-2); }, 1500);</script>';
+    else
+    echo '<script>setTimeout(function(){ history.go(-1); }, 1500);</script>';
+    die();
+ }
+ $nn=count($arrsub);
+ $k=intval($nn/10) + 1;
+ $n=0;
+ echo '<table border="1" width="100%">';
+ echo '<TR>';
+ for ($m=1;$m<$k;$m++) {
    echo '<TD align="center"><font size="4"><a href="#myLink'.($m*10).'">Salt:'.($m*10).'</a></font></td>';
-}
-echo '<TD></TD></TR>';
-foreach ($arrsub as $key => $val) {
-
+ }
+ echo '<TD></TD></TR>';
+ foreach ($arrsub as $key => $val) {
   echo '<TR><TD colspan="'.($k-1).'"><font size="4"><a id="myLink'.($n*1).'" href="#" onclick="changeserver('."'".urlencode($val)."&mod=rar"."'".');return false;">'.$val.'</a></font></TD><TD>'.($n+1).'</TD></TR>'."\r\n";
   $n++;
-  //if ($n >9)
-}
-echo '</table><BR>';
+ }
+ echo '</table><BR>';
 } else {
   //unsup....
   echo' (nesuportat) '.$filename.'</title>';
+  if ($cc=="1")
+  echo '<script>setTimeout(function(){ history.go(-2); }, 1500);</script>';
+  else
+  echo '<script>setTimeout(function(){ history.go(-1); }, 1500);</script>';
 }
 ?>
-</div></body>
+</body>
 </html>

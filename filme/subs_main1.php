@@ -52,7 +52,7 @@ else
 
 <link rel="stylesheet" type="text/css" href="../custom.css" />
 </head>
-<body><div id="mainnav">
+<body>
 <H2><?php echo $page_tit; ?></H2>
 <table border="1" width="100%"><tr>
 <?php
@@ -118,15 +118,19 @@ if (!$imdbid) {
   curl_setopt($ch, CURLOPT_TIMEOUT, 15);
   $h=curl_exec($ch);
   curl_close($ch);
+$videos=array();
+$cc="0";
 $videos=explode('<div class="w-full grid',$h);
 unset($videos[0]);
 $videos = array_values($videos);
-
+$cc=count($videos);
 foreach($videos as $video) {
   $t1=explode('title="',$video);
   $t2=explode(">",$t1[1]);
   $t3=explode("<",$t2[1]);
   $title=trim($t3[0]);
+  if (preg_match("/flag\-rom/",$video))
+   $title="&#x1F1F7;&#x1F1F4; ".$title;
   //$t1=explode('class="sub-comment">',$video);
   $t1=explode('p class="text-sm font-base overflow-auto h-auto lg:h-16">',$video);
   //$t2=explode("</div",$t1[1]);
@@ -141,11 +145,17 @@ foreach($videos as $video) {
   $link=$t2[0];
   echo '<TR>';
   //echo '<TD><font size="4"><a id="myLink" href="#" onclick="changeserver('."'".$link."'".');return false;">'.$title.'</a></font></TD><TD>'.$desc.'</TD></TR>'."\r\n";
-  echo '<TD width="33%"><a id="myLink" href="subs_sub.php?id='.$link.'&title='.urlencode(fix_t($title)).'&page_tit='.urlencode(fix_t($page_tit)).'">'.$title.'</a></TD><TD>'.$desc.'</TD></TR>'."\r\n";
+  echo '<TD width="33%"><a id="myLink" href="subs_sub.php?id='.$link.'&title='.urlencode(fix_t($title)).'&page_tit='.urlencode(fix_t($page_tit)).'&cc='.$cc.'">'.$title.'</a></TD><TD>'.$desc.'</TD></TR>'."\r\n";
 }
 
 ?>
 </TABLE>
 <BR>
-</div></body>
+<?php
+if ($cc==0) {
+    echo "Nu am gasit subtitrari.";
+    echo '<script>setTimeout(function(){ history.go(-1); }, 1500);</script>';
+}
+?>
+</body>
 </HTML>
