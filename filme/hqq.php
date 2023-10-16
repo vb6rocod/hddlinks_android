@@ -17,10 +17,22 @@ echo '
 <meta http-equiv="content-type" content="text/html; charset=UTF-8">
 <title>'.$title.'</title>
 <link rel="stylesheet" type="text/css" href="../custom.css" />
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+<style>
+#myId {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background-color: red;
+  transition: 0.2s;
+  position: absolute;
+}
+</style>
+</head>
 <body>
 ';
+echo '<div id="myId"></div>';
 echo "<a href='' id='mytest1'></a>";
-echo '<div id="rr"></div>';
 $head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/118.0',
 'Referer: https://voxfilmeonline.biz',
 );
@@ -29,10 +41,8 @@ $head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gec
 //http://netu.wiztube.xyz/player/embed_player.php?vid=YrfYaQUUMMEn&autoplay=yes
 //$l="https://strcdn.org/e/eTg3U3ZiM1B1MnJEUGlaaEhvL3ZzUT09?adfree=1";
 //http://div.str1.site/e/Sk5RVlJDL2lTdHc4b3BQN1lXUW51dz09?autoplay=yes
-preg_match("/((?:(watch_video|embed_player)\.php\?v\=)|(\?vid\=)|(\/[e|f]\/))([a-zA-Z0-9]+)/",$l,$m);
-//print_r ($m);
-$v=$m[5];
-$host="https://".parse_url($l)['host'];
+
+  $host="https://".parse_url($l)['host'];
 
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $l);
@@ -52,6 +62,8 @@ $host="https://".parse_url($l)['host'];
     $srt=$s[1];
   else
     $srt="";
+  preg_match("/orig_vid\s*\=\s*\"([^\"]+)\"/",$h,$m);
+  $v=$m[1];
   preg_match("/\'videoid\'\:\s*\'([^\']+)\'/",$h,$m);
   $video_id=$m[1];
   preg_match("/\'videokey\'\:\s*\'([^\']+)\'/",$h,$m);
@@ -63,12 +75,12 @@ $host="https://".parse_url($l)['host'];
   //die();
   //Idea from https://github.com/Gujal00/ResolveURL
   $l1=$host."/player/get_player_image.php";
-$head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/118.0',
-'Referer: '.$l,
-'Origin: '.$host,
-'Content-Type: application/json',
-'X-Requested-With: XMLHttpRequest'
-);
+  $head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/118.0',
+  'Referer: '.$l,
+  'Origin: '.$host,
+  'Content-Type: application/json',
+  'X-Requested-With: XMLHttpRequest'
+  );
 //echo $post;
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $l1);
@@ -89,21 +101,17 @@ $head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gec
   $hash_img=$r['hash_image'];
   $image=$r['image'];
   echo '<img src="'.$image.'">';
-  echo '<BR>Click in triunghi';
-echo '<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>';
+  echo '<BR>Click in triunghi sau mutati cercul rosu sus/jos dreapta/stanga, si apasati enter.';
+
 echo '
 <script>
-$(document).ready(function() {
     var adbn ="'.$adbn.'";
     var hash_img="'.$hash_img.'";
     var host = "'.$host.'";
     var v = "'.$v.'";
     var srt = "'.$srt.'";
-    $("img").on("click", function(event) {
-        var x = event.pageX - this.offsetLeft;
-        var y = event.pageY - this.offsetTop;
-        //alert("X Coordinate: " + x + " Y Coordinate: " + y);
-
+    var flash = "'.$flash.'";
+function test(x,y) {
     $.post("hqq1.php",
     {
       adb: adbn,
@@ -114,47 +122,34 @@ $(document).ready(function() {
       srt: srt,
       host: host
     },
-    function(data,status){';
-    echo 'document.getElementById("rr").innerHTML=data;';
-//////////////////////////////////////////
-if ($flash=="flash") {
-echo '
-
-const myTimeout = setTimeout(myGreeting, 500);
-
+    function(data,status){
+      handleAjaxResponse(data);
+    });
+}
+function handleAjaxResponse(responseData) {
+ document.getElementById("rr").innerHTML=responseData;
+ if (flash=="flash") {
+  const myTimeout = setTimeout(myGreeting, 500);
+ } else {
+  const myTimeout = setTimeout(myGO, 500);
+ }
+}
 function myGreeting() {
       document.getElementById("mytest1").href="link1.php?file='.urlencode($l).'&title='.urlencode($title).'";
       document.getElementById("mytest1").click();
 }
-
-';
-} else {
-echo
-'
-
 function myGO() {
   link1="'.urlencode($l).'";
   link="'.urlencode($title).'";
   on();
-  var request =  new XMLHttpRequest();
   var the_data = "link=" + link1 + "&title=" + link;
-  var php_file="link1.php";
-  request.open("POST", php_file, true);			// set the request
-
-  // adds a header to tell the PHP script to recognize the data as is sent via POST
-  request.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-  request.send(the_data);		// calls the send() method with datas as parameter
-
-  // Check request status
-  // If the response is received completely, will be transferred to the HTML tag with tagID
-  request.onreadystatechange = function() {
-    if (request.readyState == 4) {
-      off();
-      document.getElementById("mytest1").href=request.responseText;
-      document.getElementById("mytest1").click();
-      history.go(-1);
-    }
-  }
+  $.post("link1.php",the_data,
+  function(data,status){
+    off();
+    document.getElementById("mytest1").href=data;
+    document.getElementById("mytest1").click();
+    history.go(-1);
+  });
 }
 function on() {
     document.getElementById("overlay").style.display = "block";
@@ -163,17 +158,49 @@ function on() {
 function off() {
     document.getElementById("overlay").style.display = "none";
 }
-const myTimeout = setTimeout(myGO, 500);
-
 ';
-}
-//////////////////////////////////////////
 echo '
-    });
+document.onkeydown = detectKey;
+function detectKey(e) {
+    var posLeft = document.getElementById("myId").offsetLeft;
+    var posTop = document.getElementById("myId").offsetTop;
+    e = e || window.event;
+    e.preventDefault();
+    if (e.keyCode == "38") {
+        // up arrow
+        document.getElementById("myId").style.marginTop  = (posTop-28)+"px";
+    }
+    else if (e.keyCode == "40") {
+        // down arrow
+        document.getElementById("myId").style.marginTop  = (posTop+28)+"px";
+    }
+    else if (e.keyCode == "37") {
+       // left arrow
+        document.getElementById("myId").style.marginLeft  = (posLeft-28)+"px";
+    }
+    else if (e.keyCode == "39") {
+       // right arrow
+        document.getElementById("myId").style.marginLeft  = (posLeft+28)+"px";
+    }
+    else if (e.keyCode == "13") {
+      test(posLeft,posTop);
+    }
+}
+
+$(document).ready(function() {
+    document.getElementById("myId").style.marginTop="200px";
+    document.getElementById("myId").style.marginLeft="200px";
+    $("img").on("click", function(event) {
+        var x = event.pageX - this.offsetLeft;
+        var y = event.pageY - this.offsetTop;
+        test(x,y);
     });
 });
 </script>
 ';
+
+
+echo '<div id="rr"></div>';
 echo '
 <div id="overlay">
   <div id="text">Wait....</div>

@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <?php
 include ("../common.php");
-$page_title="rds.live";
+$page_title="tvhdonline";
 $width="200px";
 $height=intval(200*(394/700))."px";
 ?>
@@ -113,7 +113,7 @@ $n=0;
 $w=0;
 echo '<h2>'.$page_title.'</H2>';
 echo '<table border="1px" width="100%">'."\n\r";
-$l="https://rds.live/canale-tv/";
+$l="https://tvhdonline.org/";
 
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $l);
@@ -128,32 +128,39 @@ $l="https://rds.live/canale-tv/";
   $html = curl_exec($ch);
   curl_close($ch);
   //echo $html;
-$videos = explode('<a class="post-thumbnail', $html);
+$videos = explode('<li class="item"', $html);
 unset($videos[0]);
 $n=0;
 $videos = array_values($videos);
   foreach($videos as $video) {
-  $t1=explode('alt="',$video);
+  $t1=explode('title="',$video);
   $t2=explode('"',$t1[1]);
   $title=$t2[0];
+  if (preg_match("/title2\"\>/",$video)) {
+  $t1=explode('"title2">',$video);
+  $t2=explode('</small',$t1[1]);
+  $title2=strip_tags($t2[0]);
+  } else {
+  $title2="Acum LIVE";
+  }
   $t1=explode('href="',$video);
   $t2=explode('"',$t1[1]);
-  $link=$t2[0];
+  $link="https://tvhdonline.org".$t2[0];
   $t1=explode('src="',$video);
   $t2=explode('"',$t1[1]);
-  $image=$t2[0];
+  $image=fixurl($t2[0],"https://tvhdonline.org");
     $val_prog="link=".urlencode(fix_t($title));
-    $link1="direct_link.php?link=".$link."&title=".urlencode($title)."&from=rds.live&mod=direct";
-    $l="link=".urlencode(fix_t($link))."&title=".urlencode(fix_t($title))."&from=rds.live&mod=direct";
+    $link1="direct_link.php?link=".$link."&title=".urlencode($title)."&from=tvhdonline&mod=direct";
+    $l="link=".urlencode(fix_t($link))."&title=".urlencode(fix_t($title))."&from=tvhdonline&mod=direct";
   if ($link <> "") {
   if ($n==0) echo '<TR>';
   if ($flash == "flash") {
   echo '<td class="mp" align="center" width="25%"><a class ="imdb" id="myLink'.($w*1).'" href="'.$link1.'" target="_blank" onmousedown="isKeyPressed(event)">
-  <img id="myLink'.($w*1).'" src="'.$image.'" width="'.$width.'" height="'.$height.'"><BR>'.$title.'<input type="hidden" id="imdb_myLink'.($w*1).'" value="'.$val_prog.'"></a>
+  <img id="myLink'.($w*1).'" src="'.$image.'" width="'.$width.'" height="'.$height.'"><BR>'.$title.'<BR>'.$title2.'<input type="hidden" id="imdb_myLink'.($w*1).'" value="'.$val_prog.'"></a>
   <a onclick="prog('."'".$val_prog."')".'"'." style='cursor:pointer;'>"." *".'</a>
   </TD>';
   }  else
-  echo '<td class="mp" align="center" width="25%">'.'<a class ="imdb" id="myLink'.($w*1).'" onclick="ajaxrequest('."'".$l."')".'"'." style='cursor:pointer;'>".'<img id="myLink'.($w*1).'" src="'.$image.'" width="'.$width.'" height="'.$height.'"><BR>'.$title.'<input type="hidden" id="imdb_myLink'.($w*1).'" value="'.$val_prog.'"></a></TD>';
+  echo '<td class="mp" align="center" width="25%">'.'<a class ="imdb" id="myLink'.($w*1).'" onclick="ajaxrequest('."'".$l."')".'"'." style='cursor:pointer;' onmousedown='isKeyPressed(event)'>".'<img id="myLink'.($w*1).'" src="'.$image.'" width="'.$width.'" height="'.$height.'"><BR>'.$title.'<BR>'.$title2.'<input type="hidden" id="imdb_myLink'.($w*1).'" value="'.$val_prog.'"></a></TD>';
   $w++;
   $n++;
   if ($n == 4) {

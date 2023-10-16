@@ -79,20 +79,14 @@ document.onkeypress =  zx;
 <TR>
 <TD width="25%"><a href="filme/upmovies_s.php?page=1&tip=release&title=upmovies&link=" target="_blank">upmovies</a></TD>
 <TD width="25%"><a href="filme/flixhq_s.php?page=1&tip=release&title=flixhq&link=" target="_blank">flixhq</a></TD>
-<TD width="25%"></TD>
-<TD width="25%"><a href="filme/c1ne_s.php?page=1&tip=release&title=c1ne&link=" target="_blank">c1ne</a></TD>
+<TD width="25%"><a href="filme/bflix_s.php?page=1&tip=release&title=bflix&link=" target="_blank">bflix</a></TD>
+<TD width="25%"><a href="filme/streamlord_s.php?page=1&tip=release&title=streamlord&link=" target="_blank">streamlord</a></TD>
 </TR>
 
 <TR>
 <TD width="25%"><a href="filme/moviebox_s.php?page=1&tip=release&title=moviebox&link=" target="_blank">moviebox</a></TD>
-<TD width="25%"><a href="filme/bflix_s.php?page=1&tip=release&title=bflix&link=" target="_blank">bflix</a></TD>
-<TD width="25%"><a href="filme/fmovies1_s.php?page=1&tip=release&title=fmovies&link=" target="_blank">fmovies</a></TD>
-<TD width="25%"><a href="filme/streamlord_s.php?page=1&tip=release&title=streamlord&link=" target="_blank">streamlord</a></TD>
-</TR>
-<TR>
 <TD width="25%"><a href="filme/idlixian_s.php?page=1&tip=release&title=idlixian&link=" target="_blank">idlixian</a></TD>
 <TD width="25%"><a href="filme/diverse.php" target="_blank">diverse</a></TD>
-<TD width="25%"></TD>
 <TD width="25%"></TD>
 </TR>
 <?php

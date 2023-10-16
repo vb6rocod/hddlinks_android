@@ -54,7 +54,8 @@ $(document).on('keyup', '.imdb', isValid);
 <th class="cat" colspan="4">Live TV şi emisiuni TV</Th>
 </TR>
 <TR>
-<TD width="25%"><a href="tv/digi.php" target="_blank">digi-online</a></TD>
+<TD width="25%"><a href="tv/tvhdonline.php" target="_blank">tvhdonline</TD>
+<!--<TD width="25%"><a href="tv/digi.php" target="_blank">digi-online</a></TD>-->
 <!--<TD width="25%"><a href="tv/playlist.php?title=TVR.m3u" target="_blank">TVR Live</a></TD>-->
 <TD width="25%"><a href="tv/tvrlive.php" target="_blank">TVR Live</a></TD>
 <TD width="25%"><a href="tv/protvplus_main.php" target="_blank">protvplus</a></TD>
@@ -89,9 +90,10 @@ $(document).on('keyup', '.imdb', isValid);
 <TR>
 <TD width="25%"><a href="tv/canalelive.php" target="_blank">Sport</a></TD>
 <!--<TD width="25%"><a href="tv/time4tv.php?page=1&tip=release&title=time4tv&link=" target="_blank">time4tv</a></TD>-->
-<TD width="25%"><a href="tv/primasport.php" target="_blank">Primasport</TD>
+<!--<TD width="25%"><a href="tv/primasport.php" target="_blank">Primasport</TD>-->
 <TD width="25%"><a href="tv/telefootball.php" target="_blank">FOTBAL LA TV</TD>
 <TD width="25%"><a href="tv/rds.php" target="_blank">rds.live</TD>
+<TD width="25%"><a href="tv/tvonline.php" target="_blank">tvonline</TD>
 </TR>
 <TR>
 <TD width="25%"><a href="tv/sportybite.php" target="_blank">sportybite</a></TD>

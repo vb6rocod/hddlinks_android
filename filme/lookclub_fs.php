@@ -24,9 +24,7 @@ $mx=trim(file_get_contents($base_pass."mx.txt"));
 $mx="ad";
 }
 $user_agent     =   $_SERVER['HTTP_USER_AGENT'];
-if ($flash != "mp") {
-if (preg_match("/android|ipad/i",$user_agent) && preg_match("/chrome|firefox|mobile/i",$user_agent)) $flash="chrome";
-}
+
 $tit=unfix_t(urldecode($_GET["title"]));
 $tit=prep_tit($tit);
 $image=$_GET["image"];
@@ -195,7 +193,8 @@ if ($tip=="movie") {
   $link_page="";
 }
   $rest = substr($tit3, -6);
-  if (preg_match("/\(?(\d+)\)?/",$rest,$m)) {
+  //echo $rest."======================";
+  if (preg_match("/\(?(\d{4})\)?/",$rest,$m)) {
    $year=$m[1];
    $tit3=trim(str_replace($m[0],"",$tit3));
   } else {

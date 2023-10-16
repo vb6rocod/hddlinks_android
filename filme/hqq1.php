@@ -64,6 +64,7 @@ $head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gec
   } else {
     $link="";
   }
-  echo $link;
+
   file_put_contents("hqq.txt",$link."&srt=".$srt);
+  echo $link;
 ?>

@@ -24,9 +24,7 @@ $mx=trim(file_get_contents($base_pass."mx.txt"));
 $mx="ad";
 }
 $user_agent     =   $_SERVER['HTTP_USER_AGENT'];
-if ($flash != "mp") {
-if (preg_match("/android|ipad/i",$user_agent) && preg_match("/chrome|firefox|mobile/i",$user_agent)) $flash="chrome";
-}
+
 $tit=unfix_t(urldecode($_GET["title"]));
 $tit=prep_tit($tit);
 $image=$_GET["image"];
@@ -146,9 +144,8 @@ $ua="Mozilla/5.0 (Windows NT 10.0; rv:75.0) Gecko/20100101 Firefox/75.0";
   $h = curl_exec($ch);
   curl_close($ch);
   //echo $h;
-  $t1=explode('embedUrl":"',$h);
-  $t2=explode('"',$t1[1]);
-  $l=$t2[0];
+  preg_match("/embed\/(\w+)/",$h,$m);
+  $l="https://closeload.top/video/embed/".$m[1];
   $r[]=$l;
   $s[]=parse_url($l)['host'];
   if (preg_match("/data\-id\=\"tt(\d+)/",$h,$m))

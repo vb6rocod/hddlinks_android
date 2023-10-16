@@ -28,6 +28,7 @@ function isValid(evt) {
     self = evt.target;
      id = "imdb_" + self.id;
      id_link=self.id;
+     //alert (id_link);
     return true;
 }
 function prog(link) {

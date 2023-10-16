@@ -68,11 +68,10 @@ $mx=trim(file_get_contents($base_pass."mx.txt"));
 $mx="ad";
 }
 $user_agent     =   $_SERVER['HTTP_USER_AGENT'];
-if ($flash != "mp") {
-if (preg_match("/android|ipad/i",$user_agent) && preg_match("/chrome|firefox|mobile/i",$user_agent)) $flash="chrome";
-}
+
 $n=0;
 echo '<h2>'.$page_title.'</H2>';
+/* dead .....
 echo '<table border="1px" width="100%">'."\n\r";
 $ua="Mozilla/5.0 (Windows NT 10.0; rv:89.0) Gecko/20100101 Firefox/89.0";
 $l="https://canale.live/";
@@ -120,6 +119,7 @@ foreach($videos as $video) {
   }
 }
 echo "</table>";
+*/
 ////////////////////////////////////////////////
 // sport7.pm
 $l="https://sport7.pm/channels";

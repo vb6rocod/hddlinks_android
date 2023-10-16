@@ -130,6 +130,116 @@ if (preg_match("/dlhd\.sx/",$link)) {
 if (preg_match("/play\.stirilepe\.net/",$link)) {
  if ($flash <> "flash") $link .="|Referer=".urlencode("https://rds.live/");
 }
+
+if ($from=="tvonline") {
+  $head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/118.0',
+  'Accept: */*',
+  'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
+  'Accept-Encoding: deflate',
+  'Origin: https://tvonline123.com',
+  'Connection: keep-alive',
+  'Referer: https://tvonline123.com/');
+
+  $cookie=$base_cookie."tvonline.txt";
+  $a = substr(strrchr($link, "/"), 1);
+  $id=str_replace(".html","",$a);
+
+  $ch = curl_init();
+  curl_setopt($ch, CURLOPT_URL, $l);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+  curl_setopt($ch, CURLOPT_HTTPHEADER, $head);
+  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+  //curl_setopt($ch, CURLOPT_POST,1);
+  //curl_setopt($ch, CURLOPT_POSTFIELDS,$post);
+  curl_setopt($ch, CURLOPT_COOKIEJAR, $cookie);
+  curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie);
+  //curl_setopt($ch, CURLOPT_HEADER,1);
+  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 25);
+
+  curl_setopt($ch, CURLOPT_URL, $link);
+  $h = curl_exec($ch);
+  
+  $l="https://tvonline123.com/tvlive/?url=".$id;
+  curl_setopt($ch, CURLOPT_URL, $l);
+  $h = curl_exec($ch);
+  if (preg_match("/\&s\=(\d+)/",$h,$m)) {
+  $l="https://tvonline123.com/player/".$id."/".$m[1];
+  //echo $l;
+  curl_setopt($ch, CURLOPT_URL, $l);
+  //curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie);
+  $h = curl_exec($ch);
+  curl_close($ch);
+  if (preg_match("/file:\"([^\"]+)\"/",$h,$n)) {
+   $link=$n[1];
+   if ($flash <> "flash")
+     $link .="|Referer=".urlencode("https://tvonline123.com/")."&Origin=".urlencode("https://tvonline123.com");
+  } else {
+    $link="";
+  }
+
+  }
+}
+if ($from=="tvhdonline") {
+  function dF($s){
+   $s1=urldecode(substr($s,0,strlen($s)-1));
+   $t='';
+   for($i=0;$i<strlen($s1);$i++) {
+    $t .=chr(ord($s1[$i])- substr($s,strlen($s)-1,1));
+   }
+   return urldecode($t);
+  }
+  $head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/118.0',
+  'Accept: */*',
+  'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
+  'Accept-Encoding: deflate',
+  'Origin: https://tvhdonline.org',
+  'Connection: keep-alive',
+  'Referer: https://tvhdonline.org');
+  $ch = curl_init();
+  curl_setopt($ch, CURLOPT_URL, $link);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+  curl_setopt($ch, CURLOPT_HTTPHEADER, $head);
+  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+  curl_setopt($ch, CURLOPT_ENCODING,"");
+  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 25);
+  $h = curl_exec($ch);
+  //echo urldecode($h);
+  $t1=explode("dF('",$h);
+  $t2=explode("')",$t1[1]);
+  $h1=dF($t2[0]);
+  //echo $h1;
+  if (preg_match("/\<iframe.*?src\=\"([^\"]+)\"/i",$h1,$m)) {
+  $l=$m[1];
+  curl_setopt($ch, CURLOPT_URL, $l);
+  $h = curl_exec($ch);
+  if (preg_match("/tvhdonline.org/",$l)) {
+    if (preg_match("/LIVEAPP_URL\s*\=\s*\'([^\']+)/",$h,$s))
+     $link=$s[1];
+    else
+     $link="";
+  } else {
+    $h=urlencode($h);
+    $h=str_replace("%00","",$h);
+    $out = preg_replace_callback(
+     "(%5Cx([0-9a-z]{2}))i",
+     function($a) {return chr("0x".($a[1]));},
+     $h
+    );
+   $z=urldecode($out);
+   if(preg_match("/http[^\"]+\.m3u8?/",$z,$r))
+    $link=$r[0];
+   else
+    $link="";
+  }
+  }
+  curl_close($ch);
+  if ($link && $flash <> "flash")
+   $link .="|Referer=".urlencode("https://tvhdonline.org/");
+}
 if ($from == "time4tv") {
 $head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/110.0',
 'Accept: */*',
@@ -2137,16 +2247,16 @@ $proxy="86.120.79.84:4145";
     //$link=str_between($h,'file":"','"');
     $link=$r['file'];
     $host=parse_url($link)['host'];
-
+    $link=str_replace($host,"edge-ar.rcs-rds.ro",$link);
     //echo $link;
-    /*
+
     $ch = curl_init();
     curl_setopt($ch, CURLOPT_URL, $link);
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
     curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 10.0; rv:64.0) Gecko/20100101 Firefox/64.0');
     curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
     curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-    //curl_setopt($ch, CURLOPT_REFERER, "http://207.180.233.100:2539");
+    //curl_setopt($ch, CURLOPT_REFERER, "https://digiapis.rcs-rds.ro");
     //curl_setopt($ch, CURLOPT_PROXY, $proxy);
     curl_setopt($ch, CURLOPT_HTTPHEADER,$head);
     //curl_setopt($ch, CURLOPT_PROXYTYPE, CURLPROXY_SOCKS5);
@@ -2158,7 +2268,7 @@ $proxy="86.120.79.84:4145";
     $x = curl_exec($ch);
     curl_close($ch);
     echo $x;
-    */
+
     //$link=preg_replace("/edge\d+\.rcs\-rds\.ro/","82.76.40.81",$link);
     //$link=preg_replace("/edge\d+\.rdsnet\.ro/","82.76.40.81",$link);
     //$link=str_replace($host,"edge30.rcs-rds.ro",$link);
@@ -2841,9 +2951,7 @@ $mx=trim(file_get_contents($base_pass."mx.txt"));
 $mx="ad";
 }
 $user_agent     =   $_SERVER['HTTP_USER_AGENT'];
-if ($flash != "mp") {
-if (preg_match("/android|ipad/i",$user_agent) && preg_match("/chrome|firefox|mobile/i",$user_agent)) $flash="chrome";
-}
+
 $out=$link;
 //$flash="flash";
 //$out="http://127.0.0.1:8080/scripts/filme/lava.m3u8|Referer=https%3A%2F%2Ftr.vidlink.org&Origin=https%3A%2F%2Ftr.vidlink.org";

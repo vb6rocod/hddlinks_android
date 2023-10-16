@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <?php
 include ("../common.php");
-$page_title="rds.live";
+$page_title="tvonline";
 $width="200px";
 $height=intval(200*(394/700))."px";
 ?>
@@ -63,6 +63,7 @@ function isValid(evt) {
 function isKeyPressed(event) {
   if (event.ctrlKey) {
     id = "imdb_" + event.target.id;
+    //alert (id);
     val_imdb=document.getElementById(id).value;
     msg="prog.php?" + val_imdb;
     document.getElementById("fancy").href=msg;
@@ -112,39 +113,90 @@ $user_agent     =   $_SERVER['HTTP_USER_AGENT'];
 $n=0;
 $w=0;
 echo '<h2>'.$page_title.'</H2>';
-echo '<table border="1px" width="100%">'."\n\r";
-$l="https://rds.live/canale-tv/";
-
+$head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/118.0',
+'Accept: */*',
+'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
+'Accept-Encoding: deflate',
+'Origin: https://tvonline123.com',
+'Connection: keep-alive',
+'Referer: https://tvonline123.com/tvlive/?url=a7-tv-hd');
+$l2="https://tvonline123.com/categoria/sport.html";
+  $cookie=$base_cookie."tvonline.txt";
   $ch = curl_init();
-  curl_setopt($ch, CURLOPT_URL, $l);
+  curl_setopt($ch, CURLOPT_URL, $l2);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-  curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 10.0; rv:55.0) Gecko/20100101 Firefox/55.0');
+  curl_setopt($ch, CURLOPT_HTTPHEADER, $head);
   curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
-  curl_setopt($ch, CURLOPT_ENCODING, "");
+  //curl_setopt($ch, CURLOPT_POST,1);
+  //curl_setopt($ch, CURLOPT_POSTFIELDS,$post);
+  curl_setopt($ch, CURLOPT_COOKIEJAR, $cookie);
+  curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie);
+  //curl_setopt($ch, CURLOPT_HEADER,1);
   curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
-  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
-  //curl_setopt($ch,CURLOPT_HTTPHEADER,$head);
-  $html = curl_exec($ch);
-  curl_close($ch);
-  //echo $html;
-$videos = explode('<a class="post-thumbnail', $html);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 25);
+  $h = curl_exec($ch);
+echo '<table border="1px" width="100%">'."\n\r";
+$videos = explode('<div class="col-lg-2 col-6', $h);
 unset($videos[0]);
 $n=0;
 $videos = array_values($videos);
   foreach($videos as $video) {
-  $t1=explode('alt="',$video);
-  $t2=explode('"',$t1[1]);
+  $t1=explode('<h2>',$video);
+  $t2=explode('<',$t1[1]);
   $title=$t2[0];
   $t1=explode('href="',$video);
   $t2=explode('"',$t1[1]);
   $link=$t2[0];
+  $link=fixurl($link,$l2);
   $t1=explode('src="',$video);
   $t2=explode('"',$t1[1]);
   $image=$t2[0];
     $val_prog="link=".urlencode(fix_t($title));
-    $link1="direct_link.php?link=".$link."&title=".urlencode($title)."&from=rds.live&mod=direct";
-    $l="link=".urlencode(fix_t($link))."&title=".urlencode(fix_t($title))."&from=rds.live&mod=direct";
+    $link1="direct_link.php?link=".$link."&title=".urlencode($title)."&from=tvonline&mod=direct";
+    $l="link=".urlencode(fix_t($link))."&title=".urlencode(fix_t($title))."&from=tvonline&mod=direct";
+  if ($link <> "") {
+  if ($n==0) echo '<TR>';
+  if ($flash == "flash") {
+  echo '<td class="mp" align="center" width="25%"><a class ="imdb" id="myLink'.($w*1).'" href="'.$link1.'" target="_blank" onmousedown="isKeyPressed(event)">
+  <img id="myLink'.($w*1).'" src="'.$image.'" width="'.$width.'" height="'.$height.'"><BR>'.$title.
+  '<input type="hidden" id="imdb_myLink'.($w*1).'" value="'.$val_prog.'"></a>
+  <a onclick="prog('."'".$val_prog."')".'"'." style='cursor:pointer;'>"." *".'</a>
+  </TD>';
+  }  else
+  echo '<td class="mp" align="center" width="25%">'.'<a class ="imdb" id="myLink'.($w*1).'" onclick="ajaxrequest('."'".$l."')".'"'." style='cursor:pointer;' onmousedown='isKeyPressed(event)'>".'<img id="myLink'.($w*1).'" src="'.$image.'" width="'.$width.'" height="'.$height.'"><BR>'.$title.'<input type="hidden" id="imdb_myLink'.($w*1).'" value="'.$val_prog.'"></a></TD>';
+  $w++;
+  $n++;
+  if ($n == 4) {
+  echo '</tr>';
+  $n=0;
+  }
+  }
+}
+echo "</table>";
+$l2="https://tvonline123.com/categoria/filme.html";
+curl_setopt($ch, CURLOPT_URL, $l2);
+$h = curl_exec($ch);
+curl_close($ch);
+echo '<table border="1px" width="100%">'."\n\r";
+$videos = explode('<div class="col-lg-2 col-6', $h);
+unset($videos[0]);
+$n=0;
+$videos = array_values($videos);
+  foreach($videos as $video) {
+  $t1=explode('<h2>',$video);
+  $t2=explode('<',$t1[1]);
+  $title=$t2[0];
+  $t1=explode('href="',$video);
+  $t2=explode('"',$t1[1]);
+  $link=$t2[0];
+  $link=fixurl($link,$l2);
+  $t1=explode('src="',$video);
+  $t2=explode('"',$t1[1]);
+  $image=$t2[0];
+    $val_prog="link=".urlencode(fix_t($title));
+    $link1="direct_link.php?link=".$link."&title=".urlencode($title)."&from=tvonline&mod=direct";
+    $l="link=".urlencode(fix_t($link))."&title=".urlencode(fix_t($title))."&from=tvonline&mod=direct";
   if ($link <> "") {
   if ($n==0) echo '<TR>';
   if ($flash == "flash") {

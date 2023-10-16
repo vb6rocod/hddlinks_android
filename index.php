@@ -11,6 +11,10 @@ if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
 } else {
     $os="linux";
 }
+if (file_exists($base_pass."player.txt")) {
+   $mod=file_get_contents($base_pass."player.txt");
+} else
+   $mod="";
 // seting tast
 $f=$base_pass."tastatura.txt";
 if ($os=="win")

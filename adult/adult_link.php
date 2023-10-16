@@ -727,8 +727,13 @@ $out=$t2[0];
   }
   if (strpos($out,"http") === false && $out) $out="https:".$out;
 } else if (preg_match("/pornhub\.com/",$host)) {
-//echo $h;
+  //echo $h;
+  $h=str_replace("\\","",$h);
+  if (preg_match("/videoUrl\":\"([^\"]+)\"/",$h,$m))
+    $out=$m[1];
+  //echo $out;
   //https://www.pornhub.com/embed/ph5d4b0d9dbca84
+  /*
   preg_match_all("/flashvars\.mediaDefinitions\.(.*?)\.videoUrl/si",$h,$q);
   //print_r ($q);
   $s=$q[1][0];
@@ -749,13 +754,14 @@ $out=$t2[0];
   //echo $o;
   eval ($o);
   //echo $out;
+  */
   $ua="Mozilla/5.0 (Windows NT 10.0; rv:87.0) Gecko/20100101 Firefox/87.0";
 $head=array('Accept: */*',
 'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
 'Accept-Encoding: deflate',
 'Connection: keep-alive',
 'Referer: '.$l);
-/*
+  /*
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $out);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
@@ -769,10 +775,11 @@ $head=array('Accept: */*',
   $h = curl_exec($ch);
   curl_close($ch);
   echo $h;
-  $x=json_decode($h,1);
-  //print_r ($x);
-  $out=$x[0]['videoUrl'];
   */
+  //$x=json_decode($h,1);
+  //print_r ($x);
+  //$out=$x[0]['videoUrl'];
+
 } else if (preg_match("/pornmaki\.com/",$host)) {
   $t1=explode('file:"',$h);
   $t2=explode('"',$t1[1]);

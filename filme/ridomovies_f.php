@@ -13,6 +13,7 @@ $link=$_GET["link"];
 $width="200px";
 $height="278px";
 $last_good="https://ridomovies.pw";
+$last_good="https://ridomovies.tv";
 $host=parse_url($last_good)['host'];
 /* ==================================================== */
 $has_fav="yes";
@@ -169,17 +170,12 @@ if ($page==1) {
 echo '</TR>'."\r\n";
 $f=array();
 if ($tip=="search") {
- $search= str_replace(" ","+",$tit);
- if ($page==1)
-  $l=$last_good."/?s=".$search;
- else
-  $l=$last_good."/page/".$page."/?s=".$search;
+ $search= str_replace(" ","%20",$tit);
+  $l=$last_good."/core/api/search?q=".$search;
 } else {
- if ($page==1)
-  $l=$last_good."/home/";
- else
-  $l=$last_good."/home/page/".$page."/";
+  $l=$last_good."/core/api/movies/latest?page[number]=".$page;
 }
+//https://ridomovies.tv/core/api/search?q=star
 //https://ridomovies.pw/page/2/?s=star
 $ua="Mozilla/5.0 (Windows NT 10.0; rv:75.0) Gecko/20100101 Firefox/75.0";
   $ch = curl_init();
@@ -192,12 +188,16 @@ $ua="Mozilla/5.0 (Windows NT 10.0; rv:75.0) Gecko/20100101 Firefox/75.0";
   curl_setopt($ch, CURLOPT_TIMEOUT, 25);
   $h = curl_exec($ch);
   curl_close($ch);
+  $x=json_decode($h,1);
+  //print_r ($x);
+  $y=$x['data']['items'];
   //echo $h;
+  //print_r ($y);
 $path = parse_url($l)['path'];
 //echo $h;
 $host=parse_url($l)['host'];
-
-$videos = explode('class="post-', $h);
+/*
+$videos = explode('<div class="poster"', $h);
 unset($videos[0]);
 $videos = array_values($videos);
 //print_r ($videos);
@@ -207,30 +207,50 @@ foreach($videos as $video) {
  //$link=$t2[0];
  preg_match("/href\=\"?([^\s]+)/",$video,$s);
  $link=$s[1];
+ $link=fixurl($link,$l);
  //$t1=explode('data-src="',$video);
  //$t2=explode('"',$t1[1]);
  //$image=$t2[0];
- preg_match("/data\-src\=\"?([^\s]+)/",$video,$s);
+ preg_match("/src\=\"?([^\"]+)/",$video,$s);
  $image=$s[1];
  //$t1=explode('title="',$video);
  //$t2=explode('"',$t1[1]);
  //$title=trim($t2[0]);
- preg_match("/title\=\"?([^\>\"]+)/",$video,$s);
+ preg_match("/poster-title\"\>([^\<]+)\</",$video,$s);
  $title=$s[1];
  $year="";
   if (preg_match("/\/movies\//",$link)) $f[] = array($title,$link,$image,$year);
 }
+*/
 //echo $html;
+for ($k=0;$k<count($y);$k++) {
+ if ($tip=="search")
+  $z=$y[$k]['contentable'];
+ else
+  $z=$y[$k];
+   if ($tip=="search") {
+   $title= $z['originalTitle'];
+   $image= $z['apiPosterPath'];
+   } else {
+   $title=$z['content']['title'];
+   $image=$last_good."/uploads".$z['posterPath'];
+   }
+   $link=$z['content']['fullSlug'];
+   $link=$last_good."/".$link;
+   $year=$z['releaseYear'];
+   $imdb=$z['imdbId'];
+   $f[] = array($title,$link,$image,$year,$imdb);
+}
 foreach($f as $key => $value) {
   $title=$value[0];
   $title=prep_tit($title);
   $link=$value[1];
   $image=$value[2];
   $year=$value[3];
-  $imdb="";
+  $imdb=$value[4];
 
   $tit_imdb=$title;
-  $link_f=$fs_target.'?tip=movie&link='.urlencode($link).'&title='.urlencode(fix_t($title)).'&image='.$image."&sez=&ep=&ep_tit=&year=".$year;
+  $link_f=$fs_target.'?tip=movie&link='.urlencode($link).'&title='.urlencode(fix_t($title)).'&image='.$image."&sez=&ep=&ep_tit=&year=".$year."&imdb=".$imdb;
   if ($title) {
   if ($n==0) echo '<TR>'."\r\n";
   $val_imdb="tip=movie&title=".urlencode(fix_t($tit_imdb))."&year=".$year."&imdb=".$imdb;
