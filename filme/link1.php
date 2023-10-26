@@ -7473,9 +7473,14 @@ if (count($pl) > 1) {
   $jsu = new JavaScriptUnpacker();
   $h .= $jsu->Unpack($h);
   //echo $h;
+  //sources: ["
+  if (preg_match("/sources\:\s*\[\"([^\"]+)\"/",$h,$m))
+    $link=$m[1];
+  else {
   $t1=explode('sources:[{src:"',$h);
   $t2=explode('"',$t1[1]);
   $link=$t2[0];
+  }
   //echo $link;
   /*
   $ch = curl_init();
@@ -7557,6 +7562,7 @@ if (count($pl) > 1) {
 } elseif (preg_match("/rcp\.vidsrc\.me/",$filelink)) {
   $ua="Mozilla/5.0 (Windows NT 10.0; rv:104.0) Gecko/20100101 Firefox/104.0";
   // https://vidsrc.me/embed/tt13055982/
+  //https://vidsrc.me/embed/tt3291150/
   // https://rcp.vidsrc.me/rcp/NTBjN2QwY2JiNmRiNWM4MTNkNWU3YzA3YmJjYzc2NTg6TVRWR01qbHFaVGMyU3pKWmFtbE9SRlJ0VkhKdk5GUnVMMUp0WnpCMlNrSlJiVVU1TDIxMlpWUTFSRk5CWmtsV2FEQmlWMGhOT0VRMGR6bEJWbFpyZURadVRGbHJPVk5JYjNBeFZrSkRRMlZDWlRGQk5FMTZhSGx0U1d0dFp6SlNibXhVT1dOVlNIVkNhMGhWV2xWV01FRk9XVlJhV2xwRU1sSjRkMXBoUmtnMVpVWlVXalV4VW5KVVJqWmlOVXhpYWtSVFpWVkhhM294TW5KSWVWQjZjMHRTZWpKRmRsWjZjaTl5VUZsMk0wUjNXRFkwT0RGTFJVOUJZaTkxVEcxcFpYbDJLMFl3ZEdSTlIzWktNRE5ZZWtsS09HSlFNalUzUldwdlVDOW1NM2hXWlhoTlJYbHVaM2RoUVd4aFJsaEZUa1o2Ym1vMVVYZERXRk0wUW1RemRuQktieTlUZVdOVWEyRTNiM1pTY214bk5TdEpRM2s1UzJwcE56aFhLMnhhZVZSSGEwcFZhMHRKVVUxMlYxa3dkMEpVVXpWdlZqWlFXVEYyZWl0RFNFRnVURFUzZVdWTFNXc3JaMlZOYjBGVGQwNUhUMVI2TTNWR1QwWm9kVWM1YkVOVFVtUTJlSHBVUVZSMGNuVlZNeTl1THl0U1lURlVORXBQVG1KS2FuWmhZM2xaYzFOdFJqTlJWaXRETUhGTU1uSkZLMDU2VTJ4T1ZqSlpSbGxoYTB0WFFsUkxaVEZQYmpFeFVrNUpNMk01UjA5WlNVNXFkMjR6Y1hGNE9YSkZlWEZVWTNoTlNFTkpNa3BqYUVkeFFrRjJaV05pTWpseVExQlJRWFl2UzBGRU5uUXJZMk4wYVhGYVR6WTBUMWhPYzNKMmMwUkdSVXQ0TVhoSmJHRkpTM000ZEZwbFJYVjBMekJEZW0xTGFsQk1lV0pqZEUxSU16WkhlQzlPTDJaa2JuZEtNbmRJTlVGUmVubzBSRFE1ZFhWelFVZGtjRVJPVGpkRVowSkhSMGt3
   // https://v2.vidsrc.me/srcrcp/NTBjN2QwY2JiNmRiNWM4MTNkNWU3YzA3YmJjYzc2NTg6TVRWR01qbHFaVGMyU3pKWmFtbE9SRlJ0VkhKdk5GUnVMMUp0WnpCMlNrSlJiVVU1TDIxMlpWUTFSRk5CWmtsV2FEQmlWMGhOT0VRMGR6bEJWbFpyZURadVRGbHJPVk5JYjNBeFZrSkRRMlZDWlRGQk5FMTZhSGx0U1d0dFp6SlNibXhVT1dOVlNIVkNhMGhWV2xWV01FRk9XVlJhV2xwRU1sSjRkMXBoUmtnMVpVWlVXalV4VW5KVVJqWmlOVXhpYWtSVFpWVkhhM294TW5KSWVWQjZjMHRTZWpKRmRsWjZjaTl5VUZsMk0wUjNXRFkwT0RGTFJVOUJZaTkxVEcxcFpYbDJLMFl3ZEdSTlIzWktNRE5ZZWtsS09HSlFNalUzUldwdlVDOW1NM2hXWlhoTlJYbHVaM2RoUVd4aFJsaEZUa1o2Ym1vMVVYZERXRk0wUW1RemRuQktieTlUZVdOVWEyRTNiM1pTY214bk5TdEpRM2s1UzJwcE56aFhLMnhhZVZSSGEwcFZhMHRKVVUxMlYxa3dkMEpVVXpWdlZqWlFXVEYyZWl0RFNFRnVURFUzZVdWTFNXc3JaMlZOYjBGVGQwNUhUMVI2TTNWR1QwWm9kVWM1YkVOVFVtUTJlSHBVUVZSMGNuVlZNeTl1THl0U1lURlVORXBQVG1KS2FuWmhZM2xaYzFOdFJqTlJWaXRETUhGTU1uSkZLMDU2VTJ4T1ZqSlpSbGxoYTB0WFFsUkxaVEZQYmpFeFVrNUpNMk01UjA5WlNVNXFkMjR6Y1hGNE9YSkZlWEZVWTNoTlNFTkpNa3BqYUVkeFFrRjJaV05pTWpseVExQlJRWFl2UzBGRU5uUXJZMk4wYVhGYVR6WTBUMWhPYzNKMmMwUkdSVXQ0TVhoSmJHRkpTM000ZEZwbFJYVjBMekJEZW0xTGFsQk1lV0pqZEUxSU16WkhlQzlPTDJaa2JuZEtNbmRJTlVGUmVubzBSRFE1ZFhWelFVZGtjRVJPVGpkRVowSkhSMGt3
   //require_once("rec.php");
@@ -7584,6 +7590,7 @@ $head=array('Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image
 'Connection: keep-alive',
 'Referer: '.$filelink);
 //print_r ($head);
+//$filelink="https://vidsrc.stream/prorcp/ODkzNWM2OThjMTg3ZGE1YTBhOGVlMmExZmE5OWVjYmI6TDJkcWRqZHZOMGhNTTAxWWNraFBWVmx3YUhsS1puWm9XbmxWVTNkTlJscFdiWEZOUVRoR2NXZDFSemw0WW5GV1ZGRXZSRlJXZGtweE5GaEdhRWx5ZVZOM1pIWXZhVGsyT0hWMGFVcFlTbHBLZDJ0UGJIZDVWMk5TU1ZaUFlURnVla2h0YVdZNVlVb3hSRkF2YzFOSWJXRmFjbFJFUzNKRU5rSXhjMnR3U25SYWIyMWxhVXRSWTFKU01tcFBNMjV6WldsdmQyNDBlRU5NT1RSaVpHZDJPVWhtV2xwT1dtVlVOMUk0T0Rac2VVOUhlVE0zVkhSeVRYSk1VWGs0UzBZcmJtWmxiM2xvUTI1UGJHSlFVVVJrWVcxdVlUSjRkVlJGZEZWdlV5OXZZbnBCZWtKbGIyNUpkbVJ4V2xkeWN6ZDRZaTlXZURGaUsycGpUM295YzFkbGNUUnVha2xoUjNoRVVFbExibVUxWkdwVFkwMHZRbEl2VFVKUFZVTlVTa0p4YTBkcGVFbGpjRWdyVjFGS1UyTm5VSE5NZVc5SFZ6WjJjak0wTWs1UlUzbDNiV3BOVUZWeFlWTlpjVmRXYjNsc1ZUVlNTR1l2ZDNwa1kxVk5TV1Z2TUVSdFUyNHdTbnBwTVRRM1prZHBibTlwSzNrM1JFSlBPRTVuY0U4eWNWVTNaM2N2Y0RoaGR6QlJVVWsyUkVoR1NsZ3piRGxSTUV0YWNFeERVR3hGTTA5alR5OWhjbFZ3WmxWMlZIQXpSMnB6YjB0NlNFRnVaRGt2YzFCdmFGaFFkRll3VHpaUFNtcHZaaTlXUkVWdFdVZERLMUJUVkVONlJUbERjV0ZvWkZsT2JrZFhUVmx6VXpJeFZUaEJWMkpITDFOUU1tOVFhR2s0UjJoeFltTlFVa1pSVTA1b2JYbFhjQzlOV0RoeVkzUkRVMFZRY0ZCU1EwbHhlbXBZYTFwbVRtcGpWV2huUjJoTFZ5ODFUbEE0TkVkSllXVkZSbGsyYURoRVRXOUtNRzFVV1dzd2RVOUNLMDl3ZEc1VmIwNWtTVzR3VTBOV2R6MDk-";
   $head=array('Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
   'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
   'Accept-Encoding: deflate',
@@ -9553,7 +9560,7 @@ function xor_string($string, $key) {
   if (preg_match('/(\/\/[\.\d\w\-\.\/\\\:\?\&\#\%\_\,]*(\.(srt|vtt)))/', $filelink, $s))
     $srt="https:".$s[1];
    require_once("JavaScriptUnpacker.php");
-   //require_once ("tear.php");
+   require_once ("tear.php");
    $t1=explode("?",$filelink);
    $host="https://".parse_url($t1[0])['host'];
 
@@ -9599,18 +9606,19 @@ function xor_string($string, $key) {
   }
   }
   //echo $out;
-  /*
+
   $t1=explode("file_code:'",$out);
   $t2=explode("'",$t1[1]);
   $id=$t2[0];
   $t1=explode("hash:'",$out);
   $t2=explode("'",$t1[1]);
   $hash=$t2[0];
-  $l="https://filemoon.sx/dl";
+  $l=$host."/dl";
   $post="b=playerddl&file_code=".$id."&hash=".$hash;
-  */
+  $post="b=stream_data&file_code=".$id."&hash=".$hash; //&c1_file=https://seriale-online.net/subtitrarifilme/tt18083578.vtt&c1_label=Romana";
+
   //echo $post;
-  $post="";
+  //$post="";
   $head=array('Accept: */*',
   'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
   'Accept-Encoding: deflate',
@@ -9618,9 +9626,9 @@ function xor_string($string, $key) {
   'Content-Cache: no-cache',
   'X-Requested-With: XMLHttpRequest',
   'Content-Length: '.strlen($post),
-  'Origin: https://filemoon.sx',
+  'Origin: '.$host,
   'Connection: keep-alive',
-  'Referer: https://filemoon.sx');
+  'Referer: '.$host."/");
   $options = array(
         'http' => array(
         'header'  => array($head),
@@ -9632,8 +9640,8 @@ function xor_string($string, $key) {
         "verify_peer_name"=>false,
     )
   );
-  /*
-  $context  = stream_context_create($options);
+
+  //$context  = stream_context_create($options);
   //$h = @file_get_contents($l, false, $context);
   /////////////////////////////
   $ch = curl_init();
@@ -9651,6 +9659,7 @@ function xor_string($string, $key) {
   curl_setopt($ch, CURLOPT_TIMEOUT, 25);
   $h = curl_exec($ch);
   curl_close($ch);
+  //echo $h;
   /////////////////////////////
   $y=json_decode($h,1);
   //print_r ($y);
@@ -9674,8 +9683,8 @@ function xor_string($string, $key) {
     },
     $seed
   );
-  //$link = decrypt($src,$seed);
-  $link=$y[0]['file'];
+  $link = decrypt($src,$seed);
+  //$link=$y[0]['file'];
   //echo $link;
   $link=preg_replace_callback(
     $rep,
@@ -9686,13 +9695,15 @@ function xor_string($string, $key) {
     $link
   );
   }
-  */
+/////////////////////////
   //echo $out;
+  /*
   $out = $h." ".$out;
   //echo $out;
   //sources: [{file:"
   if (preg_match("/sources\:\s*\[\{file\:\"([^\"]+)\"/",$out,$m))
     $link=$m[1];
+  */
   //echo $link;
   //$link=$y[0]['file'];
    if ($link && $flash <> "flash") {
@@ -10560,7 +10571,7 @@ if ($link && $flash<>"flash")
   if ($m[0] && $n[1] && $p[1])
   $link=$m[0]."/".$p[1]."/".$n[1]."/0/video.mp4";
 //} elseif (strpos($filelink,"dood.") !== false) {
-} elseif (preg_match("/do{2,}ds?(stream)?\./",$filelink)) {
+} elseif (preg_match("/do{2,}ds?(stream)?\.|ds2play\./",$filelink)) {
   // https://www.doodstream.com/d/sot4bb1da0rq
   //echo $filelink;
   $ua     =   $_SERVER['HTTP_USER_AGENT'];
@@ -16013,12 +16024,13 @@ $head=array('Accept: application/json, text/javascript, */*; q=0.01',
 }
 
 //////////////////////////////////////////////////////////////////
+if (file_exists($base_sub.".srt")) unlink ($base_sub.".srt");
 if (!file_exists($base_sub."sub_extern.srt")) {
-$list = glob($base_sub."*.srt");
+   $list = glob($base_sub."*.srt");
    foreach ($list as $l) {
     str_replace(" ","%20",$l);
     unlink($l);
-}
+   }
 } else {
   $srt=$base_sub."sub_extern.srt";
 }
@@ -16031,7 +16043,9 @@ if ($srt <> "") {
    $link1=explode("/?",$t1[0]);
    $movie_file=substr(strrchr($link1[0], "/"), 1);
    }
+   $movie_file=substr($movie_file,0,min(250-strlen($base_sub),strlen($movie_file)));
    //echo "=====".$movie_file;
+   //echo "\n".strlen($movie_file);
      //$movie_file="v.mp4";
    if (preg_match("/m3u8/",$movie_file))
     $srt_name = substr($movie_file, 0, -4).".srt";
@@ -16046,8 +16060,8 @@ if ($srt <> "") {
    $srt_name=str_replace("..srt",".srt",$srt_name);
    //if (preg_match("/mp4|flv|m3u8/",$link)) {
    //$srt_name=$pg.".srt";
-   if ($flash =="flash")
-     $srt_name="master.srt";
+   //if ($flash == "flash")
+     //$srt_name="master.srt";
    $new_file = $base_sub.$srt_name;
 
    if (!file_exists($base_sub."sub_extern.srt")) {

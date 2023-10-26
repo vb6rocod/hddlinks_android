@@ -56,18 +56,21 @@ $ua = $_SERVER['HTTP_USER_AGENT'];
   curl_setopt($ch, CURLOPT_TIMEOUT, 15);
   $html = curl_exec($ch);
   curl_close($ch);
-
-$videos = explode('article class="b-tile', $html);
-unset($videos[0]);
-$videos = array_values($videos);
-
-foreach($videos as $video) {
-    $t0 = explode('href="',$video);
-    $t1 = explode('"', $t0[1]);
-    $link = $t1[0];
-    $t2 = explode('title="', $video);
-    $t3 = explode('"', $t2[1]);
-    $title = $t3[0];
+preg_match_all("/href\=\"([^\"]+)\"\s+class\=\"c-show\"\s+data-show-letter\=\"\w\"\s+data-tracking-click-type\=\"show\"\s+data-tracking-type\=\"tile\"\s+data-tracking-tile-show-id\=\"\w+\"\s+data-tracking-tile-show-name\=\"([^\"]+)\"/mi",$html,$m);
+//print_r ($m);
+//$videos = explode('article class="b-tile', $html);
+//unset($videos[0]);
+//$videos = array_values($videos);
+for ($k=0;$k<count($m[1]);$k++) {
+//foreach($videos as $video) {
+    //$t0 = explode('href="',$video);
+    //$t1 = explode('"', $t0[1]);
+    //$link = $t1[0];
+    //$t2 = explode('title="', $video);
+    //$t3 = explode('"', $t2[1]);
+    //$title = $t3[0];
+    $link=$m[1][$k];
+    $title=$m[2][$k];
     $link=$target."?page=1&show=&sez=&link=".urlencode(fix_t($link))."&title=".urlencode(fix_t($title));
     if (!preg_match("/IN CURAND|FILME SERIALE|Contact|TOP IMDb|Filme online/i",$title)) {
 	if ($n == 0) echo "<TR>"."\r\n";

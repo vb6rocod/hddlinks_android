@@ -118,7 +118,7 @@ preg_match_all("/\<h2 style\=\"background-color:cyan\"\>([^\<]+)\</",$h,$a);
 //print_r ($a[1]);
 echo '<TR><TD colspan="2"><b>Jump to:</b>';
 for ($z=0;$z<count($a[1]);$z++) {
- if (!preg_match("/PPV|Live/i",$a[1][$z])) echo '<a href="#'.$a[1][$z].'">'.$a[1][$z].'</a>,';
+ if (!preg_match("/PPV|Live|Tv/i",$a[1][$z])) echo '<a href="#'.$a[1][$z].'">'.$a[1][$z].'</a>,';
 }
 echo '</TD></TR>';
 foreach($videos as $video) {

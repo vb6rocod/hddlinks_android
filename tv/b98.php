@@ -75,9 +75,7 @@ $mx=trim(file_get_contents($base_pass."mx.txt"));
 $mx="ad";
 }
 $user_agent     =   $_SERVER['HTTP_USER_AGENT'];
-if ($flash != "mp") {
-if (preg_match("/android|ipad/i",$user_agent) && preg_match("/chrome|firefox|mobile/i",$user_agent)) $flash="chrome";
-}
+
 $n=0;
 echo '<h2>'.$page_title.'</H2>';
 echo '<table border="1px" width="100%">'."\n\r";
@@ -123,7 +121,7 @@ foreach($videos as $video) {
     $l="link=".urlencode(fix_t($link))."&title=".urlencode(fix_t($title))."&from=b98&mod=direct";
   if ($link && $title) {
   if ($n==0) echo '<TR>';
-  if ($flash != "mp")
+  if ($flash == "flash")
   echo '<td class="mp" align="center" width="25%"><a href="'.$link1.'" target="_blank"><img src="'.$image.'" width="'.$width.'" height="'.$height.'"><BR>'.$title.'</a></TD>';
     else
   echo '<td class="mp" align="center" width="25%">'.'<a onclick="ajaxrequest('."'".$l."')".'"'." style='cursor:pointer;'>".'<img src="'.$image.'" width="'.$width.'" height="'.$height.'"><BR>'.$title.'</a></TD>';

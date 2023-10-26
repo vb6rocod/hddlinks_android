@@ -119,6 +119,7 @@ foreach ($list as $l) {
     str_replace(" ","%20",$l);
      unlink($l);
 }
+if (file_exists($base_sub.".srt")) unlink ($base_sub.".srt");
 ?>
 <!--
 <TR>

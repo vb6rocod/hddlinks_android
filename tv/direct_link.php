@@ -7,6 +7,7 @@ $list = glob($base_sub."*.srt");
     str_replace(" ","%20",$l);
     unlink($l);
 }
+if (file_exists($base_sub.".srt")) unlink ($base_sub.".srt");
 function str_between($string, $start, $end){
 	$string = " ".$string; $ini = strpos($string,$start);
 	if ($ini == 0) return ""; $ini += strlen($start); $len = strpos($string,$end,$ini) - $ini;
@@ -164,13 +165,16 @@ if ($from=="tvonline") {
   $l="https://tvonline123.com/tvlive/?url=".$id;
   curl_setopt($ch, CURLOPT_URL, $l);
   $h = curl_exec($ch);
-  if (preg_match("/\&s\=(\d+)/",$h,$m)) {
+  //echo $h;
+  //if (preg_match("/\&s\=(\d+)/",$h,$m)) {
+  if (preg_match("/data-server-id\=\"(\d+)/",$h,$m)) {
   $l="https://tvonline123.com/player/".$id."/".$m[1];
   //echo $l;
   curl_setopt($ch, CURLOPT_URL, $l);
   //curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie);
   $h = curl_exec($ch);
   curl_close($ch);
+  //echo $h;
   if (preg_match("/file:\"([^\"]+)\"/",$h,$n)) {
    $link=$n[1];
    if ($flash <> "flash")
@@ -222,6 +226,7 @@ if ($from=="tvhdonline") {
     else
      $link="";
   } else {
+  //echo "enc=".mb_detect_encoding($h,"UTF-16");
     $h=urlencode($h);
     $h=str_replace("%00","",$h);
     $out = preg_replace_callback(
@@ -1942,9 +1947,14 @@ if ($from=="protvplus") {
   $h = curl_exec($ch);
   curl_close($ch);
   //echo $h;
-  $t1=explode("/embed",$h);
+  //$h=str_replace("\\","",$h);
+  //$t1=explode("/embed",$h);
+  //$t2=explode('"',$t1[1]);
+  //$l="https://media.cms.protvplus.ro/embed".$t2[0]."?autoplay=any";
+  //$l="https://media.cms.protvplus.ro/embed/7HijmOZ8Ouc?autoplay=any";
+  $t1=explode('iframe data-src="',$h);
   $t2=explode('"',$t1[1]);
-  $l="https://media.cms.protvplus.ro/embed".$t2[0];
+  $l=$t2[0];
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $l);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
@@ -1959,8 +1969,10 @@ if ($from=="protvplus") {
   //echo $h;
   $h=str_replace("\\","",$h);
   $t1=explode('src":"',$h);
+  //$t1=explode('DASH":[{"src":"',$h);
   $t2=explode('"',$t1[1]);
   $l=$t2[0];
+
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $l);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
@@ -1974,6 +1986,7 @@ if ($from=="protvplus") {
   $h = curl_exec($ch);
   curl_close($ch);
   //echo $h;
+
 $base1=str_replace(strrchr($l, "/"),"/",$l);
 $base2=getSiteHost($l);
 if (preg_match("/\.m3u8/",$h)) {
@@ -2000,6 +2013,15 @@ if (count($pl) > 1) {
 } else {
   $link=$l;
 }
+
+//curl_setopt($ch, CURLOPT_URL, $link);
+//$h = curl_exec($ch);
+//echo $h;
+$link=$l;
+//$link="https://cmero-ott-vod-web-prep-sec.ssl.cdn.cra.cz/K3MenhEnnM5nqiAaCxE4xg==,1698066020/vod_cmero/_definst_/0202/2815/rum-sd0-sd1-sd2-sd3-sd4-hd1-hd2-TwRAFeuj.smil/chunklist_b1155072.m3u8";
+//$link="https://cmero-ott-vod-prep-prot.ssl.cdn.cra.cz/vod_cmero/_definst_/0202/2815/rum-sd0-sd1-sd2-sd3-sd4-hd1-hd2-axinom-taKVQLlA.smil/playlist.m3u8";
+if ($link && $flash <> "flash")
+ $link .="|Referer=".urlencode("https://media.cms.protvplus.ro/")."&Origin=".urlencode("https://media.cms.protvplus.ro");
 }
 if ($from=="profunzime") {
     //echo $link;
@@ -3067,6 +3089,8 @@ if (strpos($out,"cmn.digitalcable.ro") !== false && $out)
 $c="intent:".$out."#Intent;type=video/mp4;package=com.mxtech.videoplayer.".$mx.";S.title=".urlencode($title).";end";
 //$c="intent:".$out."#Intent;package=com.mxtech.videoplayer.".$mx.";action=android.intent.action.view();S.title=".urlencode($title).";end";
 if (strpos($out,"ONETV") !== false)
+$c="intent:".$out."#Intent;type=video/mp4;package=com.mxtech.videoplayer.".$mx.";S.title=".urlencode($title).";b.decode_mode=1;end";
+if (preg_match("/v1\.iw\.ro/",$out)) //digisport ????
 $c="intent:".$out."#Intent;type=video/mp4;package=com.mxtech.videoplayer.".$mx.";S.title=".urlencode($title).";b.decode_mode=1;end";
 
 echo $c;

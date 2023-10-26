@@ -19,8 +19,8 @@ $page_title=$tit;
    'Origin: http://protvplus.ro'
   );
   $ua = $_SERVER['HTTP_USER_AGENT'];
-if ($page == 1) {
-  $l=$link;
+
+  $l=$link."/videoclipuri/pagina-".$page;
   $show="";
   $sez="";
   $ch = curl_init();
@@ -36,48 +36,9 @@ if ($page == 1) {
   $h = curl_exec($ch);
   curl_close($ch);
   //echo $h;
-  $t1=explode('show=',$h);
-  $t2=explode('&',$t1[1]);
-  $show=$t2[0];
-  $t1=explode('season=',$h);
-  $t2=explode('&',$t1[1]);
-  $sez=$t2[0];
-  $t1=explode("EMISIUNI INTEGRALE",$h);
-  $h=$t1[0];
-  if ($show && $sez) {
-  $l="https://protvplus.ro/api/v1/plugin/broadcasted-episodes?show=".$show."&channel=&season=".$sez."&count=12&dir=DESC&page=".$page;
-  //echo $l;
-  $ch = curl_init();
-  curl_setopt($ch, CURLOPT_URL, $l);
-  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
-  //curl_setopt($ch,CURLOPT_REFERER,"http://solarmoviesonline.net");
-  curl_setopt($ch,CURLOPT_HTTPHEADER,$head);
-  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
-  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
-  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
-  $h = curl_exec($ch);
-  curl_close($ch);
-  //echo $h;
-  }
 
-} else {
-$l="https://protvplus.ro/api/v1/plugin/broadcasted-episodes?show=".$show."&channel=&season=".$sez."&count=12&dir=DESC&page=".$page;
-//https://protvplus.ro/api/v1/plugin/broadcasted-episodes?show=22&channel=&season=105&count=8&dir=DESC&page=2
-  $ch = curl_init();
-  curl_setopt($ch, CURLOPT_URL, $l);
-  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
-  //curl_setopt($ch,CURLOPT_REFERER,"http://solarmoviesonline.net");
-  curl_setopt($ch,CURLOPT_HTTPHEADER,$head);
-  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
-  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
-  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
-  $h = curl_exec($ch);
-  curl_close($ch);
-}
+
+
 
   
 /* ==================================================== */
@@ -206,12 +167,12 @@ foreach($videos as $video) {
   $t2 = explode('"',$t1[1]);
   $link=$t2[0];
 
-  $t1=explode('title="',$video);
+  $t1=explode('tile-name="',$video);
   $t2=explode('"',$t1[1]);
   $title=trim($t2[0]);
   //$title=fix_s($title);
 //http://storage.privesc.eu/thumnails/49569.jpg
-  $t1=explode('data-original="',$video);
+  $t1=explode('data-srcset="',$video);
   $t2=explode('"',$t1[1]);
   $image=$t2[0];
   if ($link && $title && $image) {

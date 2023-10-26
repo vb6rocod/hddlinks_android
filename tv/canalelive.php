@@ -70,7 +70,7 @@ $mx="ad";
 $user_agent     =   $_SERVER['HTTP_USER_AGENT'];
 
 $n=0;
-echo '<h2>'.$page_title.'</H2>';
+//echo '<h2>'.$page_title.'</H2>';
 /* dead .....
 echo '<table border="1px" width="100%">'."\n\r";
 $ua="Mozilla/5.0 (Windows NT 10.0; rv:89.0) Gecko/20100101 Firefox/89.0";
@@ -158,7 +158,7 @@ foreach($videos as $video) {
     $l="link=".urlencode(fix_t($link))."&title=".urlencode(fix_t($title))."&from=sultanovic&mod=direct";
   if ($link && $title) {
   if ($n==0) echo '<TR>';
-  if ($flash != "mp")
+  if ($flash == "flash")
   echo '<td class="mp" align="center" width="25%"><a href="'.$link1.'" target="_blank">'.$title.'</a></TD>';
     else
   echo '<td class="mp" align="center" width="25%">'.'<a onclick="ajaxrequest('."'".$l."')".'"'." style='cursor:pointer;'>".''.$title.'</a></TD>';
@@ -212,7 +212,7 @@ foreach($videos as $video) {
     $l="link=".urlencode(fix_t($link))."&title=".urlencode(fix_t($title))."&from=sultanovic&mod=direct";
   if ($link && $title) {
   if ($n==0) echo '<TR>';
-  if ($flash != "mp")
+  if ($flash == "flash")
   echo '<td class="mp" align="center" width="25%"><a href="'.$link1.'" target="_blank">'.$title.'</a></TD>';
     else
   echo '<td class="mp" align="center" width="25%">'.'<a onclick="ajaxrequest('."'".$l."')".'"'." style='cursor:pointer;'>".''.$title.'</a></TD>';

@@ -131,7 +131,11 @@ echo '<BR>';
 $r=array();
 $s=array();
 //echo $link;
-
+//https://ridomovies.tv/movies/the-movie-star-and-the-cowboy
+//https://ridomovies.tv/core/api/movies/the-movie-star-and-the-cowboy/videos
+$host="https://".parse_url($link)['host'];
+$movie=substr(strrchr($link, "/"), 1);
+$link=$host."/core/api/movies/".$movie."/videos";
 $ua="Mozilla/5.0 (Windows NT 10.0; rv:75.0) Gecko/20100101 Firefox/75.0";
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $link);
@@ -144,8 +148,12 @@ $ua="Mozilla/5.0 (Windows NT 10.0; rv:75.0) Gecko/20100101 Firefox/75.0";
   $h = curl_exec($ch);
   curl_close($ch);
   //echo $h;
+  $x=json_decode($h,1);
+  $h=$x['data'][0]['url'];
+
   preg_match("/embed\/(\w+)/",$h,$m);
   $l="https://closeload.top/video/embed/".$m[1];
+
   $r[]=$l;
   $s[]=parse_url($l)['host'];
   if (preg_match("/data\-id\=\"tt(\d+)/",$h,$m))

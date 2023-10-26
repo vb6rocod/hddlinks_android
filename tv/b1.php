@@ -68,9 +68,7 @@ $mx=trim(file_get_contents($base_pass."mx.txt"));
 $mx="ad";
 }
 $user_agent     =   $_SERVER['HTTP_USER_AGENT'];
-if ($flash != "mp") {
-if (preg_match("/android|ipad/i",$user_agent) && preg_match("/chrome|firefox|mobile/i",$user_agent)) $flash="chrome";
-}
+
 $n=0;
 echo '<h2>'.$page_title.'</h2>';
 echo '<table border="1px" width="100%">'."\n\r";
