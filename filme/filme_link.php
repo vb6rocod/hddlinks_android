@@ -8,6 +8,7 @@ function str_between($string, $start, $end){
 }
 $ua = $_SERVER['HTTP_USER_AGENT'];
 $filelink = $_GET["file"];
+//echo $filelink;
 $link_f =  array();
 $type = "mp4";
 $pg="";

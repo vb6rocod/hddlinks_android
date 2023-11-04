@@ -333,68 +333,9 @@ if ($tip=="movie")
   $l="https://vidsrc.me/embed/".$imdb."/";
 else
   $l="https://vidsrc.me/embed/".$imdb."/".$sez."-".$ep."/";
-  //echo $l;
-  //$l= "https://v2.vidsrc.me/embed/tt1300854/";
-  $ch = curl_init($l);
-  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
-  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
-  curl_setopt($ch, CURLOPT_RETURNTRANSFER  ,1);  // RETURN THE CONTENTS OF THE CALL
-  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-  //curl_setopt($ch, CURLOPT_HTTPHEADER,$head);
-  curl_setopt($ch, CURLOPT_ENCODING,"");
-  curl_setopt($ch, CURLOPT_HEADER,1);
-  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
-  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
-  $h = curl_exec($ch);
-  curl_close ($ch);
-  if (preg_match("/location:\s+(.+)/i",$h,$m))
-   $host=parse_url(trim($m[1]))['host'];
-  else
-   $host="v2.vidsrc.me";
-  //echo $h;
-  preg_match_all("/data\-hash\=\"([a-zA-Z0-9\/\+\=\-\_]+)\"/si",$h,$m);
-   $head=array('Accept: */*',
-    'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
-    'Accept-Encoding: deflate',
-    'X-Requested-With: XMLHttpRequest',
-    'Connection: keep-alive',
-    'Referer: https://'.$host.'/');
-   $ch = curl_init();
-   curl_setopt($ch, CURLOPT_USERAGENT, $ua);
-   curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,0);
-   curl_setopt($ch, CURLOPT_RETURNTRANSFER  ,1);  // RETURN THE CONTENTS OF THE CALL
-   curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-   curl_setopt($ch, CURLOPT_HTTPHEADER,$head);
-   curl_setopt($ch, CURLOPT_ENCODING,"");
-   curl_setopt($ch, CURLOPT_HEADER,1);
-   curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
-   curl_setopt($ch, CURLOPT_TIMEOUT, 15);
-   if (preg_match("/player\_iframe\"\s+src\=\"([^\"]+)/",$h,$n)) {
-   if (substr($n[1],0,4)=="http")
-     $l=$n[1];
-   elseif (substr($n[1],0,2)=="//")
-     $l="https:".$n[1];
    $r[]=$l;
    $s[]="v. ".parse_url($l)['host'];
-   }
-   for ($k=0;$k<count($m[1]);$k++) {
-   if (substr($m[1][$k],0,4)=="http")
-     $l=$m[1][$k];
-   elseif (substr($m[1][$k],0,2)=="//")
-     $l="https:".$m[1][$k];
-   else
-    $l="https://".$host."/src/".$m[1][$k];
-    //echo "\n".$l."\n";
-    curl_setopt($ch, CURLOPT_URL, $l);
-    $h = curl_exec($ch);
-    //echo $h;
-    if (preg_match("/location\:\s+(.+)/i",$h,$m1)) {
-    $r[]=trim($m1[1]);
-    $s[]="v. ".parse_url(trim($m1[1]))['host'];
-    }
-   }
-   curl_close ($ch);
-   //die();
+
    if ($tip=="movie")
      $r[]="https://voidboost.net/embed/".$imdb."?t=20&td=20&tlabel=English&cc=off&plang=en&poster=1";
    else

@@ -70,7 +70,7 @@ else
 <TD width="25%"><a href="filme/upmovies_f.php?page=1&tip=release&title=upmovies&link=" target="_blank">upmovies</a></TD>
 <TD width="25%"><a href="filme/emovies_f.php?page=1&tip=release&title=emovies&link=" target="_blank">emovies</a></TD>
 <TD width="25%"><a href="filme/tugaflix_f.php?page=1&tip=release&title=tugaflix&link=" target="_blank">tugaflix</a></TD>
-<TD width="25%"><a href="filme/allmoviesforyou_f.php?page=1&tip=release&title=allmoviesforyou&link=" target="_blank">allmoviesforyou</a></TD>
+<TD width="25%"></TD>
 </TR>
 
 <!-- straine -->
@@ -92,7 +92,7 @@ else
 <TD width="25%"><a href="filme/zoechip_f.php?page=1&tip=release&title=zoechip&link=" target="_blank">zoechip</a></TD>
 <TD width="25%"><a href="filme/lookclub_f.php?page=1&tip=release&title=lookclub&link=" target="_blank">lookclub</a></TD>
 <TD width="25%"><a href="filme/fsharetv.php?page=1&tip=release&title=fsharetv&link=" target="_blank">fsharetv</a></TD>
-<TD width="25%"><a href="filme/streamlord_f.php?page=1&tip=release&title=streamlord&link=" target="_blank">streamlord</a></TD>
+<TD width="25%"></TD>
 </TR>
 
 <TR>

@@ -56,7 +56,7 @@ if (isset($_GET['flash'])) $flash="mpc";
 //$link="http://89.136.209.30:1935/liveedge/TVRMOLDOVA.stream/playlist.m3u8";
 //$link=urldecode("https%3A%2F%2Fwww.youtube.com%2Fwatch%3Fv%3Dr_d4ryn9UsA&title=Gaming%20Music%20Radio%20%E2%9A%A1%2024/7%20NCS%20Live%20Stream%20%E2%9A%A1%20Trap,%20Chill,%20Electro,%20Dubstep,%20Future%20Bass,%20EDM");
 //$mod="direct";
-if (preg_match("/porstream\.de|sportybite\.top/",$link)) {
+if (preg_match("/porstream\.de|sportybite\.top|sporstream\.de/",$link)) {
   $head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/110.0',
   'Accept: */*',
   'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
@@ -582,6 +582,7 @@ if (preg_match("/tutele\d+\.|tutlehd\.xyz/",$link)) {
 if (preg_match("/streamingnow\.|freeviplive\./",$link)) {
   //https://streamingnow.pro/stream.php?hd=20
   //https://freeviplive.com/stream.php?hd=20
+  //https://freeviplive.com/tvon.php?hd=71
   $head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/110.0',
   'Accept: */*',
   'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
@@ -600,10 +601,13 @@ if (preg_match("/streamingnow\.|freeviplive\./",$link)) {
   curl_setopt($ch, CURLOPT_TIMEOUT, 25);
   $h = curl_exec($ch);
   curl_close($ch);
+  //echo $h;
   $t1=explode('fid="',$h);
   $t2=explode('"',$t1[1]);
   $fid=$t2[0];
+  //https://b4ucast.com/dhonka2.php?player=
   $link="https://b4ucast.com/dhonka.php?player=desktop&live=".$fid;  // to next step
+ // echo $link;
 }
 if (preg_match("/sportskart\.click/",$link)) { // to second link!
   //https://sportskart.click/embed/stream-501.php
@@ -957,16 +961,18 @@ if (preg_match("/godzlive\.com|b4ucast\.com/",parse_url($link)['host'])) {
   'Accept-Encoding: deflate',
   'Referer: '.$ref.'/');
   //echo $link;
+  //$link=str_replace("dhonka.php","dhonka2.php",$link);
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $link);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
   curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
-  curl_setopt($ch, CURLOPT_HTTPHEADER, $head);
+  //curl_setopt($ch, CURLOPT_HTTPHEADER, $head);
   curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
   curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
   curl_setopt($ch, CURLOPT_TIMEOUT, 25);
   $h = curl_exec($ch);
   curl_close($ch);
+  //echo $h;
   $t1=explode("return([",$h);
   $t2=explode("]",$t1[1]);
   $t3=explode(",",$t2[0]);
