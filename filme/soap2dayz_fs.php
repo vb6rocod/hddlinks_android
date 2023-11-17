@@ -1,16 +1,18 @@
 <!doctype html>
 <?php
 include ("../common.php");
+
 error_reporting(0);
+if (file_exists($base_pass."debug.txt"))
+ $debug=true;
+else
+ $debug=false;
+
 $list = glob($base_sub."*.srt");
    foreach ($list as $l) {
     str_replace(" ","%20",$l);
     unlink($l);
 }
-if (file_exists($base_pass."debug.txt"))
- $debug=true;
-else
- $debug=false;
 if (file_exists($base_pass."player.txt")) {
 $flash=trim(file_get_contents($base_pass."player.txt"));
 } else {
@@ -22,7 +24,9 @@ $mx=trim(file_get_contents($base_pass."mx.txt"));
 $mx="ad";
 }
 $user_agent     =   $_SERVER['HTTP_USER_AGENT'];
-
+if ($flash != "mp") {
+if (preg_match("/android|ipad/i",$user_agent) && preg_match("/chrome|firefox|mobile/i",$user_agent)) $flash="chrome";
+}
 $tit=unfix_t(urldecode($_GET["title"]));
 $tit=prep_tit($tit);
 $image=$_GET["image"];
@@ -44,11 +48,6 @@ $tip="series";
 }
 $imdbid="";
 
-function str_between($string, $start, $end){
-	$string = " ".$string; $ini = strpos($string,$start);
-	if ($ini == 0) return ""; $ini += strlen($start); $len = strpos($string,$end,$ini) - $ini;
-	return substr($string,$ini,$len);
-}
 ?>
 <html>
 <head>
@@ -132,9 +131,41 @@ function off() {
 echo '<h2>'.$tit.$tit2.'</H2>';
 echo '<BR>';
 $r=array();
-$r[]=$link;
+$s=array();
+  if (preg_match("/tt(\d+)/",$link,$m))
+   $imdbid=$m[1];
+  else
+   $imdbid="";
+//echo $link;
+$host=parse_url($link)['host'];
+$l="https://www.2embed.cc/embed/tt".$imdbid;
+$head=array("User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/114.0",
+"Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8",
+"Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2",
+"Accept-Encoding: deflate",
+"Referer: https://soap2dayz.xyz/");
+  $ch = curl_init();
+  curl_setopt($ch, CURLOPT_URL,$l);
+  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER  ,1);  // RETURN THE CONTENTS OF THE CALL
+  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+  curl_setopt($ch, CURLOPT_ENCODING,"");
+  curl_setopt($ch, CURLOPT_HTTPHEADER,$head);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+  $h = curl_exec($ch);
+  curl_close($ch);
+  //echo $h;
+  preg_match_all("/go\(\'([^\']+)\'\)/",$h,$m);
+  //print_r ($m);
+//die();
+  for ($k=0;$k<count($m[1]);$k++) {
+    $r[]=$m[1][$k];
+    preg_match("/(\w+)\?/",$m[1][$k],$n);
+    $s[]="Server ".$n[1];
+  }
 echo '<table border="1" width="100%">';
-echo '<TR><TD class="mp">Alegeti un server: Server curent:<label id="server">'.parse_url($r[0])['host'].'</label>
+echo '<TR><TD class="mp">Alegeti un server: Server curent:<label id="server">'.$s[0].'</label>
 <input type="hidden" id="file" value="'.urlencode($r[0]).'"></td></TR></TABLE>';
 echo '<table border="1" width="100%"><TR>';
 $k=count($r);
@@ -142,7 +173,7 @@ $x=0;
 for ($i=0;$i<$k;$i++) {
   if ($x==0) echo '<TR>';
   $c_link=$r[$i];
-  $openload=parse_url($r[$i])['host'];
+  $openload=$s[$i];
   if (preg_match($indirect,$openload)) {
   echo '<TD class="mp"><a href="filme_link.php?file='.urlencode($c_link).'&title='.urlencode(unfix_t($tit.$tit2)).'" target="_blank">'.$openload.'</a></td>';
   } else
@@ -165,21 +196,16 @@ if ($tip=="movie") {
   $tit2="";
   $sez="";
   $ep="";
-  $imdbid="";
   $from="";
   $link_page="";
 } else {
   $tit3=$tit;
   $sez=$sez;
   $ep=$ep;
-  $imdbid="";
   $from="";
   $link_page="";
 }
-  $rest = substr($tit3, -6);
-  if (preg_match("/\((\d+)\)/",$rest,$m)) {
-   $tit3=trim(str_replace($m[0],"",$tit3));
-  }
+
 $sub_link ="from=".$from."&tip=".$tip."&sez=".$sez."&ep=".$ep."&imdb=".$imdbid."&title=".urlencode(fix_t($tit3))."&link=".$link_page."&ep_tit=".urlencode(fix_t($tit2))."&year=".$year;
 include ("subs.php");
 echo '<table border="1" width="100%"><TR>';
@@ -200,6 +226,10 @@ echo '<br>
 <BR>Scurtaturi: 7=opensubtitles, 8=titrari, 9=subs, 0=subtitrari (cauta imdb id)
 </b></font></TD></TR></TABLE>
 ';
+
+if (preg_match("/c\d?_file\=(http[\.\d\w\-\.\/\\\:\?\&\#\%\_\,]+)\&c\d?_label\=English/i",$r[0],$s)) {
+ echo 'Cu subtitrare in Engleza.<BR>';
+}
 include("../debug.html");
 echo '
 <div id="overlay">

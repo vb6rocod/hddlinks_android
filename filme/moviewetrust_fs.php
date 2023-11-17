@@ -144,18 +144,7 @@ function off() {
 
 <a href='' id='mytest1'></a>
 <?php
-if ($flash=="flash1") {
-echo '
-<script>
-        setInterval(function(){
-            $.get("vidsrc_pass.php", function(data, status){
-                //console.log(data);
-                //alert (data);
-            });
-        }, 60000);
-</script>
-';
-}
+
 echo '<h2>'.$tit.$tit2.'</H2>';
 echo '<BR>';
 $tmdb=$link;
@@ -259,74 +248,7 @@ $l="https://api.themoviedb.org/3/tv/".$link."?api_key=".$api_key."&append_to_res
 $k=0;
   //echo $imdb;
   //die();
-//////////////////////////////////////
-//https://databasegdriveplayer.xyz/player.php?imdb=tt9165824
-//https://databasegdriveplayer.xyz/player.php?type=series&imdb=tt0061265&season=1&episode=7
-if ($tip=="movie")
- $r[]="https://fsa.remotestre.am/Movies/".$link."/".$link.".m3u8";
-else
- $r[]="https://fsa.remotestre.am/Shows/".$link."/".$sez."/".$ep."/".$ep.".m3u8";
- $s[]="remotestre";
-  $head=array('Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
-  'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
-  'Accept-Encoding: deflate',
-  'Connection: keep-alive');
-/*
-if ($tip=="movie")
-$l="https://databasegdriveplayer.xyz/player.php?imdb=".$imdb;
-else
-$l="https://databasegdriveplayer.xyz/player.php?type=series&imdb=".$imdb."&season=".$sez."&episode=".$ep;
 
-
-  $ch = curl_init($l);
-  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
-  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
-  curl_setopt($ch, CURLOPT_RETURNTRANSFER  ,1);  // RETURN THE CONTENTS OF THE CALL
-  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-  curl_setopt($ch, CURLOPT_HTTPHEADER,$head);
-  curl_setopt($ch, CURLOPT_ENCODING,"");
-  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
-  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
-  $h = curl_exec($ch);
-  curl_close ($ch);
-  if (preg_match("/href\=\"\/\//",$h)) {
-  $t1=explode('href="//',$h);
-  $t2=explode('"',$t1[1]);
-  $l="https://".$t2[0];
-  if (preg_match("/streaming\.php\?/",$l)) {
-  $host=parse_url($l)['host'];
-  $l=str_replace($host,"membed1.com",$l);
-  //$r[]=$l;
-  //$s[]=$host;
-  $ch = curl_init();
-  curl_setopt($ch, CURLOPT_URL, $l);
-  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-  curl_setopt($ch,CURLOPT_REFERER,"https://vidembed.cc");
-  curl_setopt($ch,CURLOPT_HTTPHEADER,$head);
-  curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 10.0; rv:55.0) Gecko/20100101 Firefox/55.0');
-  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
-  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
-  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
-  $h = curl_exec($ch);
-  curl_close($ch);
-  $videos=explode('data-video="',$h);
-  unset($videos[0]);
-  $videos = array_values($videos);
-  foreach($videos as $video) {
-    $t1=explode('"',$video);
-    $l=$t1[0];
-    if ($l) {
-     if (strpos($l,"http") === false)
-       $l="https:".$l;
-     $r[]=$l;
-     $s[]=parse_url($l)['host'];
-    }
-  }
-  }
-  }
-*/
-//////////////////////////////////////
 ////////////////////////////////////////////////////////////
 // vidsrc.me
 if ($tip=="movie")
@@ -343,12 +265,7 @@ else
    $s[]="voidboost";
    $imdbid=str_replace("tt","",$imdb);
 
-/// embedo.xyz
-  if ($tip=="movie")
-   $l="https://embedo.xyz/player.php?video_id=".$imdb;
-  else
-   $l="https://embedo.xyz/player.php?video_id=".$imdb."&s=".$sez."&e=".$ep;
-  //echo $l;
+/////////////////////////////////////////////////////
   if ($tip=="movie")
    $l="https://multiembed.mov/?video_id=".$imdb;
   else

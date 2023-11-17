@@ -583,6 +583,7 @@ if (preg_match("/streamingnow\.|freeviplive\./",$link)) {
   //https://streamingnow.pro/stream.php?hd=20
   //https://freeviplive.com/stream.php?hd=20
   //https://freeviplive.com/tvon.php?hd=71
+  //https://freeviplive.com/tvon.php?hd=301
   $head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/110.0',
   'Accept: */*',
   'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
@@ -607,7 +608,7 @@ if (preg_match("/streamingnow\.|freeviplive\./",$link)) {
   $fid=$t2[0];
   //https://b4ucast.com/dhonka2.php?player=
   $link="https://b4ucast.com/dhonka.php?player=desktop&live=".$fid;  // to next step
- // echo $link;
+ //echo $link;
 }
 if (preg_match("/sportskart\.click/",$link)) { // to second link!
   //https://sportskart.click/embed/stream-501.php
@@ -955,18 +956,21 @@ if (preg_match("/ddolahdplay\./",parse_url($link)['host'])) {
 }
 if (preg_match("/godzlive\.com|b4ucast\.com/",parse_url($link)['host'])) {
   $ref="https://".parse_url($link)['host'];
+  //$ref="https://b4yucast.com";
   $head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/110.0',
   'Accept: */*',
   'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
   'Accept-Encoding: deflate',
-  'Referer: '.$ref.'/');
+  'Referer: https://b5yucast.com/');
   //echo $link;
   //$link=str_replace("dhonka.php","dhonka2.php",$link);
+  //https://b4ucast.com/dhonka2.php?player=desktop&live=bbtsp1
+  //https://b4ucast.com/dhonka2.php?player=desktop&live=bbtsp1
   $ch = curl_init();
-  curl_setopt($ch, CURLOPT_URL, $link);
+  curl_setopt($ch, CURLOPT_URL, trim($link));
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
   curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
-  //curl_setopt($ch, CURLOPT_HTTPHEADER, $head);
+  curl_setopt($ch, CURLOPT_HTTPHEADER, $head);
   curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
   curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
   curl_setopt($ch, CURLOPT_TIMEOUT, 25);

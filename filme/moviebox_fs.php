@@ -145,6 +145,7 @@ function off() {
 <body>
 <a href='' id='mytest1'></a>
 <?php
+$fast_url="mp4.shegu.net";
 echo '<h2>'.$tit.$tit2.'</H2>';
 echo '<BR>';
 $r=array();
@@ -221,7 +222,20 @@ $head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gec
    if ($z['data']['list'][$k]['path']) {
      $s[]=$z['data']['list'][$k]['real_quality'];
      $ff[]=$z['data']['list'][$k]['filename'];
-     $r[]="http://moviebox.com?file=".urlencode(urlencode($z['data']['list'][$k]['path']))."&tip=".$tip."&id=".$link."&fid=".$z['data']['list'][$k]['fid']."&sez=".$sez."&ep=".$ep;
+     $file=$z['data']['list'][$k]['path'];
+     $p_f=parse_url($file)['host'];
+     //$file=str_replace($p_f,$fast_url,$file);
+     $r[]="http://moviebox.com?file=".urlencode(urlencode($file))."&tip=".$tip."&id=".$link."&fid=".$z['data']['list'][$k]['fid']."&sez=".$sez."&ep=".$ep;
+   }
+  }
+  for ($k=0;$k<count($z['data']['list']);$k++) {
+   if ($z['data']['list'][$k]['path']) {
+     $s[]="alt.".$z['data']['list'][$k]['real_quality'];
+     $ff[]=$z['data']['list'][$k]['filename'];
+     $file=$z['data']['list'][$k]['path'];
+     $p_f=parse_url($file)['host'];
+     $file=str_replace($p_f,$fast_url,$file);
+     $r[]="http://moviebox.com?file=".urlencode(urlencode($file))."&tip=".$tip."&id=".$link."&fid=".$z['data']['list'][$k]['fid']."&sez=".$sez."&ep=".$ep;
    }
   }
 echo '<table border="1" width="100%">';
@@ -251,7 +265,11 @@ if ($x < 6 && $x > 0 & $k>6) {
  }
  echo '</TR>'."\r\n";
 }
+//////////////////////////////////////////////
+
+/////////////////////////////////////////////
 echo '</TABLE>';
+///////////////////////////////////
 if ($tip=="movie") {
   $tit3=$tit;
   $tit2="";

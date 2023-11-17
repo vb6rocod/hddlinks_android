@@ -1,0 +1,113 @@
+#EXTM3U url-tvg="http://epg.it999.ru/epg.xml.gz,https://iptvx.one/EPG.gz
+#EXTINF:-1,ТНТ Exclusiv TV
+http://212.0.211.102:9999/play/a00x/index.m3u8
+#EXTINF:-1,Рен ТВ MD
+http://212.0.211.102:9999/play/a00s/index.m3u8
+#EXTINF:-1,HD Life
+http://212.0.211.102:9999/play/a003/index.m3u8
+#EXTINF:-1,Viasat Explore
+http://212.0.211.102:9999/play/a01h/index.m3u8
+#EXTINF:-1,Viju Nature
+http://212.0.211.102:9999/play/a01i/index.m3u8
+#EXTINF:-1,Загородная жизнь
+http://212.0.211.102:9999/play/a006/index.m3u8
+#EXTINF:-1,Живая планета
+http://212.0.211.102:9999/play/a007/index.m3u8
+#EXTINF:-1,Кинопремьера
+http://212.0.211.102:9999/play/a01c/index.m3u8
+#EXTINF:-1,Кинохит
+http://212.0.211.102:9999/play/a01d/index.m3u8
+#EXTINF:-1,Индийское кино
+http://212.0.211.102:9999/play/a01f/index.m3u8
+#EXTINF:-1,Minimax
+http://212.0.211.102:9999/play/a01e/index.m3u8
+#EXTINF:-1,Cartoon Network
+http://212.0.211.102:9999/play/a01g/index.m3u8
+#EXTINF:-1,Atomic
+http://212.0.211.102:9999/play/a01j/index.m3u8
+#EXTINF:-1,Bolt
+http://212.0.211.102:9999/play/a002/index.m3u8
+#EXTINF:-1,STAR CINEMA HD UA
+http://212.0.211.102:9999/play/6/index.m3u8
+#EXTINF:-1,Квартал ТВ
+http://212.0.211.102:9999/play/a004/index.m3u8
+#EXTINF:-1,TV1000 Русское кино
+http://212.0.211.102:9999/play/a01b/index.m3u8
+#EXTINF:-1,CINEMA HD
+http://212.0.211.102:9999/play/a00e/index.m3u8
+#EXTINF:-1,STAR FAMILY HD
+http://212.0.211.102:9999/play/1/index.m3u8
+#EXTINF:-1,Живи
+http://212.0.211.102:9999/play/a00c/index.m3u8
+#EXTINF:-1,Кухня ТВ
+http://212.0.211.102:9999/play/a008/index.m3u8
+#EXTINF:-1,Мульт
+http://212.0.211.102:9999/play/a001/index.m3u8
+#EXTINF:-1,Наука
+http://212.0.211.102:9999/play/a009/index.m3u8
+#EXTINF:-1,Boomerang
+http://212.0.211.102:9999/play/a01l/index.m3u8
+#EXTINF:-1,Orizont TV MD
+http://212.0.211.102:9999/play/5/index.m3u8
+#EXTINF:-1,Сапфир
+http://212.0.211.102:9999/play/a00a/index.m3u8
+#EXTINF:-1,Cinema 1 HD MD
+http://212.0.211.102:9999/play/3/index.m3u8
+#EXTINF:-1,Canal D
+http://212.0.211.102:9999/play/4/index.m3u8
+#EXTINF:-1,Telestar 1
+http://212.0.211.102:9999/play/a00h/index.m3u8
+#EXTINF:-1,TV1000 ACTION
+http://212.0.211.102:9999/play/a00i/index.m3u8
+#EXTINF:-1,TV1000
+http://212.0.211.102:9999/play/a01a/index.m3u8
+#EXTINF:-1,Publika TV
+http://212.0.211.102:9999/play/a00m/index.m3u8
+#EXTINF:-1,Moldova 1
+http://212.0.211.102:9999/play/a00n/index.m3u8
+#EXTINF:-1,Moldova 2
+http://212.0.211.102:9999/play/a00o/index.m3u8
+#EXTINF:-1,Jurnal TV
+http://212.0.211.102:9999/play/a00p/index.m3u8
+#EXTINF:-1,Mega TV
+http://212.0.211.102:9999/play/a00q/index.m3u8
+#EXTINF:-1,Familia
+http://212.0.211.102:9999/play/a00r/index.m3u8
+#EXTINF:-1,Vocea Basarabiei
+http://212.0.211.102:9999/play/a00t/index.m3u8
+#EXTINF:-1,Pro TV
+http://212.0.211.102:9999/play/a00u/index.m3u8
+#EXTINF:-1,Canal 5
+http://212.0.211.102:9999/play/a00v/index.m3u8
+#EXTINF:-1,N4 MD
+http://212.0.211.102:9999/play/a00w/index.m3u8
+#EXTINF:-1,TV8
+http://212.0.211.102:9999/play/a011/index.m3u8
+#EXTINF:-1,R-Live
+http://212.0.211.102:9999/play/a00y/index.m3u8
+#EXTINF:-1,TVR Moldova MD
+http://212.0.211.102:9999/play/a00z/index.m3u8
+#EXTINF:-1,Tezaur Folc
+http://212.0.211.102:9999/play/a010/index.m3u8
+#EXTINF:-1,TV5 Monde
+http://212.0.211.102:9999/play/a012/index.m3u8
+#EXTINF:-1,Noroc TV
+http://212.0.211.102:9999/play/a013/index.m3u8
+#EXTINF:-1,N24 plus
+http://212.0.211.102:9999/play/a014/index.m3u8
+#EXTINF:-1,Busuioc TV
+http://212.0.211.102:9999/play/a015/index.m3u8
+#EXTINF:-1,Gurinel TV
+http://212.0.211.102:9999/play/a016/index.m3u8
+#EXTINF:-1,СТС Kids
+http://212.0.211.102:9999/play/7/index.m3u8
+#EXTINF:-1,TVC 21 MD
+http://212.0.211.102:9999/play/a017/index.m3u8
+#EXTINF:-1,Agro TV
+http://212.0.211.102:9999/play/a018/index.m3u8
+#EXTINF:-1,Trinitas TV
+http://212.0.211.102:9999/play/a019/index.m3u8
+#EXTINF:-1,Motorsport HD
+http://212.0.211.102:9999/play/a005/index.m3u8
+#EXTINF:-1,Матч! Планета
+http://212.0.211.102:9999/play/a00b/index.m3u8

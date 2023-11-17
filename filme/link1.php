@@ -390,6 +390,37 @@ if (preg_match("/hdwatched.*?\./",$filelink)) {
    //$link .="&Referer=".urlencode("https://yandex.net/")."&Origin=".urlencode("https://yandex.net");
   }
 }
+// streamsrcs.2embed.cc
+if (preg_match("/streamsrcs\.2embed\.cc/",$filelink)) {
+  $head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/112.0',
+  'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
+  'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
+  'Accept-Encoding: deflate',
+  'Connection: keep-alive',
+  'Referer: https://soap2dayz.xyz/',
+  'Origin: https://soap2dayz.xyz',
+  'Upgrade-Insecure-Requests: 1');
+  $ch = curl_init();
+  curl_setopt($ch, CURLOPT_URL,$filelink);
+  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER  ,1);  // RETURN THE CONTENTS OF THE CALL
+  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+  curl_setopt($ch, CURLOPT_HTTPHEADER,$head);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+  curl_setopt($ch, CURLOPT_URL,$filelink);
+  $h = curl_exec($ch);
+  preg_match("/iframe src\=\"([^\"]+)\"/",$h,$m);
+  $id=$m[1];
+  preg_match("/script src\=\"\.\/([^\"]+)/",$h,$n);
+  $l="https://streamsrcs.2embed.cc/".$n[1];
+  curl_setopt($ch, CURLOPT_URL,$l);
+  $h = curl_exec($ch);
+  curl_close($ch);
+  preg_match("/\'src\'\,\"([^\"]+)/",$h,$s);
+  $filelink=trim($s[1].$id);
+  //echo $filelink;
+}
 if (preg_match("/vidsrc\.me/",$filelink)) {
   function deobfstr ($hash,$index) {
   $result = "";
@@ -557,6 +588,7 @@ if (preg_match("/stream\.2embed\.cc/",$filelink)) {
    $link=$m[1];
   }
 }
+
 if (strpos($filelink,"embed.smashystream.com") !== false) {
 //echo $filelink;
   $head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/112.0',
@@ -3631,10 +3663,11 @@ if (preg_match("/ling(\-|\.)online/",$filelink)) {
   $h = curl_exec($ch);
   curl_close($ch);
   //echo $h;
-  if (preg_match("/\/\/[\w\d\/\_\:\.\?\-]+\.mp4/",$h,$m)) {
-   $link="https:".$m[0];
+  //if (preg_match("/\/\/[\w\d\/\_\:\.\?\-]+\.mp4/",$h,$m)) {
+  if (preg_match("/source src\=\"([^\"]+)\"/",$h,$m)) {
+   $link=$m[1];
    if ($link && $flash <> "flash")
-    $link=$link."|Origin=".urlencode("https://ling.online")."&Referer=".urlencode("https://ling.online");
+    $link=$link."|Origin=".urlencode("https://ling-online.net")."&Referer=".urlencode("https://ling-online.net/");
    if (preg_match("/\/\/[\w\d\/\_\:\.\?\-]+\.(vvt|srt|vtt)/",$h,$n))
     $srt="https:".$n[0];
   }
@@ -6584,7 +6617,7 @@ $head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:104.0) Gecko/20100101 
   //echo $h;
   $link=get_max_res($h,$link);
   }
-} elseif (preg_match("/streamhide\.|movhide\.pro|filelions\.to|streamwish\.to|guccihide\.com/",$filelink)) {
+} elseif (preg_match("/streamhide\.|movhide\.pro|filelions\.to|streamwish\.to|guccihide\.com|lonfils\.xyz/",$filelink)) {
 //echo $filelink;
   $host="https://".parse_url($filelink)['host'];
   $head=array('Referer: https://stream.2embed.cc',
@@ -6635,6 +6668,50 @@ $head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:104.0) Gecko/20100101 
    $link .="|Referer=".urlencode($host)."&Origin=".urlencode($host);
   }
   //."&User-Agent=".urlencode($ua);
+} elseif (preg_match("/wishfast\./",$filelink)) {
+  $host="https://".parse_url($filelink)['host'];
+  $head=array('Referer: https://2embed.cc',
+  'Origin: https://2embed.cc');
+  $ua='Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:108.0) Gecko/20100101 Firefox/108.0';
+
+  $ch = curl_init();
+  curl_setopt($ch, CURLOPT_URL, $filelink);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+  curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:108.0) Gecko/20100101 Firefox/108.0');
+  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+  curl_setopt($ch, CURLOPT_HTTPHEADER,$head);
+  curl_setopt($ch, CURLOPT_ENCODING,"");
+  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+  $out = curl_exec($ch);
+  curl_close($ch);
+  //echo $out;
+  if (preg_match("/file\:\"([^\"]+)\",label\:\"\w+\"\,kind\:\"captions\"/",$out,$m))
+   $srt=$m[1];
+  //sources:[{file:"
+  if (preg_match('/sources\:\s*\[\{file\:\"([^\"]+)\"/', $out, $m)) {
+   $link=$m[1];
+  } else
+   $link="";
+  if ($link) {
+  $ch = curl_init();
+  curl_setopt($ch, CURLOPT_URL, $link);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+  curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:108.0) Gecko/20100101 Firefox/108.0');
+  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+  curl_setopt($ch, CURLOPT_ENCODING,"");
+  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+  $h = curl_exec($ch);
+  curl_close($ch);
+  //echo $h;
+  $link=get_max_res($h,$link);
+  }
+  if ($link && $flash <> "flash")  {
+   $link .="|Referer=".urlencode($host)."&Origin=".urlencode($host);
+  }
 } elseif (preg_match("/vtplay\./",$filelink)) {
   // https://vtplay.net/embed-g1jc7lv7aoaw.html
   //$filelink="https://vtube.to/embed-nqt5gqcbg124.html";
@@ -12494,7 +12571,7 @@ if (count($pl) > 1) {
   if ($srt)
    if (strpos($srt,"http") === false) $srt="https://videyo.net".$srt;
 //} elseif (strpos($filelink,"mixdrop.") !== false) {
-} elseif (preg_match("/mixdro{0,}p\./",$filelink)) {
+} elseif (preg_match("/mixdro{0,}p\.|mdy48tn97\./",$filelink)) {
   //https://mixdrop.co/e/eaeuizxtz0
   //https://mixdrop.co/f/mxgr3tvc
   $filelink=str_replace("/f/","/e/",$filelink);
@@ -13863,6 +13940,7 @@ function rec($site_key,$co,$sa,$loc) {
   $l="";
   //echo $l;
   //die();
+  $xxx="";
   $head=array('Accept: */*',
   'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
   'Accept-Encoding: deflate',
@@ -13882,7 +13960,14 @@ function rec($site_key,$co,$sa,$loc) {
   curl_close($ch);
   //echo $h;
   $x=json_decode($h,1);
-  //echo $x["sources"];
+  //$xxx .= $x["sources"]."\n";
+  //$h = curl_exec($ch);
+
+  //echo $h;
+  
+  //$x=json_decode($h,1);
+  //$xxx .= $x["sources"]."\n";
+
   //print_r ($x);
   /*
   if (preg_match_all('/([http|https][\.\d\w\-\.\/\\\:\?\&\#\%\_\,]*(\.(srt|vtt)))\"\,\"label\"\:\"(\w+)/', $h, $m)) {
@@ -13907,12 +13992,16 @@ function rec($site_key,$co,$sa,$loc) {
   }
   */
   $file=$x["sources"];
+
   if (substr($x["sources"],0,2) == "U2") {
   //echo "asasass";
    require_once("CryptoJSAES_decrypt.php");
    $l="https://raw.githubusercontent.com/enimax-anime/key/e4/key.txt";
+   $l="https://raw.githubusercontent.com/theonlymo/keys/e4/key";
    $password="d333edc4f6a0423a32ee00fdf993d267";
    $password="e54c8749d8020713fb0887c0647b22b9";
+   $password="HvOPiBTtnIUhGlHfGAILDQHcsVbHQWBr";
+   $password="HvOPiBT7bE0yLJudjQA0DQHcAZhvgVHq";
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $l);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
@@ -13924,16 +14013,50 @@ function rec($site_key,$co,$sa,$loc) {
   $h1 = curl_exec($ch);
   curl_close($ch);
   $y=json_decode($h1,1);
+  //print_r ($y);
+  //$xxx .=$h1;
+  //file_put_contents("1.txt",$xxx);
+/*
+https://github.com/consumet/consumet.ts/blob/master/src/extractors/vidcloud.ts
+        const sourcesArray = res.data.sources.split('');
+        let extractedKey = '';
+
+        let currentIndex = 0;
+        for (const index of key) {
+          const start = index[0] + currentIndex;
+          const end = start + index[1];
+          for (let i = start; i < end; i++) {
+            extractedKey += res.data.sources[i];
+            sourcesArray[i] = '';
+          }
+          currentIndex += index[1];
+        }
+
+        key = extractedKey;
+        res.data.sources = sourcesArray.join('');
+*/
+  //echo $file."\n"."\n";
   $offset=0;
   $decryptedKey="";
   $encryptedString=$file;
+  $x=str_split($file);
   foreach($y as $t) {
-   $start=$t[0];
-   $end=$t[1];
-   $decryptedKey .=substr($encryptedString,$start-$offset,$end-$start);
-   $encryptedString = substr($encryptedString,0,$start-$offset).substr($encryptedString,$end-$offset);
-   $offset +=$end-$start;
+   $start=$t[0] + $offset;
+   $end=$t[1]+$start;
+   for ($i=$start;$i<$end;$i++) {
+     $decryptedKey .=$file[$i];
+     //$encryptedString[$i]="*";
+     $x[$i]="";
+   }
+   //$decryptedKey .=substr($encryptedString,$start-$offset,$end-$start);
+   //$decryptedKey .=substr($encryptedString,$start+$offset,$end);
+   //$encryptedString = substr($encryptedString,0,$start-$offset).substr($encryptedString,$end-$offset);
+   //$offset +=$end-$start;
+   $offset +=$t[1];
   }
+  //$encryptedString=str_replace("*","",$encryptedString);
+  $encryptedString=implode("",$x);
+  //echo $decryptedKey."\n"."\n".$encryptedString."\n";
    $x=CryptoJSAES_decrypt($encryptedString,$decryptedKey);
    //echo $x;
    if ($x) {
