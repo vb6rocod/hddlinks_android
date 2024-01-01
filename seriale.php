@@ -60,7 +60,7 @@ document.onkeypress =  zx;
 <TD width="25%"><a href="filme/tvseries_s.php?page=1&tip=release&title=tvseries&link=" target="_blank">tvseries</a></TD>
 <TD width="25%"><a href="filme/moviewetrust_s.php?page=1&tip=release&title=moviewetrust&link=" target="_blank">moviewetrust</a></TD>
 <TD width="25%"><a href="filme/streamflix_s.php?page=1&tip=release&title=streamflix&link=" target="_blank">streamflix</a></TD>
-<TD width="25%"><a href="filme/o2tvseries_s.php?page=1&tip=release&title=o2tvseries&link=" target="_blank">o2tvseries</a></TD>
+<TD width="25%"><a href="filme/fshd_s.php?page=1&tip=release&title=fshd&link=" target="_blank">fshd.ro</a></TD>
 </TR>
 
 <!-- straine -->

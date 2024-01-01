@@ -186,6 +186,7 @@ if ($from=="tvonline") {
   }
 }
 if ($from=="tvhdonline") {
+//  'Origin: https://tvhdonline.org',
   function dF($s){
    $s1=urldecode(substr($s,0,strlen($s)-1));
    $t='';
@@ -198,9 +199,8 @@ if ($from=="tvhdonline") {
   'Accept: */*',
   'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
   'Accept-Encoding: deflate',
-  'Origin: https://tvhdonline.org',
   'Connection: keep-alive',
-  'Referer: https://tvhdonline.org');
+  'Referer: https://manutv.org/');
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $link);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
@@ -216,24 +216,41 @@ if ($from=="tvhdonline") {
   $t2=explode("')",$t1[1]);
   $h1=dF($t2[0]);
   //echo $h1;
-  if (preg_match("/\<iframe.*?src\=\"([^\"]+)\"/i",$h1,$m)) {
+  if (preg_match("/\<iframe.*?src\=\"([^\"]+)\"/i",$h1,$m) || preg_match("/window\.open\(\'([^\']+)\'/",$h,$m)) {
   $l=$m[1];
+  //echo $l;
   curl_setopt($ch, CURLOPT_URL, $l);
   $h = curl_exec($ch);
+  //echo $h;
   if (preg_match("/tvhdonline.org/",$l)) {
     if (preg_match("/LIVEAPP_URL\s*\=\s*\'([^\']+)/",$h,$s))
      $link=$s[1];
     else
      $link="";
   } else {
+    $h2=urldecode($h);
+  $t1=explode("dF('",$h);
+  $t2=explode("')",$t1[1]);
+  $h1=dF($t2[0]);
+  //echo $h1;
+  if (preg_match("/\<iframe.*?src\=\"([^\"]+)\"/i",$h1,$m)) {
+  $l=$m[1];
+  //echo $l;
+  curl_setopt($ch, CURLOPT_URL, $l);
+  $h = curl_exec($ch);
+  //echo $h;
+  }
   //echo "enc=".mb_detect_encoding($h,"UTF-16");
     $h=urlencode($h);
+    //echo $h;
     $h=str_replace("%00","",$h);
+    //echo $h;
     $out = preg_replace_callback(
      "(%5Cx([0-9a-z]{2}))i",
      function($a) {return chr("0x".($a[1]));},
      $h
     );
+    //echo $out;
    $z=urldecode($out);
    if(preg_match("/http[^\"]+\.m3u8?/",$z,$r))
     $link=$r[0];

@@ -1,13 +1,19 @@
 <!DOCTYPE html>
 <?php
 include ("../common.php");
+set_time_limit(300);
 $host=$_GET['host'];
+if (isset($_GET['fix']))
+ $fix="yes";
+else
+ $fix="no";
 $page_title="Seriale favorite";
 $width="200px";
-$height="278px";
-$add_target="o2tvseries_s_add.php";
-$fs_target="o2tvseries_sez.php";
-$file=$base_fav."o2tvseries_s.dat";
+$height="200px";
+$add_target="fshd_s_add.php";
+$fs_target="fshd_s_ep.php";
+$file=$base_fav."fshd_s.dat";
+$fav_target_fix="fshd_s_fav.php?host=".$host."&fix=yes";
 ?>
 <html><head>
 <meta http-equiv="content-type" content="text/html; charset=UTF-8">
@@ -42,7 +48,7 @@ function ajaxrequest(link) {
   }
 }
 function isValid(evt) {
-    var charCode = (evt.which) ? evt.which : event.keyCode,
+    var charCode = (evt.which) ? evt.which : evt.keyCode,
     self = evt.target;
     if (charCode == "49") {
      id = "imdb_" + self.id;
@@ -93,6 +99,10 @@ function str_between($string, $start, $end){
 }
 $w=0;
 $n=0;
+if (file_exists($base_pass."tmdb.txt"))
+  $api_key=file_get_contents($base_pass."tmdb.txt");
+else
+  $api_key="";
 echo '<H2>'.$page_title.'</H2>';
 $arr=array();
 $h="";
@@ -127,6 +137,7 @@ foreach($arr as $key => $value) {
     $title = unfix_t(urldecode($key));
     $image=urldecode($arr[$key]["image"]);
     //$image=$host.parse_url($image)['path'];
+
     $year="";
     $link=$host.parse_url($link)['path'];
     $link_f=$fs_target.'?tip=series&link='.urlencode($link).'&title='.urlencode(fix_t($title)).'&image='.$image."&sez=&ep=&ep_tit=&year=".$year;

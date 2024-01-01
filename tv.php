@@ -84,7 +84,7 @@ $(document).on('keyup', '.imdb', isValid);
 <TD width="25%"><a href="filme/youtube_fav.php" target="_blank">youtube</a></TD>
 <TD width="25%"><a href="filme/youtube_live.php?token=&search=" target="_blank">youtube live</a></TD>
 <TD width="25%"><a href="tv/iptv.php" target="_blank">IPTV International</a></TD>
-<TD width="25%"><a href="tv/stream4free.php" target="_blank">stream4free</TD>
+<TD width="25%"></TD>
 </TR>
 
 <TR>

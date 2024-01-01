@@ -93,6 +93,56 @@ if (preg_match("/filmeonlinegratis\.org/",$filelink)) {
   curl_close($ch);
   $html = urldecode(str_replace("@","%",$html));
 //} elseif (strpos($filelink,"fsgratis.") !== false) {
+} elseif (preg_match("/fshd\.ro/",$filelink)) {
+  $head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:120.0) Gecko/20100101 Firefox/120.0',
+  'Accept: */*',
+  'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
+  'Accept-Encoding: deflate',
+  'Origin: https://fshd.ro',
+  'Connection: keep-alive',
+  'Referer: https://fshd.ro/film/the-naughty-nine-2023/');
+  $ch = curl_init();
+  curl_setopt($ch, CURLOPT_URL, $filelink);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+  curl_setopt($ch, CURLOPT_HTTPHEADER,$head);
+  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 25);
+  $h = curl_exec($ch);
+  curl_close($ch);
+  if (preg_match("/movie_id\s*\=\s*\"(\d+)\"/",$h,$m))
+   $id=$m[1];
+  $l="https://fshd.ro/wp-content/themes/serialeonline2/inc/parts/single/field-ajax.php";
+  $post="post_id=".$id;
+  $head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:120.0) Gecko/20100101 Firefox/120.0',
+  'Accept: */*',
+  'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
+  'Accept-Encoding: deflate',
+  'Content-Type: application/x-www-form-urlencoded; charset=UTF-8',
+  'X-Requested-With: XMLHttpRequest',
+  'Origin: https://fshd.ro',
+  'Connection: keep-alive',
+  'Referer: https://fshd.ro/film/the-naughty-nine-2023/');
+  $ch = curl_init();
+  curl_setopt($ch, CURLOPT_URL, $l);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+  curl_setopt($ch, CURLOPT_POST,1);
+  curl_setopt($ch, CURLOPT_POSTFIELDS,$post);
+  curl_setopt($ch, CURLOPT_HTTPHEADER,$head);
+  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 25);
+  $h = curl_exec($ch);
+  preg_match_all("/data-server\=\"\d+\"/",$h,$m);
+  for ($k=2;$k<count($m[0])+1;$k++) {
+   $post="post_id=".$id."&server_nr=".$k;
+   curl_setopt($ch, CURLOPT_POSTFIELDS,$post);
+   $h .= curl_exec($ch);
+  }
+  curl_close($ch);
+  $html=$h;
 } elseif (preg_match("/classicmovieshd/",$filelink)) {
   // https://www.classicmovieshd.com/ajax/embed
   $ua="Mozilla/5.0 (Windows NT 10.0; rv:82.0) Gecko/20100101 Firefox/82.0";
@@ -1341,12 +1391,13 @@ $s=$s."database\.seriale|drive\.google\.com|videomega\.|vidload\.co|mixdro{0,}p\
 $s=$s."|hxload\.|bazavox\.com|cloud\.vidhubstr\.org|vidia\.tv|gomostream\.com|viduplayer\.com|leaked-celebrities\.";
 $s=$s."|prostream\.to|videobin\.co|upstream\.to|playtvid\.com|jetload\.net|vidfast\.co|clipwatching\.";
 $s=$s."|(video|player)\.filmeserialeonline\.org|streamwire\.|cloudvid\.icu|mstream\.xyz|streamhoe\.online|videyo\.";
-$s=$s."|fastvid\.co|vidload\.net|rovideo\.net\/embed|eplayvid\.com|do{2,}ds?\.|ds2play\.|mediashore\.org|uptostream\.com";
+$s=$s."|fastvid\.co|vidload\.net|rovideo\.net\/embed|eplayvid\.com|do{2,}ds?\.|ds2play\.|ds2video\.|mediashore\.org|uptostream\.com";
 $s=$s."|movcloud\.net|dogestream\.|streamtape\.|jawcloud\.|viphdvid\.|evoload\.|sendvid\.|easyload\.io|okstream\.";
 $s=$s."|youdbox\.com|filmele-online\.com|playtube\.|ninjastream\.to|userload\.co|goplayer\.online|videovard\.|cloudemb\.|streamlare\.";
 $s=$s."|sbembed\.com|sbembed1\.com|sbplay\.|sbvideo\.net|streamsb\.net|sbplay\.one|cloudemb\.com|playersb\.com|tubesb\.com|sbplay\d\.|embedsb\.com";
 $s=$s."|\w+ssb\.|lvturbo\.|sb\w+\.|sbbrisk\.|sbanh\.|sblanh\.|sbchill\.|sbfast\.com|sblongvu\.com|sbfull\.|sbthe\.|sbspeed\.|tubeload\.|embedo\.|filemoon\.|utbrgebzvhfa\.";
-$s=$s."|streamhide\.|moonmov\.pro|vgfplay\.|fslinks\.|furher\.|truepoweroflove\.|streamdav\./i";
+$s=$s."|streamhide\.|moonmov\.pro|vgfplay\.|fslinks\.|embedv\.|furher\.|truepoweroflove\.|streamdav\.";
+$s=$s."|vembed\.net|vgembed\.|luluvdo\.com|guard|voe\.|mdbekjwqa\./i";
 /////////////////////////////////////////////
 //$x=preg_grep($s,$links);
 //print_r ($x);

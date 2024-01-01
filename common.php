@@ -88,5 +88,5 @@ function fixurl($link,$from="") {
    return $p."/".$link;
  }
 }
-$indirect="/hindipix\.in|waaw\.|hqq\.|realyplayonli\.|strcdn\.org|netu\.wiztube\.xyz|netu\.|div\.str1\.site|fshd\d+\.club|video\.filmeonline/";
+$indirect="/pajalusta\.club|hindipix\.in|waaw\.|hqq\.|realyplayonli\.|strcdn\.org|netu\.wiztube\.xyz|netu\.|div\.str1\.site|fshd\d+\.club|video\.filmeonline|fsohd\.pro/";
 ?>

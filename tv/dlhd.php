@@ -60,7 +60,7 @@ function off() {
 </script>
 <a href='' id='mytest1'></a>
 <a id="fancy" data-fancybox data-type="iframe" href=""></a>
-<h2><?php echo $pg_tit; ?> (Schedule Time UK GMT+1) - <a href="#all">See all 24/7 Channels</a></H2>
+<h2><?php echo $pg_tit; ?> <a href="#all">See all 24/7 Channels</a></H2>
 
 <table border="1px" width="100%">
 <?php
@@ -92,6 +92,7 @@ $w=0;
 $r=array();
 echo '<table border="1px" width="100%" style="table-layout:fixed;">'."\r\n";
 $l="https://dlhd.sx/";
+$l="https://dlhd.sx/schedule/schedule-generated.json";
 $l1="https://dlhd.sx/24-7-channels.php";
 $head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/110.0',
 'Accept: */*',
@@ -110,55 +111,61 @@ $head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gec
   curl_setopt($ch, CURLOPT_TIMEOUT, 15);
   $h = curl_exec($ch);
   curl_close($ch);
+  $r=json_decode($h,1);
+  //print_r ($r[key($r)]);
+  $rr=$r[key($r)];
+  //die();
   $zz=0;
-  $videos=explode('<h2 style="background-color:cyan">',$h);
-  unset($videos[0]);
-$videos = array_values($videos);
-preg_match_all("/\<h2 style\=\"background-color:cyan\"\>([^\<]+)\</",$h,$a);
+  //$videos=explode('<h2 style="background-color:cyan">',$h);
+  //unset($videos[0]);
+//$videos = array_values($videos);
+//preg_match_all("/\<h2 style\=\"background-color:cyan\"\>([^\<]+)\</",$h,$a);
 //print_r ($a[1]);
 echo '<TR><TD colspan="2"><b>Jump to:</b>';
-for ($z=0;$z<count($a[1]);$z++) {
- if (!preg_match("/PPV|Live|Tv/i",$a[1][$z])) echo '<a href="#'.$a[1][$z].'">'.$a[1][$z].'</a>,';
+foreach ($rr as $key=>$value) {
+ echo '<a href="#'.$key.'">'.$key.'</a>,';
 }
 echo '</TD></TR>';
-foreach($videos as $video) {
- $t1=explode('<',$video);
- $sport=$t1[0];
+echo '<TR><TH colspan="2" style="background-color:cyan;color:red">'.key($r).'</TH></TR>';
+foreach($rr as $key=>$value) {
+ //$t1=explode('<',$video);
+ //$sport=$t1[0];
  //echo $video."\n";
 
- if (preg_match_all("/<hr>([^\<]+)\</",$video,$y)) {
+ //if (preg_match_all("/<hr>([^\<]+)\</",$video,$y)) {
 
- echo '<TH colspan="2" style="background-color:cyan;color:red"><a id="'.$sport.'"></a>'.$sport.'</TH>';
+ echo '<TH colspan="2" style="background-color:cyan;color:red"><a id="'.$key.'"></a>'.$key.'</TH>';
  //echo $sport."\n";
- $t1=explode('<hr>',$video);
- for ($k=0;$k<count($y[1]);$k++) {
- $event=trim($y[1][$k]);
+ for ($k=0;$k<count($value);$k++) {
+ $event=trim($value[$k]['event'])." (".$value[$k]['time'].")";
  echo  '<TR>'."\n";
  echo '<TD class="cat"><a href="#">'.$event.'</a></TD>';
- if (preg_match_all("/href\=\"([^\"]+)\" target\=\"_blank\" rel\=\"noopener\"\>([^\<']+)\</m",$t1[$k+1],$x)) {
+ //if (preg_match_all("/href\=\"([^\"]+)\" target\=\"_blank\" rel\=\"noopener\"\>([^\<']+)\</m",$t1[$k+1],$x)) {
 
  echo '<TD>';
- for ($z=0;$z<count($x[2]);$z++) {
-  $title=trim($x[2][$z]);
-  if (preg_match("/CH-\d+/",$title,$m))
-   $title=$m[0];
-  $file=fixurl($x[1][$z],$l1);
+ //print_r ($value);
+ for ($z=0;$z<count($value[$k]['channels']);$z++) {
+
+  $title="CH".trim($value[$k]['channels'][$z]['channel_id']);
+  //$title=$m[0];
+  //$file=fixurl($x[1][$z],$l1);
+  $file="https://dlhd.sx/stream/stream-".$value[$k]['channels'][$z]['channel_id'].".php";
   $link="direct_link.php?link=".urlencode(fix_t($file))."&title=".urlencode(fix_t($title))."&from=".$from."&mod=direct";
   $l="link=".urlencode(fix_t($file))."&title=".urlencode(fix_t($title))."&from=".$from."&mod=".$mod;
     if ($flash == "flash")
-    echo '<a href="'.$link.'" target="_blank"><font color="yellow">|=|'.$title.'</font></a>';
+    echo '<a href="'.$link.'" target="_blank"><font color="yellow"> '.$title.'</font></a>';
     else
-    echo '<a onclick="ajaxrequest('."'".$l."')".'"'." style='cursor:pointer;'><font color='yellow'>|=|</font>".$title.'</a>';
+    echo '<a onclick="ajaxrequest('."'".$l."')".'"'." style='cursor:pointer;'><font color='yellow'> </font>".$title.'</a>';
 
   //echo $x[2][$z]." ";
  }
  echo '</TD>';
  //print_r ($x);
 
- }
+ //}
  echo '</TR>';
  }
- }
+ //}
 }
 echo '</TABLE>';
 
