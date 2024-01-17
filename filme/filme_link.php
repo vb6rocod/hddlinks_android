@@ -212,8 +212,10 @@ if (preg_match("/filmeonlinegratis\.org/",$filelink)) {
   $t2=explode('"',$t1[1]);
   $id=$t2[0];
   }
-  $l="https://www4.fsonline.to/wp-admin/admin-ajax.php";
+  $l="https://www2.fsonline.app/wp-admin/admin-ajax.php";
   $l=$last_good."/wp-admin/admin-ajax.php";
+  //echo $l;
+  //$l="https://www3.fsonline.app/wp-admin/admin-ajax.php";
   $post="action=lazy_player&movieID=".$id;
   //echo $post;
   //echo $l;
@@ -1397,6 +1399,7 @@ $s=$s."|youdbox\.com|filmele-online\.com|playtube\.|ninjastream\.to|userload\.co
 $s=$s."|sbembed\.com|sbembed1\.com|sbplay\.|sbvideo\.net|streamsb\.net|sbplay\.one|cloudemb\.com|playersb\.com|tubesb\.com|sbplay\d\.|embedsb\.com";
 $s=$s."|\w+ssb\.|lvturbo\.|sb\w+\.|sbbrisk\.|sbanh\.|sblanh\.|sbchill\.|sbfast\.com|sblongvu\.com|sbfull\.|sbthe\.|sbspeed\.|tubeload\.|embedo\.|filemoon\.|utbrgebzvhfa\.";
 $s=$s."|streamhide\.|moonmov\.pro|vgfplay\.|fslinks\.|embedv\.|furher\.|truepoweroflove\.|streamdav\.";
+$s=$s."|d0o0d\.|mdfx\w+|do0od";
 $s=$s."|vembed\.net|vgembed\.|luluvdo\.com|guard|voe\.|mdbekjwqa\./i";
 /////////////////////////////////////////////
 //$x=preg_grep($s,$links);

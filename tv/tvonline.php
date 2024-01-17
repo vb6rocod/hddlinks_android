@@ -113,14 +113,22 @@ $user_agent     =   $_SERVER['HTTP_USER_AGENT'];
 $n=0;
 $w=0;
 echo '<h2>'.$page_title.'</H2>';
+echo '<table border="1px" width="100%">'."\n\r";
+echo '<TR>';
+echo '<TD class="mp" width="25%"><a href="#sport">Sport</a></TD>';
+echo '<TD class="mp" width="25%"><a href="#filme">Filme</a></TD>';
+echo '<TD class="mp" width="50%"><a href="#doc">Documentare</a></TD>';
+echo '</TR></TABLE>';
 $head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/118.0',
 'Accept: */*',
 'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
 'Accept-Encoding: deflate',
-'Origin: https://tvonline123.com',
+'Origin: https://tvonline123.net',
 'Connection: keep-alive',
-'Referer: https://tvonline123.com/tvlive/?url=a7-tv-hd');
-$l2="https://tvonline123.com/categoria/sport.html";
+'Referer: https://www.tvonline123.com/index.php?categoria=sport');
+echo '<a id="sport"></a>';
+$l2="https://tvonline123.net/categoria/sport.html";
+$l2="https://www.tvonline123.com/categoria/sport.html";
   $cookie=$base_cookie."tvonline.txt";
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $l2);
@@ -131,11 +139,12 @@ $l2="https://tvonline123.com/categoria/sport.html";
   //curl_setopt($ch, CURLOPT_POSTFIELDS,$post);
   curl_setopt($ch, CURLOPT_COOKIEJAR, $cookie);
   curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie);
-  //curl_setopt($ch, CURLOPT_HEADER,1);
+  curl_setopt($ch, CURLOPT_HEADER,1);
   curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
   curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
   curl_setopt($ch, CURLOPT_TIMEOUT, 25);
   $h = curl_exec($ch);
+  //echo $h;
 echo '<table border="1px" width="100%">'."\n\r";
 $videos = explode('<div class="col-lg-2 col-6', $h);
 unset($videos[0]);
@@ -174,10 +183,11 @@ $videos = array_values($videos);
   }
 }
 echo "</table>";
-$l2="https://tvonline123.com/categoria/filme.html";
+echo '<a id="filme"></a>';
+$l2="https://www.tvonline123.com/categoria/filme.html";
 curl_setopt($ch, CURLOPT_URL, $l2);
 $h = curl_exec($ch);
-curl_close($ch);
+
 echo '<table border="1px" width="100%">'."\n\r";
 $videos = explode('<div class="col-lg-2 col-6', $h);
 unset($videos[0]);
@@ -215,6 +225,48 @@ $videos = array_values($videos);
   }
 }
 echo "</table>";
+echo '<a id="doc"></a>';
+$l2="https://www.tvonline123.com/categoria/documentare.html";
+curl_setopt($ch, CURLOPT_URL, $l2);
+$h = curl_exec($ch);
+echo '<table border="1px" width="100%">'."\n\r";
+$videos = explode('<div class="col-lg-2 col-6', $h);
+unset($videos[0]);
+$n=0;
+$videos = array_values($videos);
+  foreach($videos as $video) {
+  $t1=explode('<h2>',$video);
+  $t2=explode('<',$t1[1]);
+  $title=$t2[0];
+  $t1=explode('href="',$video);
+  $t2=explode('"',$t1[1]);
+  $link=$t2[0];
+  $link=fixurl($link,$l2);
+  $t1=explode('src="',$video);
+  $t2=explode('"',$t1[1]);
+  $image=$t2[0];
+    $val_prog="link=".urlencode(fix_t($title));
+    $link1="direct_link.php?link=".$link."&title=".urlencode($title)."&from=tvonline&mod=direct";
+    $l="link=".urlencode(fix_t($link))."&title=".urlencode(fix_t($title))."&from=tvonline&mod=direct";
+  if ($link <> "") {
+  if ($n==0) echo '<TR>';
+  if ($flash == "flash") {
+  echo '<td class="mp" align="center" width="25%"><a class ="imdb" id="myLink'.($w*1).'" href="'.$link1.'" target="_blank" onmousedown="isKeyPressed(event)">
+  <img id="myLink'.($w*1).'" src="'.$image.'" width="'.$width.'" height="'.$height.'"><BR>'.$title.'<input type="hidden" id="imdb_myLink'.($w*1).'" value="'.$val_prog.'"></a>
+  <a onclick="prog('."'".$val_prog."')".'"'." style='cursor:pointer;'>"." *".'</a>
+  </TD>';
+  }  else
+  echo '<td class="mp" align="center" width="25%">'.'<a class ="imdb" id="myLink'.($w*1).'" onclick="ajaxrequest('."'".$l."')".'"'." style='cursor:pointer;'>".'<img id="myLink'.($w*1).'" src="'.$image.'" width="'.$width.'" height="'.$height.'"><BR>'.$title.'<input type="hidden" id="imdb_myLink'.($w*1).'" value="'.$val_prog.'"></a></TD>';
+  $w++;
+  $n++;
+  if ($n == 4) {
+  echo '</tr>';
+  $n=0;
+  }
+  }
+}
+echo "</table>";
+curl_close($ch);
 ?>
 <div id="overlay"">
   <div id="text">Wait....</div>

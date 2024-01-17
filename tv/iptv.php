@@ -37,6 +37,7 @@ $l="https://github.com/iptv-org/iptv";
 // https://iptv-org.github.io/api/channels.json
 //$l="https://iptv-org.github.io/iptv/index.country.m3u";
 //$l="https://iptv-org.github.io/iptv/index.country.m3u";
+//$l="https://iptv-org.github.io/iptv/index.country.m3u";
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $l);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
@@ -49,8 +50,14 @@ $l="https://github.com/iptv-org/iptv";
   curl_setopt($ch, CURLOPT_TIMEOUT, 15);
   $html = curl_exec($ch);
   curl_close($ch);
-
-  $t1=explode('align="left">Country',$html);
+  //echo $html;
+  //die();
+  $t1=explode('data-target="react-partial.embeddedData">',$html);
+  $t2=explode('</script>',$t1[2]);
+  //echo $t2[0];
+  $x=json_decode($t2[0],1);
+  $html=$x['props']['initialPayload']['overview']['overviewFiles']['0']['richText'];
+  $t1=explode('<th align="left">Country',$html);
   $t2=explode('</table>',$t1[1]);
   $html=$t2[0];
   //echo $html;

@@ -58,7 +58,7 @@ $(document).on('keyup', '.imdb', isValid);
 <!--<TD width="25%"><a href="tv/digi.php" target="_blank">digi-online</a></TD>-->
 <!--<TD width="25%"><a href="tv/playlist.php?title=TVR.m3u" target="_blank">TVR Live</a></TD>-->
 <TD width="25%"><a href="tv/tvrlive.php" target="_blank">TVR Live</a></TD>
-<TD width="25%"><a href="tv/protvplus_main.php" target="_blank">protvplus</a></TD>
+<TD width="25%"></TD>
 <TD width="25%"><a href="tv/tvrstiri.php" target="_blank">TVR - Stiri</a></TD>
 
 </TR>

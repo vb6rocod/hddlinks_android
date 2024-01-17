@@ -64,6 +64,20 @@ if (preg_match("/porstream\.de|sportybite\.top|sporstream\.de/",$link)) {
   'Referer: https://porstream.de/',
   'Origin: https://porstream.de'
   );
+  //echo $link;
+  //$link="https://sportybite.top/blackpool-nottingham-forest-live-stream?id=4185";
+  //$link="https://sportybite.top/blackpool---nottingham-forest--live-stream?id=4185
+  //$link="https://sportybite.top/blackpool-nottingham-forest--live-stream?id=4185";
+  //$link="https://sportybite.top/blackpool---nottingham-forest-4185-live-streaming-online-free";
+  //$link="https://sportybite.top/event-live-stream?id=4185";
+  if (preg_match("/(\d+)-live-streaming-online-free/",$link,$m)) {
+  $link=str_replace("---","-",$link);
+  $link=str_replace("--","",$link);
+  //echo $link;
+  $link=str_replace($m[0],"live-stream?id=".$m[1],$link);
+
+  }
+  //echo $link;
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $link);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
@@ -74,6 +88,7 @@ if (preg_match("/porstream\.de|sportybite\.top|sporstream\.de/",$link)) {
   curl_setopt($ch, CURLOPT_TIMEOUT, 15);
   $h = curl_exec($ch);
   curl_close($ch);
+  //echo $h;
   if (preg_match("/\<iframe.*?src\=\"([^\"]+)\"/i",$h,$m))
    $link = fixurl($m[1]);
   else
@@ -137,14 +152,14 @@ if ($from=="tvonline") {
   'Accept: */*',
   'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
   'Accept-Encoding: deflate',
-  'Origin: https://tvonline123.com',
+  'Origin: https://tvonline123.net',
   'Connection: keep-alive',
-  'Referer: https://tvonline123.com/');
+  'Referer: https://tvonline123.net/');
 
   $cookie=$base_cookie."tvonline.txt";
   $a = substr(strrchr($link, "/"), 1);
   $id=str_replace(".html","",$a);
-
+  //echo $link;
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $l);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
@@ -161,14 +176,26 @@ if ($from=="tvonline") {
 
   curl_setopt($ch, CURLOPT_URL, $link);
   $h = curl_exec($ch);
-  
-  $l="https://tvonline123.com/tvlive/?url=".$id;
+  //echo $h;
+  preg_match("/method\=\"post\"\s+action\=\"([^\"]+)\"/",$h,$m);
+  /*
+  $t1=explode("url=",$link);
+  $id=$t1[1];
+  $l="https://tvhdonline.net/tv-live/?url=".$id;
+  */
+  $l=$m[1];
+  $post="tvgratis=".$id."&content-protector-submit.x=355&content-protector-submit.y=175";
+  //echo $l;
+  //$l="https://tvonline123.net/tvlive/?url=".$id;
+  //echo $l;
   curl_setopt($ch, CURLOPT_URL, $l);
+  curl_setopt($ch, CURLOPT_POST,1);
+  curl_setopt($ch, CURLOPT_POSTFIELDS,$post);
   $h = curl_exec($ch);
   //echo $h;
   //if (preg_match("/\&s\=(\d+)/",$h,$m)) {
   if (preg_match("/data-server-id\=\"(\d+)/",$h,$m)) {
-  $l="https://tvonline123.com/player/".$id."/".$m[1];
+  $l="https://tvonline123.net/player/".$id."/".$m[1];
   //echo $l;
   curl_setopt($ch, CURLOPT_URL, $l);
   //curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie);
@@ -178,7 +205,7 @@ if ($from=="tvonline") {
   if (preg_match("/file:\"([^\"]+)\"/",$h,$n)) {
    $link=$n[1];
    if ($flash <> "flash")
-     $link .="|Referer=".urlencode("https://tvonline123.com/")."&Origin=".urlencode("https://tvonline123.com");
+     $link .="|Referer=".urlencode("https://www.tvonline123.com/")."&Origin=".urlencode("https://tvonline123.net");
   } else {
     $link="";
   }
@@ -596,7 +623,7 @@ if (preg_match("/tutele\d+\.|tutlehd\.xyz/",$link)) {
     }
   }
 }
-if (preg_match("/streamingnow\.|freeviplive\./",$link)) {
+if (preg_match("/streamingnow\.|freeviplive\.|sons\-stream\.com|b5yucast\.com/",$link)) {
   //https://streamingnow.pro/stream.php?hd=20
   //https://freeviplive.com/stream.php?hd=20
   //https://freeviplive.com/tvon.php?hd=71
@@ -971,7 +998,7 @@ if (preg_match("/ddolahdplay\./",parse_url($link)['host'])) {
   if ($link && $flash<>"flash")
    $link .="|Referer=".urlencode("https://ddolahdplay.xyz/")."&Origin=".urlencode("https://ddolahdplay.xyz");
 }
-if (preg_match("/godzlive\.com|b4ucast\.com/",parse_url($link)['host'])) {
+if (preg_match("/godzlive\.com|b\ducast\.com/",parse_url($link)['host'])) {
   $ref="https://".parse_url($link)['host'];
   //$ref="https://b4yucast.com";
   $head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/110.0',
@@ -980,6 +1007,7 @@ if (preg_match("/godzlive\.com|b4ucast\.com/",parse_url($link)['host'])) {
   'Accept-Encoding: deflate',
   'Referer: https://b5yucast.com/');
   //echo $link;
+  //b5yucast.com
   //$link=str_replace("dhonka.php","dhonka2.php",$link);
   //https://b4ucast.com/dhonka2.php?player=desktop&live=bbtsp1
   //https://b4ucast.com/dhonka2.php?player=desktop&live=bbtsp1
@@ -1974,14 +2002,20 @@ if ($from=="protvplus") {
   $h = curl_exec($ch);
   curl_close($ch);
   //echo $h;
-  //$h=str_replace("\\","",$h);
+  $h=str_replace("\\","",$h);
   //$t1=explode("/embed",$h);
   //$t2=explode('"',$t1[1]);
   //$l="https://media.cms.protvplus.ro/embed".$t2[0]."?autoplay=any";
   //$l="https://media.cms.protvplus.ro/embed/7HijmOZ8Ouc?autoplay=any";
+  /*
   $t1=explode('iframe data-src="',$h);
   $t2=explode('"',$t1[1]);
   $l=$t2[0];
+  */
+  preg_match("/embedUrl\"\:\s*\"([^\"]+)\"/",$h,$m);
+  $l=$m[1];
+  //echo $l;
+  //https://media.cms.protvplus.ro/embed/GVDpaTJKFcK?autoplay=1
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $l);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
@@ -1995,11 +2029,12 @@ if ($from=="protvplus") {
   curl_close($ch);
   //echo $h;
   $h=str_replace("\\","",$h);
+  //echo $h;
   $t1=explode('src":"',$h);
   //$t1=explode('DASH":[{"src":"',$h);
   $t2=explode('"',$t1[1]);
   $l=$t2[0];
-
+  //echo $l;
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $l);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
@@ -2011,7 +2046,7 @@ if ($from=="protvplus") {
   curl_setopt($ch, CURLOPT_ENCODING, "");
   curl_setopt($ch, CURLOPT_TIMEOUT, 15);
   $h = curl_exec($ch);
-  curl_close($ch);
+
   //echo $h;
 
 $base1=str_replace(strrchr($l, "/"),"/",$l);
@@ -2044,7 +2079,8 @@ if (count($pl) > 1) {
 //curl_setopt($ch, CURLOPT_URL, $link);
 //$h = curl_exec($ch);
 //echo $h;
-$link=$l;
+curl_close($ch);
+//$link=$l;
 //$link="https://cmero-ott-vod-web-prep-sec.ssl.cdn.cra.cz/K3MenhEnnM5nqiAaCxE4xg==,1698066020/vod_cmero/_definst_/0202/2815/rum-sd0-sd1-sd2-sd3-sd4-hd1-hd2-TwRAFeuj.smil/chunklist_b1155072.m3u8";
 //$link="https://cmero-ott-vod-prep-prot.ssl.cdn.cra.cz/vod_cmero/_definst_/0202/2815/rum-sd0-sd1-sd2-sd3-sd4-hd1-hd2-axinom-taKVQLlA.smil/playlist.m3u8";
 if ($link && $flash <> "flash")

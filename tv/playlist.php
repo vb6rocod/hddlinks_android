@@ -5,6 +5,21 @@ if (isset($_GET['link'])) {
   $link= $_GET['link'];
 }
 $pg_tit=urldecode($_GET["title"]);
+if (isset($_GET['page']))
+ $page=$_GET['page'];
+else
+ $page=0;
+$step=200;
+////////////////////////
+$base=basename($_SERVER['SCRIPT_FILENAME']);
+$p=$_SERVER['QUERY_STRING'];
+parse_str($p, $output);
+
+if (isset($output['page'])) unset($output['page']);
+$p = http_build_query($output);
+
+$next=$base."?page=".($page+1)."&".$p;
+$prev=$base."?page=".($page-1)."&".$p;
 ?>
 <html>
 <head>
@@ -53,7 +68,9 @@ function addfav(link) {
   request.onreadystatechange = function() {
     if (request.readyState == 4) {
       alert (request.responseText);
+      if (s.match(/mod=del/gi)) {
       location.reload();
+      }
     }
   }
 }
@@ -115,7 +132,7 @@ $(document).on('keyup', '.imdb', isValid);
 document.onkeypress =  zx;
 </script>
 </head>
-<body>
+<body width="100%">
 <script>
 function on() {
     document.getElementById("overlay").style.display = "block";
@@ -129,7 +146,7 @@ function off() {
 <a id="fancy" data-fancybox data-type="iframe" href=""></a>
 <h2><?php echo $pg_tit; ?> (2=add,4=del)</H2>
 
-<table border="1px" width="100%">
+
 <?php
 function str_between($string, $start, $end){
 	$string = " ".$string; $ini = strpos($string,$start);
@@ -153,9 +170,7 @@ $tast=trim(file_get_contents($base_pass."tastatura.txt"));
 $tast="NU";
 }
 $user_agent     =   $_SERVER['HTTP_USER_AGENT'];
-if ($flash != "mp") {
-if (preg_match("/android|ipad/i",$user_agent) && preg_match("/chrome|firefox|mobile/i",$user_agent)) $flash="chrome";
-}
+
 $n=0;
 $w=0;
 $m3uFile="pl/".$pg_tit;
@@ -192,11 +207,34 @@ $m3ufile = str_replace('tvg-language', 'language', $m3ufile);
 //print_r($m3ufile);
 
 //$m3ufile = str_replace(' ', '_', $m3ufile); // FOR GROUP
-
+$m3ufile=preg_replace("/\".*?\"/","",$m3ufile);
+//echo $m3ufile;
+//die();
 preg_match_all($re, $m3ufile, $matches);
+$tot=count($matches[0]);
+if ($tot>$step) {
+$k=intval($tot/$step) + 1;
+echo '<table border="1px" width="100%"><tr>'."\n\r";
+for ($m=0;$m<$k;$m++) {
+   echo '<TD align="center"><a href="'.($base."?page=".($m*1)."&".$p).'">'.($m+1).'</a></td>';
+}
+echo '</TR></table>';
+}
+echo '<table border="1px" width="100%">';
+//print_r ($matches);
+//die();
 //print_r ($m3uFile);
-for ($z=0;$z<count($matches[2]);$z++) {
+if ($tot>$step) {
+echo '<TR>';
+ if ($page>0)
+   echo '<TD class="nav" colspan="4" align="right"><a href="'.$prev.'">&nbsp;&lt;&lt;&nbsp;</a> | <a href="'.$next.'">&nbsp;&gt;&gt;&nbsp;</a></TD>'."\r\n";
+ else
+   echo '<TD class="nav" colspan="4" align="right"><a href="'.$next.'">&nbsp;&gt;&gt;&nbsp;</a></TD>'."\r\n";
+echo '</TR>';
+}
+for ($z=$step*$page;$z<min($step*($page+1),count($matches[2]));$z++) {
     $title=trim($matches[2][$z]);
+    $title=preg_replace("/http[^\s]+/","",$title);
     $file = trim($matches[3][$z]);
     $mod="direct";
     $from="fara";
@@ -209,12 +247,12 @@ for ($z=0;$z<count($matches[2]);$z++) {
     if ($n == 0) echo "<TR>"."\n\r";
     //if ($tast == "NU")
     if ($flash == "flash")
-    echo '<TD class="cat" width="20%">'.'<a class ="imdb" id="myLink'.($w*1).'" href="'.$link.'" target="_blank">'.$title
+    echo '<TD class="cat" width="25%">'.'<a class ="imdb" id="myLink'.($w*1).'" href="'.$link.'" target="_blank">'.$title
     .'<input type="hidden" id="imdb_myLink'.($w*1).'" value="'.$val_prog.'">
     <input type="hidden" id="fav_myLink'.($w*1).'" value="'.$fav_link.'">
     </a>';
     else
-    echo '<TD class="cat" width="20%">'.'<a class ="imdb" id="myLink'.($w*1).'" onclick="ajaxrequest('."'".$l."')".'"'." style='cursor:pointer;'>".$title
+    echo '<TD class="cat" width="25%">'.'<a class ="imdb" id="myLink'.($w*1).'" onclick="ajaxrequest('."'".$l."')".'"'." style='cursor:pointer;'>".$title
     .'<input type="hidden" id="imdb_myLink'.($w*1).'" value="'.$val_prog.'">
     <input type="hidden" id="fav_myLink'.($w*1).'" value="'.$fav_link.'">
     </a>';
@@ -242,7 +280,14 @@ for ($z=0;$z<count($matches[2]);$z++) {
    //}
   //}
 }
-
+if ($tot>$step) {
+echo '<TR>';
+ if ($page>0)
+   echo '<TD class="nav" colspan="4" align="right"><a href="'.$prev.'">&nbsp;&lt;&lt;&nbsp;</a> | <a href="'.$next.'">&nbsp;&gt;&gt;&nbsp;</a></TD>'."\r\n";
+ else
+   echo '<TD class="nav" colspan="4" align="right"><a href="'.$next.'">&nbsp;&gt;&gt;&nbsp;</a></TD>'."\r\n";
+echo '</TR>';
+}
  echo '</table>';
 ?>
 

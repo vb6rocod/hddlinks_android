@@ -99,6 +99,7 @@ $head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gec
   curl_setopt($ch, CURLOPT_TIMEOUT, 15);
   $h = curl_exec($ch);
   curl_close($ch);
+  //echo $h;
   //$h=file_get_contents("C:/EasyPhp/localweb/mobile1/nou/sport.htm");
 
  //<div class="channels">
