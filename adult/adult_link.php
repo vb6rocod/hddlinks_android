@@ -1053,6 +1053,9 @@ $head=array('Accept: */*',
   $t1=explode("video_url: '",$h);
   $t2=explode("'",$t1[1]);
   $out=$t2[0];
+  $ua="MXPlayer";
+  //if ($flash <> "flash")
+  // $out=$out."|User-Agent=".urlencode($ua);
 } else if (preg_match("/xnxx\.com|xvideos\.com/",$host)) {
   if (preg_match_all("/html5player\.setVideoUrl(Low|High)\(\'(.*?)\'/ims",$h,$m)) {
      $out=$m[2][count($m[2])-1];

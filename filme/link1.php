@@ -505,7 +505,7 @@ if (preg_match("/vidsrc\.me/",$filelink)) {
   //$srt=$s[1];
   $link="";
 /////////////////////////////
-  if (preg_match("/file\:\"\#2([^\"]+)\"/",$h,$m)) {
+  if (preg_match("/file\:\"\#\d([^\"]+)\"/",$h,$m)) {
   $x=$m[1];
   //echo $x."\n";
   $x = preg_replace("/[^A-Za-z0-9\+\/\=]/", "",$x);
@@ -1390,6 +1390,9 @@ if (preg_match("/emovies\./",$filelink)) {
   else
    $l=$y['value'];
   //echo $l;
+  if (preg_match("/vidmoly\.|/",$l)) {
+   $filelink=$l;
+  } else {
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $l);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
@@ -1407,6 +1410,7 @@ if (preg_match("/emovies\./",$filelink)) {
   //echo $h."\n";
   if (preg_match("/sources\:\s*\[\{\"file\"\:\"([^\"]+)\"/",$h,$m))
    $link=$m[1];
+  }
 
 }
 if (preg_match("/tvseries\./",$filelink)) {
@@ -10489,8 +10493,10 @@ $head=array('Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image
   curl_close($ch);
   if (preg_match('/([http|https][\.\d\w\-\.\/\\\:\?\&\#\%\_\,]*(\.(mp4|m3u8)))/', $h, $m))
   $link=$m[1];
-  if (preg_match('/(\/\/[\.\d\w\-\.\/\\\:\?\&\#\%\_\,]*(\.(srt|vtt)))/', $h, $s))
-  $srt="https:".$s[1];
+  //if (preg_match('/(\/\/[\.\d\w\-\.\/\\\:\?\&\#\%\_\,]*(\.(srt|vtt)))/', $h, $s))
+  //$srt="https:".$s[1];
+  if (preg_match("/\/srt\/.+\.(srt|vtt)/",$h,$s))
+    $srt="https://vidmoly.to".$s[0];
   if (strpos($srt,"empty.srt") !== false) $srt="";
   if ($link && $flash <> "flash") {
    $link .="|Origin=".urlencode("https://vidmoly.to")."&Referer=".urlencode("https://vidmoly.to/");
@@ -12722,10 +12728,12 @@ if (count($pl) > 1) {
   if ($srt)
    if (strpos($srt,"http") === false) $srt="https://videyo.net".$srt;
 //} elseif (strpos($filelink,"mixdrop.") !== false) {
-} elseif (preg_match("/mixdro{0,}p\.|mdy48tn97\.|mdbekjwqa\.|mdfx\w+/",$filelink)) {
+} elseif (preg_match("/mixdro{0,}p\.|mdy48tn97\.|mdbekjwqa\.|mdfx\w+|mdzsmut/",$filelink)) {
   //https://mixdrop.co/e/eaeuizxtz0
   //https://mixdrop.co/f/mxgr3tvc
   $filelink=str_replace("/f/","/e/",$filelink);
+  if (preg_match('/([http|https]?[\.\d\w\-\.\/\\\:\?\&\#\%\_\,]*(\.(srt|vtt)))/', $filelink, $s))
+  $srt=$s[1];
   //echo $filelink;
   require_once("JavaScriptUnpacker.php");
   $ch = curl_init();
@@ -12757,14 +12765,39 @@ if (count($pl) > 1) {
       $link="https:".$m[1];
       if (preg_match("/\.(remote)?sub\s*\=\s*\"(.*?)\"/",$out,$s)) {
       //print_r ($s);
+       if ($s[2]) {
        $srt= urldecode($s[2]);
        $srt=str_replace(" ","%20",$srt);
        if (strpos($srt,"http") === false && $srt) $srt="https:".$srt;
+       }
       }
   } else {
     $link="";
   }
   //echo $srt;
+} elseif (preg_match("/vidmoly\.to/",$filelink)) {
+  $ua="Mozilla/5.0 (Windows NT 10.0; rv:65.0) Gecko/20100101 Firefox/65.0";
+  $ch = curl_init();
+  curl_setopt($ch, CURLOPT_URL, $l);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+  curl_setopt($ch, CURLOPT_USERAGENT, "Mozilla/5.0 (Windows NT 10.0; rv:65.0) Gecko/20100101 Firefox/65.0");
+  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+  //curl_setopt($ch,CURLOPT_REFERER,"http://gamovideo.com/");
+  curl_setopt($ch, CURLOPT_ENCODING, "");
+  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+  $h = curl_exec($ch);
+  curl_close($ch);
+  if (preg_match('/([http|https]?[\.\d\w\-\.\/\\\:\?\&\#\%\_\,]*(\.(srt|vtt)))/', $h, $s))  // mai sapa
+  $srt=$s[1];
+  if (preg_match("/file:\"([^\"]+)\"/",$h,$m)) {
+   $link=$m[1];
+   if ($flask <> "flash") {
+    $link=$link."|Referer=".urlencode("https://vidmoly.to/")."&Origin=".urlencode("https://vidmoly.to");
+    $link=$link."&User-Agent=".urlencode($ua);
+   }
+  }
 } elseif (strpos($filelink,"datoporn.co") !== false) {
   //https://datoporn.co/embed-24ynitvgmfow-658x400.html
   $pattern = '@(?:\/\/|\.)(datoporn\.(co|com))\/(?:embed-)?([a-zA-Z0-9]+)@';

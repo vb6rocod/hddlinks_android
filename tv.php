@@ -55,10 +55,10 @@ $(document).on('keyup', '.imdb', isValid);
 </TR>
 <TR>
 <TD width="25%"><a href="tv/tvhdonline.php" target="_blank">tvhdonline</TD>
+<TD width="25%"><a href="tv/tvcanale.php" target="_blank">tvcanale</TD>
 <!--<TD width="25%"><a href="tv/digi.php" target="_blank">digi-online</a></TD>-->
 <!--<TD width="25%"><a href="tv/playlist.php?title=TVR.m3u" target="_blank">TVR Live</a></TD>-->
 <TD width="25%"><a href="tv/tvrlive.php" target="_blank">TVR Live</a></TD>
-<TD width="25%"></TD>
 <TD width="25%"><a href="tv/tvrstiri.php" target="_blank">TVR - Stiri</a></TD>
 
 </TR>

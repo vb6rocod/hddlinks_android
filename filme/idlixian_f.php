@@ -17,6 +17,7 @@ $last_good="https://77.105.142.75";
 $last_good="https://tv.idlixprime.com";
 $last_good="https://tv.idlixplus.net";
 //$last_good="https://tv.idlixplus.com";
+$last_good="https://tv.idlixofficial.co";
 $host=parse_url($last_good)['host'];
 /* ==================================================== */
 $has_fav="yes";

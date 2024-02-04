@@ -155,7 +155,7 @@ if ($from=="tvonline") {
   'Origin: https://tvonline123.net',
   'Connection: keep-alive',
   'Referer: https://tvonline123.net/');
-
+  $ua="Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/118.0";
   $cookie=$base_cookie."tvonline.txt";
   $a = substr(strrchr($link, "/"), 1);
   $id=str_replace(".html","",$a);
@@ -205,7 +205,7 @@ if ($from=="tvonline") {
   if (preg_match("/file:\"([^\"]+)\"/",$h,$n)) {
    $link=$n[1];
    if ($flash <> "flash")
-     $link .="|Referer=".urlencode("https://www.tvonline123.com/")."&Origin=".urlencode("https://tvonline123.net");
+     $link .="|Referer=".urlencode("https://www.tvonline123.com/")."&Origin=".urlencode("https://www.tvonline123.com")."&User-Agent=".urlencode($ua);
   } else {
     $link="";
   }
@@ -1470,6 +1470,29 @@ if ($from=="sultanovic") {
     $link="";
   }
  }
+}
+if ($from=="tvcanale") {
+  $ua="Mozilla/5.0 (Windows NT 10.0; rv:89.0) Gecko/20100101 Firefox/89.0";
+  $host="https://".parse_url($link)['host'];
+  $ch = curl_init();
+  curl_setopt($ch, CURLOPT_URL, $link);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
+  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+  curl_setopt($ch, CURLOPT_REFERER,"https://tvcanale.live");
+  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 25);
+  $h = curl_exec($ch);
+  curl_close($ch);
+  //echo $h;
+  if (preg_match("/source:\s*\"([^\"]+)\"/",$h,$m)) {
+   $link=$m[1];
+   if ($flash <> "flash")
+    $link=$link."|Referer=".urlencode($host)."&Origin=".urlencode($host)."&User-Agent=".urlencode($ua);
+  } else
+   $link="";
+   
 }
 if ($from=="canale.live") {
   $ua="Mozilla/5.0 (Windows NT 10.0; rv:89.0) Gecko/20100101 Firefox/89.0";

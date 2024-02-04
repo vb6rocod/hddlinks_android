@@ -42,8 +42,11 @@ $head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gec
 //$l="https://strcdn.org/e/eTg3U3ZiM1B1MnJEUGlaaEhvL3ZzUT09?adfree=1";
 //http://div.str1.site/e/Sk5RVlJDL2lTdHc4b3BQN1lXUW51dz09?autoplay=yes
 
-  $host="https://".parse_url($l)['host'];
 
+  $host="https://".parse_url($l)['host'];
+  //$l=$host."/e/275205227265208246260265226204211238194271217271255";
+  if (preg_match("/hash\=(\w+)/",$l,$m))
+    $l=$host."/e/".$m[1];
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $l);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
@@ -56,7 +59,7 @@ $head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gec
   curl_setopt($ch, CURLOPT_TIMEOUT, 15);
   $h = curl_exec($ch);
   curl_close($ch);
-  //echo $h;
+  //echo urldecode($h);
   //die();
   if (preg_match("/file2sub\(\"([^\"]+)\"/",$h,$s))
     $srt=$s[1];

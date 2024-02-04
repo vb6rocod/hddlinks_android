@@ -161,8 +161,10 @@ $head=array("User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gec
 //die();
   for ($k=0;$k<count($m[1]);$k++) {
     $r[]=$m[1][$k];
-    preg_match("/(\w+)\?/",$m[1][$k],$n);
+    if (preg_match("/(\w+)\?/",$m[1][$k],$n))
     $s[]="Server ".$n[1];
+    else
+    $s[]="Server ".parse_url($m[1][$k])['host'];
   }
 echo '<table border="1" width="100%">';
 echo '<TR><TD class="mp">Alegeti un server: Server curent:<label id="server">'.$s[0].'</label>

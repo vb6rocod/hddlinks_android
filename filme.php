@@ -72,7 +72,12 @@ else
 <TD width="25%"><a href="filme/tugaflix_f.php?page=1&tip=release&title=tugaflix&link=" target="_blank">tugaflix</a></TD>
 <TD width="25%"><a href="filme/fshd_f.php?page=1&tip=release&title=fshd&link=" target="_blank">fshd.ro</a></TD>
 </TR>
-
+<TR>
+<TD width="25%"><a href="filme/sitefilme_f.php?page=1&tip=release&title=sitefilme&link=" target="_blank">sitefilme</a></TD>
+<TD width="25%"><a href="filme/vezionline_f.php?page=1&tip=release&title=vezionline&link=" target="_blank">vezionline</a></TD>
+<TD width="25%"></TD>
+<TD width="25%"></TD>
+</TR>
 <!-- straine -->
 <TR>
 <TD width="25%"><a href="filme/tvseries_f.php?page=1&tip=release&title=tvseries&link=" target="_blank">tvseries</a></TD>

@@ -173,6 +173,15 @@ $user_agent     =   $_SERVER['HTTP_USER_AGENT'];
 
 $n=0;
 $w=0;
+function remove_empty_lines($string) {
+    $lines = explode("\n", str_replace(array("\r\n", "\r"), "\n", $string));
+    $lines = array_map('trim', $lines);
+    $lines = array_filter($lines, function($value) {
+        return $value !== '';
+    });
+    return implode("\n", $lines);
+    //return $lines;
+}
 $m3uFile="pl/".$pg_tit;
 if (isset($_GET['link'])) {
   $ch = curl_init();
@@ -188,6 +197,7 @@ if (isset($_GET['link'])) {
 } else {
 $m3ufile = file_get_contents($m3uFile);
 }
+/*
 // Thanks to https://github.com/onigetoc/m3u8-PHP-Parser/blob/master/m3u-parser.php
 $re = '/#EXTINF:(.+?)[,]\s?(.+?)[\r\n]+?((?:https?|rtmp):\/\/(?:\S*?\.\S*?)(?:[\s)\[\]{};"\'<]|\.\s|$))/';
 $re = '/#EXTINF:(.+?)[,]\s?(.+?)[\r\n]+?((?:https?|rtmp):\/\/(?:\S*?\.\S*?)(?:[\s)\[\]{};"\'<]|\.\s|$))/';
@@ -208,8 +218,11 @@ $m3ufile = str_replace('tvg-language', 'language', $m3ufile);
 
 //$m3ufile = str_replace(' ', '_', $m3ufile); // FOR GROUP
 $m3ufile=preg_replace("/\".*?\"/","",$m3ufile);
+*/
 //echo $m3ufile;
 //die();
+$m3ufile = remove_empty_lines($m3ufile);
+$re = '/#EXTINF:(.+?)\n(#.*?\n)?((http|rtmp)\S+)/m';
 preg_match_all($re, $m3ufile, $matches);
 $tot=count($matches[0]);
 if ($tot>$step) {
@@ -217,6 +230,7 @@ $k=intval($tot/$step) + 1;
 echo '<table border="1px" width="100%"><tr>'."\n\r";
 for ($m=0;$m<$k;$m++) {
    echo '<TD align="center"><a href="'.($base."?page=".($m*1)."&".$p).'">'.($m+1).'</a></td>';
+   if ($m==50) echo '</TR><TR>';
 }
 echo '</TR></table>';
 }
@@ -233,9 +247,14 @@ echo '<TR>';
 echo '</TR>';
 }
 for ($z=$step*$page;$z<min($step*($page+1),count($matches[2]));$z++) {
-    $title=trim($matches[2][$z]);
-    $title=preg_replace("/http[^\s]+/","",$title);
-    $file = trim($matches[3][$z]);
+    $file=$matches[3][$z];
+    $line=$matches[1][$z];
+    if (preg_match("/tvg-name\=\"([^\"]+)\"/",$line,$x)) {
+     $title=trim($x[1]);
+    } else {
+     $t=explode(",",$line);
+     $title=trim($t[count($t)-1]);
+    }
     $mod="direct";
     $from="fara";
     $t1=preg_replace("/^\|?RO\s*\|\s*/","",$title);
