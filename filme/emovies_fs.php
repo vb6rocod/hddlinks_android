@@ -134,6 +134,7 @@ $r=array();
 $s=array();
 //echo $link;
 if ($tip=="movie") $link=$link."watching.html";
+//echo $link;
 $last_good="https://".parse_url($link)['host'];
 $ua="Mozilla/5.0 (Windows NT 10.0; rv:89.0) Gecko/20100101 Firefox/89.0";
 $head=array('Accept: application/json, text/javascript, */*; q=0.01',

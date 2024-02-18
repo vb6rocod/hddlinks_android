@@ -12,20 +12,18 @@ $tit=$_GET["title"];
 $link=$_GET["link"];
 $width="200px";
 $height="278px";
-$last_good="https://bflix.ru";
-$last_good="https://bflixz.to";
-//$last_good="https://fmoviesz.to";
+$last_good="https://fmoviesz.to";
 $host=parse_url($last_good)['host'];
 /* ==================================================== */
 $has_fav="yes";
 $has_search="yes";
 $has_add="yes";
 $has_fs="yes";
-$fav_target="bflix_f_fav.php?host=".$last_good;
-$add_target="bflix_f_add.php";
+$fav_target="fmovies_f_fav.php?host=".$last_good;
+$add_target="fmovies_f_add.php";
 $add_file="";
-$fs_target="bflix_fs.php";
-$target="bflix_f.php";
+$fs_target="fmovies_fs.php";
+$target="fmovies_f.php";
 /* ==================================================== */
 $base=basename($_SERVER['SCRIPT_FILENAME']);
 $p=$_SERVER['QUERY_STRING'];
@@ -211,20 +209,20 @@ $x=json_decode($h,1);
 $h=$x['result'];
 $host=parse_url($l)['host'];
 
-$videos = explode('<div class="film"', $h);
+$videos = explode('div class="item"', $h);
 unset($videos[0]);
 $videos = array_values($videos);
 foreach($videos as $video) {
  $t1=explode('href="',$video);
  $t2=explode('"',$t1[1]);
  $link=$last_good.$t2[0];
-
+ $t3=explode('>',$t1[2]);
+ $t4=explode('<',$t3[1]);
+ $title=trim($t4[0]);
  $t1=explode('src="',$video);
  $t2=explode('"',$t1[1]);
  $image=$t2[0];
- $t1=explode('class="film-name">',$video);
- $t2=explode('</',$t1[1]);
- $title=trim($t2[0]);
+
  if (preg_match("/span class\=\"dot\">/",$video)) {
  $t1=explode('span class="dot">',$video);
  $t2=explode('<',$t1[1]);

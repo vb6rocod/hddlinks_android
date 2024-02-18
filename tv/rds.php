@@ -4,6 +4,8 @@ include ("../common.php");
 $page_title="rds.live";
 $width="200px";
 $height=intval(200*(394/700))."px";
+$link=$_GET['link'];
+$page_title=$_GET['title'];
 ?>
 <html><head>
 <meta http-equiv="content-type" content="text/html; charset=UTF-8">
@@ -113,10 +115,10 @@ $n=0;
 $w=0;
 echo '<h2>'.$page_title.'</H2>';
 echo '<table border="1px" width="100%">'."\n\r";
-$l="https://rds.live/canale-tv/";
-
+//$l="https://rds.live/canale-tv/";
+//$link="https://emisiuni.live/canale-tv-1/";
   $ch = curl_init();
-  curl_setopt($ch, CURLOPT_URL, $l);
+  curl_setopt($ch, CURLOPT_URL, $link);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
   curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 10.0; rv:55.0) Gecko/20100101 Firefox/55.0');
   curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);

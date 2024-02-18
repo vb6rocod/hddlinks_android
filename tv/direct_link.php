@@ -56,6 +56,62 @@ if (isset($_GET['flash'])) $flash="mpc";
 //$link="http://89.136.209.30:1935/liveedge/TVRMOLDOVA.stream/playlist.m3u8";
 //$link=urldecode("https%3A%2F%2Fwww.youtube.com%2Fwatch%3Fv%3Dr_d4ryn9UsA&title=Gaming%20Music%20Radio%20%E2%9A%A1%2024/7%20NCS%20Live%20Stream%20%E2%9A%A1%20Trap,%20Chill,%20Electro,%20Dubstep,%20Future%20Bass,%20EDM");
 //$mod="direct";
+if (preg_match("/livematch\.ge/",$link)) {
+  $head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/110.0',
+  'Accept: */*',
+  'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
+  'Accept-Encoding: deflate',
+  'Referer: https://livematch.ge/',
+  'Origin: https://livematch.ge'
+  );
+  $ua="Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/110.0";
+  $ch = curl_init();
+  curl_setopt($ch, CURLOPT_URL, $link);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+  curl_setopt($ch, CURLOPT_HTTPHEADER, $head);
+  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+  $h = curl_exec($ch);
+  //echo $h;
+  if (preg_match("/\/ch(\d+)/",$h,$m)) {
+    $l="https://viwlivehdplay.ru/mono.php?id=".$m[1];
+    
+    curl_setopt($ch, CURLOPT_URL, $l);
+    $h = curl_exec($ch);
+    if (preg_match("/source\:\'([^\']+)/",$h,$n)) {
+     $link=$n[1];
+     if ($flash <> "flash")
+      $link=$link."|Referer=".urlencode("https://viwlivehdplay.ru/")."&Origin=".urlencode("https://viwlivehdplay.ru")."&User-Agent=".urlencode($ua);
+    }
+  }
+  curl_close($ch);
+}
+if (preg_match("/viwlivehdplay\./",$link)) {
+  $head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/110.0',
+  'Accept: */*',
+  'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
+  'Accept-Encoding: deflate',
+  'Referer: https://livematch.ge/',
+  'Origin: https://livematch.ge'
+  );
+  $ua="Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/110.0";
+  $ch = curl_init();
+  curl_setopt($ch, CURLOPT_URL, $link);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+  curl_setopt($ch, CURLOPT_HTTPHEADER, $head);
+  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+  $h = curl_exec($ch);
+  curl_close($ch);
+    if (preg_match("/source\:\'([^\']+)/",$h,$n)) {
+     $link=$n[1];
+     $link=$link."|Referer=".urlencode("https://viwlivehdplay.ru/")."&Origin=".urlencode("https://viwlivehdplay.ru")."&User-Agent=".urlencode($ua);
+    }
+}
 if (preg_match("/porstream\.de|sportybite\.top|sporstream\.de/",$link)) {
   $head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/110.0',
   'Accept: */*',
@@ -119,6 +175,31 @@ if (preg_match("/primasport\.one/",$link)) {
    $link="";
   //echo $link;
 }
+if (preg_match("/stream2watch\./",$link)) {
+  $head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/110.0',
+  'Accept: */*',
+  'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
+  'Accept-Encoding: deflate',
+  'Referer: https://stream2watch.pk/',
+  'Origin: https://stream2watch.pk'
+  );
+  //https://stream2watch.pk/895tv
+  //https://stream2watch.pk/live/605tv
+  $l=str_replace("stream2watch.pk","stream2watch.pk/live",$link);
+  $ch = curl_init();
+  curl_setopt($ch, CURLOPT_URL, $l);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+  curl_setopt($ch, CURLOPT_HTTPHEADER, $head);
+  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+  $h = curl_exec($ch);
+  curl_close($ch);
+  $t1=explode('live score" src="',$h);
+  $t2=explode('"',$t1[1]);
+  $link=$t2[0]; // https://dlhd.sx/tele/stream-62.php
+}
 if (preg_match("/dlhd\.sx/",$link)) {
   $head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/110.0',
   'Accept: */*',
@@ -178,6 +259,8 @@ if ($from=="tvonline") {
   $h = curl_exec($ch);
   //echo $h;
   preg_match("/method\=\"post\"\s+action\=\"([^\"]+)\"/",$h,$m);
+  //https://www.tvonline123.com/tvlive/?url=digi-sport-1
+  //https://www.tvonline123.com/tvlive/?url=digi-sport-1
   /*
   $t1=explode("url=",$link);
   $id=$t1[1];
@@ -195,7 +278,8 @@ if ($from=="tvonline") {
   //echo $h;
   //if (preg_match("/\&s\=(\d+)/",$h,$m)) {
   if (preg_match("/data-server-id\=\"(\d+)/",$h,$m)) {
-  $l="https://tvonline123.net/player/".$id."/".$m[1];
+  $l="https://www.tvonline123.com/player/".$id."/".$m[1];
+  //https://www.tvonline123.com/player/digi-sport-1/161
   //echo $l;
   curl_setopt($ch, CURLOPT_URL, $l);
   //curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie);
@@ -1036,6 +1120,7 @@ if (preg_match("/godzlive\.com|b\ducast\.com/",parse_url($link)['host'])) {
    $link .="|Referer=".urlencode($ref."/")."&Origin=".urlencode($ref);
 }
 if ($from == "rds.live") {
+$host="https://".parse_url($link)['host'];
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $link);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
@@ -1056,7 +1141,7 @@ if ($from == "rds.live") {
   $t2=explode('"',$t1[1]);
   $id=$t2[0];
   $ua="Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/110.0";
-  $l="https://rds.live/wp-admin/admin-ajax.php";
+  $l=$host."/wp-admin/admin-ajax.php";
   $post="action=show_player&id=".$id."&nonce=".$nonce;
   $head=array('Accept: */*',
   'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
@@ -1065,7 +1150,7 @@ if ($from == "rds.live") {
   'Content-Type: application/x-www-form-urlencoded; charset=UTF-8',
   'X-Requested-With: XMLHttpRequest',
   'Content-Length: '.strlen($post),
-  'Origin: https://rds.live');
+  'Origin: '.$host);
       $ch = curl_init();
       curl_setopt($ch, CURLOPT_URL, $l);
       curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
@@ -1082,7 +1167,7 @@ if ($from == "rds.live") {
       $t1=explode("src: '",$h1);
       $t2=explode("'",$t1[1]);
       $link=$t2[0];
-      if ($flash <> "flash") $link .="|Referer=".urlencode("https://rds.live/");
+      if ($flash <> "flash") $link .="|Referer=".urlencode($host."/");
 }
 if (strpos($link,"streamwat.ch") !== false) {
       $ua="Mozilla/5.0 (Windows NT 10.0; rv:81.0) Gecko/20100101 Firefox/81.0";

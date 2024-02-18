@@ -938,7 +938,7 @@ $head=json_decode(file_get_contents($base_cookie."netfilm.dat"),1);
   }
   }
 }
-if (preg_match("/bflix\.|sflix\.|fmovies\.to/",parse_url($filelink)['host'])) {
+if (preg_match("/bflix\w?\.|sflix\w?\.|fmovies\w?\.to/",parse_url($filelink)['host'])) {
   require_once("bunny1.php");
   $head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/109.0',
   'Accept: application/json, text/javascript, */*; q=0.01',
@@ -1370,7 +1370,7 @@ if (preg_match("/emovies\./",$filelink)) {
   'X-Requested-With: XMLHttpRequest',
   'Origin: https://emovies.si',
   'Connection: keep-alive',
-  'Referer: https://emovies.si');
+  'Referer: https://emovies.si/');
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $filelink);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
@@ -1390,15 +1390,19 @@ if (preg_match("/emovies\./",$filelink)) {
   else
    $l=$y['value'];
   //echo $l;
-  if (preg_match("/vidmoly\.|/",$l)) {
+  //https://embed.vodstream.xyz?
+  if (preg_match("/vidmoly\./",$l)) {
    $filelink=$l;
   } else {
+  //$l="https://embed.vodstream.xyz/?k=4ed135d59b418a1c175d9cd2cd8a70c5&li=147115&tham=1707129115&lt=os&st=128fa457b4d3b5eb35b0cefb26ee3649&qlt=720p&spq=p&prv=&key=d3ebb6addd07e05bc063230c9d6d63cd&ua=de1bb6a25fc8916d6c022705e7b454c4cde7d71777a4629cd79bde6936854bfd33cca69ccb80509c07036f8a7ca66158d6f31dd9fbe271f73e2fa63f59f9141a86dee16b095c6f30c6c4aab03ab6beb1&h=1707129115";
+  //echo "\n".$l."\n";
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $l);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
   curl_setopt($ch, CURLOPT_USERAGENT, $ua);
   curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
   curl_setopt($ch, CURLOPT_HTTPHEADER,$head);
+  curl_setopt($ch, CURLOPT_HEADER,1);
   curl_setopt($ch, CURLOPT_ENCODING,"");
   curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
   curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
@@ -6357,7 +6361,7 @@ $head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:104.0) Gecko/20100101 
     $link=html_entity_decode($m[1]);
   if (preg_match("/captions\" src\=\"([^\"]+)\"/",$h,$s))
     $srt=html_entity_decode($s[1]);
-} elseif (preg_match("/vgfplay\.|fslinks\.|vembed\.net|vgembed\.|vid-guard\.com|embedv\.|vidguard\.to/",$filelink)) {
+} elseif (preg_match($vidguard,$filelink)) {
   //https://fslinks.org/e/gqM1VOPXwMOo4kY?&c1_file=http://filmeserialeonline.org/srt/tt5264838.srt&c1_label=RO&c2_file=http://filmeserialeonline.org/srt/tt5264838_EN.srt&c2_label=EN
   //echo $filelink;
   //https://i.guardstorage.net/subtitles/3xwFGsfv8N20M6ik4VE.vtt
@@ -10933,7 +10937,7 @@ if ($link && $flash<>"flash")
   if ($m[0] && $n[1] && $p[1])
   $link=$m[0]."/".$p[1]."/".$n[1]."/0/video.mp4";
 //} elseif (strpos($filelink,"dood.") !== false) {
-} elseif (preg_match("/do{2,}ds?(stream)?\.|ds2play\.|ds2video\.|d0o0d\.|do0od\./",$filelink)) {
+} elseif (preg_match($dood,$filelink)) {
   // https://www.doodstream.com/d/sot4bb1da0rq
   //echo $filelink;
   $ua     =   $_SERVER['HTTP_USER_AGENT'];
@@ -12728,7 +12732,7 @@ if (count($pl) > 1) {
   if ($srt)
    if (strpos($srt,"http") === false) $srt="https://videyo.net".$srt;
 //} elseif (strpos($filelink,"mixdrop.") !== false) {
-} elseif (preg_match("/mixdro{0,}p\.|mdy48tn97\.|mdbekjwqa\.|mdfx\w+|mdzsmut/",$filelink)) {
+} elseif (preg_match($mixdrop,$filelink)) {
   //https://mixdrop.co/e/eaeuizxtz0
   //https://mixdrop.co/f/mxgr3tvc
   $filelink=str_replace("/f/","/e/",$filelink);
@@ -14187,6 +14191,7 @@ function rec($site_key,$co,$sa,$loc) {
    $password="e54c8749d8020713fb0887c0647b22b9";
    $password="HvOPiBTtnIUhGlHfGAILDQHcsVbHQWBr";
    $password="HvOPiBT7bE0yLJudjQA0DQHcAZhvgVHq";
+   $l="https://keys4.fun/";
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $l);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
@@ -14197,7 +14202,8 @@ function rec($site_key,$co,$sa,$loc) {
   curl_setopt($ch, CURLOPT_TIMEOUT, 15);
   $h1 = curl_exec($ch);
   curl_close($ch);
-  $y=json_decode($h1,1);
+  $y=json_decode($h1,1)['rabbitstream']['keys'];
+  //$y=json_decode($h1,1);
   //print_r ($y);
   //$xxx .=$h1;
   //file_put_contents("1.txt",$xxx);
@@ -14225,14 +14231,26 @@ https://github.com/consumet/consumet.ts/blob/master/src/extractors/vidcloud.ts
   $decryptedKey="";
   $encryptedString=$file;
   $x=str_split($file);
+  $out="";
+  for ($i=0;$i<count($y);$i++) {
+   $out .=chr($y[$i]);
+  }
+  //echo $out."\n";
+ $decryptedKey=base64_encode($out);
+ $x=CryptoJSAES_decrypt($file,$decryptedKey);
+ //echo $x;
+  //die();
+  /*
   foreach($y as $t) {
    $start=$t[0] + $offset;
+
    $end=$t[1]+$start;
    for ($i=$start;$i<$end;$i++) {
      $decryptedKey .=$file[$i];
      //$encryptedString[$i]="*";
      $x[$i]="";
    }
+  // echo $decryptedKey;
    //$decryptedKey .=substr($encryptedString,$start-$offset,$end-$start);
    //$decryptedKey .=substr($encryptedString,$start+$offset,$end);
    //$encryptedString = substr($encryptedString,0,$start-$offset).substr($encryptedString,$end-$offset);
@@ -14244,6 +14262,7 @@ https://github.com/consumet/consumet.ts/blob/master/src/extractors/vidcloud.ts
   //echo $decryptedKey."\n"."\n".$encryptedString."\n";
    $x=CryptoJSAES_decrypt($encryptedString,$decryptedKey);
    //echo $x;
+   */
    if ($x) {
      $xx=json_decode($x,1);
      $link=$xx[0]['file'];

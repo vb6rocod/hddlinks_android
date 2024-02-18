@@ -84,7 +84,7 @@ $(document).on('keyup', '.imdb', isValid);
 <TD width="25%"><a href="filme/youtube_fav.php" target="_blank">youtube</a></TD>
 <TD width="25%"><a href="filme/youtube_live.php?token=&search=" target="_blank">youtube live</a></TD>
 <TD width="25%"><a href="tv/iptv.php" target="_blank">IPTV International</a></TD>
-<TD width="25%"></TD>
+<TD width="25%"><a href="tv/rds.php?title=emisiuni.live&link=https://emisiuni.live/canale-tv-1/" target="_blank">emisiuni.live</TD>
 </TR>
 
 <TR>
@@ -92,14 +92,14 @@ $(document).on('keyup', '.imdb', isValid);
 <!--<TD width="25%"><a href="tv/time4tv.php?page=1&tip=release&title=time4tv&link=" target="_blank">time4tv</a></TD>-->
 <!--<TD width="25%"><a href="tv/primasport.php" target="_blank">Primasport</TD>-->
 <TD width="25%"><a href="tv/telefootball.php" target="_blank">FOTBAL LA TV</TD>
-<TD width="25%"><a href="tv/rds.php" target="_blank">rds.live</TD>
+<TD width="25%"><a href="tv/rds.php?title=rds.live&link=https://rds.live/canale-tv/" target="_blank">rds.live</TD>
 <TD width="25%"><a href="tv/tvonline.php" target="_blank">tvonline</TD>
 </TR>
 <TR>
 <TD width="25%"><a href="tv/sportybite.php" target="_blank">sportybite</a></TD>
 <TD width="25%"><a href="tv/sportsonline.php" target="_blank">sportsonline</a></TD>
 <TD width="25%"><a href="tv/dlhd.php" target="_blank">DaddyLiveHD</a></TD>
-<TD width="25%"></TD>
+<TD width="25%"><a href="tv/stream2watch.php" target="_blank">stream2watch</a></TD>
 </TR>
 
 <?php
@@ -159,10 +159,14 @@ $list = glob($base."*.m3u");
     if ($title <> "TVR.m3u") {
     $out=$out."#EXTINF:-1, ".$title."\n"."http://hdforall.000webhostapp.com/live/".$title."\n";
     $link="tv/playlist.php?title=".urlencode($title);
-    if ($tast == "NU")
-    echo '<td align="center" width="25%"><a href="'.$link.'" target="_blank">'.$title.'</a> <a onclick="ajaxrequest('."'".$title."'".')" style="cursor:pointer;">*</a></TD>';
+    if (strlen($title) > 25)
+    $title1=substr($title,0,22)."...";
     else
-    echo '<td align="center" width="25%"><a class ="imdb" id="myLink'.($w*1).'" href="'.$link.'" target="_blank">'.$title.'<input type="hidden" id="fav_myLink'.($w*1).'" value="'.$title.'"></a></TD>';
+    $title1=$title;
+    if ($tast == "NU")
+    echo '<td align="center" width="25%"><a href="'.$link.'" target="_blank">'.$title1.'</a> <a onclick="ajaxrequest('."'".$title."'".')" style="cursor:pointer;">*</a></TD>';
+    else
+    echo '<td align="center" width="25%"><a class ="imdb" id="myLink'.($w*1).'" href="'.$link.'" target="_blank">'.$title1.'<input type="hidden" id="fav_myLink'.($w*1).'" value="'.$title.'"></a></TD>';
     $n++;
     $w++;
     }

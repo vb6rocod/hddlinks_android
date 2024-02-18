@@ -1350,6 +1350,9 @@ $html=str_replace("&quot;","'",$html);
 //$html=str_replace('http://player.filmehd.se',"http://hqq.to",$html);
 //$html=str_replace('https://cdn1.fastvid.co',"http://hqq.to",$html);
 /* end alias */
+if (preg_match("/filmm\.link\/\?([^\'\"]+)/",$html,$m)) {    // sitefilme
+ $html .=base64_decode($m[1]);
+}
 if(preg_match_all("/(\/\/.*?)(\"|\'|\s)+/si",$html,$matches)) {
 $links=$matches[1];
 //print_r ($links);
@@ -1360,6 +1363,12 @@ $links=$matches[1];
 //print_r ($links);
 $q1=substr($indirect, 0, -1);
 $hqq_indirect=substr($q1, 1);
+$q1=substr($mixdrop, 0, -1);
+$mixdrop_indirect=substr($q1, 1);
+$q1=substr($dood, 0, -1);
+$dood_indirect=substr($q1, 1);
+$q1=substr($vidguard, 0, -1);
+$vidguard_indirect=substr($q1, 1);
 $s="/adf\.ly|vidxden\.c|divxden\.c|vidbux\.c|movreel\.c|videoweed\.(c|e)|novamov\.(c|e)|vk\.com|gounlimited\.to";
 $s=$s."|movshare\.net|youtube\.com|youtube-nocookie\.com|flvz\.com|rapidmov\.net|putlocker\.com|";
 $s=$s."mixturevideo\.com|played\.to|";
@@ -1374,7 +1383,7 @@ $s=$s."stagevu\.com|vidup\.me|vidup\.io";
 $s=$s."|filebox\.com|glumbouploads\.com|uploadc\.com|sharefiles4u\.com|zixshare\.com|uploadboost\.com|";
 $s=$s."netu\.wiztube\.xyz|hqq\.tv|hqq\.to|hqq\.watch|waaw1?\.|waaws|hindipix\.in|pajalusta\.club|vidtodo\.com|vshare\.eu|bit\.ly";
 //$s=$s."|realyplayonli\.|strcdn\.org|div\.str1\.site|fshd\d+\.club|video\.filmeonline";
-$s=$s."|".$hqq_indirect;
+$s=$s."|".$hqq_indirect."|".$mixdrop_indirect."|".$dood_indirect."|".$vidguard_indirect;
 $s=$s."|nowvideo\.eu|nowvideo\.co|vreer\.com|180upload\.com|dailymotion\.com|nosvideo\.com|vidbull\.com|";
 $s=$s."purevid\.com|videobam\.com|streamcloud\.eu|donevideo\.com|upafile\.com|docs\.google|mail\.ru|";
 $s=$s."superweb|moviki\.ru|entervideos\.com";

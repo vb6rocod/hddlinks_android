@@ -3,12 +3,17 @@
 error_reporting(0);
 if (isset($_GET['link'])) {
   $link= $_GET['link'];
-}
+} else
+ $link="";
 $pg_tit=urldecode($_GET["title"]);
 if (isset($_GET['page']))
  $page=$_GET['page'];
 else
  $page=0;
+if (isset($_GET['group']))
+ $group=$_GET['group'];
+else
+ $group="no";
 $step=200;
 ////////////////////////
 $base=basename($_SERVER['SCRIPT_FILENAME']);
@@ -144,10 +149,14 @@ function off() {
 </script>
 <a href='' id='mytest1'></a>
 <a id="fancy" data-fancybox data-type="iframe" href=""></a>
-<h2><?php echo $pg_tit; ?> (2=add,4=del)</H2>
+
 
 
 <?php
+if ($group <> "no")
+ echo '<h2>'.$pg_tit." (".$group.")</H2>";
+else
+ echo '<h2>'.$pg_tit.'</h2>';
 function str_between($string, $start, $end){
 	$string = " ".$string; $ini = strpos($string,$start);
 	if ($ini == 0) return ""; $ini += strlen($start); $len = strpos($string,$end,$ini) - $ini;
@@ -175,7 +184,9 @@ $n=0;
 $w=0;
 function remove_empty_lines($string) {
     $lines = explode("\n", str_replace(array("\r\n", "\r"), "\n", $string));
+    //print_r ($lines);
     $lines = array_map('trim', $lines);
+    //print_r ($lines);
     $lines = array_filter($lines, function($value) {
         return $value !== '';
     });
@@ -183,7 +194,7 @@ function remove_empty_lines($string) {
     //return $lines;
 }
 $m3uFile="pl/".$pg_tit;
-if (isset($_GET['link'])) {
+if ($link) {
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $link);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
@@ -197,43 +208,52 @@ if (isset($_GET['link'])) {
 } else {
 $m3ufile = file_get_contents($m3uFile);
 }
-/*
-// Thanks to https://github.com/onigetoc/m3u8-PHP-Parser/blob/master/m3u-parser.php
-$re = '/#EXTINF:(.+?)[,]\s?(.+?)[\r\n]+?((?:https?|rtmp):\/\/(?:\S*?\.\S*?)(?:[\s)\[\]{};"\'<]|\.\s|$))/';
-$re = '/#EXTINF:(.+?)[,]\s?(.+?)[\r\n]+?((?:https?|rtmp):\/\/(?:\S*?\.\S*?)(?:[\s)\[\]{};"\'<]|\.\s|$))/';
-//$attributes = '/([a-zA-Z0-9\-]+?)="([^"]*)"/';
-$attributes = '/([a-zA-Z0-9\-\_]+?)="([^"]*)"/';
-
-
-$m3ufile = str_replace('tvg-logo', 'thumb_square', $m3ufile);
-$m3ufile = str_replace('tvg-id', 'id', $m3ufile);
-//$m3ufile = str_replace('tvg-name', 'group', $m3ufile);
-//$m3ufile = str_replace('tvg-name', 'name', $m3ufile);
-$m3ufile = str_replace('tvg-name', 'author', $m3ufile);
-$m3ufile = str_replace('group-title', 'group', $m3ufile);
-$m3ufile = str_replace('tvg-country', 'country', $m3ufile);
-$m3ufile = str_replace('tvg-language', 'language', $m3ufile);
-
-//print_r($m3ufile);
-
-//$m3ufile = str_replace(' ', '_', $m3ufile); // FOR GROUP
-$m3ufile=preg_replace("/\".*?\"/","",$m3ufile);
-*/
-//echo $m3ufile;
-//die();
+//echo $m3uFile;
+//echo urlencode($m3uFile);
 $m3ufile = remove_empty_lines($m3ufile);
+
 $re = '/#EXTINF:(.+?)\n(#.*?\n)?((http|rtmp)\S+)/m';
 preg_match_all($re, $m3ufile, $matches);
 $tot=count($matches[0]);
+$rr=array();
+$rrr=array();
+
+  for ($z=0;$z<count($matches[1]);$z++) {
+   $file=$matches[3][$z];
+   $line=$matches[1][$z];
+   if (preg_match("/tvg-name\=\"([^\"]+)\"/",$line,$x)) {
+     $title=trim($x[1]);
+   } else {
+     $t=explode(",",$line);
+     $title=trim($t[count($t)-1]);
+   }
+   if (preg_match("/group-title\=\"([^\"]+)\"/",$line,$s))
+    $group1=$s[1];
+   else
+    $group1="no";
+   //echo $title."\n".$file."\n";
+  $rr[$group1][]=array($title,$file);
+  }
+  $rrr=array_keys($rr);
+//print_r ($rr);
+if ($group <> "no")
+  $tot=count($rr[$group]);
 if ($tot>$step) {
 $k=intval($tot/$step) + 1;
 echo '<table border="1px" width="100%"><tr>'."\n\r";
 for ($m=0;$m<$k;$m++) {
+   if ($m%40 == 0 && $m>0) echo '</TR><TR>';
    echo '<TD align="center"><a href="'.($base."?page=".($m*1)."&".$p).'">'.($m+1).'</a></td>';
-   if ($m==50) echo '</TR><TR>';
+
 }
 echo '</TR></table>';
 }
+if ($group=="no" && count($rrr)>1 && $page==0) {
+ echo '<table border="1px" width="100%">';
+ echo "<TR><TD class='mp'><a href=".'"playlist_group.php?title='.urlencode($pg_tit)."&link=".$link.'">ByGroup</a></TD></TR>';
+ echo '</table>';
+}
+
 echo '<table border="1px" width="100%">';
 //print_r ($matches);
 //die();
@@ -246,15 +266,11 @@ echo '<TR>';
    echo '<TD class="nav" colspan="4" align="right"><a href="'.$next.'">&nbsp;&gt;&gt;&nbsp;</a></TD>'."\r\n";
 echo '</TR>';
 }
-for ($z=$step*$page;$z<min($step*($page+1),count($matches[2]));$z++) {
-    $file=$matches[3][$z];
-    $line=$matches[1][$z];
-    if (preg_match("/tvg-name\=\"([^\"]+)\"/",$line,$x)) {
-     $title=trim($x[1]);
-    } else {
-     $t=explode(",",$line);
-     $title=trim($t[count($t)-1]);
-    }
+if ($group <> "no") {
+for ($z=$step*$page;$z<min($step*($page+1),count($rr[$group]));$z++) {
+    $file=$rr[$group][$z][1];
+    $title=$rr[$group][$z][0];
+
     $mod="direct";
     $from="fara";
     $t1=preg_replace("/^\|?RO\s*\|\s*/","",$title);
@@ -299,6 +315,64 @@ for ($z=$step*$page;$z<min($step*($page+1),count($matches[2]));$z++) {
    //}
   //}
 }
+/////////////////////////////////////////////////////////////////////
+} else {
+for ($z=$step*$page;$z<min($step*($page+1),count($matches[2]));$z++) {
+   $file=$matches[3][$z];
+   $line=$matches[1][$z];
+   if (preg_match("/tvg-name\=\"([^\"]+)\"/",$line,$x)) {
+     $title=trim($x[1]);
+   } else {
+     $t=explode(",",$line);
+     $title=trim($t[count($t)-1]);
+   }
+
+    $mod="direct";
+    $from="fara";
+    $t1=preg_replace("/^\|?RO\s*\|\s*/","",$title);
+    //echo $t1;
+    $val_prog="link=".urlencode(fix_t($t1));
+    $link="direct_link.php?link=".urlencode(fix_t($file))."&title=".urlencode(fix_t($title))."&from=".$from."&mod=direct";
+    $l="link=".urlencode(fix_t($file))."&title=".urlencode(fix_t($title))."&from=".$from."&mod=".$mod;
+    $fav_link="mod=add&title=".urlencode(fix_t($title))."&link=".urlencode($file);
+    if ($n == 0) echo "<TR>"."\n\r";
+    //if ($tast == "NU")
+    if ($flash == "flash")
+    echo '<TD class="cat" width="25%">'.'<a class ="imdb" id="myLink'.($w*1).'" href="'.$link.'" target="_blank">'.$title
+    .'<input type="hidden" id="imdb_myLink'.($w*1).'" value="'.$val_prog.'">
+    <input type="hidden" id="fav_myLink'.($w*1).'" value="'.$fav_link.'">
+    </a>';
+    else
+    echo '<TD class="cat" width="25%">'.'<a class ="imdb" id="myLink'.($w*1).'" onclick="ajaxrequest('."'".$l."')".'"'." style='cursor:pointer;'>".$title
+    .'<input type="hidden" id="imdb_myLink'.($w*1).'" value="'.$val_prog.'">
+    <input type="hidden" id="fav_myLink'.($w*1).'" value="'.$fav_link.'">
+    </a>';
+    $n++;
+    $w++;
+
+    //if ($tip_stream == "http" || $tip_stream == "https" || $tip_stream=="acestream" || $tip_stream=="sop") {
+    $t1=preg_replace("/^\|?RO\s*\|\s*/","",$title);
+    $l_prog="link=".urlencode(fix_t($t1));
+    if ($tast == "NU") {
+   	echo '<a onclick="prog('."'".$l_prog."')".'"'." style='cursor:pointer;'>"." *".'</a>
+   	<a onclick="addfav('."'".$fav_link."')".'"'." style='cursor:pointer;'>"." A".'</a>
+       </TD>';
+    if ($n > 3) {
+     echo '</TR>'."\n\r";
+     $n=0;
+    }
+    } else {
+    echo '</TD>';
+    if ($n > 3) {
+     echo '</TR>'."\n\r";
+     $n=0;
+    }
+    }
+   //}
+  //}
+}
+}
+
 if ($tot>$step) {
 echo '<TR>';
  if ($page>0)
