@@ -65,7 +65,7 @@ document.onkeypress =  zx;
 
 <!-- straine -->
 <TR>
-<TD width="25%"><a href="filme/zoechip_s.php?page=1&tip=release&title=zoechip&link=" target="_blank">zoechip</a></TD>
+<TD width="25%"><a href="filme/idlixian_s.php?page=1&tip=release&title=idlixian&link=" target="_blank">idlixian</a></TD>
 <TD width="25%"><a href="filme/goojara_s.php?page=1&tip=release&title=goojara&link=" target="_blank">goojara</a></TD>
 <TD width="25%"><a href="filme/emovies_s.php?page=1&tip=release&title=emovies&link=" target="_blank">emovies</a></TD>
 <TD width="25%"><a href="filme/lookmovie_s.php?page=1&tip=release&title=lookmovie&link=" target="_blank">lookmovie</a></TD>
@@ -78,17 +78,12 @@ document.onkeypress =  zx;
 </TR>
 <TR>
 <TD width="25%"><a href="filme/upmovies_s.php?page=1&tip=release&title=upmovies&link=" target="_blank">upmovies</a></TD>
-<TD width="25%"><a href="filme/flixhq_s.php?page=1&tip=release&title=flixhq&link=" target="_blank">flixhq</a></TD>
-<TD width="25%"><a href="filme/bflix_s.php?page=1&tip=release&title=bflix&link=" target="_blank">bflix</a></TD>
 <TD width="25%"></TD>
+<TD width="25%"><a href="filme/bflix_s.php?page=1&tip=release&title=bflix&link=" target="_blank">bflix</a></TD>
+<TD width="25%"><a href="filme/diverse.php" target="_blank">diverse</a></TD>
 </TR>
 
-<TR>
-<TD width="25%"></TD>
-<TD width="25%"><a href="filme/idlixian_s.php?page=1&tip=release&title=idlixian&link=" target="_blank">idlixian</a></TD>
-<TD width="25%"><a href="filme/diverse.php" target="_blank">diverse</a></TD>
-<TD width="25%"></TD>
-</TR>
+
 <?php
 
 if (file_exists($base_pass."debug.txt")) {

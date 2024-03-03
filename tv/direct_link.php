@@ -191,6 +191,7 @@ if (preg_match("/stream2watch\./",$link)) {
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
   curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
   curl_setopt($ch, CURLOPT_HTTPHEADER, $head);
+  curl_setopt($ch, CURLOPT_ENCODING,"");
   curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
   curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
   curl_setopt($ch, CURLOPT_TIMEOUT, 15);
@@ -199,6 +200,7 @@ if (preg_match("/stream2watch\./",$link)) {
   $t1=explode('live score" src="',$h);
   $t2=explode('"',$t1[1]);
   $link=$t2[0]; // https://dlhd.sx/tele/stream-62.php
+  //echo $link;
 }
 if (preg_match("/dlhd\.sx/",$link)) {
   $head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/110.0',
@@ -561,6 +563,7 @@ $head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gec
     $link=$m[1];
   else
     $link="";
+    //echo $link;
   if ($link && $flash <> "flash")
     $link=$link."|Referer=".urlencode("https://livehdplay.ru/")."&Origin=".urlencode("https://livehdplay.ru");
   } elseif (preg_match("/maxsport\.one/",$l1)) { ////////////////////////////////
@@ -876,10 +879,12 @@ if (preg_match("/truyenxalo\./",parse_url($link)['host'])) {
 if (preg_match("/livehdplay\.ru/",parse_url($link)['host'])) {
   // $l="https://livehdplay.ru/maxsport.php?id=cnmyfeed21";
   //https://olalivehdplay.ru/premiumtv/daddylivehd.php?id=194
+  //echo $link;
   if (preg_match("/daddylive/",$link))
    $ref="https://dlhd.sx";
   else
    $ref="https://primasport.one";
+   $ref="https://dlhd.sx";
   $host="https://".parse_url($link)['host'];
   $head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/110.0',
   'Accept: */*',
@@ -888,6 +893,7 @@ if (preg_match("/livehdplay\.ru/",parse_url($link)['host'])) {
   'Referer: '.$ref.'/',
   'Origin: '.$ref
   );
+  //print_r ($head);
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $link);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
@@ -900,12 +906,40 @@ if (preg_match("/livehdplay\.ru/",parse_url($link)['host'])) {
   $h = curl_exec($ch);
   curl_close($ch);
   //echo $h;
-  if (preg_match("/source:\s*\'([^\']+)/",$h,$m))
+  if (preg_match("/[^\/]source:\s*\'([^\']+)/",$h,$m))
    $link=trim($m[1]);
   else
    $link="";
+   //echo $link;
+   //$link="https://salamus2023.onlinehdhls.ru/ddh1/premium34/playlist.m3u8";
+   //$link="https://salamus2023.onlinehdhls.ru/ddh1/premium34/tracks-v1a1/mono.m3u8";
+   //$ref="https://claplivehdplay.ru";
+  $head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/110.0',
+  'Accept: */*',
+  'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
+  'Accept-Encoding: deflate',
+  'Referer: '.$ref.'/',
+  'Origin: '.$ref
+  );
+  /*
+  $ch = curl_init();
+  curl_setopt($ch, CURLOPT_URL, $link);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+  curl_setopt($ch, CURLOPT_HTTPHEADER, $head);
+  curl_setopt($ch, CURLOPT_HEADER,1);
+  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 25);
+  $h = curl_exec($ch);
+  curl_close($ch);
+  */
+  //echo $h;
+  $ua="Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/110.0";
+  //$link="https://salamus2023.onlinehdhls.ru/ddh1/premium34/playlist.m3u8";
+   $host="https://claplivehdplay.ru";
   if ($link && $flash <> "flash")
-    $link=$link."|Referer=".urlencode($host."/")."&Origin=".urlencode($host);
+    $link=$link."|Referer=".urlencode($host."/")."&Origin=".urlencode($host)."&User-Agent=".urlencode($ua);
 }
 if (preg_match("/tvpclive\./",parse_url($link)['host'])) {
   $head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/110.0',
@@ -1525,6 +1559,23 @@ if (strpos($link,"jurnaltv.md/JurnalTV") !== false) {
     curl_close($ch);
     $link=str_between($h,'source src="','"');
     if (!$link) $link=str_between($h,'file:"','"');
+}
+if (strpos($link,"www.b1tv.ro/wp-json/strawberry") !== false) {
+    $l="https://www.b1tv.ro/wp-json/strawberry/v1/live?v=".time();
+    $ch = curl_init();
+    curl_setopt($ch, CURLOPT_URL, $l);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+    curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 10.0; rv:64.0) Gecko/20100101 Firefox/64.0');
+    curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+    //curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
+    //curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
+    curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+    curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+    $h = curl_exec($ch);
+    curl_close($ch);
+    //echo $h;
+    $link=urldecode(json_decode($h,1)['url']);
 }
 ///////////////////////////////////////////////
 if ($from=="sultanovic") {

@@ -31,7 +31,7 @@ $mcloud="";
 
 /////////////////////////////////////////////////
 $l=$mcloud;
-$title=urldecode($_GET['title']);
+$title=unfix_t(urldecode($_GET['title']));
 $tip=$_GET['tip'];
 $host=parse_url($l)['host'];
 ///////////////////////////////////////////////////////

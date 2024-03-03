@@ -58,7 +58,7 @@ else
 </TR>
 <TR>
 <TD width="25%"><a href="filme/filmeseriale_filme.php?page=1&tip=release&title=filmeseriale&link=" target="_blank">filmeseriale.online</a></TD>
-<TD width="25%"><a href="filme/filmeonline2016.php?page=1&tip=release&title=filmeonline2016&link=" target="_blank">filmeonline2016</a></TD>
+<TD width="25%"></TD>
 <TD width="25%"><a href="filme/serialeonline_f.php?page=1&tip=release&title=serialeonline&link=" target="_blank">serialeonline</a></TD>
 <TD width="25%"><a href="filme/fsonline_f.php?page=1&tip=release&title=fsonline&link=" target="_blank">fsonline</a></TD>
 <!--<TD width="25%"><a href="filme/portalultautv_main.php" target="_blank">portalultautv</a></TD>-->
@@ -94,7 +94,7 @@ else
 </TR>
 
 <TR>
-<TD width="25%"><a href="filme/zoechip_f.php?page=1&tip=release&title=zoechip&link=" target="_blank">zoechip</a></TD>
+<TD width="25%"><a href="filme/idlixian_f.php?page=1&tip=release&title=idlixian&link=" target="_blank">idlixian</a></TD>
 <TD width="25%"><a href="filme/lookclub_f.php?page=1&tip=release&title=lookclub&link=" target="_blank">lookclub</a></TD>
 <TD width="25%"><a href="filme/fsharetv.php?page=1&tip=release&title=fsharetv&link=" target="_blank">fsharetv</a></TD>
 <TD width="25%"><a href="filme/soap2dayz_f.php?page=1&tip=release&title=soap2dayz&link=" target="_blank">soap2dayz</a></TD>
@@ -105,16 +105,10 @@ else
 <TD width="25%"><a href="filme/ridomovies_f.php?page=1&tip=release&title=ridomovies&link=" target="_blank">ridomovies</a></TD>
 <TD width="25%"><a href="filme/goojara_f.php?page=1&tip=release&title=goojara&link=" target="_blank">goojara</a></TD>
 <TD width="25%"><a href="filme/bflix_f.php?page=1&tip=release&title=bflix&link=" target="_blank">bflix</a></TD>
-<TD width="25%"><a href="filme/flixhq_f.php?page=1&tip=release&title=flixhq&link=" target="_blank">flixhq</a></TD>
+<TD width="25%"></TD>
 </TR>
 
-<TR>
-<TD width="25%"></TD>
-<TD width="25%"><a href="filme/idlixian_f.php?page=1&tip=release&title=idlixian&link=" target="_blank">idlixian</a></TD>
-<TD width="25%"></TD>
-<TD width="25%"></TD>
 
-</TR>
 <?php
 ?>
 

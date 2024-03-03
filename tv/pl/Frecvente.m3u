@@ -3,29 +3,13 @@ http://dai.google.com/linear/hls/event/OQfdjUhHSDSlb1fJVzehsQ/master.m3u8
 #EXTINF:-1, Digi 24
 https://edge-ar.rcs-rds.ro/digi24ar/hd.m3u8
 #EXTINF:-1, B1
-https://stream.adunity.com/b1/b1_640-.m3u8
-#EXTINF:-1, Realitatea Plus
-https://livestream.realitatea.net/livestream/liverealitatea.stream/playlist.m3u8
+https://www.b1tv.ro/wp-json/strawberry/v1/live?v=1709378666956
 #EXTINF:-1, TVR Moldova
 https://mn-nl.mncdn.com/tvrmoldova_new/smil:tvrmoldova_new.smil/index.m3u8
-#EXTINF:-1, MD| Realitatea MD
-https://hls.rlive.md/chanel/tv/rlive.m3u8
 #EXTINF:-1, Jurnal TV
 http://live.cdn.jurnaltv.md/JurnalTV_HD/index.m3u8?token=d3ff4ba3b0c33ac3e75c9d5268c0c170500cfc30
-#EXTINF:0 ,MD| MOLDOVA 1
-http://live.trm.md:1935/live/MoldovaUnu1/playlist.m3u8
-#EXTINF:0 ,MD| MOLDOVA 2
-http://live.trm.md:1935/live/MoldovaDoi2/playlist.m3u8
-#EXTINF:-1, MD| Publika
-https://livebeta.publika.md/LIVE/P/6810.m3u8
 #EXTINF:0 ,MD| TV8 
 https://live1.cdn.tv8.md/TV7/index.m3u8?token=1
-#EXTINF:0 ,MD| N4
-http://web.sats.gstv.tech/cpl11/da8df281-1165-440a-8c86-959f71b695b6/N4web.m3u8
-#EXTINF:0 ,MD| 10TV
-http://212.0.215.115/10TVHD/playlist.m3u8
-#EXTINF:0 ,MD| Vocea Basarabiei
-http://hls.voceabasarabiei.md/hls/vocea_basarabiei.m3u8
 #EXTINF:-1,PRO TV HD
 https://media.cms.protvplus.ro/embed/9w1VHN18dnM
 #EXTINF:-1,PRO X HD
@@ -38,46 +22,20 @@ https://media.cms.protvplus.ro/embed/HfSJSh7gYft
 https://media.cms.protvplus.ro/embed/GwaggeoLdS1
 #EXTINF:-1,PRO TV NEWS
 https://media.cms.protvplus.ro/embed/J1sXztRuh6L
-#EXTINF:-1,Iasi TV
-http://82.208.151.107:8088/high/tvriasi/index.m3u8
 #EXTINF:-1,Media Regional
 http://83.103.150.198:8080
-#EXTINF:-1,QTV HD
-http://encoder.inedittv.ro:9090/seconds4hls/live.m3u8
 #EXTINF:-1,TVSE HD
 http://89.38.8.130:39419
 #EXTINF:-1,Curier TV
 http://5.2.164.135:1935/live/curiertv/playlist.m3u8
-#EXTINF:-1,Dotto TV
-https://dotto.edvr.ro/index.m3u8
-#EXTINF:-1,A7 TV
-https://play.streamkit.tv/content/channel/aseventv/live/aseventv.player.m3u8
-#EXTINF:-1,Exclusiv TV
-https://www.exclusivtv.ro
-#EXTINF:-1,Arcadia TV
-https://www.youtube.com/watch?v=6AmYm9_HjxA
-#EXTINF:-1,HD365
-https://netstreaming.eu:8080/hls/hd365.m3u8
-#EXTINF:-1,Tele Nova
-https://www.youtube.com/watch?v=10qsdQrZzgE
-#EXTINF:-1,Alba Carolina TV
-https://www.albacarolinatv.ro/live/
 #EXTINF:-1,Bucovina TV
 http://46.4.14.12:9999/btvsvlive/playlist.m3u8
-#EXTINF:-1,Dobrogea TV
-https://www.youtube.com/watch?v=fxFIgBld95E
 #EXTINF:-1,ROCHANNEL
 http://whoptv.on-the-web.tv:8081/diretta/direttats/playlist.m3u8
-#EXTINF:-1,METROPOLA TV
-http://cdn.metropolatv.ro:9090/seconds3hls/live.m3u8
 #EXTINF:-1,TV Buzau
 http://95.77.16.67:8080/
-#EXTINF:-1,LINK PRESS TV
-http://x1.imcr.ro:9090/seconds6hls/live.m3u8
 #EXTINF:-1,Aleph News
 https://streamb.m.ro/Aleph/ngrp:Alephnew2.stream_all/playlist.m3u8
-#EXTINF:-1,LookSport
-https://looksport.1616.ro/tv/looksport/
 #EXTINF:-1,Prima TV
 https://stream1.1616.ro:1945/prima/livestream/chunklist.m3u8
 

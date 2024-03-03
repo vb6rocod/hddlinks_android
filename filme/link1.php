@@ -9884,7 +9884,7 @@ function xor_string($string, $key) {
   }
    if ($link && $flash <> "flash")
     $link=$link."|Referer=".urlencode("https://playtube.ws")."&Origin=".urlencode("https://playtube.ws");
-} elseif (preg_match("/filemoon\.|moonmov\.pro|furher\.|truepoweroflove\./",$filelink)) {
+} elseif (preg_match("/filemoon\.|moonmov\.pro|furher\.|truepoweroflove\.|kerapoxy\./",$filelink)) {
    //echo $filelink;
   $ua="Mozilla/5.0 (Windows NT 10.0; rv:81.0) Gecko/20100101 Firefox/81.0";
   $y = parse_url($filelink)['query'];
@@ -14124,11 +14124,14 @@ function rec($site_key,$co,$sa,$loc) {
   if (preg_match("/embed\-5/",$filelink))
   $l= $host."/ajax/embed-5/getSources?id=".$id;
   elseif (preg_match("/embed\-4/",$filelink))
-  $l= $host."/ajax/embed-4/getSources?id=".$id;
+  $l= $host."/ajax/v2/embed-4/getSources?id=".$id;
+  //https://rabbitstream.net/ajax/v2/embed-4/
   else
   $l="";
-  //echo $l;
+  //echo $l."\n";
   //die();
+  //echo time()."\n";
+  //$l="https://rabbitstream.net/ajax/v2/embed-4/getSources?id=ZkvAQwVC4z42&v=55914&h=bae42f24040debcb82fe8bcdd176233cbbbdfbdf&b=1676801512"; //1709461512
   $xxx="";
   $head=array('Accept: */*',
   'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
@@ -14192,6 +14195,7 @@ function rec($site_key,$co,$sa,$loc) {
    $password="HvOPiBTtnIUhGlHfGAILDQHcsVbHQWBr";
    $password="HvOPiBT7bE0yLJudjQA0DQHcAZhvgVHq";
    $l="https://keys4.fun/";
+   $l="https://raw.githubusercontent.com/eatmynerds/key/e4/key.txt";
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $l);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
@@ -14202,7 +14206,10 @@ function rec($site_key,$co,$sa,$loc) {
   curl_setopt($ch, CURLOPT_TIMEOUT, 15);
   $h1 = curl_exec($ch);
   curl_close($ch);
-  $y=json_decode($h1,1)['rabbitstream']['keys'];
+  //$y=json_decode($h1,1)['rabbitstream']['keys'];
+  $q="\$y=".$h1.";";
+  //echo $q;
+  eval ($q);
   //$y=json_decode($h1,1);
   //print_r ($y);
   //$xxx .=$h1;
@@ -14227,6 +14234,7 @@ https://github.com/consumet/consumet.ts/blob/master/src/extractors/vidcloud.ts
         res.data.sources = sourcesArray.join('');
 */
   //echo $file."\n"."\n";
+  //print_r ($y);
   $offset=0;
   $decryptedKey="";
   $encryptedString=$file;
@@ -14237,6 +14245,7 @@ https://github.com/consumet/consumet.ts/blob/master/src/extractors/vidcloud.ts
   }
   //echo $out."\n";
  $decryptedKey=base64_encode($out);
+ //echo $file."\n".$decryptedKey."\n";
  $x=CryptoJSAES_decrypt($file,$decryptedKey);
  //echo $x;
   //die();

@@ -5,8 +5,11 @@ class bunny
   //private $key_dec="hlPeNwkncH0fq9so";
   //private $key_enc="rzyKmquwICPaYFkU"; //09.07.2023
   //private $key_dec="8z5Ag5wgagfsOuhz"; //09.07.2023
-  private $key_enc="FWsfu0KQd9vxYGNB"; //30.07.2023
-  private $key_dec="8z5Ag5wgagfsOuhz"; //30.07.2023
+  //private $key_enc="FWsfu0KQd9vxYGNB"; //30.07.2023
+  //private $key_dec="8z5Ag5wgagfsOuhz"; //30.07.2023
+  private $key_enc="Ij4aiaQXgluXQRs6";  // 29.02.2024
+  private $key_dec="8z5Ag5wgagfsOuhz";  // 29.02.2024
+
   private $nineAnimeKey = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
   private function cipher($key,$text) {
    $u=0;
@@ -111,21 +114,30 @@ class bunny
    $s .=chr($c);
   }
 
+
   return ($s);
   }
-  private function ceva_f($t) {
-   $i=7;
+//0 ? o = 0 : u % i == 2 ? o -= 2 :
+//u % i == 4 || u % i == 7 ? o += 2 :
+//u % i == 0 ? o += 4 :
+//u % i == 5 || u % i == 6 ? o -= 4 :
+//u % i == 1 ? o += 3 :
+//u % i == 3 && (o += 5)
+  private function ceva_5($t) {
+   $i=8;
    $n="";
+
    for ($r=0;$r<strlen($t);$r++) {
     $u=ord($t[$r]);
-    if ($r % $i==4) $u -=6;
-    if ($r % $i==3) $u -=4;
-    if ($r % $i==5) $u +=6;
-    if ($r % $i==1||$r % $i==0||$r % $i==6) $u -=2;
-    if ($r % $i==2) $u +=6;
+    if ($r % $i==2) $u -=2;
+    if ($r % $i==4||$r % $i==7) $u +=2;
+    if ($r % $i==0) $u +=4;
+    if ($r % $i==5 || $r % $i==6) $u -=4;
+    if ($r % $i==1) $u +=3;
+    if ($r % $i==3) $u +=5;
     $n .=chr($u);
    }
-   return strrev($n);
+   return $n;
   }
    
   
@@ -154,13 +166,25 @@ class bunny
   function encodeVrf_old($text) {
    return urlencode($this->encrypt_bunny($this->ceva($this->encrypt_bunny($this->cipher($this->key_enc,$text),$this->nineAnimeKey)),$this->nineAnimeKey));
   }
+  function encodeVrf_2($text) {
+   $a=$this->cipher($this->key_enc,$text);
+
+   $b=$this->encrypt_bunny($a,$this->nineAnimeKey);
+//echo $b;
+   $d=$this->ceva_5($b);
+   //echo $d;
+   return $d;
+  }
   function encodeVrf($text) {
    $a=$this->cipher($this->key_enc,$text);
 
    $b=$this->encrypt_bunny($a,$this->nineAnimeKey);
-
-   $d=$this->ceva($b);
-
+   $b=$this->encrypt_bunny($b,$this->nineAnimeKey);
+   $b=strrev($b);
+   $b=$this->encrypt_bunny($b,$this->nineAnimeKey);
+//echo $b;
+   $d=$this->ceva_5($b);
+   //echo $d;
    return $d;
   }
   function decodeVrf($text) {

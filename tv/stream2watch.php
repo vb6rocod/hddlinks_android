@@ -7,7 +7,7 @@ $pg_tit="stream2watch";
 <html>
 <head>
 <meta charset="utf-8">
-<title>livematch</title>
+<title>stream2watch</title>
 <script type="text/javascript" src="//code.jquery.com/jquery-3.2.1.min.js"></script>
 <script src="../jquery.fancybox.min.js"></script>
 <link rel="stylesheet" type="text/css" href="../jquery.fancybox.min.css">
@@ -101,11 +101,13 @@ $head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gec
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
   curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
   curl_setopt($ch, CURLOPT_HTTPHEADER, $head);
+  curl_setopt($ch, CURLOPT_ENCODING,"");
   curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
   curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
   curl_setopt($ch, CURLOPT_TIMEOUT, 15);
   $h = curl_exec($ch);
   curl_close($ch);
+  //echo $h;
   $videos=explode('div class="p_box">',$h);
 $videos = array_values($videos);
 foreach($videos as $video) {

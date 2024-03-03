@@ -13,7 +13,7 @@ $link=$_GET["link"];
 $width="200px";
 $height="278px";
 $last_good="https://soap2dayz.xyz";
-
+$last_good="https://1hd.store";
 $host=parse_url($last_good)['host'];
 /* ==================================================== */
 $has_fav="yes";
