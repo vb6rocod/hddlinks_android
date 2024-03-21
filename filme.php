@@ -58,7 +58,7 @@ else
 </TR>
 <TR>
 <TD width="25%"><a href="filme/filmeseriale_filme.php?page=1&tip=release&title=filmeseriale&link=" target="_blank">filmeseriale.online</a></TD>
-<TD width="25%"></TD>
+<TD width="25%"><a href="filme/veziseriale_f.php?page=1&tip=release&title=veziseriale&link=" target="_blank">veziseriale</a></TD>
 <TD width="25%"><a href="filme/serialeonline_f.php?page=1&tip=release&title=serialeonline&link=" target="_blank">serialeonline</a></TD>
 <TD width="25%"><a href="filme/fsonline_f.php?page=1&tip=release&title=fsonline&link=" target="_blank">fsonline</a></TD>
 <!--<TD width="25%"><a href="filme/portalultautv_main.php" target="_blank">portalultautv</a></TD>-->
@@ -67,7 +67,7 @@ else
 
 <!--- desene si filme...-->
 <TR>
-<TD width="25%"><a href="filme/upmovies_f.php?page=1&tip=release&title=upmovies&link=" target="_blank">upmovies</a></TD>
+<TD width="25%"></TD>
 <TD width="25%"><a href="filme/emovies_f.php?page=1&tip=release&title=emovies&link=" target="_blank">emovies</a></TD>
 <TD width="25%"><a href="filme/tugaflix_f.php?page=1&tip=release&title=tugaflix&link=" target="_blank">tugaflix</a></TD>
 <TD width="25%"><a href="filme/fshd_f.php?page=1&tip=release&title=fshd&link=" target="_blank">fshd.ro</a></TD>

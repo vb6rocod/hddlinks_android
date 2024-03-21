@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <?php
 error_reporting(0);
+ini_set('memory_limit', '-1');
 if (isset($_GET['link'])) {
   $link= $_GET['link'];
 } else

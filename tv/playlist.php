@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <?php
 error_reporting(0);
+//ini_set('memory_limit', '44M');
+ini_set('memory_limit', '-1');
 if (isset($_GET['link'])) {
   $link= $_GET['link'];
 } else
@@ -215,6 +217,7 @@ $m3ufile = remove_empty_lines($m3ufile);
 $re = '/#EXTINF:(.+?)\n(#.*?\n)?((http|rtmp)\S+)/m';
 preg_match_all($re, $m3ufile, $matches);
 $tot=count($matches[0]);
+//echo $tot;
 $rr=array();
 $rrr=array();
 
@@ -235,7 +238,7 @@ $rrr=array();
   $rr[$group1][]=array($title,$file);
   }
   $rrr=array_keys($rr);
-//print_r ($rr);
+//print_r ($rrr);
 if ($group <> "no")
   $tot=count($rr[$group]);
 if ($tot>$step) {

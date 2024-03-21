@@ -126,7 +126,8 @@ foreach ($rr as $key=>$value) {
  echo '<a href="#'.$key.'">'.$key.'</a>,';
 }
 echo '</TD></TR>';
-echo '<TR><TH colspan="2" style="background-color:cyan;color:red">'.key($r).'</TH></TR>';
+//$dd="UK GMT";
+echo '<TR><TH colspan="2" style="background-color:cyan;color:red">'.key($r)."(+2)".'</TH></TR>';
 foreach($rr as $key=>$value) {
  //$t1=explode('<',$video);
  //$sport=$t1[0];
@@ -137,7 +138,10 @@ foreach($rr as $key=>$value) {
  echo '<TH colspan="2" style="background-color:cyan;color:red"><a id="'.$key.'"></a>'.$key.'</TH>';
  //echo $sport."\n";
  for ($k=0;$k<count($value);$k++) {
- $event=trim($value[$k]['event'])." (".$value[$k]['time'].")";
+ $ora=$value[$k]['time'];
+ preg_match("/(\d+):(\d+)/",$ora,$m);
+ $ora=sprintf("%02d:%02d",(($m[1]+2)%24),$m[2]);
+ $event=trim($value[$k]['event'])." (".$ora.")";
  echo  '<TR>'."\n";
  echo '<TD class="cat"><a href="#">'.$event.'</a></TD>';
  //if (preg_match_all("/href\=\"([^\"]+)\" target\=\"_blank\" rel\=\"noopener\"\>([^\<']+)\</m",$t1[$k+1],$x)) {
@@ -150,8 +154,8 @@ foreach($rr as $key=>$value) {
   //$title=$m[0];
   //$file=fixurl($x[1][$z],$l1);
   $file="https://dlhd.sx/stream/stream-".$value[$k]['channels'][$z]['channel_id'].".php";
-  $link="direct_link.php?link=".urlencode(fix_t($file))."&title=".urlencode(fix_t($title))."&from=".$from."&mod=direct";
-  $l="link=".urlencode(fix_t($file))."&title=".urlencode(fix_t($title))."&from=".$from."&mod=".$mod;
+  $link="direct_link.php?link=".urlencode(fix_t($file))."&title=".urlencode(fix_t($event))."&from=".$from."&mod=direct";
+  $l="link=".urlencode(fix_t($file))."&title=".urlencode(fix_t($event))."&from=".$from."&mod=".$mod;
     if ($flash == "flash")
     echo '<a href="'.$link.'" target="_blank"><font color="yellow"> '.$title.'</font></a>';
     else

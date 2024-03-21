@@ -179,29 +179,31 @@ if ($tip=="search") {
   $l=$last_good."/search?q=".$search."&category=movies&page=".$page;
 } else {
  if ($page==1)
-  $l=$last_good."/latest";
+  $l=$last_good."/latest/".$page;
  else
   $l=$last_good."/latest/".$page;
 }
 
 //echo $l;
 //$l=$last_good;
-
+//echo $l;
+$l="https://1hd.store/latest/";
 $head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/112.0',
 'Accept: application/json, text/javascript, */*; q=0.01',
 'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
 'Accept-Encoding: deflate',
 'X-Requested-With: XMLHttpRequest',
 'Connection: keep-alive',
+'Origin: '.$last_good,
 'Referer: '.$last_good.'/');
-$post="page=".$page;
+$post="page=".$page."&recent=recent";
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $l);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
   curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
   curl_setopt($ch, CURLOPT_HTTPHEADER, $head);
   curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-  if ($page>1) {
+  if ($page>0) {
   curl_setopt($ch, CURLOPT_POST,1);
   curl_setopt($ch, CURLOPT_POSTFIELDS,$post);
   }
@@ -221,9 +223,9 @@ $videos = explode('"ml-item"', $h);
 unset($videos[0]);
 $videos = array_values($videos);
 foreach($videos as $video) {
- $t1=explode('href="',$video);
+ $t1=explode('value="',$video);
  $t2=explode('"',$t1[1]);
- $link=$t2[0];
+ $link=$last_good."/watch-movie/".$t2[0];
  //echo $link;
  $t3=explode('title="',$video);
  $t4=explode('"',$t3[1]);

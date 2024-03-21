@@ -1,5 +1,6 @@
 <!doctype html>
 <?php
+include ("../common.php");
 $l=urldecode($_GET['id']);  // from bflix or vidsrc.to
 $host=parse_url($l)['host'];
 require_once("bunny1.php");

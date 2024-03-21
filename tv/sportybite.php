@@ -153,10 +153,12 @@ for ($z=0;$z<count($r);$z++) {
 //////////////////////
 $r=array();
 $n=0;
+//echo $h;
   $t1=explode('<script type="application/ld+json">',$h);
   $t2=explode('</script>',$t1[1]);
   $x=trim($t2[0]);
   //echo $x;
+  /*
   $videos=explode('@context',$x);
   unset($videos[0]);
   $videos = array_values($videos);
@@ -166,8 +168,32 @@ $n=0;
     preg_match("/startDate\"\:\s*\"([^\"]+)\"/",$video,$m3);
     preg_match("/sport\"\:\s*\"([^\"]+)\"/",$video,$m4);
     preg_match("/league\"\:\s*\"([^\"]+)\"/",$video,$m5);
-    print_r ($m);
+    //print_r ($m);
     $r[]=array($m1[1],$m2[1],$m3[1],$m4[1],$m5[1]);
+  }
+  */
+  $videos=explode('<td><img src="',$h);
+  unset($videos[0]);
+  $videos = array_values($videos);
+  foreach($videos as $video) {
+   $t1=explode('href="',$video);
+   $t2=explode('"',$t1[1]);
+   $link=$t2[0];
+   $t1=explode('class="event-title">',$video);
+   $t2=explode('<',$t1[1]);
+   $event=$t2[0];
+   $t1=explode('<td class="dt">',$video);
+   $t2=explode('<',$t1[1]);
+   $ora=$t2[0];
+   preg_match("/(\d+):(\d+)/",$ora,$m);
+   $ora=sprintf("%02d:%02d",(($m[1]+1)%24),$m[2]);
+   $t1=explode('<td>',$video);
+   $t2=explode('<',$t1[1]);
+   $data=$t2[0];
+   $t1=explode('class="hidden-xs">',$video);
+   $t2=explode('<',$t1[1]);
+   $sport=$t2[0];
+   $r[]=array($link,$event,$sport,$ora,$data);
   }
   /*
   die();
@@ -183,6 +209,7 @@ $n=0;
 echo '<h2>Sports Event</H2>';
 echo '<table border="1px" width="100%">';
 for ($z=0;$z<count($r);$z++) {
+    /*
     $title=trim($r[$z][0]);
     $file = trim($r[$z][1]);
     $time=$r[$z][2];
@@ -193,6 +220,11 @@ for ($z=0;$z<count($r);$z++) {
     $time=mktime($m[4]+1,$m[5],$m[6],$m[2],$m[3],$m[1]);
     $time=date("d-m-Y H:i",$time);
     $sport=$r[$z][3]." - ".$r[$z][4];
+    */
+    $file=$r[$z][0];
+    $title=$r[$z][1];
+    $sport=$r[$z][2];
+    $time=$r[$z][4]." - ".$r[$z][3];
     $mod="direct";
     $from="fara";
     $link="direct_link.php?link=".urlencode(fix_t($file))."&title=".urlencode(fix_t($title))."&from=".$from."&mod=direct";

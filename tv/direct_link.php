@@ -126,14 +126,20 @@ if (preg_match("/porstream\.de|sportybite\.top|sporstream\.de/",$link)) {
   //$link="https://sportybite.top/blackpool-nottingham-forest--live-stream?id=4185";
   //$link="https://sportybite.top/blackpool---nottingham-forest-4185-live-streaming-online-free";
   //$link="https://sportybite.top/event-live-stream?id=4185";
+  /*
   if (preg_match("/(\d+)-live-streaming-online-free/",$link,$m)) {
   $link=str_replace("---","-",$link);
   $link=str_replace("--","",$link);
-  //echo $link;
+  $link=str_replace("-&-","-",$link);
+  echo $link;
   $link=str_replace($m[0],"live-stream?id=".$m[1],$link);
 
   }
+  */
   //echo $link;
+  //https://sportybite.top/brighton-&-hove-albion-nottingham-forest-live-stream?id=5477
+  //https://sportybite.top/brighton-hove-albion-nottingham-forest-live-stream?id=5477
+  
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $link);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
@@ -787,9 +793,11 @@ if (preg_match("/sportsonline\./",parse_url($link)['host'])) {
   curl_setopt($ch, CURLOPT_TIMEOUT, 25);
   $h = curl_exec($ch);
   //echo $h;
-  if (preg_match("/\<iframe.*?src\=\"([^\"]+)\"/i",$h,$m)) {
+  if (preg_match("/\<iframe.*?src\=\"((https?:)?\/\/[^\"]+)\"/i",$h,$m)) {
    $l=fixurl($m[1]);
   }
+  //print_r ($m);
+  //echo $l;
   $ref="https://".parse_url($l)['host'];
   $head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/110.0',
   'Accept: */*',
@@ -884,9 +892,9 @@ if (preg_match("/livehdplay\.ru/",parse_url($link)['host'])) {
    $ref="https://dlhd.sx";
   else
    $ref="https://primasport.one";
-   $ref="https://dlhd.sx";
+   $ref="https://1.dlhd.sx/";
   $host="https://".parse_url($link)['host'];
-  $head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/110.0',
+  $head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:123.0) Gecko/20100101 Firefox/123.0',
   'Accept: */*',
   'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
   'Accept-Encoding: deflate',
@@ -911,17 +919,28 @@ if (preg_match("/livehdplay\.ru/",parse_url($link)['host'])) {
   else
    $link="";
    //echo $link;
+   //$link="https://webhdrus.onlinehdhls.ru/lb/premium36/index.m3u8";
    //$link="https://salamus2023.onlinehdhls.ru/ddh1/premium34/playlist.m3u8";
    //$link="https://salamus2023.onlinehdhls.ru/ddh1/premium34/tracks-v1a1/mono.m3u8";
    //$ref="https://claplivehdplay.ru";
-  $head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/110.0',
+   //$link="https://salamus2023.onlinehdhls.ru/ddh2/premium36/tracks-v1a1/mono.m3u8";
+   $ref="https://claplivehdplay.ru";
+  $head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:123.0) Gecko/20100101 Firefox/123.0',
   'Accept: */*',
   'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
   'Accept-Encoding: deflate',
+  'Origin: '.$ref,
+  'Connection: keep-alive',
   'Referer: '.$ref.'/',
-  'Origin: '.$ref
   );
-  /*
+  $head1=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:123.0) Gecko/20100101 Firefox/123.0',
+'Accept: */*',
+'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
+'Accept-Encoding: deflate',
+'Origin: https://claplivehdplay.ru',
+'Connection: keep-alive',
+'Referer: https://claplivehdplay.ru/',
+);
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $link);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
@@ -933,13 +952,16 @@ if (preg_match("/livehdplay\.ru/",parse_url($link)['host'])) {
   curl_setopt($ch, CURLOPT_TIMEOUT, 25);
   $h = curl_exec($ch);
   curl_close($ch);
-  */
+
   //echo $h;
-  $ua="Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/110.0";
+  $ua="Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:123.0) Gecko/20100101 Firefox/123.0";
   //$link="https://salamus2023.onlinehdhls.ru/ddh1/premium34/playlist.m3u8";
+  //$link="https://salamus2023.onlinehdhls.ru/ddh2/premium34/tracks-v1a1/mono.m3u8";
+  //$link="https://salamus2023.onlinehdhls.ru/ddh2/premium36/playlist.m3u8";
    $host="https://claplivehdplay.ru";
   if ($link && $flash <> "flash")
     $link=$link."|Referer=".urlencode($host."/")."&Origin=".urlencode($host)."&User-Agent=".urlencode($ua);
+    //$link=$link."&Sec-Fetch-Dest=empty&Sec-Fetch-Mode=cors&Sec-Fetch-Site=cross-site";
 }
 if (preg_match("/tvpclive\./",parse_url($link)['host'])) {
   $head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/110.0',

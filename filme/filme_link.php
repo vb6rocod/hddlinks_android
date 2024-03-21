@@ -897,11 +897,10 @@ $cookie=$base_cookie."hdpopcorns.dat";
   }
   curl_close ($ch);
   $html=$h;
-} elseif (strpos($filelink,"vezi-online.eu") !== false) {
-//echo $filelink;
+} elseif (preg_match("/vezi-online\.eu/",$filelink)) {
   $ch = curl_init($filelink);
   curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows; U; Windows NT 6.1; en-US; rv:1.9.1.2) Gecko/20090729 Firefox/3.5.2 GTB5');
-  curl_setopt($ch,CURLOPT_REFERER,"https://vezi-online.eu");
+  curl_setopt($ch,CURLOPT_REFERER,"https://".parse_url($filelink)['host']);
   //curl_setopt ($ch, CURLOPT_POST, 1);
   //curl_setopt ($ch, CURLOPT_POSTFIELDS, $post);
   //curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
@@ -927,12 +926,12 @@ $cookie=$base_cookie."hdpopcorns.dat";
    $t1=explode("data-type='",$video);
    $t2=explode("'",$t1[1]);
    $tip=$t2[0];
-   $l="https://vezi-online.eu/wp-admin/admin-ajax.php";
+   $l="https://".parse_url($filelink)['host']."/wp-admin/admin-ajax.php";
    $post="action=doo_player_ajax&post=".$id."&nume=".$nume."&type=".$tip;
    //echo $post;
    $ch = curl_init($l);
    curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows; U; Windows NT 6.1; en-US; rv:1.9.1.2) Gecko/20090729 Firefox/3.5.2 GTB5');
-   curl_setopt($ch,CURLOPT_REFERER,"https://vezi-online.eu");
+   curl_setopt($ch,CURLOPT_REFERER,$filelink);
    curl_setopt ($ch, CURLOPT_POST, 1);
    curl_setopt ($ch, CURLOPT_POSTFIELDS, $post);
    //curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
@@ -947,6 +946,56 @@ $cookie=$base_cookie."hdpopcorns.dat";
    $r=json_decode($h,1);
    $l1=$r['embed_url'];
    $html .=' "'.$l1.'" ';
+   //echo $h;
+  }
+} elseif (preg_match("/veziseriale\.org/",$filelink)) {
+  $ch = curl_init($filelink);
+  curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows; U; Windows NT 6.1; en-US; rv:1.9.1.2) Gecko/20090729 Firefox/3.5.2 GTB5');
+  curl_setopt($ch,CURLOPT_REFERER,"https://".parse_url($filelink)['host']);
+  //curl_setopt ($ch, CURLOPT_POST, 1);
+  //curl_setopt ($ch, CURLOPT_POSTFIELDS, $post);
+  //curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER  ,1);  // RETURN THE CONTENTS OF THE CALL
+  //curl_setopt($ch, CURLOPT_HEADER, true);
+  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 25);
+  $html = curl_exec($ch);
+  curl_close ($ch);
+  //echo $html;
+  $videos = explode('li id="player-option', $html);
+  unset($videos[0]);
+  $videos = array_values($videos);
+  foreach($videos as $video) {
+   $t1=explode('data-post="',$video);
+   $t2=explode('"',$t1[1]);
+   $id=$t2[0];
+   $t1=explode('data-nume="',$video);
+   $t2=explode('"',$t1[1]);
+   $nume=$t2[0];
+   $t1=explode('data-type="',$video);
+   $t2=explode('"',$t1[1]);
+   $tip=$t2[0];
+   $l="https://".parse_url($filelink)['host']."/wp-admin/admin-ajax.php";
+   $post="action=doo_player_ajax&post=".$id."&nume=".$nume."&type=".$tip;
+   //echo $post;
+   $ch = curl_init($l);
+   curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows; U; Windows NT 6.1; en-US; rv:1.9.1.2) Gecko/20090729 Firefox/3.5.2 GTB5');
+   curl_setopt($ch,CURLOPT_REFERER,$filelink);
+   curl_setopt ($ch, CURLOPT_POST, 1);
+   curl_setopt ($ch, CURLOPT_POSTFIELDS, $post);
+   //curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+   curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+   curl_setopt($ch, CURLOPT_RETURNTRANSFER  ,1);  // RETURN THE CONTENTS OF THE CALL
+   //curl_setopt($ch, CURLOPT_HEADER, true);
+   curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+   curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
+   curl_setopt($ch, CURLOPT_TIMEOUT, 25);
+   $h = curl_exec($ch);
+   curl_close ($ch);
+
+   $html .=' "'.$h.'" ';
    //echo $h;
   }
 } elseif (strpos($filelink,"filmeserialeonline.biz") !== false) {
@@ -1563,7 +1612,7 @@ for ($i=0;$i<count($links);$i++) {
   curl_setopt($ch, CURLOPT_TIMEOUT, 30);
   $h2 = curl_exec($ch);
   curl_close($ch);
-  //echo $h2;
+  //echo $h2."\n"."====================="."\n";
    if (preg_match("/location\:\s*(.+)/i",$h2,$m)) {
     $cur_link=trim($m[1]);
     $cur_link=str_replace("cdn1.fastvid.co","hqq.tv",$cur_link);

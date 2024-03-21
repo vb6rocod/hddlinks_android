@@ -73,7 +73,7 @@ function openlink1(link) {
 }
 function openlink(link) {
   link1=document.getElementById('file').value;
-  if (link1.match(/streamembed|imwatchingmovies/gi)) {
+  if (link1.match(/streamembed|imwatchingmovies|streambucket/gi)) {
   msg="streamembed1.php?file=" + link1 + "&title=" + link + "&tip=mp";
   window.open(msg);
   } else {
@@ -301,6 +301,7 @@ $head=array('User-Agent: '.$ua,
   //echo $h;
   if (preg_match("/location\:\s*(.+)/i",$h,$m))
     $link=trim($m[1]);
+  //echo $link;
   $bk="dHJ1ZS-Qt-PS-QtNj-P3LS-Qz-PzItL-0-V2NzIwODUyO-0Ay-PjU-5";
   //$bk="dHJ1ZS-Qt-PS-QtNj-P3LS-Qz-PzItL-0-V2NzIwODUyO-0Ay-PjU-4";
   $post="button-click=".base64_encode($bk)."&button-referer=";
@@ -311,7 +312,7 @@ $head=array('User-Agent: '.$ua,
 'Accept-Encoding: deflate',
 'Content-Type: application/x-www-form-urlencoded',
 'Content-Length: '.strlen($post),
-'Origin: https://imwatchingmovies.com',
+'Origin: https://streambucket.net',
 'Connection: keep-alive',
 'Referer: '.$link,
 'Upgrade-Insecure-Requests: 1',
@@ -339,6 +340,7 @@ $head=array('User-Agent: '.$ua,
   preg_match("/load_sources\(\"([^\"]+)\"/",$h,$m);
   $token=$m[1];
   $l="https://imwatchingmovies.com/response.php";
+  $l="https://streambucket.net/response.php";
   //$l="https://streamembed.net/user_guard.php";
   $post="token=".$token;
 
@@ -349,7 +351,7 @@ $head=array('User-Agent: '.$ua,
 'Content-Type: application/x-www-form-urlencoded; charset=UTF-8',
 'X-Requested-With: XMLHttpRequest',
 'Content-Length: '.strlen($post),
-'Origin: https://imwatchingmovies.com',
+'Origin: https://streambucket.net',
 'Connection: keep-alive',
 'Referer: '.$link,
 'Sec-Fetch-Dest: empty',
@@ -383,7 +385,7 @@ foreach($videos as $video) {
  $t1=explode('data-server="',$video);
  $t2=explode('"',$t1[1]);
  $ds=$t2[0];
- $r[]="https://imwatchingmovies.com/playvideo.php?video_id=".$id."=&server_id=".$ds."&token=".$token."&init=1";
+ $r[]="https://streambucket.net/playvideo.php?video_id=".$id."=&server_id=".$ds."&token=".$token."&init=1";
  $t1=explode('</div>',$video);
  $s[]="i.".trim($t1[1]);
 }

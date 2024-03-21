@@ -184,13 +184,16 @@ for ($z=0;$z<count($d[0]);$z++) {
   }
  }
 
-echo '<h2>Sports Event (PT time)</H2>';
+echo '<h2>Sports Event</H2>';
 $n=0;
 foreach ($ev as $key=>$value) {
 echo '<h3 style="text-align:center;background-color:DodgerBlue;">'.$key.'</h3>';
 echo '<table border="1px" width="100%">';
 for ($z=0;$z<count($ev[$key]);$z++) {
-    $title=$ev[$key][$z][0]." ".$ev[$key][$z][1];
+    $ora=$ev[$key][$z][0];
+    preg_match("/(\d+):(\d+)/",$ora,$m);
+    $ora=sprintf("%02d:%02d",(($m[1]+2)%24),$m[2]);
+    $title=$ora." ".$ev[$key][$z][1];
     $file = $ev[$key][$z][2];
 
     $mod="direct";

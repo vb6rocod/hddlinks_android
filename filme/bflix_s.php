@@ -14,6 +14,7 @@ $width="200px";
 $height="278px";
 $last_good="https://bflix.ru";
 $last_good="https://bflixz.to";
+$last_good="https://bflix.to";
 /* ==================================================== */
 $has_fav="yes";
 $has_search="yes";

@@ -459,8 +459,14 @@ if (preg_match("/vidsrc\.me/",$filelink)) {
    elseif (substr($n[1],0,2)=="//")
      $l1="https:".$n[1];
    }
-  //echo $l1;
+  //echo $l1."\n";
+  //$l1="https://vidsrc.stream/prorcp/Zjg3NTY2Nzg1NzJiMTdmODJhNzZlMmU5NDBiMjAyZjg6YjFScGIyRjFNVkJxU1ZWT1lXUTFWRXB5VkRWaldVUnRRbHA2VmtFek5HWjBTbUkzU2pNeU4zQk9lVTVrUmpSNVJtVldjaXR6ZG5aNE5qbE1TRU5VWlZKTmVHMTJWM2RRVnk5RmJqZG1kWGRuTldoRGFXcEVWa2hXZWtOWWNFbHJRbXczTTFrMFVXWTJTRVpKZEZaNE1GTkJhbmRwZW5CUFN6aFZibGd4TlVwV1YzRk1hbTgwU0ZONlRXaE5MelZaUkdKS1VFUmhNVFpIY0VZMWNtSnlkbWN3WkdreVkzaE5VbE01YzNkRFFYQTBVMnNyY1RRMGJtTkhXRmNyUVhoMFkyWXlhVUZXVVVFdmRsbFBSVFJVUnl0WmJqQnJNa1V4YW5CSmNWSjRjMEU0ZFhKQlVEZDVRMHB5TWtwMVFuaHRXVmxDZEdOTU5FdEpUM0psZVRneGNXcG5ObGhpTURObFlrZFNOM2RHTkc0MVExTkRWaTlHVlU1bmExaEpSSGx5YjNscWJDOHZURXM0ZFV0SVJVVnFlbGxQTm5oT05VOVdhWGhEZFVsaU4ySXlRamRUV0VoSmQybG5SbE5DVDBWTlNGSk1OVEphVFcwMGRuQmlhRmh1WVRKS1JYbEZNVVZPU0hKblFtMDJTMFV3YjFGc2RsQnpVekk1VkhKQlVIZHhla0l6VWpNeldrSkVTSEJLVjI5M1NWaFllWEZJZEhadVdrWnpiM0kxUlRacVZGTkJhRTAwV2pneVVFMHZVbGswV0RZcmNtdHNhazU1Tkc1cGIxWmlXVzQyUVc0MVVUa3ZTSHBSV0dkRGFrUlVlV2gyTVVvMGFuSTJZVFozVDBGTVFWY3hXSFpKVjFGS1NtZ3dSakJrUWtodVVuUTJiV1JOYWpKVlJqQm9UelIwVjJOVVR6VTVSMHNyV0hGR1FUQjNObk5zV2tKdmFGWXhlVWhtVURKWEwwTlhaVFpWV1ZsVFJXUjNjWFJyTVRSdWJ5dG1SWHBsWTBST09VOUxOSEpDV1VkM05WaFFObk5PU1d4QlpXTkVRM2N5ZUZCWldVeHBjeXRwVEVFd01VbzRlVk5vVmtOTFVqaG9aejA9";
+  //echo $l1."\n";
   if ($l1) {
+  //$l1=str_replace("/rcp/","/prorcp/",$l1);
+  //echo $l1;
+  //$t1=explode("/rcp/",$l1);
+  //$hash=$t1[1];
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $l1);
   curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
@@ -472,15 +478,17 @@ if (preg_match("/vidsrc\.me/",$filelink)) {
   curl_setopt($ch, CURLOPT_TIMEOUT, 15);
   $h = curl_exec($ch);
   curl_close($ch);
+  //echo $h;
   $t1=explode('data-i="',$h);
   $t2=explode('"',$t1[1]);
   $index=$t2[0];
   $t1=explode('data-h="',$h);
   $t2=explode('"',$t1[1]);
   $hash=$t2[0];
+  //echo trim($hash)."\n";
   $x=deobfstr ($hash,$index);
   //echo $x;
-
+//die();
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, fixurl($x));
   curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
@@ -1983,6 +1991,8 @@ if (preg_match("/onion\w+\.\w+/",$filelink)) {
    //https://flixon.lol/tt22687790
    // https://onionbox.org/v/a86qzi1t0OU8QbC/
    // https://onionbox.org/v/a86qzi1t0OU8QbC/
+   //https://onionflux.com/v/ThfuhQ0L9VvgkMR/
+   //https://onionflux.com/v/EUbe71Xi8nuH2Uc/
   //https://flixon.lol/
   //https://onionplay.se/
   require_once("JavaScriptUnpacker.php");
@@ -1992,7 +2002,7 @@ if (preg_match("/onion\w+\.\w+/",$filelink)) {
   'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
   'Accept-Encoding: deflate',
   'Connection: keep-alive',
-  'Referer: https://flixon.lol/');
+  'Referer: https://flixon.click/');
   $ch = curl_init($filelink);
   curl_setopt($ch, CURLOPT_USERAGENT, $ua);
   curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
@@ -2007,6 +2017,7 @@ if (preg_match("/onion\w+\.\w+/",$filelink)) {
   //echo $h;
   //$h=str_replace("\/","/",$h);
   $h1= unjuice($h);
+  //echo $h1;
   $out = $jsu->Unpack($h1);
   $t1=explode('file":"',$out);
   $t2=explode('"',$t1[1]);
@@ -5752,7 +5763,7 @@ if (preg_match("/embedo\.xyz\/player\.php/",$filelink)) {
    $filelink=$h;
   }
 }
-if (preg_match("/imwatchingmovies\.com/",$filelink)) {
+if (preg_match("/imwatchingmovies\.com|streambucket\.net/",$filelink)) {
   $ua = $_SERVER['HTTP_USER_AGENT'];
   $head=array('User-Agent: '.$ua,
   'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8',
@@ -9961,7 +9972,7 @@ function xor_string($string, $key) {
   $out="";
   if (preg_match("/eval\(function\(p,a,c,k,e,[r|d]?/",$h)) {
   $jsu = new JavaScriptUnpacker();
-  preg_match_all("/eval\(function.*?\<\//s",$h,$m);
+  preg_match_all("/eval\(function.*?\<\/script/s",$h,$m);
   for ($k=0;$k<count($m[0]);$k++) {
   $out .= $jsu->Unpack($m[0][$k]);
   }
@@ -10077,7 +10088,7 @@ function xor_string($string, $key) {
    'Origin: '.$host,
    'Connection: keep-alive',
    'Referer: '.$host."/");
-
+   /*
    $ch = curl_init();
    curl_setopt($ch, CURLOPT_URL, $link);
    curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
@@ -10091,6 +10102,7 @@ function xor_string($string, $key) {
    curl_setopt($ch, CURLOPT_TIMEOUT, 25);
    //$h = curl_exec($ch);
    curl_close($ch);
+   */
    //$link=get_max_res($h,$link);
     $link=$link."|Referer=".urlencode($host)."&Origin=".urlencode($host);
     $link .="&User-Agent=".urlencode("Mozilla/5.0 (Windows NT 10.0; rv:81.0) Gecko/20100101 Firefox/81.0");
@@ -12751,15 +12763,19 @@ if (count($pl) > 1) {
   curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
   curl_setopt($ch, CURLOPT_TIMEOUT, 15);
   $h3 = curl_exec($ch);
-  //curl_close($ch);
   //echo $h3;
+  //curl_close($ch);
+  //echo urldecode($h3);
+  /*
   if (preg_match("/window\.location/",$h3)) {
   $t1=explode('window.location = "',$h3);
   $t2=explode('"',$t1[1]);
   $l="https://mixdrop.to".$t2[0];
   curl_setopt($ch, CURLOPT_URL, $l);
-  $h3 = curl_exec($ch);
+  $h4 = curl_exec($ch);
+  //echo $h3;
   }
+  */
   curl_close($ch);
   //echo $h3;
   $jsu = new JavaScriptUnpacker();

@@ -6,24 +6,26 @@ function str_between($string, $start, $end){
 	return substr($string,$ini,$len);
 }
 include ("../common.php");
+include ("../util.php");
 $page = $_GET["page"];
 $tip= $_GET["tip"];
 $tit=$_GET["title"];
 $link=$_GET["link"];
 $width="200px";
 $height="278px";
+$last_good="https://www2.veziseriale.org";
+$host=parse_url($last_good)['host'];
 /* ==================================================== */
 $has_fav="yes";
 $has_search="yes";
 $has_add="yes";
 $has_fs="yes";
-$last_good="https://upmovies.to";
-$host=parse_url($last_good)['host'];
-$fav_target="upmovies_s_fav.php?host=".$last_good;
-$add_target="upmovies_s_add.php";
+$fav_target="veziseriale_s_fav.php?host=".$last_good;
+$fav_target_fix="veziseriale_s_fav.php?host=".$last_good."&fix=yes";
+$add_target="veziseriale_s_add.php";
 $add_file="";
-$fs_target="upmovies_ep.php";
-$target="upmovies_s.php";
+$fs_target="veziseriale_s_ep.php";
+$target="veziseriale_s.php";
 /* ==================================================== */
 $base=basename($_SERVER['SCRIPT_FILENAME']);
 $p=$_SERVER['QUERY_STRING'];
@@ -147,7 +149,8 @@ echo '<TR>'."\r\n";
 if ($page==1) {
    if ($tip == "release") {
    if ($has_fav=="yes" && $has_search=="yes") {
-     echo '<TD class="nav"><a id="fav" href="'.$fav_target.'" target="_blank">Favorite</a></TD>'."\r\n";
+     echo '<TD class="nav"><a id="fav" href="'.$fav_target.'" target="_blank">Favorite</a>
+     </TD>'."\r\n";
      echo '<TD class="form" colspan="2">'.$form.'</TD>'."\r\n";
      echo '<TD class="nav" align="right"><a href="'.$next.'">&nbsp;&gt;&gt;&nbsp;</a></TD>'."\r\n";
    } else if ($has_fav=="no" && $has_search=="yes") {
@@ -167,81 +170,85 @@ if ($page==1) {
    echo '<TD class="nav" colspan="4" align="right"><a href="'.$prev.'">&nbsp;&lt;&lt;&nbsp;</a> | <a href="'.$next.'">&nbsp;&gt;&gt;&nbsp;</a></TD>'."\r\n";
 }
 echo '</TR>'."\r\n";
-$f=array();
-if ($tip=="search") {
- $search= str_replace(" ","+",$tit);
- if ($page==1)
-  $l=$last_good."/search-movies/".$search.".html";
+if($tip=="release") {
+ if ($page>1)
+  $l=$last_good."/seriale/page/".$page."/";
  else
-  $l=$last_good."/search-movies/".$search."/page-".$page.".html";
+  $l=$last_good."/seriale/";
 } else {
- if ($page==1)
-  $l=$last_good."/tv-series.html";
- else
-  $l=$last_good."/tv-series/page-".$page.".html";
+  $search=str_replace(" ","+",$tit);
+  if ($page > 1)
+     $l=$last_good."/page/".$page."/?s=".$search;
+  else
+     $l=$last_good."/?s=".$search;
 }
-$ua="Mozilla/5.0 (Windows NT 10.0; rv:75.0) Gecko/20100101 Firefox/75.0";
+$r=array();
+$ua = $_SERVER['HTTP_USER_AGENT'];
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $l);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
-  curl_setopt($ch, CURLOPT_REFERER,$last_good);
-  curl_setopt($ch, CURLOPT_ENCODING,"");
+  curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 10.0; rv:55.0) Gecko/20100101 Firefox/55.0');
   curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+  curl_setopt($ch, CURLOPT_ENCODING, "");
   curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
-  curl_setopt($ch, CURLOPT_TIMEOUT, 25);
-  $h = curl_exec($ch);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+  $html = curl_exec($ch);
   curl_close($ch);
-  //echo $h;
-$path = parse_url($l)['path'];
-//echo $h;
-$host=parse_url($l)['host'];
+  //echo $html;
 
-$videos = explode('<div class="div-flex', $h);
-unset($videos[0]);
-$videos = array_values($videos);
-foreach($videos as $video) {
- $t1=explode('href="',$video);
- $t2=explode('"',$t1[1]);
- $link=$t2[0];
- $t3=explode(">",$t1[2]);
- $t4=explode("<",$t3[1]);
- $title=$t4[0];
-
- $t1=explode('src="',$video);
- $t2=explode('"',$t1[1]);
- $image=$t2[0];
- $title=html_entity_decode($title,ENT_QUOTES);
- $title=htmlspecialchars_decode($title,ENT_QUOTES);
- $title = preg_replace_callback(
-   "/(\&\#[0-9]+\;?)/",
-   function($m) {
-    return mb_convert_encoding(substr($m[1],-1) ==";" ? $m[1]:$m[1].";", "UTF-8", "HTML-ENTITIES");
-   },
-   $title
- );
+  $videos = explode('<article id="post', $html);
+  unset($videos[0]);
+  $videos = array_values($videos);
+  foreach($videos as $video) {
+  $t1 = explode('href="', $video);
+  $t2 = explode('"', $t1[1]);
+  $link = $t2[0];
+  //echo $link;
+  $t1=explode('alt="',$video);
+  $t2_0=explode('"',$t1[1]);
+  $t3=str_replace("Vizioneaza Film Online","",$t2_0[0]);
+  $t4=explode("&#8211;",$t3);
+  $title=trim($t4[0]);
+  $title=prep_tit($title);
+  //echo $title;
   $year="";
   $imdb="";
-  $sez="";
-  if (preg_match("/(:|-)?\s+Season\s+(\d+)/i",$title,$m)) {
-  $tit_serial=trim(str_replace($m[0],"",$title));
-  $sez=$m[2];
-  $rest = substr($tit_serial, -6);
-  if (preg_match("/\(?(\d{4})\)?/",$rest,$m)) {
+  $rest = substr($title, -6);
+  if (preg_match("/\((\d+)\)/",$rest,$m)) {
    $year=$m[1];
    $tit_imdb=trim(str_replace($m[0],"",$title));
   } else {
    $year="";
-   $tit_imdb=$tit_serial;
+   $tit_imdb=$title;
   }
+  $t1=explode('src="',$video);
+  $t2=explode('"',$t1[1]);
+  $image=$t2[0];
+    if (!preg_match("/featured/",$video) && preg_match("/\/seriale/",$link)) array_push($r ,array($title,$link, $image));
+  }
+$c=count($r);
+for ($k=0;$k<$c;$k++) {
+  $title=$r[$k][0];
+  $title=str_replace("&#8211;","-",$title);
+  $title=prep_tit($title);
+  $link=$r[$k][1];
+  $image=$r[$k][2];
+  $rest = substr($title, -2);
+  //echo urlencode($rest);
+  if ($rest == " -") $title = substr($title, 0, -2);
+  $rest = substr($title, -6);
+  if (preg_match("/\((\d{4})\)/",$rest,$m)) {
+   $year=$m[1];
+   $tit_imdb=trim(str_replace($m[0],"",$title));
   } else {
-    $tit_imdb=$title;
+   $year="";
+   $tit_imdb=$title;
   }
-  //if ($year) $year = $year-$sez+1;
-  //$year=""; // ?
-  $link_f=$fs_target.'?tip=series&link='.urlencode($link).'&title='.urlencode(fix_t($title)).'&image='.$image."&sez=".$sez."&ep=&ep_tit=&year=".$year;
-  if ($title && preg_match("/Season/",$title)) {
+
+  $imdb="";
+  $link_f=$fs_target.'?tip=series&link='.urlencode($link).'&title='.urlencode(fix_t($title)).'&image='.$image."&sez=&ep=&ep_tit=&year=".$year;
+  if ($title && strpos($link,"/serial") !== false) {
   if ($n==0) echo '<TR>'."\r\n";
   $val_imdb="tip=series&title=".urlencode(fix_t($tit_imdb))."&year=".$year."&imdb=".$imdb;
   $fav_link="mod=add&title=".urlencode(fix_t($title))."&link=".urlencode($link)."&image=".urlencode($image)."&year=".$year;
