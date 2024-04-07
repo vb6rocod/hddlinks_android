@@ -76,7 +76,7 @@ foreach($videos as $video) {
     $t=explode('href="/video?',$video);
     $t1=explode('"',$t[1]);
     $link=$t1[0];
-    $t2=explode('data-mxptext="',$t[1]);
+    $t2=explode('alt="',$t[1]);
     $t3=explode('"',$t2[1]);
   	$title=$t3[0];
   	$title=prep_tit($title);

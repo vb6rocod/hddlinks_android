@@ -42,26 +42,22 @@ $ua = "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:120.0) Gecko/20100101 Firefo
   curl_setopt($ch, CURLOPT_TIMEOUT, 15);
   $h = curl_exec($ch);
   curl_close($ch);
-
-$n=0;
-$videos = explode('<div class="se-q"', $h);
-$sezoane=array();
-unset($videos[0]);
-$videos = array_values($videos);
-
-foreach($videos as $video) {
-  $t1=explode('class="title">',$video);
-  $t2=explode('<',$t1[1]);
-  if (preg_match("/sezonul\s+(\d+)/i",$t2[0],$m))
-  $sezoane[]=trim($m[1]);
+  //Sezonul 3 Episodul 23
+  $r=array();
+preg_match_all("/\<a href=\"([^\"]+)\"\s+title=\"([^\"]+)\"\>Sezonul\s*(\d+)\s*Episodul\s+(\d+)/i",$h,$m);
+//print_r ($m);
+for ($z=0;$z<count($m[1]);$z++) {
+ $r[$m[3][$z]][$m[4][$z]]=$m[1][$z];
 }
+$sezoane=array();
+$sezoane=array_reverse($r,true);
+
 echo '<table border="1" width="100%">'."\n\r";
 
 $p=0;
-$c=count($sezoane);
-for ($k=0;$k<$c;$k++) {
+foreach($sezoane as $key=>$value) {
 if ($p==0) echo '<TR>';
-echo '<td class="sez" style="color:black;text-align:center"><a href="#sez'.($sezoane[$k]).'">Sezonul '.($sezoane[$k]).'</a></TD>';
+echo '<td class="sez" style="color:black;text-align:center"><a href="#sez'.($key).'">Sezonul '.($key).'</a></TD>';
 $p++;
 if ($p == 10) {
  echo '</tr>';
@@ -75,37 +71,25 @@ if ($p < 10 && $p > 0 && $k > 9) {
  echo '</TR>'."\r\n";
 }
 echo '</TABLE>';
+foreach($sezoane as $key=>$value) {
 
-foreach($videos as $video) {
-  $t1=explode('class="title">',$video);
-  $t2=explode('<',$t1[1]);
-  if (preg_match("/sezonul\s+(\d+)/i",$t2[0],$m))
-  $season=trim($m[1]);
+  $season=$key;
   $sez = $season;
   echo '<table border="1" width="100%">'."\n\r";
   echo '<TR><td class="sez" style="color:black;background-color:#0a6996;color:#64c8ff;text-align:center" colspan="3">Sezonul '.($sez).'</TD></TR>';
   $n=0;
-
-  $vids = explode('<li>', $video);
-  unset($vids[0]);
-  $vids = array_values($vids);
-  foreach($vids as $vid) {
+  $episodes=array();
+  $episodes=array_reverse($sezoane[$key],true);
+  foreach($episodes as $epp=>$ll) {
   $img_ep="";
   $episod="";
   $ep_tit="";
-  $t1=explode('href="',$vid);
-  $t2=explode('"',$t1[1]);
-  $link=$t2[0];
-  //Sezonul 1 Episodul 1
-  preg_match("/sezonul\s+\d+\s+episodul\s+(\d+)/i",$vid,$m);
-  $episod=$m[1];
+
+  $link=$ll;
+  $episod=$epp;
   $img_ep="";
   $title="";
-  $t1=explode('title="',$vid);
-  $t2=explode('"',$t1[1]);
-  $title=$t2[0];
-  $title=str_replace("&nbsp;"," ",$title);
-  $ep_tit=prep_tit($title);
+
   if ($ep_tit)
    $ep_tit_d=$season."x".$episod." ".$ep_tit;
   else

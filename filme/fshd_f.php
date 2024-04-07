@@ -11,7 +11,7 @@ $tip= $_GET["tip"];
 $tit=$_GET["title"];
 $link=$_GET["link"];
 $width="200px";
-$height="200px";
+$height="100px";
 $last_good="https://fshd.ro";
 $host=parse_url($last_good)['host'];
 /* ==================================================== */

@@ -137,8 +137,20 @@ $s=array();
   else
    $imdbid="";
 //echo $link;
+if (!$imdbid) {
+ if (preg_match("/watch-movie\/(\d+)/",$link,$m))
+  $tmdb=$m[1];
+ else
+  $tmdb="";
+}
 $host=parse_url($link)['host'];
+//https://1hd.store/watch-movie/845665
+//$imdbid="845665";
+if ($imdbid)
 $l="https://www.2embed.cc/embed/tt".$imdbid;
+else
+$l="https://www.2embed.cc/embed/".$tmdb;
+//echo $l;
 $head=array("User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/114.0",
 "Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8",
 "Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2",

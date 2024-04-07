@@ -9,7 +9,7 @@ else
  $fix="no";
 $page_title="Seriale favorite";
 $width="200px";
-$height="200px";
+$height="100px";
 $add_target="fshd_s_add.php";
 $fs_target="fshd_s_ep.php";
 $file=$base_fav."fshd_s.dat";

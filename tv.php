@@ -54,7 +54,7 @@ $(document).on('keyup', '.imdb', isValid);
 <th class="cat" colspan="4">Live TV şi emisiuni TV</Th>
 </TR>
 <TR>
-<TD width="25%"><a href="tv/tvhdonline.php" target="_blank">tvhdonline</TD>
+<TD width="25%"></TD>
 <TD width="25%"><a href="tv/tvcanale.php" target="_blank">tvcanale</TD>
 <!--<TD width="25%"><a href="tv/digi.php" target="_blank">digi-online</a></TD>-->
 <!--<TD width="25%"><a href="tv/playlist.php?title=TVR.m3u" target="_blank">TVR Live</a></TD>-->
@@ -96,7 +96,7 @@ $(document).on('keyup', '.imdb', isValid);
 <TD width="25%"><a href="tv/tvonline.php" target="_blank">tvonline</TD>
 </TR>
 <TR>
-<TD width="25%"><a href="tv/sportybite.php" target="_blank">sportybite</a></TD>
+<TD width="25%"><a href="tv/sons-stream.php" target="_blank">sons-stream</a></TD>
 <TD width="25%"><a href="tv/sportsonline.php" target="_blank">sportsonline</a></TD>
 <TD width="25%"><a href="tv/dlhd.php" target="_blank">DaddyLiveHD</a></TD>
 <TD width="25%"><a href="tv/stream2watch.php" target="_blank">stream2watch</a></TD>

@@ -974,10 +974,14 @@ $head=array('Accept: */*',
     $out=$t2[0];
   }
 } else if (preg_match("/tnaflix\.com/",$host)) {
-  $vid=str_between($h,'VID" type="hidden" value="','"');
-  $key=str_between($h,'nkey" type="hidden" value="','"');
-  $fid=str_between($h,'vkey" type="hidden" value="','"');
-  $l1="https://cdn-fck.tnaflix.com/tnaflix/".$fid.".fid?key=".$key."&VID=".$vid."&rollover=1&startThumb=19&premium=1&country=&user=0&vip=0&cd=u&ref=embed&alpha";
+  //$vid=str_between($h,'VID" type="hidden" value="','"');
+  //$key=str_between($h,'nkey" type="hidden" value="','"');
+  //$fid=str_between($h,'vkey" type="hidden" value="','"');
+  //$l1="https://cdn-fck.tnaflix.com/tnaflix/".$fid.".fid?key=".$key."&VID=".$vid."&rollover=1&startThumb=19&premium=1&country=&user=0&vip=0&cd=u&ref=embed&alpha";
+  //https://www.tnaflix.com/ajax/video-player/10617655
+  $t1=explode('vid":"',$h);
+  $t2=explode('"',$t1[1]);
+  $l1="https://www.tnaflix.com/ajax/video-player/".$t2[0];
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $l1);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
@@ -989,8 +993,13 @@ $head=array('Accept: */*',
   curl_setopt($ch, CURLOPT_TIMEOUT, 15);
   $h1 = curl_exec($ch);
   curl_close($ch);
-  $t1=explode('<videoLink><![CDATA[',$h1);
-  $t2=explode(']]>',$t1[count($t1)-1]);
+  
+  $x=json_decode($h1,1)['html'];
+  //echo $x;
+  $t1=explode('source src="',$x);
+  $t2=explode('"',$t1[1]);
+  //$t1=explode('<videoLink><![CDATA[',$h1);
+  //$t2=explode(']]>',$t1[count($t1)-1]);
   $out=$t2[0];
   if (strpos($out,"http") === false && $out) $out="https:".$out;
 } else if (preg_match("/trannytube\.net|trannytube\.tv/",$host)) {

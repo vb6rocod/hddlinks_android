@@ -239,7 +239,9 @@ foreach($videos as $video) {
  );
  $t1=explode('src="',$video);
  $t2=explode('"',$t1[1]);
- $image=$last_good.$t2[0];
+ $image=$t2[0];
+ if (!preg_match("/http/",$image))
+  $image=$last_good.$t2[0];
  $t1=explode('mli-quality">',$video);
  $t2=explode('<',$t1[1]);
  $year=$t2[0];

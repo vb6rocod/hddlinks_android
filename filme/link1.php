@@ -6522,6 +6522,54 @@ $head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:104.0) Gecko/20100101 
   if ($link && $flash <> "flash")
   $link .="|Referer=".urlencode($host)."&Origin=".urlencode($host);
   //}
+} elseif (preg_match("/vidhidevip\./",$filelink)) {
+  $host="https://".parse_url($filelink)['host'];
+
+  $ua='Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:108.0) Gecko/20100101 Firefox/108.0';
+  $ch = curl_init();
+  curl_setopt($ch, CURLOPT_URL, $filelink);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+  curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:108.0) Gecko/20100101 Firefox/108.0');
+  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+  //curl_setopt($ch, CURLOPT_HTTPHEADER,$head);
+  curl_setopt($ch, CURLOPT_REFERER, $filelink);
+  curl_setopt($ch, CURLOPT_ENCODING,"");
+  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+  $h = curl_exec($ch);
+  curl_close($ch);
+  $srt="";
+  if (preg_match_all("/file:\s*\"([^\"]+)\",\s*label:\s*\"(Romanian|English)/i",$h,$m)) {
+   for ($k=0;$k<count($m[2]);$k++) {
+    if (preg_match("/romanian/i",$m[2][$k])) {
+      $srt=$m[1][$k];
+      break;
+    }
+   }
+  if (!$srt) $srt=$m[1][0];
+  }
+  //echo $srt;
+  if (preg_match("/sources:\s*\[\{file\:\"([^\"]+)\"/",$h,$m)) {
+   $link=$m[1];
+  $ch = curl_init();
+  curl_setopt($ch, CURLOPT_URL, $link);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+  curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:108.0) Gecko/20100101 Firefox/108.0');
+  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+  //curl_setopt($ch, CURLOPT_HTTPHEADER,$head);
+  curl_setopt($ch, CURLOPT_REFERER, $filelink);
+  curl_setopt($ch, CURLOPT_ENCODING,"");
+  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+  $h = curl_exec($ch);
+  curl_close($ch);
+  //echo $h;
+  $link=get_max_res($h,$link);
+  }
+
+   
 } elseif (preg_match("/luluvdo\.com/",$filelink)) {
   $host="https://".parse_url($filelink)['host'];
 

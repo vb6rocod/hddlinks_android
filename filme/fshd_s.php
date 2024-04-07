@@ -12,7 +12,7 @@ $tip= $_GET["tip"];
 $tit=$_GET["title"];
 $link=$_GET["link"];
 $width="200px";
-$height="200px";
+$height="100px";
 $last_good="https://fshd.ro";
 $host=parse_url($last_good)['host'];
 /* ==================================================== */
@@ -197,7 +197,7 @@ $ua = $_SERVER['HTTP_USER_AGENT'];
   curl_close($ch);
   //echo $html;
   if ($tip=="release") {
-  $videos = explode('<article', $html);
+  $videos = explode('<article class="post"', $html);
   unset($videos[0]);
   $videos = array_values($videos);
   foreach($videos as $video) {

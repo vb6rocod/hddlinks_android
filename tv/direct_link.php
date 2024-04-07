@@ -1,6 +1,7 @@
 <?php
 //set_time_limit(0);
 error_reporting(0);
+$hw=2;
 include ("../common.php");
 $list = glob($base_sub."*.srt");
    foreach ($list as $l) {
@@ -348,6 +349,7 @@ if ($from=="tvhdonline") {
      $link="";
   } else {
     $h2=urldecode($h);
+    //echo $h2;
   $t1=explode("dF('",$h);
   $t2=explode("')",$t1[1]);
   $h1=dF($t2[0]);
@@ -361,7 +363,8 @@ if ($from=="tvhdonline") {
   }
   //echo "enc=".mb_detect_encoding($h,"UTF-16");
     $h=urlencode($h);
-    //echo $h;
+    echo urldecode($h);
+    //die();
     $h=str_replace("%00","",$h);
     //echo $h;
     $out = preg_replace_callback(
@@ -371,6 +374,7 @@ if ($from=="tvhdonline") {
     );
     //echo $out;
    $z=urldecode($out);
+   //echo $z;
    if(preg_match("/http[^\"]+\.m3u8?/",$z,$r))
     $link=$r[0];
    else
@@ -775,6 +779,8 @@ if (preg_match("/sportskart\.click/",$link)) { // to second link!
 if (preg_match("/sportsonline\./",parse_url($link)['host'])) {
   //https://sportsonline.so/channels/hd/hd1.php
   //echo $link;
+  //$hw=1;    trebuie alta solutie.....
+  $ua="Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/110.0";
   $head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/110.0',
   'Accept: */*',
   'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
@@ -820,7 +826,7 @@ if (preg_match("/sportsonline\./",parse_url($link)['host'])) {
   else
    $link="";
   if ($link && $flash <> "flash")
-   $link=$link."|Referer=".urlencode($l)."&Origin=".urlencode($ref);
+   $link=$link."|Referer=".urlencode($l)."&Origin=".urlencode($ref)."&User-Agent=".urlencode($ua);
 }
 if (preg_match("/iweb\.\w+\.shop/",parse_url($link)['host'])) {
   // https://iweb.ijttgbt.shop/embed/e8GplfEKWQOE
@@ -888,13 +894,14 @@ if (preg_match("/livehdplay\.ru/",parse_url($link)['host'])) {
   // $l="https://livehdplay.ru/maxsport.php?id=cnmyfeed21";
   //https://olalivehdplay.ru/premiumtv/daddylivehd.php?id=194
   //echo $link;
+  $ua="Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:124.0) Gecko/20100101 Firefox/124.0";
   if (preg_match("/daddylive/",$link))
    $ref="https://dlhd.sx";
   else
    $ref="https://primasport.one";
    $ref="https://1.dlhd.sx/";
   $host="https://".parse_url($link)['host'];
-  $head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:123.0) Gecko/20100101 Firefox/123.0',
+  $head=array('User-Agent: '.$ua,
   'Accept: */*',
   'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
   'Accept-Encoding: deflate',
@@ -925,7 +932,7 @@ if (preg_match("/livehdplay\.ru/",parse_url($link)['host'])) {
    //$ref="https://claplivehdplay.ru";
    //$link="https://salamus2023.onlinehdhls.ru/ddh2/premium36/tracks-v1a1/mono.m3u8";
    $ref="https://claplivehdplay.ru";
-  $head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:123.0) Gecko/20100101 Firefox/123.0',
+  $head=array('User-Agent: '.$ua,
   'Accept: */*',
   'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
   'Accept-Encoding: deflate',
@@ -933,7 +940,7 @@ if (preg_match("/livehdplay\.ru/",parse_url($link)['host'])) {
   'Connection: keep-alive',
   'Referer: '.$ref.'/',
   );
-  $head1=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:123.0) Gecko/20100101 Firefox/123.0',
+  $head1=array('User-Agent: '.$ua,
 'Accept: */*',
 'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
 'Accept-Encoding: deflate',
@@ -954,7 +961,7 @@ if (preg_match("/livehdplay\.ru/",parse_url($link)['host'])) {
   curl_close($ch);
 
   //echo $h;
-  $ua="Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:123.0) Gecko/20100101 Firefox/123.0";
+
   //$link="https://salamus2023.onlinehdhls.ru/ddh1/premium34/playlist.m3u8";
   //$link="https://salamus2023.onlinehdhls.ru/ddh2/premium34/tracks-v1a1/mono.m3u8";
   //$link="https://salamus2023.onlinehdhls.ru/ddh2/premium36/playlist.m3u8";
@@ -3335,6 +3342,9 @@ $c="intent:".$out."#Intent;type=video/mp4;package=com.mxtech.videoplayer.".$mx."
 if (strpos($out,"ONETV") !== false)
 $c="intent:".$out."#Intent;type=video/mp4;package=com.mxtech.videoplayer.".$mx.";S.title=".urlencode($title).";b.decode_mode=1;end";
 if (preg_match("/v1\.iw\.ro/",$out)) //digisport ????
+$c="intent:".$out."#Intent;type=video/mp4;package=com.mxtech.videoplayer.".$mx.";S.title=".urlencode($title).";b.decode_mode=1;end";
+///////////////////
+if ($hw==1) //sportsonline
 $c="intent:".$out."#Intent;type=video/mp4;package=com.mxtech.videoplayer.".$mx.";S.title=".urlencode($title).";b.decode_mode=1;end";
 
 echo $c;
