@@ -12,6 +12,16 @@ td {
     font-size: 20px;
     text-align: left;
 }
+th {
+		padding: 5px;
+		border: 0;
+		text-align: center;
+		/* border: 1px solid #0000005c; */ /* Supprimer cette ligne pour retirer les traits verticaux */
+		font-family: "sans-serif", monospace;
+		font-size: 18px;
+		color: burlywood;
+        background-color: #22252a;
+}
 </style>
 <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.0/jquery.min.js"></script>
 <script type="text/javascript">
@@ -50,18 +60,35 @@ $(document).on('keyup', '.imdb', isValid);
 <BODY>
 <BR><BR>
 <table border="1" align="center" width="90%">
+<!--
 <TR>
 <th class="cat" colspan="4">Live TV şi emisiuni TV</Th>
 </TR>
+-->
+<!-- Live TV -->
+<TR><Th colspan="4">Live TV</Th></TR>
 <TR>
-<TD width="25%"></TD>
+<TD width="25%"><a href="tv/rds.php?title=emisiuni.live&link=https://emisiuni.live/canale-tv-1/" target="_blank">emisiuni.live</TD>
+<TD width="25%"><a href="tv/rds.php?title=rds.live&link=https://rds.live/canale-tv/" target="_blank">rds.live</TD>
+<TD width="25%"><a href="tv/tvonline.php" target="_blank">tvonline</TD>
 <TD width="25%"><a href="tv/tvcanale.php" target="_blank">tvcanale</TD>
-<!--<TD width="25%"><a href="tv/digi.php" target="_blank">digi-online</a></TD>-->
-<!--<TD width="25%"><a href="tv/playlist.php?title=TVR.m3u" target="_blank">TVR Live</a></TD>-->
-<TD width="25%"><a href="tv/tvrlive.php" target="_blank">TVR Live</a></TD>
-<TD width="25%"><a href="tv/tvrstiri.php" target="_blank">TVR - Stiri</a></TD>
-
 </TR>
+<TR>
+<TD width="25%"><a href="tv/tvrlive.php" target="_blank">TVR Live</a></TD>
+<TD width="25%"><a href="tv/program.php" target="_blank">ProgramTV</a></TD>
+<TD width="25%"><a href="tv/telefootball.php" target="_blank">FOTBAL LA TV</TD>
+<TD width="25%"><a href="tv/iptv.php" target="_blank">IPTV International</a></TD>
+</TR>
+
+<TR>
+<TD width="25%"><a href="tv/stream2watch.php" target="_blank">stream2watch</a></TD>
+<TD width="25%"></TD>
+<TD width="25%"></TD>
+<TD width="25%"></TD>
+</TR>
+
+<!-- Stiri si emisiuni -->
+<TR><Th colspan="4">Emisiuni TV</Th></TR>
 <TR>
 <TD width="25%"><a href="tv/digi24.php" target="_blank">Digi24 - Stiri</a></TD>
 <TD width="25%"><a href="tv/digi24_main.php" target="_blank">Digi24 - Emisiuni</a></TD>
@@ -75,32 +102,33 @@ $(document).on('keyup', '.imdb', isValid);
 <TD width="25%"><a href="tv/tvrplus_main.php" target="_blank">TVR+ (Emisiuni)</a></TD>
 </TR>
 <TR>
-<TD width="25%"><a href="tv/program.php" target="_blank">ProgramTV</a></TD>
+
 <TD width="25%"><a href="tv/primaplay.php?page=1&link=&title=primaplay" target="_blank">primaplay</a></TD>
 <TD width="25%"><a href="tv/protvmd.php?page=1,,ProTV Moldova" target="_blank">PROTV Moldova</a></TD>
 <TD width="25%"><a href="tv/inprofunzime.php?page=1,,IN+PROfunzime" target="_blank">IN PROfunzime</a></TD>
-</TR>
-<TR>
-<TD width="25%"><a href="filme/youtube_fav.php" target="_blank">youtube</a></TD>
-<TD width="25%"><a href="filme/youtube_live.php?token=&search=" target="_blank">youtube live</a></TD>
-<TD width="25%"><a href="tv/iptv.php" target="_blank">IPTV International</a></TD>
-<TD width="25%"><a href="tv/rds.php?title=emisiuni.live&link=https://emisiuni.live/canale-tv-1/" target="_blank">emisiuni.live</TD>
+<TD width="25%"></TD>
 </TR>
 
+<!-- Sport -->
+<TR><Th colspan="4">Sport</Th></TR>
 <TR>
-<TD width="25%"><a href="tv/canalelive.php" target="_blank">Sport</a></TD>
-<!--<TD width="25%"><a href="tv/time4tv.php?page=1&tip=release&title=time4tv&link=" target="_blank">time4tv</a></TD>-->
-<!--<TD width="25%"><a href="tv/primasport.php" target="_blank">Primasport</TD>-->
-<TD width="25%"><a href="tv/telefootball.php" target="_blank">FOTBAL LA TV</TD>
-<TD width="25%"><a href="tv/rds.php?title=rds.live&link=https://rds.live/canale-tv/" target="_blank">rds.live</TD>
-<TD width="25%"><a href="tv/tvonline.php" target="_blank">tvonline</TD>
-</TR>
-<TR>
+<TD width="25%"><a href="tv/canalelive.php" target="_blank">sport7.pm</a></TD>
 <TD width="25%"><a href="tv/sons-stream.php" target="_blank">sons-stream</a></TD>
 <TD width="25%"><a href="tv/sportsonline.php" target="_blank">sportsonline</a></TD>
 <TD width="25%"><a href="tv/dlhd.php" target="_blank">DaddyLiveHD</a></TD>
-<TD width="25%"><a href="tv/stream2watch.php" target="_blank">stream2watch</a></TD>
 </TR>
+
+<!-- Clip -->
+<TR><Th colspan="4">Clipuri</Th></TR>
+<TR>
+<TD width="25%"><a href="filme/youtube_fav.php" target="_blank">youtube</a></TD>
+<TD width="25%"><a href="filme/youtube_live.php?token=&search=" target="_blank">youtube live</a></TD>
+<TD width="25%"><a href="filme/vimeo_fav.php?tip=fav&title=Vimeo&page=1" target="_"blank">Vimeo</a></TD>
+<TD width="25%"><a href="filme/dailymotion_fav.php" target="_blank">dailymotion</a></TD>
+</TR>
+
+
+
 
 <?php
 include ("common.php");
@@ -132,9 +160,12 @@ if (file_exists($base_sub.".srt")) unlink ($base_sub.".srt");
 </table>
 <BR>
 <table border="1" align="center" width="90%">
+<!--
 <TR>
 <th class="cat" colspan="4">My Playlist</Th>
 </TR>
+-->
+<TR><Th colspan="4">My Playlist</Th></TR>
 <TR>
 <?php
 //include ("common.php");

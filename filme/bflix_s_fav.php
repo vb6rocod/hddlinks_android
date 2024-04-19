@@ -175,6 +175,10 @@ foreach($arr as $key => $value) {
     $image=urldecode($arr[$key][2]);
     $tit_imdb=$title;
     //$image=$host.parse_url($image)['path'];
+    //https://static.bunnycdn.ru
+    $h1="static.".parse_url($host)['host'];
+    $h2=parse_url($image)['host'];
+    $image=str_replace($h2,$h1,$image);
     $year="";
     $link=$host.parse_url($link)['path'];
     $link_f=$fs_target.'?tip=series&link='.urlencode($link).'&title='.urlencode(fix_t($title)).'&image='.$image."&sez=&ep=&ep_tit=&year=".$year;

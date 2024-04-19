@@ -174,6 +174,9 @@ foreach($arr as $key => $value) {
     $title = unfix_t(urldecode($arr[$key][0]));
     $image=urldecode($arr[$key][2]);
     //$image=$host.parse_url($image)['path'];
+    $h1="static.".parse_url($host)['host'];
+    $h2=parse_url($image)['host'];
+    $image=str_replace($h2,$h1,$image);
     $link=$host.parse_url($link)['path'];
     $year="";
     $link_f=$fs_target.'?tip=movie&link='.urlencode($link).'&title='.urlencode(fix_t($title)).'&image='.$image."&sez=&ep=&ep_tit=&year=".$year;

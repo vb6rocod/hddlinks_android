@@ -7,11 +7,11 @@ class bunny
   //private $key_dec="8z5Ag5wgagfsOuhz"; //09.07.2023
   //private $key_enc="FWsfu0KQd9vxYGNB"; //30.07.2023
   //private $key_dec="8z5Ag5wgagfsOuhz"; //30.07.2023
-  private $key_enc="Ij4aiaQXgluXQRs6";  // 29.02.2024
-  private $key_dec="8z5Ag5wgagfsOuhz";  // 29.02.2024
+  //private $key_enc="Ij4aiaQXgluXQRs6";  // 29.02.2024
+  //private $key_dec="8z5Ag5wgagfsOuhz";  // 29.02.2024
 
-  //private $key_enc="p8HVMm5j8mH8aRSk";  // vidsrc.to
-  //private $key_dec="WXrUARXb1aDLaZjI";  // vidsrc.to
+  private $key_enc="p8HVMm5j8mH8aRSk";  // vidsrc.to
+  private $key_dec="WXrUARXb1aDLaZjI";  // vidsrc.to
   private $nineAnimeKey = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
   private function cipher($key,$text) {
    $u=0;

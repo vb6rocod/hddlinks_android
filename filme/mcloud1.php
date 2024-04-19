@@ -3,9 +3,14 @@
 include ("../common.php");
 $l=urldecode($_GET['id']);  // from bflix or vidsrc.to
 $host=parse_url($l)['host'];
+if (preg_match("/vidsrc\.to/",$host))
+require_once("bunny2.php");
+else
 require_once("bunny1.php");
 $bunny=new bunny();
 $mcloud="";
+//echo $l;
+//die();
   $head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/109.0',
   'Accept: application/json, text/javascript, */*; q=0.01',
   'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
@@ -25,13 +30,17 @@ $mcloud="";
   curl_setopt($ch, CURLOPT_TIMEOUT, 15);
   $h = curl_exec($ch);
   curl_close($ch);
+  //echo $h;
   $url=json_decode($h,1)['result']['url'];
+  //echo $url."\n"."\n";
   $mcloud=$bunny->decodeVrf($url);
 
    
 
 /////////////////////////////////////////////////
 $l=$mcloud;
+//echo $l;
+//die();
 $title=unfix_t(urldecode($_GET['title']));
 $tip=$_GET['tip'];
 $host=parse_url($l)['host'];
@@ -57,13 +66,16 @@ if ($port=="80") {
 }
 $id="";
 if (preg_match("/\/(?:f|e|embed)\/([a-z0-9]+)/i",$l,$m)) {
+//echo $l;
+$host="https://".parse_url($l)['host'];
  $id=$m[1];
  $head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/115.0',
  'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8',
  'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
  'Accept-Encoding: deflate',
  'Connection: keep-alive',
- 'Referer: https://vidsrc.to/');
+ 'Referer: '.$l,
+ 'Origin: '.$host);
 
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $l);
@@ -74,13 +86,14 @@ if (preg_match("/\/(?:f|e|embed)\/([a-z0-9]+)/i",$l,$m)) {
   curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
   curl_setopt($ch, CURLOPT_TIMEOUT, 15);
   $h = curl_exec($ch);
-
+//echo $h;
   preg_match("/base href\=\"([^\"]+)\"/",$h,$m);
   $site=$m[1];
   $l1=$site."futoken";
   curl_setopt($ch, CURLOPT_URL, $l1);
   $h1 = curl_exec($ch);
   curl_close($ch);
+  //echo $h1;
   $h1=str_replace("mediainfo/",$b."write.php?m=",$h1);
   $h1=str_replace("location.search",'"'.$ls.'"',$h1);
   file_put_contents("futoken",$h1);

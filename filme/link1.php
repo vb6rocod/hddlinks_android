@@ -567,7 +567,7 @@ if (preg_match("/vidsrc\.to/",parse_url($filelink)['host'])) {
   //echo $h;
   $url=json_decode($h,1)['result']['url'];
   //echo $url;
-  require_once("bunny1.php");
+  require_once("bunny2.php");
   $bunny=new bunny();
   $filelink = $bunny->decodeVrf($url);
   //echo $filelink;
@@ -11790,7 +11790,7 @@ $head=array('Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q
   $t1=explode("sub=",$filelink);
   $srt=urldecode($t1[1]);
 //} elseif (strpos($filelink,"mcloud") !== false) {
-} elseif (preg_match("/(mcloud|vidstream|vizcloud|vidplay)\./",$filelink)) {
+} elseif (preg_match("/(mcloud|vidstream|vizcloud|vidplay|vid41c|vid30c)\./",$filelink)) {
   $dr=$_SERVER['DOCUMENT_ROOT'];
   if (preg_match("/\/(?:f|e|embed)\/([a-z0-9]+)/i",$filelink,$m))
   $id=$m[1];
@@ -15343,11 +15343,11 @@ $ua="Mozilla/5.0 (Windows NT 10.0; rv:63.0) Gecko/20100101 Firefox/63.0";
 } elseif (strpos($filelink,'vimeo.com') !==false){
   //http://player.vimeo.com/video/16275866
   ///cgi-bin/translate?info,,http://vimeo.com/16275866
+  //https://vimeo.com/683631475
+  preg_match("/\d+/",$filelink,$m);
+  $filelink="http://player.vimeo.com/video/".$m[0];
   $ch = curl_init($filelink);
   curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
-  if ($referer)
-  curl_setopt($ch, CURLOPT_REFERER, $referer);
-  else
   curl_setopt($ch, CURLOPT_REFERER, "https://player.vimeo.com");
   curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 10.0; rv:55.0) Gecko/20100101 Firefox/55.0');
   curl_setopt($ch, CURLOPT_RETURNTRANSFER  ,1);  // RETURN THE CONTENTS OF THE CALL
@@ -15358,15 +15358,17 @@ $ua="Mozilla/5.0 (Windows NT 10.0; rv:63.0) Gecko/20100101 Firefox/63.0";
   curl_close($ch);
   //echo $h;
   //die();
-  $t1=explode("class=player></div><script>(function(t,e){var r=",$h);
-  $t2=explode(";if(!r.request",$t1[1]);
+  $t1=explode('window.playerConfig = ',$h);
+  $t2=explode("</script",$t1[1]);
   $h2=$t2[0];
   //echo $h2;
   //$t1=explode("video/mp4",$h2);
   $r=json_decode($h2,1);
   //print_r ($r);
-  $p=$r["request"]["files"]["progressive"];
-  $link=$p[0]["url"];
+  $link=$r["request"]["files"]["hls"]["cdns"]["akfire_interconnect_quic"]["url"];
+  //$p=$r["request"]["files"]["progressive"];
+  //$link=$p[0]["url"];
+  /*
   if (!$link) {
    $t1=explode('mime":"video/mp4',$h);
    $t2=explode('url":"',$t1[2]);
@@ -15374,6 +15376,10 @@ $ua="Mozilla/5.0 (Windows NT 10.0; rv:63.0) Gecko/20100101 Firefox/63.0";
    $link=$t3[0];
   }
   $link=str_replace("https","http",$link);
+  */
+  if ($link && $flash <>"flash") {
+    $link=$link."|Referer=".urlencode("https://player.vimeo.com/")."&Origin=".urlencode("https://player.vimeo.com");
+  }
 } elseif (strpos($filelink, 'filebox.com') !==false) {
   //http://www.filebox.com/embed-mxw6nxj1blfs-970x543.html
   //http://www.filebox.com/mxw6nxj1blfs

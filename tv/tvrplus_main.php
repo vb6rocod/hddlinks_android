@@ -36,7 +36,7 @@ $l="http://www.tvrplus.ro/emisiuni";
   //echo $html;
   
 $html=str_between($html,'<div id="main-section">','</ul');
-$videos = explode('<li', $html);
+$videos = explode('<li >', $html);
 unset($videos[0]);
 $videos = array_values($videos);
 foreach($videos as $video) {
@@ -58,7 +58,7 @@ foreach($videos as $video) {
     curl_setopt($ch, CURLOPT_TIMEOUT, 15);
     $h = curl_exec($ch);
     curl_close($ch);
-    $vids = explode('div class="item">', $h);
+    $vids = explode('<div class="item-image-1">', $h);
     unset($vids[0]);
     $vids = array_values($vids);
     foreach($vids as $vid) {
