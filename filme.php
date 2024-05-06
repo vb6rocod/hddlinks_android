@@ -8,7 +8,7 @@ include ("common.php");
 <meta http-equiv="Pragma" content="no-cache"/>
 <meta http-equiv="Expires" content="0"/>
       <title>Filme</title>
-<link rel="stylesheet" type="text/css" href="custom.css" />
+<link rel="stylesheet" type="text/css" href="custom.css?1234" />
 <script src="//code.jquery.com/jquery-2.0.2.js"></script>
 <style>
 td {

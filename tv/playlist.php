@@ -197,6 +197,7 @@ function remove_empty_lines($string) {
 }
 $m3uFile="pl/".$pg_tit;
 if ($link) {
+  //echo $link;
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $link);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
@@ -206,6 +207,7 @@ if ($link) {
   curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
   curl_setopt($ch, CURLOPT_TIMEOUT, 15);
   $m3ufile = curl_exec($ch);
+  //echo $m3ufile;
   curl_close($ch);
 } else {
 $m3ufile = file_get_contents($m3uFile);
@@ -253,7 +255,7 @@ echo '</TR></table>';
 }
 if ($group=="no" && count($rrr)>1 && $page==0) {
  echo '<table border="1px" width="100%">';
- echo "<TR><TD class='mp'><a href=".'"playlist_group.php?title='.urlencode($pg_tit)."&link=".$link.'">ByGroup</a></TD></TR>';
+ echo "<TR><TD class='mp'><a href=".'"playlist_group.php?title='.urlencode($pg_tit)."&link=".urlencode($link).'">ByGroup</a></TD></TR>';
  echo '</table>';
 }
 

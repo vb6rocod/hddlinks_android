@@ -44,14 +44,14 @@ $ua = "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:120.0) Gecko/20100101 Firefo
   curl_close($ch);
 //echo $h;
 $n=0;
-$videos = explode('<div class="se-q"', $h);
+$videos = explode("<div class='se-q'", $h);
 $sezoane=array();
 unset($videos[0]);
 $videos = array_reverse($videos);
 
 foreach($videos as $video) {
-  $t1=explode('class="title">',$video);
-  $t2=explode('<',$t1[1]);
+  $t1=explode("class='title'>",$video);
+  $t2=explode("<",$t1[1]);
   if (preg_match("/sezonul\s+(\d+)/i",$t2[0],$m))
   $sezoane[]=trim($m[1]);
 }
@@ -77,8 +77,8 @@ if ($p < 10 && $p > 0 && $k > 9) {
 echo '</TABLE>';
 
 foreach($videos as $video) {
-  $t1=explode('class="title">',$video);
-  $t2=explode('<',$t1[1]);
+  $t1=explode("class='title'>",$video);
+  $t2=explode("<",$t1[1]);
   if (preg_match("/sezonul\s+(\d+)/i",$t2[0],$m))
   $season=trim($m[1]);
   $sez = $season;
@@ -86,23 +86,23 @@ foreach($videos as $video) {
   echo '<TR><td class="sez" style="color:black;background-color:#0a6996;color:#64c8ff;text-align:center" colspan="3">Sezonul '.($sez).'</TD></TR>';
   $n=0;
 
-  $vids = explode('class="episodiotitle">', $video);
+  $vids = explode("class='episodiotitle'>", $video);
   unset($vids[0]);
   $vids = array_reverse($vids);
   foreach($vids as $vid) {
   $img_ep="";
   $episod="";
   $ep_tit="";
-  $t1=explode('href="',$vid);
-  $t2=explode('"',$t1[1]);
+  $t1=explode("href='",$vid);
+  $t2=explode("'",$t1[1]);
   $link=$t2[0];
   //Sezonul 1 Episodul 1
   preg_match("/sezonul\s+\d+\s+episodul\s+(\d+)/i",$vid,$m);
   $episod=$m[1];
   $img_ep="";
   $title="";
-  $t1=explode('class="date">',$vid);
-  $t2=explode('<',$t1[1]);
+  $t1=explode("class='date'>",$vid);
+  $t2=explode("<",$t1[1]);
   $title=$t2[0];
   $title=str_replace("&nbsp;"," ",$title);
   $ep_tit=prep_tit($title);

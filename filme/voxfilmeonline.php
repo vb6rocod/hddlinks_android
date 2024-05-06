@@ -69,7 +69,7 @@ if ($tip=="search") {
 <script type="text/javascript" src="//code.jquery.com/jquery-3.2.1.min.js"></script>
 <script src="../jquery.fancybox.min.js"></script>
 <link rel="stylesheet" type="text/css" href="../jquery.fancybox.min.css">
-<link rel="stylesheet" type="text/css" href="../custom.css" />
+<link rel="stylesheet" type="text/css" href="../custom.css?123" />
 
 <script type="text/javascript">
 var id_link="";

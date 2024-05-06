@@ -109,7 +109,7 @@ $rrr=array();
 echo '<table border="1px" width="100%">'."\n\r";
 foreach($rr as $key=>$value) {
     $title1=$key;
-    $link1="playlist.php?link=".$link."&title=".$pg_tit."&group=".urlencode($key);
+    $link1="playlist.php?link=".urlencode($link)."&title=".$pg_tit."&group=".urlencode($key);
 	if ($n == 0) echo "<TR>"."\n\r";
 	echo '<TD class="cat">'.'<a href="'.$link1.'" target="_blank">'.$title1.'</a></TD>';
     $n++;

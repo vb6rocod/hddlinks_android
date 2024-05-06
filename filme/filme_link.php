@@ -949,6 +949,7 @@ $cookie=$base_cookie."hdpopcorns.dat";
    //echo $h;
   }
 } elseif (preg_match("/veziseriale\.org/",$filelink)) {
+//echo $filelink;
   $ch = curl_init($filelink);
   curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows; U; Windows NT 6.1; en-US; rv:1.9.1.2) Gecko/20090729 Firefox/3.5.2 GTB5');
   curl_setopt($ch,CURLOPT_REFERER,"https://".parse_url($filelink)['host']);
@@ -964,18 +965,18 @@ $cookie=$base_cookie."hdpopcorns.dat";
   $html = curl_exec($ch);
   curl_close ($ch);
   //echo $html;
-  $videos = explode('li id="player-option', $html);
+  $videos = explode("<li id='player-option", $html);
   unset($videos[0]);
   $videos = array_values($videos);
   foreach($videos as $video) {
-   $t1=explode('data-post="',$video);
-   $t2=explode('"',$t1[1]);
+   $t1=explode("data-post='",$video);
+   $t2=explode("'",$t1[1]);
    $id=$t2[0];
-   $t1=explode('data-nume="',$video);
-   $t2=explode('"',$t1[1]);
+   $t1=explode("data-nume='",$video);
+   $t2=explode("'",$t1[1]);
    $nume=$t2[0];
-   $t1=explode('data-type="',$video);
-   $t2=explode('"',$t1[1]);
+   $t1=explode("data-type='",$video);
+   $t2=explode("'",$t1[1]);
    $tip=$t2[0];
    $l="https://".parse_url($filelink)['host']."/wp-admin/admin-ajax.php";
    $post="action=doo_player_ajax&post=".$id."&nume=".$nume."&type=".$tip;

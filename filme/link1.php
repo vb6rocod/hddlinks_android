@@ -3149,6 +3149,16 @@ $filelink=htmlspecialchars_decode($filelink, ENT_QUOTES);
   $r=json_decode($h,1);
   if (isset($r['data']['file']['sources'][0]['src'])) {
    $link="https://fsharetv.io".$r['data']['file']['sources'][0]['src'];
+  file_put_contents("lava.m3u8",$link);
+  if ($flash == "flash") {
+
+  //$p = dirname($_SERVER['HTTP_REFERER']);
+  $t1=explode("?",$_SERVER['HTTP_REFERER']);
+  $p=dirname($t1[0]);
+  $link = $p."/lava.m3u8";
+  } else {
+  $link = "http://127.0.0.1:8080/scripts/filme/lava.m3u8";
+  }
    if ($flash <> "flash")
     $link=$link."|Referer=".urlencode("https://fsharetv.io");
   }

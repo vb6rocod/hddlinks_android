@@ -16,7 +16,8 @@ $pg_tit="sportsonline";
         body {
             background-color: #272B39;
             color: white;
-            font-family: Arial, sans-serif;
+            font-family: "sans-serif", monospace;
+            font-size: 18px;
             padding: 20px;
             margin: 0;
         }
@@ -217,6 +218,8 @@ $n=0;
 $w=0;
 $r=array();
 $l="https://sportsonline.so/247.txt";
+//$l="https://sportsonline.gl/prog.txt";
+$l="https://v2.sportsonline.si/247.txt";
 $head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/110.0',
 'Accept: */*',
 'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
@@ -237,7 +240,7 @@ $head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gec
   //echo $h;
   $videos=explode("\n",$h);
   
-  unset($videos[0]);
+  //unset($videos[0]);
   $videos = array_values($videos);
   foreach($videos as $video) {
     if (preg_match("/https/",$video)) {
@@ -309,11 +312,14 @@ $link="https://sportsonline.gl/prog.txt";
   //echo $h;
 $ev=array();
 $evv=array();
-preg_match_all("/(Monday|Tuesday|Wednesday|Thursday|Friday|Saturday|Sunday)/si",$h,$d);
-$m=preg_split("/Monday|Tuesday|Wednesday|Thursday|Friday|Saturday|Sunday/i",$h);
+//$h=str_replace("Sivasspor","Sivasspor Friday",$h);
+preg_match_all("/(Monday|Tuesday|Wednesday|Thursday|Friday|Saturday|Sunday)\s*\n/si",$h,$d);
+$m=preg_split("/(Monday|Tuesday|Wednesday|Thursday|Friday|Saturday|Sunday)\s*\n/i",$h);
+//print_r ($d);
+//print_r ($m);
 for ($z=0;$z<count($d[0]);$z++) {
  $e=array();
-  if (preg_match_all("/(\d{1,2}\:\d{2})\s+([^\|]+)\|\s*(.+)/",$m[$z+1],$e)) {
+  if (preg_match_all("/(\d{1,2}\:\d{2})\s+(.*?)\|?\s*\|?\s*(http.+)/",$m[$z+1],$e)) {
     for ($y=0;$y<count($e[0]);$y++) {
       $ev[$d[0][$z]][]=array($e[1][$y],trim($e[2][$y]),trim($e[3][$y]));
       $evv[$d[0][$z]][trim($e[2][$y])][]=array($e[1][$y], trim($e[3][$y]));

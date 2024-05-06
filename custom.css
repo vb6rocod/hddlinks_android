@@ -1,4 +1,6 @@
-html { height: 100%;}
+html {
+ height: 100%;
+}
 body {background-color:Black;color:White;margin:0px 0px 0px 0px;}
 .balloon { position: absolute; width: 214px; height: 317px; background: #000; border: 1px solid #fff; z-index: 10; display: none; }
 a { text-decoration:none }
@@ -22,7 +24,6 @@ h2 {
  text-align:center;
  vertical-align:middle;
 }
-
 th.cat {
   color:black;
   background-color:#0a6996;

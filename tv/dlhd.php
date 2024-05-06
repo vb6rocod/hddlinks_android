@@ -154,20 +154,14 @@ function ajaxrequest(link) {
   //var request =  new XMLHttpRequest();
 
   var the_data = link;
-  $.post("primasport_fs.php",link,function(t) {
-  //alert (t);
-  document.getElementById("text").innerHTML=t;
   on();
   $.post("direct_link.php",link,function(s) {
+
       off();
-      document.getElementById("text").innerHTML="Wait...";
       document.getElementById("mytest1").href=s;
       document.getElementById("mytest1").click();
   }
   );
-  }
-  );
-
 }
 
 
