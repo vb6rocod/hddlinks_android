@@ -6532,7 +6532,7 @@ $head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:104.0) Gecko/20100101 
   if ($link && $flash <> "flash")
   $link .="|Referer=".urlencode($host)."&Origin=".urlencode($host);
   //}
-} elseif (preg_match("/vidhidevip\./",$filelink)) {
+} elseif (preg_match("/vidhidevip|vidhidepre\./",$filelink)) {
   $host="https://".parse_url($filelink)['host'];
 
   $ua='Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:108.0) Gecko/20100101 Firefox/108.0';
@@ -6765,7 +6765,7 @@ $head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:104.0) Gecko/20100101 
   //echo $h;
   $link=get_max_res($h,$link);
   }
-} elseif (preg_match("/streamvid\.net/",$filelink)) {
+} elseif (preg_match("/streamvid\.net|lylxan\.com/",$filelink)) {
 //echo $filelink;
   $host="https://".parse_url($filelink)['host'];
 
@@ -6791,7 +6791,11 @@ $head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:104.0) Gecko/20100101 
    $srt=$m[1];
   //sources:[{file:"
   //sources:[{src:"
+  //sources:[{file:"
+  //echo $out;
   if (preg_match('/sources\:\s*\[\{src\:\"([^\"]+)\"/', $out, $m)) {
+   $link=$m[1];
+  } elseif (preg_match('/sources\:\s*\[\{file\:\"([^\"]+)\"/', $out, $m)) {
    $link=$m[1];
   } else
    $link="";
@@ -6810,7 +6814,7 @@ $head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:104.0) Gecko/20100101 
   //echo $h;
   $link=get_max_res($h,$link);
   }
-} elseif (preg_match("/streamhide\.|movhide\.pro|filelions\.to|streamwish\.to|guccihide\.com|lonfils\.xyz|uqloads\.xyz/",$filelink)) {
+} elseif (preg_match("/swhoi\.|streamhide\.|movhide\.pro|filelions\.to|streamwish\.to|guccihide\.com|lonfils\.xyz|uqloads\.xyz/",$filelink)) {
 //echo $filelink;
   //https://uqloads.xyz/e/y1i43ovz9r2y
   $host="https://".parse_url($filelink)['host'];
@@ -7293,10 +7297,12 @@ if (count($pl) > 1) {
     }
   preg_match("/\'\w+\':_0x\w+\((\w+)\)\+_0x\w+\((\w+)\)/",$h,$m);
   $cc=count($c);
+  //print_r ($c);
   for ($k=0;$k<$cc;$k++) {
-    if (strlen($c[($m[1]+$k) % $cc].$c[($m[2]+$k) % $cc])==15)
+    //if (strlen($c[($m[1]+$k) % $cc].$c[($m[2]+$k) % $cc])==15)
     $p[]=$c[($m[1]+$k) % $cc].$c[($m[2]+$k) % $cc];
   }
+  //print_r ($p);
   $out="";
   for ($k=0;$k<count($p);$k++) {
   $pass=$p[$k];
@@ -7304,6 +7310,7 @@ if (count($pl) > 1) {
   $out .= $js->decrypt1($pass,$enc);
   }
   }
+  //echo $out;
 
   //$pass="tSIsE8FgpRkv3QQQ";
 ///////////////////////////////////////////////////////////
@@ -9987,7 +9994,7 @@ function xor_string($string, $key) {
   // filemoon.to
   // https://filemoon.sx/e/re09uiwgwgve?c1_file=https://seriale-online.net/subtitrarifilme/tt11291274.vtt&c1_label=Romana
   // https://filemoon.to/e/dk86vk0iouf2?sub.info=https://fmovies.to/ajax/episode/subtitles/0b5d2788859f1833c7f39eb5f5b02122?&autostart=true
-  if (preg_match('/(\/\/[\.\d\w\-\.\/\\\:\?\&\#\%\_\,]*(\.(srt|vtt)))/', $filelink, $s))
+  if (preg_match('/(\/\/[\.\d\w\-\.\/\\\:\?\&\#\%\_\,\(\)]*(\.(srt|vtt)))/', $filelink, $s))
     $srt="https:".$s[1];
    require_once("JavaScriptUnpacker.php");
    require_once ("tear.php");
@@ -10158,8 +10165,9 @@ function xor_string($string, $key) {
    curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
    curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
    curl_setopt($ch, CURLOPT_TIMEOUT, 25);
-   //$h = curl_exec($ch);
+   $h = curl_exec($ch);
    curl_close($ch);
+   echo $h;
    */
    //$link=get_max_res($h,$link);
     $link=$link."|Referer=".urlencode($host)."&Origin=".urlencode($host);
@@ -15138,7 +15146,7 @@ $filelink="https://vidlox.me/".$id;
    unlink ("hqq.txt");
   } else
    $link="";
-  if (preg_match('/([http|https]?[\.\d\w\-\.\/\\\:\?\&\#\%\_\,]*(\.(srt|vtt)))/', $filelink, $m) && !$srt)
+  if (preg_match('/([http|https]?[\.\d\w\-\.\/\\\:\?\&\#\%\_\,\)\(]*(\.(srt|vtt)))/', $filelink, $m) && !$srt)
   $srt=$m[1];
   if ($link && $flash <> "flash")
     $link .="|Referer=".urlencode($host."/")."&Origin=".urlencode($host);

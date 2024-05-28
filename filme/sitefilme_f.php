@@ -169,11 +169,12 @@ if ($page==1) {
 }
 echo '</TR>'."\r\n";
 //https://sitefilme.com/filme-online-hd/page/2/
+//https://sitefilme.com/filme-online-hd/page/2/
 if($tip=="release") {
  if ($page>1)
-  $l ="https://".$host."/page/".$page."/";
+  $l =$last_good."/page/".$page."/";
  else
-  $l="https://".$host."/";
+  $l=$last_good."/";
 } else {
   $search=str_replace(" ","+",$tit);
   if ($page == 1)

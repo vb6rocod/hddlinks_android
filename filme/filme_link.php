@@ -94,13 +94,14 @@ if (preg_match("/filmeonlinegratis\.org/",$filelink)) {
   $html = urldecode(str_replace("@","%",$html));
 //} elseif (strpos($filelink,"fsgratis.") !== false) {
 } elseif (preg_match("/fshd\.ro/",$filelink)) {
+  $host="https://".parse_url($filelink)['host'];
   $head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:120.0) Gecko/20100101 Firefox/120.0',
   'Accept: */*',
   'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
   'Accept-Encoding: deflate',
   'Origin: https://fshd.ro',
   'Connection: keep-alive',
-  'Referer: https://fshd.ro/film/the-naughty-nine-2023/');
+  'Referer: '.$host.'/');
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $filelink);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
@@ -113,7 +114,7 @@ if (preg_match("/filmeonlinegratis\.org/",$filelink)) {
   curl_close($ch);
   if (preg_match("/movie_id\s*\=\s*\"(\d+)\"/",$h,$m))
    $id=$m[1];
-  $l="https://fshd.ro/wp-content/themes/serialeonline2/inc/parts/single/field-ajax.php";
+  $l=$host."/wp-content/themes/serialeonline2/inc/parts/single/field-ajax.php";
   $post="post_id=".$id;
   $head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:120.0) Gecko/20100101 Firefox/120.0',
   'Accept: */*',
@@ -121,9 +122,9 @@ if (preg_match("/filmeonlinegratis\.org/",$filelink)) {
   'Accept-Encoding: deflate',
   'Content-Type: application/x-www-form-urlencoded; charset=UTF-8',
   'X-Requested-With: XMLHttpRequest',
-  'Origin: https://fshd.ro',
+  'Origin: '.$host,
   'Connection: keep-alive',
-  'Referer: https://fshd.ro/film/the-naughty-nine-2023/');
+  'Referer: '.$host.'/');
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $l);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
@@ -965,6 +966,7 @@ $cookie=$base_cookie."hdpopcorns.dat";
   $html = curl_exec($ch);
   curl_close ($ch);
   //echo $html;
+  if (preg_match("/\<li id\=\'player-option/",$html)) {
   $videos = explode("<li id='player-option", $html);
   unset($videos[0]);
   $videos = array_values($videos);
@@ -998,6 +1000,34 @@ $cookie=$base_cookie."hdpopcorns.dat";
 
    $html .=' "'.$h.'" ';
    //echo $h;
+
+  }
+  } elseif (preg_match("/data-id\=[\"\'](\d+)[\"\']/",$html,$m)) {
+   $id=$m[1];
+   $l="https://manager.veziseriale.org/get_links.php";
+   $post="id=".$id;
+   //echo $post;
+   $ch = curl_init($l);
+   curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows; U; Windows NT 6.1; en-US; rv:1.9.1.2) Gecko/20090729 Firefox/3.5.2 GTB5');
+   curl_setopt($ch,CURLOPT_REFERER,$l);
+   curl_setopt ($ch, CURLOPT_POST, 1);
+   curl_setopt ($ch, CURLOPT_POSTFIELDS, $post);
+   //curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+   curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+   curl_setopt($ch, CURLOPT_RETURNTRANSFER  ,1);  // RETURN THE CONTENTS OF THE CALL
+   //curl_setopt($ch, CURLOPT_HEADER, true);
+   curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+   curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
+   curl_setopt($ch, CURLOPT_TIMEOUT, 25);
+   $h = curl_exec($ch);
+   curl_close ($ch);
+   $x=json_decode($h,1);
+   //print_r ($x);
+   for ($k=0;$k<count($x['links']);$k++) {
+   $html .=' <iframe src="'.$x['links'][$k]['url'].'"> ';
+   //echo $h;
+   }
+   $srt=$x['subs1']; //?????
   }
 } elseif (strpos($filelink,"filmeserialeonline.biz") !== false) {
   $ch = curl_init($filelink);
@@ -1459,7 +1489,7 @@ $s=$s."|sbembed\.com|sbembed1\.com|sbplay\.|sbvideo\.net|streamsb\.net|sbplay\.o
 $s=$s."|\w+ssb\.|lvturbo\.|sb\w+\.|sbbrisk\.|sbanh\.|sblanh\.|sbchill\.|sbfast\.com|sblongvu\.com|sbfull\.|sbthe\.|sbspeed\.|tubeload\.|embedo\.|filemoon\.|utbrgebzvhfa\.";
 $s=$s."|streamhide\.|moonmov\.pro|vgfplay\.|fslinks\.|embedv\.|furher\.|truepoweroflove\.|streamdav\.";
 $s=$s."|d0o0d\.|mdfx\w+|do0od";
-$s=$s."|vembed\.net|vgembed\.|luluvdo\.com|guard|voe\.|mdbekjwqa\.|mdzsmut|vidmoly\.to|vidhidevip\./i";
+$s=$s."|vembed\.net|vgembed\.|luluvdo\.com|guard|voe\.|mdbekjwqa\.|mdzsmut|vidmoly\.to|vidhidevip\.|vidhidepre\./i";
 /////////////////////////////////////////////
 //$x=preg_grep($s,$links);
 //print_r ($x);

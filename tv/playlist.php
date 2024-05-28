@@ -284,6 +284,7 @@ for ($z=$step*$page;$z<min($step*($page+1),count($rr[$group]));$z++) {
     $link="direct_link.php?link=".urlencode(fix_t($file))."&title=".urlencode(fix_t($title))."&from=".$from."&mod=direct";
     $l="link=".urlencode(fix_t($file))."&title=".urlencode(fix_t($title))."&from=".$from."&mod=".$mod;
     $fav_link="mod=add&title=".urlencode(fix_t($title))."&link=".urlencode($file);
+    $title=wordwrap($title,25,"\n",true);
     if ($n == 0) echo "<TR>"."\n\r";
     //if ($tast == "NU")
     if ($flash == "flash")
@@ -340,6 +341,7 @@ for ($z=$step*$page;$z<min($step*($page+1),count($matches[2]));$z++) {
     $link="direct_link.php?link=".urlencode(fix_t($file))."&title=".urlencode(fix_t($title))."&from=".$from."&mod=direct";
     $l="link=".urlencode(fix_t($file))."&title=".urlencode(fix_t($title))."&from=".$from."&mod=".$mod;
     $fav_link="mod=add&title=".urlencode(fix_t($title))."&link=".urlencode($file);
+    $title=wordwrap($title,25,"\n",true);
     if ($n == 0) echo "<TR>"."\n\r";
     //if ($tast == "NU")
     if ($flash == "flash")

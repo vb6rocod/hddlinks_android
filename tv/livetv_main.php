@@ -7,6 +7,142 @@
       <title>livetv</title>
 <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
 <link rel="stylesheet" type="text/css" href="../custom.css" />
+    <style>
+        body {
+            background-color: #272B39;
+            color: white;
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            margin: 0;
+        }
+
+        .event-container {
+            width: 100%;
+        }
+
+
+        .event-table {
+            width: 100%;
+            background-color: #22252a;
+            border-collapse: collapse;
+            border-spacing: 0;
+            font-family: "Courier New", monospace;
+            font-size: 18px;
+            margin-bottom: 20px;
+        }
+
+        .event-table th, .event-table td {
+		padding: 5px;
+		text-align: center;
+		/* border: 1px solid #0000005c; */ /* Supprimer cette ligne pour retirer les traits verticaux */
+		font-family: "sans-serif", monospace;
+		font-size: 18px;
+		color: burlywood;
+}
+
+        .event-table th {
+            color: #0fe3d1;
+        }
+
+        .event-table tbody tr:hover {
+            background-color: #666;
+        }
+
+		.event-table tbody tr:nth-child(odd) td {
+    background-color: #00000042; /* Couleur pour les lignes impaires */
+}
+
+.event-table tbody tr:hover td {
+    background-color: #666; /* Couleur au survol de la souris */
+}
+
+        .btn-link {
+            display: inline-block;
+            padding: 10px 20px;
+            text-align: center;
+            text-decoration: none;
+            border: 2px solid #ffcc00;
+            border-radius: 5px;
+            background-color: transparent;
+            color: #ffcc00;
+            font-weight: bold;
+            transition: background-color 0.3s, color 0.3s, border-color 0.3s;
+            cursor: pointer;
+        }
+
+        .btn-link:hover {
+            background-color: #ffcc00;
+            color: #22252a;
+            border-color: #22252a;
+        }
+
+        .btn-stream, .btn-copy {
+            background-color: #277ea566;
+            color: burlywood;
+            border: none;
+            padding: 4px 12px;
+            cursor: pointer;
+            font-weight: bold;
+            border-radius: 5px;
+        }
+
+        .btn-stream:hover, .btn-copy:hover {
+            background-color: #277ea566;
+            color: #ff0000;
+        }
+
+        .event-table .cell-color {
+            background-color: #18222d;
+        }
+
+        .event-table .btn-cell-color {
+            background-color: #18222d;
+        }
+
+        #video-container {
+            width: 100%;
+            margin-top: 20px;
+        }
+
+        #video-player-container {
+            width: 900px;
+            height: 800px;
+            margin: 0 auto;
+            border: 2px solid #ffcc00;
+            border-radius: 10px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        #video-player-container iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+
+        #iframe-code {
+            width: calc(100% - 10px);
+            margin-top: 10px;
+        }
+
+        #copy-button {
+            display: block;
+            margin-top: 10px;
+        }
+
+        #event-info {
+            border: 2px solid #ffcc00;
+            border-radius: 5px;
+            padding: 10px;
+            margin-bottom: 20px;
+            width: fit-content;
+            margin: 0 auto;
+			font-family: system-ui;
+        }
+    </style>
 </head>
 <body>
 <?php
@@ -69,8 +205,10 @@ for ($k=0;$k<count($m[0]);$k++) {
  }
  echo '</TABLE>';
 $n=0;
-echo '<table border="1px" width="100%">'."\n\r";
-echo '<TR><TD class="mp" colspan="6" bgcolor="#0a6996">Top Events LIVE</td></tr>';
+//echo $h;
+//echo '<table border="1px" width="100%">'."\n\r";
+//echo '<TR><TD class="mp" colspan="6" bgcolor="#0a6996">Top Events LIVE</td></tr>';
+echo "<table class='event-table'>";
 $videos = explode('<td OnMouseOver="', $h);
 
 unset($videos[0]);
@@ -88,26 +226,27 @@ foreach($videos as $video) {
  $t1=explode('class="evdesc">',$video);
  $t2=explode('<',$t1[1]);
  $date=$t2[0];
+ //echo $date."\n";
+ //3:00 (BWF World Tour)
+ preg_match("/\d+:\d+\s+\((.*?)\)/",$date,$x);
+ $sport=$x[1];
  preg_match("/(\d+):(\d+)/",$date,$m);
  $ora=sprintf("%02d:%02d",(($m[1]+2)%24),$m[2]);
  $date=str_replace($m[0],$ora,$date);
  $t1=explode('src="',$video);
  $t2=explode('"',$t1[1]);
  $image="https:".$t2[0];
+///////////////////////
+  echo "<tr class='cell-color'>";
+  echo "<td class='cell-color'>".$ora."</td><td class='cell-color'><img src='".$image."' width='40' height='36' /></td>";
+  echo "<td class='event-title cell-color'>".$sport."</td>";
     $link="livetv_fs.php?page=1&link=".urlencode($link)."&title=".urlencode($event);
-	if ($n == 0) echo "<TR>"."\n\r";
 
-	echo '<TD><img width=27 height=25 src="'.$image.'"></TD>';
-    //echo '<a href="'.$link.'" target="_blank">';
-	echo '<TD class="cat"><a href="'.$link.'" target="_blank">'.$event.'<BR>'.$date.'</a></TD>';
-    $n++;
-    if ($n > 2) {
-     echo '</TR>'."\n\r";
-     $n=0;
-    }
+	echo '<TD><a href="'.$link.'" target="_blank">'.$event.'</a></TD>';
 
+ echo '</TR>';
 }
- if ($n<3) echo "</TR>"."\n\r";
+
  echo '</table>';
 ?>
 

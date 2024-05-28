@@ -1,14 +1,10 @@
 <!DOCTYPE html>
-<?php
-$link=urldecode($_GET['link']);
-$tit=urldecode($_GET['title']);
-?>
 <html><head>
 <meta http-equiv="content-type" content="text/html; charset=UTF-8">
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate"/>
 <meta http-equiv="Pragma" content="no-cache"/>
 <meta http-equiv="Expires" content="0"/>
-      <title><?php echo $tit; ?></title>
+      <title>bundesliga-live</title>
 <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
 <link rel="stylesheet" type="text/css" href="../custom.css" />
     <style>
@@ -166,20 +162,17 @@ function convert_entity($matches, $destroy = true) {
   // else
   return $destroy ? '' : $matches[0];
 }
-echo '<h2>'.$tit.'</h2>';
-echo '<table border="1px" width="100%">'."\n\r";
-//echo '<TR><td style="color:black;background-color:deepskyblue;text-align:center" colspan="3"><b>Digi24 Emisiuni</b></TD></TR>';
-$n=0;
-echo '<TR>';
-
+echo '<h2>bundesliga-live</h2>';
+$r=array();
+$l="https://bundesliga-live.info/";
 $head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/110.0',
 'Accept: application/json, text/plain, */*',
 'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
 'Accept-Encoding: deflate',
 'Connection: keep-alive',
-'Referer: http://livetv.sx/');
+'Referer: http://bundesliga-live.info/');
   $ch = curl_init();
-  curl_setopt($ch, CURLOPT_URL, $link);
+  curl_setopt($ch, CURLOPT_URL, $l);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
   curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
   curl_setopt($ch, CURLOPT_HTTPHEADER, $head);
@@ -190,54 +183,30 @@ $head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gec
   $h = curl_exec($ch);
   curl_close($ch);
 /////////////////////////////////////////////////////////////
-//echo $h;
-$n=0;
+  preg_match_all("/img class\=\"mascot\" src\=\"([^\"]+)\".*?href\=\"([^\"]+)\".*?\<span\>([^\<]+)\<\/span\>.*?data\-time\=\"([^\"]+)\".*?\<\/time\>([^\<]+)\</si",$h,$m);
+  //print_r ($m);
+  for ($k=0;$k<count($m[0]);$k++) {
+   //2024-05-20T18:30:00
+   preg_match("/(\d+)-(\d+)-(\d+)T(\d+):(\d+)/",$m[4][$k],$n);
+   $day=$n[3]."-".$n[2]."-".$n[1];
+   $ora=sprintf("%02d:%02d",(($n[4]+1)%24),$n[5]);
+   $r[$day][]=array($ora,$m[1][$k],$m[2][$k],$m[3][$k],$m[5][$k]);
+  }
+  //print_r ($r);
 echo "<table class='event-table'>";
-$videos=explode('<td colspan=4 height=48>',$h);
-unset($videos[0]);
-$videos = array_values($videos);
-foreach($videos as $video) {
- $t1=explode('<b>',$video);
- $t2=explode('</b>',$t1[1]);
- $day=$t2[0];
- echo "<tr><th colspan='3'>".$day."</th></tr>";
- //echo '<TR><TD style="color:black;background-color:deepskyblue;text-align:center" colspan=4>'.$day.'</TD></TR>';
- $vids=explode('<a class="live"',$video);
- unset ($vids[0]);
- foreach($vids as $vid) {
- $t1=explode('href="',$vid);
- $t2=explode('"',$t1[1]);
- $link="http://livetv.sx".$t2[0];
- $t3=explode(">",$t1[1]);
- $t4=explode("<",$t3[1]);
- $event=$t4[0];
- $event=decode_entities_full($event, ENT_COMPAT, "utf-8");
- $t1=explode('class="evdesc">',$vid);
- $t2=explode('</span>',$t1[1]);
- $date=$t2[0];
- $date=str_replace("<br>","",$date);
- //echo $date;
- preg_match("/\d+:\d+\s+\((.*?)\)/si",$date,$x);
- $sport=$x[1];
- preg_match("/(\d+):(\d+).+\(([^\)]+)\)/si",$date,$s);
- //print_r ($s);
- preg_match("/(\d+):(\d+)/",$date,$m);
- $ora=sprintf("%02d:%02d",(($m[1]+2)%24),$m[2]);
- //$date=str_replace($m[0],$ora,$date);
- $date=$ora." (".$s[3].")";
-
+foreach ($r as $key=>$value) {
+ echo "<th colspan='3'>".$key.'</th>';
+ for ($z=0;$z<count($value);$z++) {
   echo "<tr class='cell-color'>";
-  echo "<td class='cell-color'>".$ora."</td><td class='cell-color'>".$sport."</td>";
-  //echo "<td class='event-title cell-color'>".$sport."</td>";
-  $link="livetv_fs.php?page=1&link=".urlencode($link)."&title=".urlencode($event);
-
-	echo '<TD><a href="'.$link.'" target="_blank">'.$event.'</a></TD>';
-
- echo '</TR>';
+  echo "<td class='cell-color'>".$value[$z][0]."</td><td class='cell-color'>".$value[$z][4]."</td>";
+  $event=$value[$z][3];
+  $l="bundesliga-live_fs.php?page=1&link=".urlencode($value[$z][2])."&title=".urlencode($event);
+  echo "<td class='event-title cell-color'>".'<a href="'.$l.'" target="_blank">'.$event."</a></td>";
+  echo "<td>";
+  echo '</tr>';
  }
 }
-echo '</TABLE>';
-/////////////////////////////////////////////////////
+echo '</table>';
 
 ?>
 

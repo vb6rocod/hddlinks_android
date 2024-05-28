@@ -128,7 +128,7 @@ function isValid(evt) {
     }
    }
 function isKeyPressed(event) {
-  if (event.ctrlKey) {
+  if (event.ctrlKey) {    //event.altKey
     id = "imdb_" + event.target.id;
     val_imdb=document.getElementById(id).value;
     msg="imdb.php?" + val_imdb;

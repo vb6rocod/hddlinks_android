@@ -70,7 +70,7 @@ $(document).on('keyup', '.imdb', isValid);
 <TR>
 <TD width="25%"><a href="tv/rds.php?title=emisiuni.live&link=https://emisiuni.live/canale-tv-1/" target="_blank">emisiuni.live</TD>
 <TD width="25%"><a href="tv/rds.php?title=rds.live&link=https://rds.live/canale-tv/" target="_blank">rds.live</TD>
-<TD width="25%"><a href="tv/tvonline.php" target="_blank">tvonline</TD>
+<TD width="25%"><a href="tv/tvonline_main.php" target="_blank">tvonline</TD>
 <TD width="25%"><a href="tv/tvcanale.php" target="_blank">tvcanale</TD>
 </TR>
 <TR>
@@ -106,7 +106,7 @@ $(document).on('keyup', '.imdb', isValid);
 <TD width="25%"><a href="tv/primaplay.php?page=1&link=&title=primaplay" target="_blank">primaplay</a></TD>
 <TD width="25%"><a href="tv/protvmd.php?page=1,,ProTV Moldova" target="_blank">PROTV Moldova</a></TD>
 <TD width="25%"><a href="tv/inprofunzime.php?page=1,,IN+PROfunzime" target="_blank">IN PROfunzime</a></TD>
-<TD width="25%"></TD>
+<TD width="25%"><a href="tv/emisiuni_main.php" target="_blank">emisiuni.net</a></TD>
 </TR>
 
 <!-- Sport -->
@@ -119,8 +119,8 @@ $(document).on('keyup', '.imdb', isValid);
 </TR>
 <TR>
 <TD width="25%"><a href="tv/livetv_main.php" target="_blank">livetv.sx</a></TD>
-<TD width="25%"></TD>
-<TD width="25%"></TD>
+<TD width="25%"><a href="tv/channelstream.php" target="_blank">channelstream</a></TD>
+<TD width="25%"><a href="tv/bundesliga-live.php" target="_blank">bundesliga-live</a></TD>
 <TD width="25%"></TD>
 </TR>
 <!-- Clip -->
