@@ -159,6 +159,35 @@ if ($from=="emisiuni_net") {
   $t2=explode('"',$t1[1]);
   $link=$t2[0];
 }
+/////////////////////////////////////////
+if (preg_match("/stream2watch\./",$link)) {
+  $head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/110.0',
+  'Accept: */*',
+  'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
+  'Accept-Encoding: deflate',
+  'Referer: https://stream2watch.pk/',
+  'Origin: https://stream2watch.pk'
+  );
+  //https://stream2watch.pk/895tv
+  //https://stream2watch.pk/live/605tv
+  $l=str_replace("stream2watch.pk","stream2watch.pk/live",$link);
+  $ch = curl_init();
+  curl_setopt($ch, CURLOPT_URL, $l);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+  curl_setopt($ch, CURLOPT_HTTPHEADER, $head);
+  curl_setopt($ch, CURLOPT_ENCODING,"");
+  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+  $h = curl_exec($ch);
+  curl_close($ch);
+  $t1=explode('live score" src="',$h);
+  $t2=explode('"',$t1[1]);
+  $link=$t2[0]; // https://dlhd.sx/tele/stream-62.php
+
+}
+////////////////////////////////////////
 if ($from=="channelstream") {
   //echo $link;
   $t1=explode("xxx=",$link);
@@ -366,6 +395,7 @@ $head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gec
   //https://scolie.net/acd/ab3/boki.php
   //https://www.powerover.online/2024/05/srarenapremuim3_16.html
   //https://kingstreamz.lol/rlive/free52.php
+  //https://jokersportshd.org/13aa54ee/acfa304e/3d6af974
   //echo $link;
  }
 }
@@ -618,10 +648,11 @@ if (preg_match("/daddylivehd\.sx\/embed\/|daddylive\d\.shop\/mylive/",$link)) { 
   //echo $h;
   preg_match("/\<iframe.*?src\=\"([^\"]+)\"/i",$h,$m);
   $l3=fixurl($m[1]); //https://weblivehdplay.ru/premiumtv/daddyhd.php?id=41
+  //echo $l3;
 $head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:125.0) Gecko/20100101 Firefox/125.0',
 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8',
 'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
-'Accept-Encoding: gzip, deflate, br',
+'Accept-Encoding: deflate',
 'Connection: keep-alive',
 'Referer: https://daddylive1.shop/',
 'Upgrade-Insecure-Requests: 1',
@@ -635,7 +666,7 @@ $head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:125.0) Gec
   curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
   curl_setopt($ch, CURLOPT_HTTPHEADER, $head);
   curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-  curl_setopt($ch, CURLOPT_ENCODING,"");
+  //curl_setopt($ch, CURLOPT_ENCODING,"");
   curl_setopt($ch, CURLOPT_HEADER, 1);
   $h = curl_exec($ch);
   curl_close($ch);
@@ -675,7 +706,7 @@ $ua="Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:125.0) Gecko/20100101 Firefox/
   if ($link && $flash <> "flash")
     $link=$link."|Referer=".urlencode("https://viwlivehdplay.ru/")."&Origin=".urlencode("https://viwlivehdplay.ru")."&User-Agent=".urlencode($ua);
 }
-if (preg_match("/(antennasports|maxsport|poscitechs|soccerstream100|streamhd247|lato|venushd|scolie|kingstreamz|powerover)\./",$link)) {
+if (preg_match("/(antennasports|maxsport|poscitechs|soccerstream100|streamhd247|lato|venushd|scolie|kingstreamz|powerover)\.|jokersportshd\./",$link)) {
 $head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/110.0',
 'Accept: application/json, text/plain, */*',
 'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
@@ -701,6 +732,34 @@ $head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gec
   //echo $link;
   //echo $h;
 }
+if (preg_match("/realtvs\.tv/",$link)) {
+  //https://vip.realtvs.tv/jokers.php?u=tennis20
+  $ua="Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:124.0) Gecko/20100101 Firefox/124.0";
+  $head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:124.0) Gecko/20100101 Firefox/124.0',
+  'Accept: application/json, text/plain, */*',
+  'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
+  'Accept-Encoding: deflate',
+  'Connection: keep-alive',
+  'Origin: https://jokersportshd.org',
+  'Referer: https://jokersportshd.org/');
+  $ch = curl_init();
+  curl_setopt($ch, CURLOPT_URL, $link);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+  curl_setopt($ch, CURLOPT_HTTPHEADER, $head);
+  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+  //curl_setopt($ch, CURLOPT_HEADER,1);
+  $h = curl_exec($ch);
+  curl_close($ch);
+  if (preg_match("/file:\s*\"([^\"]+)\"/",$h,$m))
+   $link=$m[1];
+  if ($flash <> "flash")
+   $link .="|Referer=".urlencode("https://jokersportshd.org/")."&Origin=".urlencode("https://jokersportshd.org")."&User-Agent=".urlencode($ua);
+
+}
+
 if (preg_match("/fullassia\.com/",$link)) {
   //https://fullassia.com/live/sportofeurope/?lang=ro
   $ua="Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:124.0) Gecko/20100101 Firefox/124.0";
@@ -1151,33 +1210,7 @@ if (preg_match("/primasport\.one/",$link)) {
    $link="";
   //echo $link;
 }
-if (preg_match("/stream2watch\./",$link)) {
-  $head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/110.0',
-  'Accept: */*',
-  'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
-  'Accept-Encoding: deflate',
-  'Referer: https://stream2watch.pk/',
-  'Origin: https://stream2watch.pk'
-  );
-  //https://stream2watch.pk/895tv
-  //https://stream2watch.pk/live/605tv
-  $l=str_replace("stream2watch.pk","stream2watch.pk/live",$link);
-  $ch = curl_init();
-  curl_setopt($ch, CURLOPT_URL, $l);
-  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
-  curl_setopt($ch, CURLOPT_HTTPHEADER, $head);
-  curl_setopt($ch, CURLOPT_ENCODING,"");
-  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
-  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
-  $h = curl_exec($ch);
-  curl_close($ch);
-  $t1=explode('live score" src="',$h);
-  $t2=explode('"',$t1[1]);
-  $link=$t2[0]; // https://dlhd.sx/tele/stream-62.php
-  //echo $link;
-}
+
 if (preg_match("/dlhd\.sx/",$link)) {
   $head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/110.0',
   'Accept: */*',
@@ -1337,19 +1370,24 @@ if (preg_match("/tvonline123\./",$link)) {
   );
   if (preg_match("/file:\s*\"([^\"]+)\"/",$h,$n)) {
    $link=$n[1];
-
+   if (preg_match("/cdn\.tv24\.gdn/",$link)) {
    curl_setopt($ch, CURLOPT_URL, $link);
    curl_setopt($ch, CURLOPT_HTTPHEADER, $head);
    $h = curl_exec($ch);
    //echo $h;
    $link=get_max_res($h,$link);
-   //curl_setopt($ch, CURLOPT_URL, $link);
-   //$h = curl_exec($ch);
-   //echo $h;
+   }
+   //echo $link."\n";
    curl_close($ch);
    //$link="https://cdn.tv24.gdn/lb/DigiSport1/tracks-v1a1/mono.m3u8?token=df4349c15b4ef3dab71b47822e233456be14149c-f46b3594df67e2fd8fe79022f376cfae-1716899061-1716888261";
    if ($flash <> "flash")
-     $link .="|Referer=".urlencode("https://www.tvonline123.com/")."&Origin=".urlencode("https://www.tvonline123.com")."&User-Agent=".urlencode($ua);
+     if (!preg_match("/cdn\.tv24\.gdn/",$link))
+      $link .="|Referer=".urlencode("https://www.tvonline123.com/")."&Origin=".urlencode("https://www.tvonline123.com")."&User-Agent=".urlencode($ua);
+     else {
+      $t1=explode("?",$_SERVER['HTTP_REFERER']);
+      $p=dirname($t1[0]);
+      $link=$p."/hserver.php?file=".urlencode($link);
+     }
   } else {
     $link="";
   }
@@ -1971,9 +2009,10 @@ if (preg_match("/truyenxalo\./",parse_url($link)['host'])) {
   if ($link && $flash <> "flash")
     $link=$link."|Referer=".urlencode($ref."/")."&Origin=".urlencode($ref);
 }
-if (preg_match("/livehdplay\.ru/",parse_url($link)['host'])) {
+if (preg_match("/livehdplay\.ru|1qwebplay\.xyz/",parse_url($link)['host'])) {
   // $l="https://livehdplay.ru/maxsport.php?id=cnmyfeed21";
   //https://olalivehdplay.ru/premiumtv/daddylivehd.php?id=194
+  //https://1qwebplay.xyz/premiumtv/daddylivehd.php?id=101
   //echo $link;
   $ua="Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:124.0) Gecko/20100101 Firefox/124.0";
   if (preg_match("/daddylive/",$link))

@@ -31,6 +31,10 @@ function str_between($string, $start, $end){
 }
 echo '<h2>'.$tit.'</h2>';
 $ua = $_SERVER['HTTP_USER_AGENT'];
+//echo $link;
+//https://ling-online.net/en/videos/serials/the-boys-serial/watch/
+//https://ling-online.net/en/videos/serials/the-boys-serial/iframe/
+$link=str_replace("iframe","watch",$link);
   $host=parse_url($link)['host'];
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $link);

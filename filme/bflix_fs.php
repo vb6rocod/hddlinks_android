@@ -225,7 +225,7 @@ $r=array();
 if (preg_match("/<div class\=\"film\-server\"/",$h))
 $videos = explode('<div class="film-server"', $h);
 else
-$videos=explode('<li class="server',$h);
+$videos=explode('span class="server',$h);
 unset($videos[0]);
 $videos = array_values($videos);
 foreach($videos as $video) {
@@ -268,7 +268,7 @@ $r=array();
 if (preg_match("/<div class\=\"film\-server\"/",$h))
 $videos = explode('<div class="film-server"', $h);
 else
-$videos=explode('<li class="server',$h);
+$videos=explode('span class="server',$h);
 unset($videos[0]);
 $videos = array_values($videos);
 foreach($videos as $video) {

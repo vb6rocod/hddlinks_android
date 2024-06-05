@@ -15,6 +15,7 @@ $height="278px";
 $last_good="https://bflix.ru";
 $last_good="https://bflixz.to";
 $last_good="https://fmoviesz.to";
+$last_good="https://fmovies24.to";
 /* ==================================================== */
 $has_fav="yes";
 $has_search="yes";

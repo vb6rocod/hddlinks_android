@@ -15,6 +15,7 @@ $height="278px";
 $last_good="https://bflix.ru";
 $last_good="https://bflixz.to";
 $last_good="https://bflix.to";
+$last_good="https://bflixhd.to";
 /* ==================================================== */
 $has_fav="yes";
 $has_search="yes";
@@ -210,7 +211,7 @@ $x=json_decode($h,1);
 $h=$x['result'];
 $host=parse_url($l)['host'];
 
-$videos = explode('<div class="film"', $h);
+$videos = explode('<div class="entity"', $h);
 unset($videos[0]);
 $videos = array_values($videos);
 foreach($videos as $video) {
@@ -221,9 +222,10 @@ foreach($videos as $video) {
  $t1=explode('src="',$video);
  $t2=explode('"',$t1[1]);
  $image=$t2[0];
- $t1=explode('class="film-name">',$video);
+ $t1=explode('<h5>',$video);
  $t2=explode('</',$t1[1]);
  $title=trim($t2[0]);
+ $year="";
  if (preg_match("/span class\=\"dot\">/",$video)) {
  $t1=explode('span class="dot">',$video);
  $t2=explode('<',$t1[1]);
@@ -233,6 +235,8 @@ foreach($videos as $video) {
  $t2=explode('<',$t1[1]);
  $year=trim($t2[0]);
  }
+ if (preg_match("/\<span\>([1|2]\d{3})/",$video,$y))
+  $year=$y[1];
   if (preg_match("/\/tv\//",$link)) $f[] = array($title,$link,$image,$year);
 }
 foreach($f as $key => $value) {

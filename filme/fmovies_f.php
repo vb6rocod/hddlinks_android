@@ -13,6 +13,7 @@ $link=$_GET["link"];
 $width="200px";
 $height="278px";
 $last_good="https://fmoviesz.to";
+$last_good="https://fmovies24.to";
 $host=parse_url($last_good)['host'];
 /* ==================================================== */
 $has_fav="yes";

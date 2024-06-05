@@ -99,7 +99,7 @@ $z=1;
 $path = parse_url($link)['path'];
 //echo $h;
 $host=parse_url($link)['host'];
-$videos = explode('<ul class="episodes"', $h);
+$videos = explode('<ul class="range', $h);
 $sezoane=array();
 $link_sez=array();
 //$link_sezoane=array();
@@ -160,7 +160,7 @@ foreach($videos as $video) {
   $t2=explode('"',$t1[1]);
   $link=$t2[0]."&".$last_good;
 
-  $t3=explode('class="num">',$vid);
+  $t3=explode('data-toggle="tooltip"',$vid);
   $t4=explode('<span>',$t3[1]);
   $t5=explode('</span',$t4[1]);
   $ep_tit = $t5[0];

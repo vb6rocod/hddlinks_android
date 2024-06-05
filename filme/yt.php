@@ -2,22 +2,21 @@
 //$file="https://www.youtube.com/watch?v=y5IdUV6KN_A";
 //https://www.youtube.com/watch?v=aTKBowDjMQg
 //echo youtube_nou($file);
+//include ("../common.php");
+$cookie=$base_cookie."yt.dat";
+//echo $cookie;
 function youtube_nou1($file) {
 if(preg_match('/youtube\.com\/(v\/|watch\?v=|embed\/)([\w\-]+)/', $file, $match)) {
+  global $cookie;
   $r=array();
   $s=array();
   $out="";
   $id = $match[2];
-  $file = "https://www.youtube.com/watch?v=".$id;
-  $l="https://y2mate.is/analyze";
-  $l="https://en.y2mate.so/analyze";
-  $post= "url=".$file;
+  $l="https://en.y2mate.is/v41/";
   $head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:125.0) Gecko/20100101 Firefox/125.0',
   'Accept: application/json, text/javascript, */*; q=0.01',
   'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
   'Accept-Encoding: deflate',
-  'Content-Type: application/x-www-form-urlencoded; charset=UTF-8',
-  'Content-Length: '.strlen($post),
   'Origin: https://en.y2mate.is',
   'Connection: keep-alive',
   'Referer: https://en.y2mate.is/');
@@ -27,13 +26,48 @@ if(preg_match('/youtube\.com\/(v\/|watch\?v=|embed\/)([\w\-]+)/', $file, $match)
   curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
   curl_setopt($ch, CURLOPT_HTTPHEADER, $head);
   curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+  curl_setopt($ch, CURLOPT_COOKIEJAR, $cookie);
+  curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie);
+  curl_setopt($ch, CURLOPT_HEADER, 1);
+  $h = curl_exec($ch);
+  curl_close($ch);
+  //echo $h;
+  $t1=explode('csrf-token" content="',$h);
+  $t2=explode('"',$t1[1]);
+  $csrf=$t2[0];
+  
+  $file = "https://www.youtube.com/watch?v=".$id;
+  $l="https://y2mate.is/analyze";
+  $l="https://en.y2mate.so/analyze";
+  $l="https://en.y2mate.is/analyze";
+  $post= "url=".$file;
+  $head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:125.0) Gecko/20100101 Firefox/125.0',
+  'Accept: application/json, text/javascript, */*; q=0.01',
+  'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
+  'Accept-Encoding: deflate',
+  'Content-Type: application/x-www-form-urlencoded; charset=UTF-8',
+  'Content-Length: '.strlen($post),
+  'X-CSRF-TOKEN: '.$csrf,
+  'Origin: https://en.y2mate.is',
+  'Connection: keep-alive',
+  'Referer: https://en.y2mate.is/');
+  //print_r ($head);
+  $ch = curl_init();
+  curl_setopt($ch, CURLOPT_URL, $l);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+  curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
+  curl_setopt($ch, CURLOPT_HTTPHEADER, $head);
+  curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie);
+  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
   curl_setopt($ch, CURLOPT_POST,1);
   curl_setopt($ch, CURLOPT_POSTFIELDS,$post);
   //curl_setopt($ch, CURLOPT_HEADER, 1);
   $h = curl_exec($ch);
   curl_close($ch);
+  //echo $h;
   $r=json_decode($h,1)['formats']['video'];
   //print_r ($r);
+  //die();
   foreach ($r as $rr) {
    if ($rr['needConvert']==false)
     $s[$rr['formatId']]=$rr['url'];

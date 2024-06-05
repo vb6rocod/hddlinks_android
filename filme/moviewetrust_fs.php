@@ -255,6 +255,8 @@ if ($tip=="movie")
   $l="https://vidsrc.me/embed/".$imdb."/";
 else
   $l="https://vidsrc.me/embed/".$imdb."/".$sez."-".$ep."/";
+  //echo $l;
+  //die();
    $r[]=$l;
    $s[]="v. ".parse_url($l)['host'];
 
@@ -264,7 +266,7 @@ else
      $r[]="https://voidboost.net/embed/".$imdb."?&s=".$sez."&e=".$ep."&t=20&td=20&tlabel=English&cc=off&plang=en&poster=1";
    $s[]="voidboost";
    $imdbid=str_replace("tt","",$imdb);
-
+   //print_r ($r);
 /////////////////////////////////////////////////////
   if ($tip=="movie")
    $l="https://multiembed.mov/?video_id=".$imdb;

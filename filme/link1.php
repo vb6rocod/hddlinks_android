@@ -946,8 +946,9 @@ $head=json_decode(file_get_contents($base_cookie."netfilm.dat"),1);
   }
   }
 }
-if (preg_match("/bflix\w?\.|sflix\w?\.|fmovies\w?\.to/",parse_url($filelink)['host'])) {
+if (preg_match("/bflix\w*\.|sflix\w*\.|fmovies\w*\.to/",parse_url($filelink)['host'])) {
   require_once("bunny1.php");
+  //echo $filelink; //bflixhd.to
   $head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/109.0',
   'Accept: application/json, text/javascript, */*; q=0.01',
   'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
@@ -9960,8 +9961,9 @@ function xor_string($string, $key) {
   }
    if ($link && $flash <> "flash")
     $link=$link."|Referer=".urlencode("https://playtube.ws")."&Origin=".urlencode("https://playtube.ws");
-} elseif (preg_match("/filemoon\.|moonmov\.pro|furher\.|truepoweroflove\.|kerapoxy\./",$filelink)) {
+} elseif (preg_match("/filemoon\.|moonmov\.pro|furher\.|truepoweroflove\.|kerapoxy\.|c4qhk0je\./",$filelink)) {
    //echo $filelink;
+   //c4qhk0je.xyz
   $ua="Mozilla/5.0 (Windows NT 10.0; rv:81.0) Gecko/20100101 Firefox/81.0";
   $y = parse_url($filelink)['query'];
   parse_str($y,$r);
@@ -16853,6 +16855,7 @@ $file_array=explode("\n",$contents);
           $n++;
         }
   }
+  if (!$output) $output=$contents;
 return $output;
 }
 //echo $h;
