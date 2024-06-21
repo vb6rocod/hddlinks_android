@@ -128,13 +128,13 @@ $l="https://tvcanale.live/";
   $html = curl_exec($ch);
   curl_close($ch);
   //echo $html;
-$videos = explode('div class="element">', $html);
+$videos = explode('<div class="channel', $html);
 unset($videos[0]);
 $n=0;
 $videos = array_values($videos);
   foreach($videos as $video) {
-  $t1=explode('data-name>',$video);
-  $t2=explode('<',$t1[1]);
+  $t1=explode('alt="',$video);
+  $t2=explode('"',$t1[1]);
   $title=$t2[0];
   $t1=explode('href="',$video);
   $t2=explode('"',$t1[1]);

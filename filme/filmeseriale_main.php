@@ -38,6 +38,7 @@ $prev=$base."?page=".($page-1)."&".$p;
 /* ==================================================== */
 $tit=unfix_t(urldecode($tit));
 $link=unfix_t(urldecode($link));
+$l2="filmeseriale_main1.php";
 /* ==================================================== */
 if (file_exists($base_cookie."seriale.dat"))
   $val_search=file_get_contents($base_cookie."seriale.dat");
@@ -145,7 +146,7 @@ echo '<TR>'."\r\n";
 if ($page==1) {
    if ($tip == "release") {
    if ($has_fav=="yes" && $has_search=="yes") {
-     echo '<TD class="nav"><a id="fav" href="'.$fav_target.'" target="_blank">Favorite</a></TD>'."\r\n";
+     echo '<TD class="nav"><a id="fav" href="'.$fav_target.'" target="_blank">Favorite</a> | <a href="'.$l2.'" target="_blank">GEN</a></TD>'."\r\n";
      echo '<TD class="form" colspan="2">'.$form.'</TD>'."\r\n";
      echo '<TD class="nav" align="right"><a href="'.$next.'">&nbsp;&gt;&gt;&nbsp;</a></TD>'."\r\n";
    } else if ($has_fav=="no" && $has_search=="yes") {
@@ -166,7 +167,7 @@ if ($page==1) {
 }
 echo '</TR>'."\r\n";
 if ($tip == "release")
-  $l="http://www.filmeserialeonline.org/seriale/page/".$page."/";
+  $l=$link."page/".$page."/";
 else {
   $search=str_replace(" ","+",$tit);
   if ($page == 1)

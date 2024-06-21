@@ -369,11 +369,13 @@ $head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gec
   $h1=$t1[1];
   preg_match("/\<iframe.+src\=\"([^\"]+)\"/",$h1,$m);
   $link=fixurl($m[1]);
+
   //https://sons-stream.com/tvsxxx.php?hd=322
   //https://embed.tvcom.cz/59f15d65-ea2f-43ee-b7eb-89347b64a9bb/720/
   //https://wikisport.se/court/t3.php
   //https://ustream.pro/us22.php todo
   //https://antennasports.ru/matchpremier.php
+  //https://antennasports.ru/bet.php?id=6305054
   //https://maxsport.one/matchpremier.php
   //https://poscitechs.shop/live/stream-573.php
   //https://d.daddylivehd.sx/embed/stream-41.php
@@ -623,7 +625,7 @@ if (preg_match("/popcdn\.day/",$link)) {
   //https://love2live.wideiptv.top/TNT1UK/embed.html?token=49951d5347cd117b28ef2b41226b54c9d820be36-609da27a497fab85089a8d4b13eb1196-1714655990-1714645190&remote=no_check_ip
   $link=str_replace("embed.html","index.fmp4.m3u8",$l3);
 }
-if (preg_match("/daddylivehd\.sx\/embed\/|daddylive\d\.shop\/mylive/",$link)) { ////////////////////////////////
+if (preg_match("/daddylivehd\.sx\/embed\/|daddylive\d\.shop\/mylive|daddy\-stream\.xyz\/mylivetv/",$link)) { ////////////////////////////////
    //https://daddylive1.shop/mylivetv/stream-426.php
    //https://daddylive1.shop/mylive/stream-11.php
    //
@@ -675,6 +677,8 @@ $head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:125.0) Gec
   //echo $h;
   if (preg_match("/[^\/]source:\s*\'([^\']+)/",$h,$m))
    $link=trim($m[1]);
+  elseif (preg_match("/\"src\":\s*\"([^\"]+)\"/",$h,$m))   //"src": "
+   $link=trim($m[1]);
   else
    $link="";
 $head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:125.0) Gecko/20100101 Firefox/125.0',
@@ -707,12 +711,14 @@ $ua="Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:125.0) Gecko/20100101 Firefox/
     $link=$link."|Referer=".urlencode("https://viwlivehdplay.ru/")."&Origin=".urlencode("https://viwlivehdplay.ru")."&User-Agent=".urlencode($ua);
 }
 if (preg_match("/(antennasports|maxsport|poscitechs|soccerstream100|streamhd247|lato|venushd|scolie|kingstreamz|powerover)\.|jokersportshd\./",$link)) {
+  $link=str_replace("antennasports.ru/bet.php?","4kwebplay.xyz/crv.php?",$link);
 $head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/110.0',
 'Accept: application/json, text/plain, */*',
 'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
 'Accept-Encoding: deflate',
 'Connection: keep-alive',
 'Referer: http://livetv.sx/');
+if (!preg_match("/4kwebplay\.xyz/",$link)) {
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $link);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
@@ -727,6 +733,9 @@ $head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gec
   $h=preg_replace("/\<\!--.*?--\>/si","",$h);
   preg_match("/\<iframe.+src\=[\"\']([^\"\']+)[\"\']/",$h,$m);
   $link=fixurl($m[1]);
+  }
+  //if ($link == "/")
+  //$link=str_replace("antennasports.ru/bet.php?","4kwebplay.xyz/crv.php?",$link);
   //$link="https://livehdplay.ru/embedlivetv.php?id=ELj82ZClTB";
   //https://librarywhispering.com/player/57195ea0925f142a-38b56bf84596c48ccf3339fe27aa26ac lato.sx
   //echo $link;
@@ -759,7 +768,33 @@ if (preg_match("/realtvs\.tv/",$link)) {
    $link .="|Referer=".urlencode("https://jokersportshd.org/")."&Origin=".urlencode("https://jokersportshd.org")."&User-Agent=".urlencode($ua);
 
 }
+if (preg_match("/4kwebplay\.xyz/",$link)) {
+  //https://4kwebplay.xyz/crv.php?id=6305054
+  //echo $link;
+  $ua="Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:124.0) Gecko/20100101 Firefox/124.0";
+  $head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:124.0) Gecko/20100101 Firefox/124.0',
+  'Accept: application/json, text/plain, */*',
+  'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
+  'Accept-Encoding: deflate',
+  'Connection: keep-alive',
+  'Referer: https://antennasports.ru/');
+  $ch = curl_init();
+  curl_setopt($ch, CURLOPT_URL, $link);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+  curl_setopt($ch, CURLOPT_HTTPHEADER, $head);
+  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+  //curl_setopt($ch, CURLOPT_HEADER,1);
+  $h = curl_exec($ch);
+  curl_close($ch);
+  if (preg_match("/source\:\s*\'([^\']+)\'/",$h,$m))
+   $link=$m[1];
+  if ($flash <> "flash")
+   $link .="|Referer=".urlencode("https://4kwebplay.xyz/")."&Origin=".urlencode("https://4kwebplay.xyz")."&User-Agent=".urlencode($ua);
 
+}
 if (preg_match("/fullassia\.com/",$link)) {
   //https://fullassia.com/live/sportofeurope/?lang=ro
   $ua="Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:124.0) Gecko/20100101 Firefox/124.0";
@@ -1343,6 +1378,7 @@ $h = preg_replace_callback(
   curl_close($ch);
 }
 if (preg_match("/tvonline123\./",$link)) {
+//echo $link;
   $ua="Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/118.0";
   $head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/118.0',
   'Accept: */*',
@@ -1363,11 +1399,14 @@ if (preg_match("/tvonline123\./",$link)) {
   curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
   curl_setopt($ch, CURLOPT_TIMEOUT, 25);
   $h = curl_exec($ch);
+  //echo $h;
+  //die();
   $h = preg_replace_callback(
   "(\\\\x([0-9a-f]{2}))i",
   function($a) {return chr(hexdec($a[1]));},
   $h
   );
+  //echo $h;
   if (preg_match("/file:\s*\"([^\"]+)\"/",$h,$n)) {
    $link=$n[1];
    if (preg_match("/cdn\.tv24\.gdn/",$link)) {
@@ -1379,6 +1418,7 @@ if (preg_match("/tvonline123\./",$link)) {
    }
    //echo $link."\n";
    curl_close($ch);
+
    //$link="https://cdn.tv24.gdn/lb/DigiSport1/tracks-v1a1/mono.m3u8?token=df4349c15b4ef3dab71b47822e233456be14149c-f46b3594df67e2fd8fe79022f376cfae-1716899061-1716888261";
    if ($flash <> "flash")
      if (!preg_match("/cdn\.tv24\.gdn/",$link))
@@ -1391,6 +1431,11 @@ if (preg_match("/tvonline123\./",$link)) {
   } else {
     $link="";
   }
+  $link="https://kuk1.modprimus.cfd/er02/usergenje3x9dqrnd.m3u8";
+  $link .="|Referer=".urlencode("https://kuk1.modprimus.cfd/")."&Origin=".urlencode("https://kuk1.modprimus.cfd")."&User-Agent=".urlencode($ua);
+  //   $link="https://cdn.tv24.gdn/lb/FilmeDocumentare/index.m3u8?token=c8462dbdc76b077e7cff8acd7128bf4ac08a1812-11775ba62364711250b44c865503383d-1718371448-1718360648";
+  //    $link .="|Referer=".urlencode("https://www.tvonline123.com/")."&Origin=".urlencode("https://www.tvonline123.com")."&User-Agent=".urlencode($ua);
+
 
 }
 if ($from=="tvhdonline") {
@@ -2009,7 +2054,7 @@ if (preg_match("/truyenxalo\./",parse_url($link)['host'])) {
   if ($link && $flash <> "flash")
     $link=$link."|Referer=".urlencode($ref."/")."&Origin=".urlencode($ref);
 }
-if (preg_match("/livehdplay\.ru|1qwebplay\.xyz/",parse_url($link)['host'])) {
+if (preg_match("/livehdplay\.ru|1qwebplay\.xyz|4kwebplay\.|qqwebplay\./",parse_url($link)['host'])) {
   // $l="https://livehdplay.ru/maxsport.php?id=cnmyfeed21";
   //https://olalivehdplay.ru/premiumtv/daddylivehd.php?id=194
   //https://1qwebplay.xyz/premiumtv/daddylivehd.php?id=101
@@ -2357,7 +2402,7 @@ $host="https://".parse_url($link)['host'];
       $t1=explode("src: '",$h1);
       $t2=explode("'",$t1[1]);
       $link=$t2[0];
-      if ($flash <> "flash") $link .="|Referer=".urlencode($host."/");
+      if ($flash <> "flash") $link .="|Referer=".urlencode($host."/")."&Origin=".urlencode($host)."&User-Agent=".urlencode($ua);
 }
 if (strpos($link,"streamwat.ch") !== false) {
       $ua="Mozilla/5.0 (Windows NT 10.0; rv:81.0) Gecko/20100101 Firefox/81.0";

@@ -232,12 +232,16 @@ $rrr=array();
      $t=explode(",",$line);
      $title=trim($t[count($t)-1]);
    }
+   if (preg_match("/tvg-logo\=\"([^\"]+)\"/",$line,$i))
+    $logo=$i[1];
+   else
+    $logo="";
    if (preg_match("/group-title\=\"([^\"]+)\"/",$line,$s))
     $group1=$s[1];
    else
     $group1="no";
    //echo $title."\n".$file."\n";
-  $rr[$group1][]=array($title,$file);
+  $rr[$group1][]=array($title,$file,$logo);
   }
   $rrr=array_keys($rr);
 //print_r ($rrr);
@@ -272,6 +276,7 @@ echo '<TR>';
 echo '</TR>';
 }
 if ($group <> "no") {
+//file_put_contents("vod.txt",json_encode($rr[$group]));
 for ($z=$step*$page;$z<min($step*($page+1),count($rr[$group]));$z++) {
     $file=$rr[$group][$z][1];
     $title=$rr[$group][$z][0];

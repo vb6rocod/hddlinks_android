@@ -9961,7 +9961,7 @@ function xor_string($string, $key) {
   }
    if ($link && $flash <> "flash")
     $link=$link."|Referer=".urlencode("https://playtube.ws")."&Origin=".urlencode("https://playtube.ws");
-} elseif (preg_match("/filemoon\.|moonmov\.pro|furher\.|truepoweroflove\.|kerapoxy\.|c4qhk0je\./",$filelink)) {
+} elseif (preg_match("/filemoon\.|moonmov\.pro|furher\.|truepoweroflove\.|kerapoxy\.|c4qhk0je\.|1azayf9w\./",$filelink)) {
    //echo $filelink;
    //c4qhk0je.xyz
   $ua="Mozilla/5.0 (Windows NT 10.0; rv:81.0) Gecko/20100101 Firefox/81.0";
@@ -11810,11 +11810,11 @@ $head=array('Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q
   $t1=explode("sub=",$filelink);
   $srt=urldecode($t1[1]);
 //} elseif (strpos($filelink,"mcloud") !== false) {
-} elseif (preg_match("/(mcloud|vidstream|vizcloud|vidplay|vid41c|vid30c)\./",$filelink)) {
+} elseif (preg_match("/(mcloud|vidstream|vizcloud|vidplay|vid41c|vid30c|vid1f61|vid\d.+)\./",$filelink)) {
   $dr=$_SERVER['DOCUMENT_ROOT'];
   if (preg_match("/\/(?:f|e|embed)\/([a-z0-9]+)/i",$filelink,$m))
   $id=$m[1];
-
+   //echo $filelink;
   if (file_exists($dr."/e/".$id)) {
   $list = glob($dr."/e/".$id."/*.*");
    foreach ($list as $l) {
