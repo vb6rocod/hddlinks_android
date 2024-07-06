@@ -144,6 +144,63 @@ if (preg_match("/filmeonlinegratis\.org/",$filelink)) {
   }
   curl_close($ch);
   $html=$h;
+} elseif (preg_match("/fshd\.uk/",$filelink)) {
+  $host="https://".parse_url($filelink)['host'];
+  $head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:120.0) Gecko/20100101 Firefox/120.0',
+  'Accept: */*',
+  'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
+  'Accept-Encoding: deflate',
+  'Origin: https://fshd.uk',
+  'Connection: keep-alive',
+  'Referer: '.$host.'/');
+  $ch = curl_init();
+  curl_setopt($ch, CURLOPT_URL, $filelink);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+  curl_setopt($ch, CURLOPT_HTTPHEADER,$head);
+  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 25);
+  $h = curl_exec($ch);
+  curl_close($ch);
+  if (preg_match("/data-id\s*\=\s*\"(\d+)\"/",$h,$m))
+   $id=$m[1];
+  if (preg_match("/\"nonce\":\"([^\"]+)\"/",$h,$m))
+   $nonce=$m[1];
+  $l=$host."/wp-content/themes/serialeonline2/inc/parts/single/field-ajax.php";
+  $l="https://fshd.uk/wp-content/themes/serialenoi/field-ajax3.php";
+  $post="post_id=".$id;
+  //$l="https://fshd.uk/wp-admin/admin-ajax.php";
+  //$post="action=postviews&nonce=".$nonce."&postviews_id=".$id."&cache=false";
+  $head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:120.0) Gecko/20100101 Firefox/120.0',
+  'Accept: */*',
+  'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
+  'Accept-Encoding: deflate',
+  'Content-Type: application/x-www-form-urlencoded; charset=UTF-8',
+  'X-Requested-With: XMLHttpRequest',
+  'Origin: '.$host,
+  'Connection: keep-alive',
+  'Referer: '.$host.'/');
+  $ch = curl_init();
+  curl_setopt($ch, CURLOPT_URL, $l);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+  curl_setopt($ch, CURLOPT_POST,1);
+  curl_setopt($ch, CURLOPT_POSTFIELDS,$post);
+  curl_setopt($ch, CURLOPT_HTTPHEADER,$head);
+  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 25);
+  $h = curl_exec($ch);
+  //echo $h;
+  preg_match_all("/data-server\=\"\d+\"/",$h,$m);
+  for ($k=2;$k<count($m[0])+1;$k++) {
+   $post="post_id=".$id."&server_nr=".$k;
+   curl_setopt($ch, CURLOPT_POSTFIELDS,$post);
+   $h .= curl_exec($ch);
+  }
+  curl_close($ch);
+  $html=$h;
 } elseif (preg_match("/classicmovieshd/",$filelink)) {
   // https://www.classicmovieshd.com/ajax/embed
   $ua="Mozilla/5.0 (Windows NT 10.0; rv:82.0) Gecko/20100101 Firefox/82.0";

@@ -13,6 +13,7 @@ $link=$_GET["link"];
 $width="200px";
 $height="100px";
 $last_good="https://fshd.ro";
+$last_good="https://fshd.uk";
 $host=parse_url($last_good)['host'];
 /* ==================================================== */
 $has_fav="no";
@@ -179,6 +180,12 @@ if ($tip == "release") {
   else
     $l=$last_good."/page/".$page."/?s=".$search;
 }
+if ($tip=="release") {
+ if ($page==1)
+  $l=$last_good."/category/film/";
+ else
+  $l=$last_good."/category/film/page".$page."/";
+}
 $r=array();
 $ua = $_SERVER['HTTP_USER_AGENT'];
   $ch = curl_init();
@@ -193,32 +200,16 @@ $ua = $_SERVER['HTTP_USER_AGENT'];
   $html = curl_exec($ch);
   curl_close($ch);
   //echo $html;
-  if ($tip=="release") {
-  $videos = explode('<article', $html);
-  unset($videos[0]);
-  $videos = array_values($videos);
-  foreach($videos as $video) {
-    $t1=explode('href="',$video);
-    $t2=explode('"',$t1[1]);
-    $link=$t2[0];
-    $t1=explode('alt="',$video);
-    $t2=explode('"',$t1[1]);
-    $title=trim($t2[0]);
-    $t1=explode('src="',$video);
-    $t2=explode('"',$t1[1]);
-    $image=$t2[0];
-    if (strpos($link,"/serial") === false) array_push($r ,array($title,$link, $image));
-  }
-  } else {
-  $videos = explode('<article', $html);
-  unset($videos[0]);
-  $videos = array_values($videos);
-  foreach($videos as $video) {
 
+  //$videos = explode('<article', $html);
+  $videos=explode('<div id="post-',$html);
+  unset($videos[0]);
+  $videos = array_values($videos);
+  foreach($videos as $video) {
     $t1=explode('href="',$video);
     $t2=explode('"',$t1[1]);
     $link=$t2[0];
-    $t1=explode('alt="',$video);
+    $t1=explode('title="',$video);
     $t2=explode('"',$t1[1]);
     $title=trim($t2[0]);
     $t1=explode('src="',$video);
@@ -226,7 +217,7 @@ $ua = $_SERVER['HTTP_USER_AGENT'];
     $image=$t2[0];
     if (strpos($link,"/serial") === false) array_push($r ,array($title,$link, $image));
   }
-  }
+
   //print_r ($r);
 $c=count($r);
 for ($k=0;$k<$c;$k++) {

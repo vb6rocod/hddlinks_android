@@ -14,6 +14,7 @@ $width="200px";
 $height="278px";
 $last_good="https://soap2dayz.xyz";
 $last_good="https://1hd.store";
+$last_good="https://soap2day0.xyz";
 $host=parse_url($last_good)['host'];
 /* ==================================================== */
 $has_fav="yes";
@@ -187,7 +188,7 @@ if ($tip=="search") {
 //echo $l;
 //$l=$last_good;
 //echo $l;
-$l="https://1hd.store/latest/";
+//$l="https://1hd.store/latest/";
 $head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/112.0',
 'Accept: application/json, text/javascript, */*; q=0.01',
 'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
@@ -223,9 +224,12 @@ $videos = explode('"ml-item"', $h);
 unset($videos[0]);
 $videos = array_values($videos);
 foreach($videos as $video) {
- $t1=explode('value="',$video);
- $t2=explode('"',$t1[1]);
- $link=$last_good."/watch-movie/".$t2[0];
+$t1=explode('href="',$video);
+$t2=explode('"',$t1[1]);
+$link=$last_good.$t2[0];
+ //$t1=explode('value="',$video);
+ //$t2=explode('"',$t1[1]);
+ //$link=$last_good."/watch-movie/".$t2[0];
  //echo $link;
  $t3=explode('title="',$video);
  $t4=explode('"',$t3[1]);

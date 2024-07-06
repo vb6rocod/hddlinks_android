@@ -205,9 +205,9 @@ echo '</TR>'."\r\n";
 
 if($tip=="release") {
   if ($page>1)
-    $l = $link."/page/".$page;
+    $l = $link."page/".$page;
   else
-    $l = $link."/page/".$page;
+    $l = $link;
 } else {
   $search=str_replace(" ","+",$tit);
   if ($page > 1)
@@ -215,6 +215,7 @@ if($tip=="release") {
   else
     $l="https://streamporn.pw/?s=".$search;
 }
+//echo $l;
 $host=parse_url($l)['host'];
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $l);

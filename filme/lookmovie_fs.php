@@ -180,7 +180,7 @@ $ref="lookmovie2.to";
      $l=$info['redirect_url'];
      if (preg_match("/second/",$l)) {
      file_put_contents($base_cookie."lookmovie_ref1.txt",$l."|".$ref."|".$csrf);
-     echo '<a href="look.html">Solve captcha</a>';
+     echo '<a href="look2.php">Solve captcha</a>';
      } else {
        echo 'Try again';
        echo '<script>setTimeout(function(){ history.go(-1); }, 2000);</script>';

@@ -138,13 +138,38 @@ if (preg_match("/jizzbunker\.com|familyporn1\.tv|zbporn\.com|trannytube11\.net|2
 
  //echo $h;
 ///////////////////////
-
+} elseif (preg_match("/proporn\.com/",$l)) {
+  $head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:127.0) Gecko/20100101 Firefox/127.0',
+  'Accept: application/json, text/javascript, */*; q=0.01',
+  'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
+  'Accept-Encoding: deflate',
+  'Content-Type: application/x-www-form-urlencoded; charset=utf-8',
+  'Connection: keep-alive',
+  'Referer: https://www.proporn.com/video/1944980/blonde-amateur-milf-pov-toys-fingering-shaved-cunt',
+  'Sec-Fetch-Dest: empty',
+  'Sec-Fetch-Mode: cors',
+  'Sec-Fetch-Site: same-origin');
+  $ch = curl_init();
+  curl_setopt($ch, CURLOPT_URL, trim($l));
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+  curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
+  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
+  //curl_setopt($ch, CURLOPT_REFERER, $l);
+  curl_setopt($ch, CURLOPT_HTTPHEADER,$head);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 25);
+  $h = curl_exec($ch);
+  curl_close($ch);
+  //echo $h;
 } else {
   //$l="https://pefilme.info/video.php?id=159035";
   //echo $l;
+  //$l .="&aid=0&domain_id=0&embed=0&ref=null&check_speed=0";
   $host=parse_url($l)['host'];
-  $head=array ('Origin: https//'.$host);
-  $ua="Mozilla/5.0 (Windows NT 10.0; rv:83.0) Gecko/20100101 Firefox/83.0";
+  $head=array ('Origin: https//'.$host,
+  'Referer: '.$l);
+  $ua="Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:127.0) Gecko/20100101 Firefox/127.0";
 
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $l);
@@ -161,7 +186,7 @@ if (preg_match("/jizzbunker\.com|familyporn1\.tv|zbporn\.com|trannytube11\.net|2
   curl_setopt($ch, CURLOPT_TIMEOUT, 25);
   $h = curl_exec($ch);
   curl_close($ch);
-  //echo $h;
+  //echo "=========".$h;
 
 ////////////////////////////////////////////
 
@@ -351,7 +376,11 @@ $out=$t2[0];
   $out=$t2[0];
 } else if (preg_match("/drtuber\.com|proporn\.com/",$host)) {
 //echo $h;
+//echo $link;
+//https://www.proporn.com//player_config_json/?vid=1944980
+//https://www.proporn.com/player_config_json/?vid=1944980&aid=0&domain_id=0&embed=0&ref=null&check_speed=0
   $r=json_decode($h,1);
+  //print_r ($r);
   if (isset($r["files"])) {
   if (isset($r["files"]["hq"]))
     $out= $r["files"]["hq"];

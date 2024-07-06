@@ -129,11 +129,18 @@ $head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gec
   }
   } elseif (preg_match("/channelstream/",$host)) {
   //https://hoyfutbol.info/player/2/58
+  //https://daddylive.sx/tele/stream-40.php
   preg_match_all("/https:\/\/(tvfutbol|hoyfutbol)\.info\/player\/(\d+)\/(\d+)/",$h,$m);
   //print_r ($m);
   for ($z=0;$z<count($m[0]);$z++) {
    $r[]=$m[0][$z];
    $s[]="Ch ".$m[2][$z]."-".$m[3][$z];
+   $img[]="";
+  }
+  preg_match_all("/https:\/\/daddylive\.sx\/tele\/stream-(\d+)\.php/",$h,$m);
+  for ($z=0;$z<count($m[0]);$z++) {
+   $r[]=$m[0][$z];
+   $s[]="Ch ".$m[1][$z];
    $img[]="";
   }
   }

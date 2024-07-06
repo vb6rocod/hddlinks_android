@@ -7247,7 +7247,9 @@ if (count($pl) > 1) {
   }
   curl_close($ch);
   //echo $m[1];
+  //$h=str_replace('src="/assets','src="https://w1.moviesapi.club/assets',$h);
   //echo $h;
+  //file_put_contents("moviesapi1.html",$h);
   //preg_match("/\=\s+\'([^\']+)\'/",$h,$m);
   //print_r ($m);
   //echo $h."\n";
@@ -7269,6 +7271,7 @@ if (count($pl) > 1) {
   $pass="2ihHoN6ZmSq3XeOy";
   $pass="sZX7Rhncw6mlbL8j";
   $pass="233KvCBGckBuCn";
+  $pass="KB3c1lgTx6cHL3W";
 ///////////////////////////////////////////////////////////
 
 //////////////////////////////////////////////////////////
@@ -7310,6 +7313,8 @@ if (count($pl) > 1) {
 
   $out .= $js->decrypt1($pass,$enc);
   }
+  } else {
+  $out = $js->decrypt1($pass,$enc);
   }
   //echo $out;
 
@@ -8658,6 +8663,10 @@ $head=array('Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image
   curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
   curl_setopt($ch, CURLOPT_TIMEOUT, 25);
   $h = curl_exec($ch);
+  if (preg_match("/window\.location\.href\s*\=\s*\'([^\']+)/",$h,$m)) {
+  curl_setopt($ch, CURLOPT_URL, $m[1]);
+  $h = curl_exec($ch);
+  }
   curl_close($ch);
   //echo $h;
   //'hls': '
@@ -8665,10 +8674,11 @@ $head=array('Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image
   //$t2=explode('"',$t1[1]);
   //$link=$t2[0];
   if (preg_match("/[\"\']hls[\'\"]\:\s*[\'\"]([^\"\']+)/",$h,$m))
-   $link=$m[1];
+   $link=base64_decode($m[1]);
   else
    $link="";
-  if ($link && $flash != "flash") {
+  //echo $link;
+  if ($link && $flash <> "flash") {
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $link);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
@@ -11815,6 +11825,7 @@ $head=array('Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q
   if (preg_match("/\/(?:f|e|embed)\/([a-z0-9]+)/i",$filelink,$m))
   $id=$m[1];
    //echo $filelink;
+   //https://vid2v11.site
   if (file_exists($dr."/e/".$id)) {
   $list = glob($dr."/e/".$id."/*.*");
    foreach ($list as $l) {

@@ -625,11 +625,45 @@ if (preg_match("/popcdn\.day/",$link)) {
   //https://love2live.wideiptv.top/TNT1UK/embed.html?token=49951d5347cd117b28ef2b41226b54c9d820be36-609da27a497fab85089a8d4b13eb1196-1714655990-1714645190&remote=no_check_ip
   $link=str_replace("embed.html","index.fmp4.m3u8",$l3);
 }
-if (preg_match("/daddylivehd\.sx\/embed\/|daddylive\d\.shop\/mylive|daddy\-stream\.xyz\/mylivetv/",$link)) { ////////////////////////////////
+if (preg_match("/daddylivehd\.sx\/embed\/|daddylive\d\.shop\/mylive|daddy\-stream\.xyz\/mylive|daddylive\.sx\/tele/",$link)) { ////////////////////////////////
    //https://daddylive1.shop/mylivetv/stream-426.php
    //https://daddylive1.shop/mylive/stream-11.php
+   //https://daddylive.sx/tele/stream-40.php
+   //https://daddy-stream.xyz/mylive
    //
    //echo $link;
+  function hunter($h, $u, $n, $t, $e, $r) {
+    $r = "";
+    for($i = 0; $i < strlen($h);$i++) {
+        $s = "";
+        while($h[$i] !== $n[$e]) {
+            $s .= $h[$i];
+            $i++;
+        }
+        for($j = 0; $j < strlen($n);$j++) {
+          $s=str_replace($n[$j],$j,$s);
+        }
+        $r .= chr(abc($s, $e, 10) - $t);
+    }
+    return $r;
+  }
+  function abc($d, $e, $f) {
+    $g = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ+/';
+    $h = substr($g,0, $e);
+    $i = substr($g,0, $f);
+    $x=strrev($d);
+    $a=0;
+    $j=0;
+    for ($m=0;$m<strlen($x);$m++) {
+      $j +=strpos($h,$x[$m])*pow($e,$m);
+    }
+    $k = '';
+    while($j > 0) {
+        $k = $i[$j % $f].$k;
+        $j = ($j - ($j % $f)) / $f;
+    }
+    return $k;
+  }
    $head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/110.0',
    'Accept: application/json, text/plain, */*',
    'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
@@ -675,12 +709,32 @@ $head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:125.0) Gec
   //echo $h;
   $h=preg_replace("/\<\!--.*?--\>/si","",$h);
   //echo $h;
+////////////////////////////////////////////////
+  //function(h,u,n,t,e,r)
+ if (preg_match("/function\(h\,u\,n\,t\,e\,r\)/",$h)) {
+  //decodeURIComponent(escape(r))}("GqMqTMMMTGqzGTHGMTGqqz
+  preg_match_all("/decodeURIComponent\(escape\(r\)\)\}\((.*?)\)\)/",$h,$m);
+  //print_r ($m);
+  $out="";
+  for ($k=0;$k<count($m[1]);$k++) {
+   $c=str_replace('"',"",$m[1][$k]);
+   $t1=explode(",",$c);
+   $out .=hunter($t1[0],$t1[1],$t1[2],$t1[3],$t1[4],$t1[5]);
+  }
+  if (preg_match("/encodedSource\s*\=\s*\'([^\']+)\'/",$out,$r)) {
+   $link=base64_decode($r[1]);
+  }
+  } elseif (preg_match("/encryptedSource\s*\=\s*\"([^\"]+)\"/",$h,$z)) {
+    $link=base64_decode($z[1]);
+ } else {
+////////////////////////////////////////////////
   if (preg_match("/[^\/]source:\s*\'([^\']+)/",$h,$m))
    $link=trim($m[1]);
   elseif (preg_match("/\"src\":\s*\"([^\"]+)\"/",$h,$m))   //"src": "
    $link=trim($m[1]);
   else
    $link="";
+  }
 $head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:125.0) Gecko/20100101 Firefox/125.0',
 'Accept: */*',
 'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
@@ -2059,6 +2113,38 @@ if (preg_match("/livehdplay\.ru|1qwebplay\.xyz|4kwebplay\.|qqwebplay\./",parse_u
   //https://olalivehdplay.ru/premiumtv/daddylivehd.php?id=194
   //https://1qwebplay.xyz/premiumtv/daddylivehd.php?id=101
   //echo $link;
+  function hunter($h, $u, $n, $t, $e, $r) {
+    $r = "";
+    for($i = 0; $i < strlen($h);$i++) {
+        $s = "";
+        while($h[$i] !== $n[$e]) {
+            $s .= $h[$i];
+            $i++;
+        }
+        for($j = 0; $j < strlen($n);$j++) {
+          $s=str_replace($n[$j],$j,$s);
+        }
+        $r .= chr(abc($s, $e, 10) - $t);
+    }
+    return $r;
+  }
+  function abc($d, $e, $f) {
+    $g = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ+/';
+    $h = substr($g,0, $e);
+    $i = substr($g,0, $f);
+    $x=strrev($d);
+    $a=0;
+    $j=0;
+    for ($m=0;$m<strlen($x);$m++) {
+      $j +=strpos($h,$x[$m])*pow($e,$m);
+    }
+    $k = '';
+    while($j > 0) {
+        $k = $i[$j % $f].$k;
+        $j = ($j - ($j % $f)) / $f;
+    }
+    return $k;
+  }
   $ua="Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:124.0) Gecko/20100101 Firefox/124.0";
   if (preg_match("/daddylive/",$link))
    $ref="https://dlhd.sx";
@@ -2086,10 +2172,26 @@ if (preg_match("/livehdplay\.ru|1qwebplay\.xyz|4kwebplay\.|qqwebplay\./",parse_u
   $h = curl_exec($ch);
   curl_close($ch);
   //echo $h;
+  if (preg_match("/function\(h\,u\,n\,t\,e\,r\)/",$h)) {
+  preg_match_all("/decodeURIComponent\(escape\(r\)\)\}\((.*?)\)\)/",$h,$m);
+  //print_r ($m);
+  $out="";
+  for ($k=0;$k<count($m[1]);$k++) {
+   $c=str_replace('"',"",$m[1][$k]);
+   $t1=explode(",",$c);
+   $out .=hunter($t1[0],$t1[1],$t1[2],$t1[3],$t1[4],$t1[5]);
+  }
+  if (preg_match("/encodedSource\s*\=\s*\'([^\']+)\'/",$out,$r)) {
+    $link=base64_decode($r[1]);
+  }
+  } elseif (preg_match("/encryptedSource\s*\=\s*\"([^\"]+)\"/",$h,$z)) {
+    $link=base64_decode($z[1]);
+  } else {
   if (preg_match("/[^\/]source:\s*\'([^\']+)/",$h,$m))
    $link=trim($m[1]);
   else
    $link="";
+  }
    //echo $link;
    //$link="https://webhdrus.onlinehdhls.ru/lb/premium36/index.m3u8";
    //$link="https://salamus2023.onlinehdhls.ru/ddh1/premium34/playlist.m3u8";
@@ -4582,6 +4684,16 @@ $c="intent:".$out."#Intent;type=video/mp4;package=com.mxtech.videoplayer.".$mx."
 if (preg_match("/v1\.iw\.ro/",$out)) //digisport ????
 $c="intent:".$out."#Intent;type=video/mp4;package=com.mxtech.videoplayer.".$mx.";S.title=".urlencode($title).";b.decode_mode=1;end";
 ///////////////////
+if (preg_match("/nxtportal\.xyz/",$link)) {
+ //if ($flash=="mp") {
+ //file_put_contents("lava.m3u8",$link);
+ //$link="http://127.0.0.1:8080/scripts/tv/lava.m3u8";
+ //}
+ $ua="Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:127.0) Gecko/20100101 Firefox/127.0";
+ $link .="|User-Agent=".urlencode($ua);
+ $out=$link;
+//$hw=1;
+}
 if ($hw==1) //sportsonline
 $c="intent:".$out."#Intent;type=video/mp4;package=com.mxtech.videoplayer.".$mx.";S.title=".urlencode($title).";b.decode_mode=1;end";
 

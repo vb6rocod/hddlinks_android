@@ -9,7 +9,7 @@ function str_between($string, $start, $end){
 $main_title="streamporn";
 $target="streamporn.php";
 $fav_target="";
-$recente="https://streamporn.pw/movies";
+$recente="https://streamporn.pw/movies/";
 ?>
 <html>
 <head>
@@ -56,6 +56,7 @@ echo $form;
 echo '</TR>';
 $n=0;
 $l="https://streamporn.pw/movies";
+$l="https://streamporn.org/movies";
 $ua = $_SERVER['HTTP_USER_AGENT'];
 $ua="Mozilla/5.0 (Windows NT 10.0; rv:68.0) Gecko/20100101 Firefox/68.0";
   $ch = curl_init();
@@ -69,7 +70,7 @@ $ua="Mozilla/5.0 (Windows NT 10.0; rv:68.0) Gecko/20100101 Firefox/68.0";
   $html = curl_exec($ch);
   curl_close($ch);
   //echo $html;
-$videos = explode('id="menu-item-', $html);
+$videos = explode('<span class="item"', $html);
 unset($videos[0]);
 $videos = array_values($videos);
 foreach($videos as $video) {
@@ -80,8 +81,9 @@ foreach($videos as $video) {
     $t4=explode('<',$t2[1]);
   	$title=$t4[0];
   	$title=prep_tit($title);
+
+    if ($title && preg_match("/https?:/",$link)) {
     $link=$target."?page=1&tip=release&link=".urlencode(fix_t($link))."&title=".urlencode(fix_t($title));
-    if ($title) {
 	if ($n == 0) echo "<TR>"."\r\n";
 	echo '<TD class="cat">'.'<a class ="cat" href="'.$link.'" target="_blank">'.$title.'</a></TD>';
     $n++;
