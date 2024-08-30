@@ -91,6 +91,7 @@ curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
 curl_setopt($ch, CURLOPT_HEADER, 1);
 $h = curl_exec($ch);
 curl_close($ch);
+//echo $h;
 $pat='/value\=\"8\"\>\<img class\=\"fbc-imageselect-payload\" src\=\"(.+?)"/';
 preg_match_all($pat,$h,$m);
 $captchaScrap=$m[1][0];
@@ -104,7 +105,8 @@ $c=$m[1][0];
 $pat='/k\=(.+?)\" alt\=/';
 preg_match_all($pat,$h,$m);
 $k=$m[1][0];
-$l='https://www.google.com'.str_replace("&amp;","&amp;",$captchaScrap);
+$l='https://www.google.com'.str_replace("&amp;","&",$captchaScrap);
+$l="r_m.php?file=".urlencode($l);
 //echo $l;
 echo '
 <!DOCTYPE HTML>

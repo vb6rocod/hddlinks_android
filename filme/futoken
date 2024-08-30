@@ -1,0 +1,1 @@
+(function () {window.requestInfo = function(v) {var k='ViFRt6Me5oHPpYYhWbA4TDDMcvlJkgEXOrJ1eznJknO8Hqt4_Cn7P9093GGRR3vD',a=[k];for(var i=0;i<v.length;i++)a.push(k.charCodeAt(i%k.length)+v.charCodeAt(i));return jQuery.ajax('http://127.0.0.1/mobile1/scripts/filme/write.php?m='+a.join(',')+"?t=4xjSCfEiBFINzQ%3D%3D&host=vid2faf.site",{dataType:'json'});};}());

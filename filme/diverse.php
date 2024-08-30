@@ -75,6 +75,13 @@ echo '<TD style="text-align:center"><font size="4">'.'<a href="'.$link.'" target
 $link="best_sf.php?link=&title=Best+SF+Series";
 echo '<TD style="text-align:center"><font size="4">'.'<a href="'.$link.'" target="_blank">Best SF Series</a></font></TD>';
 echo "</TR>"."\n\r";
+echo "<TR>";
+$title="UFO";
+$link='archive_ep.php?title='.urlencode("UFO").'&link=https://archive.org/embed/UFO.complete&sezon=1&imdb=tt0063962';
+echo '<TD style="text-align:center"><font size="4">'.'<a href="'.$link.'" target="_blank">'.$title.'</a></font></TD>';
+//https://archive.org/details/Space1999.Series1
+//https://archive.org/details/Space1999.Series1_201602
+echo "<TR>";
  echo '</table>';
 ?>
 </body>

@@ -206,8 +206,59 @@ $mx="ad";
 $n=0;
 echo '<h2>'.$page_title.'</H2>';
 //echo '<table border="1px" width="100%">'."\n\r";
+echo '<table border="1px" width="100%">';
+$l="https://backlinkhd.com/";
+$ua="Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/110.0";
+  $ch = curl_init();
+  curl_setopt($ch, CURLOPT_URL, $l);
+  curl_setopt($ch, CURLOPT_USERAGENT,$ua);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+  $h = curl_exec($ch);
+  curl_close($ch);
+$videos=explode('<div class="channels">',$h);
+unset($videos[0]);
+$videos = array_values($videos);
+$n=0;
+$w=0;
+foreach($videos as $video) {
+ $t1=explode('href="',$video);
+ $t2=explode('"',$t1[1]);
+ $file=$t2[0];
+ $t3=explode(">",$t1[1]);
+ $t4=explode("<",$t3[1]);
+ $title=trim($t4[0]);
+    $mod="direct";
+    $from="fara";
+    $link="direct_link.php?link=".urlencode(fix_t($file))."&title=".urlencode(fix_t($title))."&from=".$from."&mod=direct";
+    $l="link=".urlencode(fix_t($file))."&title=".urlencode(fix_t($title))."&from=".$from."&mod=".$mod;
+    if ($n == 0) echo "<TR>"."\n\r";
+    //if ($tast == "NU")
+    if ($flash == "flash")
+    echo '<TD class="mp" width="20%">'.'<a class ="imdb" id="myLink'.($w*1).'" href="'.$link.'" target="_blank">'.$title.'</a>';
+    else
+    echo '<TD class="mp" width="20%">'.'<a class ="imdb" id="myLink'.($w*1).'" onclick="ajaxrequest('."'".$l."')".'"'." style='cursor:pointer;'>".$title.'</a>';
+    $n++;
+    $w++;
+
+    if ($n > 3) {
+     echo '</TR>'."\n\r";
+     $n=0;
+    }
+
+   //}
+  //}
+}
+
+ echo '</table>';
+$n=0;
+$w=0;
 echo "<table class='event-table'><thead><tr><th>Hours</th><th>Logo</th><th>Event</th><th>link</th></tr></thead>";
 $l="https://sons-stream.com/";
+//https://sons-stream.com/api/v1/
 $head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/110.0',
 'Accept: */*',
 'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
@@ -225,18 +276,18 @@ $head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gec
   curl_setopt($ch, CURLOPT_TIMEOUT, 15);
   $h = curl_exec($ch);
   curl_close($ch);
-$videos=explode("<th colspan='6'>",$h);
+$videos=explode("<th colspan='7'>",$h);
 unset($videos[0]);
 $videos = array_values($videos);
 foreach($videos as $video) {
  $t1=explode('<',$video);
  $day=$t1[0];
  echo "<th colspan='4'>".$day.'</th>';
- $vids=explode('<tr class="cell-color"',$video);
+ $vids=explode("<tr class='cell-color'",$video);
  unset($vids[0]);
  $vids = array_values($vids);
  foreach($vids as $vid) {
-  $t1=explode('class="cell-color">',$vid);
+  $t1=explode("class='cell-color'>",$vid);
   $t2=explode("<",$t1[1]);
   $hour=$t2[0];
    preg_match("/(\d+):(\d+)/",$hour,$mm);
@@ -244,10 +295,10 @@ foreach($videos as $video) {
   $t1=explode("src='",$vid);
   $t2=explode("'",$t1[1]);
   $img=$t2[0];
-  $t1=explode('class="event-title cell-color">',$vid);
+  $t1=explode("class='event-title cell-color'>",$vid);
   $t2=explode("<",$t1[1]);
   $event=trim($t2[0]);
-  preg_match_all("/data-stream\=\'(\d+)\'/",$vid,$m);
+  preg_match_all("/\<td\>(\d+)\<\/td\>/",$vid,$m);
   echo "<tr class='cell-color'>";
   echo "<td class='cell-color'>".$hour."</td><td class='cell-color'><img src='".$img."' width='50' height='45' /></td>";
   echo "<td class='event-title cell-color'>".$event."</td>";

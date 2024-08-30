@@ -2,12 +2,12 @@
 <?php
 include ("../common.php");
 $host=$_GET['host'];
-$page_title="Seriale favorite";
+$page_title="Filme favorite";
 $width="200px";
 $height="278px";
-$add_target="fmovies_s_add.php";
-$fs_target="fmovies_ep.php";
-$file=$base_fav."bflix_s.dat";
+$add_target="nites_f_add.php";
+$fs_target="nites_fs.php";
+$file=$base_fav."nites_f.dat";
 ?>
 <html><head>
 <meta http-equiv="content-type" content="text/html; charset=UTF-8">
@@ -22,32 +22,6 @@ $file=$base_fav."bflix_s.dat";
 
 <script type="text/javascript">
 var id_link="";
-function openlink1(link) {
-  msg="link1.php?file=" + link;
-  window.open(msg);
-}
-function openlink(link) {
-  on();
-  var request =  new XMLHttpRequest();
-  var the_data = "link=" + link;
-  //alert (the_data);
-  var php_file="link1.php";
-  request.open("POST", php_file, true);			// set the request
-
-  // adds a header to tell the PHP script to recognize the data as is sent via POST
-  request.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-  request.send(the_data);		// calls the send() method with datas as parameter
-
-  // Check request status
-  // If the response is received completely, will be transferred to the HTML tag with tagID
-  request.onreadystatechange = function() {
-    if (request.readyState == 4) {
-      off();
-      document.getElementById("mytest1").href=request.responseText;
-      document.getElementById("mytest1").click();
-    }
-  }
-}
 function ajaxrequest(link) {
   var request =  new XMLHttpRequest();
   var the_data = link;
@@ -77,12 +51,6 @@ function isValid(evt) {
      msg="imdb.php?" + val_imdb;
      document.getElementById("fancy").href=msg;
      document.getElementById("fancy").click();
-    } else if  (charCode == "52") {
-     id = "imdb_" + self.id;
-     id_link=self.id;
-     val_imdb=document.getElementById(id).value;
-     msg="imdb.php?" + val_imdb;
-     openlink (msg);
     } else if  (charCode == "51") {
       id = "fav_" + self.id;
       val_fav=document.getElementById(id).value;
@@ -109,27 +77,13 @@ function isKeyPressed(event) {
     msg="imdb.php?" + val_imdb;
     document.getElementById("fancy").href=msg;
     document.getElementById("fancy").click();
-  } else if (event.shiftKey) {
-    id = "imdb_" + event.target.id;
-    //alert (id);
-    val_imdb=document.getElementById(id).value;
-    msg="imdb.php?" + val_imdb;
-    openlink1(msg);
   }
 }
 $(document).on('keyup', '.imdb', isValid);
 document.onkeypress =  zx;
-function on() {
-    document.getElementById("overlay").style.display = "block";
-}
-
-function off() {
-    document.getElementById("overlay").style.display = "none";
-}
 </script>
 </head>
 <body>
-<a href='' id='mytest1'></a>
 <a id="fancy" data-fancybox data-type="iframe" href=""></a>
 <?php
 function str_between($string, $start, $end){
@@ -140,7 +94,6 @@ function str_between($string, $start, $end){
 $w=0;
 $n=0;
 echo '<H2>'.$page_title.'</H2>';
-$arr=array();
 $h="";
 if (file_exists($file)) {
   $h=file_get_contents($file);
@@ -151,9 +104,8 @@ if (file_exists($file)) {
       $tit=trim($a[0]);
       $l=trim($a[1]);
       $img=trim($a[2]);
-      //$arr[$tit]["link"]=$l;
-      //$arr[$tit]["image"]=$img;
-      $arr[$k]=array($tit,$l,$img);
+      $arr[$tit]["link"]=$l;
+      $arr[$tit]["image"]=$img;
     }
   }
 }
@@ -170,19 +122,17 @@ echo '</TR></table>';
 echo '<table border="1px" width="100%">'."\n\r";
 foreach($arr as $key => $value) {
     $imdb="";
-	$link = urldecode($arr[$key][1]);
-    $title = unfix_t(urldecode($arr[$key][0]));
-    $image=urldecode($arr[$key][2]);
-    $tit_imdb=$title;
-    $h1="static.".parse_url($host)['host'];
-    $h2=parse_url($image)['host'];
-    $image=str_replace($h2,$h1,$image);
+	$link = urldecode($arr[$key]["link"]);
+    $title = unfix_t(urldecode($key));
+    $image=urldecode($arr[$key]["image"]);
     //$image=$host.parse_url($image)['path'];
-    $year="";
+    $tit_imdb=$title;
+
     $link=$host.parse_url($link)['path'];
-    $link_f=$fs_target.'?tip=series&link='.urlencode($link).'&title='.urlencode(fix_t($title)).'&image='.$image."&sez=&ep=&ep_tit=&year=".$year;
+    $last_good="https://".$host;
+    $link_f=$fs_target.'?tip=movie&link='.urlencode($link).'&title='.urlencode(fix_t($title)).'&image='.$image."&sez=&ep=&ep_tit=&year=".$year."&last=".$last_good;
   if ($n==0) echo '<TR>'."\r\n";
-  $val_imdb="tip=series&title=".urlencode(fix_t($tit_imdb))."&year=".$year."&imdb=".$imdb;
+  $val_imdb="tip=movie&title=".urlencode(fix_t($tit_imdb))."&year=".$year."&imdb=".$imdb;
   $fav_link="file=&mod=del&title=".urlencode(fix_t($title))."&link=".urlencode($link)."&image=".urlencode($image)."&year=".$year;
   if ($tast == "NU") {
     echo '<td class="mp" width="25%"><a href="'.$link_f.'" id="myLink'.$w.'" target="_blank" onmousedown="isKeyPressed(event)">
@@ -213,8 +163,5 @@ foreach($arr as $key => $value) {
 echo '</TABLE>';
 }
 ?>
-<div id="overlay">
-  <div id="text">Wait....</div>
-</div>
 </body>
 </html>

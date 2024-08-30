@@ -51,37 +51,26 @@ document.onkeypress =  zx;
 </TR>
 <TR>
 <TD width="25%"><a href="filme/filmeseriale_main.php?page=1&tip=release&title=filmeseriale.online&link=http://www.filmeserialeonline.org/seriale/" target="_blank">filmeseriale.online</a></TD>
-<TD width="25%"><a href="filme/divxfilmeonline_s.php?page=1&tip=release&title=divxfilmeonline&link=" target="_blank">divxfilmeonline</a></TD>
-<TD width="25%"><a href="filme/fsonline_s.php?page=1&tip=release&title=fsonline&link=" target="_blank">fsonline</a></TD>
+<TD width="25%"><a href="filme/veziseriale_s.php?page=1&tip=release&title=veziseriale&link=" target="_blank">veziseriale</a></TD>
+<TD width="25%"><a href="filme/fshd_s.php?page=1&tip=release&title=fshd&link=" target="_blank">fshd.ro</a></TD>
 <TD width="25%"><a href="filme/serialeonline.php?page=1&tip=release&title=serialeonline&link=" target="_blank">serialeonline</a></TD>
 </TR>
 
-<TR>
-<TD width="25%"><a href="filme/tvseries_s.php?page=1&tip=release&title=tvseries&link=" target="_blank">tvseries</a></TD>
-<TD width="25%"><a href="filme/moviewetrust_s.php?page=1&tip=release&title=moviewetrust&link=" target="_blank">moviewetrust</a></TD>
-<TD width="25%"><a href="filme/streamflix_s.php?page=1&tip=release&title=streamflix&link=" target="_blank">streamflix</a></TD>
-<TD width="25%"><a href="filme/fshd_s.php?page=1&tip=release&title=fshd&link=" target="_blank">fshd.ro</a></TD>
-</TR>
 
 <!-- straine -->
 <TR>
-<TD width="25%"><a href="filme/idlixian_s.php?page=1&tip=release&title=idlixian&link=" target="_blank">idlixian</a></TD>
+<TD width="25%"><a href="filme/tvseries_s.php?page=1&tip=release&title=tvseries&link=" target="_blank">tvseries</a></TD>
 <TD width="25%"><a href="filme/goojara_s.php?page=1&tip=release&title=goojara&link=" target="_blank">goojara</a></TD>
 <TD width="25%"><a href="filme/emovies_s.php?page=1&tip=release&title=emovies&link=" target="_blank">emovies</a></TD>
 <TD width="25%"><a href="filme/lookmovie_s.php?page=1&tip=release&title=lookmovie&link=" target="_blank">lookmovie</a></TD>
 </TR>
 <TR>
 <TD width="25%"><a href="filme/cineplex_s_main.php" target="_blank">cineplex (cont)</a></TD>
-<TD width="25%"><a href="filme/watch-serieshd_s.php?page=1&tip=release&title=watch-serieshd&link=" target="_blank">watch-serieshd</a></TD>
-<TD width="25%"><a href="filme/fmovies_s.php?page=1&tip=release&title=fmovies&link=" target="_blank">fmovies</a></TD>
-<TD width="25%"><a href="filme/ling_s.php?page=1&tip=release&title=ling.online&link=" target="_blank">ling.online</a></TD>
-</TR>
-<TR>
-<TD width="25%"><a href="filme/veziseriale_s.php?page=1&tip=release&title=veziseriale&link=" target="_blank">veziseriale</a></TD>
+<TD width="25%"><a href="filme/moviewetrust_s.php?page=1&tip=release&title=moviewetrust&link=" target="_blank">moviewetrust</a></TD>
 <TD width="25%"></TD>
-<TD width="25%"><a href="filme/bflix_s.php?page=1&tip=release&title=bflix&link=" target="_blank">bflix</a></TD>
 <TD width="25%"><a href="filme/diverse.php" target="_blank">diverse</a></TD>
 </TR>
+
 
 
 <?php

@@ -70,8 +70,8 @@ $(document).on('keyup', '.imdb', isValid);
 <TR>
 <TD width="25%"><a href="tv/rds.php?title=emisiuni.live&link=https://emisiuni.live/canale-tv-1/" target="_blank">emisiuni.live</TD>
 <TD width="25%"><a href="tv/rds.php?title=rds.live&link=https://rds.live/canale-tv/" target="_blank">rds.live</TD>
-<TD width="25%"><a href="tv/tvonline_main.php" target="_blank">tvonline</TD>
-<TD width="25%"><a href="tv/tvcanale.php" target="_blank">tvcanale</TD>
+<TD width="25%"></TD>
+<TD width="25%"></TD>
 </TR>
 <TR>
 <TD width="25%"><a href="tv/tvrlive.php" target="_blank">TVR Live</a></TD>
@@ -80,12 +80,7 @@ $(document).on('keyup', '.imdb', isValid);
 <TD width="25%"><a href="tv/iptv.php" target="_blank">IPTV International</a></TD>
 </TR>
 
-<TR>
-<TD width="25%"><a href="tv/stream2watch.php" target="_blank">stream2watch</a></TD>
-<TD width="25%"></TD>
-<TD width="25%"></TD>
-<TD width="25%"></TD>
-</TR>
+
 
 <!-- Stiri si emisiuni -->
 <TR><Th colspan="4">Emisiuni TV</Th></TR>
@@ -96,14 +91,14 @@ $(document).on('keyup', '.imdb', isValid);
 <TD width="25%"><a href="tv/protv_stiri.php?page=1,,PROTV" target="_blank">PROTV</a></TD>
 </TR>
 <TR>
-<TD width="25%"><a href="tv/privesc.php?page=1&link=https://www.privesc.eu/arhiva/categorii/Toate&title=privesc.eu" target="_blank">privesc.eu</a></TD>
+<TD width="25%"></TD>
 <TD width="25%"><a href="tv/b1_main.php?page=1&link=&title=B1TV" target="_blank">B1 Emisiuni</a></TD>
 <TD width="25%"><a href="tv/europalibera.php?page=1,,europalibera" target="_blank">europalibera</a></TD>
 <TD width="25%"><a href="tv/tvrplus_main.php" target="_blank">TVR+ (Emisiuni)</a></TD>
 </TR>
 <TR>
 
-<TD width="25%"><a href="tv/primaplay.php?page=1&link=&title=primaplay" target="_blank">primaplay</a></TD>
+<TD width="25%"></TD>
 <TD width="25%"><a href="tv/protvmd.php?page=1,,ProTV Moldova" target="_blank">PROTV Moldova</a></TD>
 <TD width="25%"><a href="tv/inprofunzime.php?page=1,,IN+PROfunzime" target="_blank">IN PROfunzime</a></TD>
 <TD width="25%"><a href="tv/emisiuni_main.php" target="_blank">emisiuni.net</a></TD>
@@ -112,24 +107,19 @@ $(document).on('keyup', '.imdb', isValid);
 <!-- Sport -->
 <TR><Th colspan="4">Sport</Th></TR>
 <TR>
-<TD width="25%"><a href="tv/canalelive.php" target="_blank">sport7.pm</a></TD>
+<TD width="25%"><a href="tv/livetv_main.php" target="_blank">livetv.sx</a></TD>
 <TD width="25%"><a href="tv/sons-stream.php" target="_blank">sons-stream</a></TD>
 <TD width="25%"><a href="tv/sportsonline.php" target="_blank">sportsonline</a></TD>
 <TD width="25%"><a href="tv/dlhd.php" target="_blank">DaddyLiveHD</a></TD>
 </TR>
-<TR>
-<TD width="25%"><a href="tv/livetv_main.php" target="_blank">livetv.sx</a></TD>
-<TD width="25%"><a href="tv/channelstream.php" target="_blank">channelstream</a></TD>
-<TD width="25%"><a href="tv/bundesliga-live.php" target="_blank">bundesliga-live</a></TD>
-<TD width="25%"></TD>
-</TR>
+
 <!-- Clip -->
 <TR><Th colspan="4">Clipuri</Th></TR>
 <TR>
 <TD width="25%"><a href="filme/youtube_fav.php" target="_blank">youtube</a></TD>
 <TD width="25%"><a href="filme/youtube_live.php?token=&search=" target="_blank">youtube live</a></TD>
-<TD width="25%"><a href="filme/vimeo_fav.php?tip=fav&title=Vimeo&page=1" target="_"blank">Vimeo</a></TD>
 <TD width="25%"><a href="filme/dailymotion_fav.php" target="_blank">dailymotion</a></TD>
+<TD width="25%"></TD>
 </TR>
 
 

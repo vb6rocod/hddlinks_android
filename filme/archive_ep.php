@@ -95,6 +95,10 @@ for ($k=0;$k<count($e);$k++) {
   $episod=$m[2].$m[6];
   $ep_tit=trim($m[3].$m[7]);
   if ($m[5]) $season=$m[5];
+  } else {
+   $episod=$k+1;
+   $ep_tit=$title;
+  }
   if ($ep_tit)
    $ep_tit_d=$season."x".$episod." ".$ep_tit;
   else
@@ -111,7 +115,7 @@ for ($k=0;$k<count($e);$k++) {
     echo '</TR>'."\n\r";
     $n=0;
    }
-   }
+   //}
 }  
   if ($n < 3 && $n > 0) {
     for ($k=0;$k<3-$n;$k++) {

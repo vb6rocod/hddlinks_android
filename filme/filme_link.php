@@ -593,6 +593,7 @@ if (preg_match("/filmeonlinegratis\.org/",$filelink)) {
   curl_setopt($ch, CURLOPT_TIMEOUT, 15);
   $h = curl_exec($ch);
   curl_close($ch);
+  //echo $h;
   if (preg_match_all("/Location\:\s+(.+)/i",$h,$m)) {
   $html .='<iframe src="'.trim($m[1]).'"> ';
   }
@@ -1471,6 +1472,7 @@ $ua = $_SERVER['HTTP_USER_AGENT'];
   $html=curl_exec($ch);
   curl_close($ch);
   $html = urldecode(str_replace("@","%",$html));
+  //echo $html;
 }
 //$html .=' "https://drive.google.com/file/d/1yNs4OjXCugk0CddF07xvaIEasxrLkb8V/view" ';
 /**################ All links ################**/
@@ -1488,7 +1490,14 @@ $html=str_replace("&quot;","'",$html);
 //$html=str_replace('https://cdn1.fastvid.co',"http://hqq.to",$html);
 /* end alias */
 if (preg_match("/filmm\.link\/\?([^\'\"]+)/",$html,$m)) {    // sitefilme
- $html .=base64_decode($m[1]);
+//print_r ($m);
+$t1=explode(" ",$m[1]);
+//echo base64_decode($m[1]);
+$out="";
+for ($k=0;$k<count($t1);$k++) {
+ $out .=" ".base64_decode($t1[$k])." ";
+}
+ $html .=$out;
 }
 if(preg_match_all("/(\/\/.*?)(\"|\'|\s)+/si",$html,$matches)) {
 $links=$matches[1];
@@ -1506,6 +1515,8 @@ $q1=substr($dood, 0, -1);
 $dood_indirect=substr($q1, 1);
 $q1=substr($vidguard, 0, -1);
 $vidguard_indirect=substr($q1, 1);
+$q1=substr($filemoon, 0, -1);
+$filemoon_indirect=substr($q1, 1);
 $s="/adf\.ly|vidxden\.c|divxden\.c|vidbux\.c|movreel\.c|videoweed\.(c|e)|novamov\.(c|e)|vk\.com|gounlimited\.to";
 $s=$s."|movshare\.net|youtube\.com|youtube-nocookie\.com|flvz\.com|rapidmov\.net|putlocker\.com|";
 $s=$s."mixturevideo\.com|played\.to|";
@@ -1520,7 +1531,7 @@ $s=$s."stagevu\.com|vidup\.me|vidup\.io";
 $s=$s."|filebox\.com|glumbouploads\.com|uploadc\.com|sharefiles4u\.com|zixshare\.com|uploadboost\.com|";
 $s=$s."netu\.wiztube\.xyz|hqq\.tv|hqq\.to|hqq\.watch|waaw1?\.|waaws|hindipix\.in|pajalusta\.club|vidtodo\.com|vshare\.eu|bit\.ly";
 //$s=$s."|realyplayonli\.|strcdn\.org|div\.str1\.site|fshd\d+\.club|video\.filmeonline";
-$s=$s."|".$hqq_indirect."|".$mixdrop_indirect."|".$dood_indirect."|".$vidguard_indirect;
+$s=$s."|".$hqq_indirect."|".$mixdrop_indirect."|".$dood_indirect."|".$vidguard_indirect."|".$filemoon_indirect;
 $s=$s."|nowvideo\.eu|nowvideo\.co|vreer\.com|180upload\.com|dailymotion\.com|nosvideo\.com|vidbull\.com|";
 $s=$s."purevid\.com|videobam\.com|streamcloud\.eu|donevideo\.com|upafile\.com|docs\.google|mail\.ru|";
 $s=$s."superweb|moviki\.ru|entervideos\.com";
@@ -1638,6 +1649,7 @@ for ($i=0;$i<count($links);$i++) {
    //echo $h2;
    if (preg_match("/location\:\s*(.+)/i",$h2,$m)) {
      $l1=$m[1];
+     $l1=str_replace("cdn1.fastvid.co","hqq.tv",$l1);
      if (strpos($l1,"database.seriale") !== false) {
       $links[$i]=$l1;
      } else {
@@ -1695,7 +1707,7 @@ for ($i=0;$i<count($links);$i++) {
   curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
   curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
   curl_setopt($ch, CURLOPT_HEADER,1);
-  curl_setopt($ch, CURLOPT_NOBODY,1);
+  //curl_setopt($ch, CURLOPT_NOBODY,1);
   curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 20);
   curl_setopt($ch, CURLOPT_TIMEOUT, 30);
   $h2 = curl_exec($ch);
@@ -1703,6 +1715,13 @@ for ($i=0;$i<count($links);$i++) {
   //echo $h2."\n"."====================="."\n";
    if (preg_match("/location\:\s*(.+)/i",$h2,$m)) {
     $cur_link=trim($m[1]);
+    //echo $cur_link."\n";
+    if (preg_match("/filemoon/",$h2)) {  //seialeonline filemoon
+     $alias=parse_url($cur_link)['host'];
+     //echo $alias;
+     $cur_link=str_replace($alias,"filemoon.sx",$cur_link)."&alias=".$alias;
+    }
+
     $cur_link=str_replace("cdn1.fastvid.co","hqq.tv",$cur_link);
     //echo html_entity_decode(urldecode($cur_link))."\n";
     if (strpos($cur_link,"database.seriale") !== false) { //https://database.seriale-online.net/movies/iframe/OGJSK0tXYjlIMVJSNDRveit2eXkwb1NzY1o0d292ZDhpSzc1aU1Kelk4a1ZqcjhSTnB1UE5XTnA5dz09

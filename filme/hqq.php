@@ -41,7 +41,7 @@ $head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gec
 //http://netu.wiztube.xyz/player/embed_player.php?vid=YrfYaQUUMMEn&autoplay=yes
 //$l="https://strcdn.org/e/eTg3U3ZiM1B1MnJEUGlaaEhvL3ZzUT09?adfree=1";
 //http://div.str1.site/e/Sk5RVlJDL2lTdHc4b3BQN1lXUW51dz09?autoplay=yes
-
+$l=str_replace("/f/","/e/",$l);
 
   $host="https://".parse_url($l)['host'];
   //$l=$host."/e/275205227265208246260265226204211238194271217271255";

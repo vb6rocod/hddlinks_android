@@ -36,8 +36,10 @@ http://whoptv.on-the-web.tv:8081/diretta/direttats/playlist.m3u8
 http://95.77.16.67:8080/
 #EXTINF:-1,Aleph News
 https://streamb.m.ro/Aleph/ngrp:Alephnew2.stream_all/playlist.m3u8
-#EXTINF:-1,Prima TV
+#EXTINF:-1,Prima News
 https://stream1.1616.ro:1945/prima/livestream/chunklist.m3u8
+#EXTINF:-1,Aleph News
+http://localhost/mobile1/nou/dlhds.php?link=https%3A%2F%2Fddy1.mizhls.ru%2Fddy1%2Fpremium123%2Ftracks-v1a1%2Fmono.m3u8&host=https%3A%2F%2Fquest4play.xyz&tip=m3u8
 
 
 

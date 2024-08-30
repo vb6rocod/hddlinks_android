@@ -52,61 +52,44 @@ else
 
 <TD width="25%"><a href="filme/voxfilmeonline.php?page=1&tip=release&title=voxfilmeonline&link=" target="_blank">voxfilmeonline</a></TD>
 <TD width="25%"><a href="filme/topfilmeonline.php?page=1&tip=release&title=topfilmeonline&link=" target="_blank">topfilmeonline</a></TD>
-<TD width="25%"><a href="filme/divxfilmeonline.php?page=1&tip=release&title=divxfilmeonline&link=" target="_blank">divxfilmeonline</a></TD>
+<TD width="25%"><a href="filme/serialeonline_f.php?page=1&tip=release&title=serialeonline&link=" target="_blank">serialeonline</a></TD>
 <TD width="25%"><a href="filme/filmehd.php?page=1&tip=release&title=filmehd&link=" target="_blank">filmehd</a></TD>
 
 </TR>
 <TR>
 <TD width="25%"><a href="filme/filmeseriale_filme.php?page=1&tip=release&title=filmeseriale&link=" target="_blank">filmeseriale.online</a></TD>
 <TD width="25%"><a href="filme/veziseriale_f.php?page=1&tip=release&title=veziseriale&link=" target="_blank">veziseriale</a></TD>
-<TD width="25%"><a href="filme/serialeonline_f.php?page=1&tip=release&title=serialeonline&link=" target="_blank">serialeonline</a></TD>
-<TD width="25%"><a href="filme/fsonline_f.php?page=1&tip=release&title=fsonline&link=" target="_blank">fsonline</a></TD>
-<!--<TD width="25%"><a href="filme/portalultautv_main.php" target="_blank">portalultautv</a></TD>-->
+<TD width="25%"><a href="filme/fshd_f.php?page=1&tip=release&title=fshd&link=" target="_blank">fshd.ro</a></TD>
+<TD width="25%"><a href="filme/sitefilme_f.php?page=1&tip=release&title=sitefilme&link=" target="_blank">sitefilme</a></TD>
 </TR>
 
 
 <!--- desene si filme...-->
 <TR>
-<TD width="25%"></TD>
+<TD width="25%"><a href="filme/nites_f.php?page=1&tip=release&title=nites&link=" target="_blank">nites</a></TD>
 <TD width="25%"><a href="filme/emovies_f.php?page=1&tip=release&title=emovies&link=" target="_blank">emovies</a></TD>
 <TD width="25%"><a href="filme/tugaflix_f.php?page=1&tip=release&title=tugaflix&link=" target="_blank">tugaflix</a></TD>
-<TD width="25%"><a href="filme/fshd_f.php?page=1&tip=release&title=fshd&link=" target="_blank">fshd.ro</a></TD>
+<TD width="25%"><a href="filme/lookclub_f.php?page=1&tip=release&title=lookclub&link=" target="_blank">lookclub</a></TD>
 </TR>
-<TR>
-<TD width="25%"><a href="filme/sitefilme_f.php?page=1&tip=release&title=sitefilme&link=" target="_blank">sitefilme</a></TD>
-<TD width="25%"><a href="filme/vezionline_f.php?page=1&tip=release&title=vezionline&link=" target="_blank">vezionline</a></TD>
-<TD width="25%"><a href="filme/fmovies_f.php?page=1&tip=release&title=fmovies&link=" target="_blank">fmovies</a></TD>
-<TD width="25%"></TD>
-</TR>
+
 <!-- straine -->
 <TR>
 <TD width="25%"><a href="filme/tvseries_f.php?page=1&tip=release&title=tvseries&link=" target="_blank">tvseries</a></TD>
 <TD width="25%"><a href="filme/moviewetrust_f.php?page=1&tip=release&title=moviewetrust&link=popular" target="_blank">moviewetrust</a></TD>
 <TD width="25%"><a href="filme/cineplex_f_main.php" target="_blank">cineplex (cont)</a></TD>
-<TD width="25%"><a href="filme/ling_f.php?page=1&tip=release&title=ling.online&link=" target="_blank">ling.online</a></TD>
-</TR>
-
-<TR>
-<TD width="25%"><a href="filme/lookmovie_f.php?page=1&tip=release&title=lookmovie&link=" target="_blank">lookmovie</a></TD>
-<TD width="25%"><a href="filme/streamflix_f.php?page=1&tip=release&title=streamflix&link=popular" target="_blank">streamflix</a></TD>
-<TD width="25%"><a href="filme/onionplay_f.php?page=1&tip=release&title=onionplay&link=" target="_blank">onionplay</a></TD>
-<TD width="25%"><a href="filme/azseries_f.php?page=1&tip=release&title=azseries&link=" target="_blank">azseries</a></TD>
-</TR>
-
-<TR>
-<TD width="25%"><a href="filme/idlixian_f.php?page=1&tip=release&title=idlixian&link=" target="_blank">idlixian</a></TD>
-<TD width="25%"><a href="filme/lookclub_f.php?page=1&tip=release&title=lookclub&link=" target="_blank">lookclub</a></TD>
-<TD width="25%"><a href="filme/fsharetv.php?page=1&tip=release&title=fsharetv&link=" target="_blank">fsharetv</a></TD>
 <TD width="25%"><a href="filme/soap2dayz_f.php?page=1&tip=release&title=soap2dayz&link=" target="_blank">soap2dayz</a></TD>
 </TR>
 
 <TR>
-<!--<TD width="25%"><a href="filme/uniquestream_f.php?page=1&tip=release&title=uniquestream&link=" target="_blank">uniquestream</a></TD>-->
+<TD width="25%"><a href="filme/lookmovie_f.php?page=1&tip=release&title=lookmovie&link=" target="_blank">lookmovie</a></TD>
 <TD width="25%"><a href="filme/ridomovies_f.php?page=1&tip=release&title=ridomovies&link=" target="_blank">ridomovies</a></TD>
+<TD width="25%"><a href="filme/onionplay_f.php?page=1&tip=release&title=onionplay&link=" target="_blank">onionplay</a></TD>
 <TD width="25%"><a href="filme/goojara_f.php?page=1&tip=release&title=goojara&link=" target="_blank">goojara</a></TD>
-<TD width="25%"><a href="filme/bflix_f.php?page=1&tip=release&title=bflix&link=" target="_blank">bflix</a></TD>
-<TD width="25%"></TD>
 </TR>
+
+
+
+
 
 
 <?php

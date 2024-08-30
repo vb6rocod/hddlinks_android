@@ -1,5 +1,6 @@
 <?php
 //set_time_limit(0);
+
 error_reporting(0);
 $hw=2;
 include ("../common.php");
@@ -159,7 +160,6 @@ if ($from=="emisiuni_net") {
   $t2=explode('"',$t1[1]);
   $link=$t2[0];
 }
-/////////////////////////////////////////
 if (preg_match("/stream2watch\./",$link)) {
   $head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/110.0',
   'Accept: */*',
@@ -184,9 +184,47 @@ if (preg_match("/stream2watch\./",$link)) {
   curl_close($ch);
   $t1=explode('live score" src="',$h);
   $t2=explode('"',$t1[1]);
-  $link=$t2[0]; // https://dlhd.sx/tele/stream-62.php
+  $link=$t2[0]; // https://dlhd.sx/tele/stream-62.php   //https://dlhd.sx/embed/stream-463.php
+  //echo $link;
 
 }
+//////////////////////////////////////////
+if (preg_match("/dlhd\.sx/",$link)) {
+//echo $link;
+  $head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/110.0',
+  'Accept: */*',
+  'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
+  'Accept-Encoding: deflate',
+  'Referer: https://dlhd.sx/',
+  'Origin: https://dlhd.sx'
+  );
+  //echo $link;
+  $ch = curl_init();
+  curl_setopt($ch, CURLOPT_URL, $link);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+  curl_setopt($ch, CURLOPT_HTTPHEADER, $head);
+  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+  $h = curl_exec($ch);
+  curl_close($ch);
+  if (preg_match("/\<iframe.*?src\=\"([^\"]+)\"/i",$h,$m))
+   $link = $m[1];
+  else
+   $link="";
+  //echo $link;
+  //die();
+   if ($link) {
+    $x="1qwebplay.xyz";
+    $host=parse_url($link)['host'];
+    $link=str_replace($host,$x,$link)."&alias=".$host;
+   }
+  //echo $link;
+  //die();
+}
+/////////////////////////////////////////
+
 ////////////////////////////////////////
 if ($from=="channelstream") {
   //echo $link;
@@ -625,13 +663,15 @@ if (preg_match("/popcdn\.day/",$link)) {
   //https://love2live.wideiptv.top/TNT1UK/embed.html?token=49951d5347cd117b28ef2b41226b54c9d820be36-609da27a497fab85089a8d4b13eb1196-1714655990-1714645190&remote=no_check_ip
   $link=str_replace("embed.html","index.fmp4.m3u8",$l3);
 }
-if (preg_match("/daddylivehd\.sx\/embed\/|daddylive\d\.shop\/mylive|daddy\-stream\.xyz\/mylive|daddylive\.sx\/tele/",$link)) { ////////////////////////////////
+if (preg_match("/daddylivehd\.sx\/embed\/|daddylive\d\.shop\/(my)?live|daddy\-stream\.xyz\/mylive|daddylive\.sx\/tele/",$link)) { ////////////////////////////////
    //https://daddylive1.shop/mylivetv/stream-426.php
    //https://daddylive1.shop/mylive/stream-11.php
    //https://daddylive.sx/tele/stream-40.php
    //https://daddy-stream.xyz/mylive
+   //daddylive1.shop/livetv
    //
    //echo $link;
+   //die();
   function hunter($h, $u, $n, $t, $e, $r) {
     $r = "";
     for($i = 0; $i < strlen($h);$i++) {
@@ -683,88 +723,10 @@ if (preg_match("/daddylivehd\.sx\/embed\/|daddylive\d\.shop\/mylive|daddy\-strea
   $h = curl_exec($ch);
   //echo $h;
   preg_match("/\<iframe.*?src\=\"([^\"]+)\"/i",$h,$m);
-  $l3=fixurl($m[1]); //https://weblivehdplay.ru/premiumtv/daddyhd.php?id=41
-  //echo $l3;
-$head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:125.0) Gecko/20100101 Firefox/125.0',
-'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8',
-'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
-'Accept-Encoding: deflate',
-'Connection: keep-alive',
-'Referer: https://daddylive1.shop/',
-'Upgrade-Insecure-Requests: 1',
-'Sec-Fetch-Dest: iframe',
-'Sec-Fetch-Mode: navigate',
-'Sec-Fetch-Site: cross-site');
+  $link=fixurl($m[1]); //https://weblivehdplay.ru/premiumtv/daddyhd.php?id=41
 
-  $ch = curl_init();
-  curl_setopt($ch, CURLOPT_URL, $l3);
-  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-  curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
-  curl_setopt($ch, CURLOPT_HTTPHEADER, $head);
-  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-  //curl_setopt($ch, CURLOPT_ENCODING,"");
-  curl_setopt($ch, CURLOPT_HEADER, 1);
-  $h = curl_exec($ch);
-  curl_close($ch);
-  //echo $h;
-  $h=preg_replace("/\<\!--.*?--\>/si","",$h);
-  //echo $h;
-////////////////////////////////////////////////
-  //function(h,u,n,t,e,r)
- if (preg_match("/function\(h\,u\,n\,t\,e\,r\)/",$h)) {
-  //decodeURIComponent(escape(r))}("GqMqTMMMTGqzGTHGMTGqqz
-  preg_match_all("/decodeURIComponent\(escape\(r\)\)\}\((.*?)\)\)/",$h,$m);
-  //print_r ($m);
-  $out="";
-  for ($k=0;$k<count($m[1]);$k++) {
-   $c=str_replace('"',"",$m[1][$k]);
-   $t1=explode(",",$c);
-   $out .=hunter($t1[0],$t1[1],$t1[2],$t1[3],$t1[4],$t1[5]);
-  }
-  if (preg_match("/encodedSource\s*\=\s*\'([^\']+)\'/",$out,$r)) {
-   $link=base64_decode($r[1]);
-  }
-  } elseif (preg_match("/encryptedSource\s*\=\s*\"([^\"]+)\"/",$h,$z)) {
-    $link=base64_decode($z[1]);
- } else {
-////////////////////////////////////////////////
-  if (preg_match("/[^\/]source:\s*\'([^\']+)/",$h,$m))
-   $link=trim($m[1]);
-  elseif (preg_match("/\"src\":\s*\"([^\"]+)\"/",$h,$m))   //"src": "
-   $link=trim($m[1]);
-  else
-   $link="";
-  }
-$head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:125.0) Gecko/20100101 Firefox/125.0',
-'Accept: */*',
-'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
-'Accept-Encoding: deflate',
-'Origin: https://viwlivehdplay.ru',
-'Connection: keep-alive',
-'Referer: https://viwlivehdplay.ru/',
-'Sec-Fetch-Dest: empty',
-'Sec-Fetch-Mode: cors',
-'Sec-Fetch-Site: cross-site');
-$ua="Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:125.0) Gecko/20100101 Firefox/125.0";
-  $ch = curl_init();
-  curl_setopt($ch, CURLOPT_URL, $link);
-  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-  curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
-  curl_setopt($ch, CURLOPT_HTTPHEADER, $head);
-  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-  //curl_setopt($ch, CURLOPT_ENCODING,"");
-  curl_setopt($ch, CURLOPT_HEADER, 1);
-  $h = curl_exec($ch);
-  curl_close($ch);
-  if (preg_match("/location:\s*(.+)/i",$h,$n))
-   $link=trim($n[1]);
-  $t1=explode('#EXTM3U',$h);
-  $h="#EXTM3U".$t1[1];
-  $link=get_max_res($h,$link);
-  if ($link && $flash <> "flash")
-    $link=$link."|Referer=".urlencode("https://viwlivehdplay.ru/")."&Origin=".urlencode("https://viwlivehdplay.ru")."&User-Agent=".urlencode($ua);
 }
-if (preg_match("/(antennasports|maxsport|poscitechs|soccerstream100|streamhd247|lato|venushd|scolie|kingstreamz|powerover)\.|jokersportshd\./",$link)) {
+if (preg_match("/(antenn?asports|maxsport|poscitechs|soccerstream100|streamhd247|lato|venushd|scolie|kingstreamz|powerover)\.|jokersportshd\./",$link)) {
   $link=str_replace("antennasports.ru/bet.php?","4kwebplay.xyz/crv.php?",$link);
 $head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/110.0',
 'Accept: application/json, text/plain, */*',
@@ -785,6 +747,7 @@ if (!preg_match("/4kwebplay\.xyz/",$link)) {
   $h = curl_exec($ch);
   curl_close($ch);
   $h=preg_replace("/\<\!--.*?--\>/si","",$h);
+  //echo $h;
   preg_match("/\<iframe.+src\=[\"\']([^\"\']+)[\"\']/",$h,$m);
   $link=fixurl($m[1]);
   }
@@ -822,7 +785,7 @@ if (preg_match("/realtvs\.tv/",$link)) {
    $link .="|Referer=".urlencode("https://jokersportshd.org/")."&Origin=".urlencode("https://jokersportshd.org")."&User-Agent=".urlencode($ua);
 
 }
-if (preg_match("/4kwebplay\.xyz/",$link)) {
+if (preg_match("/4kwebplay\.xyz\/crv/",$link)) {
   //https://4kwebplay.xyz/crv.php?id=6305054
   //echo $link;
   $ua="Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:124.0) Gecko/20100101 Firefox/124.0";
@@ -847,6 +810,37 @@ if (preg_match("/4kwebplay\.xyz/",$link)) {
    $link=$m[1];
   if ($flash <> "flash")
    $link .="|Referer=".urlencode("https://4kwebplay.xyz/")."&Origin=".urlencode("https://4kwebplay.xyz")."&User-Agent=".urlencode($ua);
+
+}
+if (preg_match("/topembed\./",$link)) {
+  //https://topembed.pw/livetv/ex6413114
+  //echo $link;
+  $ua="Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:124.0) Gecko/20100101 Firefox/124.0";
+  $head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:124.0) Gecko/20100101 Firefox/124.0',
+  'Accept: application/json, text/plain, */*',
+  'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
+  'Accept-Encoding: deflate',
+  'Connection: keep-alive',
+  'Referer: https://livetv.sx/');
+  $ch = curl_init();
+  curl_setopt($ch, CURLOPT_URL, $link);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+  curl_setopt($ch, CURLOPT_HTTPHEADER, $head);
+  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+  //curl_setopt($ch, CURLOPT_HEADER,1);
+  $h = curl_exec($ch);
+  curl_close($ch);
+  //echo $h;
+  if (preg_match("/file[\'\"]\:\s*[\'\"]([^\'\"]+)[\'\"]/",$h,$m))     //file": '  source: '
+   $link=$m[1];
+  elseif (preg_match("/source\:\s+[\'\"]([^\'\"]+)[\'\"]/",$h,$m))
+   $link=$m[1];
+  //print_r ($m);
+  if ($flash <> "flash")
+   $link .="|Referer=".urlencode("https://topembed.pw/")."&Origin=".urlencode("https://topembed.pw")."&User-Agent=".urlencode($ua);
 
 }
 if (preg_match("/fullassia\.com/",$link)) {
@@ -1060,6 +1054,8 @@ $head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gec
 'Accept-Encoding: deflate',
 'Connection: keep-alive',
 'Referer: http://livetv.sx/');
+//echo $link;
+//$link="https://wikisport.se/arenasport1-srbi/";
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $link);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
@@ -1300,30 +1296,7 @@ if (preg_match("/primasport\.one/",$link)) {
   //echo $link;
 }
 
-if (preg_match("/dlhd\.sx/",$link)) {
-  $head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/110.0',
-  'Accept: */*',
-  'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
-  'Accept-Encoding: deflate',
-  'Referer: https://dlhd.sx/',
-  'Origin: https://dlhd.sx'
-  );
-  $ch = curl_init();
-  curl_setopt($ch, CURLOPT_URL, $link);
-  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
-  curl_setopt($ch, CURLOPT_HTTPHEADER, $head);
-  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
-  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
-  $h = curl_exec($ch);
-  curl_close($ch);
-  if (preg_match("/\<iframe.*?src\=\"([^\"]+)\"/i",$h,$m))
-   $link = $m[1];
-  else
-   $link="";
-  //echo $link;
-}
+
 if (preg_match("/play\.stirilepe\.net/",$link)) {
  if ($flash <> "flash") $link .="|Referer=".urlencode("https://rds.live/");
 }
@@ -1938,6 +1911,28 @@ if (preg_match("/tutele\d+\.|tutlehd\.xyz/",$link)) {
     }
   }
 }
+if (preg_match("/backlinkhd\.com/",$link)) {
+  $head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/110.0',
+  'Accept: */*',
+  'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
+  'Accept-Encoding: deflate',
+  'Referer: https://backlinkhd.com/',
+  'Origin: https://backlinkhd.com'
+  );
+  $ch = curl_init();
+  curl_setopt($ch, CURLOPT_URL, $link);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+  curl_setopt($ch, CURLOPT_HTTPHEADER, $head);
+  curl_setopt($ch, CURLOPT_HEADER,1);
+  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 25);
+  $h = curl_exec($ch);
+  curl_close($ch);
+  if (preg_match("/iframe src\=\"([^\"]+)\"/",$h,$m))
+   $link=fixurl($m[1]);
+}
 if (preg_match("/streamingnow\.|freeviplive\.|sons\-stream\.com|b5yucast\.com/",$link)) {
   //https://streamingnow.pro/stream.php?hd=20
   //https://freeviplive.com/stream.php?hd=20
@@ -2108,11 +2103,20 @@ if (preg_match("/truyenxalo\./",parse_url($link)['host'])) {
   if ($link && $flash <> "flash")
     $link=$link."|Referer=".urlencode($ref."/")."&Origin=".urlencode($ref);
 }
-if (preg_match("/livehdplay\.ru|1qwebplay\.xyz|4kwebplay\.|qqwebplay\./",parse_url($link)['host'])) {
+if (preg_match("/livehdplay\.ru|1qwebplay\.xyz|4kwebplay\.|qqwebplay\.|cookiewebplay\.|quest4play\.|ilovetoplay\./",parse_url($link)['host'])) {
   // $l="https://livehdplay.ru/maxsport.php?id=cnmyfeed21";
   //https://olalivehdplay.ru/premiumtv/daddylivehd.php?id=194
   //https://1qwebplay.xyz/premiumtv/daddylivehd.php?id=101
   //echo $link;
+  //die();
+  $q=parse_url($link)['query'];
+  parse_str($q,$x);
+  //print_r ($x);
+  //$link=
+  if (isset($x['alias']))
+  $link=str_replace("1qwebplay.xyz",$x['alias'],$link);
+  //echo $link;
+  $host1="https://".parse_url($link)['host'];
   function hunter($h, $u, $n, $t, $e, $r) {
     $r = "";
     for($i = 0; $i < strlen($h);$i++) {
@@ -2146,6 +2150,7 @@ if (preg_match("/livehdplay\.ru|1qwebplay\.xyz|4kwebplay\.|qqwebplay\./",parse_u
     return $k;
   }
   $ua="Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:124.0) Gecko/20100101 Firefox/124.0";
+  $ua="Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:128.0) Gecko/20100101 Firefox/128.0";
   if (preg_match("/daddylive/",$link))
    $ref="https://dlhd.sx";
   else
@@ -2171,7 +2176,7 @@ if (preg_match("/livehdplay\.ru|1qwebplay\.xyz|4kwebplay\.|qqwebplay\./",parse_u
   curl_setopt($ch, CURLOPT_TIMEOUT, 25);
   $h = curl_exec($ch);
   curl_close($ch);
-  //echo $h;
+  //echo $h."\n"."\n";
   if (preg_match("/function\(h\,u\,n\,t\,e\,r\)/",$h)) {
   preg_match_all("/decodeURIComponent\(escape\(r\)\)\}\((.*?)\)\)/",$h,$m);
   //print_r ($m);
@@ -2183,13 +2188,26 @@ if (preg_match("/livehdplay\.ru|1qwebplay\.xyz|4kwebplay\.|qqwebplay\./",parse_u
   }
   if (preg_match("/encodedSource\s*\=\s*\'([^\']+)\'/",$out,$r)) {
     $link=base64_decode($r[1]);
+    //echo "asasasas";
   }
   } elseif (preg_match("/encryptedSource\s*\=\s*\"([^\"]+)\"/",$h,$z)) {
     $link=base64_decode($z[1]);
-  } else {
-  if (preg_match("/[^\/]source:\s*\'([^\']+)/",$h,$m))
+    //echo "hfghfghfhg";
+  } elseif (preg_match("/encryptedEmbed\s*\=\s*\"([^\"]+)\"/",$h,$z)) {
+    $link=base64_decode($z[1]);
+  } elseif (preg_match("/return atob\(([^\)]+)/",$h,$m)) {  // return atob(lonelilstopstealing)
+    $f=$m[1];
+    $s="/".$f."\s*\=\s*\"([^\"]+)\"/";
+    //echo $s;
+   if (preg_match($s,$h,$z)) {
+    $link=base64_decode($z[1]);
+    //echo $link;
+   }
+  } elseif (preg_match("/[^\/]source:\s*\'([^\']+)/",$h,$m)) {
    $link=trim($m[1]);
-  else
+  } elseif (preg_match("/[^\/]file[\'\"]:\s*[\'\"]([^\'\"]+)/",$h,$m)) {   //"file": '
+    $link=trim($m[1]);
+  } else {
    $link="";
   }
    //echo $link;
@@ -2199,6 +2217,7 @@ if (preg_match("/livehdplay\.ru|1qwebplay\.xyz|4kwebplay\.|qqwebplay\./",parse_u
    //$ref="https://claplivehdplay.ru";
    //$link="https://salamus2023.onlinehdhls.ru/ddh2/premium36/tracks-v1a1/mono.m3u8";
    $ref="https://claplivehdplay.ru";
+   $ref="https://4kwebplay.xyz";
   $head=array('User-Agent: '.$ua,
   'Accept: */*',
   'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
@@ -2228,21 +2247,51 @@ if (preg_match("/livehdplay\.ru|1qwebplay\.xyz|4kwebplay\.|qqwebplay\./",parse_u
   curl_close($ch);
   if (preg_match("/location:\s*(.+)/i",$h,$m))
    $link=trim($m[1]);
+  $link=str_replace("playlist.m3u8","tracks-v1a1/mono.m3u8",$link);
+  $t1=explode("?",$_SERVER['HTTP_REFERER']);
+  $p=dirname($t1[0]);
+  $link = $p."/dlhds.php?link=".base64_encode($link)."&host=".urlencode($host)."&tip=m3u8";
+  if ($link && $flash <> "flash")
+    $link=$link."|Referer=".urlencode($host1."/")."&Origin=".urlencode($host1)."&User-Agent=".urlencode($ua);
+    //$link=$link."&Sec-Fetch-Dest=empty&Sec-Fetch-Mode=cors&Sec-Fetch-Site=cross-site";
   //echo $h;
   //echo $h;
+  /*
   $t1=explode("#EXTM3U",$h);
   $h=$t1[1];
   //echo $h;
   //echo $link;
-  //$link=get_max_res($h,$link);
-
+  $link=get_max_res($h,$link);
+  /*
+  $l="https://max2.stopcoolrea1.shop/ddy1/premium346/tracks-v1a1/2024/07/19/10/55/57-04004.zip?token=c2VydmVyX3RpbWU9MTcxNDMyNzU2MyZoYXNoX3ZhbHVlPU5EQmlObUV3TldZek1tUmhNemMwWkRJM09URXdaREU0TTJZMU9EQmhNR";
+  */
+  /*
+  $ch = curl_init();
+  curl_setopt($ch, CURLOPT_URL, $link);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+  curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
+  curl_setopt($ch, CURLOPT_HTTPHEADER, $head);
+  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+  //curl_setopt($ch, CURLOPT_ENCODING,"");
+  curl_setopt($ch, CURLOPT_HEADER, 1);
+  $h = curl_exec($ch);
+  curl_close($ch);
+  //echo $h;
+  */
   //$link="https://salamus2023.onlinehdhls.ru/ddh1/premium34/playlist.m3u8";
   //$link="https://salamus2023.onlinehdhls.ru/ddh2/premium34/tracks-v1a1/mono.m3u8";
   //$link="https://salamus2023.onlinehdhls.ru/ddh2/premium36/playlist.m3u8";
+  /*
    $host="https://claplivehdplay.ru";
+   $host="https://4kwebplay.xyz";
+   $host=$host1;
+   //$host="https://".parse_url($link)['host'];
+   //$host="https://antenasports.ru";
+   //$host="https://qqwebplay.xyz";
   if ($link && $flash <> "flash")
     $link=$link."|Referer=".urlencode($host."/")."&Origin=".urlencode($host)."&User-Agent=".urlencode($ua);
     //$link=$link."&Sec-Fetch-Dest=empty&Sec-Fetch-Mode=cors&Sec-Fetch-Site=cross-site";
+  */
 }
 if (preg_match("/tvpclive\./",parse_url($link)['host'])) {
   $head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/110.0',
@@ -2926,7 +2975,7 @@ if ($from=="tvcanale") {
   $h = curl_exec($ch);
   curl_close($ch);
   //echo $h;
-  if (preg_match("/source:\s*\"([^\"]+)\"/",$h,$m)) {
+  if (preg_match("/source:\s+\"([^\"]+)\"/",$h,$m)) {
    $link=$m[1];
    if ($flash <> "flash")
     $link=$link."|Referer=".urlencode($host)."&Origin=".urlencode($host)."&User-Agent=".urlencode($ua);

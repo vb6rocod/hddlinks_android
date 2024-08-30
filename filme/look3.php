@@ -9,13 +9,13 @@ $post=$q;
 $head=array('Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
 'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
 'Accept-Encoding: deflate',
-'Referer: https://www.google.com/recaptcha/api/fallback?k=6LcLBhQUAAAAACtt-2FptlfshI9rRZakENgwiK_H',
+'Referer: https://www.google.com/recaptcha/api/fallback?k=6LdPO70aAAAAAPLTFBiLkiyTlzco6VNnD0Y6jP3b',
 'Content-Type: application/x-www-form-urlencoded',
 'Content-Length: '.strlen($post).'',
 'Connection: keep-alive'
 );
 //6LfCmh4TAAAAAKog9f8wTyEOc0U8Ms2RTuDFyYP_
-$l="https://www.google.com/recaptcha/api/fallback?k=6LcLBhQUAAAAACtt-2FptlfshI9rRZakENgwiK_H";
+$l="https://www.google.com/recaptcha/api/fallback?k=6LdPO70aAAAAAPLTFBiLkiyTlzco6VNnD0Y6jP3b";
 $ch = curl_init();
 curl_setopt($ch, CURLOPT_URL, $l);
 curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
@@ -35,34 +35,57 @@ curl_close($ch);
 $pat='/\<textarea dir\=\"ltr\" readonly\>(.+?)\</';
 if (preg_match_all($pat,$h,$m)) {
 $token=$m[1][0];
-$post="call=".$token;
-$l="http://www.filmeserialeonline.org/wp-content/themes/grifus/loop/second.php";
-$headers=array('Accept: text/html, */*; q=0.01',
+$ua="Mozilla/5.0 (Windows NT 10.0; rv:86.0) Gecko/20100101 Firefox/86.0";
+
+//$ua = $_SERVER['HTTP_USER_AGENT'];
+$cookie=$base_cookie."lookmovie.txt";
+//$cookie="C:/EasyPhp/data/localweb/mobile1/cookie/cookies.txt";
+//unlink ($cookie);
+$x=file_get_contents($base_cookie."lookmovie_ref1.txt");
+$t1=explode("|",$x);
+$l1=$t1[0];
+$ref=$t1[1];
+$csrf=$t1[2];
+//$token=$_POST['g-recaptcha-response'];
+$post="_csrf=".$csrf."&g-recaptcha-response=".$token;
+$head=array('Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
 'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
 'Accept-Encoding: deflate',
-'Content-Type: application/x-www-form-urlencoded; charset=UTF-8',
-'X-Requested-With: XMLHttpRequest',
-'Content-Length: '.strlen($post).'',
-'Origin: http://www.filmeserialeonline.org',
+'Content-Type: application/x-www-form-urlencoded',
+'Content-Length: '.strlen($post),
+'Origin: https://'.$ref,
 'Connection: keep-alive',
-'Referer: http://www.filmeserialeonline.org'
-);
-  $ch = curl_init($l);
+'Referer: https://'.$ref,
+'Upgrade-Insecure-Requests: 1');
+  $ch = curl_init();
+  curl_setopt($ch, CURLOPT_URL, $l1);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
   curl_setopt($ch, CURLOPT_USERAGENT, $ua);
-  //curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows; U; Windows NT 6.1; en-US; rv:1.9.1.2) Gecko/20090729 Firefox/3.5.2 GTB5');
-  curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
-  curl_setopt ($ch, CURLOPT_POST, 1);
-  curl_setopt ($ch, CURLOPT_POSTFIELDS, $post);
-  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
-  curl_setopt($ch, CURLOPT_RETURNTRANSFER  ,1);  // RETURN THE CONTENTS OF THE CALL
-  curl_setopt($ch, CURLOPT_HEADER, true);
-  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
-  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
-  $html = curl_exec($ch);
-  curl_close ($ch);
-  echo "Puteti vedea sursele timp de aproximativ 12h";
-  echo '<script>setTimeout(function(){ history.go(-2); }, 2000);</script>';
+  //curl_setopt($ch,CURLOPT_REFERER,$l);
+  curl_setopt($ch, CURLOPT_HTTPHEADER, $head);
+  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,0);
+  curl_setopt($ch, CURLOPT_HEADER,1);
+  curl_setopt($ch, CURLOPT_POST,1);
+  curl_setopt($ch, CURLOPT_POSTFIELDS,$post);
+  //curl_setopt($ch, CURLOPT_NOBODY,1);
+  curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie);
+  curl_setopt($ch, CURLOPT_COOKIEJAR, $cookie);
+  curl_setopt($ch, CURLOPT_HTTPHEADER, $head);
+ //curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
+ curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 25);
+  $h = curl_exec($ch);
+  //$info = curl_getinfo($ch);
+  curl_close($ch);
+  if (preg_match("/invisible\-recaptcha\-key/",$h)) {
+   //echo '<a href="look_captcha.php?host=https://lookmovie.io&cookie=lookmovie.txt&target=lookmovie_s.php&title=lookmovie" target="_blank"><b>Sorry! Use firefox (cookies.txt) to GET COOKIE</b></a>';
+   echo 'error';
+   die();
+  } else {
+    echo "OK! GO BACK";
+    echo '<script>setTimeout(function(){ history.go(-3); }, 2000);</script>';
+  }
 } else {
   echo "BAD CAPTCHA!";
   echo '<script>setTimeout(function(){ history.go(-2); }, 2000);</script>';
@@ -73,7 +96,7 @@ $headers=array('Accept: text/html, */*; q=0.01',
 $key="6LcLBhQUAAAAACtt-2FptlfshI9rRZakENgwiK_H";
 
 $l="https://www.google.com/recaptcha/api/fallback?k=6LcLBhQUAAAAACtt-2FptlfshI9rRZakENgwiK_H";
-//$l="https://www.google.com/recaptcha/api/fallback?k=6LdPO70aAAAAAPLTFBiLkiyTlzco6VNnD0Y6jP3b";
+$l="https://www.google.com/recaptcha/api/fallback?k=6LdPO70aAAAAAPLTFBiLkiyTlzco6VNnD0Y6jP3b";
 $head = array(
 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
 'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2'
@@ -82,7 +105,7 @@ $ch = curl_init();
 curl_setopt($ch, CURLOPT_URL, $l);
 curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
 curl_setopt($ch, CURLOPT_USERAGENT, $ua);
-curl_setopt($ch, CURLOPT_REFERER, "http://www.filmeserialeonline.org");
+curl_setopt($ch, CURLOPT_REFERER, "https://lookmovie2.to");
 curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 0);
 curl_setopt($ch, CURLOPT_HTTPHEADER, $head);
 curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
