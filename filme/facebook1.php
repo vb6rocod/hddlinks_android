@@ -234,15 +234,15 @@ $cover="";
 //if (preg_match_all("/\<td class\=\"\S+\"\>\<.*?href\=\"(\S+)\"\s+aria\-label\=\"(.*?)\".*?src\=\"(\S+)\"/ms",$h,$m)) {
 for ($k=0;$k<count($x);$k++) {
   $title=$x[$k]['node']['channel_tab_thumbnail_renderer']['video']['savable_title']['text'];
-  $image=$x[$k]['node']['channel_tab_thumbnail_renderer']['video']['VideoThumbnailImage']['uri'];
-  $sec=$x[$k]['node']['channel_tab_thumbnail_renderer']['video']['playable_duration'];
+  $image=$x[$k]['node']['channel_tab_thumbnail_renderer']['video']['image']['uri'];
+  $sec=$x[$k]['node']['channel_tab_thumbnail_renderer']['video']['video_thumbnail_overlays_renderer']['video']['playable_duration'];
   //$link1="http://xxx.abc?file=".urlencode($x[$k]['node']['channel_tab_thumbnail_renderer']['video']['creation_story']['attachments'][0]['target']['playable_url'])."&title=".urlencode($title);
   $durata=format_sec($sec);
   if ($title)
     $title=$title." (".$durata.")";
   else
     $title=$durata;
-   $link1="".urlencode($x[$k]['node']['channel_tab_thumbnail_renderer']['video']['url'])."&title=".urlencode($title);
+   $link1="".urlencode("https://www.facebook.com/video/embed?video_id=".$x[$k]['node']['channel_tab_thumbnail_renderer']['video']['id'])."&title=".urlencode($title);
   if ($n==0) echo '<TR>';
 
   if ($tast == "NU") {

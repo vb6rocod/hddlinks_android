@@ -189,7 +189,7 @@ if (preg_match("/stream2watch\./",$link)) {
 
 }
 //////////////////////////////////////////
-if (preg_match("/dlhd\.sx/",$link)) {
+if (preg_match("/dlhd\.sx|daddylive/",$link)) {
 //echo $link;
   $head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/110.0',
   'Accept: */*',
@@ -1071,7 +1071,15 @@ $head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gec
   $t1=explode('fid="',$h);
   $t2=explode('"',$t1[1]);
   $fid=$t2[0];
+  $t1=explode('src="',$h);
+  $t2=explode('"',$t1[1]);
+  $l1=fixurl($t2[0]);
+  $host1="https://".parse_url($l1)['host'];
+  //https://freshwaterdell.com/wiki.php?player=desktop&live=eurosp1
   $l="https://fiveyardlab.com/wiki.php?player=desktop&live=".$fid;
+  $l="https://freshwaterdell.com/wiki.php?player=desktop&live=".$fid;
+  $l=$host1."/wiki.php?player=desktop&live=".$fid;
+  //echo $l;
   $head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/110.0',
   'Accept: */*',
   'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
@@ -1089,6 +1097,7 @@ $head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gec
   'Referer: https://cdnssd.ru/',
   'Origin: https://cdnssd.ru');
    $l="https://locatedinfain.com/embed2.php?player=desktop&live=".$fid;
+   $host1="https://locatedinfain.com";
   }
   //$l="https://fiveyardlab.com/wiki.php?player=desktop&live=".$fid;
 
@@ -1117,7 +1126,7 @@ $head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gec
   //echo $x;
   $link=$x;
   if ($link && $flash <> "flash")
-    $link=$link."|Referer=".urlencode("https://fiveyardlab.com/")."&Origin=".urlencode("https://fiveyardlab.com");
+    $link=$link."|Referer=".urlencode($host1."/")."&Origin=".urlencode($host1);
 }
 if (preg_match("/tvcom.cz/",$link)) {
 $head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/110.0',
@@ -1938,6 +1947,7 @@ if (preg_match("/streamingnow\.|freeviplive\.|sons\-stream\.com|b5yucast\.com/",
   //https://freeviplive.com/stream.php?hd=20
   //https://freeviplive.com/tvon.php?hd=71
   //https://freeviplive.com/tvon.php?hd=301
+  //echo $link;
   $head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/110.0',
   'Accept: */*',
   'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
@@ -1961,7 +1971,9 @@ if (preg_match("/streamingnow\.|freeviplive\.|sons\-stream\.com|b5yucast\.com/",
   $t2=explode('"',$t1[1]);
   $fid=$t2[0];
   //https://b4ucast.com/dhonka2.php?player=
+  //https://anarchy-stream.com/dhonka4.php?player=desktop&live=bbtsp1
   $link="https://b4ucast.com/dhonka.php?player=desktop&live=".$fid;  // to next step
+  $link="https://anarchy-stream.com/dhonka4.php?player=desktop&live=".$fid;
  //echo $link;
 }
 if (preg_match("/sportskart\.click/",$link)) { // to second link!
@@ -2250,7 +2262,7 @@ if (preg_match("/livehdplay\.ru|1qwebplay\.xyz|4kwebplay\.|qqwebplay\.|cookieweb
   $link=str_replace("playlist.m3u8","tracks-v1a1/mono.m3u8",$link);
   $t1=explode("?",$_SERVER['HTTP_REFERER']);
   $p=dirname($t1[0]);
-  $link = $p."/dlhds.php?link=".base64_encode($link)."&host=".urlencode($host)."&tip=m3u8";
+  //$link = $p."/dlhds.php?link=".base64_encode($link)."&host=".urlencode($host)."&tip=m3u8";
   if ($link && $flash <> "flash")
     $link=$link."|Referer=".urlencode($host1."/")."&Origin=".urlencode($host1)."&User-Agent=".urlencode($ua);
     //$link=$link."&Sec-Fetch-Dest=empty&Sec-Fetch-Mode=cors&Sec-Fetch-Site=cross-site";
@@ -2468,9 +2480,10 @@ if (preg_match("/ddolahdplay\./",parse_url($link)['host'])) {
   if ($link && $flash<>"flash")
    $link .="|Referer=".urlencode("https://ddolahdplay.xyz/")."&Origin=".urlencode("https://ddolahdplay.xyz");
 }
-if (preg_match("/godzlive\.com|b\ducast\.com/",parse_url($link)['host'])) {
+if (preg_match("/godzlive\.com|b\ducast\.com|anarchy\-stream/",parse_url($link)['host'])) {
   $ref="https://".parse_url($link)['host'];
   //$ref="https://b4yucast.com";
+  //https://anarchy-stream.com/dhonka4.php?player=desktop&live=bbtsp1
   $head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/110.0',
   'Accept: */*',
   'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',

@@ -168,9 +168,9 @@ echo '</TR>'."\r\n";
 
 if($tip=="release") {
  if ($page>1)
-  $l ="http://www.filmeserialeonline.org/filme-online-hd-19/page/".$page."/";
+  $l ="http://www.filmeserialeonline.org/filme-online-hd-2024-00/page/".$page."/";
  else
-  $l="http://www.filmeserialeonline.org/filme-online-hd-19/";
+  $l="http://www.filmeserialeonline.org/filme-online-hd-2024-00/";
 } else {
   $search=str_replace(" ","+",$tit);
   if ($page > 1)

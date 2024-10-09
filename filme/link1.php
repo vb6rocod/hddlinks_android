@@ -6657,7 +6657,8 @@ $head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:104.0) Gecko/20100101 
   //echo $h;
   $jsu = new JavaScriptUnpacker();
   $out = $jsu->Unpack($h);
-  //$out .=$h;
+  $out .=$h;
+  //echo $out;
   if (preg_match("/file:\"([^\"]+)\"/",$out,$m)) {
    $link=$m[1];
    //echo $link;
@@ -10083,8 +10084,13 @@ function xor_string($string, $key) {
    curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
    curl_setopt($ch, CURLOPT_TIMEOUT, 25);
    $h = curl_exec($ch);
-   curl_close($ch);
 
+   if (preg_match("/\<iframe src\=\"([^\"]+)\"/",$h,$m)) {
+    curl_setopt($ch, CURLOPT_URL, $m[1]);
+    $h = curl_exec($ch);
+    //$host="https://".parse_url($m[1])['host'];
+   }
+   curl_close($ch);
    //echo $h;
   $head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:81.0) Gecko/20100101 Firefox/81.0',
   'Accept: application/json, text/plain, */*',
@@ -15373,6 +15379,7 @@ $ua="Mozilla/5.0 (Windows NT 10.0; rv:63.0) Gecko/20100101 Firefox/63.0";
   //http://vk.com/video_ext.php?oid=169048067&id=164398681&hash=8e32454b953dff04&hd=2
   //$link=vk($filelink);
   $ua="Mozilla/5.0 (Windows NT 10.0; rv:63.0) Gecko/20100101 Firefox/63.0";
+  $ua="Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:125.0) Gecko/20100101 Firefox/125.0";
   $ch = curl_init($filelink);
   curl_setopt($ch, CURLOPT_USERAGENT, $ua);
   curl_setopt($ch,CURLOPT_REFERER,"https://vk.com/");
@@ -15399,15 +15406,52 @@ $ua="Mozilla/5.0 (Windows NT 10.0; rv:63.0) Gecko/20100101 Firefox/63.0";
     $filelink=str_replace("https","http",$filelink);
     $filelink=str_replace("youtube-nocookie","youtube",$filelink);
     //echo $filelink;
-    $link=youtube_nou1($filelink);
+    //$link=youtube_nou1($filelink);
     //die();
-    //$link="";
+    $link="";
     if (!$link)
       $link=youtube($filelink);
     //echo $link;
     //$t1=explode("|||",$link);
     //$link=$t1[0];
     $audio="";
+    $ua="Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:125.0) Gecko/20100101 Firefox/125.0";
+    if ($link && $flash <> "flash") {
+     $link .="|Referer=".urlencode("https://www.youtube.com/")."&Origin=".urlencode("https://www.youtube.com");
+     $link .="&User-Agent=".urlencode($ua);
+    }
+    //echo $link;
+$post="x";
+$head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:130.0) Gecko/20100101 Firefox/130.0',
+'Accept: */*',
+'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
+'Accept-Encoding: gzip, deflate, br, zstd',
+'Content-Length: 1',
+'Referer: https://www.youtube.com/',
+'Origin: https://www.youtube.com',
+'Sec-Fetch-Dest: empty',
+'Sec-Fetch-Mode: cors',
+'Sec-Fetch-Site: cross-site',
+'Connection: keep-alive');
+/*
+  $ch = curl_init();
+  curl_setopt($ch, CURLOPT_URL, $link);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+  curl_setopt($ch,CURLOPT_HTTPHEADER,$head);
+  curl_setopt($ch,CURLOPT_POST,1);
+  curl_setopt($ch,CURLOPT_POSTFIELDS,$post);
+  curl_setopt($ch,CURLOPT_HEADER,1);
+  curl_setopt($ch,CURLOPT_NOBODY,1);
+  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+  curl_setopt($ch, CURLINFO_HEADER_OUT, true);
+  $h = curl_exec($ch);
+  $info = curl_getinfo($ch);
+  curl_close($ch);
+  echo "====".$h;
+  print_r ($info);
+  */
     //$link=youtube_nou($filelink);
     /*
     if ($link && strpos($link,"m3u8") === false) {
@@ -15429,6 +15473,7 @@ $ua="Mozilla/5.0 (Windows NT 10.0; rv:63.0) Gecko/20100101 Firefox/63.0";
   $link = "http://127.0.0.1:8080/scripts/filme/lava.m3u8";
   }
 */
+
 } elseif (strpos($filelink,'vimeo.com') !==false){
   //http://player.vimeo.com/video/16275866
   ///cgi-bin/translate?info,,http://vimeo.com/16275866

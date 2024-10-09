@@ -1711,11 +1711,17 @@ for ($i=0;$i<count($links);$i++) {
   curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 20);
   curl_setopt($ch, CURLOPT_TIMEOUT, 30);
   $h2 = curl_exec($ch);
-  curl_close($ch);
+
   //echo $h2."\n"."====================="."\n";
    if (preg_match("/location\:\s*(.+)/i",$h2,$m)) {
     $cur_link=trim($m[1]);
     //echo $cur_link."\n";
+   if (preg_match("/\<iframe src\=\"([^\"]+)\"/",$h2,$m)) {
+     curl_setopt($ch, CURLOPT_URL, $m[1]);
+     $h2 = curl_exec($ch);
+     $cur_link=$m[1];
+   }
+   curl_close($ch);
     if (preg_match("/filemoon/",$h2)) {  //seialeonline filemoon
      $alias=parse_url($cur_link)['host'];
      //echo $alias;

@@ -145,8 +145,9 @@ foreach($videos as $video) {
   $t3=explode("<",$t2[1]);
   $title=$t3[0];
   $t1=explode('id="bottom">',$video);
-  $t2=explode("<div>",$t1[1]);
-  $t3=explode("</",$t2[1]);
+  $t2=explode('<div',$t1[1]);
+  $t2_1=explode('>',$t2[1]);
+  $t3=explode("</",$t2_1[1]);
   $desc=$t3[0];
   $desc = preg_replace("/(<\/?)(\w+)([^>]*>)/","",$desc);
   $t1=explode('class="buton">',$video);

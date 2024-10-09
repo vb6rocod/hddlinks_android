@@ -25,6 +25,7 @@ if ($tip=="m3u8") {
   curl_setopt($ch, CURLOPT_TIMEOUT, 25);
   $h = curl_exec($ch);
   curl_close($ch);
+  //echo $h;
   if (preg_match("/URI\=\"([^\"]+)\"/",$h,$m)) {
    $h=str_replace($m[1],str_replace("key2","key",$m[1]),$h);
    //echo $h;

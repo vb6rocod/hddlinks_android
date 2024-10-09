@@ -143,6 +143,7 @@ if(preg_match('/youtube\.com\/(v\/|watch\?v=|embed\/)([\w\-]+)/', $file, $match)
   //$audio= $videos['249'];
   if ($video) {
   parse_str($video, $output);
+  //print_r ($output);
   if (!isset($output['s'])) {
     $r=$video;
     //$r=$video."|||".$audio;

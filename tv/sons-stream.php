@@ -254,9 +254,75 @@ foreach($videos as $video) {
 }
 
  echo '</table>';
+ /////////////////////////////////////////////////////////////////////////////////////////////////////
+echo "<table class='event-table'><thead><tr><th>Hours</th><th>Logo</th><th>Event</th><th>link</th></tr></thead>";
+$l="https://sons-stream.com/";
+$l="https://sons-stream.com/api/v1/";
+$head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/110.0',
+'Accept: */*',
+'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
+'Accept-Encoding: deflate',
+'Referer: https://sons-stream.com/',
+'Origin: https://sons-stream.com'
+);
+  $ch = curl_init();
+  curl_setopt($ch, CURLOPT_URL, $l);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+  curl_setopt($ch, CURLOPT_HTTPHEADER, $head);
+  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+  $h = curl_exec($ch);
+  curl_close($ch);
+  $x=json_decode($h,1);
+  //print_r ($x);
+  $r=array();
+  for ($k=0;$k<count($x);$k++) {
+   $d=$x[$k]['event_start'];
+   preg_match("/(\d+)-(\d+)-(\d+)\s*(\d+):(\d+)/",$d,$m);
+   $hour=sprintf("%02d:%02d",(($m[4]+1)%24),$m[5]);
+   $day=$m[3]."-".$m[2]."-".$m[1];
+   $event=$x[$k]['event_title'];
+   $img="https://backlinkhd.com/assets/uploads/leagues/".$x[$k]['league_id'].".png";
+   preg_match_all("/src\=\"([^\"]+)\"/",$x[$k]['channel_embeds'],$mm);
+   //for ($z=0;$z<count($mm);$z++) {
+     $r[$day][]=array($event,$hour,$img,$mm[1]);
+  }
+  //print_r ($r);
+  foreach ($r as $key=>$value) {
+   $day=$key;
+   echo "<th colspan='4'>".$day.'</th>';
+   for ($z=0;$z<count($r[$key]);$z++) {
+    $hour=$r[$key][$z][1];
+    $event=$r[$key][$z][0];
+    $img=$r[$key][$z][2];
+
+    echo "<tr class='cell-color'>";
+    echo "<td class='cell-color'>".$hour."</td><td class='cell-color'><img src='".$img."' width='50' height='45' /></td>";
+    echo "<td class='event-title cell-color'>".$event."</td>";
+    echo "<td>";
+    for ($k=0;$k<count($r[$key][$z][3]);$k++){
+     $link=fixurl($r[$key][$z][3][$k]);
+     $t1=explode("hd=",$link);
+     $id=$t1[1];
+     $link1="direct_link.php?link=".$link."&title=".urlencode($event)."&from=fara&mod=direct";
+     $l="link=".urlencode(fix_t($link))."&title=".urlencode(fix_t($event))."&from=fara&mod=direct";
+     if ($flash == "flash")
+        echo '<a href="'.$link1.'" target="_blank">'.$id.'</a>';
+     else
+        echo '<a onclick="ajaxrequest('."'".$l."')".'"'." style='cursor:pointer;'>".$id.'</a>';
+     echo ' ';
+   }
+   echo '</TD></TR>';
+   }
+  }
+  echo "</table>";
+  //die();
+
 $n=0;
 $w=0;
-echo "<table class='event-table'><thead><tr><th>Hours</th><th>Logo</th><th>Event</th><th>link</th></tr></thead>";
+
 $l="https://sons-stream.com/";
 //https://sons-stream.com/api/v1/
 $head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/110.0',
@@ -266,6 +332,8 @@ $head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gec
 'Referer: https://sons-stream.com/',
 'Origin: https://sons-stream.com'
 );
+/*
+echo "<table class='event-table'><thead><tr><th>Hours</th><th>Logo</th><th>Event</th><th>link</th></tr></thead>";
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $l);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
@@ -298,7 +366,8 @@ foreach($videos as $video) {
   $t1=explode("class='event-title cell-color'>",$vid);
   $t2=explode("<",$t1[1]);
   $event=trim($t2[0]);
-  preg_match_all("/\<td\>(\d+)\<\/td\>/",$vid,$m);
+  //preg_match_all("/\<td\>(\d+)\<\/td\>/",$vid,$m);
+  preg_match_all("/(\d+)\<\/button\>/",$vid,$m);
   echo "<tr class='cell-color'>";
   echo "<td class='cell-color'>".$hour."</td><td class='cell-color'><img src='".$img."' width='50' height='45' /></td>";
   echo "<td class='event-title cell-color'>".$event."</td>";
@@ -319,6 +388,7 @@ foreach($videos as $video) {
 ////////////////////////////////////
 
 echo "</table>";
+*/
 ?>
 <div id="overlay"">
   <div id="text">Wait....</div>
