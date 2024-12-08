@@ -50,7 +50,7 @@ document.onkeypress =  zx;
 <th class="cat" colspan="4">Seriale online</Th>
 </TR>
 <TR>
-<TD width="25%"><a href="filme/filmeseriale_main.php?page=1&tip=release&title=filmeseriale.online&link=http://www.filmeserialeonline.org/seriale/" target="_blank">filmeseriale.online</a></TD>
+<TD width="25%"></TD>
 <TD width="25%"><a href="filme/veziseriale_s.php?page=1&tip=release&title=veziseriale&link=" target="_blank">veziseriale</a></TD>
 <TD width="25%"><a href="filme/fshd_s.php?page=1&tip=release&title=fshd&link=" target="_blank">fshd.ro</a></TD>
 <TD width="25%"><a href="filme/serialeonline.php?page=1&tip=release&title=serialeonline&link=" target="_blank">serialeonline</a></TD>
@@ -61,7 +61,7 @@ document.onkeypress =  zx;
 <TR>
 <TD width="25%"><a href="filme/tvseries_s.php?page=1&tip=release&title=tvseries&link=" target="_blank">tvseries</a></TD>
 <TD width="25%"><a href="filme/goojara_s.php?page=1&tip=release&title=goojara&link=" target="_blank">goojara</a></TD>
-<TD width="25%"><a href="filme/emovies_s.php?page=1&tip=release&title=emovies&link=" target="_blank">emovies</a></TD>
+<TD width="25%"></TD>
 <TD width="25%"><a href="filme/lookmovie_s.php?page=1&tip=release&title=lookmovie&link=" target="_blank">lookmovie</a></TD>
 </TR>
 <TR>

@@ -419,7 +419,7 @@ if (preg_match("/streamsrcs\.2embed\.cc/",$filelink)) {
   curl_close($ch);
   //echo $h;
   //src',"
-  preg_match("/\'src\'\,\"([^\"]+)/",$h,$s);
+  preg_match("/\'src\'\,\s*\"([^\"]+)/",$h,$s);
   $filelink=trim($s[1].$id);
   //echo $filelink;
 }
@@ -6871,7 +6871,7 @@ $head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:104.0) Gecko/20100101 
   //echo $h;
   $link=get_max_res($h,$link);
   }
-} elseif (preg_match("/swhoi\.|streamhide\.|movhide\.pro|filelions\.to|streamwish\.to|guccihide\.com|lonfils\.xyz|uqloads\.xyz/",$filelink)) {
+} elseif (preg_match("/streamsrcs|swhoi\.|streamhide\.|movhide\.pro|filelions\.to|streamwish\.to|guccihide\.com|lonfils\.xyz|uqloads\.xyz/",$filelink)) {
 //echo $filelink;
   //https://uqloads.xyz/e/y1i43ovz9r2y
   $host="https://".parse_url($filelink)['host'];
@@ -7952,6 +7952,7 @@ if (count($pl) > 1) {
   curl_setopt($ch, CURLOPT_URL, $l);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
   curl_setopt($ch, CURLOPT_USERAGENT, $ua);
+  curl_setopt($ch, CURLOPT_REFERER, "https://moviesroot.club/");
   curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
   curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
   curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
@@ -7959,6 +7960,9 @@ if (count($pl) > 1) {
   $h = curl_exec($ch);
   curl_close($ch);
   //echo $h;
+  $ref="https://moviesroot.club";
+  preg_match("/src\:\s*[\'\"]([^\"\']+)/",$h,$m);
+  $link=$m[1];
   /*
   $t1=explode('source src="',$h);
   $t2=explode('"',$t1[1]);
@@ -7974,8 +7978,10 @@ if (count($pl) > 1) {
    $link=$t2[0];
   }
   */
-  if (preg_match("/[\"\'](http[^\"\']+\.mp4)[\"\']/",$h,$m))
-   $link=$m[1];
+  if ($link && $flash <> "flash")
+  $link=$link."|Referer=".urlencode($ref."/")."&Origin=".urlencode($ref);
+  //if (preg_match("/[\"\'](http[^\"\']+\.mp4)[\"\']/",$h,$m))
+  // $link=$m[1];
 } elseif (strpos($filelink,"streamhub.") !== false) {
   // https://streamhub.to/e/9s9yqt4qy9yr
   require_once("JavaScriptUnpacker.php");
@@ -10071,7 +10077,15 @@ function xor_string($string, $key) {
    require_once ("tear.php");
    $t1=explode("?",$filelink);
    $host="https://".parse_url($t1[0])['host'];
-
+   $head=array('Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+   'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
+   'Accept-Encoding: deflate',
+   'Connection: keep-alive',
+   'Referer: https://filemoon.sx/',
+   'Cookie: ref_url=filemoon.sx;',
+   'Upgrade-Insecure-Requests: 1',
+   'Sec-Fetch-Dest: iframe',
+   'Sec-Fetch-Mode: navigate');
    //echo $filelink;
    $ch = curl_init();
    curl_setopt($ch, CURLOPT_URL, $filelink);
@@ -10087,7 +10101,10 @@ function xor_string($string, $key) {
 
    if (preg_match("/\<iframe src\=\"([^\"]+)\"/",$h,$m)) {
     curl_setopt($ch, CURLOPT_URL, $m[1]);
+    curl_setopt($ch, CURLOPT_HTTPHEADER,$head);
+    //curl_setopt($ch, CURLOPT_REFERER,"https://filemoon.sx/");
     $h = curl_exec($ch);
+    //echo $h;
     //$host="https://".parse_url($m[1])['host'];
    }
    curl_close($ch);
@@ -14004,6 +14021,8 @@ $head=array('Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image
       //echo $h1;
       preg_match_all("/FBQualityLabel\=\"(\d+)p\"\>\<BaseURL\>(.*?)\</",$h1,$m);
       //print_r ($m);
+      //$j=count($m[2]);
+      //$link=$m[2][$j-1];
       preg_match_all("/\"(?:hd_src|sd_src)\":\"(.+?)\"/",$h1,$x);
       //print_r ($x);
       $link=$x[1][0];

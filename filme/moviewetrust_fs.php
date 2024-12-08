@@ -248,18 +248,20 @@ $l="https://api.themoviedb.org/3/tv/".$link."?api_key=".$api_key."&append_to_res
 $k=0;
   //echo $imdb;
   //die();
-echo '<table border="1" width="100%">';
-echo '<TR><TD class="mp"><label id="server"></label>
-<input type="hidden" id="file" value=""></td></TR></TABLE>';
-////////////////////////////////////////////////////////////
-// vidsrc.me
 if ($tip=="movie")
   $l="https://vidsrc.me/embed/".$imdb."/";
 else
   $l="https://vidsrc.me/embed/".$imdb."/".$sez."-".$ep."/";
   //echo $l;
   //die();
-  $head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/109.0',
+  //echo '<iframe src="'.$l.'" style="display:none;"></iframe>';
+echo '<table border="1" width="100%">';
+echo '<TR><TD class="mp"><label id="server"></label>
+<input type="hidden" id="file" value=""></td></TR></TABLE>';
+////////////////////////////////////////////////////////////
+// vidsrc.me
+$ua = $_SERVER['HTTP_USER_AGENT'];
+  $head=array('User-Agent: '.$ua,
   'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
   'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
   'Accept-Encoding: deflate',
@@ -278,11 +280,14 @@ else
   curl_setopt($ch, CURLOPT_TIMEOUT, 15);
   $h = curl_exec($ch);
   curl_close($ch);
+  //echo $h;
   $t1=explode('player_iframe" src="',$h);
   $t2=explode('"',$t1[1]);
   $l1=fixurl($t2[0],$l);
   $host="https://".parse_url($l1)['host'];
-  $ua="Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/109.0";
+  //echo '<iframe src="'.$l1.'" style="display:none;"></iframe>';
+  //echo $l1;
+  //$ua="Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/109.0";
    $head=array('Accept: */*',
     'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
     'Accept-Encoding: deflate',
@@ -301,17 +306,34 @@ else
    curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
    curl_setopt($ch, CURLOPT_TIMEOUT, 15);
    curl_setopt($ch, CURLOPT_URL, $l1);
-   $h = curl_exec($ch);
+   //$h = curl_exec($ch);
+   //echo $h;
+   //$h=file_get_contents($l1);
+  $options = array(
+        'http' => array(
+        'header'  => array($head),
+        'method'  => 'GET'
+    ),
+        "ssl"=>array(
+        "verify_peer"=>false,
+        "verify_peer_name"=>false,
+    )
+  );
+  $context  = stream_context_create($options);
+  $h = @file_get_contents($l1, false, $context);
+   ///////////////////////////////
    $t1=explode("src: '",$h);
    $t2=explode("'",$t1[1]);
    $l=fixurl($t2[0],$l1);
+   //echo $l."===========";
    curl_setopt($ch, CURLOPT_URL, $l);
-   $h = curl_exec($ch);
+   //$h = curl_exec($ch);
    //echo $h;
+   $h = @file_get_contents($l, false, $context);
    $t1=explode('style="display:none;">',$h);
    $t2=explode("<",$t1[1]);
    $a=$t2[0];
-   //echo $a;
+   echo $a;
    $t1=explode('src="/tprs/index.js',$h);
    $t2=explode('src="',$t1[1]);
    $t3=explode('"',$t2[1]);
@@ -369,9 +391,10 @@ else
    echo '<TD align="center" colspan="4"><a id="viz" onclick="'."openlink1('".$openlink."')".'"'." style='cursor:pointer;'>".'VIZIONEAZA !</a></td>';
  else
    echo '<TD align="center" colspan="4"><a id="viz" onclick="'."openlink('".$openlink."')".'"'." style='cursor:pointer;'>".'VIZIONEAZA !</a></td>';
-
+echo '</TR><TD align="center" colspan="4"><a href="'.$l1.'" target="_blank">CF</a></TD>';
 echo '</tr>';
 echo '</table>';
+
 echo '<br>
 <table border="0px" width="100%">
 <TR>

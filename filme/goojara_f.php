@@ -20,7 +20,7 @@ $has_fs="yes";
 $ref="https://www.goojara.to";
 //$ref="https://supernova.to";
 //$ref="https://ww1.goojara.to";
-//$ref="https://goojara.club";
+$ref="https://ww1.goojara.to";
 $host=parse_url($ref)['host'];
 $fav_target="goojara_f_fav.php?host=".$ref;
 $add_target="goojara_f_add.php";
@@ -266,9 +266,10 @@ if ($tip=="release") {
    $t4 = explode('<', $t3[1]);
    $title = trim($t4[0]);
    $title=prep_tit($title);
-   $t1 = explode('data-src="', $video);
-   $t2 = explode('"', $t1[1]);
-   $image = $t2[0];
+   //$t1 = explode('data-src="', $video);
+   //$t2 = explode('"', $t1[1]);
+   //$image = $t2[0];
+   $image="blank.jpg";
    if ($title) $r[$title]=array($link,$image);
   }
 } else {

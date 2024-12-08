@@ -726,7 +726,8 @@ if (preg_match("/daddylivehd\.sx\/embed\/|daddylive\d\.shop\/(my)?live|daddy\-st
   $link=fixurl($m[1]); //https://weblivehdplay.ru/premiumtv/daddyhd.php?id=41
 
 }
-if (preg_match("/(antenn?asports|maxsport|poscitechs|soccerstream100|streamhd247|lato|venushd|scolie|kingstreamz|powerover)\.|jokersportshd\./",$link)) {
+//antenasport.online
+if (preg_match("/(antenn?asports?|maxsport|poscitechs|soccerstream100|streamhd247|lato|venushd|scolie|kingstreamz|powerover)\.|jokersportshd\./",$link)) {
   $link=str_replace("antennasports.ru/bet.php?","4kwebplay.xyz/crv.php?",$link);
 $head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/110.0',
 'Accept: application/json, text/plain, */*',
@@ -1972,8 +1973,10 @@ if (preg_match("/streamingnow\.|freeviplive\.|sons\-stream\.com|b5yucast\.com/",
   $fid=$t2[0];
   //https://b4ucast.com/dhonka2.php?player=
   //https://anarchy-stream.com/dhonka4.php?player=desktop&live=bbtsp1
+  //https://processbigger.com/maestrohd1.php?player=
   $link="https://b4ucast.com/dhonka.php?player=desktop&live=".$fid;  // to next step
   $link="https://anarchy-stream.com/dhonka4.php?player=desktop&live=".$fid;
+  $link="https://processbigger.com/maestrohd1.php?player=desktop&live=".$fid;
  //echo $link;
 }
 if (preg_match("/sportskart\.click/",$link)) { // to second link!
@@ -2034,8 +2037,8 @@ if (preg_match("/sportsonline\./",parse_url($link)['host'])) {
   'Accept: */*',
   'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
   'Accept-Encoding: deflate',
-  'Referer: https://sportsonline.so/',
-  'Origin: https://sportsonline.so'
+  'Referer: https://v1.sportsonline.ps/',
+  'Origin: https://v1.sportsonline.ps'
   );
   curl_setopt($ch, CURLOPT_HTTPHEADER, $head);
   curl_setopt($ch, CURLOPT_URL, $l);
@@ -2044,7 +2047,12 @@ if (preg_match("/sportsonline\./",parse_url($link)['host'])) {
   //echo $h;
   require_once("../filme/JavaScriptUnpacker.php");
   $jsu = new JavaScriptUnpacker();
-  $out = $jsu->Unpack($h);
+  $t=explode('eval(function',$h);
+  //unset $t[0];
+  $out="";
+  for ($k=1;$k<count($t);$k++) {
+   $out .= $jsu->Unpack('eval(function'.$t[$k]);
+  }
   //echo $out;
   if (preg_match("/var src\=\"([^\"]+)\"/",$out,$m))
    $link=$m[1];
@@ -2480,7 +2488,7 @@ if (preg_match("/ddolahdplay\./",parse_url($link)['host'])) {
   if ($link && $flash<>"flash")
    $link .="|Referer=".urlencode("https://ddolahdplay.xyz/")."&Origin=".urlencode("https://ddolahdplay.xyz");
 }
-if (preg_match("/godzlive\.com|b\ducast\.com|anarchy\-stream/",parse_url($link)['host'])) {
+if (preg_match("/godzlive\.com|b\ducast\.com|anarchy\-stream|processbigger\.com/",parse_url($link)['host'])) {
   $ref="https://".parse_url($link)['host'];
   //$ref="https://b4yucast.com";
   //https://anarchy-stream.com/dhonka4.php?player=desktop&live=bbtsp1
@@ -2533,15 +2541,22 @@ $host="https://".parse_url($link)['host'];
   $h = curl_exec($ch);
   //echo $h;
   curl_close($ch);
-  $t1=explode('nonce":"',$h);
-  $t2=explode('"',$t1[1]);
-  $nonce=$t2[0];
-  $t1=explode('div id="player" class="content" data-id="',$h);
-  $t2=explode('"',$t1[1]);
+  //$t1=explode('nonce":"',$h);
+  //$t2=explode('"',$t1[1]);
+  //$nonce=$t2[0];
+  //$t1=explode('div id="player" class="content" data-id="',$h);
+  //$t2=explode('"',$t1[1]);
+  //$id=$t2[0];
+  $t1=explode("postID = '",$h);
+  $t2=explode("'",$t1[1]);
   $id=$t2[0];
+  $t1=explode("const iframeUrl = `",$h);
+  $t2=explode("`",$t1[1]);
+  $l2=$t2[0];
   $ua="Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/110.0";
   $l=$host."/wp-admin/admin-ajax.php";
-  $post="action=show_player&id=".$id."&nonce=".$nonce;
+  //$post="action=show_player&id=".$id."&nonce=".$nonce;
+  $post="action=get_video_source&tab=tab1&post_id=".$id;
   $head=array('Accept: */*',
   'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
   'Accept-Encoding: deflate',
@@ -2563,9 +2578,29 @@ $host="https://".parse_url($link)['host'];
       curl_setopt($ch, CURLOPT_TIMEOUT, 25);
       $h1 = curl_exec($ch);
       curl_close($ch);
-      $t1=explode("src: '",$h1);
-      $t2=explode("'",$t1[1]);
-      $link=$t2[0];
+      //echo $h1;
+      $x=json_decode($h1,1)['data'];
+      $l2=str_replace("\${encodeURIComponent(response.data)}",urlencode($x),$l2);
+  $ch = curl_init();
+  curl_setopt($ch, CURLOPT_URL, $l2);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
+  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+  curl_setopt($ch, CURLOPT_REFERER,$host."/");
+  curl_setopt($ch, CURLOPT_ENCODING, "");
+  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+  //curl_setopt($ch,CURLOPT_HTTPHEADER,$head);
+  $h = curl_exec($ch);
+  //echo $h;
+  curl_close($ch);
+  $t1=explode('source src="',$h);
+  $t2=explode('"',$t1[1]);
+  $link=$t2[0];
+  $link=str_replace("&amp;","&",$link);
+  $host="https://ivanturbinca.com";
+      //$l="https://ivanturbinca.com/embed-video.php?source=https%3A%2F%2Fp13.magicplaces.eu%2Fdigisport1hd%2Findex.m3u8&token=fa7dc1ca48ad7e1af7e10fa654c3e16b95207cd7955e5174826313f9bb29c1a0&timestamp=1733641503";
       if ($flash <> "flash") $link .="|Referer=".urlencode($host."/")."&Origin=".urlencode($host)."&User-Agent=".urlencode($ua);
 }
 if (strpos($link,"streamwat.ch") !== false) {
@@ -3703,6 +3738,10 @@ $head=array('Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
     $link=$t2[0];
     } else
     $link="";
+    $link=str_replace(" ","%20",$link);
+    if ($link && $flash <> "flash") {
+     $link .="|User-Agent=".urlencode("Mozilla/5.0 (Windows NT 10.0; rv:85.0) Gecko/20100101 Firefox/85.0");
+    }
 }
 if ($from=="moldova") {
     $ua = $_SERVER['HTTP_USER_AGENT'];

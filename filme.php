@@ -51,13 +51,13 @@ else
 
 
 <TD width="25%"><a href="filme/voxfilmeonline.php?page=1&tip=release&title=voxfilmeonline&link=" target="_blank">voxfilmeonline</a></TD>
-<TD width="25%"><a href="filme/topfilmeonline.php?page=1&tip=release&title=topfilmeonline&link=" target="_blank">topfilmeonline</a></TD>
+<TD width="25%"></TD>
 <TD width="25%"><a href="filme/serialeonline_f.php?page=1&tip=release&title=serialeonline&link=" target="_blank">serialeonline</a></TD>
 <TD width="25%"><a href="filme/filmehd.php?page=1&tip=release&title=filmehd&link=" target="_blank">filmehd</a></TD>
 
 </TR>
 <TR>
-<TD width="25%"><a href="filme/filmeseriale_filme.php?page=1&tip=release&title=filmeseriale&link=" target="_blank">filmeseriale.online</a></TD>
+<TD width="25%"></TD>
 <TD width="25%"><a href="filme/veziseriale_f.php?page=1&tip=release&title=veziseriale&link=" target="_blank">veziseriale</a></TD>
 <TD width="25%"><a href="filme/fshd_f.php?page=1&tip=release&title=fshd&link=" target="_blank">fshd.ro</a></TD>
 <TD width="25%"><a href="filme/sitefilme_f.php?page=1&tip=release&title=sitefilme&link=" target="_blank">sitefilme</a></TD>
@@ -66,8 +66,8 @@ else
 
 <!--- desene si filme...-->
 <TR>
-<TD width="25%"><a href="filme/nites_f.php?page=1&tip=release&title=nites&link=" target="_blank">nites</a></TD>
-<TD width="25%"><a href="filme/emovies_f.php?page=1&tip=release&title=emovies&link=" target="_blank">emovies</a></TD>
+<TD width="25%"></TD>
+<TD width="25%"></TD>
 <TD width="25%"><a href="filme/tugaflix_f.php?page=1&tip=release&title=tugaflix&link=" target="_blank">tugaflix</a></TD>
 <TD width="25%"><a href="filme/lookclub_f.php?page=1&tip=release&title=lookclub&link=" target="_blank">lookclub</a></TD>
 </TR>
@@ -77,7 +77,7 @@ else
 <TD width="25%"><a href="filme/tvseries_f.php?page=1&tip=release&title=tvseries&link=" target="_blank">tvseries</a></TD>
 <TD width="25%"><a href="filme/moviewetrust_f.php?page=1&tip=release&title=moviewetrust&link=popular" target="_blank">moviewetrust</a></TD>
 <TD width="25%"><a href="filme/cineplex_f_main.php" target="_blank">cineplex (cont)</a></TD>
-<TD width="25%"><a href="filme/soap2dayz_f.php?page=1&tip=release&title=soap2dayz&link=" target="_blank">soap2dayz</a></TD>
+<TD width="25%"></TD>
 </TR>
 
 <TR>

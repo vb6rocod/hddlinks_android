@@ -1489,8 +1489,10 @@ $html=str_replace("&quot;","'",$html);
 //$html=str_replace('http://player.filmehd.se',"http://hqq.to",$html);
 //$html=str_replace('https://cdn1.fastvid.co',"http://hqq.to",$html);
 /* end alias */
-if (preg_match("/filmm\.link\/\?([^\'\"]+)/",$html,$m)) {    // sitefilme
+//echo $html;
+if (preg_match("/filmm\.link\/.*?\/([^\'\"]+)/",$html,$m)) {    // sitefilme
 //print_r ($m);
+//http://filmm.link/gogogo/?
 $t1=explode(" ",$m[1]);
 //echo base64_decode($m[1]);
 $out="";
@@ -1703,7 +1705,7 @@ for ($i=0;$i<count($links);$i++) {
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
   curl_setopt($ch, CURLOPT_USERAGENT, $ua);
   curl_setopt($ch,CURLOPT_REFERER,"https://serialeonline.to");
-  //curl_setopt($ch,CURLOPT_REFERER,"https://filmehd.to");
+  curl_setopt($ch,CURLOPT_REFERER,"https://seriale-online.net/");
   curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
   curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
   curl_setopt($ch, CURLOPT_HEADER,1);
@@ -1720,8 +1722,11 @@ for ($i=0;$i<count($links);$i++) {
      curl_setopt($ch, CURLOPT_URL, $m[1]);
      $h2 = curl_exec($ch);
      $cur_link=$m[1];
+     //echo $h2."\n"."====================="."\n";
    }
    curl_close($ch);
+   //echo $cur_link."\n";
+   //echo $h2."\n"."====================="."\n";
     if (preg_match("/filemoon/",$h2)) {  //seialeonline filemoon
      $alias=parse_url($cur_link)['host'];
      //echo $alias;

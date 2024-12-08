@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <?php
+error_reporting(0);
 function str_between($string, $start, $end){
 	$string = " ".$string; $ini = strpos($string,$start);
 	if ($ini == 0) return ""; $ini += strlen($start); $len = strpos($string,$end,$ini) - $ini;
@@ -19,6 +20,7 @@ $has_add="yes";
 $has_fs="yes";
 $ref="https://www.goojara.to";
 //$ref="https://supernova.to";
+$ref="https://ww1.goojara.to";
 $fav_target="goojara_s_fav.php?host=".$ref;
 $add_target="goojara_s_add.php";
 $add_file="";
@@ -215,9 +217,9 @@ $head=array('Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image
     //$out = 'aGooz='.$m[2];
     file_put_contents($base_cookie."goojora.dat",$out);
   }
-  $t1=explode('div id="subdiv">',$html);
-  $t2=explode('<div id="pgs',$t1[1]);
-  $html=$t2[0];
+  //$t1=explode('div id="subdiv">',$html);
+  //$t2=explode('<div id="pgs',$t1[1]);
+  //$html=$t2[0];
 } else {
   $head=array('Accept: */*',
   'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
@@ -253,13 +255,14 @@ if ($tip=="release") {
   foreach($videos as $video) {
    $t1=explode('"',$video);
    $link=$t1[0];
-   $t3 = explode('span class="mtl">', $video);
-   $t4 = explode('<', $t3[1]);
+   $t3 = explode('title="', $video);
+   $t4 = explode('"', $t3[1]);
    $title = trim($t4[0]);
    $title=prep_tit($title);
-   $t1 = explode('data-src="', $video);
-   $t2 = explode('"', $t1[1]);
-   $image = $t2[0];
+   //$t1 = explode('data-src="', $video);
+   //$t2 = explode('"', $t1[1]);
+   //$image = $t2[0];
+   $image="blank.jpg";
    if ($title) $r[$title]=array($link,$image);
   }
 } else {

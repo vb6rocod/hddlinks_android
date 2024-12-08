@@ -270,7 +270,7 @@ foreach($rr as $key=>$value) {
  for ($k=0;$k<count($value);$k++) {
  $ora=$value[$k]['time'];
  preg_match("/(\d+):(\d+)/",$ora,$m);
- $ora=sprintf("%02d:%02d",(($m[1]+3)%24),$m[2]);
+ $ora=sprintf("%02d:%02d",(($m[1]+2)%24),$m[2]);
  $event=trim($value[$k]['event']);
  echo  '<TR>'."\n";
  echo '<TD>'.$ora.'</TD>';
