@@ -208,6 +208,7 @@ echo '<h2>'.$page_title.'</H2>';
 //echo '<table border="1px" width="100%">'."\n\r";
 echo '<table border="1px" width="100%">';
 $l="https://backlinkhd.com/";
+$l="https://sons-stream.com/stats.php";
 $ua="Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/110.0";
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $l);
@@ -219,17 +220,16 @@ $ua="Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/
   curl_setopt($ch, CURLOPT_TIMEOUT, 15);
   $h = curl_exec($ch);
   curl_close($ch);
-$videos=explode('<div class="channels">',$h);
+$videos=explode('<td class="event-title cell-color">',$h);
 unset($videos[0]);
 $videos = array_values($videos);
 $n=0;
 $w=0;
 foreach($videos as $video) {
- $t1=explode('href="',$video);
- $t2=explode('"',$t1[1]);
+ $t1=explode("open('",$video);
+ $t2=explode("'",$t1[1]);
  $file=$t2[0];
- $t3=explode(">",$t1[1]);
- $t4=explode("<",$t3[1]);
+ $t4=explode("<",$video);
  $title=trim($t4[0]);
     $mod="direct";
     $from="fara";
@@ -255,7 +255,7 @@ foreach($videos as $video) {
 
  echo '</table>';
  /////////////////////////////////////////////////////////////////////////////////////////////////////
-echo "<table class='event-table'><thead><tr><th>Hours</th><th>Logo</th><th>Event</th><th>link</th></tr></thead>";
+//echo "<table class='event-table'><thead><tr><th>Hours</th><th>Logo</th><th>Event</th><th>link</th></tr></thead>";
 $l="https://sons-stream.com/";
 $l="https://sons-stream.com/api/v1/";
 $head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/110.0',
@@ -265,6 +265,7 @@ $head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gec
 'Referer: https://sons-stream.com/',
 'Origin: https://sons-stream.com'
 );
+/*
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $l);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
@@ -319,7 +320,7 @@ $head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gec
   }
   echo "</table>";
   //die();
-
+*/
 $n=0;
 $w=0;
 
@@ -332,7 +333,7 @@ $head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gec
 'Referer: https://sons-stream.com/',
 'Origin: https://sons-stream.com'
 );
-/*
+
 echo "<table class='event-table'><thead><tr><th>Hours</th><th>Logo</th><th>Event</th><th>link</th></tr></thead>";
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $l);
@@ -344,18 +345,18 @@ echo "<table class='event-table'><thead><tr><th>Hours</th><th>Logo</th><th>Event
   curl_setopt($ch, CURLOPT_TIMEOUT, 15);
   $h = curl_exec($ch);
   curl_close($ch);
-$videos=explode("<th colspan='7'>",$h);
+$videos=explode("<th colspan='8' class='date-cell'>",$h);
 unset($videos[0]);
 $videos = array_values($videos);
 foreach($videos as $video) {
  $t1=explode('<',$video);
  $day=$t1[0];
  echo "<th colspan='4'>".$day.'</th>';
- $vids=explode("<tr class='cell-color'",$video);
+ $vids=explode("<tr class='cell-color'>",$video);
  unset($vids[0]);
  $vids = array_values($vids);
  foreach($vids as $vid) {
-  $t1=explode("class='cell-color'>",$vid);
+  $t1=explode("</td><td>",$vid);
   $t2=explode("<",$t1[1]);
   $hour=$t2[0];
    preg_match("/(\d+):(\d+)/",$hour,$mm);
@@ -363,9 +364,12 @@ foreach($videos as $video) {
   $t1=explode("src='",$vid);
   $t2=explode("'",$t1[1]);
   $img=$t2[0];
-  $t1=explode("class='event-title cell-color'>",$vid);
+  $t1=explode("<div class='channel-name'>",$vid);
   $t2=explode("<",$t1[1]);
-  $event=trim($t2[0]);
+  $event1=trim($t2[0]);
+  $t3=explode("<",$t1[2]);
+  $event2=$t3[0];
+  $event=$event1." - ".$event2;
   //preg_match_all("/\<td\>(\d+)\<\/td\>/",$vid,$m);
   preg_match_all("/(\d+)\<\/button\>/",$vid,$m);
   echo "<tr class='cell-color'>";
@@ -373,6 +377,7 @@ foreach($videos as $video) {
   echo "<td class='event-title cell-color'>".$event."</td>";
   echo "<td>";
   for ($k=0;$k<count($m[1]);$k++){
+  //https://sons-stream.com/tvon.php?hd=115
    $link="https://sons-stream.com/tvon.php?hd=".$m[1][$k];
    $link1="direct_link.php?link=".$link."&title=".urlencode($event)."&from=fara&mod=direct";
    $l="link=".urlencode(fix_t($link))."&title=".urlencode(fix_t($event))."&from=fara&mod=direct";
@@ -388,7 +393,7 @@ foreach($videos as $video) {
 ////////////////////////////////////
 
 echo "</table>";
-*/
+
 ?>
 <div id="overlay"">
   <div id="text">Wait....</div>

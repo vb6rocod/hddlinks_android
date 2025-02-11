@@ -74,7 +74,8 @@ if($tip=="release") {
 
 } else {
   $search=str_replace(" ","%20",$tit);
-  $l=$last_good."/movies/search/?p=".$page."&q=".$search;
+  $l=$last_good."/movies/search/?page=".$page."&q=".$search;
+  //https://www.lookmovie2.to/movies/search?q=star&page=2
   //$l=$last_good."/movies/search?like=".$search."&page=".$page;
 }
 //https://lookmovie2.to/movies/page/2?per-page=30

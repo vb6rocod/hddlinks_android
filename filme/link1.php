@@ -6871,7 +6871,7 @@ $head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:104.0) Gecko/20100101 
   //echo $h;
   $link=get_max_res($h,$link);
   }
-} elseif (preg_match("/streamsrcs|swhoi\.|streamhide\.|movhide\.pro|filelions\.to|streamwish\.to|guccihide\.com|lonfils\.xyz|uqloads\.xyz/",$filelink)) {
+} elseif (preg_match("/streamsrcs|swhoi\.|streamhide\.|movhide\.pro|filelions\.to|streamwish\.to|guccihide\.com|lonfils\.xyz|uqloads\.xyz|hlswish\./",$filelink)) {
 //echo $filelink;
   //https://uqloads.xyz/e/y1i43ovz9r2y
   $host="https://".parse_url($filelink)['host'];
@@ -9181,6 +9181,7 @@ function xor_string($string, $key) {
   $id=$t2[0];
   $l="https://www.wootly.ch/ajax?t=".$tk."&id=".$id;
   $l="https://www.wootly.ch/grabd?t=".$tk."&id=".$id;
+  $l="https://www.wootly.ch/grabm?t=".$tk."&id=".$id;
   //echo $l;
   //$l="https://www.wootly.ch/ajax?t=JDEkOG9oaFFKWkgkZUR0S0tZc2l5bEhpVzN3Rkoxdlh0MQ&id=1311431";
   //$l="https://www.wootly.ch/ajax?t=JDEkalJTcHYwWEYkMWlGNUlJMFI5YkRWSUR0cjc1RFpZLw&id=1257246";
@@ -9222,6 +9223,7 @@ function xor_string($string, $key) {
   curl_setopt($ch, CURLOPT_TIMEOUT, 15);
   $h = curl_exec($ch);
   curl_close ($ch);
+  //echo $h;
   //echo $l."\n".$h;
   if (preg_match("/location\:\s*(.+)/i",$h,$r))
    $link=trim($r[1]);

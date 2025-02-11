@@ -344,8 +344,11 @@ if ($from=="alieztv") {
 $q=parse_url($link)['query'];
 parse_str($q,$r);
 //print_r ($r);
+//echo $link;
 if (preg_match("/aliez/",$r["t"])) {
  $link="https://emb.apl340.me/player/live.php?id=".$r["c"];
+ $link="https://emb.apl374.me/player/live.php?id=".$r["c"];
+ //https://emb.apl374.me/player/live.php?id=230257&w=700&h=480
 $head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/110.0',
 'Accept: application/json, text/plain, */*',
 'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',

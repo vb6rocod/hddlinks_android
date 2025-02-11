@@ -183,8 +183,8 @@ if($tip=="release") {
   $ref1="https://ww1.goojara.to";
   $l=$ref1."/xhrr.php";
   //$l=$ref."/xkbc.php";
-  $l=$ref1."/xhrc.php";
-  $post="q=".$search;
+  $l=$ref1."/xmre.php";
+  $post="q=".$search."&z=voYgBOKk2w&x=5a76f1c5e8";
 }
 $host=parse_url($l)['host'];
 
@@ -259,6 +259,7 @@ if ($tip=="release") {
    $t4 = explode('"', $t3[1]);
    $title = trim($t4[0]);
    $title=prep_tit($title);
+   $title=preg_replace("/\(.*\)/","",$title);
    //$t1 = explode('data-src="', $video);
    //$t2 = explode('"', $t1[1]);
    //$image = $t2[0];

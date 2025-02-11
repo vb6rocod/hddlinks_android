@@ -254,8 +254,9 @@ foreach($videos as $video) {
   $image = $t2[0];
   if (strpos($image,"http") === false) $image="https:".$image;
   //$t1 = explode('duration"',$video);
-  $t2 = explode ('testid="video-duration">',$video);
-  $t3 = explode("<",$t2[1]);
+  $t2 = explode ('<div data-role="video-duration">',$video);
+  $t4=explode('>',$t2[1]);
+  $t3 = explode("<",$t4[1]);
   $durata=trim($t3[0]);
   $durata = preg_replace("/\n|\r/"," ",strip_tags($durata));
   if ($durata) $title=$title." (".$durata.')';

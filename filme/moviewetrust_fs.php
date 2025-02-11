@@ -147,6 +147,31 @@ function off() {
 
 echo '<h2>'.$tit.$tit2.'</H2>';
 echo '<BR>';
+//////////////////////////////
+ $DEFAULT_CIPHERS =array(
+            "ECDHE+AESGCM",
+            "ECDHE+CHACHA20",
+            "DHE+AESGCM",
+            "DHE+CHACHA20",
+            "ECDH+AESGCM",
+            "DH+AESGCM",
+            "ECDH+AES",
+            "DH+AES",
+            "RSA+AESGCM",
+            "RSA+AES",
+            "!aNULL",
+            "!eNULL",
+            "!MD5",
+            "!DSS",
+            "!ECDHE+SHA",
+            "!AES128-SHA",
+            "!DHE"
+        );
+ if (defined('CURL_SSLVERSION_TLSv1_3'))
+  $ssl_version=7;
+ else
+  $ssl_version=0;
+///////////////////////////
 $tmdb=$link;
 $r=array();
 $s=array();
@@ -249,9 +274,9 @@ $k=0;
   //echo $imdb;
   //die();
 if ($tip=="movie")
-  $l="https://vidsrc.me/embed/".$imdb."/";
+  $l="https://vidsrc.net/embed/".$imdb."/";
 else
-  $l="https://vidsrc.me/embed/".$imdb."/".$sez."-".$ep."/";
+  $l="https://vidsrc.net/embed/".$imdb."/".$sez."-".$ep."/";
   //echo $l;
   //die();
   //echo '<iframe src="'.$l.'" style="display:none;"></iframe>';
@@ -261,13 +286,14 @@ echo '<TR><TD class="mp"><label id="server"></label>
 ////////////////////////////////////////////////////////////
 // vidsrc.me
 $ua = $_SERVER['HTTP_USER_AGENT'];
+//$ua="Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:133.0) Gecko/20100101 Firefox/133.0";
   $head=array('User-Agent: '.$ua,
   'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
   'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
   'Accept-Encoding: deflate',
   'Connection: keep-alive',
-  'Referer: https://vidsrc.me/',
-  'Origin: https://vidsrc.me/',
+  'Referer: https://vidsrc.net/',
+  'Origin: https://vidsrc.net',
   'Upgrade-Insecure-Requests: 1');
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $l);
@@ -288,25 +314,35 @@ $ua = $_SERVER['HTTP_USER_AGENT'];
   //echo '<iframe src="'.$l1.'" style="display:none;"></iframe>';
   //echo $l1;
   //$ua="Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/109.0";
-   $head=array('Accept: */*',
-    'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
-    'Accept-Encoding: deflate',
-    'X-Requested-With: XMLHttpRequest',
-    'Connection: keep-alive',
-    'Referer: '.$host.'/',
-    'Origin: '.$host);
+  //'User-Agent: '.$ua,
+   $head=array('User-Agent: '.$ua,
+'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
+'Accept-Encoding: deflate',
+'Connection: keep-alive',
+'Referer: https://vidsrc.net/',
+'Upgrade-Insecure-Requests: 1',
+'Sec-Fetch-Dest: iframe',
+'Sec-Fetch-Mode: navigate',
+'Sec-Fetch-Site: cross-site');
+//print_r ($head);
    $ch = curl_init();
-   curl_setopt($ch, CURLOPT_USERAGENT, $ua);
+   //curl_setopt($ch, CURLOPT_USERAGENT, $ua);
    curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
    curl_setopt($ch, CURLOPT_RETURNTRANSFER  ,1);  // RETURN THE CONTENTS OF THE CALL
    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+   curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
    curl_setopt($ch, CURLOPT_HTTPHEADER,$head);
-   curl_setopt($ch, CURLOPT_ENCODING,"");
+   //curl_setopt($ch, CURLOPT_ENCODING,"");
    //curl_setopt($ch, CURLOPT_HEADER,1);
+  curl_setopt($ch, CURLOPT_SSL_CIPHER_LIST, implode(":", $DEFAULT_CIPHERS));
+  curl_setopt($ch, CURLOPT_SSLVERSION,$ssl_version);
    curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
    curl_setopt($ch, CURLOPT_TIMEOUT, 15);
    curl_setopt($ch, CURLOPT_URL, $l1);
-   //$h = curl_exec($ch);
+   //curl_setopt($ch, CURLINFO_HEADER_OUT, true);
+   $h = curl_exec($ch);
+   //$info = curl_getinfo($ch);
    //echo $h;
    //$h=file_get_contents($l1);
   $options = array(
@@ -320,16 +356,21 @@ $ua = $_SERVER['HTTP_USER_AGENT'];
     )
   );
   $context  = stream_context_create($options);
-  $h = @file_get_contents($l1, false, $context);
+  //$h = file_get_contents($l1, false, $context);
+  //echo $h;
+  //print_r ($info);
+  //$x=get_headers($l1,false);
+  //echo $x;
    ///////////////////////////////
    $t1=explode("src: '",$h);
    $t2=explode("'",$t1[1]);
    $l=fixurl($t2[0],$l1);
    //echo $l."===========";
    curl_setopt($ch, CURLOPT_URL, $l);
-   //$h = curl_exec($ch);
+   $h = curl_exec($ch);
    //echo $h;
-   $h = @file_get_contents($l, false, $context);
+   //$h = @file_get_contents($l, false, $context);
+   //echo $h;
    $t1=explode('style="display:none;">',$h);
    $t2=explode("<",$t1[1]);
    $a=$t2[0];

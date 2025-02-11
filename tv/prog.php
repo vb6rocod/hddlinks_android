@@ -123,8 +123,11 @@ foreach($videos as $video) {
  $t2=explode('"',$t1[1]);
  $tip=$t2[0];
  $ora=trim(str_between($video,'<span class="time">','</span>'));
- $title=str_between($video,'<h3>','</h3>');
+ $title=str_between($video,'<h2>','</h2>');
  $title = trim(preg_replace("/(<\/?)(\w+)([^>]*>)/i","",$title));
+ //$t1=explode('title="',$video);
+ //$t2=explode('"',$t1[1]);
+ //$title=$t2[0];
  //echo $ora." ".$title."\r\n";
  //echo $ora." ".$title."<BR>";
  if ($tip <> "old_show")

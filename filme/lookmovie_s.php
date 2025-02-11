@@ -74,7 +74,7 @@ if($tip=="release") {
   //$l=$last_good."/shows/page/".$page;
 } else {
   $search=str_replace(" ","%20",$tit);
-  $l=$last_good."/shows/search/?p=".$page."&q=".$search;
+  $l=$last_good."/shows/search/?page=".$page."&q=".$search;
   //$l=$last_good."/shows/search?like=".$search."&page=".$page;
 }
 $host=parse_url($l)['host'];

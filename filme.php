@@ -51,26 +51,20 @@ else
 
 
 <TD width="25%"><a href="filme/voxfilmeonline.php?page=1&tip=release&title=voxfilmeonline&link=" target="_blank">voxfilmeonline</a></TD>
-<TD width="25%"></TD>
+<TD width="25%"><a href="filme/sitefilme_f.php?page=1&tip=release&title=sitefilme&link=" target="_blank">sitefilme</a></TD>
 <TD width="25%"><a href="filme/serialeonline_f.php?page=1&tip=release&title=serialeonline&link=" target="_blank">serialeonline</a></TD>
 <TD width="25%"><a href="filme/filmehd.php?page=1&tip=release&title=filmehd&link=" target="_blank">filmehd</a></TD>
 
 </TR>
 <TR>
-<TD width="25%"></TD>
 <TD width="25%"><a href="filme/veziseriale_f.php?page=1&tip=release&title=veziseriale&link=" target="_blank">veziseriale</a></TD>
 <TD width="25%"><a href="filme/fshd_f.php?page=1&tip=release&title=fshd&link=" target="_blank">fshd.ro</a></TD>
-<TD width="25%"><a href="filme/sitefilme_f.php?page=1&tip=release&title=sitefilme&link=" target="_blank">sitefilme</a></TD>
-</TR>
-
-
-<!--- desene si filme...-->
-<TR>
-<TD width="25%"></TD>
-<TD width="25%"></TD>
 <TD width="25%"><a href="filme/tugaflix_f.php?page=1&tip=release&title=tugaflix&link=" target="_blank">tugaflix</a></TD>
 <TD width="25%"><a href="filme/lookclub_f.php?page=1&tip=release&title=lookclub&link=" target="_blank">lookclub</a></TD>
 </TR>
+
+
+
 
 <!-- straine -->
 <TR>
@@ -83,8 +77,9 @@ else
 <TR>
 <TD width="25%"><a href="filme/lookmovie_f.php?page=1&tip=release&title=lookmovie&link=" target="_blank">lookmovie</a></TD>
 <TD width="25%"><a href="filme/ridomovies_f.php?page=1&tip=release&title=ridomovies&link=" target="_blank">ridomovies</a></TD>
-<TD width="25%"><a href="filme/onionplay_f.php?page=1&tip=release&title=onionplay&link=" target="_blank">onionplay</a></TD>
+
 <TD width="25%"><a href="filme/goojara_f.php?page=1&tip=release&title=goojara&link=" target="_blank">goojara</a></TD>
+<TD width="25%"></TD>
 </TR>
 
 
