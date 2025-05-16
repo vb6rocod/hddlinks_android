@@ -21,10 +21,12 @@ function kt($d,$orig) {
 		$m.= $n;
 		}
 	}
-
+ //echo $d;
  $t1 = explode("/", $orig);
+ //print_r ($t1);
  $j = $t1[5];
  $h = substr($j, 0, 32);
+ //echo $h;
  $i = $m;
 
  for ($j = $h, $k = strlen($h) - 1; $k >= 0; $k--)
@@ -38,6 +40,7 @@ function kt($d,$orig) {
 
 	$h = $n;
 	}
+//echo $j."\n".$h."\n".str_replace($j, $h, $orig);
  return str_replace($j, $h, $orig);
 }
 include ("../common.php");
@@ -65,6 +68,7 @@ if (isset($_POST["link"])) {
   $l=str_replace(" ","%20",$l);
   $title = unfix_t(urldecode($_GET["title"]));
 }
+//echo $l;
 $l=trim($l);
 $image="";
 $filelink_mpc='adult_link.php?link='.urlencode($l).'&title='.urlencode(fix_t($title)).'&image='.$image."&flash=mpc";
@@ -494,13 +498,18 @@ $out=$t2[0];
   $out=$t2[0];
 } else if (preg_match("/hdmovz\.com|porntrex\.com/",$host)) {
   //echo $h;
+  //echo $link;
   if (preg_match("/license_code:\s+\'(.*?)\'/ms",$h,$m)) {
+  //echo $h;
    preg_match_all("/(video_url|video_alt_url|video_alt_url2|video_alt_url3)\:\s+\'(.*?)\/\'/ms",$h,$u);
    $movie=$u[2][count($u[2])-1];
    //echo $movie."\n";
    $lic=$m[1];
+   //echo "====".$lic."====";
    $out=kt($lic,$movie);
    $out=$movie;
+     if ($out && $flash != "flash")
+        $out=$out."|Referer=".urlencode('https://porntrex.com/');
  }
 } else if (preg_match("/hellmoms\.com/",$host)) {
   if (preg_match_all("/src\=\"([http|https][\.\d\w\-\.\/\\\:\?\&\#\%\_\,\=]*)\"\s+title\=\"(\d+)p\"/",$h,$m)) {

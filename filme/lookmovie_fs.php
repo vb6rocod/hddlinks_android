@@ -133,8 +133,10 @@ $ref="lookmovie2.to";
   $info = curl_getinfo($ch);
   curl_close($ch);
 
-
+  //echo $h;
   $l=$info['url'];
+  //echo $l;
+  //die();
   if (preg_match("/threat\-protection/",$l)) {
     $csrf="";
     $key="";
@@ -142,13 +144,19 @@ $ref="lookmovie2.to";
       $csrf=$c[1];
     if (preg_match("/grecaptcha\.execute\(\'([^\']+)\'/",$h,$k))
       $key=$k[1];
-    require_once("rec.php");
+    elseif  (preg_match("/data\-sitekey\=\"([^\"]+)\"/",$h,$k))
+      $key=$k[1];
+    //echo $key;
+    //$key="6Ley5moUAAAAAJxloiuF--u_uS28aYUj-0E6tSfZ";
+    //require_once("rec.php");
     $sa="submit";
     $new_host="https://".parse_url($l)['host'].":443";
     $co=str_replace("=",".",base64_encode($new_host));
     $loc="https://".parse_url($l)['host'];
-    $token=rec($key,$co,$sa,$loc);
-    $post="_csrf=".$csrf."&tk=".$token;
+    //$token=rec($key,$co,$sa,$loc);
+    //echo $token;
+    //$post="_csrf=".$csrf."&tk=".$token;
+    $post="";
     $head=array('Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
     'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
     'Accept-Encoding: deflate',
@@ -158,6 +166,7 @@ $ref="lookmovie2.to";
     'Connection: keep-alive',
     'Referer: '.$l,
     'Upgrade-Insecure-Requests: 1');
+    /*
     $ch = curl_init();
     curl_setopt($ch, CURLOPT_URL, $l);
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
@@ -176,17 +185,18 @@ $ref="lookmovie2.to";
     $h = curl_exec($ch);
     $info = curl_getinfo($ch);
     curl_close($ch);
-    if (isset($info['redirect_url'])) {
-     $l=$info['redirect_url'];
-     if (preg_match("/second/",$l)) {
+    */
+    //if (isset($info['redirect_url'])) {
+     //$l=$info['redirect_url'];
+     //if (preg_match("/second/",$l)) {
      file_put_contents($base_cookie."lookmovie_ref1.txt",$l."|".$ref."|".$csrf);
      echo '<a href="look3.php">Solve captcha</a>';
-     } else {
-       echo 'Try again';
-       echo '<script>setTimeout(function(){ history.go(-1); }, 2000);</script>';
-     }
+     //} else {
+     //  echo 'Try again';
+     //  echo '<script>setTimeout(function(){ history.go(-1); }, 2000);</script>';
+     //}
      exit;
-    }
+    //}
   }
 ////////////////////////////////////////
   $id="";

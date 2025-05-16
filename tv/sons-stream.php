@@ -345,7 +345,7 @@ echo "<table class='event-table'><thead><tr><th>Hours</th><th>Logo</th><th>Event
   curl_setopt($ch, CURLOPT_TIMEOUT, 15);
   $h = curl_exec($ch);
   curl_close($ch);
-$videos=explode("<th colspan='8' class='date-cell'>",$h);
+$videos=explode("<th colspan='5' class='date-cell'>",$h);
 unset($videos[0]);
 $videos = array_values($videos);
 foreach($videos as $video) {
@@ -356,7 +356,7 @@ foreach($videos as $video) {
  unset($vids[0]);
  $vids = array_values($vids);
  foreach($vids as $vid) {
-  $t1=explode("</td><td>",$vid);
+  $t1=explode("<td class='cell-color'>",$vid);
   $t2=explode("<",$t1[1]);
   $hour=$t2[0];
    preg_match("/(\d+):(\d+)/",$hour,$mm);
@@ -370,6 +370,10 @@ foreach($videos as $video) {
   $t3=explode("<",$t1[2]);
   $event2=$t3[0];
   $event=$event1." - ".$event2;
+  ////////////////////////////
+  $t1=explode("<td class='event-title cell-color'>",$vid);
+  $t2=explode("</span",$t1[1]);
+  $event=trim($t2[0]);
   //preg_match_all("/\<td\>(\d+)\<\/td\>/",$vid,$m);
   preg_match_all("/(\d+)\<\/button\>/",$vid,$m);
   echo "<tr class='cell-color'>";

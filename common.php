@@ -93,7 +93,7 @@ function fixurl($link,$from="") {
 }
 $indirect="/vzlinks\.|playerwatch\.xyz|player\.filmm\.link|pajalusta\.club|hindipix\.in|waaw\.|hqq\.|realyplayonli\.|strcdn\.org|netu\.wiztube\.xyz|netu\.|div\.str1\.site|fshd\d+\.club|video\.filmeonline|fsohd\.pro|cdn1\.vidcdn\.co|playvideohd\.com/";
 $mixdrop="/mi?xdro{0,}p\.|mdy48tn97\.|mdbekjwqa\.|mdfx\w+|mdzsmut|mixdropjmk/";
-$dood="/do{2,}ds?(stream)?\.|ds2play\.|ds2video\.|d0o0d\.|do0od\.|d0000d|d000d/";
+$dood="/do{2,}ds?(stream)?\.|ds2play\.|ds2video\.|d0o0d\.|do0od\.|d0000d|d000d|do7go/";
 $filemoon="/filemoon\.|moonmov\.pro|furher\.|truepoweroflove\.|kerapoxy\.|c4qhk0je\.|1azayf9w\.|81u6xl9d\.xyz|4usw6ehy\.xyz|o45q3azz\.skin|ynowfnga\.xyz/";
 $vidguard="/vgfplay\.|fslinks\.|vembed\.net|vgembed\.|vid-guard\.com|embedv\.|vidguard\.to|serialeonline\.ovh|bembed\.net|listeamed\.net/";
 ?>

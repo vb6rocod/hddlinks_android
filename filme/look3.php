@@ -48,6 +48,9 @@ $ref=$t1[1];
 $csrf=$t1[2];
 //$token=$_POST['g-recaptcha-response'];
 $post="_csrf=".$csrf."&g-recaptcha-response=".$token;
+//echo $post;
+//die();
+//echo $l1;
 $head=array('Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
 'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
 'Accept-Encoding: deflate',
@@ -78,6 +81,8 @@ $head=array('Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image
   $h = curl_exec($ch);
   //$info = curl_getinfo($ch);
   curl_close($ch);
+  //echo $h;
+  //die();
   if (preg_match("/invisible\-recaptcha\-key/",$h)) {
    //echo '<a href="look_captcha.php?host=https://lookmovie.io&cookie=lookmovie.txt&target=lookmovie_s.php&title=lookmovie" target="_blank"><b>Sorry! Use firefox (cookies.txt) to GET COOKIE</b></a>';
    echo 'error';

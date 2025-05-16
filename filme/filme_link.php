@@ -1493,6 +1493,7 @@ $html=str_replace("&quot;","'",$html);
 if (preg_match("/filmm\.link\/.*?\/([^\'\"]+)/",$html,$m)) {    // sitefilme
 //print_r ($m);
 //http://filmm.link/gogogo/?
+//echo $html;
 $t1=explode(" ",$m[1]);
 //echo base64_decode($m[1]);
 $out="";
@@ -1501,6 +1502,31 @@ for ($k=0;$k<count($t1);$k++) {
 }
  $html .=$out;
 }
+//echo $html;
+//echo $pg;
+if ($pg =="play now...") {   //sitefilme
+//echo "asasasas";
+if (preg_match("/\<title\>([^\<]+)\<\/title\>/i",$html,$m))  {
+  $pg=$m[1];
+  $pg=preg_replace("/\s*online subtitrat/i","",$pg);
+  }
+  $rest = substr($pg, -2);
+  //echo urlencode($rest);
+  if ($rest == " -") $pg = substr($pg, 0, -2);
+  $rest = substr($pg, -6);
+  if (preg_match("/\((\d+)\)/",$rest,$m)) {
+   $year=$m[1];
+   $pg=trim(str_replace($m[0],"",$pg));
+  } else {
+   $year="";
+   $pg=$pg;
+  }
+  $imdb="";
+  $pg=preg_replace("/\s\-\s.*/","",$pg);
+  $sub_link ="from=".$from."&tip=".$tip."&sez=".$sez."&ep=".$ep."&imdb=".$imdbid."&title=".urlencode(fix_t($pg))."&link=".$link_page."&ep_tit=".$ep_tit."&year=".$year;
+
+}
+//echo $pg;
 if(preg_match_all("/(\/\/.*?)(\"|\'|\s)+/si",$html,$matches)) {
 $links=$matches[1];
 //print_r ($links);
@@ -1558,7 +1584,7 @@ $s=$s."|youdbox\.com|filmele-online\.com|playtube\.|ninjastream\.to|userload\.co
 $s=$s."|sbembed\.com|sbembed1\.com|sbplay\.|sbvideo\.net|streamsb\.net|sbplay\.one|cloudemb\.com|playersb\.com|tubesb\.com|sbplay\d\.|embedsb\.com";
 $s=$s."|\w+ssb\.|lvturbo\.|sb\w+\.|sbbrisk\.|sbanh\.|sblanh\.|sbchill\.|sbfast\.com|sblongvu\.com|sbfull\.|sbthe\.|sbspeed\.|tubeload\.|embedo\.|filemoon\.|utbrgebzvhfa\.";
 $s=$s."|streamhide\.|moonmov\.pro|vgfplay\.|fslinks\.|embedv\.|furher\.|truepoweroflove\.|streamdav\.";
-$s=$s."|d0o0d\.|mdfx\w+|do0od";
+$s=$s."|d0o0d\.|mdfx\w+|do0od|lulu\.st|filmm\.link\/\d+|vinovo\.to";
 $s=$s."|vembed\.net|vgembed\.|luluvdo\.com|guard|voe\.|mdbekjwqa\.|mdzsmut|vidmoly\.to|vidhidevip\.|vidhidepre\./i";
 /////////////////////////////////////////////
 //$x=preg_grep($s,$links);
@@ -1717,11 +1743,13 @@ for ($i=0;$i<count($links);$i++) {
   //echo $h2."\n"."====================="."\n";
    if (preg_match("/location\:\s*(.+)/i",$h2,$m)) {
     $cur_link=trim($m[1]);
+    $c1=$cur_link;
+    //print_r ($m);
     //echo $cur_link."\n";
    if (preg_match("/\<iframe src\=\"([^\"]+)\"/",$h2,$m)) {
      curl_setopt($ch, CURLOPT_URL, $m[1]);
      $h2 = curl_exec($ch);
-     $cur_link=$m[1];
+     $cur_link=fixurl($m[1],$c1);
      //echo $h2."\n"."====================="."\n";
    }
    curl_close($ch);

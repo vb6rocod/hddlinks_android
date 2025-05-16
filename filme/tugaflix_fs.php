@@ -159,8 +159,10 @@ $head=array("User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gec
   curl_close($ch);
   //echo $h;
   $t1=explode('target="player',$h);
-  $t2=explode('file=',$t1[1]);
+  $t2=explode('ST=',$t1[1]);
   $t3=explode('&',$t2[1]);
+  $t4=explode('"',$t3[1]);
+  $x=str_replace("sub=","sub=https://tuga.vip/sub/",$t4[0]);
   $l="https://streamtape.com/v/".$t3[0];
   $r[]=$l;
 //die();

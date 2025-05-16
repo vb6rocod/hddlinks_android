@@ -36,7 +36,7 @@ if ($tip=="m3u8") {
   function($a) {
   global $host;
   global $path;
-  return $path."/".$a[0];
+  return $a[0];
   },
   $h
 );

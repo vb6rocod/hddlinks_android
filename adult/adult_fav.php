@@ -105,10 +105,7 @@ $mx=trim(file_get_contents($base_pass."mx.txt"));
 $mx="ad";
 }
 $user_agent     =   $_SERVER['HTTP_USER_AGENT'];
-if ($flash != "mp") {
-if (preg_match("/android|ipad/i",$user_agent) && preg_match("/chrome|firefox|mobile/i",$user_agent)) $flash="chrome";
-}
-if ($flash=="chrome") $flash="mp";
+
 $w=0;
 $n=0;
 echo '<H2>'.$page_title.'</H2>';
@@ -171,7 +168,7 @@ foreach($arr as $key => $value) {
   $fav_link="mod=del&title=".urlencode(fix_t($title))."&link=".urlencode($link)."&image=".urlencode($image)."&width=".$width."&height=".$height."&file=filme_link.php";
   if (true) {
   if ($n==0) echo '<TR>'."\r\n";
-  if ($tast == "NU" && $flash !="mp") {
+  if ($tast == "NU" && $flash =="flash") {
    if ($has_fs=="no")
     $link_f='adult_link.php?link='.urlencode($link).'&title='.urlencode(fix_t($title)).'&image='.$image;
    else
@@ -180,7 +177,7 @@ foreach($arr as $key => $value) {
     <img id="myLink'.$w.'" src="'.$image.'" width="'.$width.'" height="'.$height.'"><BR>'.$title.'</a>'."\r\n";
     echo '<a onclick="add_fav('."'".$fav_link."'".')" style="cursor:pointer;">*</a>'."\r\n";
     echo '</TD>'."\r\n";
-  } else if ($tast == "NU" && $flash == "mp") {
+  } else if ($tast == "NU" && $flash <> "flash") {
    if ($has_fs=="yes") {
     $link_f='../filme/filme_link.php?file='.urlencode($link).'&title='.urlencode(fix_t($title)).'&image='.$image;
     echo '<td class="mp" width="25%"><a class="imdb" href="'.$link_f.'" id="myLink'.$w.'" target="_blank">
@@ -194,7 +191,7 @@ foreach($arr as $key => $value) {
     echo '<a onclick="add_fav('."'".$fav_link."'".')" style="cursor:pointer;">*</a>'."\r\n";
     echo '</TD>'."\r\n";
    }
-  } else if ($tast == "DA" && $flash !="mp") {
+  } else if ($tast == "DA" && $flash =="flash") {
    if ($has_fs=="no")
     $link_f='adult_link.php?link='.urlencode($link).'&title='.urlencode(fix_t($title)).'&image='.$image;
    else

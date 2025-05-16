@@ -98,8 +98,9 @@ $ua="Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/
     $new_host="https://".parse_url($l)['host'].":443";
     $co=str_replace("=",".",base64_encode($new_host));
     $loc="https://".parse_url($l)['host'];
-    $token=rec($key,$co,$sa,$loc);
-    $post="_csrf=".$csrf."&tk=".$token;
+    //$token=rec($key,$co,$sa,$loc);
+    //$post="_csrf=".$csrf."&tk=".$token;
+    $post="";
     $head=array('Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
     'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
     'Accept-Encoding: deflate',
@@ -109,6 +110,7 @@ $ua="Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/
     'Connection: keep-alive',
     'Referer: '.$l,
     'Upgrade-Insecure-Requests: 1');
+    /*
     $ch = curl_init();
     curl_setopt($ch, CURLOPT_URL, $l);
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
@@ -129,15 +131,16 @@ $ua="Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/
     curl_close($ch);
     if (isset($info['redirect_url'])) {
      $l=$info['redirect_url'];
-     if (preg_match("/second/",$l)) {
+    */
+     //if (preg_match("/second/",$l)) {
      file_put_contents($base_cookie."lookmovie_ref1.txt",$l."|".$ref."|".$csrf);
      echo '<a href="look3.php">Solve captcha</a>';
-     } else {
-       echo 'Try again';
-       echo '<script>setTimeout(function(){ history.go(-1); }, 2000);</script>';
-     }
+     //} else {
+     //  echo 'Try again';
+     //  echo '<script>setTimeout(function(){ history.go(-1); }, 2000);</script>';
+     //}
      exit;
-    }
+    //}
   }
 ////////////////////////////////////////
     //echo $h;

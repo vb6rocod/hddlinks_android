@@ -231,7 +231,7 @@ foreach($videos as $video) {
  preg_match("/\d+:\d+\s+\((.*?)\)/",$date,$x);
  $sport=$x[1];
  preg_match("/(\d+):(\d+)/",$date,$m);
- $ora=sprintf("%02d:%02d",(($m[1]+1)%24),$m[2]);
+ $ora=sprintf("%02d:%02d",(($m[1]+2)%24),$m[2]);
  $date=str_replace($m[0],$ora,$date);
  $t1=explode('src="',$video);
  $t2=explode('"',$t1[1]);

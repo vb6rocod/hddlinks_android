@@ -47,7 +47,7 @@ $ua="Mozilla/5.0 (iPhone; CPU iPhone OS 5_0_1 like Mac OS X)";
 $t1=explode('window.__data=JSON.parse("',$h);
 //$t1=explode('window.__data=JSON.parse("',$h);
 //$t2=explode(';window.experience',$t1[1]);
-$t2=explode('");</script>',$t1[1]);
+$t2=explode('"); window.__i18n=window.__data.i18n.i18n;</script>',$t1[1]);
 $h1=trim($t2[0]);
 $h1=str_replace('\"','"',$h1);
 $h1=str_replace('\"','"',$h1);

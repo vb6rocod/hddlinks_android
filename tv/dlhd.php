@@ -221,14 +221,15 @@ $w=0;
 $r=array();
 echo "<table class='event-table'>"."\r\n";
 $l="https://dlhd.sx/";
-$l="https://dlhd.sx/schedule/schedule-generated.json";
-$l1="https://dlhd.sx/24-7-channels.php";
+$l="https://daddylive.mp/schedule/schedule-generated.json";
+$l1="https://daddylive.mp/24-7-channels.php";
+$l="https://daddylive.mp/schedule/schedule-generated.php";
 $head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/110.0',
 'Accept: */*',
 'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
 'Accept-Encoding: deflate',
-'Referer: https://dlhd.sx/',
-'Origin: https://dlhd.sx'
+'Referer: https://daddylive.mp/',
+'Origin: https://daddylive.mp'
 );
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $l);
@@ -240,7 +241,9 @@ $head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gec
   curl_setopt($ch, CURLOPT_TIMEOUT, 15);
   $h = curl_exec($ch);
   curl_close($ch);
+  //echo $h;
   $r=json_decode($h,1);
+  //print_r ($r);
   //print_r ($r[key($r)]);
   $rr=$r[key($r)];
   //die();
@@ -270,7 +273,7 @@ foreach($rr as $key=>$value) {
  for ($k=0;$k<count($value);$k++) {
  $ora=$value[$k]['time'];
  preg_match("/(\d+):(\d+)/",$ora,$m);
- $ora=sprintf("%02d:%02d",(($m[1]+2)%24),$m[2]);
+ $ora=sprintf("%02d:%02d",(($m[1]+3)%24),$m[2]);
  $event=trim($value[$k]['event']);
  echo  '<TR>'."\n";
  echo '<TD>'.$ora.'</TD>';

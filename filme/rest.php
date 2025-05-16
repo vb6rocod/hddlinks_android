@@ -107,6 +107,7 @@ if ($tip=="movie") {
 $head=array('X-Requested-With: XMLHttpRequest',
 "X-User-Agent: ".$key);
 //$head=array
+//$l_eng="https://rest.opensubtitles.org/search/query-".urlencode($title)."/sublanguageid-eng";
   $ua="Mozilla/5.0 (Windows NT 10.0; rv:98.0) Gecko/20100101 Firefox/98.0";
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_USERAGENT, $ua);
@@ -121,7 +122,8 @@ $head=array('X-Requested-With: XMLHttpRequest',
   curl_setopt($ch, CURLOPT_URL, $l_eng);
   $h_eng = curl_exec($ch);
   curl_close ($ch);
-  //echo $h;
+  echo $l_eng;
+  echo $h_eng;
   $r_rum=json_decode($h_rum,1);
   $r_eng=json_decode($h_eng,1);
 $s_rum=array();

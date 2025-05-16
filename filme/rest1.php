@@ -103,18 +103,22 @@ if (!$imdbid) {
     else
      $find=$title." movie ".$year;
   }
+
   $url = "https://www.google.com/search?q=imdb+" . rawurlencode($find);
+  $url="https://www.imdb.com/find/?q=" . rawurlencode($find);
+  $ua="Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:138.0) Gecko/20100101 Firefox/138.0";
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $url);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-  curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows; U; Windows NT 6.1; en-US; rv:1.9.1.2) Gecko/20090729 Firefox/3.5.2 GTB5');
+  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
   curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
   curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
   curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
   curl_setopt($ch, CURLOPT_TIMEOUT, 15);
   $h = curl_exec($ch);
   curl_close($ch);
-  if (preg_match('/https:\/\/www.imdb.com\/title\/(tt\d+)/ms', $h, $match))
+  //echo $h;
+  if (preg_match('/\/title\/(tt\d+)/ms', $h, $match))
    $imdbid=str_replace("tt","",$match[1]);
 }
 if ($imdbid) $imdbid=sprintf("%07d", $imdbid);

@@ -195,9 +195,12 @@ if (preg_match("/dlhd\.sx|daddylive/",$link)) {
   'Accept: */*',
   'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
   'Accept-Encoding: deflate',
-  'Referer: https://dlhd.sx/',
-  'Origin: https://dlhd.sx'
+  'Referer: https://daddylive.mp/',
+  'Origin: https://daddylive.mp'
   );
+  preg_match("/stream\-(\d+)/",$link,$m);
+  $id=$m[1];
+  $h="";
   //echo $link;
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $link);
@@ -209,19 +212,77 @@ if (preg_match("/dlhd\.sx|daddylive/",$link)) {
   curl_setopt($ch, CURLOPT_TIMEOUT, 15);
   $h = curl_exec($ch);
   curl_close($ch);
+  //echo $h;
   if (preg_match("/\<iframe.*?src\=\"([^\"]+)\"/i",$h,$m))
    $link = $m[1];
   else
    $link="";
   //echo $link;
+  $host=parse_url($link)['host'];
   //die();
-   if ($link) {
+   if ($link==="xxxxx") {
     $x="1qwebplay.xyz";
     $host=parse_url($link)['host'];
     $link=str_replace($host,$x,$link)."&alias=".$host;
    }
   //echo $link;
+  $link="https://gamerushplay.cfd/server_lookup.php?channel_id=premium".$id;
+  $link="https://".$host."/server_lookup.php?channel_id=premium".$id;
+  //https://caq21harderv991gpluralplay.xyz/server_lookup.php?channel_id=premium33
+  $ch = curl_init();
+  curl_setopt($ch, CURLOPT_URL, $link);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+  curl_setopt($ch, CURLOPT_HTTPHEADER, $head);
+  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+  $h = curl_exec($ch);
+  curl_close($ch);
+  //echo $h;
+  $t1=explode('server_key":"',$h);
+  $t2=explode('"',$t1[1]);
+  $sv=$t2[0];
+  $link="https://".$sv."new.koskoros.ru/".$sv."/premium".$id."/mono.m3u8";
+  $link="https://nfsnew.newkso.ru/nfs/premium28/mono.m3u8";
+  $link="https://".$sv."new.newkso.ru/".$sv."/premium".$id."/mono.m3u8";
+  //$l="https://gamerushplay.cfd/server_lookup.php?channel_id=premium353";
+  //echo $link;
   //die();
+  $head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/110.0',
+  'Accept: */*',
+  'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
+  'Accept-Encoding: deflate',
+  'Referer: https://kisskissplay.cfd/',
+  'Origin: https://kisskissplay.cfd'
+  );
+  /*
+  $ch = curl_init();
+  curl_setopt($ch, CURLOPT_URL, $link);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+  curl_setopt($ch, CURLOPT_HTTPHEADER, $head);
+  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+  $h = curl_exec($ch);
+  curl_close($ch);
+  echo $h;
+  */
+  $ua="Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/110.0";
+  $host1="https://kisskissplay.cfd";
+  $host1="https://kisskissplay.cfd";
+  $host1="https://kisskissplay.cfd";
+  $host1=$host;
+  //////////////////////////////////////////
+  $t1=explode("?",$_SERVER['HTTP_REFERER']);
+  $p=dirname($t1[0]);
+  $link = $p."/dlhds.php?link=".base64_encode($link)."&host=".urlencode($host1)."&tip=m3u8";
+  if ($link && $flash <> "flash")
+    $link=$link."|Referer=".urlencode($host1."/")."&Origin=".urlencode($host1)."&User-Agent=".urlencode($ua);
+  ///////////////////////////////////////////////
+ // if ($link && $flash <> "flash")
+ //   $link=$link."|Referer=".urlencode("https://gamerushplay.cfd/")."&Origin=".urlencode("https://gamerushplay.cfd/")."&User-Agent=".urlencode($ua);
 }
 /////////////////////////////////////////
 
@@ -348,6 +409,7 @@ parse_str($q,$r);
 if (preg_match("/aliez/",$r["t"])) {
  $link="https://emb.apl340.me/player/live.php?id=".$r["c"];
  $link="https://emb.apl374.me/player/live.php?id=".$r["c"];
+ $link="https://emb.apl375.me/player/live.php?id=".$r["c"];
  //https://emb.apl374.me/player/live.php?id=230257&w=700&h=480
 $head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/110.0',
 'Accept: application/json, text/plain, */*',
@@ -543,16 +605,19 @@ if (preg_match("/aliezstream\.pro/",$link)) {
   $h = curl_exec($ch);
   $id=json_decode($h,1)['id'];
   curl_close($ch);
-  $link="https://emb.apl340.me/player/live.php?id=".$id;
+  $link="https://emb.apl375.me/player/live.php?id=".$id;
 }
-if (preg_match("/emb\.apl\d+\.me\/player/",$link)) {
+if (preg_match("/emb\.apl\d+\.me\/\s*player/",$link)) {
   $head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/110.0',
   'Accept: application/json, text/plain, */*',
   'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
   'Accept-Encoding: deflate',
   'Connection: keep-alive',
   'Referer: http://livetv.sx/');
-
+  //https://emb.apl375.me/ player/live.php?id=236616&w=700&h=480
+  //echo urlencode($link);
+  $link=str_replace(urldecode("%0A"),"",$link);
+  //echo $link;
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $link);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
@@ -600,19 +665,26 @@ if (preg_match("/voodc\.com/",$link)) {
   curl_setopt($ch, CURLOPT_TIMEOUT, 15);
   curl_setopt($ch, CURLOPT_HEADER,0);
   $h = curl_exec($ch);
+  //echo $h;
   $t1=explode('src="//voodc.com',$h);
   $t2=explode('"',$t1[1]);
   $l= "https://voodc.com".$t2[0];
   curl_setopt($ch, CURLOPT_URL, $l);
   $h = curl_exec($ch);
+  //echo $h;
   $t1=explode('embedded+"',$h);
   $t2=explode('"',$t1[1]);
   $l="https://voodc.com/play/d".$t2[0];
   curl_setopt($ch, CURLOPT_URL, $l);
   $h = curl_exec($ch);
-
+  //echo $h;
   preg_match("/file\"\:\s*\'([^\s\']+)\'/",$h,$m);
   $link=$m[1];
+  //var PlayS = '
+  if (!$link) {
+  preg_match("/var\s*PlayS\s*\=\s*\'([^\s\']+)\'/",$h,$m);
+  $link=$m[1];
+  }
   curl_close($ch);
 }
 if (preg_match("/player\.qazcdn\.com/",$link)) {
@@ -727,7 +799,7 @@ if (preg_match("/daddylivehd\.sx\/embed\/|daddylive\d\.shop\/(my)?live|daddy\-st
   //echo $h;
   preg_match("/\<iframe.*?src\=\"([^\"]+)\"/i",$h,$m);
   $link=fixurl($m[1]); //https://weblivehdplay.ru/premiumtv/daddyhd.php?id=41
-
+  //echo $link;
 }
 //antenasport.online
 if (preg_match("/(antenn?asports?|maxsport|poscitechs|soccerstream100|streamhd247|lato|venushd|scolie|kingstreamz|powerover)\.|jokersportshd\./",$link)) {
@@ -838,14 +910,67 @@ if (preg_match("/topembed\./",$link)) {
   $h = curl_exec($ch);
   curl_close($ch);
   //echo $h;
-  if (preg_match("/file[\'\"]\:\s*[\'\"]([^\'\"]+)[\'\"]/",$h,$m))     //file": '  source: '
-   $link=$m[1];
-  elseif (preg_match("/source\:\s+[\'\"]([^\'\"]+)[\'\"]/",$h,$m))
-   $link=$m[1];
-  //print_r ($m);
-  if ($flash <> "flash")
-   $link .="|Referer=".urlencode("https://topembed.pw/")."&Origin=".urlencode("https://topembed.pw")."&User-Agent=".urlencode($ua);
+  if (preg_match("/\<iframe.*?src\=\"([^\"]+)\"/i",$h,$m))
+   $link = $m[1];
+  else
+   $link="";
+  //echo $link;
+  $host=parse_url($link)['host'];
+  curl_setopt($ch, CURLOPT_URL, $link);
+  $h = curl_exec($ch);
+  //echo $h;
+  curl_close($ch);
+  $t1=explode('channelKey = "',$h);
+  $t2=explode('"',$t1[1]);
+  $id=$t2[0];
+  $link="https://".$host."/server_lookup.php?channel_id=".urlencode($id);
+  //https://caq21harderv991gpluralplay.xyz/server_lookup.php?channel_id=premium33
+  $ch = curl_init();
+  curl_setopt($ch, CURLOPT_URL, $link);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+  curl_setopt($ch, CURLOPT_HTTPHEADER, $head);
+  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+  $h = curl_exec($ch);
+  curl_close($ch);
+  //echo $h;
+  $t1=explode('server_key":"',$h);
+  $t2=explode('"',$t1[1]);
+  $sv=$t2[0];
 
+  $link="https://".$sv."new.newkso.ru/".$sv."/".$id."/mono.m3u8";
+  //echo $link;
+  $head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/110.0',
+  'Accept: */*',
+  'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
+  'Accept-Encoding: deflate',
+  'Referer: https://'.$host.'/',
+  'Origin: https://'.$host
+  );
+  /*
+  $ch = curl_init();
+  curl_setopt($ch, CURLOPT_URL, $link);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+  curl_setopt($ch, CURLOPT_HTTPHEADER, $head);
+  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+  $h = curl_exec($ch);
+  curl_close($ch);
+  echo $h;
+  */
+  $ua="Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/110.0";
+
+  $host1=$host;
+  //////////////////////////////////////////
+  $t1=explode("?",$_SERVER['HTTP_REFERER']);
+  $p=dirname($t1[0]);
+  $link = $p."/dlhds.php?link=".base64_encode($link)."&host=".urlencode($host1)."&tip=m3u8";
+  if ($link && $flash <> "flash")
+    $link=$link."|Referer=".urlencode($host1."/")."&Origin=".urlencode($host1)."&User-Agent=".urlencode($ua);
 }
 if (preg_match("/fullassia\.com/",$link)) {
   //https://fullassia.com/live/sportofeurope/?lang=ro
@@ -1060,6 +1185,7 @@ $head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gec
 'Referer: http://livetv.sx/');
 //echo $link;
 //$link="https://wikisport.se/arenasport1-srbi/";
+//https://caq21harderv991gpluralplay.xyz/wiki.php?id=ps1uk
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $link);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
@@ -1070,67 +1196,70 @@ $head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gec
   curl_setopt($ch, CURLOPT_TIMEOUT, 15);
   //curl_setopt($ch, CURLOPT_HEADER,1);
   $h = curl_exec($ch);
-  curl_close($ch);
+
   //echo $h;
-  $t1=explode('fid="',$h);
+  if (preg_match("/\<iframe.*?src\=\"([^\"]+)\"/i",$h,$m))
+   $link = $m[1];
+  else
+   $link="";
+  //echo $link;
+  $host=parse_url($link)['host'];
+  curl_setopt($ch, CURLOPT_URL, $link);
+  $h = curl_exec($ch);
+  //echo $h;
+  curl_close($ch);
+  $t1=explode('channelKey = "',$h);
   $t2=explode('"',$t1[1]);
-  $fid=$t2[0];
-  $t1=explode('src="',$h);
-  $t2=explode('"',$t1[1]);
-  $l1=fixurl($t2[0]);
-  $host1="https://".parse_url($l1)['host'];
-  //https://freshwaterdell.com/wiki.php?player=desktop&live=eurosp1
-  $l="https://fiveyardlab.com/wiki.php?player=desktop&live=".$fid;
-  $l="https://freshwaterdell.com/wiki.php?player=desktop&live=".$fid;
-  $l=$host1."/wiki.php?player=desktop&live=".$fid;
-  //echo $l;
-  $head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/110.0',
-  'Accept: */*',
-  'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
-  'Accept-Encoding: deflate',
-  'Referer: https://wikisport.click/',
-  'Origin: https://wikisport.click');
-  if (!$fid) {
-   $t1=explode("fid='",$h);
-   $t2=explode("'",$t1[1]);
-   $fid=$t2[0];
-  $head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/110.0',
-  'Accept: */*',
-  'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
-  'Accept-Encoding: deflate',
-  'Referer: https://cdnssd.ru/',
-  'Origin: https://cdnssd.ru');
-   $l="https://locatedinfain.com/embed2.php?player=desktop&live=".$fid;
-   $host1="https://locatedinfain.com";
-  }
-  //$l="https://fiveyardlab.com/wiki.php?player=desktop&live=".$fid;
-
-  //echo $l;
-
+  $id=$t2[0];
+  $link="https://".$host."/server_lookup.php?channel_id=".urlencode($id);
+  //https://caq21harderv991gpluralplay.xyz/server_lookup.php?channel_id=premium33
   $ch = curl_init();
-  curl_setopt($ch, CURLOPT_URL, $l);
+  curl_setopt($ch, CURLOPT_URL, $link);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
   curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
   curl_setopt($ch, CURLOPT_HTTPHEADER, $head);
   curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
   curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
   curl_setopt($ch, CURLOPT_TIMEOUT, 15);
-  //curl_setopt($ch, CURLOPT_HEADER,1);
   $h = curl_exec($ch);
   curl_close($ch);
   //echo $h;
-  $t1=explode("return([",$h);
-  $t2=explode("]",$t1[1]);
-  $t3=explode(",",$t2[0]);
-  $x=implode("",$t3);
-  //echo $x;
-  $x=str_replace('"',"",$x);
-  $x=str_replace("\\","",$x);
-  $x=str_replace("////","//",$x);
-  //echo $x;
-  $link=$x;
+  $t1=explode('server_key":"',$h);
+  $t2=explode('"',$t1[1]);
+  $sv=$t2[0];
+
+  $link="https://".$sv."new.newkso.ru/".$sv."/".$id."/mono.m3u8";
+  //echo $link;
+  $head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/110.0',
+  'Accept: */*',
+  'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
+  'Accept-Encoding: deflate',
+  'Referer: https://'.$host.'/',
+  'Origin: https://'.$host
+  );
+  /*
+  $ch = curl_init();
+  curl_setopt($ch, CURLOPT_URL, $link);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+  curl_setopt($ch, CURLOPT_HTTPHEADER, $head);
+  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+  $h = curl_exec($ch);
+  curl_close($ch);
+  echo $h;
+  */
+  $ua="Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/110.0";
+
+  $host1=$host;
+  //////////////////////////////////////////
+  $t1=explode("?",$_SERVER['HTTP_REFERER']);
+  $p=dirname($t1[0]);
+  $link = $p."/dlhds.php?link=".base64_encode($link)."&host=".urlencode($host1)."&tip=m3u8";
   if ($link && $flash <> "flash")
-    $link=$link."|Referer=".urlencode($host1."/")."&Origin=".urlencode($host1);
+    $link=$link."|Referer=".urlencode($host1."/")."&Origin=".urlencode($host1)."&User-Agent=".urlencode($ua);
+
 }
 if (preg_match("/tvcom.cz/",$link)) {
 $head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/110.0',
@@ -2007,8 +2136,9 @@ if (preg_match("/sportskart\.click/",$link)) { // to second link!
   else
     $link="";
 }
-if (preg_match("/sportsonline\./",parse_url($link)['host'])) {
+if (preg_match("/sport[sz]online\./",parse_url($link)['host'])) {
   //https://sportsonline.so/channels/hd/hd1.php
+  //https://sportzonline.ps/channels/hd/hd7.php
   //echo $link;
   //$hw=1;    trebuie alta solutie.....
   $ua="Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/110.0";

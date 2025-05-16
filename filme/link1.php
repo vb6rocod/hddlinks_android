@@ -423,6 +423,97 @@ if (preg_match("/streamsrcs\.2embed\.cc/",$filelink)) {
   $filelink=trim($s[1].$id);
   //echo $filelink;
 }
+if (preg_match("/vidsrc\.net/",$filelink)) {
+  //https://vidsrc.net/embed/
+  $ua = $_SERVER['HTTP_USER_AGENT'];
+  $ua="Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:133.0) Gecko/20100101 Firefox/133.0";
+  $head=array('User-Agent: '.$ua,
+  'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
+  'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
+  'Accept-Encoding: deflate',
+  'Connection: keep-alive',
+  'Referer: https://vidsrc.net/',
+  'Origin: https://vidsrc.net',
+  'Upgrade-Insecure-Requests: 1');
+  $ch = curl_init();
+  curl_setopt($ch, CURLOPT_URL, $filelink);
+  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER  ,1);  // RETURN THE CONTENTS OF THE CALL
+  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+  curl_setopt($ch, CURLOPT_HTTPHEADER,$head);
+  curl_setopt($ch, CURLOPT_ENCODING,"");
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+  $h = curl_exec($ch);
+  curl_close($ch);
+  //echo $h;
+  $t1=explode('player_iframe" src="',$h);
+  $t2=explode('"',$t1[1]);
+  $l1=fixurl($t2[0],$l);
+  $host="https://".parse_url($l1)['host'];
+
+   $head=array('User-Agent: '.$ua,
+   'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+   'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
+   'Accept-Encoding: deflate',
+   'Connection: keep-alive',
+   'Referer: https://vidsrc.net/',
+   'Upgrade-Insecure-Requests: 1',
+   'Sec-Fetch-Dest: iframe',
+   'Sec-Fetch-Mode: navigate',
+   'Sec-Fetch-Site: cross-site');
+
+   $ch = curl_init();
+   //curl_setopt($ch, CURLOPT_USERAGENT, $ua);
+   curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+   curl_setopt($ch, CURLOPT_RETURNTRANSFER  ,1);  // RETURN THE CONTENTS OF THE CALL
+   curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+   curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
+   curl_setopt($ch, CURLOPT_HTTPHEADER,$head);
+   curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+   curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+   curl_setopt($ch, CURLOPT_URL, $l1);
+   //curl_setopt($ch, CURLINFO_HEADER_OUT, true);
+   $h = curl_exec($ch);
+
+   $t1=explode("src: '",$h);
+   $t2=explode("'",$t1[1]);
+   $l=fixurl($t2[0],$l1);
+   //echo $l."===========";
+   curl_setopt($ch, CURLOPT_URL, $l);
+   $h = curl_exec($ch);
+
+   //file: '
+
+   curl_close($ch);
+   preg_match("/file\:\s*\'([^\']+)\'/",$h,$m);
+   $link=$m[1];
+  $head=array('User-Agent: '.$ua,
+  'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
+  'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
+  'Accept-Encoding: deflate',
+  'Connection: keep-alive',
+  'Referer: '.$host.'/',
+  'Origin: '.$host,
+  'Upgrade-Insecure-Requests: 1');
+  $ch = curl_init();
+  curl_setopt($ch, CURLOPT_URL, $link);
+  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER  ,1);  // RETURN THE CONTENTS OF THE CALL
+  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+  curl_setopt($ch, CURLOPT_HTTPHEADER,$head);
+  curl_setopt($ch, CURLOPT_ENCODING,"");
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+  $h = curl_exec($ch);
+  curl_close($ch);
+  //echo $h;
+  $link=get_max_res($h,$link);
+  if ($link && $flash <> "flash")  {
+   $link .="|Referer=".urlencode($host."/")."&Origin=".urlencode($host)."&User-Agent=".urlencode($ua);
+  }
+  //echo $link;
+}
 if (preg_match("/vidsrcme\.com/",$filelink)) {
  //echo $filelink;
  $ua="Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/109.0";
@@ -701,6 +792,80 @@ if (strpos($filelink,"embed.smashystream.com") !== false) {
     $t1=explode('iframe src="',$h);
     $t2=explode('"',$t1[1]);
     $filelink=$t2[0];
+  }
+}
+if (preg_match("/vinovo\.to/",$filelink)) {
+ //https://vinovo.to/e/8g15y41jb65x8q
+ $cookie=$base_cookie."vinovo.dat";
+ $ua="Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:137.0) Gecko/20100101 Firefox/137.0";
+  $head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:137.0) Gecko/20100101 Firefox/137.0',
+  'Accept: */*',
+  'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
+  'Accept-Encoding: deflate',
+  'Referer: https://filmebunehd1.com/'
+  );
+  $ch = curl_init();
+  curl_setopt($ch, CURLOPT_URL, $filelink);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+  curl_setopt($ch, CURLOPT_HTTPHEADER, $head);
+  //curl_setopt($ch, CURLOPT_HEADER,1);
+  curl_setopt($ch, CURLOPT_COOKIEFILE,$cookie);
+  curl_setopt($ch, CURLOPT_COOKIEJAR,$cookie);
+  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 25);
+  $h = curl_exec($ch);
+  curl_close($ch);
+  $t1=explode('name="token" content="',$h);
+  $t2=explode('"',$t1[1]);
+  $tk=$t2[0];
+  $t1=explode('data-base="',$h);
+  $t2=explode('"',$t1[1]);
+  $server=$t2[0]; //https://fs-93aab8.vincdn.net
+  $t1=explode('file_code" content="',$h);
+  $t2=explode('"',$t1[1]);
+  $id=$t2[0];
+  require_once("rec.php");
+  $key="6LcBdeUqAAAAAP4pgGR0LtgJ92yf-JfGRMtMgUAk";
+  $co="aHR0cHM6Ly92aW5vdm8udG86NDQz";
+  $sa="embed";
+  $loc="https://vinovo.to";
+  $token=rec($key,$co,$sa,$loc);
+  
+  $l="https://vinovo.to/api/file/url/".$id;
+  $post="recaptcha=".$token."&token=".$tk;
+
+  $head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:137.0) Gecko/20100101 Firefox/137.0',
+  'Accept: */*',
+  'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
+  'Accept-Encoding: deflate',
+  'Content-Type: application/x-www-form-urlencoded; charset=UTF-8',
+  'X-Requested-With: XMLHttpRequest',
+  'Content-Length: '.strlen($post),
+  'Origin: https://vinovo.to',
+  'Connection: keep-alive',
+  'Referer: https://vinovo.to/e/8g15y41jb65x8q');
+
+  $ch = curl_init();
+  curl_setopt($ch, CURLOPT_URL, $l);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+  curl_setopt($ch, CURLOPT_HTTPHEADER, $head);
+  curl_setopt($ch, CURLOPT_POST,1);
+  curl_setopt($ch, CURLOPT_POSTFIELDS,$post);
+  curl_setopt($ch, CURLOPT_COOKIEFILE,$cookie);
+  curl_setopt($ch, CURLOPT_COOKIEJAR,$cookie);
+  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 25);
+  $h = curl_exec($ch);
+  curl_close($ch);
+  $x=json_decode($h,1);
+  $host="https://vinovo.to";
+  $link=$server."/stream/".$x['token'];
+  if ($link && $flash <> "flash")  {
+   $link .="|Referer=".urlencode($host."/")."&Origin=".urlencode($host)."&User-Agent=".$ua;
   }
 }
 if (preg_match("/bflix\.gs/",$filelink)) {
@@ -8731,15 +8896,42 @@ $head=array('Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image
   }
   curl_close($ch);
   //echo $h;
-  //'hls': '
-  //$t1=explode('hls": "',$h);
-  //$t2=explode('"',$t1[1]);
-  //$link=$t2[0];
-  if (preg_match("/[\"\']hls[\'\"]\:\s*[\'\"]([^\"\']+)/",$h,$m))
-   $link=base64_decode($m[1]);
-  else
-   $link="";
-  //echo $link;
+/////////////////////////////////////////////////
+  preg_match_all('/\w+="([^"]+)";function/',$h,$m);
+  $ct=$m[1][0];
+  preg_match_all("/,_\w+\s*=\s*\['(.+?)'\],/",$h,$m);
+  $lut=$m[1][0];
+  //echo $ct."\n"."\n";
+
+  $txt="";
+  for ($i=0;$i<strlen($ct);$i++) {
+      $x=ord($ct[$i]);
+  if ($x>=65 && $x<=90)
+     $x=($x-52)%26+65;
+  elseif ($x>=97 && $x<=122)
+  $x=($x-84)%26+97;
+  $txt .=chr($x);
+  }
+
+  $t=explode("','",$lut);
+  for ($z=0;$z<count($t);$z++) {
+      $txt=str_replace($t[$z],"_",$txt);
+  }
+
+  $txt=implode("",explode("_",$txt));
+  $ct=base64_decode($txt);
+  $y="";
+  for ($i=0;$i<strlen($ct);$i++) {
+      $a=ord($ct[$i]);
+      $y .=chr($a-3);
+  }
+  $z=strrev($y);
+  $out=base64_decode($z);
+  //echo $out;
+  $zz=json_decode($out,1);
+  //print_r ($zz);
+//////////////////////////////////////////////////
+  $link=$zz['source'];
   if ($link && $flash <> "flash") {
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $link);
@@ -9147,7 +9339,7 @@ function xor_string($string, $key) {
   $t1=explode('iframe src="',$html);
   $t2=explode('"',$t1[1]);
   $l=$t2[0];
-  $post="qdf=1";
+  $post="qdfx=1";
   $cookie=$base_cookie."wootly.dat";
   $head=array('Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
   'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
@@ -9181,7 +9373,8 @@ function xor_string($string, $key) {
   $id=$t2[0];
   $l="https://www.wootly.ch/ajax?t=".$tk."&id=".$id;
   $l="https://www.wootly.ch/grabd?t=".$tk."&id=".$id;
-  $l="https://www.wootly.ch/grabm?t=".$tk."&id=".$id;
+  $l="https://web.wootly.ch/grabm?t=".$tk."&id=".$id;
+  //$l="https://web.wootly.ch/grabm?
   //echo $l;
   //$l="https://www.wootly.ch/ajax?t=JDEkOG9oaFFKWkgkZUR0S0tZc2l5bEhpVzN3Rkoxdlh0MQ&id=1311431";
   //$l="https://www.wootly.ch/ajax?t=JDEkalJTcHYwWEYkMWlGNUlJMFI5YkRWSUR0cjc1RFpZLw&id=1257246";
@@ -10100,7 +10293,11 @@ function xor_string($string, $key) {
    curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
    curl_setopt($ch, CURLOPT_TIMEOUT, 25);
    $h = curl_exec($ch);
-
+   if (preg_match("/This video cannot be watched under this domain/",$h)) {
+    curl_setopt($ch, CURLOPT_REFERER,"https://sitefilme.com/");
+    $h = curl_exec($ch);
+   
+   }
    if (preg_match("/\<iframe src\=\"([^\"]+)\"/",$h,$m)) {
     curl_setopt($ch, CURLOPT_URL, $m[1]);
     curl_setopt($ch, CURLOPT_HTTPHEADER,$head);
@@ -10272,7 +10469,35 @@ function xor_string($string, $key) {
 
    // https://moon-storage-delivery-s05.filemoon.to/hls2/01/00021/re09uiwgwgve_x/master.m3u8?t=1QAuFako9vgEMFTW0IDiWSBeZNLnyWfM99gHRGnvK9k&s=1655205176&e=-100&f=107259&srv=127.0.0.1&asn=12302
    // https://moon-storage-delivery-s05.filemoon.to/hls2/01/00021/re09uiwgwgve_x/master.m3u8?t=sqqFodyexNeY4i-RgKmJBQTRPs6-Qp2n2qNkgIW_SSI&s=1655205189&e=43200&f=107259&srv=127.0.0.1&asn=12302
-//} elseif (strpos($filelink,"videovard.") !== false) {
+} elseif (strpos($filelink,"lulu.") !== false) {
+  //https://lulu.st/e/qhq08ers4m1d
+  $host="https://lulu.st";
+  $ua="Mozilla/5.0 (Windows NT 10.0; rv:81.0) Gecko/20100101 Firefox/81.0";
+   $ch = curl_init();
+   curl_setopt($ch, CURLOPT_URL, $filelink);
+   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+   curl_setopt($ch, CURLOPT_USERAGENT, $ua);
+   curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+   curl_setopt($ch, CURLOPT_ENCODING,"");
+   curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+   curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
+   curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
+   curl_setopt($ch, CURLOPT_TIMEOUT, 25);
+   $h = curl_exec($ch);
+   curl_close($ch);
+  if (preg_match("/sources\:\s*\[\{file\:\"([^\"]+)\"/",$h,$m))
+    $link=$m[1];
+  if ($link && $flash <> "flash") {
+    $link=$link."|Referer=".urlencode($host."/")."&Origin=".urlencode($host);
+    $link .="&User-Agent=".urlencode("Mozilla/5.0 (Windows NT 10.0; rv:81.0) Gecko/20100101 Firefox/81.0");
+  }
+} elseif (preg_match("/filmm\.link/",$filelink)) {    // sitefilm
+  $link=$filelink;
+  $host="https://sitefilme.com";
+  $ua="Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:137.0) Gecko/20100101 Firefox/137.0";
+  if ($link && $flash <> "flash")
+    $link=$link."|Referer=".urlencode($host."/")."&Origin=".urlencode($host)."&User-Agent=".urlencode($ua);;
+  $srt=str_replace(".m3u8",".vtt",$link);
 } elseif (preg_match("/videovard\./",$filelink)) {
 //echo $filelink;
   // https://videovard.sx/e/m97g3y0q9xcs?c1_file=https://seriale-online.net/subtitrari/7482-5-2.vtt&c1_label=Romana
@@ -16798,6 +17023,36 @@ if ($srt <> "") {
     curl_setopt($ch, CURLOPT_TIMEOUT, 25);
     $h = curl_exec($ch);
     curl_close($ch);
+    } elseif (strpos($srt,"filmm.link") !== false) {
+    //https://filmm.link/123959/123959.vtt
+    $head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:137.0) Gecko/20100101 Firefox/137.0',
+    'Accept: */*',
+    'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
+    'Accept-Encoding: deflate',
+    'Referer: https://sitefilme.com/',
+    'Origin: https://sitefilme.com');
+    $ch = curl_init();
+    curl_setopt($ch, CURLOPT_URL, $srt);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+    curl_setopt($ch,CURLOPT_HTTPHEADER,$head);
+    curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+    curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
+    curl_setopt($ch, CURLOPT_TIMEOUT, 25);
+    $h = curl_exec($ch);
+    curl_close($ch);
+  $options = array(
+        'http' => array(
+        'header'  => array($head),
+        'method'  => 'GET'
+    ),
+        "ssl"=>array(
+        "verify_peer"=>false,
+        "verify_peer_name"=>false,
+    )
+  );
+  $context  = stream_context_create($options);
+  //$h = @file_get_contents($srt, false, $context);
    } elseif (strpos($srt,"soap2day") !== false) {
     $cookie=$base_cookie."soap2day.dat";
     if (file_exists($base_pass."firefox.txt"))

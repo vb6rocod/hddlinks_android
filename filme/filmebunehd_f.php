@@ -12,9 +12,7 @@ $tit=$_GET["title"];
 $link=$_GET["link"];
 $width="200px";
 $height="278px";
-
-$last_good="https://sitefilme.com/filme-online-hd";
-$last_good="https://sitefilme.com";
+$last_good="https://filmebunehd1.com";
 $host=parse_url($last_good)['host'];
 /* ==================================================== */
 $has_fav="no";
@@ -25,7 +23,7 @@ $fav_target="";
 $add_target="filme_add.php";
 $add_file="";
 $fs_target="";
-$target="sitefilme_f.php";
+$target="filmebunehd_f.php";
 /* ==================================================== */
 $base=basename($_SERVER['SCRIPT_FILENAME']);
 $p=$_SERVER['QUERY_STRING'];
@@ -169,16 +167,18 @@ if ($page==1) {
    echo '<TD class="nav" colspan="4" align="right"><a href="'.$prev.'">&nbsp;&lt;&lt;&nbsp;</a> | <a href="'.$next.'">&nbsp;&gt;&gt;&nbsp;</a></TD>'."\r\n";
 }
 echo '</TR>'."\r\n";
-//https://sitefilme.com/filme-online-hd/page/2/
-//https://sitefilme.com/filme-online-hd/page/2/
+//https://filmebunehd1.com/category/movies/
+//https://filmebunehd1.com/category/movies/page/2/
+//https://filmebunehd1.com/?s=star
+//https://filmebunehd1.com/page/2/?s=star
 if($tip=="release") {
  if ($page>1)
-  $l =$last_good."/page/".$page."/";
+  $l ="https://".$host."/category/movies/page/".$page."/";
  else
-  $l=$last_good."/";
+  $l="https://".$host."/category/movies/";
 } else {
   $search=str_replace(" ","+",$tit);
-  if ($page == 1)
+  if ($page > 1)
     $l="https://".$host."/?s=".$search;
   else
     $l="https://".$host."/page/".$page."/?s=".$search;
@@ -191,7 +191,6 @@ $ua = $_SERVER['HTTP_USER_AGENT'];
   curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 10.0; rv:55.0) Gecko/20100101 Firefox/55.0');
   curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
   curl_setopt($ch, CURLOPT_ENCODING, "");
-  curl_setopt($ch, CURLOPT_REFERER,"https://sitefilme.com/");
   curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
   curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
   curl_setopt($ch, CURLOPT_TIMEOUT, 15);
@@ -199,24 +198,21 @@ $ua = $_SERVER['HTTP_USER_AGENT'];
   curl_close($ch);
   //echo $html;
 
-  $videos = explode('<div class="post"', $html);
+  $videos = explode('<div id="post-', $html);
   unset($videos[0]);
   $videos = array_values($videos);
   foreach($videos as $video) {
     $t1=explode('href="',$video);
     $t2=explode('"',$t1[1]);
     $link=$t2[0];
-    $t1=explode('src="',$video);
+    $t1=explode('data-src="',$video);
     $t2=explode('"',$t1[1]);
-    $image="r_m.php?file=".trim($t2[0]);
-    $image=str_replace('https://sitefilme.com/timthumb/?src=','',$image);
-    if (preg_match("/title\=\"([^\"]+)/",$video,$m))
-     $title=$m[1];
-    else
-     $title="";
+    $image=trim($t2[0]);
+    $t1=explode('rel="bookmark">',$video);
+    $t2=explode('<',$t1[1]);
+    $title=$t2[0];
     array_push($r ,array($title,$link, $image));
-  }
-
+}
 $c=count($r);
 for ($k=0;$k<$c;$k++) {
   $title=$r[$k][0];
@@ -236,7 +232,6 @@ for ($k=0;$k<$c;$k++) {
    $tit_imdb=$title;
   }
   $imdb="";
-  $tit_imdb=preg_replace("/\s\-\s.*/","",$tit_imdb);
   if (strpos($link,"filme") !== false && $title <> "DMCA") {
   if ($has_fs == "no")
     $link_f='filme_link.php?file='.urlencode($link).'&title='.urlencode(fix_t($title));

@@ -200,6 +200,7 @@ foreach($arr as $key => $value) {
     $image=str_replace("image.lookmovie.ag/p","lookmovie.ag/images/p",$image);
     $image=str_replace("lookmovie.ag","lookmovie.io",$image);
     $image=str_replace("lookmovie.io","lookmovie2.to",$image);
+    $image=str_replace("cloudcdn.monster","lookmovie2.to",$image);
     if (strpos($image,"http") === false) $image="https:".$image;
     if (preg_match("/tmdb\.org/",$image) && $fix=="yes" && $api_key) {
     $x=implode(",",get_headers($image));
