@@ -11,20 +11,19 @@ $tip= $_GET["tip"];
 $tit=$_GET["title"];
 $link=$_GET["link"];
 $width="200px";
-$height="100px";
-$last_good="https://fshd.ro";
-$last_good="https://fshd.uk";
+$height="278px";
+$last_good="https://meoo.ro";
 $host=parse_url($last_good)['host'];
 /* ==================================================== */
 $has_fav="no";
 $has_search="yes";
-$has_add="yes";
-$has_fs="no";
-$fav_target="";
-$add_target="filme_add.php";
+$has_add="no";
+$has_fs="yes";
+$fav_target="meoo_fav.php?host=".$last_good;
+$add_target="meoo_add.php";
 $add_file="";
-$fs_target="";
-$target="fshd_f.php";
+$fs_target="meoo_fs.php";
+$target="meoo.php";
 /* ==================================================== */
 $base=basename($_SERVER['SCRIPT_FILENAME']);
 $p=$_SERVER['QUERY_STRING'];
@@ -168,83 +167,74 @@ if ($page==1) {
    echo '<TD class="nav" colspan="4" align="right"><a href="'.$prev.'">&nbsp;&lt;&lt;&nbsp;</a> | <a href="'.$next.'">&nbsp;&gt;&gt;&nbsp;</a></TD>'."\r\n";
 }
 echo '</TR>'."\r\n";
-if ($tip == "release") {
-   if ($page > 1)
-    $l=$last_good."/filme-online-subtitrate/page/".$page;
-   else
-    $l=$last_good."/filme-online-subtitrate/";
+if($tip=="release") {
+ if ($page>1)
+  $l =$last_good."/category/movies/page/".$page."/";
+ else
+  $l=$last_good."/category/movies/";
 } else {
   $search=str_replace(" ","+",$tit);
-  if ($page == 1)
+  if ($page > 1)
     $l=$last_good."/?s=".$search;
   else
     $l=$last_good."/page/".$page."/?s=".$search;
 }
-if ($tip=="release") {
- if ($page==1)
-  $l=$last_good."/category/film/";
- else
-  $l=$last_good."/category/film/page".$page."/";
-}
-$r=array();
-$ua = $_SERVER['HTTP_USER_AGENT'];
+$f=array();
+$head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:139.0) Gecko/20100101 Firefox/139.0',
+'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
+'Accept-Encoding: deflate',
+'Connection: keep-alive',
+'Referer: https://meoo.ro/?player_movie=10248&auto=true');
+
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $l);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-  curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:120.0) Gecko/20100101 Firefox/120.0');
   curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
-  curl_setopt($ch, CURLOPT_ENCODING, "");
+  curl_setopt($ch, CURLOPT_HTTPHEADER, $head);
   curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
   curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
   curl_setopt($ch, CURLOPT_TIMEOUT, 15);
-  $html = curl_exec($ch);
+  $h = curl_exec($ch);
   curl_close($ch);
-  //echo $html;
-
-  //$videos = explode('<article', $html);
-  $videos=explode('<div id="post-',$html);
+  
+  $videos = explode('<div id="post-', $h);
   unset($videos[0]);
   $videos = array_values($videos);
   foreach($videos as $video) {
     $t1=explode('href="',$video);
     $t2=explode('"',$t1[1]);
-    $link=$t2[0];
-    $t1=explode('title="',$video);
-    $t2=explode('"',$t1[1]);
+    $link1=$t2[0];
+    $t1=explode('"',$video);
+    $link=$t1[0];
+    $t1=explode('class="movie-title">',$video);
+    $t2=explode('<',$t1[1]);
     $title=trim($t2[0]);
-    $t1=explode('src="',$video);
+    $t1=explode('data-src="',$video);
     $t2=explode('"',$t1[1]);
     $image=$t2[0];
-    if (strpos($link,"/serial") === false) array_push($r ,array($title,$link, $image));
+    $t1=explode('class="movie-date">',$video);
+    $t2=explode('<',$t1[1]);
+    $year=$t2[0];
+    $imdb="";
+    $f[] = array($title,$link,$image,$year,$imdb);
   }
 
-  //print_r ($r);
-$c=count($r);
-for ($k=0;$k<$c;$k++) {
-  $title=$r[$k][0];
-  $title=str_replace("&#8211;","-",$title);
+/////////////////////
+foreach($f as $key => $value) {
+  $title=$value[0];
   $title=prep_tit($title);
-  $link=$r[$k][1];
-  $image=$r[$k][2];
-  $rest = substr($title, -2);
-  //echo urlencode($rest);
-  if ($rest == " -") $title = substr($title, 0, -2);
-  $rest = substr($title, -6);
-  if (preg_match("/\((\d{4})\)/",$rest,$m)) {
-   $year=$m[1];
-   $tit_imdb=trim(str_replace($m[0],"",$title));
-  } else {
-   $year="";
-   $tit_imdb=$title;
-  }
-  $imdb="";
-  if ($has_fs == "no")
-    $link_f='filme_link.php?file='.urlencode($link).'&title='.urlencode(fix_t($title));
-  else
-    $link_f=$fs_target.'?tip=movie&link='.urlencode($link).'&title='.urlencode(fix_t($tit)).'&image='.$image."&sez=&ep=&ep_tit=&year=".$year;
+  $link=$value[1];
+  $image=$value[2];
+  $year=$value[3];
+  $imdb=$value[4];
+
+  $tit_imdb=$title;
+  $link_f=$fs_target.'?tip=movie&link='.urlencode($link).'&title='.urlencode(fix_t($title)).'&image='.$image."&sez=&ep=&ep_tit=&year=".$year."&imdb=".$imdb;
+  if ($title) {
   if ($n==0) echo '<TR>'."\r\n";
   $val_imdb="tip=movie&title=".urlencode(fix_t($tit_imdb))."&year=".$year."&imdb=".$imdb;
-  $fav_link="file=".$add_file."&mod=add&title=".urlencode(fix_t($title))."&link=".urlencode($link)."&image=".urlencode($image)."&year=".$year;
+  $fav_link="mod=add&title=".urlencode(fix_t($title))."&link=".urlencode($link)."&image=".urlencode($image)."&year=".$year;
   if ($tast == "NU") {
     echo '<td class="mp" width="25%"><a href="'.$link_f.'" id="myLink'.$w.'" target="_blank" onmousedown="isKeyPressed(event)">
     <img id="myLink'.$w.'" src="'.$image.'" width="'.$width.'" height="'.$height.'"><BR>'.$title.'</a>
@@ -266,7 +256,10 @@ for ($k=0;$k<$c;$k++) {
   echo '</tr>'."\r\n";
   $n=0;
   }
-}
+  }
+ }
+
+/* bottom */
   if ($n < 4 && $n > 0) {
     for ($k=0;$k<4-$n;$k++) {
       echo '<TD></TD>'."\r\n";
@@ -281,6 +274,6 @@ else
   echo '<a href="'.$next.'">&nbsp;&gt;&gt;&nbsp;</a></TD>'."\r\n";
 echo '</TR>'."\r\n";
 echo "</table>"."\r\n";
-?>
-<br></body>
+echo "</table>";
+?></body>
 </html>

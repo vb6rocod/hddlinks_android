@@ -142,7 +142,7 @@ if (preg_match("/jizzbunker\.com|familyporn1\.tv|zbporn\.com|trannytube11\.net|2
 
  //echo $h;
 ///////////////////////
-} elseif (preg_match("/proporn\.com/",$l)) {
+} elseif (preg_match("/proporn\.com|drtuber\.com/",$l)) {
   $head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:127.0) Gecko/20100101 Firefox/127.0',
   'Accept: application/json, text/javascript, */*; q=0.01',
   'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
@@ -383,6 +383,7 @@ $out=$t2[0];
 //echo $link;
 //https://www.proporn.com//player_config_json/?vid=1944980
 //https://www.proporn.com/player_config_json/?vid=1944980&aid=0&domain_id=0&embed=0&ref=null&check_speed=0
+//https://www.drtuber.com/player_config_json/?vid=9758528
   $r=json_decode($h,1);
   //print_r ($r);
   if (isset($r["files"])) {
@@ -903,7 +904,7 @@ $head=array('Accept: */*',
  }
 } else if (preg_match("/redtube\.com/",$host)) {
 //echo $h;
-  if (preg_match_all("/format\"\:\"hls\"\,\"videoUrl\"\:\"(.*?)\"/",$h,$m)) {
+  if (preg_match_all("/format\"\:\"hls\"\,\"height\":\d+,\"width\":\d+,\"videoUrl\"\:\"(.*?)\"/",$h,$m)) {
   //print_r ($m);
   $out=$m[1][0];
   $out=str_replace("\\","",$out);

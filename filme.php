@@ -58,9 +58,10 @@ else
 </TR>
 <TR>
 <TD width="25%"><a href="filme/veziseriale_f.php?page=1&tip=release&title=veziseriale&link=" target="_blank">veziseriale</a></TD>
-<TD width="25%"><a href="filme/fshd_f.php?page=1&tip=release&title=fshd&link=" target="_blank">fshd.ro</a></TD>
 <TD width="25%"><a href="filme/filmebunehd_f.php?page=1&tip=release&title=filmebunehd&link=" target="_blank">filmebunehd</a></TD>
-<TD width="25%"><a href="filme/lookclub_f.php?page=1&tip=release&title=lookclub&link=" target="_blank">lookclub</a></TD>
+<TD width="25%"><a href="filme/meoo.php?page=1&tip=release&title=meoo&link=" target="_blank">meoo</a></TD>
+<TD width="25%"></TD>
+
 </TR>
 
 
@@ -71,7 +72,7 @@ else
 <TD width="25%"><a href="filme/tvseries_f.php?page=1&tip=release&title=tvseries&link=" target="_blank">tvseries</a></TD>
 <TD width="25%"><a href="filme/moviewetrust_f.php?page=1&tip=release&title=moviewetrust&link=popular" target="_blank">moviewetrust</a></TD>
 <TD width="25%"><a href="filme/cineplex_f_main.php" target="_blank">cineplex (cont)</a></TD>
-<TD width="25%"></TD>
+<TD width="25%"><a href="filme/lookclub_f.php?page=1&tip=release&title=lookclub&link=" target="_blank">lookclub</a></TD>
 </TR>
 
 <TR>

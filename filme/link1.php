@@ -610,7 +610,8 @@ if (preg_match("/vidsrc\.me/",$filelink)) {
    curl_setopt($ch, CURLOPT_TIMEOUT, 15);
    curl_setopt($ch, CURLOPT_URL, $l1);
    $h = curl_exec($ch);
-   
+   //echo $h;
+   //src: '
     $t1=explode("src: '",$h);
     $t2=explode("'",$t1[1]);
     $l=$host.$t2[0];
@@ -618,6 +619,7 @@ if (preg_match("/vidsrc\.me/",$filelink)) {
     curl_setopt($ch, CURLOPT_URL, $l);
     $h = curl_exec($ch);
     //echo $h;
+    /*
     $t1=explode('style="display:none;">',$h);
     $t2=explode("<",$t1[1]);
     $a=$t2[0];
@@ -639,6 +641,9 @@ if (preg_match("/vidsrc\.me/",$filelink)) {
     }
     //echo $out;
     $link=$out;
+    */
+    if (preg_match("/file\:\s*\'([^\']+)\'/",$h,$m))
+     $link=$m[1];
     if (!preg_match("/master\./",$link)) $link="";
   if ($link && $flash <> "flash") {
     curl_setopt($ch, CURLOPT_URL, $link);
@@ -6114,6 +6119,98 @@ if (preg_match("/imwatchingmovies\.com|streambucket\.net/",$filelink)) {
   }
   //echo $link."\n".$srt;
 }
+if (preg_match("/streamingnow\./",$filelink)) {
+$head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:139.0) Gecko/20100101 Firefox/139.0',
+'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
+'Accept-Encoding: deflate',
+'Connection: keep-alive',
+'Referer: https://streamingnow.mov/');
+  $ch = curl_init();
+  curl_setopt($ch, CURLOPT_URL, $filelink);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+  curl_setopt($ch, CURLOPT_HTTPHEADER, $head);
+  curl_setopt($ch, CURLOPT_HEADER,1);
+  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+  $h = curl_exec($ch);
+  curl_close($ch);
+  //echo $h;
+  function hunter($h, $u, $n, $t, $e, $r) {
+    $r = "";
+    for($i = 0; $i < strlen($h);$i++) {
+        $s = "";
+        while($h[$i] !== $n[$e]) {
+            $s .= $h[$i];
+            $i++;
+        }
+        for($j = 0; $j < strlen($n);$j++) {
+          $s=str_replace($n[$j],$j,$s);
+        }
+        $r .= chr(abc($s, $e, 10) - $t);
+    }
+    return $r;
+  }
+  function abc($d, $e, $f) {
+    $g = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ+/';
+    $h = substr($g,0, $e);
+    $i = substr($g,0, $f);
+    $x=strrev($d);
+    $a=0;
+    $j=0;
+    for ($m=0;$m<strlen($x);$m++) {
+      $j +=strpos($h,$x[$m])*pow($e,$m);
+    }
+    $k = '';
+    while($j > 0) {
+        $k = $i[$j % $f].$k;
+        $j = ($j - ($j % $f)) / $f;
+    }
+    return $k;
+  }
+  preg_match_all("/decodeURIComponent\(escape\(r\)\)\}\((.*?)\)\)/",$h,$m);
+  //print_r ($m);
+  $out="";
+  for ($k=0;$k<count($m[1]);$k++) {
+   $c=str_replace('"',"",$m[1][$k]);
+   $t1=explode(",",$c);
+   $out .=hunter($t1[0],$t1[1],$t1[2],$t1[3],$t1[4],$t1[5]);
+  }
+  //echo $out;
+  if (preg_match("/file\:\"([^\"]+)\"/",$out,$m))
+   $link=$m[1];
+  $sub=explode(",",$out);
+  $s=preg_grep("/\[(english|romanian).*\](http[^\[]+\.vtt)/i",$sub);
+  $srt="";
+  //echo $out;
+  foreach($s as $v) {
+   if (preg_match("/\[romanian.*\](http.+)\"/i",$v,$ss)) {
+    $srt=$ss[1];
+    break;
+   } elseif (preg_match("/\[english.*\](http.+)\"/i",$v,$ss)) $srt=$ss[1];
+  }
+  $ua="Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:139.0) Gecko/20100101 Firefox/139.0";
+  if (preg_match("/\.m3u8/",$link)) {
+  $ch = curl_init();
+  curl_setopt($ch, CURLOPT_URL, $link);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+  curl_setopt($ch, CURLOPT_HTTPHEADER, $head);
+  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+  $h = curl_exec($ch);
+  curl_close($ch);
+  $link=get_max_res($h,$link);
+  //file_put_contents("1.txt",$h);
+  }
+  $host="https://streamingnow.mov";
+  if ($link && $flash <> "flash")
+   $link .="|Referer=".urlencode($host."/")."&Origin=".urlencode($host)."&User-Agent=".urlencode($ua);
+}
+
 if (preg_match("/streamembed\./",$filelink)) {
   //echo $filelink;
   //die();
@@ -6800,8 +6897,38 @@ $head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:104.0) Gecko/20100101 
   $link=get_max_res($h,$link);
   }
 
-   
-} elseif (preg_match("/luluvdo\.com/",$filelink)) {
+} elseif (preg_match("/movearnpre/",$filelink)) {
+  //https://movearnpre.com/embed/0no4e3wh0z1a
+  $host="https://".parse_url($filelink)['host'];
+
+  $ua='Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:108.0) Gecko/20100101 Firefox/108.0';
+  require_once("JavaScriptUnpacker.php");
+  $ch = curl_init();
+  curl_setopt($ch, CURLOPT_URL, $filelink);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+  curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:108.0) Gecko/20100101 Firefox/108.0');
+  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+  //curl_setopt($ch, CURLOPT_HTTPHEADER,$head);
+  curl_setopt($ch, CURLOPT_REFERER, "https://movearnpre.com");
+  curl_setopt($ch, CURLOPT_ENCODING,"");
+  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+  $h = curl_exec($ch);
+  curl_close($ch);
+  //echo $h;
+  $jsu = new JavaScriptUnpacker();
+  $out = $jsu->Unpack($h);
+  //$out .=$h;
+  //echo $out;
+  preg_match("/hls\d\"\:\"(http[^\"]+)\"/",$out,$m);
+  $link=$m[1];
+  $ua="Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:139.0) Gecko/20100101 Firefox/139.0";
+  //$host="https://streamingnow.mov";
+  if ($link && $flash <> "flash")
+   $link .="|Referer=".urlencode($host."/")."&Origin=".urlencode($host)."&User-Agent=".urlencode($ua);
+} elseif (preg_match("/luluvdo/",$filelink)) {
+//luluvdoo.com
   $host="https://".parse_url($filelink)['host'];
 
   $ua='Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:108.0) Gecko/20100101 Firefox/108.0';
@@ -7070,7 +7197,12 @@ $head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:104.0) Gecko/20100101 
    $link=$m[1];
   } else
    $link="";
-  if ($link) {
+  if(!$link) {
+    preg_match("/hls\d+\"\:\"(http[^\"]+)/",$out,$m);
+    $link=$m[1];
+  }
+
+  if ($link && preg_match("/\.m3u8/",$out)) {
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $link);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
@@ -7085,6 +7217,7 @@ $head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:104.0) Gecko/20100101 
   //echo $h;
   $link=get_max_res($h,$link);
   }
+
   if ($link && $flash <> "flash")  {
    $link .="|Referer=".urlencode($host)."&Origin=".urlencode($host);
   }
@@ -8101,6 +8234,7 @@ if (count($pl) > 1) {
   curl_setopt($ch, CURLOPT_URL, $filelink);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
   curl_setopt($ch, CURLOPT_USERAGENT, $ua);
+  curl_setopt($ch, CURLOPT_REFERER,"https://lookmovie.onl");
   curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
   curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
   curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
@@ -8125,6 +8259,8 @@ if (count($pl) > 1) {
   $h = curl_exec($ch);
   curl_close($ch);
   //echo $h;
+  $t1=explode("mainSource",$h);
+  $h=$t1[1];
   $ref="https://moviesroot.club";
   preg_match("/src\:\s*[\'\"]([^\"\']+)/",$h,$m);
   $link=$m[1];
@@ -8890,18 +9026,30 @@ $head=array('Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image
   curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
   curl_setopt($ch, CURLOPT_TIMEOUT, 25);
   $h = curl_exec($ch);
+  $host1=parse_url($filelink)['host'];
   if (preg_match("/window\.location\.href\s*\=\s*\'([^\']+)/",$h,$m)) {
   curl_setopt($ch, CURLOPT_URL, $m[1]);
   $h = curl_exec($ch);
+  $host1=parse_url($m[1])['host'];
   }
   curl_close($ch);
-  //echo $h;
-/////////////////////////////////////////////////
-  preg_match_all('/\w+="([^"]+)";function/',$h,$m);
+  preg_match_all('/json\"\>\["([^\"]+)\"]\<\/script>\s*\<script\s*src\=\"([^\"]+)/',$h,$m);
   $ct=$m[1][0];
-  preg_match_all("/,_\w+\s*=\s*\['(.+?)'\],/",$h,$m);
-  $lut=$m[1][0];
-  //echo $ct."\n"."\n";
+  $l1="https://".$host1.$m[2][0];
+  $ch = curl_init();
+  curl_setopt($ch, CURLOPT_URL, $l1);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
+  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 25);
+  $h = curl_exec($ch);
+  preg_match_all("/(\[(?:'\W{2}'[,\]]){1,9})/",$h2,$m);
+
+  $lut=$m[0][0];
+/////////////////////////////////////////////////
+
 
   $txt="";
   for ($i=0;$i<strlen($ct);$i++) {
@@ -13134,6 +13282,8 @@ if (count($pl) > 1) {
 } elseif (preg_match($mixdrop,$filelink)) {
   //https://mixdrop.co/e/eaeuizxtz0
   //https://mixdrop.co/f/mxgr3tvc
+  $ua="Mozilla/5.0 (Windows NT 10.0; rv:65.0) Gecko/20100101 Firefox/65.0";
+  $host="https://".parse_url($filelink)['host'];
   $filelink=str_replace("/f/","/e/",$filelink);
   if (preg_match('/([http|https]?[\.\d\w\-\.\/\\\:\?\&\#\%\_\,]*(\.(srt|vtt)))/', $filelink, $s))
   $srt=$s[1];
@@ -13181,6 +13331,10 @@ if (count($pl) > 1) {
   } else {
     $link="";
   }
+   if ($flask <> "flash") {
+    $link=$link."|Referer=".urlencode($host."/")."&Origin=".urlencode($host);
+    $link=$link."&User-Agent=".urlencode($ua);
+   }
   //echo $srt;
 } elseif (preg_match("/vidmoly\.to/",$filelink)) {
   $ua="Mozilla/5.0 (Windows NT 10.0; rv:65.0) Gecko/20100101 Firefox/65.0";

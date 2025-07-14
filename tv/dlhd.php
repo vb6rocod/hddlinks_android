@@ -275,6 +275,7 @@ foreach($rr as $key=>$value) {
  preg_match("/(\d+):(\d+)/",$ora,$m);
  $ora=sprintf("%02d:%02d",(($m[1]+3)%24),$m[2]);
  $event=trim($value[$k]['event']);
+ if (count($value[$k]['channels'])>0) {
  echo  '<TR>'."\n";
  echo '<TD>'.$ora.'</TD>';
  echo '<TD>'.$event.'</TD>';
@@ -303,6 +304,7 @@ foreach($rr as $key=>$value) {
 
  //}
  echo '</TR>';
+ }
  }
  //}
 }

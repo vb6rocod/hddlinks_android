@@ -59,7 +59,7 @@ echo '
 <TR>
 <TD width="25%"><a href="adult/xnxx_main.php" target="_blank">xnxx</a></TD>
 <TD width="25%"><a href="adult/xvideos_main.php" target="_blank">xvideos</a></TD>
-<TD width="25%"><a href="adult/4tube_main.php" target="_blank">4tube</a></TD>
+<TD width="25%"><a href="adult/proporn_main.php" target="_blank">proporn</a></TD>
 <TD width="25%"><a href="adult/milfzr.php?tip=release&page=1&title=milfzr&link=" target="_blank">milfzr</a></TD>
 </TR>
 
@@ -73,8 +73,8 @@ echo '
 
 <TR>
 <TD width="25%"><a href="adult/streamporn_main.php" target="_blank">streamporn</a></TD>
-<TD width="25%"><a href="adult/tvporn_main.php" target="_blank">tvporn</a></TD>
-<TD width="25%"><a href="adult/fapbox_main.php" target="_blank">fapbox</a></TD>
+<TD width="25%"><a href="adult/dansmovies_main.php" target="_blank">dansmovies</a></TD>
+<TD width="25%"></TD>
 <TD width="25%"><a href="adult/pornhub_main.php" target="_blank">porhub</a></TD>
 </TR>
 
@@ -88,7 +88,7 @@ echo '
 <TR>
 <TD width="25%"></TD>
 <TD width="25%"><a href="adult/hellmoms_main.php" target="_blank">hellmoms</a></TD>
-<TD width="25%"><a href="adult/bitporno.php?tip=release&page=1&title=bitporno&link=" target="_blank">bitporno</a></TD>
+<TD width="25%"></TD>
 <TD width="25%"><a href="adult/tubepornclassic.php?tip=release&page=1&title=tubepornclassic&link=" target="_blank">tubepornclassic</a></TD>
 </TR>
 
@@ -113,19 +113,14 @@ echo '
 <TD width="25%"><a href="adult/handjobhub_main.php" target="_blank">handjobhub</a></TD>
 </TR>
 
-<TR>
-<TD width="25%"><a href="adult/pefilme_main.php" target="_blank">pefilme</a></TD>
-<TD width="25%"><a href="adult/dansmovies_main.php" target="_blank">dansmovies</a></TD>
-<TD width="25%"><a href="adult/pornmaki_main.php" target="_blank">pornmaki</a></TD>
-<TD width="25%"><a href="adult/proporn_main.php" target="_blank">proporn</a></TD>
-</TR>
+
 
 
 
 <TR>
 <TD width="25%"><a href="adult/trannytube_main.php" target="_blank">trannytube</a></TD>
 <TD width="25%"><a href="adult/trannytube_tv_main.php" target="_blank">trannytube.tv</a></TD>
-<TD width="25%"><a href="adult/astube_main.php" target="_blank">astube</a></TD>
+<TD width="25%"></TD>
 <TD width="25%"></TD>
 </TR>
 

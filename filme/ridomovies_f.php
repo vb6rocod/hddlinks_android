@@ -177,11 +177,13 @@ if ($tip=="search") {
 }
 //https://ridomovies.tv/core/api/search?q=star
 //https://ridomovies.pw/page/2/?s=star
+//https://ridomovies.tv/core/api/movies/latest?page%5Bnumber%5D=2
 $ua="Mozilla/5.0 (Windows NT 10.0; rv:75.0) Gecko/20100101 Firefox/75.0";
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $l);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
   curl_setopt($ch, CURLOPT_USERAGENT, $ua);
+  curl_setopt($ch, CURLOPT_REFERER,"https://ridomovies.tv/home");
   curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
   curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
   curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);

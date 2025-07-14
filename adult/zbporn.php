@@ -228,7 +228,7 @@ $host=parse_url($l)['host'];
   curl_close($ch);
 //echo $html;
 $r=array();
-$videos = explode('<div class="th"',$html);
+$videos = explode('div class="th th-i',$html);
 unset($videos[0]);
 $videos = array_values($videos);
 foreach($videos as $video) {

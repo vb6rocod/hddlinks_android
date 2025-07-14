@@ -251,6 +251,11 @@ foreach($videos as $video) {
   $t2 = explode ('>',$t1[1]);
   $t3 = explode("<",$t2[1]);
   $durata=trim($t3[0]);
+  if (!$durata) {
+  $t1=explode('title="Video Duration">',$video);
+  $t2=explode('<',$t1[1]);
+  $durata=$t2[0];
+  }
   $durata = preg_replace("/\n|\r/"," ",strip_tags($durata));
   if ($durata) $title=$title." (".$durata.')';
   if ($image) array_push($r ,array($title,$link, $image));

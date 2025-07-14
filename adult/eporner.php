@@ -228,7 +228,7 @@ $host=parse_url($l)['host'];
   curl_close($ch);
 //echo $html;
 $r=array();
-$videos = explode('class="mvhdico"',$html);
+$videos = explode('data-id="',$html);
 unset($videos[0]);
 $videos = array_values($videos);
 foreach($videos as $video) {

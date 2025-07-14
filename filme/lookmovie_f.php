@@ -287,6 +287,7 @@ $videos=explode('div class="movie-list-detailed mobile',$html);
 */
 //print_r ($videos);
 // div class="movie-card"
+//echo $html;
 $videos = explode('<div class="movie-item', $html);
 unset($videos[0]);
 $videos = array_values($videos);

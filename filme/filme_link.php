@@ -1585,7 +1585,7 @@ $s=$s."|sbembed\.com|sbembed1\.com|sbplay\.|sbvideo\.net|streamsb\.net|sbplay\.o
 $s=$s."|\w+ssb\.|lvturbo\.|sb\w+\.|sbbrisk\.|sbanh\.|sblanh\.|sbchill\.|sbfast\.com|sblongvu\.com|sbfull\.|sbthe\.|sbspeed\.|tubeload\.|embedo\.|filemoon\.|utbrgebzvhfa\.";
 $s=$s."|streamhide\.|moonmov\.pro|vgfplay\.|fslinks\.|embedv\.|furher\.|truepoweroflove\.|streamdav\.";
 $s=$s."|d0o0d\.|mdfx\w+|do0od|lulu\.st|filmm\.link\/\d+|vinovo\.to";
-$s=$s."|vembed\.net|vgembed\.|luluvdo\.com|guard|voe\.|mdbekjwqa\.|mdzsmut|vidmoly\.to|vidhidevip\.|vidhidepre\./i";
+$s=$s."|vembed\.net|vgembed\.|luluvdo+\.com|guard|voe\.|mdbekjwqa\.|mdzsmut|vidmoly\.to|vidhidevip\.|vidhidepre\./i";
 /////////////////////////////////////////////
 //$x=preg_grep($s,$links);
 //print_r ($x);

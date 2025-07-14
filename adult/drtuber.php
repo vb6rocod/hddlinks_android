@@ -215,6 +215,7 @@ if($tip=="release") {
   else
     $l="https://www.drtuber.com/search/videos/".$search."/".$page;
 }
+//   https://www.drtuber.com/video/9757811/granny-nurses-him-back-to-healthy-gilfaf
 $host=parse_url($l)['host'];
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $l);
@@ -226,15 +227,16 @@ $host=parse_url($l)['host'];
   curl_setopt($ch, CURLOPT_TIMEOUT, 15);
   $html = curl_exec($ch);
   curl_close($ch);
-  
+//echo $html;
 $r=array();
 $videos = explode('id="rotate_',$html);
 unset($videos[0]);
 $videos = array_values($videos);
 foreach($videos as $video) {
   $t1=explode('_',$video);
-  $link = $t1[0];
-  $link="https://www.drtuber.com/player_config_json/?vid=".$link;
+  $link = trim($t1[0]);
+  $link="https://www.drtuber.com/player_config_json/?vid=".$link."&aid=0&domain_id=0&embed=0&ref=null&check_speed=0";
+  //https://www.drtuber.com/player_config_json/?vid=9757811&aid=0&domain_id=0&embed=0&ref=null&check_speed=0
   $t1=explode('alt="',$video);
   $t3=explode('"',$t1[1]);
   $title=$t3[0];

@@ -105,7 +105,7 @@ else
   $html = curl_exec($ch);
   curl_close($ch);
   //echo $html;
-$videos = explode('<div class="media-block ">', $html);
+$videos = explode('<div class="media-block ', $html);
 
 unset($videos[0]);
 $videos = array_values($videos);

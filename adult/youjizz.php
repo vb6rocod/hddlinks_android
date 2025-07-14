@@ -247,9 +247,9 @@ foreach($videos as $video) {
   $t2 = explode('"', $t1[1]);
   $image = $t2[0];
   if (strpos($image,"http") === false) $image="https:".$image;
-  $t1 = explode('class="time">',$video);
-  $t2 = explode ('<',$t1[1]);
-  $durata=trim($t2[0]);
+  $t1 = explode('<i class="fa fa-clock-o">',$video);
+  $t2 = explode ('</span>',$t1[1]);
+  $durata=strip_tags(trim($t2[0]));
   $durata = preg_replace("/\n|\r/"," ",strip_tags($durata));
   if ($durata) $title=$title." (".$durata.')';
   if ($title) array_push($r ,array($title,$link, $image));
