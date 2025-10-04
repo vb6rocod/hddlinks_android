@@ -204,22 +204,16 @@ else
 echo '</TR>'."\r\n";
 
 if($tip=="release") {
-if ($page > 1) {
- if (strpos($search,"porn-videos") === false)
-  $l="https://www.pornburst.xxx/ajax/homepage/?page=".$page;
- else {
-  $t1=explode("/categorie",$link);
-  $l="https://www.pornburst.xxx/ajax/show_category/".$t1[1]."?page=".$page;
- }
-} else {
- $l=$link;
-}
+if ($page > 1)
+  $l=$link."/".$page;
+ else
+  $l=$link;
 } else {
   $search=str_replace(" ","%20",$tit);
   if ($page > 1)
-    $l="https://www.pornburst.xxx/ajax/new_search/?page=".$page1."&q=".$search;
+    $l="https://www.superporn.com/search/".$page."?q=".$search;
   else
-    $l = "https://www.pornburst.xxx/search/?q=".$search;
+    $l = "https://www.superporn.com/search?q=".$search;
 }
 $host=parse_url($l)['host'];
   $ch = curl_init();
@@ -235,19 +229,19 @@ $host=parse_url($l)['host'];
   
 
 $r=array();
-$videos=explode('div class="box-link-productora"',$html);
+$videos=explode('<div class="thumb-video  "',$html);
 unset($videos[0]);
 $videos = array_values($videos);
 foreach($videos as $video) {
   $t1=explode('href="',$video);
   $t2 = explode('"', $t1[1]);
-  $link = "https://www.pornburst.xxx".$t2[0];
+  $link = $t2[0];
   $t1 = explode('data-src="', $video);
   $t2 = explode('"', $t1[1]);
   $image = $t2[0];
-  $title=str_between($video,'data-stats-video-name="','"');
+  $title=str_between($video,'alt="','"');
   $title = prep_tit($title);
-  $durata = trim(str_between($video,'title="Length"></span>',"<"));
+  $durata = trim(str_between($video,'class="duracion">',"<"));
   $durata = preg_replace("/\n|\r/"," ",strip_tags($durata));
   if ($durata) $title=$title." (".$durata.')';
   if ($title) array_push($r ,array($title,$link, $image));

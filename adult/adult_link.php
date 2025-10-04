@@ -142,7 +142,7 @@ if (preg_match("/jizzbunker\.com|familyporn1\.tv|zbporn\.com|trannytube11\.net|2
 
  //echo $h;
 ///////////////////////
-} elseif (preg_match("/proporn\.com|drtuber\.com/",$l)) {
+} elseif (preg_match("/proporn\.com|drtuber\.com|nuvid\.com/",$l)) {
   $head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:127.0) Gecko/20100101 Firefox/127.0',
   'Accept: application/json, text/javascript, */*; q=0.01',
   'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
@@ -509,8 +509,14 @@ $out=$t2[0];
    //echo "====".$lic."====";
    $out=kt($lic,$movie);
    $out=$movie;
+   ////////////////////
+   $ua="Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:141.0) Gecko/20100101 Firefox/141.0";
+
+
+   //$out="https://www.porntrex.com/get_file/28/bb03922b8ae6ca28c7b8d9f4a612684726c786270b/2840000/2840014/2840014_1080p.mp4";
+   $ua="Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:141.0) Gecko/20100101 Firefox/141.0";
      if ($out && $flash != "flash")
-        $out=$out."|Referer=".urlencode('https://porntrex.com/');
+        $out=$out."|Referer=".urlencode('https://porntrex.com/')."&Origin=".urlencode('https://porntrex.com')."&User-Agent=".urlencode($ua);
  }
 } else if (preg_match("/hellmoms\.com/",$host)) {
   if (preg_match_all("/src\=\"([http|https][\.\d\w\-\.\/\\\:\?\&\#\%\_\,\=]*)\"\s+title\=\"(\d+)p\"/",$h,$m)) {
@@ -608,6 +614,7 @@ $out=$t2[0];
   $out=str_replace("\\","",$out);
   if (strpos($out,"http") === false && $out) $out="https:".$out;
 } else if (preg_match("/nuvid\.com/",$host)) {
+//echo $h;
   $r=json_decode($h,1);
   if (isset($r["files"])) {
   if (isset($r["files"]["hq"]))
@@ -637,7 +644,7 @@ $out=$t2[0];
   $out=$t2[0];
   $out=str_replace("\\","",$out);
   if (strpos($out,"http") === false && $out) $out="https:".$out;
-} else if (preg_match("/pornburst\.xxx|pornjam\.com/",$host)) {
+} else if (preg_match("/pornburst\.xxx|pornjam\.com|superporn\.com/",$host)) {
   $t1=explode('source src="',$h);
   $t2=explode('"',$t1[1]);
   $out=$t2[0];
@@ -1079,6 +1086,8 @@ $head=array('Accept: */*',
   }
 } else if (preg_match("/xhamster\.com/",$host)) {
   //$h=str_replace("\\","",$h);
+  //echo $h;
+  /*
   $t1=explode("window.initials=",$h);
   $t2=explode(";</script>",$t1[1]);
   $x=json_decode($t2[0],1);
@@ -1092,9 +1101,14 @@ $head=array('Accept: */*',
   }
     $max_key = max(array_keys($s));
     $out = $s[$max_key];
+  */
   //if (preg_match_all("/(144|240|360|480|720|1080)p\"\:\"(.*?)\"/",$h,$m)) {
   //  $out=$m[2][0];
   //}
+  $t1=explode('<video',$h);
+  $t2=explode('src="',$t1[1]);
+  $t3=explode('"',$t2[1]);
+  $out=$t3[0];
   if ($out && $flash <> "flash")
     $out=$out."|Referer=".urlencode("https://xhamster.com");
 } else if (preg_match("/xozilla\.com/",$host)) {

@@ -1007,7 +1007,7 @@ $cookie=$base_cookie."hdpopcorns.dat";
    $html .=' "'.$l1.'" ';
    //echo $h;
   }
-} elseif (preg_match("/veziseriale\.org/",$filelink)) {
+} elseif (preg_match("/veziseriale\./",$filelink)) {
 //echo $filelink;
   $ch = curl_init($filelink);
   curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows; U; Windows NT 6.1; en-US; rv:1.9.1.2) Gecko/20090729 Firefox/3.5.2 GTB5');
@@ -1062,7 +1062,7 @@ $cookie=$base_cookie."hdpopcorns.dat";
   }
   } elseif (preg_match("/data-id\=[\"\'](\d+)[\"\']/",$html,$m)) {
    $id=$m[1];
-   $l="https://manager.veziseriale.org/get_links.php";
+   $l="https://manager.veziseriale.to/get_links.php";
    $post="id=".$id;
    //echo $post;
    $ch = curl_init($l);
@@ -1081,8 +1081,9 @@ $cookie=$base_cookie."hdpopcorns.dat";
    curl_close ($ch);
    $x=json_decode($h,1);
    //print_r ($x);
+   $srt="?c1_file=https://manager.veziseriale.to/subtitles/".$x['subs1'];
    for ($k=0;$k<count($x['links']);$k++) {
-   $html .=' <iframe src="'.$x['links'][$k]['url'].'"> ';
+   $html .=' <iframe src="'.$x['links'][$k]['url'].$srt.'"> ';
    //echo $h;
    }
    $srt=$x['subs1']; //?????
@@ -1584,8 +1585,8 @@ $s=$s."|youdbox\.com|filmele-online\.com|playtube\.|ninjastream\.to|userload\.co
 $s=$s."|sbembed\.com|sbembed1\.com|sbplay\.|sbvideo\.net|streamsb\.net|sbplay\.one|cloudemb\.com|playersb\.com|tubesb\.com|sbplay\d\.|embedsb\.com";
 $s=$s."|\w+ssb\.|lvturbo\.|sb\w+\.|sbbrisk\.|sbanh\.|sblanh\.|sbchill\.|sbfast\.com|sblongvu\.com|sbfull\.|sbthe\.|sbspeed\.|tubeload\.|embedo\.|filemoon\.|utbrgebzvhfa\.";
 $s=$s."|streamhide\.|moonmov\.pro|vgfplay\.|fslinks\.|embedv\.|furher\.|truepoweroflove\.|streamdav\.";
-$s=$s."|d0o0d\.|mdfx\w+|do0od|lulu\.st|filmm\.link\/\d+|vinovo\.to";
-$s=$s."|vembed\.net|vgembed\.|luluvdo+\.com|guard|voe\.|mdbekjwqa\.|mdzsmut|vidmoly\.to|vidhidevip\.|vidhidepre\./i";
+$s=$s."|d0o0d\.|mdfx\w+|do0od|lulu\.st|filmm\.link\/\d+|vinovo\.to|stf\d+\.vip\/\d+";
+$s=$s."|vembed\.net|vgembed\.|luluvdo+\.com|luluvid\.|guard|voe\.|mdbekjwqa\.|mdzsmut|vidmoly\.to|vidhidevip\.|vidhidepre\./i";
 /////////////////////////////////////////////
 //$x=preg_grep($s,$links);
 //print_r ($x);
@@ -1891,7 +1892,7 @@ for ($i=0;$i<count($links);$i++) {
    if (!$path && !isset(parse_url($cur_link)["query"])) $cur_link="";
    if ($path=="/" && !isset(parse_url($cur_link)["query"])) $cur_link="";
    //echo "c=".$cur_link;
-   $pat="/hqq\.watch|xopenload\.me|\/player\/script\.php|top\.mail\.ru|facebook|twitter|player\.swf";
+   $pat="/hqq\.watch|xopenload\.|\/player\/script\.php|top\.mail\.ru|facebook|twitter|player\.swf";
    $pat .="|img\.youtube|youtube\.com\/user|radioarad|\.jpg|\.png|\.gif|jq\/(js|css)";
    $pat .="|fsplay\.net\?s|changejplayer\.js|validateemb\.php|restore_google\.php|clicksud\.biz|123formbuilder\.com|";
    $pat .="\.js|ExoLoader\.addZone|js\/api\/share\.js|hindipix\.in\/(js|style)|share\.php\?|brave\.com|affiliate\.rusvpn\.com|favicon\.ico/i";

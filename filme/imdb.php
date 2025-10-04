@@ -16,7 +16,30 @@ if (isset($_GET["imdb"])) {
   if ($imdb[0] !="t" && $imdb) $imdb = "tt".$imdb;
 } else
   $imdb="";
-
+if (isset($_GET['notitle'])) {  //sitefilme
+  $l=urldecode($_GET['notitle']);
+  $ch = curl_init();
+  curl_setopt($ch, CURLOPT_URL, $l);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+  curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 10.0; rv:55.0) Gecko/20100101 Firefox/55.0');
+  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+  curl_setopt($ch, CURLOPT_ENCODING, "");
+  curl_setopt($ch, CURLOPT_REFERER,"https://sitefilme.com/");
+  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+  $html = curl_exec($ch);
+  curl_close($ch);
+  //echo $html;
+  if (preg_match("/\<title\>([^\<]+)\<\/title\>/i",$html,$m))  {
+  $title=$m[1];
+  $title=preg_replace("/\s*online subtitrat/i","",$title);
+  $title=str_replace("&#8211;","-",$title);
+  $t1=explode(" - ",$title);
+  $title=$t1[0];
+  }
+  //echo $title;
+}
 $ttxml="";
 $tit="";
 //$year="";

@@ -23,7 +23,9 @@ $host=urldecode(urldecode($_GET['host']));
   curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
   curl_setopt($ch, CURLOPT_TIMEOUT, 25);
   $h = curl_exec($ch);
+  //file_put_contents("dlhds.txt",$h);
   $h=preg_replace("/key\d\./","key.",$h);
+  //$h=preg_replace("/top\d\./","top.",$h);
   if (preg_match("/URI\=\"([^\"]+)\"/",$h,$m)) {
   if (!file_exists("dlhds.key")) {
   curl_setopt($ch, CURLOPT_URL, $m[1]);

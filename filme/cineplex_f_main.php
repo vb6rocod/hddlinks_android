@@ -55,6 +55,7 @@ if (file_exists($cont) && !file_exists($cookie)) {
   //$user=str_replace("@","%40",$user);
   $pass=trim($a[1]);
   $l="https://".$host."/";
+  //echo $l;
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $l);
   curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 10.0; rv:55.0) Gecko/20100101 Firefox/55.0');
@@ -98,9 +99,10 @@ $l="https://".$host."/movies";
   curl_setopt($ch, CURLOPT_TIMEOUT, 15);
   $h1 = curl_exec($ch);
   curl_close($ch);
-  $t1=explode('token_key="',$h1);
-  $t2=explode('"',$t1[1]);
-  $token=$t2[0];
+  preg_match("/token_key\s*\=\s*\"([^\"]+)/",$h1,$m);
+  //$t1=explode('token_key="',$h1);
+  //$t2=explode('"',$t1[1]);
+  $token=$m[1];
   //echo $h1;
 echo '
 <TR><TD class="cat" style="text-align:left"><a id="fav" href="cineplex_f_fav.php?token='.$token.'" target="_blank">Favorite</a></TD>

@@ -2061,6 +2061,7 @@ $head=array('Accept: */*',
   */
 }
 if (preg_match("/closeload\./",$filelink)) {
+//$filelink="https://closeload.top/video/embed/sHjilxF77Ak/";
   $host="https://".parse_url($filelink)['host'];
   $head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/114.0',
   'Accept: application/json, text/plain, */*',
@@ -2089,11 +2090,103 @@ if (preg_match("/closeload\./",$filelink)) {
   require_once("JavaScriptUnpacker.php");
   $jsu = new JavaScriptUnpacker();
   $out = $jsu->Unpack($h);
-  $t1=explode('src:atob(',$out);
-  $t2=explode(')',$t1[1]);
-  $t1=explode($t2[0].'="',$out);
-  $t2=explode('"',$t1[1]);
-  $link=base64_decode($t2[0]);
+  //echo $out;
+  preg_match("/\(\[([^\)]+)\]\)/",$out,$m);
+  $d=$m[1];
+  //echo $d;
+  $d=str_replace('","',"",$d);
+  $d=str_replace('"',"",$d);
+  /*
+  $d=base64_decode($d);
+  $e=strrev($d);
+    $e=preg_replace_callback(
+    "/[a-zA-Z]/",
+    function ($a1) {
+     return chr(($a1[0] <= 'Z' ? 90 : 122) >= ($a1 = ord($a1[0]) + 13) ? $a1 : $a1 - 26);
+    },
+    $e
+    );
+    */
+    //echo $e;
+  $x=strrev($d);
+  $e=base64_decode($x);
+  $e=base64_decode($e);
+    $u="";
+    for ($i=0;$i<strlen($e);$i++) {
+     $c=ord($e[$i]);
+     $c= ($c - (399756995 % ($i + 5)) + 256) % 256;
+     $u .=chr($c);
+    }
+
+  if (!preg_match("/http/",$u)){
+    $e=preg_replace_callback(
+    "/[a-zA-Z]/",
+    function ($a1) {
+     return chr(($a1[0] <= 'Z' ? 90 : 122) >= ($a1 = ord($a1[0]) + 13) ? $a1 : $a1 - 26);
+    },
+    $x
+    );
+    $e=base64_decode($e);
+    $u="";
+    for ($i=0;$i<strlen($e);$i++) {
+     $c=ord($e[$i]);
+     $c= ($c - (399756995 % ($i + 5)) + 256) % 256;
+     $u .=chr($c);
+    }
+  }
+  if (!preg_match("/http/",$u)){
+   $x=base64_decode($d);
+   $e=strrev($x);
+    $e=preg_replace_callback(
+    "/[a-zA-Z]/",
+    function ($a1) {
+     return chr(($a1[0] <= 'Z' ? 90 : 122) >= ($a1 = ord($a1[0]) + 13) ? $a1 : $a1 - 26);
+    },
+    $e
+    );
+    $u="";
+    for ($i=0;$i<strlen($e);$i++) {
+     $c=ord($e[$i]);
+     $c= ($c - (399756995 % ($i + 5)) + 256) % 256;
+     $u .=chr($c);
+    }
+  }
+  if (!preg_match("/http/",$u)){
+   $x=strrev($d);
+   $e=base64_decode($x);
+    $e=preg_replace_callback(
+    "/[a-zA-Z]/",
+    function ($a1) {
+     return chr(($a1[0] <= 'Z' ? 90 : 122) >= ($a1 = ord($a1[0]) + 13) ? $a1 : $a1 - 26);
+    },
+    $e
+    );
+    $u="";
+    for ($i=0;$i<strlen($e);$i++) {
+     $c=ord($e[$i]);
+     $c= ($c - (399756995 % ($i + 5)) + 256) % 256;
+     $u .=chr($c);
+    }
+  }
+  if (!preg_match("/http/",$u)){
+    $e=preg_replace_callback(
+    "/[a-zA-Z]/",
+    function ($a1) {
+     return chr(($a1[0] <= 'Z' ? 90 : 122) >= ($a1 = ord($a1[0]) + 13) ? $a1 : $a1 - 26);
+    },
+    $d
+    );
+
+    $x=base64_decode($e);
+    $e=strrev($x);
+    $u="";
+    for ($i=0;$i<strlen($e);$i++) {
+     $c=ord($e[$i]);
+     $c= ($c - (399756995 % ($i + 5)) + 256) % 256;
+     $u .=chr($c);
+    }
+  }
+  $link=$u;
   if (preg_match("/http/",$link) && $flash <> "flash")
    $link .="|Referer=".urlencode($host)."&Origin=".urlencode($host);
   //echo $out;
@@ -6179,18 +6272,23 @@ $head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:139.0) Gec
    $out .=hunter($t1[0],$t1[1],$t1[2],$t1[3],$t1[4],$t1[5]);
   }
   //echo $out;
+  $out .=$h;
+  //echo $out;
   if (preg_match("/file\:\"([^\"]+)\"/",$out,$m))
    $link=$m[1];
   $sub=explode(",",$out);
+  //print_r ($sub);
   $s=preg_grep("/\[(english|romanian).*\](http[^\[]+\.vtt)/i",$sub);
   $srt="";
+  //print_r ($s);
   //echo $out;
   foreach($s as $v) {
-   if (preg_match("/\[romanian.*\](http.+)\"/i",$v,$ss)) {
+   if (preg_match("/\[romanian.*\](http.+)\"?/i",$v,$ss)) {
     $srt=$ss[1];
     break;
-   } elseif (preg_match("/\[english.*\](http.+)\"/i",$v,$ss)) $srt=$ss[1];
+   } elseif (preg_match("/\[english.*\](http.+)\"?/i",$v,$ss)) $srt=$ss[1];
   }
+  //echo $srt;
   $ua="Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:139.0) Gecko/20100101 Firefox/139.0";
   if (preg_match("/\.m3u8/",$link)) {
   $ch = curl_init();
@@ -6927,7 +7025,7 @@ $head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:104.0) Gecko/20100101 
   //$host="https://streamingnow.mov";
   if ($link && $flash <> "flash")
    $link .="|Referer=".urlencode($host."/")."&Origin=".urlencode($host)."&User-Agent=".urlencode($ua);
-} elseif (preg_match("/luluvdo/",$filelink)) {
+} elseif (preg_match("/luluvdo|luluvid/",$filelink)) {
 //luluvdoo.com
   $host="https://".parse_url($filelink)['host'];
 
@@ -7222,6 +7320,60 @@ $head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:104.0) Gecko/20100101 
    $link .="|Referer=".urlencode($host)."&Origin=".urlencode($host);
   }
   //."&User-Agent=".urlencode($ua);
+} elseif (preg_match("/streamhls\./",$filelink)) {
+  //https://streamhls.to/e/y2uyaysgq2vj
+  preg_match("/\/e\/(\w+)/",$filelink,$m);
+  $id=$m[1];
+  $post="op=embed&file_code=".$id."&auto=0&referer=";
+  
+  $head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:142.0) Gecko/20100101 Firefox/142.0',
+  'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+  'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
+  'Accept-Encoding: deflate',
+  'Content-Type: application/x-www-form-urlencoded',
+  'Content-Length: '.strlen($post),
+  'Origin: https://streamhls.to',
+  'Connection: keep-alive',
+  'Referer: https://streamhls.to/e/y2uyaysgq2vj');
+  $l="https://streamhls.to/dl";
+  $ch = curl_init();
+  curl_setopt($ch, CURLOPT_URL, $l);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+  curl_setopt($ch, CURLOPT_HTTPHEADER,$head);
+  curl_setopt($ch, CURLOPT_POST,1);
+  curl_setopt($ch, CURLOPT_POSTFIELDS,$post);
+  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+  $out = curl_exec($ch);
+  curl_close($ch);
+  if (preg_match("/\[\{file:\"([^\"]+)/",$out,$m)) {
+   $link=$m[1];
+  $head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:142.0) Gecko/20100101 Firefox/142.0',
+  'Accept: */*',
+  'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
+  'Accept-Encoding: deflate',
+  'Origin: https://streamhls.to',
+  'Connection: keep-alive',
+  'Referer: https://streamhls.to/e/y2uyaysgq2vj');
+  $ch = curl_init();
+  curl_setopt($ch, CURLOPT_URL, $link);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+  curl_setopt($ch, CURLOPT_HTTPHEADER,$head);
+  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+  $h = curl_exec($ch);
+  curl_close($ch);
+  $link=get_max_res($h,$link);
+  }
+  if ($link && $flash <> "flash")  {
+   $ua="Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:142.0) Gecko/20100101 Firefox/142.0";
+   $host="https://streamhls.to";
+   $link .="|Referer=".urlencode($host."/")."&Origin=".urlencode($host)."&User-Agent=".urlencode($ua);
+  }
 } elseif (preg_match("/wishfast\./",$filelink)) {
   $host="https://".parse_url($filelink)['host'];
   $head=array('Referer: https://2embed.cc',
@@ -10639,7 +10791,7 @@ function xor_string($string, $key) {
     $link=$link."|Referer=".urlencode($host."/")."&Origin=".urlencode($host);
     $link .="&User-Agent=".urlencode("Mozilla/5.0 (Windows NT 10.0; rv:81.0) Gecko/20100101 Firefox/81.0");
   }
-} elseif (preg_match("/filmm\.link/",$filelink)) {    // sitefilm
+} elseif (preg_match("/filmm\.link|stf\d+\.vip/",$filelink)) {    // sitefilm
   $link=$filelink;
   $host="https://sitefilme.com";
   $ua="Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:137.0) Gecko/20100101 Firefox/137.0";

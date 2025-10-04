@@ -9,7 +9,7 @@ function str_between($string, $start, $end){
 $main_title="pornburst";
 $target="pornburst.php";
 $fav_target="";
-$recente="https://www.pornburst.xxx/";
+$recente="https://www.superporn.com";
 ?>
 <html>
 <head>
@@ -55,7 +55,7 @@ echo '<TR><TD class="cat">'.'<a class ="nav" href="'.$target.'?page=1&tip=releas
 echo $form;
 echo '</TR>';
 $n=0;
-$l="https://www.pornburst.xxx/categories/";
+$l="https://www.superporn.com";
 $ua = $_SERVER['HTTP_USER_AGENT'];
 $ua="Mozilla/5.0 (Windows NT 10.0; rv:68.0) Gecko/20100101 Firefox/68.0";
   $ch = curl_init();
@@ -68,15 +68,17 @@ $ua="Mozilla/5.0 (Windows NT 10.0; rv:68.0) Gecko/20100101 Firefox/68.0";
   curl_setopt($ch, CURLOPT_TIMEOUT, 15);
   $html = curl_exec($ch);
   curl_close($ch);
-
-$videos = explode('a class="muestra-escena', $html);
+$t1=explode('<ul class="dropdown__nav',$html);
+$t2=explode('</ul',$t1[1]);
+$html=$t2[0];
+$videos = explode('class="dropdown__item', $html);
 unset($videos[0]);
 $videos = array_values($videos);
 foreach($videos as $video) {
     $t=explode('href="',$video);
     $t1=explode('"',$t[1]);
-    $link="http://www.pornburst.xxx".$t1[0];
-    $t2=explode('span>',$video);
+    $link=$t1[0];
+    $t2=explode('>',$t[1]);
     $t3=explode('<',$t2[1]);
   	$title=trim($t3[0]);
   	$title=prep_tit($title);

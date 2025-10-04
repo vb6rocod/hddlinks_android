@@ -69,7 +69,7 @@ $find=$id;
 /* ========================================================= */
 //echo $id;
 $link="https://android.cinemagia.ro/program-tv/".$id."/";
-
+//echo $link;
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $link);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
@@ -123,8 +123,10 @@ foreach($videos as $video) {
  $t2=explode('"',$t1[1]);
  $tip=$t2[0];
  $ora=trim(str_between($video,'<span class="time">','</span>'));
- $title=str_between($video,'<h2>','</h2>');
+ $title=str_between($video,'span class="title">','</');
+ if (!$title) $title=str_between($video,'title="','"');
  $title = trim(preg_replace("/(<\/?)(\w+)([^>]*>)/i","",$title));
+
  //$t1=explode('title="',$video);
  //$t2=explode('"',$t1[1]);
  //$title=$t2[0];

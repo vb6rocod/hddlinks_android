@@ -192,16 +192,17 @@ $head=array('Accept-Language: ro-ro,ro;q=0.8,en-us;q=0.6,en-gb;q=0.4,en;q=0.2','
   $html = curl_exec($ch);
   curl_close($ch);
 }
+//echo $html;
 //echo $l;
 if ($tip=="search") {
   $videos = explode('class="item">', $html);
   unset($videos[0]);
   $videos = array_values($videos);
   foreach($videos as $video) {
-    $t1=explode('movie-title">',$video);
+    $t1=explode('movie-card-title">',$video);
     $t2=explode('<',$t1[1]);
     $title1= $t2[0];
-    $t1=explode('movie-date">',$video);
+    $t1=explode('mf-year ng-binding">',$video);
     $t2=explode("<",$t1[1]);
     $year = trim($t2[0]);
     $t1=explode('src="',$video);
@@ -236,10 +237,10 @@ if ($tip=="search") {
   unset($videos[0]);
   $videos = array_values($videos);
   foreach($videos as $video) {
-    $t1=explode('movie-card-title">',$video);
+    $t1=explode('class="movie-title">',$video);
     $t2=explode('<',$t1[1]);
     $title1= $t2[0];
-    $t1=explode('mf-year ng-binding">',$video);
+    $t1=explode('class="movie-date">',$video);
     $t2=explode("<",$t1[1]);
     $year = trim($t2[0]);
     $t1=explode('src="',$video);

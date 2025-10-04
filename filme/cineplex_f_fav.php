@@ -137,23 +137,24 @@ $file=$base_fav."cineplex_f.dat";
 $arr=array();
 $h="";
 if (file_exists($file)) {
-  $h=trim(file_get_contents($file));
-  //echo $h;
+  $h=file_get_contents($file);
   $t1=explode("\r\n",$h);
-  for ($k=0;$k<count($t1);$k++) {
+  for ($k=0;$k<count($t1) -1;$k++) {
     $a=explode("#separator",$t1[$k]);
     if ($a) {
       $tit=trim($a[0]);
       $l=trim($a[1]);
-      $y=trim($a[2]);
-      $img=trim($a[3]);
-      $arr[$tit]["link"]=$l;
-      $arr[$tit]["year"]=$y;
-      $arr[$tit]["image"]=$img;
+      $img=trim($a[2]);
+      $yy=trim($a[3]);
+      //$arr[$tit]["link"]=$l;
+      //$arr[$tit]["image"]=$img;
+      $arr[$k]=array($tit,$l,$img,$yy);
     }
   }
 }
 if ($arr) {
+asort($arr);
+//if ($arr) {
 //print_r ($arr);
 $n=0;
 $nn=count($arr);
@@ -175,11 +176,13 @@ $p=0;
 echo '<table border="1px" width="100%">'."\n\r";
 foreach($arr as $key => $value) {
 
-	$link = $arr[$key]["link"];
-    $link1=$link;
-    $title11 = $key;
-    $image=$arr[$key]["image"];
-    $year=$arr[$key]["year"];
+    $imdb="";
+	$link = urldecode($arr[$key][1]);
+	$link1=$link;
+    $title11 = unfix_t(urldecode($arr[$key][0]));
+    $image=urldecode($arr[$key][3]);
+    $year=$arr[$key][2];
+    //$year="";
     //echo $title11."\n";
     if (preg_match("/tmdb\.org/",$image) && $fix=="yes" && $api_key) {
     $x=implode(",",get_headers($image));

@@ -99,10 +99,10 @@ $l="https://".$host."/series";
   curl_setopt($ch, CURLOPT_TIMEOUT, 15);
   $h1 = curl_exec($ch);
   curl_close($ch);
-  $t1=explode('token_key="',$h1);
-  $t2=explode('"',$t1[1]);
-  $token=$t2[0];
-  //echo $h1;
+  preg_match("/token_key\s*\=\s*\"([^\"]+)/",$h1,$m);
+  //$t1=explode('token_key="',$h1);
+  //$t2=explode('"',$t1[1]);
+  $token=$m[1];
 echo '
 <TR><TD class="cat"><a id="fav" href="cineplex_s_fav.php?token='.$token.'" target="_blank">Favorite</a></TD>
 ';

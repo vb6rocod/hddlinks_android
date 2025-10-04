@@ -27,6 +27,9 @@ $l="https://raw.githubusercontent.com/iptv-org/iptv/master/index.m3u";
 //$l="https://raw.githubusercontent.com/freearhey/iptv/master/index.m3u";
 $l="https://raw.githubusercontent.com/iptv-org/iptv/master/index.m3u";
 $l="https://github.com/iptv-org/iptv";
+$l="https://iptv-org.github.io/iptv/index.m3u";
+$l="https://iptv-org.github.io/iptv/index.countries.m3u";
+$l="https://github.com/iptv-org/iptv/blob/master/PLAYLISTS.md";
 // https://iptv-org.github.io/api/countries.json
 // https://iptv-org.github.io/api/regions.json
 // https://iptv-org.github.io/api/subdivisions.json
@@ -52,7 +55,15 @@ $l="https://github.com/iptv-org/iptv";
   $html = curl_exec($ch);
   curl_close($ch);
   //echo $html;
+  $t1=explode('data-target="react-app.embeddedData">',$html);
+  $t2=explode('</script',$t1[1]);
+  $x=json_decode($t2[0],1);
+  //print_r ($x);
+  $y=$x['payload']['blob']['richText'];
+  //echo $y;
+  $html=$y;
   //die();
+  /*
   $t1=explode('data-target="react-partial.embeddedData">',$html);
   $c=count($t1);
   $t2=explode('</script>',$t1[$c-1]);
@@ -62,6 +73,7 @@ $l="https://github.com/iptv-org/iptv";
   $t1=explode('<th align="left">Country',$html);
   $t2=explode('</table>',$t1[1]);
   $html=$t2[0];
+  */
   //echo $html;
 /*
 $m3uFile=explode("\n",$html);

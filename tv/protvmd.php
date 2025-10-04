@@ -99,8 +99,11 @@ $link="http://protv.md/api/home/section-".$value;
   $html = curl_exec($ch);
   curl_close($ch);
   $p=json_decode($html,1);
+  //print_r ($p);
+  //echo "======================================"."\n";
   //print_r ($p["items"]);
   //$r=$p["items"];
+  //echo count($p["items"])."\n";
   array_push($r,$p["items"]);
 }
 //print_r ($r);
@@ -113,7 +116,7 @@ for ($k=0;$k<count($r);$k++) {
     $link=$id;
     $link1="direct_link.php?link=".$link."&title=".urlencode($title)."&from=protvmd&mod=direct";
     $l="link=".urlencode(fix_t($link))."&title=".urlencode(fix_t($title))."&from=protvmd&mod=direct";
-  if ($tip == "video" && $r[$k][$x]["site_id"] == "1") {
+  if ($tip == "video" && $r[$k][$x]["site_id"] == "1") {  // && $r[$k][$x]["site_id"] == "1"
   if ($n==0) echo '<TR>';
   if ($flash == "flash")
   echo '<td class="mp" align="center" width="25%"><a href="'.$link1.'" target="_blank"><img src="'.$image.'" width="'.$width.'" height="'.$height.'"><BR>'.$title.'</a></TD>';

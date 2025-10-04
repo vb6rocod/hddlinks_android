@@ -17,12 +17,12 @@ $last_good="https://sitefilme.com/filme-online-hd";
 $last_good="https://sitefilme.com";
 $host=parse_url($last_good)['host'];
 /* ==================================================== */
-$has_fav="no";
+$has_fav="yes";
 $has_search="yes";
 $has_add="yes";
 $has_fs="no";
-$fav_target="";
-$add_target="filme_add.php";
+$fav_target="sitefilme_fav.php";
+$add_target="sitefilme_add.php";
 $add_file="";
 $fs_target="";
 $target="sitefilme_f.php";
@@ -243,7 +243,7 @@ for ($k=0;$k<$c;$k++) {
   else
     $link_f=$fs_target.'?tip=movie&link='.urlencode($link).'&title='.urlencode(fix_t($tit)).'&image='.$image."&sez=&ep=&ep_tit=&year=".$year;
   if ($n==0) echo '<TR>'."\r\n";
-  $val_imdb="tip=movie&title=".urlencode(fix_t($tit_imdb))."&year=".$year."&imdb=".$imdb;
+  $val_imdb="tip=movie&title=".urlencode(fix_t($tit_imdb))."&year=".$year."&imdb=".$imdb."&notitle=".urlencode($link);
   $fav_link="file=".$add_file."&mod=add&title=".urlencode(fix_t($title))."&link=".urlencode($link)."&image=".urlencode($image)."&year=".$year;
   if ($tast == "NU") {
     echo '<td class="mp" width="25%"><a href="'.$link_f.'" id="myLink'.$w.'" target="_blank" onmousedown="isKeyPressed(event)">
