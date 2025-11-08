@@ -231,6 +231,7 @@ $head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gec
 'Referer: https://daddylive.mp/',
 'Origin: https://daddylive.mp'
 );
+$l="https://dlhd.dad/schedule/schedule-generated.json";
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $l);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
@@ -239,9 +240,10 @@ $head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gec
   curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
   curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
   curl_setopt($ch, CURLOPT_TIMEOUT, 15);
-  $h = curl_exec($ch);
+  //$h = curl_exec($ch);
   curl_close($ch);
   //echo $h;
+  $h="";
   $r=json_decode($h,1);
   //print_r ($r);
   //print_r ($r[key($r)]);
@@ -311,7 +313,8 @@ foreach($rr as $key=>$value) {
 echo '</TABLE>';
 
 ///////// all channel
-$l1="https://dlhd.sx/24-7-channels.php";
+$l1="https://dlhd.dad/24-7-channels.php";
+$l1="https://dlhd.dad/24-7-channels.php";
 $head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/110.0',
 'Accept: */*',
 'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
@@ -329,20 +332,30 @@ $head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gec
   curl_setopt($ch, CURLOPT_TIMEOUT, 15);
   $h = curl_exec($ch);
   curl_close($ch);
-  $videos=explode('<div class="grid-item"',$h);
+  $videos=explode('a class="card"',$h);
   unset($videos[0]);
 $videos = array_values($videos);
 $n=0;
 $r=array();
 foreach($videos as $video) {
- $t1=explode('href="',$video);
+ $t1=explode('?id=',$video);
  $t2=explode('"',$t1[1]);
- $l2=fixurl($t2[0],$l1);
- $t3=explode('<strong>',$video);
+ //$l2=fixurl($t2[0],$l1);
+ $l2="https://dlhd.dad/stream/stream-".$t2[0].".php";
+ $t3=explode('class="card__title">',$video);
  $t4=explode('<',$t3[1]);
  $title=$t4[0];
  $r[]=array($l2,$title);
 }
+/*
+$out="";
+for ($z=0;$z<count($r);$z++) {
+    $title=trim($r[$z][1]);
+    $file = trim($r[$z][0]);
+    $out .="#EXTINF:-1,".$title."\n".$file."\n";
+}
+file_put_contents("daddy.m3u",$out);
+*/
 echo '<h2>24/7 Channels</h2>';
 echo '<a id="all"></a>';
 echo '<table border="1px" width="100%" style="table-layout:fixed;">'."\r\n";

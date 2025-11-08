@@ -147,31 +147,6 @@ function off() {
 
 echo '<h2>'.$tit.$tit2.'</H2>';
 echo '<BR>';
-//////////////////////////////
- $DEFAULT_CIPHERS =array(
-            "ECDHE+AESGCM",
-            "ECDHE+CHACHA20",
-            "DHE+AESGCM",
-            "DHE+CHACHA20",
-            "ECDH+AESGCM",
-            "DH+AESGCM",
-            "ECDH+AES",
-            "DH+AES",
-            "RSA+AESGCM",
-            "RSA+AES",
-            "!aNULL",
-            "!eNULL",
-            "!MD5",
-            "!DSS",
-            "!ECDHE+SHA",
-            "!AES128-SHA",
-            "!DHE"
-        );
- if (defined('CURL_SSLVERSION_TLSv1_3'))
-  $ssl_version=7;
- else
-  $ssl_version=0;
-///////////////////////////
 $tmdb=$link;
 $r=array();
 $s=array();
@@ -273,128 +248,56 @@ $l="https://api.themoviedb.org/3/tv/".$link."?api_key=".$api_key."&append_to_res
 $k=0;
   //echo $imdb;
   //die();
+
+////////////////////////////////////////////////////////////
+// vidsrc.me
+$r=array();
+$s=array();
 if ($tip=="movie")
   $l="https://vidsrc.net/embed/".$imdb."/";
 else
   $l="https://vidsrc.net/embed/".$imdb."/".$sez."-".$ep."/";
+$r[]=$l;
+$s[]="vidsrc";
+if ($tip=="movie")
+ $l="https://vixsrc.to/movie/".$tmdb;
+else
+ $l="https://vixsrc.to/tv/".$tmdb."/".$sez."/".$ep;
+$r[]=$l;
+$s[]="vixsrc";
   //echo $l;
   //die();
-  //echo '<iframe src="'.$l.'" style="display:none;"></iframe>';
-  //https://multiembed.mov/directstream.php?video_id=tt6208148
-////////////////////////////////////////////////////////////
-// vidsrc.me
-$ua1 = $_SERVER['HTTP_USER_AGENT'];
-$ua="Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:133.0) Gecko/20100101 Firefox/133.0";
-  $head=array('User-Agent: '.$ua,
-  'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
-  'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
-  'Accept-Encoding: deflate',
-  'Connection: keep-alive',
-  'Referer: https://vidsrc.net/',
-  'Upgrade-Insecure-Requests: 1');
-  $ch = curl_init();
-  curl_setopt($ch, CURLOPT_URL, $l);
-  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
-  curl_setopt($ch, CURLOPT_RETURNTRANSFER  ,1);  // RETURN THE CONTENTS OF THE CALL
-  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-  curl_setopt($ch, CURLOPT_HTTPHEADER,$head);
-  curl_setopt($ch, CURLOPT_ENCODING,"");
-  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
-  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
-  $h = curl_exec($ch);
-  curl_close($ch);
-  //echo $h;
-  $t1=explode('player_iframe" src="',$h);
-  $t2=explode('"',$t1[1]);
-  $l1=fixurl($t2[0],$l);
 
-  $host="https://".parse_url($l1)['host'];
-$head=array('User-Agent: '.$ua,
-'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
-'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
-'Accept-Encoding: deflate',
-'Alt-Used: cloudnestra.com',
-'Connection: keep-alive',
-'Referer: https://vidsrc.net/',
-'Upgrade-Insecure-Requests: 1',
-'Sec-Fetch-Dest: iframe',
-'Sec-Fetch-Mode: navigate',
-'Sec-Fetch-Site: cross-site');
-
-  $options = array(
-        'http' => array(
-        'header'  => array($head),
-        'method'  => 'GET'
-    ),
-        "ssl"=>array(
-        "verify_peer"=>false,
-        "verify_peer_name"=>false,
-    )
-  );
-  $context  = stream_context_create($options);
-  //$h = @file_get_contents($l1, false, $context);
-
-
-  $ch = curl_init();
-  curl_setopt($ch, CURLOPT_URL, $l1);
-  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
-  curl_setopt($ch, CURLOPT_RETURNTRANSFER  ,1);  // RETURN THE CONTENTS OF THE CALL
-  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-  //curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
-  curl_setopt($ch, CURLOPT_HTTPHEADER,$head);
-  //curl_setopt($ch, CURLOPT_ENCODING,"");
-  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
-  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
-  $h = curl_exec($ch);
-  curl_close($ch);
-
-  //echo $h;
-   $t1=explode("src: '",$h);
-   $t2=explode("'",$t1[1]);
-   $l2=fixurl($t2[0],$l1);
-
-
-   //$l2="https://cloudnestra.com/prorcp/MzMzZjhlMTJlNjFkYTJmZTYyMDgxN2UzZTVlZWE4NGE6UXpjcmIzZFJjbnBxWWtwaVVFMHhibFUxTjA5dFZFRjZSbHAxY1VJeU9ISkRVU3RtYWs1UlpGRlVjRTFHVUVzM1ZXTkdkMUoxVTFoYVNHaGlhMWxTZWpGMVVVVmtVMGxvT0RGalZ6ZE5ia05RYXpKRVFqaEhZMDA0WkhrMlpTdHVZemw2WWxGQ09HVkxWbVZQUmtGS2NsQllRVkpCYjNWa1NFVXJReTlQUWtvclJ6ZEJVM0JNSzBGcVRYVk1jSGN3YVRSbWIwRlpSbVpVYlVnMVpHMUNSRUZ0V1ZwcFVuRjZlbTE1TlM5VlRrc3pabmxhTlRReVptZGlNRWg1UWxCTmNVWnZhMUJHZDIxUldtSnBUMmxyUTFkWVZVWXJXbkZ4UWtaUGJDOXljblpvSzNjclpHcG5TbFpoZVZnNVRITjNibXMzY2psRlJVZ3pLek5zZEhwWFNHZHJPSGhvWTJwSVZ6VnZTMmRoVkVWc2MxVmlNVk5ZUm1aMVZUbHVWR3hIT1RnME0yTk1XR1ZOU0V0Qk1uUkdOV1kyVW5kUWVsbDJhalV3WVhJeWNtaHVRbUpKUVdaUk4yUjBURzk1UzA5dlluaG1WM2hTY1UxWFVHNXRVSEFyVkhSalduWkZaM1prZDBwTFRuUlliekl3T0hWVFRYUjVUMUJKU1RKc0wySk1ZMU5EYWtaWFEyWXdhREJzVG5oS2JXVmtTMUJPTDFGMmJVZEpPRVpsVTFsV2RVVXZPR1phWWtOd01IRlNObU5QVDJ0UldreDNRamxOYUU5bFpIUkhWV1ZTZVhWNk1uVmFOVEY0UmtJeU1ERkJSMGxzUWpCRWRVWlRORVJCUlZWU1RpdEJkamR0T0habVNrSlNlR0l2TDNCNllpdENPVll4YmtWdWQyTk1RVkpGUldKYUwza3diazFZUkRocE0wcG1RbGx2ZDBzM05UTjZXbVZwYW1wTGMySkpZek0zUVV0SWFubFdTSFZUU25RMlNqVTNORFJyZURKa2RtOXJiRk5PY25Wa2JsZ3hNMnBaTVc5dVNVbDFkV2RoUjFGTWRWUXphVFpCVm05MlltZENZbkUwU3pCV2NubzBUM2xUWm05UFdHbHdVMDlFUjFKeVFuRm5SWFpsVVRGblUxWmFURWxSTUV4UmFEQTFLemgyWlRSQlZXbzJXa0Z1Y0dGYWF6bE1UbVV2YUc0M2RHVklSWFUzUlZGeWNGVnpWSFpzTlVJMFF5c3JNblJ3V25GeWFqVkVhelUwV25CbmEwUmxZbEV4Um1aSFVVY3lTVUpNYkdwM05GY3hVVWMyUTNWbVFrZGtWVmxXVFdadk5UVTBWWGszUkhnMGIxVnZiRXBsWkhWTmJtSnJaVUYxYldkbWVtTnBReXRyTXpNek1rTkpUM2d5ZUc5clQzRllUMHhCZEc5eWNtazJha1pUYW5WRldrTkNWekZYZWtGS1YwWmxNMmxuZDBGUE9IRk9kRWxvWVdsak1XMUVNRFU1Ym5KSE0zQkdTV28xT0dNMUwzUmlWMGh3U3pSV1FqQXhkRzl1YTFkaFpuRnZjR2xxWjBKdE9HcHFPR0ZzV0daTVIwWkZiUzl1YVRCUVN6QlNWRGx6TlRjNGNIUnBZMVk0ZDNaVllVeFVXRmR2TURsamNHZHdNR3BTVWxNclVISjFUVEl6VTJ4QmVuSkRWWHBoU3pNNFZrTnNWa2Q0UVhodWRUQnFMMUZZVkdac1pITlhaR1JNVWpsV2RXSklZa1F2ZGs5UVMzWk5aamhaV1hKT00yeFpRMnBIUm5wcGJXdEdWMU5HUW1WcWJFMUlkVkJzVkd3eVVXVndXR2xGZDJ0emFHMW1ZV1pRYkc1b1dGVXdWak50YXpkbFJrZEhRV1ZvVkVWc1pqaHFjRmxYZUVGT1JUUXZUR3cxYzNKWVVuTlhWbXcxVG5jdmRteGlVVkp4VTAwelMwaEhkamRoV25nek9ETnNORWt6ZGl0RFVXeFZRVVprVUZWaVZYSnRWRFpoVFhVeE9TdHdSalpNV2tSSVYwVm5NMDh5ZDFCclZHeG1TR05GS3pocU0xbHBibGxUY1d4VFFsUm1XbWhTU2xOMVlsQTRjVTlNYnpGcldUbDFaa3hPZG5GaE1FZElWV2swWjBKdGNXZGFSRXM1VDIxaU1GQXZXV0psWTFJNE1HWlRlaXQwT1dsNlpGRnVibVZ6Unl0Q05rVmlaWEkzU0hSUmFuWlVhblJJTDNnelRsQjRTRWREV214eVREa3dhMHBYWlcxb1pFRmlSbXhMVXpndlNHVXJTVTF1UmpORVZVUXlTbVJ2V1dSQk0xUnBiR0ZvYVhGc1VWSnNNemR2UFE9PQ--";
-   //$l2="https://cloudnestra.com/prorcp/ODEyMDA0OGRiYTZiMzNjYjJjM2IzYTJlNzMyNTA3OWU6Vkc5V2FFdEZRVEJoV1RkdWRYWmlNakI2YjFGa1NVbzFSa0Z1Y2s0d1NVd3JTVFp5T0hoT1JtdE1RVFpXWVRabFpFd3dlbmN2Y0ZRMGFUTnFNMHB5YUdKMVQxTlVlVVk1YVZwMEswTkdhMkZYTDJ0bE9IWmhZV1JWWVVoU01VUXlaa3d2VTNsSWMydzNPV2hVU1ZwVGIzVXhUbkl3WlRGMGIwbFRVRnBNV1hSNk5UVm9VbHB0ZVU1MFFUWm5jRTVvVGxoWFRtaGthVkk1YmtkUlZIZEpUWFpuVG5GcVZVZE9jbmxaZG1OeUwyaFBOMGQ1TjI1dlIwVldiWEV6YzJGS1QzZHdOblJTTHpOWWJtMWljM2RvVW5aeGJURjJXazR4WnpCNWVqWkxlRTFqY0hGRmRFOUtkM0l5TVRZeVRESjFWVEZWWm5JclRrZEpWVkZuZEdSbVprUXdiSFl5ZW1keVJWaEZOVGQwUjFwbGJFZHhRVTR4UTB4Uk4xVnlURzlRV1d0dlltSkVkbkF4UlhGdGJrUlJkekowZGtaTmQxZE1aMlZhUm5GS1FtNVZjVGxJSzB3ME5rSmlLMkkxT0VjMmFDOUplRTl4Y1V0d1MxbFZVMEozVDJOdEwwa3daVFpuVDJFMldITjVNMUYwVFVSbmFVbHZURU5WTjBRd1VERXpkbTVvZHpWemRWZDBVRGRvTW5rNWIzUk1iRk0yUlROaU9XbE1XWGRxWm5vclpIVndjRFJxZDJwb1kxcHVjMlZWWmpkNWRqSndkM0ZTV1RVM01pOHhjbklyVjNjNWFURlhRa0kzZVZOamJWRnVaemxSWkZadU56TnpaV1pxY1VFdmFUSmtNM1pvWkhGcFltUlBTMFpxVFV4Q1JXTkZSM3AyTkRCS1kyNTRZelJDUTNsRGFDdDNWR2RCWW5RNFVsQjFTRzFFT0VvMFQxWkRRbkEzZDNkSlR6VnliRW95VTBkMVNWbEtNbGhoTnpoR04xUnVVM2xGZGxWMmQzcFROMVpHZEhCeFltUnRlVVJ5TVRFcmRUQTFkV3RPTkd4NFJFNVJNMHd4VVZwTmVtaDNhVk5JTm5oc09VSkpSQ3Q1TmtsSVNuVkNORlZwZG1FeFVrVm9WbVpJYzFaMVpGSTRlVWh3ZDNOcGFGRTJVMVZ2TkRac2VEaDZkVGRyU1hvMEsxZEhZek50VFhScVpVbGhWRFJyVGpVdlVVa3daV2MwT0hSdGJHUndiRE5GU0haWVVGSk5RV3RHVEZOcUswOW5TRXRpY0VwbmNGRmxaMjVVVUZCcGFDc3JkMHMxYjJ4UU0xSlViSGQxTkhCMVZqVk9aV1I2SzA5SVVqTkpSR3haSzNWd05FazJkbmx0VmxCTFIwaG9RemR0VDNGTGVqSmxOVGg2ZUN0a1VXcHNWblpWUjNGUGFFWTNhbHBqYkRVM1dGaHRVbVpuWkdWV1EyTkpVV2R3Y1RGSlNrZzVWbEJSVDFGaVdEQnVWM1pSWW14RVQzZEZaVEl6WjFKbVZGWkJaRlpPUjJadmJTdFBNMVIwUlhGNVYwTlVPRlJPWTNSTGJHTlpTbEpLZFM5TlIwMXJVVFZRYVhOMk1uVlhRamM1VVRSSGRHa3liMmhRYmpFd1R6aERWM3BtVkdwV2EwVndSeTlsWkhaTlZVWm9kVnBhYVdVeGRtNVVXVE5JT1U0clVqTTRTVzR3VjJKTlJWTTRUbEphY1hKSmJ5OTRUMjFPWldnelR6RkpjbGRYTmxaNmVrZE5TbUZ5VkUxVlRUUjFWMHhJY1U1R09VWjJZVXgyVjNOcVdVdzNNRGRIUlV0YVpVeGhaMEl3UVhaMldYSnlUSGgyWkZOYVZHWjRjSHBOVjNkMk1tUnNhRkZSU1RoVWFtdFNZVE5uTTFSaWJGWlRjVzl1Y0Zsb1IwZzRSMWs1TUdkUlJGbEphbVJxUWpaU1dHNU1NakkwZGpCTWVWQlFRMFIwWjBJclNqSkNkVWhxYm5OMFowZHVjelI2WVRSV00xSk1ZVFZ0V1d4blRUVkdjbFJHVlhCcFoxWlNXbk55ZUZvdmJYUlFkSFVyU0RGelEySjZXbFYxYmt3dlVWRldUR0ZsYzFOdVFsTjBRVzA0WldocE1FOUpVMGhMVEdsRk5VOVhhVEZEU201T1kxWlFVR2h0VUhWQ1RFY3lUbFpYZG01TGRsVlFTVll3ZFZGelZubDJNV1ZoTlhjMVdIUlZXRWhHUkdGU2VGWXJZbWxCVkVnNGVuazBjbmhLWjBzemQwbHpVMUpuVkZodWIwZFBUMFZyVDAxYWFHTXhaVVpWTjBWSFdHMTBVMHB5TkhSaVZFVTNhbFZQUmtSMWRtcHdOVVo2YzFocVJsTnZTREJhTkhkQ2RVbEZOM2syTlVaU05tNDNhbFpGVEVKMVltRXZkall4ZDFSeFFWbFlWWGwzYkVacE5VOXlaWFZSUlQwPQ--";
-   $head=array('User-Agent: '.$ua,
-   'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
-   'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
-   'Accept-Encoding: deflate',
-   'Referer: '.$l1,
-   'Connection: keep-alive',
-   'Upgrade-Insecure-Requests: 1',
-   'Sec-Fetch-Dest: iframe',
-   'Sec-Fetch-Mode: navigate',
-   'Sec-Fetch-Site: same-origin');
-  $ch = curl_init();
-  curl_setopt($ch, CURLOPT_URL, $l2);
-  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
-  curl_setopt($ch, CURLOPT_RETURNTRANSFER  ,1);  // RETURN THE CONTENTS OF THE CALL
-  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-  //curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
-  curl_setopt($ch, CURLOPT_HTTPHEADER,$head);
-  //curl_setopt($ch, CURLOPT_ENCODING,"");
-  //curl_setopt($ch, CURLOPT_HEADER,1);
-  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
-  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
-  $h = curl_exec($ch);
-  curl_close($ch);
-  //echo $h;
-  //die();
-
-  //$context  = stream_context_create($options);
-  //$h = @file_get_contents($l2, false, $context);
-  //echo $h;
-  //echo '<a href="https://ttraian22.great-site.net/m.php?link='.$l2.'">xxxxx</a>';
+    
+///////////////////////////////////////////
+//print_r ($r);
 echo '<table border="1" width="100%">';
-if (preg_match("/file\:\s*\'([^\']+)\'/",$h,$m))
- echo '<TR><TD class="mp"><label id="server">'.parse_url($m[1])["host"].'</label>';
-else
-echo '<TR><TD class="mp"><label id="server">vidsrc.net</label>';
-echo '<input type="hidden" id="file" value="'.$l.'"></td></TR></TABLE>';
-
+echo '<TR><TD class="mp">Alegeti un server: Server curent:<label id="server">'.$s[0].'</label>
+<input type="hidden" id="file" value="'.urlencode($r[0]).'"></td></TR></TABLE>';
 echo '<table border="1" width="100%"><TR>';
-
+$k=count($r);
+$x=0;
+for ($i=0;$i<$k;$i++) {
+  if ($x==0) echo '<TR>';
+  $c_link=$r[$i];
+  $openload=$s[$i];
+  if (preg_match("/streamembed1/",$c_link)) {
+  echo '<TD class="mp"><a href="streamembed1.php?file='.urlencode($c_link).'&title='.urlencode(unfix_t($tit.$tit2)).'&tip='.$flash.'" target="_blank">'.$openload.'</a></td>';
+  } else
+  echo '<TD class="mp"><a id="myLink" href="#" onclick="changeserver('."'".$openload."','".urlencode($c_link)."'".');return false;">'.$openload.'</a></td>';
+  $x++;
+  if ($x==6) {
+    echo '</TR>';
+    $x=0;
+  }
+}
+if ($x < 6 && $x > 0 & $k>6) {
+ for ($k=0;$k<6-$x;$k++) {
+   echo '<TD></TD>'."\r\n";
+ }
+ echo '</TR>'."\r\n";
+}
+echo '</TABLE>';
 if ($tip=="movie") {
   $tit3=$tit;
   $tit2="";
@@ -424,10 +327,9 @@ else
    echo '<TD align="center" colspan="4"><a id="viz" onclick="'."openlink1('".$openlink."')".'"'." style='cursor:pointer;'>".'VIZIONEAZA !</a></td>';
  else
    echo '<TD align="center" colspan="4"><a id="viz" onclick="'."openlink('".$openlink."')".'"'." style='cursor:pointer;'>".'VIZIONEAZA !</a></td>';
-echo '</TR><TD align="center" colspan="4"><a href="'.$l1.'" target="_blank">CF</a></TD>';
+
 echo '</tr>';
 echo '</table>';
-
 echo '<br>
 <table border="0px" width="100%">
 <TR>

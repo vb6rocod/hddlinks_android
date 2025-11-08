@@ -189,7 +189,7 @@ if (preg_match("/stream2watch\./",$link)) {
 
 }
 //////////////////////////////////////////
-if (preg_match("/dlhd\.sx|daddylive/",$link)) {
+if (preg_match("/dlhd\.|daddylive/",$link)) {
 //echo $link;
   $head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/110.0',
   'Accept: */*',
@@ -223,8 +223,8 @@ if (preg_match("/dlhd\.sx|daddylive/",$link)) {
 
   $host=parse_url($link)['host'];
   //die();
-   if ($link==="xxxxx") {
-    $x="1qwebplay.xyz";
+   if ($link) {
+    $x="ddddd.xyz";
     $host=parse_url($link)['host'];
     $link=str_replace($host,$x,$link)."&alias=".$host;
    }
@@ -634,7 +634,7 @@ if (preg_match("/vidembed\./",$link)) {
   if ($link && $flash <> "flash")
     $link=$link."|Referer=".urlencode($host1."/")."&Origin=".urlencode($host1)."&User-Agent=".urlencode($ua);
 }
-if (preg_match("/(topembed|alldownplay|allupplay|lefttoplay|dovkembed|forcedtoplay|fnjplay|jxoplay|jxoxkplay|andrenalynrushplay)\./",$link)) {
+if (preg_match("/(ddddd|topembed|alldownplay|allupplay|lefttoplay|dovkembed|forcedtoplay|fnjplay|jxoplay|jxoxkplay|andrenalynrushplay|kondoplay|zukiplay)\./",$link)) {
   //https://dlhd.sx/stream/stream-55.php
   //https://alldownplay.xyz/premiumtv/daddylivehd.php?id=55
   //https://allupplay.xyz/premiumtv/daddylivehd.php?id=585
@@ -642,15 +642,24 @@ if (preg_match("/(topembed|alldownplay|allupplay|lefttoplay|dovkembed|forcedtopl
   //https://forcedtoplay.xyz/maxsport.php?id=bet8108594
   //https://jxoplay.xyz/premiumtv/daddylive.php?id=124
   //https://topembed.pw/channel/ex8586142
+  $host=parse_url($link)['host'];
+  if ($host==="ddddd.xyz") {
+  parse_str($link,$xx);
+  $host1=$xx['alias'];
+  
+  $link=str_replace($host,$host1,$link);
+  }
+  $debug="";
+  $debug .=$host."\n".$host1."\n";
   $ua="Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/110.0";
   $head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/110.0',
   'Accept: */*',
   'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
   'Accept-Encoding: deflate',
-  'Referer: https://daddylive.dad/',
-  'Origin: https://daddylive.dad'
+  'Referer: https://dlhd.dad/',
+  'Origin: https://dlhd.dad'
   );
-  $debug="";
+
   $h="";
   $debug .=$link."\n";
   $debug .="=========================================="."\n";
@@ -697,9 +706,20 @@ if (preg_match("/(topembed|alldownplay|allupplay|lefttoplay|dovkembed|forcedtopl
     preg_match("/CHANNEL_KEY\s*\=\s*\"([^\"]+)/i",$h,$m);
     $id=$m[1];
   }
-  preg_match("/const\s*BUNDLE\s*\=\s*\"([^\"]+)/i",$h,$m);
-  preg_match("/const XJZ\=\"([^\"]+)/",$h,$m);
-  $x=base64_decode($m[1]);
+  //echo $h;
+  //$t1=explode('IJXX="',$h);
+  //const BUNDLE = "
+  //echo $h."\n";
+  preg_match("/const\s*\w+\s*\=\s*\"(ey[^\"]+)/i",$h,$n);
+  //print_r ($n);
+  //echo $t1[1];
+  //const IJXX="ey
+  //preg_match("/const\s*BUNDLE\s*\=\s*\"([^\"]+)/i",$h,$m);
+  //preg_match("/const XJZ|XKZK|IJXX\=\"([^\"]+)/",$h,$m);
+  //preg_match("/IJXX\=\"(ey[^\"\+)/i",$h,$n);
+  //print_r ($n);
+  $x=base64_decode($n[1]);
+  $debug .=$n[1]."\n";
   $p=json_decode($x,1);
   //print_r ($p);
   $ts=base64_decode($p['b_ts']);
@@ -730,11 +750,13 @@ if (preg_match("/(topembed|alldownplay|allupplay|lefttoplay|dovkembed|forcedtopl
   curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
   curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
   curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+  //if ($flash <> "mpc") {
   curl_setopt($ch, CURLOPT_URL, $l_auth);
   $h1 = curl_exec($ch);
+  //}
   $debug .=$l_auth."\n";
   $debug .="=========================================="."\n";
-  $debug .=$h1."\n";
+  //$debug .=$h1."\n";
   curl_setopt($ch, CURLOPT_URL, $link);
   $h = curl_exec($ch);
   curl_close($ch);
@@ -746,6 +768,7 @@ if (preg_match("/(topembed|alldownplay|allupplay|lefttoplay|dovkembed|forcedtopl
   $sv=$t2[0];
 
   $link="https://".$sv."new.newkso.ru/".$sv."/".$id."/mono.m3u8";
+  //$link="https://".$sv."new.newkso.ru/".$sv."/".$id."/mono.css";
   $debug .=$link."\n";
   $debug .="=========================================="."\n";
   //$l="https://gamerushplay.cfd/server_lookup.php?channel_id=premium353";
@@ -759,7 +782,7 @@ if (preg_match("/(topembed|alldownplay|allupplay|lefttoplay|dovkembed|forcedtopl
   );
   $t1=explode("?",$_SERVER['HTTP_REFERER']);
   $p=dirname($t1[0]);
-
+   /*
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $link);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
@@ -770,6 +793,7 @@ if (preg_match("/(topembed|alldownplay|allupplay|lefttoplay|dovkembed|forcedtopl
   curl_setopt($ch, CURLOPT_TIMEOUT, 25);
   $h = curl_exec($ch);
   curl_close($ch);
+
   //echo $h;
   //file_put_contents("dlhds.m3u8",$h);
   if (preg_match("/URI\=\"([^\"]+)\"/",$h,$m)) {
@@ -777,11 +801,21 @@ if (preg_match("/(topembed|alldownplay|allupplay|lefttoplay|dovkembed|forcedtopl
   $link=$p."/dlhds.php?link=".base64_encode($link)."&host=".urlencode($host1);
   }
   $debug .=$h."\n";
+  */
   //echo $debug;
   //$link = $p."/dlhds.php?link=".base64_encode($link)."&host=".urlencode($host1)."&tip=m3u8";
+  $r=array("link"=> $link,
+     "auth"=>$l_auth,
+     "host"=>$host1);
+  //$m=json_encode($r);
+  //file_put_contents("daddy.txt",$m);
+  //$debug .=$m."\n";
+  if ($flash <> "mpc") {
+  $link = $p."/dlhds.php?link=".base64_encode($link)."&host=".urlencode($host1)."&tip=m3u8";
+  }
   if ($link && $flash <> "flash")
     $link=$link."|Referer=".urlencode($host1."/")."&Origin=".urlencode($host1)."&User-Agent=".urlencode($ua);
-  $debug .=$link;
+  $debug .=$link."\n".$flash;
   //file_put_contents("debug.txt",$debug);
 }
 ////////////////////////////////////////
@@ -2640,7 +2674,7 @@ if (preg_match("/truyenxalo\./",parse_url($link)['host'])) {
   if ($link && $flash <> "flash")
     $link=$link."|Referer=".urlencode($ref."/")."&Origin=".urlencode($ref);
 }
-if (preg_match("/livehdplay\.ru|1qwebplay\.xyz|4kwebplay\.|qqwebplay\.|cookiewebplay\.|quest4play\.|ilovetoplay\./",parse_url($link)['host'])) {
+if (preg_match("/livehdplay\.ru|1qwebplay\.xyz|4kwebplay\.|qqwebplay\.|cookiewebplay\.|quest4play\.|ilovetoplay\.|kondoplay22\./",parse_url($link)['host'])) {
   // $l="https://livehdplay.ru/maxsport.php?id=cnmyfeed21";
   //https://olalivehdplay.ru/premiumtv/daddylivehd.php?id=194
   //https://1qwebplay.xyz/premiumtv/daddylivehd.php?id=101

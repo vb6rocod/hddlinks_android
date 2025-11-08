@@ -123,26 +123,29 @@ if (!$imdbid) {
   curl_close($ch);
 $videos=array();
 $cc="0";
-$videos=explode('<div class="w-full grid',$h);
+$videos=explode('<div class="flex-1',$h);
 unset($videos[0]);
 $videos = array_values($videos);
 $cc=count($videos);
 foreach($videos as $video) {
-  $t1=explode('title="',$video);
-  $t2=explode(">",$t1[1]);
-  $t3=explode("<",$t2[1]);
-  $title=trim($t3[0]);
+  $t1=explode('<span class="flex-1">',$video);
+  $t2=explode("</span>",$t1[1]);
+
+  //$t3=explode("<",$t2[1]);
+  $title=trim($t2[0]);
   if (preg_match("/flag\-rom/",$video))
    $title="&#x1F1F7;&#x1F1F4; ".$title;
   //$t1=explode('class="sub-comment">',$video);
-  $t1=explode('p class="text-sm font-base overflow-auto h-auto lg:h-16">',$video);
+  $t1=explode('<div class="text-sm text-gray-700 leading-relaxed overflow-auto" style="max-height: 120px;">',$video);
   //$t2=explode("</div",$t1[1]);
-  $t2=explode('</p',$t1[1]);
+  $t2=explode('</div>',$t1[1]);
   $desc=trim($t2[0]);
   $desc=str_replace('<span style="color: red;">',"",$desc);
   $desc=str_replace('<span style="color: blue;">',"",$desc);
   $desc=str_replace('<span style="color: green;">',"",$desc);
   $desc = preg_replace("/(<\/?)(\w+)([^>]*>)/","",$desc);
+
+
   $t1=explode('descarca/',$video);
   $t2=explode('"',$t1[1]);
   $link=$t2[0];

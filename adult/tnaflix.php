@@ -235,7 +235,7 @@ foreach($videos as $video) {
   $title=str_between($video,'alt="','"');
   $title = trim(strip_tags($title));
   $title = prep_tit($title);
-  $t1 = explode('src="', $video);
+  $t1 = explode('data-src="', $video);
   $t2 = explode('"', $t1[1]);
   $image = $t2[0];
   if (strpos($image,"http") === false) $image="https:".$image;

@@ -1025,6 +1025,7 @@ $head=array('Accept: */*',
   //$fid=str_between($h,'vkey" type="hidden" value="','"');
   //$l1="https://cdn-fck.tnaflix.com/tnaflix/".$fid.".fid?key=".$key."&VID=".$vid."&rollover=1&startThumb=19&premium=1&country=&user=0&vip=0&cd=u&ref=embed&alpha";
   //https://www.tnaflix.com/ajax/video-player/10617655
+  /*
   $t1=explode('vid":"',$h);
   $t2=explode('"',$t1[1]);
   $l1="https://www.tnaflix.com/ajax/video-player/".$t2[0];
@@ -1041,8 +1042,10 @@ $head=array('Accept: */*',
   curl_close($ch);
   
   $x=json_decode($h1,1)['html'];
+  */
   //echo $x;
-  $t1=explode('source src="',$x);
+  //<source src="
+  $t1=explode('source src="',$h);
   $t2=explode('"',$t1[1]);
   //$t1=explode('<videoLink><![CDATA[',$h1);
   //$t2=explode(']]>',$t1[count($t1)-1]);

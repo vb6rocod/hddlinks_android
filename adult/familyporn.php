@@ -212,9 +212,10 @@ if($tip=="release") {
 } else {
   $search=str_replace(" ","+",$tit);
   if ($page > 1)
-    $l="https://familyporn.tv/search/".$search."/".$page."/";
+    $l="https://familyporn.tv/search/anal/?mode=async&function=get_block&block_id=list_videos_videos_list_search_result&q=".$search."&category_ids=&sort_by=&from_videos=".$page."&from_albums=&_=";
   else
-    $l="https://familyporn.tv/search/".$search."/".$page."/";
+    $l="https://familyporn.tv/search/".$search."/";
+
 }
 $host=parse_url($l)['host'];
   $ch = curl_init();

@@ -222,7 +222,7 @@ foreach($videos as $video) {
  preg_match("/(\d+):(\d+).+\(([^\)]+)\)/si",$date,$s);
  //print_r ($s);
  preg_match("/(\d+):(\d+)/",$date,$m);
- $ora=sprintf("%02d:%02d",(($m[1]+2)%24),$m[2]);
+ $ora=sprintf("%02d:%02d",(($m[1]+1)%24),$m[2]);
  //$date=str_replace($m[0],$ora,$date);
  $date=$ora." (".$s[3].")";
 

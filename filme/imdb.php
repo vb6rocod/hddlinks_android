@@ -138,11 +138,14 @@ if (isset($_GET['tmdb'])) {
   curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
   curl_setopt($ch, CURLOPT_TIMEOUT, 15);
   $h = curl_exec($ch);
+  //echo $h;
   $t1=explode('type="application/json">',$h);
   $t2=explode('</script>',$t1[1]);
   $x=$t2[0];
   $y=json_decode($x,1);
+  //print_r ($y);
   $m=$y['props']['pageProps']['titleResults']['results'];
+  //print_r ($m);
   if(count($m) == 0) {
   $url="https://www.imdb.com/find/?q=".rawurlencode($title)."&ref_=fn_al";
   curl_setopt($ch, CURLOPT_URL, $url);
@@ -165,14 +168,12 @@ if (isset($_GET['tmdb'])) {
   //print_r ($m);
   if (count($m)>0) { // find result save to arr_imdb, not filter
    foreach($m as $k=>$v) {
-   $tip_imdb=$v['imageType'];
-   if (isset($v['titleReleaseText']))
-   $year_imdb=substr($v['titleReleaseText'],0,4);
-   else
-   $year_imdb=0;
-   $title_imdb=$v['titleNameText'];
-   $id_imdb=$v['id'];
-   $img_imdb=$v['titlePosterImageModel']['url'];
+   $tip_imdb=$v['listItem']['titleType']['id'];
+
+   $year_imdb=$v['listItem']['releaseYear'];
+   $title_imdb=$v['listItem']['originalTitleText'];
+   $id_imdb=$v['index'];
+   $img_imdb=$v['listItem']['primaryImage']['url'];
    $arr_imdb[]=array($id_imdb,$tip,$year_imdb,$title_imdb,$img_imdb,$tip_imdb);
   }
   //print_r ($arr_imdb);
@@ -257,7 +258,9 @@ if (isset($_GET['tmdb'])) {
    }
    }
   } else { // year no set
+  //print_r ($arr_imdb);
    foreach ($arr_imdb as $k=>$v) {
+   //print_r ($v['listItem']);
    $year_imdb=$v[2];
    $tip_imdb=$v[5];
    if (preg_match("/movie|short|tvMiniSeries/i",$tip_imdb) && $year_imdb>0) {
