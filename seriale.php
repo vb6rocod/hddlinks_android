@@ -64,6 +64,7 @@ document.onkeypress =  zx;
 <TD width="25%"><a href="filme/moviewetrust_s.php?page=1&tip=release&title=moviewetrust&link=" target="_blank">moviewetrust</a></TD>
 <TD width="25%"><a href="filme/lookmovie_s.php?page=1&tip=release&title=lookmovie&link=" target="_blank">lookmovie</a></TD>
 </TR>
+<!--
 <TR>
 
 
@@ -73,7 +74,7 @@ document.onkeypress =  zx;
 <TD width="25%"></TD>
 <TD width="25%"></TD>
 </TR>
-
+-->
 
 
 <?php

@@ -634,7 +634,7 @@ if (preg_match("/vidembed\./",$link)) {
   if ($link && $flash <> "flash")
     $link=$link."|Referer=".urlencode($host1."/")."&Origin=".urlencode($host1)."&User-Agent=".urlencode($ua);
 }
-if (preg_match("/(ddddd|topembed|alldownplay|allupplay|lefttoplay|dovkembed|forcedtoplay|fnjplay|jxoplay|jxoxkplay|andrenalynrushplay|kondoplay|zukiplay)\./",$link)) {
+if (preg_match("/(epicplayplay|ddddd|topembed|alldownplay|allupplay|lefttoplay|dovkembed|forcedtoplay|fnjplay|jxoplay|jxoxkplay|andrenalynrushplay|kondoplay|zukiplay)\./",$link)) {
   //https://dlhd.sx/stream/stream-55.php
   //https://alldownplay.xyz/premiumtv/daddylivehd.php?id=55
   //https://allupplay.xyz/premiumtv/daddylivehd.php?id=585
@@ -642,6 +642,7 @@ if (preg_match("/(ddddd|topembed|alldownplay|allupplay|lefttoplay|dovkembed|forc
   //https://forcedtoplay.xyz/maxsport.php?id=bet8108594
   //https://jxoplay.xyz/premiumtv/daddylive.php?id=124
   //https://topembed.pw/channel/ex8586142
+  //https://topembed.pw/channel/bet11664462
   $host=parse_url($link)['host'];
   if ($host==="ddddd.xyz") {
   parse_str($link,$xx);
@@ -649,15 +650,16 @@ if (preg_match("/(ddddd|topembed|alldownplay|allupplay|lefttoplay|dovkembed|forc
   
   $link=str_replace($host,$host1,$link);
   }
+  $host="https://".parse_url($link)['host'];
   $debug="";
-  $debug .=$host."\n".$host1."\n";
+
   $ua="Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/110.0";
   $head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/110.0',
   'Accept: */*',
   'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
   'Accept-Encoding: deflate',
-  'Referer: https://dlhd.dad/',
-  'Origin: https://dlhd.dad'
+  'Referer: '.$host.'/',
+  'Origin: '.$host
   );
 
   $h="";
@@ -674,149 +676,12 @@ if (preg_match("/(ddddd|topembed|alldownplay|allupplay|lefttoplay|dovkembed|forc
   curl_setopt($ch, CURLOPT_TIMEOUT, 15);
   $h = curl_exec($ch);
   curl_close($ch);
-  //https://top2new.newkso.ru/auth.php?channel_id=bet8153591&ts=1750500166&rnd=d1589519&sig=90eefd50872664c850edbefea1cb1809d38804a141a73b771729c5949e1680d9
-  //https://top2new.newkso.ru/auth.php?channel_id=bet8153591&ts=1750500952&rnd=94c2b58c&sig=9321ee8ca2824dc5a9e7de8aea42daa0ff6abead3b2336a10a23623734394715
-  //echo $h;
-  //const CHANNEL_KEY = "premium379";
-  $host=parse_url($link)['host'];
-  $host1="https://".parse_url($link)['host'];
-  preg_match("/channelKey\s*\=\s*\"([^\"]+)/i",$h,$m);
-  $id=$m[1];
-  if (preg_match("/authTs\s*\=\s*\"([^\"]+)/i",$h,$m)) {
-  $ts=$m[1];
-  preg_match("/authRnd\s*\=\s*\"([^\"]+)/i",$h,$m);
-  $rnd=$m[1];
-  preg_match("/authSig\s*\=\s*\"([^\"]+)/i",$h,$m);
-  $sig=$m[1];
-  } else {
-  preg_match("/var\s*__d\s*\=\s*atob\(\"([^\"]+)\"/",$h,$m);
-  $rnd = base64_decode($m[1]);
-  preg_match("/var\s*__e\s*\=\s*atob\(\"([^\"]+)\"/",$h,$m);
-  $sig = base64_decode($m[1]);
-  preg_match("/var\s*__a\s*\=\s*atob\(\"([^\"]+)\"/",$h,$m);
-  $a = base64_decode($m[1]); //https://top2new.newkso.ru
-  preg_match("/var\s*__c\s*\=\s*atob\(\"([^\"]+)\"/",$h,$m);
-  $ts = base64_decode($m[1]);
-  preg_match("/var\s*__b\s*\=\s*atob\(\"([^\"]+)\"/",$h,$m);
-  $b = base64_decode($m[1]);  //auth.php
-  //echo $b;
-  }
-  if (!$sig) {
-  if (!$id) {
-    preg_match("/CHANNEL_KEY\s*\=\s*\"([^\"]+)/i",$h,$m);
-    $id=$m[1];
-  }
-  //echo $h;
-  //$t1=explode('IJXX="',$h);
-  //const BUNDLE = "
-  //echo $h."\n";
-  preg_match("/const\s*\w+\s*\=\s*\"(ey[^\"]+)/i",$h,$n);
-  //print_r ($n);
-  //echo $t1[1];
-  //const IJXX="ey
-  //preg_match("/const\s*BUNDLE\s*\=\s*\"([^\"]+)/i",$h,$m);
-  //preg_match("/const XJZ|XKZK|IJXX\=\"([^\"]+)/",$h,$m);
-  //preg_match("/IJXX\=\"(ey[^\"\+)/i",$h,$n);
-  //print_r ($n);
-  $x=base64_decode($n[1]);
-  $debug .=$n[1]."\n";
-  $p=json_decode($x,1);
-  //print_r ($p);
-  $ts=base64_decode($p['b_ts']);
-  $sig=base64_decode($p['b_sig']);
-  $rnd=base64_decode($p['b_rnd']);
-  }
-  //preg_match("/const XJZ\=\"([^\"]+)/",$h,$m);
-  //$x=base64_decode($m[1]);
-  //$x=json_decode($x,1);
-  //print_r ($x);
-  $debug .=$h."\n";
-  $l_auth="https://top2new.newkso.ru/auth.php?channel_id=".$id."&ts=".$ts."&rnd=".$rnd."&sig=".$sig;
-  //echo $l_auth;
-  $link="https://".$host."/server_lookup.php?channel_id=".$id;
-  //https://caq21harderv991gpluralplay.xyz/server_lookup.php?channel_id=premium33
-  $head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/110.0',
-  'Accept: */*',
-  'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
-  'Accept-Encoding: deflate',
-  'Referer: https://'.$host.'/',
-  'Origin: https://'.$host
-  );
-  $ch = curl_init();
 
-  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
-  curl_setopt($ch, CURLOPT_HTTPHEADER, $head);
-  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
-  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
-  //if ($flash <> "mpc") {
-  curl_setopt($ch, CURLOPT_URL, $l_auth);
-  $h1 = curl_exec($ch);
-  //}
-  $debug .=$l_auth."\n";
-  $debug .="=========================================="."\n";
-  //$debug .=$h1."\n";
-  curl_setopt($ch, CURLOPT_URL, $link);
-  $h = curl_exec($ch);
-  curl_close($ch);
-  $debug .=$link."\n";
-  $debug .="=========================================="."\n";
-  $debug .=$h."\n";
-  $t1=explode('server_key":"',$h);
-  $t2=explode('"',$t1[1]);
-  $sv=$t2[0];
 
-  $link="https://".$sv."new.newkso.ru/".$sv."/".$id."/mono.m3u8";
-  //$link="https://".$sv."new.newkso.ru/".$sv."/".$id."/mono.css";
-  $debug .=$link."\n";
-  $debug .="=========================================="."\n";
-  //$l="https://gamerushplay.cfd/server_lookup.php?channel_id=premium353";
-  //echo $link;
-  $head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/110.0',
-  'Accept: */*',
-  'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
-  'Accept-Encoding: deflate',
-  'Referer: https://'.$host.'/',
-  'Origin: https://'.$host
-  );
-  $t1=explode("?",$_SERVER['HTTP_REFERER']);
-  $p=dirname($t1[0]);
-   /*
-  $ch = curl_init();
-  curl_setopt($ch, CURLOPT_URL, $link);
-  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
-  curl_setopt($ch, CURLOPT_HTTPHEADER, $head);
-  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
-  curl_setopt($ch, CURLOPT_TIMEOUT, 25);
-  $h = curl_exec($ch);
-  curl_close($ch);
-
-  //echo $h;
-  //file_put_contents("dlhds.m3u8",$h);
-  if (preg_match("/URI\=\"([^\"]+)\"/",$h,$m)) {
-  unlink("dlhds.key");
-  $link=$p."/dlhds.php?link=".base64_encode($link)."&host=".urlencode($host1);
-  }
-  $debug .=$h."\n";
-  */
-  //echo $debug;
-  //$link = $p."/dlhds.php?link=".base64_encode($link)."&host=".urlencode($host1)."&tip=m3u8";
-  $r=array("link"=> $link,
-     "auth"=>$l_auth,
-     "host"=>$host1);
-  //$m=json_encode($r);
-  //file_put_contents("daddy.txt",$m);
-  //$debug .=$m."\n";
-  if ($flash <> "mpc") {
-  $link = $p."/dlhds.php?link=".base64_encode($link)."&host=".urlencode($host1)."&tip=m3u8";
-  }
   if ($link && $flash <> "flash")
     $link=$link."|Referer=".urlencode($host1."/")."&Origin=".urlencode($host1)."&User-Agent=".urlencode($ua);
   $debug .=$link."\n".$flash;
-  //file_put_contents("debug.txt",$debug);
+  file_put_contents("debug.txt",$debug);
 }
 ////////////////////////////////////////
 if ($from=="channelstream") {
@@ -2564,8 +2429,8 @@ if (preg_match("/sport[sz]online\./",parse_url($link)['host'])) {
   'Accept: */*',
   'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
   'Accept-Encoding: deflate',
-  'Referer: https://primasport.one/',
-  'Origin: https://primasport.one'
+  'Referer: https://sportzonline.live/',
+  'Origin: https://sportzonline.live'
   );
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $link);
@@ -2588,8 +2453,8 @@ if (preg_match("/sport[sz]online\./",parse_url($link)['host'])) {
   'Accept: */*',
   'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
   'Accept-Encoding: deflate',
-  'Referer: https://v1.sportsonline.ps/',
-  'Origin: https://v1.sportsonline.ps'
+  'Referer: https://sportzonline.live/',
+  'Origin: https://sportzonline.live'
   );
   curl_setopt($ch, CURLOPT_HTTPHEADER, $head);
   curl_setopt($ch, CURLOPT_URL, $l);
@@ -4606,6 +4471,7 @@ $head=array("X-Requested-With: XMLHttpRequest",
   $h = curl_exec($ch);
   curl_close($ch);
   //echo $h;
+  /*
   $t1=explode("video_id: '",$h);
   $t2=explode("'",$t1[1]);
   $id=$t2[0];
@@ -4633,6 +4499,10 @@ $head=array("X-Requested-With: XMLHttpRequest",
   } else
    $link="";
   $link=str_replace("https","http",$link);
+  */
+  $t1=explode('contentUrl": "',$h);
+  $t2=explode('"',$t1[1]);
+  $link=$t2[0];
 }
 if ($from=="europalibera") {
 //echo $link;

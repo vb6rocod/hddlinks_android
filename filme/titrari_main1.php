@@ -131,6 +131,7 @@ else
   $title_s=$title;
 
   $query="numaicautamcaneiesepenas";    // asta se tot schimba.....
+  $query="cautamainaltaparte";
   $lang="-1"; // -1=toate,1=romana,2=engleza,3=spaniola,4=germana,5=italiana,6=portugheza,7=franceza,18=ceha,18=rusa,20=maghiara,99=alta
   $gen="All";
   $tip_s='0'; //0=oricare,1=film,2=serial

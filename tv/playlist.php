@@ -215,19 +215,25 @@ $m3ufile = file_get_contents($m3uFile);
 //echo $m3uFile;
 //echo urlencode($m3uFile);
 $m3ufile = remove_empty_lines($m3ufile);
-
+//echo $m3ufile;
+//#EXTINF:-1 tvg-id="" tvg-name="COLINDE ROMANESTI" tvg-logo="https://i.scdn.co/image/ab67616d0000b273e9af6e6ace7bae5f933bdc04" group-title="??ROMANIA TV??",COLINDE ROMANESTI
 $re = '/#EXTINF:(.+?)\n(#.*?\n)?((http|rtmp)\S+)/m';
+//$re= '/#EXTINF:(.+?)\n(#.*?\n)?(http\S+)/m';
 preg_match_all($re, $m3ufile, $matches);
+//print_r ($matches[0]);
 $tot=count($matches[0]);
 //echo $tot;
+//tvg-name="COLINDE ROMANESTI"
 $rr=array();
 $rrr=array();
-
+//"
   for ($z=0;$z<count($matches[1]);$z++) {
    $file=$matches[3][$z];
    $line=$matches[1][$z];
+   
    if (preg_match("/tvg-name\=\"([^\"]+)\"/",$line,$x)) {
      $title=trim($x[1]);
+     //echo $title;
    } else {
      $t=explode(",",$line);
      $title=trim($t[count($t)-1]);
@@ -244,7 +250,18 @@ $rrr=array();
   $rr[$group1][]=array($title,$file,$logo);
   }
   $rrr=array_keys($rr);
-//print_r ($rrr);
+//echo  count($rrr);
+
+////////////////////////////////////////////////////
+// save group ///
+//print_r ($rr[$group]);
+$out="";
+for ($j=0;$j<count($rr[$group]);$j++) {
+  $out .="#EXTINF:-1,".$rr[$group][$j][0]."\n".$rr[$group][$j][1]."\n";
+}
+//echo $out;
+//file_put_contents("pl/".$group.".m3u",$out);
+///////////////////////////////////////////////////
 if ($group <> "no")
   $tot=count($rr[$group]);
 if ($tot>$step) {
@@ -257,6 +274,8 @@ for ($m=0;$m<$k;$m++) {
 }
 echo '</TR></table>';
 }
+//echo count($rrr);
+//echo "ggggggggggggg".$group;
 if ($group=="no" && count($rrr)>1 && $page==0) {
  echo '<table border="1px" width="100%">';
  echo "<TR><TD class='mp'><a href=".'"playlist_group.php?title='.urlencode($pg_tit)."&link=".urlencode($link).'">ByGroup</a></TD></TR>';

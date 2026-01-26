@@ -1,4 +1,10 @@
 <?php
+if (isset($_POST['link'])) {
+$zz=trim($_POST['link']);
+$h=file_get_contents("v1.txt");
+file_put_contents("v1.txt",$h."|".$zz);
+die();
+}
   $out=$_GET["file"];
   $out=urldecode($out);
   $t1=file_get_contents("vidsrc_time.txt");

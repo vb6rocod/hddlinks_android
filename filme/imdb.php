@@ -139,6 +139,7 @@ if (isset($_GET['tmdb'])) {
   curl_setopt($ch, CURLOPT_TIMEOUT, 15);
   $h = curl_exec($ch);
   //echo $h;
+  //$h=file_get_contents("1.txt");
   $t1=explode('type="application/json">',$h);
   $t2=explode('</script>',$t1[1]);
   $x=$t2[0];
@@ -282,6 +283,48 @@ if (isset($_GET['tmdb'])) {
   echo $x;
   }
  } // end if (count($m)>0)
+ else {
+ if ($tip=="movie") {
+ if ($year)
+   $l="https://www.themoviedb.org/search/movie?query=".rawurlencode($title)."%20y:".$year;
+ else
+   $l="https://www.themoviedb.org/search/movie?query=".rawurlencode($title);
+ } else {
+ if ($year)
+   $l="https://www.themoviedb.org/search/tv?query=".rawurlencode($title)."%20y:".$year;
+ else
+   $l="https://www.themoviedb.org/search/tv?query=".rawurlencode($title);
+ }
+ $arr_match=array();
+  $ch = curl_init();
+  curl_setopt($ch, CURLOPT_URL, $l);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+  curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/117.0');
+  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+  $h = curl_exec($ch);
+  curl_close($ch);
+  if ($tip=="movie")
+  preg_match_all("/movie\/(\d+)\-/",$h,$m);
+  else
+  preg_match_all("/tv\/(\d+)\-/",$h,$m);
+  //print_r ($m);
+  $arr_match=array_unique($m[1]);
+  //print_r ($z);
+  if (count($arr_match) >0) {
+  $out="";
+  foreach ($arr_match as $k=>$v) {
+   $out .='"'.$v.'",';
+  }
+  $out=substr($out,0,-1);
+  $out=$out."|0|".$tip;
+  file_put_contents($file,$out);
+  $x=getTMDBDetail($z[0],"",$key,$tip,1,count($arr_match));
+  echo $x;
+  }
+}
 }
 //echo count($arr_match);
 if (count($arr_match) == 0  && !isset($_GET['tmdb']) && !$imdb) {  // not found imdb

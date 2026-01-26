@@ -1586,7 +1586,7 @@ $s=$s."|sbembed\.com|sbembed1\.com|sbplay\.|sbvideo\.net|streamsb\.net|sbplay\.o
 $s=$s."|\w+ssb\.|lvturbo\.|sb\w+\.|sbbrisk\.|sbanh\.|sblanh\.|sbchill\.|sbfast\.com|sblongvu\.com|sbfull\.|sbthe\.|sbspeed\.|tubeload\.|embedo\.|filemoon\.|utbrgebzvhfa\.";
 $s=$s."|streamhide\.|moonmov\.pro|vgfplay\.|fslinks\.|embedv\.|furher\.|truepoweroflove\.|streamdav\.";
 $s=$s."|d0o0d\.|mdfx\w+|do0od|lulu\.st|filmm\.link\/\d+|vinovo\.to|stf\d+\.vip\/\d+";
-$s=$s."|vembed\.net|vgembed\.|luluvdo+\.com|luluvid\.|guard|voe\.|mdbekjwqa\.|mdzsmut|vidmoly\.to|vidhidevip\.|vidhidepre\./i";
+$s=$s."|vembed\.net|vgembed\.|luluvdo+\.com|luluvid\.|guard|voe\.|mdbekjwqa\.|mdzsmut|vidmoly\.to|vidhidevip\.|vidhidepre\.|streamflash\.sx/i";
 /////////////////////////////////////////////
 //$x=preg_grep($s,$links);
 //print_r ($x);
@@ -1761,7 +1761,13 @@ for ($i=0;$i<count($links);$i++) {
      //echo $alias;
      $cur_link=str_replace($alias,"filemoon.sx",$cur_link)."&alias=".$alias;
     }
-
+////////////////////////////////
+    if (preg_match("/path\.indexOf\(\'\/e\/\'\)|vite\-legacy\-entry/",$h2)) {  //seialeonline ciudatenie
+     $alias=parse_url($cur_link)['host'];
+     //echo $alias;
+     $cur_link=str_replace($alias,"filemoon.sx",$cur_link)."&alias=".$alias;
+    }
+////////////////////////////////
     $cur_link=str_replace("cdn1.fastvid.co","hqq.tv",$cur_link);
     //echo html_entity_decode(urldecode($cur_link))."\n";
     if (strpos($cur_link,"database.seriale") !== false) { //https://database.seriale-online.net/movies/iframe/OGJSK0tXYjlIMVJSNDRveit2eXkwb1NzY1o0d292ZDhpSzc1aU1Kelk4a1ZqcjhSTnB1UE5XTnA5dz09
@@ -2038,6 +2044,8 @@ $server="";
 $server = parse_url($link_f[$k])["host"];
 if (preg_match($indirect,$server)) {
     echo '<TR><td class="link"><a href="hqq.php?file='.urlencode($link_f[$k]).'&title='.urlencode($pg).'" target="_blank">'.$server.'</a></TD></TR>';
+} else if(preg_match($filemoon,$server)) {
+    echo '<TR><td class="link"><a href="filemoon.php?file='.urlencode($link_f[$k]).'&title='.urlencode($pg).'" target="_blank">'.$server.'</a></TD></TR>';
 } else {
  if ($flash =="flash")  {
    //echo $link_f[$k];

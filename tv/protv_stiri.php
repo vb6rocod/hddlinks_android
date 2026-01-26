@@ -88,6 +88,10 @@ else
 echo '<a href="protv_stiri.php?page='.($page+1).','.$search.','.urlencode($page_title).'">&nbsp;&gt;&gt;&nbsp;</a></TD></TR>';
 $head=array("X-Requested-With: XMLHttpRequest");
 $l="https://stirileprotv.ro/ajax/box/Article_ArticleVideosList/ajaxGetMenuItemsAndVideos?&menuItemId=-16&type=galleries&pageNumber=".$page."&tplPrefix=stirileprotv_";
+if ($page==1)
+  $l="https://stirileprotv.ro/video/";
+else
+  $l="https://stirileprotv.ro/video/?page=".$page;
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $l);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
@@ -102,7 +106,7 @@ $l="https://stirileprotv.ro/ajax/box/Article_ArticleVideosList/ajaxGetMenuItemsA
   $html = curl_exec($ch);
   curl_close($ch);
   //echo $html;
-$videos = explode('<div class="vid_item', $html);
+$videos = explode('<div class="vid_item"', $html);
 
 unset($videos[0]);
 $videos = array_values($videos);
@@ -110,7 +114,7 @@ $videos = array_values($videos);
 foreach($videos as $video) {
     $t1 = explode('href="', $video);
     $t2 = explode('"', $t1[1]);
-    $link = "https://stirileprotv.ro".$t2[0];
+    $link = $t2[0];
 
     $t1 = explode('src="', $video);
     $t2 = explode('"', $t1[1]);
@@ -118,6 +122,10 @@ foreach($videos as $video) {
     $t1=explode('srcset="',$video);
     $t2=explode(',',$t1[1]);
     $image=trim($t2[0]);
+    $t1=explode('div class="img-picture">',$video);
+    $t2=explode('data-src="',$t1[1]);
+    $t3=explode('?',$t2[1]);
+    $image=$t3[0];
     //$image=str_replace("https","http",$image);
 
     $t1 = explode('class="title">', $video);

@@ -219,13 +219,13 @@ $w=0;
 $r=array();
 $l="https://sportsonline.so/247.txt";
 //$l="https://sportsonline.gl/prog.txt";
-$l="https://v2.sportsonline.si/247.txt";
+$l="https://sportzonline.live/247.txt";
 $head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/110.0',
 'Accept: */*',
 'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
 'Accept-Encoding: deflate',
-'Referer: https://sportsonline.so/',
-'Origin: https://sportsonline.so'
+'Referer: https://sportzonline.live/',
+'Origin: https://sportzonline.live'
 );
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $l);
