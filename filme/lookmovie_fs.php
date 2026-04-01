@@ -266,7 +266,7 @@ $ref="lookmovie2.to";
   //print_r ($x);
 
   foreach ($x as $key => $value) {
-   if ($key <> "auto") {
+   if ($key <> "auto" && $value) {
     $r[]=$value;
     $s[]=$key;
    }
@@ -327,7 +327,7 @@ $ref="lookmovie2.to";
   $x=json_decode($h,1)['streams'];
   //print_r ($x);
   foreach ($x as $key => $value) {
-   if ($key <> "auto") {
+   if ($key <> "auto" && $value) {
     $r[]=$value;
     $s[]=$key;
    }

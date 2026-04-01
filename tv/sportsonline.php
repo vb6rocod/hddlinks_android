@@ -266,7 +266,7 @@ for ($z=0;$z<count($r);$z++) {
     $file = trim($r[$z][1]);
 
     $mod="direct";
-    $from="fara";
+    $from="sportsonline";
     $link="direct_link.php?link=".urlencode(fix_t($file))."&title=".urlencode(fix_t($title))."&from=".$from."&mod=direct";
     $l="link=".urlencode(fix_t($file))."&title=".urlencode(fix_t($title))."&from=".$from."&mod=".$mod;
     if ($n == 0) echo "<TR>"."\n\r";
@@ -349,7 +349,7 @@ echo "<thead><tr><th>Hours</th><th>Event</th><th>link</th></tr></thead>";
    $file=$value[$p][1];
    $title=$keys;
     $mod="direct";
-    $from="fara";
+    $from="sportsonline";
     $link="direct_link.php?link=".urlencode(fix_t($file))."&title=".urlencode(fix_t($title))."&from=".$from."&mod=direct";
     $l="link=".urlencode(fix_t($file))."&title=".urlencode(fix_t($title))."&from=".$from."&mod=".$mod;
 

@@ -167,18 +167,21 @@ if ($page==1) {
    echo '<TD class="nav" colspan="4" align="right"><a href="'.$prev.'">&nbsp;&lt;&lt;&nbsp;</a> | <a href="'.$next.'">&nbsp;&gt;&gt;&nbsp;</a></TD>'."\r\n";
 }
 echo '</TR>'."\r\n";
+
+//https://meoo.ro/filme/?page=movies&p=2&genre=&year=&rating=&sort=recent
 if($tip=="release") {
  if ($page>1)
-  $l =$last_good."/category/movies/page/".$page."/";
+  $l =$last_good."/filme/?page=movies&p=".$page."&genre=&year=&rating=&sort=recent";
  else
-  $l=$last_good."/category/movies/";
+  $l=$last_good."/filme/";
 } else {
   $search=str_replace(" ","+",$tit);
   if ($page > 1)
-    $l=$last_good."/?s=".$search;
+    $l=$last_good."/filme/index.php?page=search&q=".$search;
   else
-    $l=$last_good."/page/".$page."/?s=".$search;
+    $l=$last_good."/filme/index.php?page=search&q=".$search;
 }
+//https://meoo.ro/filme/index.php?page=search&q=star
 $f=array();
 $head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:139.0) Gecko/20100101 Firefox/139.0',
 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
@@ -197,27 +200,30 @@ $head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:139.0) Gec
   curl_setopt($ch, CURLOPT_TIMEOUT, 15);
   $h = curl_exec($ch);
   curl_close($ch);
-  
-  $videos = explode('<div id="post-', $h);
+  $t1=explode('<main class="container',$h);
+  $h=$t1[1];
+//echo $h;
+  $videos = explode('<div class="relative">', $h);
   unset($videos[0]);
   $videos = array_values($videos);
   foreach($videos as $video) {
     $t1=explode('href="',$video);
     $t2=explode('"',$t1[1]);
-    $link1=$t2[0];
+    $link1=$last_good.$t2[0];
     $t1=explode('"',$video);
     $link=$t1[0];
-    $t1=explode('class="movie-title">',$video);
-    $t2=explode('<',$t1[1]);
-    $title=trim($t2[0]);
-    $t1=explode('data-src="',$video);
+    $t1=explode('title="',$video);
+    $t2=explode('>',$t1[1]);
+    $t3=explode("<",$t2[1]);
+    $title=trim($t3[0]);
+    $t1=explode('src="',$video);
     $t2=explode('"',$t1[1]);
     $image=$t2[0];
-    $t1=explode('class="movie-date">',$video);
-    $t2=explode('<',$t1[1]);
-    $year=$t2[0];
+
+    if (preg_match("/\<span\>([12]\d{3})\<\/span\>/",$video,$m))
+    $year=$m[1];
     $imdb="";
-    $f[] = array($title,$link,$image,$year,$imdb);
+    if ($link1 && !preg_match("/item\.title/",$title)) $f[] = array($title,$link1,$image,$year,$imdb);
   }
 
 /////////////////////

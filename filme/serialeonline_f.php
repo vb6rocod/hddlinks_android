@@ -13,6 +13,7 @@ $link=$_GET["link"];
 $width="200px";
 $height="278px";
 $last_good="https://serialeonline.io";
+$last_good="https://seriale-online.net";
 $host=parse_url($last_good)['host'];
 /* ==================================================== */
 $has_fav="no";
@@ -182,17 +183,45 @@ if($tip=="release") {
 }
 $r=array();
 $ua = $_SERVER['HTTP_USER_AGENT'];
+$ua="Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:147.0) Gecko/20100101 Firefox/147.0";
+$head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:147.0) Gecko/20100101 Firefox/147.0',
+'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+'Accept-Language: ro-RO,ro-GB;q=0.9,en;q=0.8',
+'Accept-Encoding: deflate',
+'Referer: https://seriale-online.net/filme/home-2009/',
+'Alt-Used: seriale-online.net',
+'Connection: keep-alive',
+'Upgrade-Insecure-Requests: 1',
+'Sec-Fetch-Dest: document',
+'Sec-Fetch-Mode: navigate',
+'Sec-Fetch-Site: same-origin',
+'Sec-Fetch-User: ?1');
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $l);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-  curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 10.0; rv:55.0) Gecko/20100101 Firefox/55.0');
+  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
   curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+  curl_setopt($ch, CURLOPT_HTTPHEADER, $head);
   curl_setopt($ch, CURLOPT_ENCODING, "");
   curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+  //curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
   curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
   curl_setopt($ch, CURLOPT_TIMEOUT, 15);
   $html = curl_exec($ch);
   curl_close($ch);
+  //echo $html1;
+  $options = array(
+        'http' => array(
+        'header'  => array($head),
+        'method'  => 'GET'
+    ),
+        "ssl"=>array(
+        "verify_peer"=>false,
+        "verify_peer_name"=>false,
+    )
+  );
+  $context  = stream_context_create($options);
+  //$html = @file_get_contents($l, false, $context);
   //echo $html;
   if ($tip=="release") {
   $videos = explode('article id="post', $html);

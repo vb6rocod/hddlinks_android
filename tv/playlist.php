@@ -255,12 +255,14 @@ $rrr=array();
 ////////////////////////////////////////////////////
 // save group ///
 //print_r ($rr[$group]);
+//echo "\n".$group."\n";
+$f=str_replace("|","",$group);
 $out="";
 for ($j=0;$j<count($rr[$group]);$j++) {
   $out .="#EXTINF:-1,".$rr[$group][$j][0]."\n".$rr[$group][$j][1]."\n";
 }
 //echo $out;
-//file_put_contents("pl/".$group.".m3u",$out);
+//file_put_contents("pl/".$f.".m3u",$out);
 ///////////////////////////////////////////////////
 if ($group <> "no")
   $tot=count($rr[$group]);

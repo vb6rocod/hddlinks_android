@@ -91,9 +91,103 @@ function fixurl($link,$from="") {
  } else
    return "";
 }
+function getHTML1($l) {
+  global $base_cookie;
+  $cookie=$base_cookie."getlink.dat";
+  $l1="https://ttraian22.great-site.net/getlink.php";
+  require_once( '../filme/cryptoHelpers.php');
+  require_once( '../filme/aes_small.php');
+  $ua = "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:147.0) Gecko/20100101 Firefox/147.0";
+  $head=array('Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
+  'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
+  'Accept-Encoding: deflate',
+  'Connection: keep-alive',
+  'Upgrade-Insecure-Requests: 1');
+  $l2=$l1."?link=".urlencode($l);
+  $ch = curl_init();
+  curl_setopt($ch, CURLOPT_URL, $l2);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
+  curl_setopt($ch, CURLOPT_HTTPHEADER,$head);
+  curl_setopt($ch, CURLOPT_COOKIEFILE,$cookie);
+  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+  $html = curl_exec($ch);
+  if(preg_match_all('/toNumbers\(\"(\w+)\"/',$html,$m)) {
+   $a=cryptoHelpers::toNumbers($m[1][0]);
+   $b=cryptoHelpers::toNumbers($m[1][1]);
+   $c=cryptoHelpers::toNumbers($m[1][2]);
+   $d=AES::decrypt($c,16,2,$a,16,$b);
+   //print_r ($m);
+   $test=cryptoHelpers::toHex($d);
+   //echo $test;
+   //$test="fa275c559dc4f8c70acca818baf3e37b";
+   $domain = 'ttraian22.great-site.net';
+   $expire = time() + 36000;
+   $name   = '__test';
+   $value = $test;
+   file_put_contents($cookie, "\n$domain\tTRUE\t/\tFALSE\t$expire\t$name\t$value\n", FILE_APPEND);
+   curl_setopt($ch, CURLOPT_COOKIEFILE,$cookie);
+   $html = curl_exec($ch);
+  }
+ curl_close($ch);
+ return $html;
+}
+function getHTML2($l) {
+  global $base_cookie;
+  $cookie=$base_cookie."getlink.dat";
+  $l1="https://ttraian22.great-site.net/getlink2.php";
+  require_once( '../filme/cryptoHelpers.php');
+  require_once( '../filme/aes_small.php');
+  $ua = "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:147.0) Gecko/20100101 Firefox/147.0";
+  $head=array('Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
+  'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
+  'Accept-Encoding: deflate',
+  'Connection: keep-alive',
+  'Upgrade-Insecure-Requests: 1');
+  $l2=$l1."?link=".base64_encode($l);
+  $ch = curl_init();
+  curl_setopt($ch, CURLOPT_URL, $l2);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
+  curl_setopt($ch, CURLOPT_HTTPHEADER,$head);
+  curl_setopt($ch, CURLOPT_COOKIEFILE,$cookie);
+  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+  $html = curl_exec($ch);
+  if(preg_match_all('/toNumbers\(\"(\w+)\"/',$html,$m)) {
+   $a=cryptoHelpers::toNumbers($m[1][0]);
+   $b=cryptoHelpers::toNumbers($m[1][1]);
+   $c=cryptoHelpers::toNumbers($m[1][2]);
+   $d=AES::decrypt($c,16,2,$a,16,$b);
+   //print_r ($m);
+   $test=cryptoHelpers::toHex($d);
+   //echo $test;
+   //$test="fa275c559dc4f8c70acca818baf3e37b";
+   $domain = 'ttraian22.great-site.net';
+   $expire = time() + 36000;
+   $name   = '__test';
+   $value = $test;
+   file_put_contents($cookie, "\n$domain\tTRUE\t/\tFALSE\t$expire\t$name\t$value\n", FILE_APPEND);
+   curl_setopt($ch, CURLOPT_COOKIEFILE,$cookie);
+   $html = curl_exec($ch);
+  }
+ curl_close($ch);
+ return $html;
+}
+function clearHTML ($h) {
+ $x=preg_replace("/<!--.*?-->/ms","",$h);
+ $x=preg_replace("/^(\s*\/\/).+/m","\r\n",$x);
+ return $x;
+}
 $indirect="/vzlinks\.|playerwatch\.xyz|player\.filmm\.link|pajalusta\.club|hindipix\.in|waaw\.|hqq\.|realyplayonli\.|strcdn\.org|netu\.wiztube\.xyz|netu\.|div\.str1\.site|fshd\d+\.club|video\.filmeonline|fsohd\.pro|cdn1\.vidcdn\.co|playvideohd\.com|kokostream\./";
 $mixdrop="/mi?xdro{0,}p|mdy48tn97\.|mdbekjwqa\.|mdfx\w+|mdzsmut|mixdropjmk/";
-$dood="/do{2,}ds?(stream)?\.|ds2play\.|ds2video\.|d0o0d\.|do0od\.|d0000d|d000d|do7go|doply|vidply|vide0\.|d\-s\.io|dsvplay\./";
-$filemoon="/filemoon\.|moonmov\.pro|furher\.|truepoweroflove\.|kerapoxy\.|c4qhk0je\.|1azayf9w\.|81u6xl9d\.xyz|4usw6ehy\.xyz|o45q3azz\.skin|ynowfnga\.xyz|f16px\./";
+$vsembed="/vsembed\.|vidsrc\.net/";
+$dood="/do{2,}ds?(stream)?\.|ds2play\.|ds2video\.|d0o0d\.|do0od\.|d0000d|d000d|do7go|doply|vidply|vide0\.|d\-s\.io|dsvplay\.|myvidplay\./";
+$filemoon="/filemoon\.|moonmov\.pro|furher\.|truepoweroflove\.|kerapoxy\.|c4qhk0je\.|1azayf9w\.|81u6xl9d\.xyz|4usw6ehy\.xyz|o45q3azz\.skin|ynowfnga\.xyz|f16px\.|bysetayico\.|byselapuix\.|byse/";
 $vidguard="/vgfplay\.|fslinks\.|vembed\.net|vgembed\.|vid-guard\.com|embedv\.|vidguard\.to|serialeonline\.ovh|bembed\.net|listeamed\.net/";
 ?>

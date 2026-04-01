@@ -172,27 +172,47 @@ $f=array();
 if ($tip=="search") {
  $search= str_replace(" ","%20",$tit);
   $l=$last_good."/core/api/search?q=".$search;
+  //$l="https://ridomovies.tv/api/search?q=star&lang=en&limit=5";
 } else {
-  $l=$last_good."/core/api/movies/latest?page[number]=".$page;
+   if ($page==1)
+    $l=$last_good."/movies-rd1";
+  else
+  $l=$last_good."/movies/page-".$page;
 }
+//echo $l;
 //https://ridomovies.tv/core/api/search?q=star
 //https://ridomovies.pw/page/2/?s=star
 //https://ridomovies.tv/core/api/movies/latest?page%5Bnumber%5D=2
+//$l="https://ridomovies.tv/movies/page-2";
 $ua="Mozilla/5.0 (Windows NT 10.0; rv:75.0) Gecko/20100101 Firefox/75.0";
+$head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:148.0) Gecko/20100101 Firefox/148.0',
+'Accept: */*',
+'Accept-Language: ro-RO,ro-GB;q=0.9,en;q=0.8',
+'Accept-Encoding: deflate,',
+'Referer: https://ridomovies.tv/movies-rd1',
+'X-Requested-With: XMLHttpRequest',
+'Connection: keep-alive',
+'Sec-Fetch-Dest: empty',
+'Sec-Fetch-Mode: cors',
+'Sec-Fetch-Site: same-origin');
+//echo $l;
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $l);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
-  curl_setopt($ch, CURLOPT_REFERER,"https://ridomovies.tv/home");
+  curl_setopt($ch, CURLOPT_HTTPHEADER, $head);
   curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
   curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
   curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
   curl_setopt($ch, CURLOPT_TIMEOUT, 25);
   $h = curl_exec($ch);
   curl_close($ch);
+
+  //echo $h;
+  //$h=getHTML2($l);
+  //echo $h;
   $x=json_decode($h,1);
   //print_r ($x);
-  $y=$x['data']['items'];
+  $y=$x['movies'];
   //echo $h;
   //print_r ($y);
 $path = parse_url($l)['path'];
@@ -230,7 +250,9 @@ for ($k=0;$k<count($y);$k++) {
   $z=$y[$k]['contentable'];
  else
   $z=$y[$k];
+   /*
    if ($tip=="search") {
+
    $title= $z['originalTitle'];
    $image= $z['apiPosterPath'];
    } else {
@@ -241,7 +263,15 @@ for ($k=0;$k<count($y);$k++) {
    $link=$last_good."/".$link;
    $year=$z['releaseYear'];
    $imdb=$z['imdbId'];
-   $f[] = array($title,$link,$image,$year,$imdb);
+   */
+   //////////
+   //https://ridomovies.tv/movie/
+   $title=$z['title'];
+   $image=$last_good.$z['poster_path'];
+   $link=$last_good."/movie/".$z['slug'];
+   $year=date('Y', strtotime($z['release_date']));
+   $tmdb=$z['tmdb_id'];
+   $f[] = array($title,$link,$image,$year,$tmdb);
 }
 foreach($f as $key => $value) {
   $title=$value[0];
@@ -249,10 +279,10 @@ foreach($f as $key => $value) {
   $link=$value[1];
   $image=$value[2];
   $year=$value[3];
-  $imdb=$value[4];
-
+  $tmdb=$value[4];
+  $imdb="";
   $tit_imdb=$title;
-  $link_f=$fs_target.'?tip=movie&link='.urlencode($link).'&title='.urlencode(fix_t($title)).'&image='.$image."&sez=&ep=&ep_tit=&year=".$year."&imdb=".$imdb;
+  $link_f=$fs_target.'?tip=movie&link='.urlencode($link).'&title='.urlencode(fix_t($title)).'&image='.$image."&sez=&ep=&ep_tit=&year=".$year."&imdb=".$imdb."&tmdb=".$tmdb;
   if ($title) {
   if ($n==0) echo '<TR>'."\r\n";
   $val_imdb="tip=movie&title=".urlencode(fix_t($tit_imdb))."&year=".$year."&imdb=".$imdb;

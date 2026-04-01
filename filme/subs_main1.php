@@ -87,15 +87,16 @@ if (!$imdbid) {
    $imdbid=str_replace("tt","",$match[1]);
 }
   $page1=0;
-  $ua="Mozilla/5.0 (Windows NT 10.0; rv:55.0) Gecko/20100101 Firefox/55.0";
-  if ($imdbid)
-  $l="https://subs.ro/subtitrari/imdbid/".$imdbid;
-  else {
+  $ua="Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:148.0) Gecko/20100101 Firefox/148.0";
+  //if ($imdbid)
+  //$l="https://subs.ro/subtitrari/imdbid/".$imdbid;
+  //else {
   $l="https://subs.ro/subtitrari/";
+$l="https://subs.ro/cautare?termen-general=";
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $l);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-  curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 5.1; rv:31.0) Gecko/20100101 Firefox/31.0');
+  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
   curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
   curl_setopt ($ch, CURLOPT_REFERER, "https://subs.ro/subtitrari/");
   curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
@@ -107,20 +108,27 @@ if (!$imdbid) {
   $t1=explode('name="antispam',$x);
   $t2=explode('value="',$t1[1]);
   $t3=explode('"',$t2[1]);
-  $l="https://subs.ro/ajax/search/?search-text=".urlencode($title)."&amp;in=name&amp;antispam=".$t3[0];
-  }
-
+  $as=$t3[0];
+  //echo $l;
+  //$l="https://subs.ro/subtitrari/imdbid/tt0151804";
+  $imdb_d=str_replace("tt","",$imdbid);
+  $post="antispam=".$as."&type=subtitrari&titlu-film=".$title."&external_id=".$imdb_d."&versiune-film=&limba=&an=&traducator=";
+  //echo $post;
+  $l="https://subs.ro/ajax/search";
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $l);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
   curl_setopt($ch, CURLOPT_USERAGENT, $ua);
   curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
   curl_setopt ($ch, CURLOPT_REFERER, "https://subs.ro/subtitrari/");
+  curl_setopt($ch, CURLOPT_POST,1);
+  curl_setopt($ch, CURLOPT_POSTFIELDS,$post);
   curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
   curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
   curl_setopt($ch, CURLOPT_TIMEOUT, 15);
   $h=curl_exec($ch);
   curl_close($ch);
+  //echo $h;
 $videos=array();
 $cc="0";
 $videos=explode('<div class="flex-1',$h);

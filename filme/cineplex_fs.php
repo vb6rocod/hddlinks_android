@@ -60,6 +60,7 @@ $l="https://".$host."/movies/getMovieLink?id=".$id."&token=".$token."&oPid=&_=";
 else
 $l="https://".$host."/series/getTvLink?id=".$id."&token=".$token."&s=".$sez."&e=".$ep."&oPid=&_=";
 $rh="https://".$host;
+//echo $link;
 //echo $l;
 //$l="https://senturion.to/movies/getMovieLink?id=17338&token=2n71u52vkeau66246q9be0q5e5&oPid=&_=1686382222416";
 $head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/114.0',
@@ -254,7 +255,7 @@ if ($user=="free" && file_exists($amigo)) {
 echo '<table border="1" width="100%">';
 echo '<TR><TD align="center" colspan="'.(count($arr)*2).'"><font size="4"><b>Vizionati !</b></font></td></TR>';
 echo '<TR>';
-
+//print_r ($arr);
 foreach ($arr as $key => $value) {
   //print_r ($value);
   //echo $key;
@@ -303,7 +304,7 @@ if (preg_match("/trial(\d+)/",$movie,$m)) {
  echo '<hr><table border="1" width="100%">';
  echo '<TR><TD class="cat">Alegeti alt server:</TD>';
  echo '<TD class="cat">';
- for ($k=1;$k<8;$k++) {
+ for ($k=1;$k<11;$k++) {
   if ($k==hexdec($serv))
    echo '<input type="radio" name="svr" id="svr'.$k.'" value="'.$k.'" checked><label for="svr'.$k.'">Server: '.$k.'</label>';
   else

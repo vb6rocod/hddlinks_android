@@ -303,7 +303,7 @@ $head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gec
 
 }
 ///////////////////////////////
-if (preg_match("/wikisport\./",$link)) {
+if (preg_match("/wikisport\.|freestreams/",$link)) {
   //https://wikisport.best/embed/bt2.php
   $head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:142.0) Gecko/20100101 Firefox/142.0',
   'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
@@ -804,9 +804,10 @@ parse_str($q,$r);
 //print_r ($r);
 //echo $link;
 if (preg_match("/aliez/",$r["t"])) {
- $link="https://emb.apl340.me/player/live.php?id=".$r["c"];
- $link="https://emb.apl374.me/player/live.php?id=".$r["c"];
- $link="https://emb.apl375.me/player/live.php?id=".$r["c"];
+ //$link="https://emb.apl340.me/player/live.php?id=".$r["c"];
+ //$link="https://emb.apl374.me/player/live.php?id=".$r["c"];
+ //$link="https://emb.apl375.me/player/live.php?id=".$r["c"];
+ //$link="https://emb.apl396.me/player/live.php?id=".$r["c"];
  //https://emb.apl374.me/player/live.php?id=230257&w=700&h=480
 $head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/110.0',
 'Accept: application/json, text/plain, */*',
@@ -824,8 +825,13 @@ $head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gec
   curl_setopt($ch, CURLOPT_TIMEOUT, 15);
   //curl_setopt($ch, CURLOPT_HEADER,1);
   $h = curl_exec($ch);
+  //curl_close($ch);
+  preg_match("/emb\.apl(\d+)/",$h,$m);
+  $s=$m[1];
+  $link="https://emb.apl".$s.".me/player/live.php?id=".$r["c"];
+  curl_setopt($ch, CURLOPT_URL, $link);
+  $h = curl_exec($ch);
   curl_close($ch);
-  //echo $h;
   preg_match("/pl\.init\(\'([^\']+)/",$h,$n);
   //print_r ($n);
   $link="https:".$n[1];
@@ -2419,12 +2425,16 @@ if (preg_match("/sportskart\.click/",$link)) { // to second link!
   else
     $link="";
 }
-if (preg_match("/sport[sz]online\./",parse_url($link)['host'])) {
+if (preg_match("/spo?rt[sz]online\./",parse_url($link)['host']) || $from=="sportsonline") {
   //https://sportsonline.so/channels/hd/hd1.php
   //https://sportzonline.ps/channels/hd/hd7.php
+  //https://www1.sprtsonline.click/channels/pt/sporttv2.php
   //echo $link;
   //$hw=1;    trebuie alta solutie.....
+  $h1=parse_url($link)['host'];
+  $link=str_replace($h1,"sportzonline.live",$link);
   $ua="Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/110.0";
+  $ref="https://".parse_url($link)['host'];
   $head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/110.0',
   'Accept: */*',
   'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
@@ -2443,12 +2453,15 @@ if (preg_match("/sport[sz]online\./",parse_url($link)['host'])) {
   curl_setopt($ch, CURLOPT_TIMEOUT, 25);
   $h = curl_exec($ch);
   //echo $h;
-  if (preg_match("/\<iframe.*?src\=\"((https?:)?\/\/[^\"]+)\"/i",$h,$m)) {
-   $l=fixurl($m[1]);
+  $h=preg_replace("/<!--.*?-->/ms","",$h);
+  //echo $h;
+  if (preg_match_all("/\<iframe.*?src\=\"((https?:)?\/\/[^\"]+)\"/i",$h,$m)) {
+  $l=$m[1][count($m[1])-1];
+   $l=fixurl($l);
   }
   //print_r ($m);
   //echo $l;
-  $ref="https://".parse_url($l)['host'];
+
   $head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/110.0',
   'Accept: */*',
   'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
@@ -2470,12 +2483,13 @@ if (preg_match("/sport[sz]online\./",parse_url($link)['host'])) {
    $out .= $jsu->Unpack('eval(function'.$t[$k]);
   }
   //echo $out;
-  if (preg_match("/var src\=\"([^\"]+)\"/",$out,$m))
+  if (preg_match("/var src\s*\=\s*\"([^\"]+)\"/",$h.$out,$m))
    $link=$m[1];
   else
    $link="";
+  $ref="https://".parse_url($l)['host'];
   if ($link && $flash <> "flash")
-   $link=$link."|Referer=".urlencode($l)."&Origin=".urlencode($ref)."&User-Agent=".urlencode($ua);
+   $link=$link."|Referer=".urlencode($ref."/")."&Origin=".urlencode($ref)."&User-Agent=".urlencode($ua);
 }
 if (preg_match("/iweb\.\w+\.shop/",parse_url($link)['host'])) {
   // https://iweb.ijttgbt.shop/embed/e8GplfEKWQOE

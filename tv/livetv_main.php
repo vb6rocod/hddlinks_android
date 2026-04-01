@@ -185,14 +185,20 @@ $head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gec
   //curl_setopt($ch, CURLOPT_HEADER,1);
   $h = curl_exec($ch);
   curl_close($ch);
+  //echo $h;
 /////////////////////////////////////////////////////////////
 // sports
-preg_match_all("/\<a class\=\"main\"\s+href\=\"(\/enx\/allupcomingsports\/\d+\/)\"\>\<b\>([^\<]+)/si",$h,$m);
+//<a class="main" href="/enx/allupcomingsports/1/"><b>Football</b>
+preg_match_all("/\<a class\=\"main\"\s+href\=\"((\/enx)?\/allupcomingsports\/\d+\/)\"\>\<b\>([^\<]+)/si",$h,$m);
 //print_r ($m);
 for ($k=0;$k<count($m[0]);$k++) {
  if ($n==0) echo '<TR>';
- $l="http://livetv.sx".$m[1][$k];
- $t=$m[2][$k];
+ if ($m[2][$k] <> "")
+ $l="http://livetv.sx".$m[2][$k].$m[1][$k];
+ else
+ $l="http://livetv.sx"."/enx/".$m[1][$k];
+ $l=str_replace("/enx/enx","/enx",$l);
+ $t=$m[3][$k];
  $link="livetv.php?link=".urlencode($l)."&title=".$t."&page=1";
 
  echo '<TD class="cat"><a href="'.$link.'" target="_blank">'.$t.'</a></TD>';
@@ -231,11 +237,12 @@ foreach($videos as $video) {
  preg_match("/\d+:\d+\s+\((.*?)\)/",$date,$x);
  $sport=$x[1];
  preg_match("/(\d+):(\d+)/",$date,$m);
- $ora=sprintf("%02d:%02d",(($m[1]+1)%24),$m[2]);
+ $ora=sprintf("%02d:%02d",(($m[1]+2)%24),$m[2]);
  $date=str_replace($m[0],$ora,$date);
  $t1=explode('src="',$video);
  $t2=explode('"',$t1[1]);
- $image="https:".$t2[0];
+ $image=fixurl($t2[0],$l);
+ //$image="../filme/r_m.php?file=".$image;
 ///////////////////////
   echo "<tr class='cell-color'>";
   echo "<td class='cell-color'>".$ora."</td><td class='cell-color'><img src='".$image."' width='40' height='36' /></td>";

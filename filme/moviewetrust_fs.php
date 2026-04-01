@@ -52,6 +52,7 @@ function str_between($string, $start, $end){
 	if ($ini == 0) return ""; $ini += strlen($start); $len = strpos($string,$end,$ini) - $ini;
 	return substr($string,$ini,$len);
 }
+$vsembed1="/vsembed1/";
 ?>
 <html>
 <head>
@@ -63,8 +64,8 @@ function str_between($string, $start, $end){
 function openlink1(link) {
   link1=document.getElementById('file').value;
   //alert (link1);
-  if (link1.match(/streamembed|imwatchingmovies/gi)) {
-  msg="streamembed1.php?file=" + link1 + "&title=" + link + "&tip=flash";
+  if (link1.match(<?php echo $vsembed1;?>gi)) {
+  msg="vsembed.php?file=" + link1 + "&title=" + link;
   window.open(msg);
   } else {
   msg="link1.php?file=" + link1 + "&title=" + link;
@@ -73,8 +74,8 @@ function openlink1(link) {
 }
 function openlink(link) {
   link1=document.getElementById('file').value;
-  if (link1.match(/streamembed|imwatchingmovies|streambucket/gi)) {
-  msg="streamembed1.php?file=" + link1 + "&title=" + link + "&tip=mp";
+  if (link1.match(<?php echo $vsembed1;?>gi)) {
+  msg="vsembed.php?file=" + link1 + "&title=";
   window.open(msg);
   } else {
   on();
@@ -269,93 +270,7 @@ $s[]="vixsrc";
   //echo $l;
   //die();
 //==============================================
-if (file_exists("v1.html"))
-  unlink("v1.html");
-if (file_exists("v1.txt"))
-  unlink("v1.txt");
-  $ua="Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:133.0) Gecko/20100101 Firefox/133.0";
-  $head=array('User-Agent: '.$ua,
-  'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
-  'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
-  'Accept-Encoding: deflate',
-  'Connection: keep-alive',
-  'Referer: https://vidsrc-embed.ru/',
-  'Origin: https://vidsrc-embed.ru',
-  'Upgrade-Insecure-Requests: 1');
-  $ch = curl_init();
-  curl_setopt($ch, CURLOPT_URL, $l1);
-  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
-  curl_setopt($ch, CURLOPT_RETURNTRANSFER  ,1);  // RETURN THE CONTENTS OF THE CALL
-  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-  curl_setopt($ch, CURLOPT_HTTPHEADER,$head);
-  curl_setopt($ch, CURLOPT_ENCODING,"");
-  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
-  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
-  $h = curl_exec($ch);
-  curl_close($ch);
-  //echo $h;
-  $t1=explode('player_iframe" src="',$h);
-  $t2=explode('"',$t1[1]);
-  $l1=fixurl($t2[0]);
-  $host="https://".parse_url($l1)['host'];
 
-   $head=array('User-Agent: '.$ua,
-   'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
-   'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
-   'Accept-Encoding: deflate',
-   'Connection: keep-alive',
-   'Referer: https://vidsrc-embed.ru/',
-   'Upgrade-Insecure-Requests: 1',
-   'Sec-Fetch-Dest: iframe',
-   'Sec-Fetch-Mode: navigate',
-   'Sec-Fetch-Site: cross-site');
-
-   $ch = curl_init();
-   //curl_setopt($ch, CURLOPT_USERAGENT, $ua);
-   curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
-   curl_setopt($ch, CURLOPT_RETURNTRANSFER  ,1);  // RETURN THE CONTENTS OF THE CALL
-   curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-   curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
-   curl_setopt($ch, CURLOPT_HTTPHEADER,$head);
-   curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
-   curl_setopt($ch, CURLOPT_TIMEOUT, 15);
-   curl_setopt($ch, CURLOPT_URL, $l1);
-   //curl_setopt($ch, CURLINFO_HEADER_OUT, true);
-   $h = curl_exec($ch);
-   //echo $h;
-   $t1=explode("src: '",$h);
-   $t2=explode("'",$t1[1]);
-   $l=fixurl($t2[0],$l1);
-   //echo $l."===========";
-   curl_setopt($ch, CURLOPT_URL, $l);
-   $h = curl_exec($ch);
-   //$h=str_replace("/tprs/","https://cloudnestra.com/tprs/",$h);
-   //echo $h;
-   //file: '
-
-   curl_close($ch);
-   preg_match_all("/src\=\"(\/[^\"]+)/",$h,$m);
-   //print_r ($m);
-   $h=preg_replace_callback(
-    "/src\=\"(\/[^\"]+)/",
-    function ($a1) {
-     return ' src="https://cloudnestra.com'.$a1[1];
-    },
-    $h
-    );
-    //https://cloudnestra.com/pjs/pjs_main_drv_cast.261225.js?_=1766737926
-    $h=preg_replace("/https\:\/\/cloudnestra\.com\/pjs\/pjs\_main\_drv\_cast\.\d+\.js/","pjs_main_drv_cast.2611251.js",$h);
-    //echo $h;
-    $t1=explode('.get("',$h);
-    $t2=explode('"',$t1[1]);
-    $l_pass="https://cloudnestra.com".$t2[0];
-    file_put_contents("v1.txt",$l_pass);
-    //$h=str_replace('.get("/','.get("https://cloudnestra.com/',$h);
-    file_put_contents("v1.html",$h);
-//echo '<iframe src="v1.html" style="display:none;"></iframe>';
-///////////////////////////////////////////
-//print_r ($r);
-echo '<iframe src="v1.html"></iframe>';
 echo '<table border="1" width="100%">';
 echo '<TR><TD class="mp">Alegeti un server: Server curent:<label id="server">'.$s[0].'</label>
 <input type="hidden" id="file" value="'.urlencode($r[0]).'"></td></TR></TABLE>';

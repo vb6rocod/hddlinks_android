@@ -144,6 +144,15 @@ if (preg_match("/filmeonlinegratis\.org/",$filelink)) {
   }
   curl_close($ch);
   $html=$h;
+} elseif (preg_match("/zfilmeonline\./",$filelink)) {
+
+  $h=getHTML1($filelink);
+  preg_match_all("/data-load\=\"([^\"]+)/",$h,$m);
+  $html="";
+  for ($k=0;$k<count($m[1]);$k++) {
+    $html .=base64_decode($m[1][$k]);
+  }
+  //echo $html;
 } elseif (preg_match("/fshd\.uk/",$filelink)) {
   $host="https://".parse_url($filelink)['host'];
   $head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:120.0) Gecko/20100101 Firefox/120.0',
@@ -750,6 +759,30 @@ if (preg_match("/filmeonlinegratis\.org/",$filelink)) {
   //}
 
   //echo $html;
+} elseif (strpos($filelink,"filmehd.one") !== false) {
+  //https://filmehd.one/api/movies/i-am-rage-2023
+  $ua="Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:147.0) Gecko/20100101 Firefox/147.0";
+  $ch = curl_init();
+  curl_setopt($ch, CURLOPT_URL,$filelink);
+  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
+  curl_setopt($ch,CURLOPT_REFERER,$filelink);
+  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER  ,1);  // RETURN THE CONTENTS OF THE CALL
+  //curl_setopt($ch, CURLOPT_HEADER, true);
+  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+  $h = curl_exec($ch);
+  $t1=explode('"movie-slug-',$h);
+  $t2=explode('"',$t1[1]);
+  $id=$t2[0];
+  $l="https://filmehd.one/api/movies/".$id;
+  curl_setopt($ch, CURLOPT_URL,$l);
+  $h = curl_exec($ch);
+  curl_close ($ch);
+  $r=json_decode($h,1);
+  $html=$r["embed"];
+  
 } elseif (strpos($filelink,"filmehd.to") !== false) {
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL,$filelink);
@@ -1479,6 +1512,8 @@ $ua = $_SERVER['HTTP_USER_AGENT'];
 /**################ All links ################**/
 //echo $html;
 //die();
+$html=str_replace('\"','"',$html);
+$html=str_replace('\/','/',$html);
 $h_debug=$html;
 $html=str_replace("https","http",$html);
 $html=str_replace("&#038;","&",$html);
@@ -1504,6 +1539,7 @@ for ($k=0;$k<count($t1);$k++) {
  $html .=$out;
 }
 //echo $html;
+
 //echo $pg;
 if ($pg =="play now...") {   //sitefilme
 //echo "asasasas";
@@ -1561,6 +1597,7 @@ $s=$s."|filebox\.com|glumbouploads\.com|uploadc\.com|sharefiles4u\.com|zixshare\
 $s=$s."netu\.wiztube\.xyz|hqq\.tv|hqq\.to|hqq\.watch|waaw1?\.|waaws|hindipix\.in|pajalusta\.club|vidtodo\.com|vshare\.eu|bit\.ly";
 //$s=$s."|realyplayonli\.|strcdn\.org|div\.str1\.site|fshd\d+\.club|video\.filmeonline";
 $s=$s."|".$hqq_indirect."|".$mixdrop_indirect."|".$dood_indirect."|".$vidguard_indirect."|".$filemoon_indirect;
+
 $s=$s."|nowvideo\.eu|nowvideo\.co|vreer\.com|180upload\.com|dailymotion\.com|nosvideo\.com|vidbull\.com|";
 $s=$s."purevid\.com|videobam\.com|streamcloud\.eu|donevideo\.com|upafile\.com|docs\.google|mail\.ru|";
 $s=$s."superweb|moviki\.ru|entervideos\.com";
@@ -1586,6 +1623,8 @@ $s=$s."|sbembed\.com|sbembed1\.com|sbplay\.|sbvideo\.net|streamsb\.net|sbplay\.o
 $s=$s."|\w+ssb\.|lvturbo\.|sb\w+\.|sbbrisk\.|sbanh\.|sblanh\.|sbchill\.|sbfast\.com|sblongvu\.com|sbfull\.|sbthe\.|sbspeed\.|tubeload\.|embedo\.|filemoon\.|utbrgebzvhfa\.";
 $s=$s."|streamhide\.|moonmov\.pro|vgfplay\.|fslinks\.|embedv\.|furher\.|truepoweroflove\.|streamdav\.";
 $s=$s."|d0o0d\.|mdfx\w+|do0od|lulu\.st|filmm\.link\/\d+|vinovo\.to|stf\d+\.vip\/\d+";
+$s=$s."|movearnpre|minochinos|vidmoly|vidnest|strmup\.";
+$s=$s."|embed4me\.|strp2p\.live|vidara\.to|vsembed\.";
 $s=$s."|vembed\.net|vgembed\.|luluvdo+\.com|luluvid\.|guard|voe\.|mdbekjwqa\.|mdzsmut|vidmoly\.to|vidhidevip\.|vidhidepre\.|streamflash\.sx/i";
 /////////////////////////////////////////////
 //$x=preg_grep($s,$links);
@@ -1891,12 +1930,12 @@ for ($i=0;$i<count($links);$i++) {
    }
    /* try to remove links like http://abc.com or http://abc.com/ but not http://abc.com?x=y or http://abc.com/?x=y*/
    //print_r (parse_url($cur_link));
-   if (isset(parse_url($cur_link)["path"]))
+   if (isset(parse_url($cur_link)["path"]) || isset(parse_url($cur_link)["fragment"]))
       $path=parse_url($cur_link)["path"];
    else
       $path="";
-   if (!$path && !isset(parse_url($cur_link)["query"])) $cur_link="";
-   if ($path=="/" && !isset(parse_url($cur_link)["query"])) $cur_link="";
+   //if (!$path && (!isset(parse_url($cur_link)["query"]) || !isset(parse_url($cur_link)["fragment"]))) $cur_link="";
+   //if ($path=="/" && (!isset(parse_url($cur_link)["query"]) || !isset(parse_url($cur_link)["fragment"]))) $cur_link="";
    //echo "c=".$cur_link;
    $pat="/hqq\.watch|xopenload\.|\/player\/script\.php|top\.mail\.ru|facebook|twitter|player\.swf";
    $pat .="|img\.youtube|youtube\.com\/user|radioarad|\.jpg|\.png|\.gif|jq\/(js|css)";
@@ -2039,6 +2078,7 @@ echo '<h2>'.$pg."</H2><BR>";
 echo '<label id="server"><font size="6" color="lightblue">Alegeti un server</font></label><BR>';
 echo '<table border="0" width="90%">'."\n\r";
 $cap=0;
+$vsembed1="/vsembed1/";
 foreach($link_f as $k=>$val) {
 $server="";
 $server = parse_url($link_f[$k])["host"];
@@ -2046,6 +2086,8 @@ if (preg_match($indirect,$server)) {
     echo '<TR><td class="link"><a href="hqq.php?file='.urlencode($link_f[$k]).'&title='.urlencode($pg).'" target="_blank">'.$server.'</a></TD></TR>';
 } else if(preg_match($filemoon,$server)) {
     echo '<TR><td class="link"><a href="filemoon.php?file='.urlencode($link_f[$k]).'&title='.urlencode($pg).'" target="_blank">'.$server.'</a></TD></TR>';
+} else if(preg_match($vsembed1,$server)) {
+    echo '<TR><td class="link"><a href="vsembed.php?file='.urlencode($link_f[$k]).'&title='.urlencode($pg).'" target="_blank">'.$server.'</a></TD></TR>';
 } else {
  if ($flash =="flash")  {
    //echo $link_f[$k];

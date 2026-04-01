@@ -4,6 +4,7 @@ error_reporting(0);
 //echo '<link rel="stylesheet" type="text/css" href="../custom.css" />';
 include ("../common.php");
 include ("../util.php");
+$has_IMDB="OK";
 $title=unfix_t(urldecode($_GET["title"]));
 $tip=$_GET["tip"];
 if ($tip=="serie" || $tip=="series") $tip="tv";
@@ -281,9 +282,15 @@ if (isset($_GET['tmdb'])) {
   file_put_contents($file,$out);
   $x=getTMDBDetail("",$arr_match[0][0],$key,$tip,1,count($arr_match));
   echo $x;
+  } else {
+    $has_IMDB="";
   }
  } // end if (count($m)>0)
  else {
+ //die();
+ //echo "OK";
+ //$x=file_get_contents($file);
+ //echo $x;
  if ($tip=="movie") {
  if ($year)
    $l="https://www.themoviedb.org/search/movie?query=".rawurlencode($title)."%20y:".$year;
@@ -312,7 +319,7 @@ if (isset($_GET['tmdb'])) {
   preg_match_all("/tv\/(\d+)\-/",$h,$m);
   //print_r ($m);
   $arr_match=array_unique($m[1]);
-  //print_r ($z);
+  //print_r ($arr_match);
   if (count($arr_match) >0) {
   $out="";
   foreach ($arr_match as $k=>$v) {
@@ -321,8 +328,11 @@ if (isset($_GET['tmdb'])) {
   $out=substr($out,0,-1);
   $out=$out."|0|".$tip;
   file_put_contents($file,$out);
-  $x=getTMDBDetail($z[0],"",$key,$tip,1,count($arr_match));
+  //echo $out;
+  $x=getTMDBDetail($arr_match[0],"",$key,$tip,1,count($arr_match));
   echo $x;
+  } else {
+    $has_IMDB="";
   }
 }
 }
@@ -332,15 +342,22 @@ if (count($arr_match) == 0  && !isset($_GET['tmdb']) && !$imdb) {  // not found 
    //$arr_imdb[]=array($id_imdb,$tip,$year_imdb,$title_imdb,$img_imdb,$tip_imdb);
    $id_imdb=$arr_imdb[0][0];
    $out=$id_imdb."|0|".$tip;
-   file_put_contents($file,$out);
-   $x=getTMDBDetail("",$id_imdb,$key,$tip,1,1);
-   echo $x;
+   //file_put_contents($file,$out);
+   //$x=getTMDBDetail("",$id_imdb,$key,$tip,1,1);
+   //echo $x;
   } else { // not found
+   $out="0"."|0|".$tip;
+   //file_put_contents($file,$out);
+   //$x=getTMDBDetail("0","",$key,$tip,1,1);
+   //echo $x;
+  }
+}
+if (!$has_IMDB) {
    $out="0"."|0|".$tip;
    file_put_contents($file,$out);
    $x=getTMDBDetail("0","",$key,$tip,1,1);
    echo $x;
-  }
+
 }
 /*
   $r=getIMDBDetail($imdb);

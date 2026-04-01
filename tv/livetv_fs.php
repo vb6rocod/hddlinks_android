@@ -124,7 +124,7 @@ preg_match_all("/show_webplayer\(\'([^\']+).+href\=\"([^\"]+)\"/",$h,$m);
 //print_r ($m);
   for ($k=0;$k<count($m[1]);$k++) {
   if (preg_match("/alieztv|youtube|ifr/i",$m[1][$k])) {
-   $r[]=fixurl($m[2][$k]);
+   $r[]=fixurl($m[2][$k],$link);
    $s[]=$m[1][$k];
    }
   }
@@ -135,7 +135,7 @@ preg_match_all("/onclick\=\"window\.open.+href\=\"([^\"]+)\"/",$h,$m);
   //echo "\n".fixurl($m[1][$k])."\n";
   if (preg_match("/webplayer\d?\.php/i",$m[1][$k])) {
 
-   curl_setopt($ch, CURLOPT_URL, fixurl($m[1][$k]));
+   curl_setopt($ch, CURLOPT_URL, fixurl($m[1][$k],$link));
    $h = curl_exec($ch);
    //echo $h;
    //echo "==========================";

@@ -8,6 +8,8 @@ elseif (strpos($file,"cinebloom") !== false)
  $cookie=$base_cookie."cinebloom.txt";
 elseif (strpos($file,"batflix") !== false)
  $cookie=$base_cookie."batflix.txt";
+elseif (strpos($file,"zfilmeonline") !== false)
+ $cookie=$base_cookie."getlink.dat";
 elseif (strpos($file,"5movies") !== false) {
  $cookie=$base_cookie."5movies.dat";
  if (file_exists($base_pass."firefox.txt"))
@@ -22,7 +24,7 @@ elseif (strpos($file,"5movies") !== false) {
    $ua="Mozilla/5.0 (Windows NT 10.0; rv:75.0) Gecko/20100101 Firefox/75.0";
 } else
  $cookie=$base_cookie."hdpopcorns.dat";
-if (!preg_match("/5movies|filmehd\.|cinebloom\.|batflix\.|lookmovie\./",$file)) {
+if (!preg_match("/5movies|filmehd\.|cinebloom\.|batflix\.|lookmovie\.|zfilmeonline\./",$file)) {
 $ch = curl_init();
 curl_setopt($ch, CURLOPT_URL, $file);
 curl_setopt($ch, CURLOPT_REFERER,$file);
@@ -39,6 +41,26 @@ $res = curl_exec($ch);
 $rescode = curl_getinfo($ch, CURLINFO_HTTP_CODE); 
 curl_close($ch) ;
 echo $res;
+} elseif (preg_match("/zfilmeonline\./",$file)) {
+$l1="https://ttraian22.great-site.net/getlink.php";
+$file=$l1."?link=".urlencode($file);
+//echo $file;
+$ua = "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:147.0) Gecko/20100101 Firefox/147.0";
+$ch = curl_init();
+curl_setopt($ch, CURLOPT_URL, $file);
+curl_setopt($ch, CURLOPT_REFERER,$l1);
+//curl_setopt($ch, CURLOPT_VERBOSE, true);
+//curl_setopt($ch, CURLOPT_HEADER, false);
+curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+curl_setopt($ch, CURLOPT_RETURNTRANSFER, false);
+curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+curl_setopt($ch, CURLOPT_USERAGENT, $ua);
+curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie);
+curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+curl_exec($ch);
+curl_close($ch) ;
+//echo $res;
 } elseif (preg_match("/batflix\./",$file)) {
 $ua=file_get_contents($base_pass."firefox.txt");
 $ch = curl_init();

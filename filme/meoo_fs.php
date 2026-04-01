@@ -137,7 +137,8 @@ $head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:139.0) Gec
 'Accept-Encoding: deflate',
 'Connection: keep-alive',
 'Referer: https://meoo.ro/?player_movie=10248&auto=true');
-
+//echo $link;
+$l=$link."/vizioneaza/";
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $l);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
@@ -148,10 +149,56 @@ $head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:139.0) Gec
   curl_setopt($ch, CURLOPT_TIMEOUT, 15);
   $h = curl_exec($ch);
   curl_close($ch);
-  preg_match("/data\-load\-embed\=\"(\d+)/",$h,$m);
-  $tmbd=$m[1];
-  preg_match("/data\-load\-embed\=\"(tt\d+)/",$h,$m);
-  $imdb=$m[1];
+  preg_match_all("/server\=(\d)/",$h,$m);
+  //print_r ($m);
+  //echo $h;
+$r=array();
+$s=array();
+  for ($z=0;$z<count($m[1]);$z++) {
+  $l1=$l."?server=".$m[1][$z];
+  //echo $l1;
+  $ch = curl_init();
+  curl_setopt($ch, CURLOPT_URL, $l1);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+  curl_setopt($ch, CURLOPT_HTTPHEADER, $head);
+  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+  $h = curl_exec($ch);
+  curl_close($ch);
+  $t1=explode('data-token="',$h);
+  $t2=explode('"',$t1[1]);
+  $token=$t2[0];
+$l2="https://meoo.ro/api/get_embed_url.php";
+$post="token=".$token;
+  $ch = curl_init();
+  curl_setopt($ch, CURLOPT_URL, $l2);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+  curl_setopt($ch, CURLOPT_HTTPHEADER, $head);
+  curl_setopt($ch, CURLOPT_POST,1);
+  curl_setopt($ch, CURLOPT_POSTFIELDS,$post);
+  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+  $h = curl_exec($ch);
+  curl_close($ch);
+  //echo $h;
+  $x=json_decode($h,1);
+  $r[]=$x['url'];
+  $s[]=parse_url($x['url'])['host'];
+  if (preg_match("/movie\/(\d+)/",$x['url'],$k))
+   $tmbd=$k[1];
+  if (preg_match("/imdb\=(tt\d+)/",$x['url'],$k1))
+   $imdb=$k1[1];
+}
+//echo $imdb;
+//print_r ($r);
+//  preg_match("/data\-load\-embed\=\"(\d+)/",$h,$m);
+//  $tmbd=$m[1];
+//  preg_match("/data\-load\-embed\=\"(tt\d+)/",$h,$m);
+//  $imdb=$m[1];
 //////////////////////////////////////////////////////////////////
 $ua="Mozilla/5.0 (Windows NT 10.0; rv:88.0) Gecko/20100101 Firefox/88.0";
 if (file_exists($base_pass."tmdb.txt"))
@@ -245,9 +292,9 @@ $l="https://api.themoviedb.org/3/tv/".$tmbd."?api_key=".$api_key."&append_to_res
   $info = substr($info, 0, -1).".<BR>";
   $info .= '<b><font color="cyan">Overview:</font></b>'.$overview;
 ///////////////////////////////////////////////////////////////////
-$r=array();
-$s=array();
+
 $l="https://multiembed.mov/?video_id=".$imdb;
+//echo $l;
 $head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:139.0) Gecko/20100101 Firefox/139.0',
 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
 'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
