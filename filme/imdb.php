@@ -80,16 +80,20 @@ if (file_exists($f_OMDB)) {
    $OMDB=false;
 
 $title=prep_tit($title);
-//echo $title."\n";
 
+//echo $title."\n";
+//echo $year;
 if (!$year) {
   preg_match("/\(([^\)]*)\)$/",$title,$y);
+  //print_r ($y);
   if (isset($y[0])) {
     $title=trim(preg_replace("/\(([^\)]*)\)$/","",$title));
     if (preg_match("/[1|2]\d{3}/",$y[1],$z))
      $year=$z[0];
   }
 }
+$title=trim(preg_replace("/\(([^\)]*)\)$/","",$title));
+//echo $year;
 //One Piece Season 1
 preg_match("/\s*[\s\-]?\s*(season|sezon|mini)\w*\s+(\d+)/i",$title,$m);
 //print_r ($m);
@@ -141,6 +145,8 @@ if (isset($_GET['tmdb'])) {
   $h = curl_exec($ch);
   //echo $h;
   //$h=file_get_contents("1.txt");
+  $m=array();
+  if (preg_match("/type\=\"application\/json/",$h)) {
   $t1=explode('type="application/json">',$h);
   $t2=explode('</script>',$t1[1]);
   $x=$t2[0];
@@ -148,15 +154,19 @@ if (isset($_GET['tmdb'])) {
   //print_r ($y);
   $m=$y['props']['pageProps']['titleResults']['results'];
   //print_r ($m);
+  }
   if(count($m) == 0) {
+  $m=array();
   $url="https://www.imdb.com/find/?q=".rawurlencode($title)."&ref_=fn_al";
   curl_setopt($ch, CURLOPT_URL, $url);
   $h = curl_exec($ch);
+  if (preg_match("/type\=\"application\/json/",$h)) {
   $t1=explode('type="application/json">',$h);
   $t2=explode('</script>',$t1[1]);
   $x=$t2[0];
   $y=json_decode($x,1);
   $m=$y['props']['pageProps']['titleResults']['results'];
+  }
   //print_r ($y);
   }
   curl_close($ch);
@@ -302,6 +312,7 @@ if (isset($_GET['tmdb'])) {
  else
    $l="https://www.themoviedb.org/search/tv?query=".rawurlencode($title);
  }
+ //echo $l;
  $arr_match=array();
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $l);
@@ -313,6 +324,7 @@ if (isset($_GET['tmdb'])) {
   curl_setopt($ch, CURLOPT_TIMEOUT, 15);
   $h = curl_exec($ch);
   curl_close($ch);
+  //echo $h;
   if ($tip=="movie")
   preg_match_all("/movie\/(\d+)\-/",$h,$m);
   else

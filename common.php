@@ -188,6 +188,6 @@ $indirect="/vzlinks\.|playerwatch\.xyz|player\.filmm\.link|pajalusta\.club|hindi
 $mixdrop="/mi?xdro{0,}p|mdy48tn97\.|mdbekjwqa\.|mdfx\w+|mdzsmut|mixdropjmk/";
 $vsembed="/vsembed\.|vidsrc\.net/";
 $dood="/do{2,}ds?(stream)?\.|ds2play\.|ds2video\.|d0o0d\.|do0od\.|d0000d|d000d|do7go|doply|vidply|vide0\.|d\-s\.io|dsvplay\.|myvidplay\./";
-$filemoon="/filemoon\.|moonmov\.pro|furher\.|truepoweroflove\.|kerapoxy\.|c4qhk0je\.|1azayf9w\.|81u6xl9d\.xyz|4usw6ehy\.xyz|o45q3azz\.skin|ynowfnga\.xyz|f16px\.|bysetayico\.|byselapuix\.|byse/";
+$filemoon="/filemoon\.|moonmov\.pro|furher\.|truepoweroflove\.|kerapoxy\.|c4qhk0je\.|1azayf9w\.|81u6xl9d\.xyz|4usw6ehy\.xyz|o45q3azz\.skin|ynowfnga\.xyz|f16px\.|bysetayico\.|byselapuix\.|byse|weneverbeenfree/";
 $vidguard="/vgfplay\.|fslinks\.|vembed\.net|vgembed\.|vid-guard\.com|embedv\.|vidguard\.to|serialeonline\.ovh|bembed\.net|listeamed\.net/";
 ?>

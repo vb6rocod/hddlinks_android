@@ -154,7 +154,7 @@ $l=$link."/vizioneaza/";
   //echo $h;
 $r=array();
 $s=array();
-  for ($z=0;$z<count($m[1]);$z++) {
+  for ($z=0;$z<2;$z++) {
   $l1=$l."?server=".$m[1][$z];
   //echo $l1;
   $ch = curl_init();
@@ -167,6 +167,10 @@ $s=array();
   curl_setopt($ch, CURLOPT_TIMEOUT, 15);
   $h = curl_exec($ch);
   curl_close($ch);
+  //echo $h;
+  preg_match ("/\<iframe id\=\"video-iframe\"\s+src\=\"([^\"]+)/",$h,$yy);
+  //print_r ($yy);
+  /*
   $t1=explode('data-token="',$h);
   $t2=explode('"',$t1[1]);
   $token=$t2[0];
@@ -186,12 +190,66 @@ $post="token=".$token;
   curl_close($ch);
   //echo $h;
   $x=json_decode($h,1);
-  $r[]=$x['url'];
-  $s[]=parse_url($x['url'])['host'];
-  if (preg_match("/movie\/(\d+)/",$x['url'],$k))
+  */
+  $url=str_replace("&amp;","&",$yy[1]);
+  $r[]=$url;
+  $s[]=parse_url($url)['host'];
+  if (preg_match("/movie\/(\d+)/",$url,$k))
    $tmbd=$k[1];
-  if (preg_match("/imdb\=(tt\d+)/",$x['url'],$k1))
+  if (preg_match("/imdb\=(tt\d+)/",$url,$k1))
    $imdb=$k1[1];
+}
+ $key=base64_decode("dHJhaWxlcnMudG8tVUE=");
+ //echo $key;
+$head=array('X-Requested-With: XMLHttpRequest',
+"X-User-Agent: ".$key);
+//$head=array
+$imdbid=str_replace("tt","",$imdb);
+$imdbid=sprintf("%07d", $imdbid);
+$l_rum="https://rest.opensubtitles.org/search/imdbid-".$imdbid."/sublanguageid-rum";
+  $ua="Mozilla/5.0 (Windows NT 10.0; rv:98.0) Gecko/20100101 Firefox/98.0";
+  $ch = curl_init();
+  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
+  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER  ,1);  // RETURN THE CONTENTS OF THE CALL
+  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+  curl_setopt($ch, CURLOPT_HTTPHEADER,$head);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 25);
+  curl_setopt($ch, CURLOPT_URL, $l_rum);
+  $h_rum = curl_exec($ch);
+  curl_close ($ch);
+$r_rum=json_decode($h_rum,1);
+$d="";
+for($zz=0;$zz<count($r_rum);$zz++) {
+ $d=$r_rum[0]['SubDownloadLink'];
+ $movie=$r_rum[$zz]['MovieReleaseName'];
+ if (preg_match("/bluray/i",$movie)) {
+  $d=$r_rum[$zz]['SubDownloadLink'];
+  break;
+ }
+}
+if ($d) {
+  $srt_name="sub_extern.srt";
+  $ch = curl_init();
+  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
+  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER  ,1);  // RETURN THE CONTENTS OF THE CALL
+  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+  curl_setopt($ch, CURLOPT_HTTPHEADER,$head);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 25);
+  curl_setopt($ch, CURLOPT_URL, $d);
+  $h_sub = curl_exec($ch);
+  curl_close ($ch);
+  $h = gzdecode($h_sub);
+  //$h=mb_convert_encoding($h,'UTF-8', 'ISO-8859-2');
+  if ($h) {
+   $new_file = $base_sub.$srt_name;
+   $fh = fopen($new_file, 'w');
+   fwrite($fh, $h, strlen($h));
+   fclose($fh);
+}
 }
 //echo $imdb;
 //print_r ($r);
@@ -293,179 +351,6 @@ $l="https://api.themoviedb.org/3/tv/".$tmbd."?api_key=".$api_key."&append_to_res
   $info .= '<b><font color="cyan">Overview:</font></b>'.$overview;
 ///////////////////////////////////////////////////////////////////
 
-$l="https://multiembed.mov/?video_id=".$imdb;
-//echo $l;
-$head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:139.0) Gecko/20100101 Firefox/139.0',
-'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
-'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
-'Accept-Encoding: deflate',
-'Connection: keep-alive',
-'Referer: https://multiembed.mov/');
-
-  $ch = curl_init();
-  curl_setopt($ch, CURLOPT_URL, $l);
-  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
-  curl_setopt($ch, CURLOPT_HTTPHEADER, $head);
-  curl_setopt($ch, CURLOPT_HEADER,1);
-  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
-  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
-  $h = curl_exec($ch);
-  curl_close($ch);
-  preg_match("/location:\s*(.*)/i",$h,$m);
-  //print_r ($m);
-  //echo $h;
-  $l=trim($m[1]);
-  //echo $l;
-  $btn="ZEhKMVpTLVF0LVBTLVF0TmotUDFMUy1Rek5qSXRMLTAtVjNOLTAtVi1RTkRjNU5EWS1RTi0wYy01";
-  $btn=base64_encode("dHJ1ZS-Qt-PS-QtNj-P1LS-QzNjItL-0-V3N-0-V-QNDc5NDY-QN-0c-5");
-  //$btn=base64_encode("dHJ1ZS-Qt-PS-QtNj-P1LS-QzNjItL-0-V3N-0-V-QNDc5NDY-QN-0c-6");
-  $post="button-click=".$btn."&button-referer=";
-$head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:140.0) Gecko/20100101 Firefox/140.0',
-'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
-'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
-'Accept-Encoding: deflate',
-'Content-Type: application/x-www-form-urlencoded',
-'Content-Length: '.strlen($post),
-'Origin: https://streamingnow.mov',
-'Connection: keep-alive',
-'Referer: '.$l);
-  $ch = curl_init();
-  curl_setopt($ch, CURLOPT_URL, $l);
-  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
-  curl_setopt($ch, CURLOPT_HTTPHEADER, $head);
-  curl_setopt($ch, CURLOPT_POST,1);
-  curl_setopt($ch, CURLOPT_POSTFIELDS,$post);
-  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
-  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
-  $h = curl_exec($ch);
-  curl_close($ch);
-  //echo $h;
-  preg_match("/load_sources\(\"([^\"]+)/",$h,$m);
-  preg_match_all("/servers\[(\d+)\]\=\s*\"([^\"]+)/",$h,$n);
-  //print_r ($m);
-  //print_r ($n);
-  $token=$m[1];
-  $l1="https://streamingnow.mov/response.php";
-
-  //$token="S0dPVFFEaUcxTUlmNXJMUFRGb0tTaXFUVStiSHNRbkRNcXF1OWtBaWljR0dnQ1JIeFdGbWcweTN5akc1RFdZOGZLY1c0ZjZYUElOV09YYzZEcHJWN2JWendOYWh2YXRDUDhRV1duQVRpMW14d0YyNFJSc1RkYzA0cUVYbitzQTZxZENMRDdXRnZ1a2RDVUdNRjBmbjNDeTY2UEdNNUtjMEs4SDI=";
-  $post="token=".$token;
-  //echo $post."\n";
-$head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:140.0) Gecko/20100101 Firefox/140.0',
-'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
-'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
-'Accept-Encoding: deflate',
-'Content-Type: application/x-www-form-urlencoded',
-'X-Requested-With: XMLHttpRequest',
-'Content-Length: '.strlen($post),
-'Origin: https://streamingnow.mov',
-'Connection: keep-alive',
-'Referer: '.$l);
-//print_r ($head);
-  $ch = curl_init();
-  curl_setopt($ch, CURLOPT_URL, $l1);
-  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
-  curl_setopt($ch, CURLOPT_HTTPHEADER, $head);
-  curl_setopt($ch, CURLOPT_POST,1);
-  curl_setopt($ch, CURLOPT_POSTFIELDS,$post);
-  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
-  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
-  $h = curl_exec($ch);
-  curl_close($ch);
-  //echo $h;
-  preg_match_all("/data\-id\=\"([^\"]+)\"\s*data\-server\=\"([^\"]+)/",$h,$x);
-  //print_r ($x);
-  $l_captcha="https://streamingnow.mov/playvideo.php?video_id=".$x[1][0]."&server_id=".$x[2][0]."&token=".$token."&init=1";
-$head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:139.0) Gecko/20100101 Firefox/139.0',
-'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
-'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
-'Accept-Encoding: deflate',
-'Connection: keep-alive',
-'Referer: '.$l);
-  $ch = curl_init();
-
-  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
-  curl_setopt($ch, CURLOPT_HTTPHEADER, $head);
-  //curl_setopt($ch, CURLOPT_HEADER,1);
-  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
-  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
-  for ($i=0;$i<count($x[2]);$i++) {
-  $id=$x[1][$i];
-  $s1=$x[2][$i];
-  $l2="https://streamingnow.mov/playvideo.php?video_id=".$id."&server_id=".$s1."&token=".$token."&init=1";
-  //echo $l2;
-
-  curl_setopt($ch, CURLOPT_URL, $l2);
-  $h = curl_exec($ch);
-
-  //echo $h;
-  if (preg_match("/frameborder\=\"0\" src\=\"/",$h)) {
-  $t1=explode('frameborder="0" src="',$h);
-  $t2=explode('"',$t1[1]);
-  $l3=$t2[0];
-  $r[]=$l3;
-  if (preg_match("/vipstream\_vfx\.php\?s\=(\d+)/",$l3,$m)) {
-  $s[]= "vip".$m[1];
-  } else
-  $s[]=parse_url($l3)['host'];
-  }
-  //echo $l3."\n";
-  }
-curl_close($ch);
-//print_r ($r);
-if (preg_match("/captcha\_id/",$h)) {
-preg_match("/type=\"hidden\"\s*value\=\"([^\"]+)/",$h,$m);
-$ch_id=$m[1];
-preg_match_all("/captcha_answer\[\\]\"\s*value\=\"([^\"]+)/",$h,$n);
-//print_r ($n);
-preg_match("/id\=\"captcha-message\"\>([^\<]+)/",$h,$m);
-$q=$m[1];
-preg_match_all("/captcha\/testing\/[^\"]+/",$h,$o);
-//print_r ($o);
-echo '
-<style>
-label:before {
-  content: url("https://cdn1.iconfinder.com/data/icons/windows8_icons_iconpharm/26/unchecked_checkbox.png");
-  position: absolute;
-  z-index: 100;
-}
-:checked+label:before {
-  content: url("check_sign_icon.png");
-}
-input[type=checkbox] {
-  display: none;
-}
-/*pure cosmetics:*/
-img {
-  width: 80px;
-  height: 80px;
-}
-label {
-  margin: 10px;
-}
-</style>
-';
-echo '<span>'.$q."</span><BR>";
-echo '<form method="post" action="multiembed1.php?file='.urlencode($l2).'"><BR>';
-echo '<input type="hidden" value="'.$ch_id.'" name="captcha_id">';
-
-for ($i=0;$i<count($n[1]);$i++){
- echo '<input type="checkbox" id="ch_'.$i.'" name="captcha_answer[]" value="'.$n[1][$i].'">';
- echo '<label for="ch_'.$i.'">';
- echo '<img src="https://streamingnow.mov/'.$o[0][$i].'">';
- echo '</label>';
-}
-
-echo '<button type="submit">Verify</button>';
-echo '</form>';
-}
 ///////////////////////////////////////////////////////////////////
 echo '<table border="1" width="100%">';
 echo '<TR><TD class="mp">Alegeti un server: Server curent:<label id="server">'.$s[0].'</label>

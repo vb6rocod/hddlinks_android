@@ -153,11 +153,11 @@ $videos = array_values($videos);
   if ($n==0) echo '<TR>';
   if ($flash == "flash") {
   echo '<td class="mp" align="center" width="25%"><a class ="imdb" id="myLink'.($w*1).'" href="'.$link1.'" target="_blank" onmousedown="isKeyPressed(event)">
-  <img id="myLink'.($w*1).'" src="'.$image.'" width="'.$width.'" height="'.$height.'"><BR>'.$title.'<input type="hidden" id="imdb_myLink'.($w*1).'" value="'.$val_prog.'"></a>
+  '.$title.'<input type="hidden" id="imdb_myLink'.($w*1).'" value="'.$val_prog.'"></a>
   <a onclick="prog('."'".$val_prog."')".'"'." style='cursor:pointer;'>"." *".'</a>
   </TD>';
   }  else
-  echo '<td class="mp" align="center" width="25%">'.'<a class ="imdb" id="myLink'.($w*1).'" onclick="ajaxrequest('."'".$l."')".'"'." style='cursor:pointer;'>".'<img id="myLink'.($w*1).'" src="'.$image.'" width="'.$width.'" height="'.$height.'"><BR>'.$title.'<input type="hidden" id="imdb_myLink'.($w*1).'" value="'.$val_prog.'"></a></TD>';
+  echo '<td class="mp" align="center" width="25%">'.'<a class ="imdb" id="myLink'.($w*1).'" onclick="ajaxrequest('."'".$l."')".'"'." style='cursor:pointer;'>".$title.'<input type="hidden" id="imdb_myLink'.($w*1).'" value="'.$val_prog.'"></a></TD>';
   $w++;
   $n++;
   if ($n == 4) {

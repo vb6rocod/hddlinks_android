@@ -104,7 +104,7 @@ $link="http://protv.md/api/home/section-".$value;
   //print_r ($p["items"]);
   //$r=$p["items"];
   //echo count($p["items"])."\n";
-  array_push($r,$p["items"]);
+  if (isset($p["items"])) array_push($r,$p["items"]);
 }
 //print_r ($r);
 for ($k=0;$k<count($r);$k++) {

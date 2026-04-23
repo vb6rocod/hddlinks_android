@@ -189,7 +189,7 @@ if($tip=="release") {
 $r=array();
 
   $html=getHTML1($l);
-  $videos = explode('<article id="post-', $html);
+  $videos = explode('<div class="listmovie', $html);
   unset($videos[0]);
   $videos = array_values($videos);
   foreach($videos as $video) {

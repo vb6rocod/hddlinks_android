@@ -2239,7 +2239,9 @@ $head=array('Accept: */*',
   */
 }
 if (preg_match("/closeload\./",$filelink)) {
+//$filelink="https://closeload.top/video/embed/ygzuOvgRAwD/?imdb_id=tt1776340";
 //$filelink="https://closeload.top/video/embed/sHjilxF77Ak/";
+//$filelink=urldecode("https%3A%2F%2Fcloseload.top%2Fvideo%2Fembed%2FIBGjpaZnOvP");
   $host="https://".parse_url($filelink)['host'];
   $head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/114.0',
   'Accept: application/json, text/plain, */*',
@@ -2263,12 +2265,17 @@ if (preg_match("/closeload\./",$filelink)) {
      curl_close($ch);
      if (preg_match("/track\s+src\=\"([^\"]+)\"/",$h,$m))
       $srt=$host.$m[1];
+     if (preg_match("/tracks: \[\{\"file\":\"([^\"]+)/",$h,$z)) {
+      $srt=$z[1];
+      $srt=str_replace("\/","/",$srt);
+     }
      //echo $h;
      // track src="
   require_once("JavaScriptUnpacker.php");
   $jsu = new JavaScriptUnpacker();
   $out = $jsu->Unpack($h);
   //echo $out;
+  $out=$h;
   preg_match("/\(\[([^\)]+)\]\)/",$out,$m);
   $d=$m[1];
   //echo $d;
@@ -8623,8 +8630,8 @@ if (count($pl) > 1) {
   $h = curl_exec($ch);
   curl_close($ch);
   //echo $h;
-  //$t1=explode("mainSource",$h);
-  //$h=$t1[1];
+  $t1=explode("mainSource",$h);
+  $h=$t1[1];
   //echo $h;
   $ref="https://moviesroot.club";
   if (preg_match("/src\:\s*[\'\"]([^\"\']+)/",$h,$m))

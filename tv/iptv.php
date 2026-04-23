@@ -42,13 +42,14 @@ $l="https://github.com/iptv-org/iptv/blob/master/PLAYLISTS.md";
 //$l="https://iptv-org.github.io/iptv/index.country.m3u";
 //$l="https://iptv-org.github.io/iptv/index.country.m3u";
 //$l="https://iptv-org.github.io/iptv/index.country.m3u";
+//$l="https://iptv-org.github.io/iptv/index.country.m3u";
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $l);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
   curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 10.0; rv:64.0) Gecko/20100101 Firefox/64.0');
   curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
   curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-  //curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
+  curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
   //curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
   curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
   curl_setopt($ch, CURLOPT_TIMEOUT, 15);
@@ -59,9 +60,13 @@ $l="https://github.com/iptv-org/iptv/blob/master/PLAYLISTS.md";
   $t2=explode('</script',$t1[1]);
   $x=json_decode($t2[0],1);
   //print_r ($x);
-  $y=$x['payload']['blob']['richText'];
+  $y=$x['payload']['codeViewBlobRoute']['richText'];
   //echo $y;
+  //<li>Nordics <code><a href="https://iptv-org.github.io/iptv/regions/nord.m3u" rel="nofollow">
+  preg_match_all("/\<li\>(.*?)\<code\>\<a href\=\"([^\"]+)\"/",$y,$z);
+  //print_r ($z);
   $html=$y;
+  //$t1=explode('<code>https://iptv-org.github.io/iptv/index.country.m3u',$html);
   //die();
   /*
   $t1=explode('data-target="react-partial.embeddedData">',$html);
@@ -98,6 +103,7 @@ foreach($m3uFile as $key => $line) {
  }
 }
 */
+/*
   $videos = explode('<tr><td>', $html);
   unset($videos[0]);
   $videos = array_values($videos);
@@ -109,6 +115,25 @@ foreach($m3uFile as $key => $line) {
    $t2=explode('</code',$t1[1]);
    $file=$t2[0];
    if (!preg_match("/subdivisions/",$file)) {
+    $link="playlist.php?title=".urlencode($title)."&link=".$file;
+    if ($title) {
+	if ($n == 0) echo "<TR>"."\n\r";
+	echo '<TD class="cat">'.'<a href="'.$link.'" target="_blank">'.$title.'</a></TD>';
+    $n++;
+    if ($n > 4) {
+     echo '</TR>'."\n\r";
+     $n=0;
+    }
+ }
+  }
+  }
+*/
+  for ($m=0;$m<count($z[0]);$m++) {
+
+   $title=trim($z[1][$m]);
+
+   $file=$z[2][$m];
+   if (!preg_match("/subdivisions/",$file) && preg_match("/\/countries\//",$file)) {
     $link="playlist.php?title=".urlencode($title)."&link=".$file;
     if ($title) {
 	if ($n == 0) echo "<TR>"."\n\r";

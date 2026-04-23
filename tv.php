@@ -119,7 +119,7 @@ echo '
 <TD width="25%"><a href="filme/facebook1_fav.php" target="_blank">facebook1</a></TD>
 <TD width="25%"><a href="filme/facebook2_fav.php" target="_blank">facebook2</a></TD>
 <TD width="25%"><a href="tv/diverse.php" target="_blank">Diverse</a></TD>
-<TD width="25%"></TD>'
+<TD width="25%"><a href="tv/diverse1.php" target="_blank">Diverse(c)</a></TD>'
 ;
 echo '</TR>';
 }

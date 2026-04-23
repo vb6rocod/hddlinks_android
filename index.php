@@ -58,6 +58,14 @@ td {
     font-style: bold;
     font-size: 20px;
 }
+#footer {
+    bottom: 0%;
+    position: fixed;
+}
+#bottom{
+
+    position: absolute; bottom: 0px;
+}
 </style>
 <script type="text/javascript">
 function ajaxrequest(url) {
@@ -252,10 +260,27 @@ if (!file_exists($firefox))
   file_put_contents($firefox,$ua);
 if (!file_exists($base_pass."tmdb.txt"))
   file_put_contents($base_pass."tmdb.txt","d0e6107be30f2a3cb0a34ad2a90ceb6f");
+$ua = $_SERVER['HTTP_USER_AGENT'];
+if (preg_match("/(windows|android)[^;]+/i",$ua,$m))
+ $vv=" | ".$m[0];
+else
+ $vv="";
 ?>
 <br>
 <div id="overlay">
   <div id="text">Wait....</div>
 </div>
+
+<div class="bottom" id="bottom"></div>
+<script>
+let text = "Screen: " + screen.width + "*" + screen.height + " | " +
+'PHP version: ' + '<?php echo(phpversion()); ?>'   + '<?php echo ($vv); ?>';
+//let text = "Total width/height: " + screen.width + "*" + screen.height + "<br>" +
+//"Available width/height: " + screen.availWidth + "*" + screen.availHeight + "<br>" +
+//"Color depth: " + screen.colorDepth + "<br>" +
+//"Color resolution: " + screen.pixelDepth;
+
+document.getElementById("bottom").innerHTML = text;
+</script>
 </body>
 </html>

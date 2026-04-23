@@ -1,20 +1,13 @@
 <!DOCTYPE html>
 <?php
-error_reporting(0);
-//ini_set('memory_limit', '44M');
+//error_reporting(0);
 ini_set('memory_limit', '-1');
-if (isset($_GET['link'])) {
-  $link= $_GET['link'];
-} else
- $link="";
+$link= $_GET['link'];
 $pg_tit=urldecode($_GET["title"]);
 if (isset($_GET['page']))
  $page=$_GET['page'];
 else
  $page=0;
-if (isset($_GET['group']))
- $group=$_GET['group'];
-else
  $group="no";
 $step=200;
 ////////////////////////
@@ -155,9 +148,7 @@ function off() {
 
 
 <?php
-if ($group <> "no")
- echo '<h2>'.$pg_tit." (".$group.")</H2>";
-else
+
  echo '<h2>'.$pg_tit.'</h2>';
 function str_between($string, $start, $end){
 	$string = " ".$string; $ini = strpos($string,$start);
@@ -184,89 +175,67 @@ $user_agent     =   $_SERVER['HTTP_USER_AGENT'];
 
 $n=0;
 $w=0;
-function remove_empty_lines($string) {
-    $lines = explode("\n", str_replace(array("\r\n", "\r"), "\n", $string));
-    //print_r ($lines);
-    $lines = array_map('trim', $lines);
-    //print_r ($lines);
-    $lines = array_filter($lines, function($value) {
-        return $value !== '';
-    });
-    return implode("\n", $lines);
-    //return $lines;
-}
-$m3uFile="pl/".$pg_tit;
-if ($link) {
-  //echo $link;
+$cookie=$base_cookie."/iptv.dat";
+$ua="Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:149.0) Gecko/20100101 Firefox/149.0";
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $link);
-  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-  curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 10.0; rv:64.0) Gecko/20100101 Firefox/64.0');
+  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
   curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER  ,1);  // RETURN THE CONTENTS OF THE CALL
   curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+  curl_setopt($ch, CURLOPT_COOKIEFILE,$cookie);
   curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
   curl_setopt($ch, CURLOPT_TIMEOUT, 15);
   $m3ufile = curl_exec($ch);
-  //echo $m3ufile;
   curl_close($ch);
-} else {
-$m3ufile = file_get_contents($m3uFile);
-}
-//echo $m3uFile;
-//echo urlencode($m3uFile);
-$m3ufile = remove_empty_lines($m3ufile);
+  $m3ufile = str_replace('["',"",$m3ufile);
+  $m3ufile = str_replace('"]',"",$m3ufile);
 //echo $m3ufile;
-//#EXTINF:-1 tvg-id="" tvg-name="COLINDE ROMANESTI" tvg-logo="https://i.scdn.co/image/ab67616d0000b273e9af6e6ace7bae5f933bdc04" group-title="??ROMANIA TV??",COLINDE ROMANESTI
-$re = '/#EXTINF:(.+?)\n(#.*?\n)?((http|rtmp)\S+)/m';
-//$re= '/#EXTINF:(.+?)\n(#.*?\n)?(http\S+)/m';
-preg_match_all($re, $m3ufile, $matches);
-//print_r ($matches[0]);
-$tot=count($matches[0]);
-//echo $tot;
-//tvg-name="COLINDE ROMANESTI"
-//print_r ($matches[1]);
+//die();
 $rr=array();
 $rrr=array();
-//"
-  for ($z=0;$z<count($matches[1]);$z++) {
-   $file=$matches[3][$z];
-   $line=$matches[1][$z];
-   
-   if (preg_match("/tvg-name\=\"([^\"]+)\"/",$line,$x)) {
-     $title=trim($x[1]);
-     //echo $title;
-   } else {
-     $t=explode(",",$line);
-     $title=trim($t[count($t)-1]);
-   }
-   if (preg_match("/tvg-logo\=\"([^\"]+)\"/",$line,$i))
-    $logo=$i[1];
-   else
-    $logo="";
-   if (preg_match("/group-title\=\"([^\"]+)\"/",$line,$s))
-    $group1=$s[1];
-   else
-    $group1="no";
-   //echo $title."\n".$file."\n";
-  $rr[$group1][]=array($title,$file,$logo);
-  }
-  $rrr=array_keys($rr);
-//echo  count($rrr);
-//print_r ($rrr);
-////////////////////////////////////////////////////
-// save group ///
-//print_r ($rr[$group]);
-//echo "\n".$group."\n";
-$f=str_replace("|","",$group);
-$out="";
-//for ($j=0;$j<count($rr[$group]);$j++) {
-//  $out .="#EXTINF:-1,".$rr[$group][$j][0]."\n".$rr[$group][$j][1]."\n";
-//}
-//echo $out;
-//file_put_contents("pl/".$f.".m3u",$out);
-///////////////////////////////////////////////////
-if ($group <> "no")
-  $tot=count($rr[$group]);
+if (preg_match("/\<div class\=\"movie_Frame\"\>/",$m3ufile)) {
+$videos = explode('<div class="movie_Frame">', $m3ufile);
+//print_r ($videos);
+//die();
+unset($videos[0]);
+$n=0;
+$videos = array_values($videos);
+//print_r ($videos);
+foreach($videos as $video) {
+  $t1=explode("window.location.href='",$video);
+  $t2=explode("'",$t1[1]);
+  $ll=$t2[0];
+  $t1=explode("<p>",$video);
+  $t2=explode("</p>",$t1[1]);
+  $tt=$t2[0];
+  $tt=strip_tags($tt);
+  $rr[]=array($ll,$tt);
+}
+} else {
+$videos = explode('<div class="channel_Frame">', $m3ufile);
+//print_r ($videos);
+//die();
+unset($videos[0]);
+$n=0;
+$videos = array_values($videos);
+//print_r ($videos);
+foreach($videos as $video) {
+  $t1=explode("link:'",$video);
+  $t2=explode("'",$t1[1]);
+  $ll=$t2[0];
+  $t1=explode("<p>",$video);
+  $t2=explode("</p>",$t1[1]);
+  $tt=$t2[0];
+  $tt=strip_tags($tt);
+  $rr[]=array($ll,$tt);
+}
+}
+$tot=count($rr);
+//print_r ($rr);
+
+
+
 if ($tot>$step) {
 $k=intval($tot/$step) + 1;
 echo '<table border="1px" width="100%"><tr>'."\n\r";
@@ -277,13 +246,7 @@ for ($m=0;$m<$k;$m++) {
 }
 echo '</TR></table>';
 }
-//echo count($rrr);
-//echo "ggggggggggggg".$group;
-if ($group=="no" && count($rrr)>1 && $page==0) {
- echo '<table border="1px" width="100%">';
- echo "<TR><TD class='mp'><a href=".'"playlist_group.php?title='.urlencode($pg_tit)."&link=".urlencode($link).'">ByGroup</a></TD></TR>';
- echo '</table>';
-}
+
 
 echo '<table border="1px" width="100%">';
 //print_r ($matches);
@@ -297,11 +260,11 @@ echo '<TR>';
    echo '<TD class="nav" colspan="4" align="right"><a href="'.$next.'">&nbsp;&gt;&gt;&nbsp;</a></TD>'."\r\n";
 echo '</TR>';
 }
-if ($group <> "no") {
-//file_put_contents("vod.txt",json_encode($rr[$group]));
-for ($z=$step*$page;$z<min($step*($page+1),count($rr[$group]));$z++) {
-    $file=$rr[$group][$z][1];
-    $title=$rr[$group][$z][0];
+
+for ($z=$step*$page;$z<min($step*($page+1),count($rr));$z++) {
+   $file=$rr[$z][0];
+   $title=$rr[$z][1];
+
 
     $mod="direct";
     $from="fara";
@@ -348,64 +311,7 @@ for ($z=$step*$page;$z<min($step*($page+1),count($rr[$group]));$z++) {
    //}
   //}
 }
-/////////////////////////////////////////////////////////////////////
-} else {
-for ($z=$step*$page;$z<min($step*($page+1),count($matches[2]));$z++) {
-   $file=$matches[3][$z];
-   $line=$matches[1][$z];
-   if (preg_match("/tvg-name\=\"([^\"]+)\"/",$line,$x)) {
-     $title=trim($x[1]);
-   } else {
-     $t=explode(",",$line);
-     $title=trim($t[count($t)-1]);
-   }
 
-    $mod="direct";
-    $from="fara";
-    $t1=preg_replace("/^\|?RO\s*\|\s*/","",$title);
-    //echo $t1;
-    $val_prog="link=".urlencode(fix_t($t1));
-    $link="direct_link.php?link=".urlencode(fix_t($file))."&title=".urlencode(fix_t($title))."&from=".$from."&mod=direct";
-    $l="link=".urlencode(fix_t($file))."&title=".urlencode(fix_t($title))."&from=".$from."&mod=".$mod;
-    $fav_link="mod=add&title=".urlencode(fix_t($title))."&link=".urlencode($file);
-    $title=wordwrap($title,25,"\n",true);
-    if ($n == 0) echo "<TR>"."\n\r";
-    //if ($tast == "NU")
-    if ($flash == "flash")
-    echo '<TD class="cat" width="25%">'.'<a class ="imdb" id="myLink'.($w*1).'" href="'.$link.'" target="_blank">'.$title
-    .'<input type="hidden" id="imdb_myLink'.($w*1).'" value="'.$val_prog.'">
-    <input type="hidden" id="fav_myLink'.($w*1).'" value="'.$fav_link.'">
-    </a>';
-    else
-    echo '<TD class="cat" width="25%">'.'<a class ="imdb" id="myLink'.($w*1).'" onclick="ajaxrequest('."'".$l."')".'"'." style='cursor:pointer;'>".$title
-    .'<input type="hidden" id="imdb_myLink'.($w*1).'" value="'.$val_prog.'">
-    <input type="hidden" id="fav_myLink'.($w*1).'" value="'.$fav_link.'">
-    </a>';
-    $n++;
-    $w++;
-
-    //if ($tip_stream == "http" || $tip_stream == "https" || $tip_stream=="acestream" || $tip_stream=="sop") {
-    $t1=preg_replace("/^\|?RO\s*\|\s*/","",$title);
-    $l_prog="link=".urlencode(fix_t($t1));
-    if ($tast == "NU") {
-   	echo '<a onclick="prog('."'".$l_prog."')".'"'." style='cursor:pointer;'>"." *".'</a>
-   	<a onclick="addfav('."'".$fav_link."')".'"'." style='cursor:pointer;'>"." A".'</a>
-       </TD>';
-    if ($n > 3) {
-     echo '</TR>'."\n\r";
-     $n=0;
-    }
-    } else {
-    echo '</TD>';
-    if ($n > 3) {
-     echo '</TR>'."\n\r";
-     $n=0;
-    }
-    }
-   //}
-  //}
-}
-}
 
 if ($tot>$step) {
 echo '<TR>';

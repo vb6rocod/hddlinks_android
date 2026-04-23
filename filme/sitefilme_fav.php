@@ -7,6 +7,14 @@ $height="278px";
 $add_target="sitefilme_add.php";
 $fs_target="filme_link.php";
 $file=$base_fav."sitefilme.dat";
+$f_TMDB=$base_pass."tmdb.txt";
+$key = file_get_contents($f_TMDB);
+if (isset($_GET['fix']))
+ $fix="yes";
+else
+ $fix="no";
+$fav_target_fix="sitefilme_fav.php?fix=yes";
+set_time_limit(0);
 ?>
 <html><head>
 <meta http-equiv="content-type" content="text/html; charset=UTF-8">
@@ -90,26 +98,101 @@ function str_between($string, $start, $end){
 	if ($ini == 0) return ""; $ini += strlen($start); $len = strpos($string,$end,$ini) - $ini;
 	return substr($string,$ini,$len);
 }
+function rep_img($tit,$img,$key) {
+  $year="";
+  unfix_t($tit);
+  preg_match("/\(([^\)]*)\)$/",$tit,$y);
+  //print_r ($y);
+  if (isset($y[0])) {
+    $title=trim(preg_replace("/\(([^\)]*)\)$/","",$tit));
+    if (preg_match("/[1|2]\d{3}/",$y[1],$z))
+     $year=$z[0];
+  }
+  $tit=trim(preg_replace("/\(([^\)]*)\)$/","",$tit));
+  if (preg_match("/\s-\s/",$tit)) {
+   $t1=explode(" - ",$tit);
+   $tit=$t1[0];
+  }
+  //echo $tit."\n";
+ if ($year)
+   $l="https://www.themoviedb.org/search/movie?query=".rawurlencode($tit)."%20y:".$year;
+ else
+   $l="https://www.themoviedb.org/search/movie?query=".rawurlencode($tit);
+  $ch = curl_init();
+  curl_setopt($ch, CURLOPT_URL, $l);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+  curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/117.0');
+  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+  $h = curl_exec($ch);
+  curl_close($ch);
+  if (preg_match_all("/movie\/(\d+)\-/",$h,$m)) {
+  //print_r ($m);
+  $tmdb = $m[1][0];
+  $l="https://api.themoviedb.org/3/movie/".$tmdb."?api_key=".$key."&append_to_response=credits";
+  //echo $l;
+  $ch = curl_init();
+  curl_setopt($ch, CURLOPT_URL, $l);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+  curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows; U; Windows NT 6.1; en-US; rv:1.9.1.2) Gecko/20090729 Firefox/3.5.2 GTB5');
+  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+  curl_setopt($ch, CURLOPT_REFERER, "https://api.themoviedb.org");
+  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+  $h = curl_exec($ch);
+  curl_close($ch);
+   $p=json_decode($h,1);
+   if ($p["poster_path"])
+    $img="http://image.tmdb.org/t/p/w500".$p["poster_path"];
+
+ }
+ return $img;
+}
 $w=0;
 $n=0;
-echo '<H2>'.$page_title.'</H2>';
+echo '<H2>'.$page_title.' <a href="'.$fav_target_fix.'">(fix image)</a></H2>';
+//echo '<H2>'.$page_title.'</H2>';
 $arr=array();
 $h="";
 if (file_exists($file)) {
   $h=file_get_contents($file);
   $t1=explode("\r\n",$h);
+  $bfound=0;
   for ($k=0;$k<count($t1) -1;$k++) {
     $a=explode("#separator",$t1[$k]);
     if ($a) {
       $tit=trim($a[0]);
+      //$tit=prep_tit($tit);
       $l=trim($a[1]);
       $img=trim($a[2]);
+      //if ($k>300) {
+      if (preg_match("/sitefilme/",$img) && $fix=="yes") {
+       $img=rep_img($tit,$img,$key);
+       $bfound=1;
+       //if (!preg_match("/sitefilme/",$img)) {
+       
+       //}
+      }
+      //}
       //$arr[$tit]["link"]=$l;
       //$arr[$tit]["image"]=$img;
       $arr[$k]=array($tit,$l,$img);
     }
   }
 }
+if ($bfound==1) {
+  $out="";
+  //print_r ($arr);
+  foreach($arr as $key => $value) {
+    //$out =$out.$key."#separator".$arr[$key]["link"]."#separator".$arr[$key]["image"]."\r\n";
+    $out =$out.$arr[$key][0]."#separator".$arr[$key][1]."#separator".$arr[$key][2]."\r\n";
+  }
+  file_put_contents($file,$out);
+}
+//print_r ($arr);
 if ($arr) {
 asort($arr);
 $n=0;
@@ -134,10 +217,25 @@ foreach($arr as $key => $value) {
     $imdb="";
 	$link = urldecode($arr[$key][1]);
     $title = unfix_t(urldecode($arr[$key][0]));
+/////////////////////////////////////////
+  preg_match("/\(([^\)]*)\)$/",$title,$y);
+  //print_r ($y);
+  if (isset($y[0])) {
+    $tit_imdb=trim(preg_replace("/\(([^\)]*)\)$/","",$title));
+    if (preg_match("/[1|2]\d{3}/",$y[1],$z))
+     $year=$z[0];
+  }
+  $tit_imdb=trim(preg_replace("/\(([^\)]*)\)$/","",$tit_imdb));
+  if (preg_match("/\s-\s/",$tit_imdb)) {
+   $t1=explode(" - ",$tit_imdb);
+   $tit_imdb=$t1[0];
+  }
+/////////////////////////////////////////
     $image=urldecode($arr[$key][2]);
+    //$image="blank.jpg";
     $link_f=$fs_target.'?file='.urlencode($link).'&title='.urlencode(fix_t($title));
   if ($n==0) echo '<TR>'."\r\n";
-  $val_imdb="tip=movie&title=".urlencode(fix_t($title))."&year=".$year."&imdb=".$imdb;
+  $val_imdb="tip=movie&title=".urlencode(fix_t($tit_imdb))."&year=".$year."&imdb=".$imdb;
   $fav_link="file=&mod=del&title=".urlencode(fix_t($title))."&link=".urlencode($link)."&image=".urlencode($image)."&year=".$year;
   if ($tast == "NU") {
     echo '<td class="mp" width="25%"><a href="'.$link_f.'" id="myLink'.$w.'" target="_blank" onmousedown="isKeyPressed(event)">

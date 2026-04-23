@@ -2992,6 +2992,7 @@ $host="https://".parse_url($link)['host'];
   $l=$host."/wp-admin/admin-ajax.php";
   //$post="action=show_player&id=".$id."&nonce=".$nonce;
   $post="action=get_video_source&tab=tab1&post_id=".$id;
+  //action=get_video_source&tab=tab3&post_id=1406
   //echo $post;
   $head=array('Accept: */*',
   'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
@@ -3016,8 +3017,27 @@ $host="https://".parse_url($link)['host'];
       curl_close($ch);
       //echo $h1;
       $x=json_decode($h1,1)['data'];
+      // tab3 source
+      $post="action=get_video_source&tab=tab3&post_id=".$id;
+      $ch = curl_init();
+      curl_setopt($ch, CURLOPT_URL, $l);
+      curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+      curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+      curl_setopt($ch, CURLOPT_USERAGENT, $ua);
+      curl_setopt($ch, CURLOPT_HTTPHEADER, $head);
+      curl_setopt($ch, CURLOPT_POST,1);
+      curl_setopt($ch, CURLOPT_POSTFIELDS,$post);
+      curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+      curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
+      curl_setopt($ch, CURLOPT_TIMEOUT, 25);
+      $h1 = curl_exec($ch);
+      curl_close($ch);
+      //echo $h1;
+      $xx=json_decode($h1,1)['data'];
+      //print_r ($xx);
       //$l2=str_replace("\${encodeURIComponent(response.data)}",urlencode($x),$l2);
       $l2="https://ivanturbinca.com/embed-video2.php?source=".urlencode($x);
+      $l2="https://ivanturbinca.com/embed-video-rds.php?source=".urlencode($x);
       //echo $l2;
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $l2);
@@ -3032,12 +3052,14 @@ $host="https://".parse_url($link)['host'];
   //curl_setopt($ch,CURLOPT_HTTPHEADER,$head);
   $h = curl_exec($ch);
   $l3="https://ivanturbinca.com/securetoken.php?source=".urlencode($x);
+  $l3="https://rds.live/token_proxy_rds.php?source=".urlencode($x)."&page=https%3A%2F%2Frds.live%2F";
   curl_setopt($ch, CURLOPT_URL, $l3);
   $h1 = curl_exec($ch);
   //echo $h1;
   curl_close($ch);
   $y=json_decode($h1,1)['token'];
-  $link=$x."?token=".$y."&remote=no_check_ip";
+  $z=json_decode($h1,1)["remote"];
+  $link=$x."?token=".$y."&remote=".urlencode($z);
   //$t1=explode('source src="',$h);
   //$t2=explode('"',$t1[1]);
   //$link=$t2[0];
@@ -3046,6 +3068,23 @@ $host="https://".parse_url($link)['host'];
   //$host="https://ivanturbinca.com";
       //$l="https://ivanturbinca.com/embed-video.php?source=https%3A%2F%2Fp13.magicplaces.eu%2Fdigisport1hd%2Findex.m3u8&token=fa7dc1ca48ad7e1af7e10fa654c3e16b95207cd7955e5174826313f9bb29c1a0&timestamp=1733641503";
       if ($flash <> "flash") $link .="|Referer=".urlencode($host1."/")."&Origin=".urlencode($host1)."&User-Agent=".urlencode($ua);
+////////////////////// tab3
+/*
+$xx="https://canale-tv.net/channel/primasp2.html";
+  $ch = curl_init();
+  curl_setopt($ch, CURLOPT_URL, $xx);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+  curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:149.0) Gecko/20100101 Firefox/149.0');
+  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+  curl_setopt($ch, CURLOPT_REFERER,"https://rds.live/");
+  //curl_setopt($ch, CURLOPT_ENCODING, "");
+  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+  //curl_setopt($ch,CURLOPT_HTTPHEADER,$head);
+  $h = curl_exec($ch);
+  echo $h;
+  */
 }
 if (strpos($link,"streamwat.ch") !== false) {
       $ua="Mozilla/5.0 (Windows NT 10.0; rv:81.0) Gecko/20100101 Firefox/81.0";

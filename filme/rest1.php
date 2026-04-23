@@ -140,6 +140,7 @@ if ($tip=="movie") {
  }
 }
  $key=base64_decode("dHJhaWxlcnMudG8tVUE=");
+ //echo $key;
 $head=array('X-Requested-With: XMLHttpRequest',
 "X-User-Agent: ".$key);
 //$head=array

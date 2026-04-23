@@ -4,14 +4,14 @@
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate"/>
 <meta http-equiv="Pragma" content="no-cache"/>
 <meta http-equiv="Expires" content="0"/>
-      <title>Diverse</title>
+      <title>Diverse (c)</title>
 <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
 <link rel="stylesheet" type="text/css" href="../custom.css" />
 <script type="text/javascript">
 function ajaxrequest(link) {
   var request =  new XMLHttpRequest();
   var the_data = "link=" + link;
-  request.open("POST","diverse.php", true);			// set the request
+  request.open("POST","diverse1.php", true);			// set the request
 
   // adds a header to tell the PHP script to recognize the data as is sent via POST
   request.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
@@ -52,7 +52,7 @@ function str_between($string, $start, $end){
 	if ($ini == 0) return ""; $ini += strlen($start); $len = strpos($string,$end,$ini) - $ini;
 	return substr($string,$ini,$len);
 }
-echo '<h2>Diverse</h2>';
+echo '<h2>Diverse (c)</h2>';
 echo '<table border="1px" width="100%">'."\n\r";
 //echo '<TR><td style="color:black;background-color:deepskyblue;text-align:center" colspan="3"><b>Digi24 Emisiuni</b></TD></TR>';
 $n=0;
@@ -103,7 +103,7 @@ foreach($m[0] as $video) {
     else
     $title1=$title;
     $link1="playlist.php?link=".urlencode($link)."&title=".urlencode($title);
-    $link1="iptv1.php?link=".urlencode($link)."&title=".urlencode($title);
+    //$link1="iptv1.php?link=".urlencode($link)."&title=".urlencode($title);
 	if ($n == 0) echo "<TR>"."\n\r";
 	echo '<TD class="cat">'.'<a class ="imdb" id="myLink'.$w.'" href="'.$link1.'" target="_blank">'.$title.'';
     echo '<input type="hidden" id="fav_myLink'.$w.'" value="'.urlencode($link).'"></a>'."\r\n";
