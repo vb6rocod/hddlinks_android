@@ -255,9 +255,9 @@ $k=0;
 $r=array();
 $s=array();
 if ($tip=="movie")
-  $l="https://vidsrc.net/embed/".$imdb."/";
+  $l="https://vsembed.su/embed/".$imdb."/";
 else
-  $l="https://vidsrc.net/embed/".$imdb."/".$sez."-".$ep."/";
+  $l="https://vsembed.su/embed/".$imdb."/".$sez."-".$ep."/";
 $l1=$l;
 $r[]=$l;
 $s[]="vidsrc";

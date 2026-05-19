@@ -99,9 +99,10 @@ $(document).on('keyup', '.imdb', isValid);
 <TR>
 <TD width="25%"><a href="tv/livetv_main.php" target="_blank">livetv.sx</a></TD>
 <!--<TD width="25%"><a href="tv/sons-stream.php" target="_blank">sons-stream</a></TD>-->
+<!--<TD width="25%"><a href="tv/livetv_ro.php" target="_blank">livetv(ro)</a></TD>-->
 <TD width="25%"><a href="tv/sportsonline.php" target="_blank">sportsonline</a></TD>
+
 <TD width="25%"></TD>
-<!--<TD width="25%"></TD>-->
 <TD width="25%"></TD>
 </TR>
 

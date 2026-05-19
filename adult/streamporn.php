@@ -211,9 +211,9 @@ if($tip=="release") {
 } else {
   $search=str_replace(" ","+",$tit);
   if ($page > 1)
-    $l="https://streamporn.pw/page/".$page."?s=".$search;
+    $l="https://streamporn.vip/page/".$page."?s=".$search;
   else
-    $l="https://streamporn.pw/?s=".$search;
+    $l="https://streamporn.vip/?s=".$search;
 }
 //echo $l;
 $host=parse_url($l)['host'];

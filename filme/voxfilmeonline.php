@@ -207,7 +207,7 @@ if ($page==1) {
    echo '<TD class="nav" colspan="4" align="right"><a href="'.$prev.'">&nbsp;&lt;&lt;&nbsp;</a> | <a href="'.$next.'">&nbsp;&gt;&gt;&nbsp;</a></TD>'."\r\n";
 }
 echo '</TR>'."\r\n";
-
+//voxfilmeonline.biz
 if($tip=="release") {
  if ($page>1)
   $l="https://voxfilmeonline.biz/"."page/".$page."/";

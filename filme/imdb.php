@@ -99,6 +99,12 @@ preg_match("/\s*[\s\-]?\s*(season|sezon|mini)\w*\s+(\d+)/i",$title,$m);
 //print_r ($m);
 $title=trim(preg_replace("/\s*[\s\-]?\s*(season|sezon|mini)\w*\s+(\d+)/i","",$title));
 $title=trim(preg_replace("/s\d{1,2}\s*e\d{1,2}/i","",$title));
+
+  if (preg_match("/\s\-\s/",$title)) {    //sitefilme
+   $t1=explode(" - ",$title);
+   //$title=$t1[0];
+   //echo $title;
+  }
 //echo $year."\n";
 //echo $title."\n";
 //$title=preg_replace("/\s*(\:|\-)\s+(season|sezon|minis)+(.*?)/i","",$title);
@@ -139,6 +145,7 @@ if (isset($_GET['tmdb'])) {
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
   curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/117.0');
   curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+  curl_setopt($ch, CURLOPT_HEADER,1);
   curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
   curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
   curl_setopt($ch, CURLOPT_TIMEOUT, 15);

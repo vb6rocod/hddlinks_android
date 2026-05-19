@@ -7,7 +7,8 @@ if (isset($_GET['link'])) {
   $link= $_GET['link'];
 } else
  $link="";
-$pg_tit=urldecode($_GET["title"]);
+$pg_tit=rawurldecode($_GET["title"]);
+//echo $pg_tit;
 if (isset($_GET['page']))
  $page=$_GET['page'];
 else
@@ -196,6 +197,7 @@ function remove_empty_lines($string) {
     //return $lines;
 }
 $m3uFile="pl/".$pg_tit;
+//echo $m3uFile;
 if ($link) {
   //echo $link;
   $ch = curl_init();

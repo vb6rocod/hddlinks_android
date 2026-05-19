@@ -9,7 +9,7 @@ function str_between($string, $start, $end){
 $main_title="streamporn";
 $target="streamporn.php";
 $fav_target="";
-$recente="https://streamporn.pw/movies/";
+$recente="https://streamporn.vip/movies/";
 ?>
 <html>
 <head>
@@ -56,7 +56,7 @@ echo $form;
 echo '</TR>';
 $n=0;
 $l="https://streamporn.pw/movies";
-$l="https://streamporn.org/movies";
+$l="https://streamporn.vip/movies";
 $ua = $_SERVER['HTTP_USER_AGENT'];
 $ua="Mozilla/5.0 (Windows NT 10.0; rv:68.0) Gecko/20100101 Firefox/68.0";
   $ch = curl_init();

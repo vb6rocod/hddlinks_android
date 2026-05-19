@@ -7,7 +7,16 @@ $flash=trim(file_get_contents($base_pass."player.txt"));
 $flash="flash";
 }
 $l=urldecode($_GET['file']);
+$host="https://".parse_url($l)['host'];
 $title=urldecode($_GET['title']);
+if (preg_match("/ref_filemoon/",$l)) {
+ $t1=explode("&ref_filemoon=",$l);
+ $l=$t1[0];
+ $ref_filemoon=parse_url($t1[1])['host'];
+} else
+ $ref_filemoon=$host;
+//echo $l;
+//https://weneverbeenfree.com/assets/videoPagesBundle-CQv1AfZY.js
 echo '
 <html>
 <head>
@@ -29,36 +38,92 @@ echo '
 <body>
 ';
   if (file_exists("1.txt")) unlink("1.txt");
+/*
+Referer: https://bysesukior.com/e/r35jmej2719k
+X-Embed-Origin: filmebro.com
+X-Embed-Referer: https://filmebro.com/
+X-Embed-Parent: https://bysesukior.com/e/r35jmej2719k
+*/
+// Thanks to Gujal00
+//https://github.com/Gujal00/ResolveURL/blob/master/script.module.resolveurl/lib/resolveurl/plugins/byse.py
+function base64_urlencode($str,$strip=true) {
+  $a=base64_encode($str);
+  $a=str_replace("+","-",$a);
+  $a=str_replace("_","/",$a);
+  if ($strip)
+   $a=preg_replace("/\=+$/","",$a);
+  return $a;
+}
+$v_id="cf363c6da0624e99a72bfebbc7804c37";
+$d_id="e9d276ab3be845d19876aae380d4d8b7";
+$confidence=0.91;
+        $t_data = array(
+            'viewer_id'=> $v_id,
+            'device_id' => $d_id,
+            'confidence' => $confidence,
+            'iat' => time(),
+            'exp' =>time() + 600
+        );
+$t_bdata=base64_urlencode(json_encode($t_data));
+
+$t_sig=openssl_digest(hash("sha256",$t_bdata),"sha256");
+
+$token=$t_bdata.".".$t_sig;
+$r=array("fingerprint" =>array(
+  "token" => $token,
+  "viewer_id" => $v_id,
+  "device_id" => $d_id,
+  "confidence" =>$confidence
+  ));
+//print_r ($r);
+$post=json_encode($r);
+
   $head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:144.0) Gecko/20100101 Firefox/144.0',
   'Accept: */*',
   'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
   'Accept-Encoding: deflate',
-  'Referer: https://filemoon.sx/',
-  'X-Embed-Parent: https://filemoon.sx');
+  'Referer: '.'https://'.$ref_filemoon.'/',
+  'X-Embed-Origin: '.$ref_filemoon,
+  'X-Embed-Parent: '.$l);
+//print_r ($head);
+$head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:150.0) Gecko/20100101 Firefox/150.0',
+'Accept: */*',
+'Accept-Language: ro-RO,ro-GB;q=0.9,en;q=0.8',
+'Accept-Encoding: deflate',
+'Referer: '.'https://'.$ref_filemoon.'/',
+'Content-Type: application/json',
+'X-Embed-Parent: '.$l,
+'Content-Length: '.strlen($post),
+'Origin: https://'.$ref_filemoon,
+'X-Embed-Origin: '.$ref_filemoon,
+'Connection: keep-alive');
   if (preg_match("/alias\=/",$l)) {
     $t1=explode("&alias=",$l);
     $host="https://".$t1[1];
   } else {
     $host="https://".parse_url($l)['host'];
   }
-   $id="45b1x7nh1ymm";
+   //$id="45b1x7nh1ymm";
    preg_match("/\/e\/(\w+)/",$l,$m);
    $id=$m[1];
    $l1=$host."/api/videos/".$id."/embed/playback";
    //echo $l;
-
+//post={"fingerprint":{"token":"eyJ2aWV3ZXJfaWQiOiJjZjM2M2M2ZGEwNjI0ZTk5YTcyYmZlYmJjNzgwNGMzNyIsImRldmljZV9pZCI6ImU5ZDI3NmFiM2JlODQ1ZDE5ODc2YWFlMzgwZDRkOGI3IiwiY29uZmlkZW5jZSI6MC42LCJpYXQiOjE3Nzc3MTcwMzMsImV4cCI6MTc3NzcxNzYzM30.5aZb1E9RgzkfC7Vtb83JFx4Tw8S2NV74-p6_EBsF5XM","viewer_id":"cf363c6da0624e99a72bfebbc7804c37","device_id":"e9d276ab3be845d19876aae380d4d8b7","confidence":0.6}}
    $ch = curl_init();
    curl_setopt($ch, CURLOPT_URL, $l1);
    curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
    curl_setopt($ch, CURLOPT_HTTPHEADER,$head);
    curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+   curl_setopt($ch, CURLOPT_POST,1);
+   curl_setopt($ch, CURLOPT_POSTFIELDS,$post);
    curl_setopt($ch, CURLOPT_ENCODING,"");
    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-   curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
    curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
    curl_setopt($ch, CURLOPT_TIMEOUT, 25);
    $h = curl_exec($ch);
    curl_close($ch);
+//echo $h;
+//die();
 echo '<script>';
 echo "const jj='".trim($h)."';";
 echo '

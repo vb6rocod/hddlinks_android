@@ -144,6 +144,65 @@ if (preg_match("/filmeonlinegratis\.org/",$filelink)) {
   }
   curl_close($ch);
   $html=$h;
+} elseif (preg_match("/filmebro\./",$filelink)) {
+  $host="https://".parse_url($filelink)['host'];
+  $head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:120.0) Gecko/20100101 Firefox/120.0',
+  'Accept: */*',
+  'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
+  'Accept-Encoding: deflate',
+  'Origin: https://filmebro.com',
+  'Connection: https://filmebro.com',
+  'Referer: '.$host.'/');
+  $ch = curl_init();
+  curl_setopt($ch, CURLOPT_URL, $filelink);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+  curl_setopt($ch, CURLOPT_HTTPHEADER,$head);
+  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 25);
+  $h = curl_exec($ch);
+  curl_close($ch);
+  $t0=explode('<div class="player-results">',$h);
+  $t1=explode('mishka-post="',$t0[1]);
+  $t2=explode('"',$t1[1]);
+  $l=$host.$t2[0];
+  $t1=explode('post_id&quot;:&quot;',$h);
+  $t2=explode('&quot;',$t1[1]);
+  $post_id=$t2[0];
+  preg_match_all("/data-player-index\=\"(\d)/",$h,$m);
+  $post="post_id=".$post_id."&player_index=1";
+  $head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:149.0) Gecko/20100101 Firefox/149.0',
+  'Accept: text/html, application/json',
+  'Accept-Language: ro-RO,ro-GB;q=0.9,en;q=0.8',
+  'Accept-Encoding: deflate',
+  'Referer: https://filmebro.com/filme/the-matrix-4-resurrections/',
+  'Content-Type: application/x-www-form-urlencoded',
+  'Content-Length: '.strlen($post),
+  'Origin: https://filmebro.com',
+  'Alt-Used: filmebro.com',
+  'Connection: keep-alive');
+  $h="";
+  //echo $l;
+  $ch = curl_init();
+  curl_setopt($ch, CURLOPT_URL, $l);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+  curl_setopt($ch, CURLOPT_HTTPHEADER, $head);
+  curl_setopt($ch, CURLOPT_POST,1);
+  for ($k=0;$k<count($m[0]);$k++) {
+  $post="post_id=".$post_id."&player_index=".($m[1][$k]);
+  //echo $post;
+  curl_setopt($ch, CURLOPT_POSTFIELDS,$post);
+  //curl_setopt($ch, CURLOPT_HEADER,1);
+  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 25);
+  $h .= curl_exec($ch);
+}
+  curl_close($ch);
+  $html=$h;
+  //echo $h;
 } elseif (preg_match("/zfilmeonline\./",$filelink)) {
 
   $h=getHTML1($filelink);
@@ -1274,6 +1333,60 @@ $cookie=$base_cookie."hdpopcorns.dat";
    $html .=$h;
   }
 //echo $html;
+} elseif (strpos($filelink,"topfilmeonline.ro") !== false) {
+  $q=parse_url($filelink)['query'];
+  //echo $q;
+  parse_str($q,$r);
+  //print_r ($r);
+  //$r=parse_str($q);
+  //print_r ($r);
+  $id=$r['postviews_id'];
+  $l="https://topfilmeonline.ro/wp-admin/admin-ajax.php";
+  //action=postviews&nonce=b2005e98a1&postviews_id=4300&cache=false
+  //action=postviews&postviews_id=4295&nonce=b2005e98a1&cache=false
+  //https://topfilmeonline.ro/?trembed=0&trid=4300&trtype=1
+  $post="action=postviews&".$q."&cache=false";
+  //echo $post;
+  $l="https://topfilmeonline.ro/?trembed=0&trid=".$id."&trtype=1";
+  //echo $l;
+  $ua="Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:150.0) Gecko/20100101 Firefox/150.0";
+$head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:150.0) Gecko/20100101 Firefox/150.0',
+'Accept: */*',
+'Accept-Language: ro-RO,ro-GB;q=0.9,en;q=0.8',
+'Accept-Encoding: deflate',
+'Referer: https://topfilmeonline.ro/film/longlegs-colectionarul-de-suflete-online-subtitrat/',
+'Cache-Control: no-cache',
+'Origin: https://topfilmeonline.ro',
+'Sec-Fetch-Dest: empty',
+'Sec-Fetch-Mode: cors',
+'Sec-Fetch-Site: same-origin',
+'Connection: keep-alive');
+   /*
+   $ch = curl_init($l);
+   curl_setopt($ch, CURLOPT_HTTPHEADER, $head);
+   curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+   curl_setopt($ch, CURLOPT_RETURNTRANSFER  ,1);  // RETURN THE CONTENTS OF THE CALL
+   //curl_setopt($ch, CURLOPT_HEADER, true);
+   curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+   curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+   curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+   $h = curl_exec($ch);
+   curl_close ($ch);
+   */
+   //echo $h;
+  $options = array(
+        'http' => array(
+        'header'  => array($head),
+        'method'  => 'GET'
+    ),
+        "ssl"=>array(
+        "verify_peer"=>false,
+        "verify_peer_name"=>false,
+    )
+  );
+  $context  = stream_context_create($options);
+  $h = @file_get_contents($l, false, $context);
+   $html .=$h;
 } elseif (strpos($filelink,"filmeonline.biz") !== false || strpos($filelink,"filmecinema.net") !== false) {
 
   $cookie=$base_cookie."biz.dat";
@@ -1515,7 +1628,7 @@ $ua = $_SERVER['HTTP_USER_AGENT'];
 $html=str_replace('\"','"',$html);
 $html=str_replace('\/','/',$html);
 $h_debug=$html;
-$html=str_replace("https","http",$html);
+//$html=str_replace("https","http",$html);
 $html=str_replace("&#038;","&",$html);
 $html=str_replace("&amp;","&",$html);
 $html=str_replace("&quot;","'",$html);
@@ -1937,8 +2050,8 @@ for ($i=0;$i<count($links);$i++) {
    //if (!$path && (!isset(parse_url($cur_link)["query"]) || !isset(parse_url($cur_link)["fragment"]))) $cur_link="";
    //if ($path=="/" && (!isset(parse_url($cur_link)["query"]) || !isset(parse_url($cur_link)["fragment"]))) $cur_link="";
    //echo "c=".$cur_link;
-   $pat="/hqq\.watch|xopenload\.|\/player\/script\.php|top\.mail\.ru|facebook|twitter|player\.swf";
-   $pat .="|img\.youtube|youtube\.com\/user|radioarad|\.jpg|\.png|\.gif|jq\/(js|css)";
+   $pat="/hqq\.watch|xopenload\.|\/player\/script\.php|top\.mail\.ru|facebook|twitter|player\.swf|\/\/api\.";
+   $pat .="|img\.youtube|youtube\.com\/user|radioarad|\.jpg|\.png|\.gif|jq\/(js|css)|blinksbobblepadding";
    $pat .="|fsplay\.net\?s|changejplayer\.js|validateemb\.php|restore_google\.php|clicksud\.biz|123formbuilder\.com|";
    $pat .="\.js|ExoLoader\.addZone|js\/api\/share\.js|hindipix\.in\/(js|style)|share\.php\?|brave\.com|affiliate\.rusvpn\.com|favicon\.ico/i";
    if (!preg_match($pat,$cur_link)) {
@@ -1966,6 +2079,31 @@ $user_agent     =   $_SERVER['HTTP_USER_AGENT'];
 $link_f=array_unique($link_f);
 //print_r ($link_f);
 //$n= count($link_f);
+//try to fix sub in m3u8 filemoon
+$srt1="";
+foreach($link_f as $k=>$val) {
+ $host1=parse_url($val)['host'];
+ $query=parse_url($val)['query'];
+ if (preg_match("/\=(http.*?\.(srt|vtt))/",$val,$m)) {
+  $srt1=$m[1];
+  break;
+ }
+
+ 
+}
+//echo $srt1;
+if ($srt1<>"") {
+foreach($link_f as $k=>$val) {
+ $query=parse_url($val)['query'];
+ if (!preg_match("/\=(http.*?\.(srt|vtt))/",$val)) {
+ if (!$query)
+   $link_f[$k]=$val."?c1_file=".$srt1;
+ else
+   $link_f[$k]=$val."&c1_file=".$srt1;
+ }
+}
+}
+//print_r ($link_f);
 $find_hqq = false;
 if (count ($link_f) > 0) {
 echo '
@@ -2085,7 +2223,7 @@ $server = parse_url($link_f[$k])["host"];
 if (preg_match($indirect,$server)) {
     echo '<TR><td class="link"><a href="hqq.php?file='.urlencode($link_f[$k]).'&title='.urlencode($pg).'" target="_blank">'.$server.'</a></TD></TR>';
 } else if(preg_match($filemoon,$server)) {
-    echo '<TR><td class="link"><a href="filemoon.php?file='.urlencode($link_f[$k]).'&title='.urlencode($pg).'" target="_blank">'.$server.'</a></TD></TR>';
+    echo '<TR><td class="link"><a href="filemoon.php?file='.urlencode($link_f[$k]."&ref_filemoon=".$filelink).'&title='.urlencode($pg).'" target="_blank">'.$server.'</a></TD></TR>';
 } else if(preg_match($vsembed1,$server)) {
     echo '<TR><td class="link"><a href="vsembed.php?file='.urlencode($link_f[$k]).'&title='.urlencode($pg).'" target="_blank">'.$server.'</a></TD></TR>';
 } else {
@@ -2139,6 +2277,11 @@ preg_match_all("/\<iframe(.*?)src\=(\"|\')(.*?)(\"|\')/msi",$h_debug,$m);
 for ($k=0;$k<count($m[3]);$k++) {
   echo $m[3][$k]."<BR>";
 }
+echo '<font color="yellow">';
+foreach($link_f as $k=>$val) {
+ echo $val."<BR>";
+}
+echo '</font>';
 }
 ?>
 <!--

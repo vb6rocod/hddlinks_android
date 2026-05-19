@@ -10,11 +10,11 @@ else
 $page_title="Seriale favorite";
 $width="200px";
 $height="278px";
-$add_target="veziseriale_s_add.php";
-$fs_target="veziseriale_s_ep.php";
-$file=$base_fav."veziseriale_s.dat";
-$fav_target_fix="veziseriale_s_fav.php?host=".$host."&fix=yes";
-$fav_target="veziseriale_s_fav.php?host=".$host;
+$add_target="filmebro_s_add.php";
+$fs_target="filmebro_s_ep.php";
+$file=$base_fav."filmebro_s.dat";
+$fav_target_fix="filmebro_s_fav.php?host=".$host."&fix=yes";
+$fav_target="filmebro_s_fav.php?host=".$host;
 ?>
 <html><head>
 <meta http-equiv="content-type" content="text/html; charset=UTF-8">

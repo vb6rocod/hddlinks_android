@@ -200,6 +200,7 @@ $flash=trim(file_get_contents($base_pass."player.txt"));
 } else {
 $flash="direct";
 }
+$flash="direct";
 if (file_exists($base_pass."mx.txt")) {
 $mx=trim(file_get_contents($base_pass."mx.txt"));
 } else {
@@ -211,21 +212,21 @@ $tast=trim(file_get_contents($base_pass."tastatura.txt"));
 $tast="NU";
 }
 $user_agent     =   $_SERVER['HTTP_USER_AGENT'];
-if ($flash != "mp") {
-if (preg_match("/android|ipad/i",$user_agent) && preg_match("/chrome|firefox|mobile/i",$user_agent)) $flash="chrome";
-}
+
+$flash="flash";
 $n=0;
 $w=0;
 $r=array();
 $l="https://sportsonline.so/247.txt";
 //$l="https://sportsonline.gl/prog.txt";
 $l="https://sportzonline.live/247.txt";
+$l="https://sportzonline.click/247.txt";
 $head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/110.0',
 'Accept: */*',
 'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
 'Accept-Encoding: deflate',
-'Referer: https://sportzonline.live/',
-'Origin: https://sportzonline.live'
+'Referer: https://sportzonline.click/',
+'Origin: https://sportzonline.click'
 );
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $l);
@@ -268,6 +269,7 @@ for ($z=0;$z<count($r);$z++) {
     $mod="direct";
     $from="sportsonline";
     $link="direct_link.php?link=".urlencode(fix_t($file))."&title=".urlencode(fix_t($title))."&from=".$from."&mod=direct";
+    $link=$file;
     $l="link=".urlencode(fix_t($file))."&title=".urlencode(fix_t($title))."&from=".$from."&mod=".$mod;
     if ($n == 0) echo "<TR>"."\n\r";
     //if ($tast == "NU")
@@ -290,13 +292,13 @@ for ($z=0;$z<count($r);$z++) {
  echo '</table>';
  //<div class="channels">
 $r=array();
-$link="https://sportsonline.gl/prog.txt";
+$link="https://sportsonline.vc/prog.txt";
   $head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/110.0',
   'Accept: */*',
   'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
   'Accept-Encoding: deflate',
-  'Referer: https://primasport.one/',
-  'Origin: https://primasport.one'
+  'Referer: https://sportzonline.click/',
+  'Origin: https://sportzonline.click'
   );
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $link);
@@ -351,6 +353,7 @@ echo "<thead><tr><th>Hours</th><th>Event</th><th>link</th></tr></thead>";
     $mod="direct";
     $from="sportsonline";
     $link="direct_link.php?link=".urlencode(fix_t($file))."&title=".urlencode(fix_t($title))."&from=".$from."&mod=direct";
+    $link=$file;
     $l="link=".urlencode(fix_t($file))."&title=".urlencode(fix_t($title))."&from=".$from."&mod=".$mod;
 
     if ($flash == "flash")

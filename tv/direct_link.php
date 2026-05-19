@@ -2432,15 +2432,15 @@ if (preg_match("/spo?rt[sz]online\./",parse_url($link)['host']) || $from=="sport
   //echo $link;
   //$hw=1;    trebuie alta solutie.....
   $h1=parse_url($link)['host'];
-  $link=str_replace($h1,"sportzonline.live",$link);
+  $link=str_replace($h1,"v3.sportssonline.click",$link);
   $ua="Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/110.0";
   $ref="https://".parse_url($link)['host'];
   $head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/110.0',
   'Accept: */*',
   'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
   'Accept-Encoding: deflate',
-  'Referer: https://sportzonline.live/',
-  'Origin: https://sportzonline.live'
+  'Referer: https://v3.sportssonline.click/',
+  'Origin: https://v3.sportssonline.click'
   );
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $link);
@@ -2461,19 +2461,25 @@ if (preg_match("/spo?rt[sz]online\./",parse_url($link)['host']) || $from=="sport
   }
   //print_r ($m);
   //echo $l;
-
+   $out=$l."<BR>";
   $head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/110.0',
   'Accept: */*',
   'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
   'Accept-Encoding: deflate',
-  'Referer: https://sportzonline.live/',
-  'Origin: https://sportzonline.live'
+  'Referer: https://v3.sportssonline.click/',
+  'Origin: https://v3.sportssonline.click'
   );
   curl_setopt($ch, CURLOPT_HTTPHEADER, $head);
   curl_setopt($ch, CURLOPT_URL, $l);
   $h = curl_exec($ch);
   curl_close($ch);
+  $out .=$h;
+  //file_put_contents("1.html",$out);
   //echo $h;
+  $t1=explode("window._econfig='",$h);
+  $t2=explode("'",$t1[1]);
+  $a=base64_decode(base64_decode($t2[0]));
+  //echo $a;
   require_once("../filme/JavaScriptUnpacker.php");
   $jsu = new JavaScriptUnpacker();
   $t=explode('eval(function',$h);

@@ -464,6 +464,13 @@ if (preg_match($vsembed1,$filelink)) {
   //echo $link;
 }
 if (preg_match($vsembed,$filelink)) {
+  $q=parse_url($filelink)['query'];
+  parse_str($q,$r);
+  if (!file_exists($base_sub."sub_extern.srt")) {
+   if (isset($r['c1_file']))
+    $srt=$r['c1_file'];
+  }
+  //echo $filelink;
   $ua="Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:133.0) Gecko/20100101 Firefox/133.0";
   $head=array('User-Agent: '.$ua,
   'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
@@ -1012,7 +1019,7 @@ if (preg_match("/bflix\.gs/",$filelink)) {
 }
 if (preg_match("/streamflash\.sx/",$filelink)) {
   //https://streamflash.sx/watch.php?v=bgXaBdxBUY
-  $head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/112.0',
+  $head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:150.0) Gecko/20100101 Firefox/150.0',
   'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
   'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
   'Accept-Encoding: deflate',
@@ -1020,6 +1027,7 @@ if (preg_match("/streamflash\.sx/",$filelink)) {
   'Upgrade-Insecure-Requests: 1');
   //echo $filelink;
   $ua="Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/112.0";
+  $ua="Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:150.0) Gecko/20100101 Firefox/150.0";
   $host="https://streamflash.sx";
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL,$filelink);
@@ -1033,6 +1041,9 @@ if (preg_match("/streamflash\.sx/",$filelink)) {
   $h = curl_exec($ch);
   curl_close($ch);
   //echo $h;
+//////////////////////////////////////////////////
+
+/////////////////////////////////////////////////
   $t1=explode('track kind="subtitles"',$h);
   $t2=explode('src="',$t1[1]);
   $t3=explode('"',$t2[1]);
@@ -1040,10 +1051,20 @@ if (preg_match("/streamflash\.sx/",$filelink)) {
   $t1=explode('source src="',$h);
   $t2=explode('"',$t1[1]);
   //source src="stream.php?id=50289&amp;type=video"
+
   $link="https://streamflash.sx/".str_replace("&amp;","&",$t2[0]);
+  ///////////////////////////////////////////////////////
+
+  //////////////////////////////////////////////////////
+  if ($flash=="mp") {
+    $link="http://127.0.0.1:8080/scripts/filme/flash.php?file=".urlencode($link);
+  } else {
   if ($link && $flash <> "flash")  {
-   $link .="|Referer=".urlencode($host."/")."&Origin=".urlencode($host)."&User-Agent=".urlencode($ua);
+   $link .="|Referer=".urlencode($filelink);
   }
+  }
+  //if ($flash=="mp")
+  // $link="http://127.0.0.1:8080/scripts/filme/flash.php?file=".urlencode($link);
 }
 if (preg_match("/vidara\./",$filelink)) {
   //https://vidara.to/e/zuhZnkTqd9zpT
@@ -1051,13 +1072,26 @@ if (preg_match("/vidara\./",$filelink)) {
   $id=$m[1];
   
   $l="https://vidara.to/api/stream?filecode=".$id;
+  //echo $l;
+  $post='{"filecode":"'.$id.'","device":"web"}';
+  $l="https://vidara.to/api/stream";
   $head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:147.0) Gecko/20100101 Firefox/147.0',
   'Accept: */*',
   'Accept-Language: ro-RO,ro-GB;q=0.9,en;q=0.8',
   'Accept-Encoding: deflate',
   'Referer: '.$filelink);
+$host="https://".parse_url($filelink)['host'];
+$head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:150.0) Gecko/20100101 Firefox/150.0',
+'Accept: */*',
+'Accept-Language: ro-RO,ro-GB;q=0.9,en;q=0.8',
+'Accept-Encoding: deflate',
+'Referer: '.$filelink,
+'Content-Type: application/json',
+'Content-Length: '.strlen($post),
+'Origin: https://'.$host,
+'Connection: keep-alive');
   $ua="Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:147.0) Gecko/20100101 Firefox/147.0";
-  $host="https://".parse_url($filelink)['host'];
+
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL,$l);
   curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
@@ -1065,10 +1099,13 @@ if (preg_match("/vidara\./",$filelink)) {
   curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
   //curl_setopt($ch, CURLOPT_HEADER,1);
   curl_setopt($ch, CURLOPT_HTTPHEADER,$head);
+  curl_setopt($ch, CURLOPT_POST,1);
+  curl_setopt($ch, CURLOPT_POSTFIELDS,$post);
   curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
   curl_setopt($ch, CURLOPT_TIMEOUT, 15);
   $h = curl_exec($ch);
   curl_close($ch);
+  //echo $h;
   $r=json_decode($h,1);
   $link=$r['streaming_url'];
   $srt=$r['subtitles'][0]['file_path'];
@@ -8598,7 +8635,7 @@ if (count($pl) > 1) {
   $res=str_replace($rep1,"",$res);
   $res=str_replace($rep2,"",$res);
   $link=base64_decode($res);
-} elseif (strpos($filelink,"moviesroot.club") !== false) {
+} elseif (strpos($filelink,"moviesroot") !== false) {
   $ua="Mozilla/5.0 (Windows NT 10.0; rv:87.0) Gecko/20100101 Firefox/87.0";
   //echo $filelink;
   $ch = curl_init();
@@ -11568,13 +11605,19 @@ $head=array('Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image
   //https://vidmoly.to/embed-x92cku9tbojr.html
   //$filelink="https://vidmoly.biz/embed-kcvjecl6wfsz.html";
   //http://vidmoly.net/embed-kcvjecl6wfsz.html
+  //http://vidmoly.biz/embed-kee0zbvrrh0x.html
   //echo $filelink;
-  
+  //Thanks to Gujal00
+  //https://github.com/Gujal00/ResolveURL/blob/master/script.module.resolveurl/lib/resolveurl/plugins/vidmoly.py
+  preg_match("/embed\-(\w+)/",$filelink,$m);
+  $id=$m[1];
   $ua="Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:147.0) Gecko/20100101 Firefox/147.0";
 $head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:148.0) Gecko/20100101 Firefox/148.0',
 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
 'Accept-Language: ro-RO,ro-GB;q=0.9,en;q=0.8',
 'Accept-Encoding: deflate',
+'Referer: '.$filelink,
+'Cookie: cf_turnstile_demo_pass_'.$id.'=1',
 'Connection: keep-alive',
 'Upgrade-Insecure-Requests: 1',
 'Sec-Fetch-Dest: document',
@@ -11603,7 +11646,11 @@ $head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:148.0) Gec
   $link=$t2[0];
   //if (preg_match('/(\/\/[\.\d\w\-\.\/\\\:\?\&\#\%\_\,]*(\.(srt|vtt)))/', $h, $s))
   //$srt="https:".$s[1];
-  if (preg_match("/[\'\"](.+\.(srt|vtt))/",$h,$x))
+  if (preg_match("/file:\s*[\'\"](.+Romanian\.(srt|vtt))/",$h,$x))
+    $srt=fixurl($x[1],$filelink);
+  elseif (preg_match("/file:\s*[\'\"](.+\.(srt|vtt))/",$h,$x))
+    $srt=fixurl($x[1],$filelink);
+  elseif (preg_match("/http.+(srt|vtt)/",$filelink,$x))
     $srt=fixurl($x[1],$filelink);
   //print_r ($x);
   //if (preg_match("/\/srt\/.+\.(srt|vtt)/",$h,$s))
@@ -12171,7 +12218,7 @@ if ($link && $flash<>"flash")
   $ssl_version=7;
  else
   $ssl_version=0;
-  $ua="Mozilla/5.0 (Windows NT 10.0; rv:89.0) Gecko/20100101 Firefox/89.0";
+  $ua="Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:150.0) Gecko/20100101 Firefox/150.0";
   //$ua="Mozilla/5.0";
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $filelink);
