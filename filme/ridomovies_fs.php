@@ -55,14 +55,14 @@ $imdbid="";
 <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.0/jquery.min.js"></script>
 <script type="text/javascript">
 function openlink1(link) {
-  link1=document.getElementById('file').value;
+  link1=document.getElementById('file1').value;
   msg="link1.php?file=" + link1 + "&title=" + link;
   window.open(msg);
 }
 function openlink(link) {
   on();
   var request =  new XMLHttpRequest();
-  link1=document.getElementById('file').value;
+  link1=document.getElementById('file1').value;
   var the_data = "link=" + link1 + "&title=" + link;
   var php_file="link1.php";
   request.open("POST", php_file, true);			// set the request
@@ -125,24 +125,60 @@ function off() {
 </head>
 <body>
 <a href='' id='mytest1'></a>
+<input type="hidden" id="file1" value="">
 <?php
 echo '<h2>'.$tit.$tit2.'</H2>';
 echo '<BR>';
 $r=array();
 $s=array();
+ $DEFAULT_CIPHERS =array(
+            "ECDHE+AESGCM",
+            "ECDHE+CHACHA20",
+            "DHE+AESGCM",
+            "DHE+CHACHA20",
+            "ECDH+AESGCM",
+            "DH+AESGCM",
+            "ECDH+AES",
+            "DH+AES",
+            "RSA+AESGCM",
+            "RSA+AES",
+            "!aNULL",
+            "!eNULL",
+            "!MD5",
+            "!DSS",
+            "!ECDHE+SHA",
+            "!AES128-SHA",
+            "!DHE"
+        );
+ if (defined('CURL_SSLVERSION_TLSv1_3'))
+  $ssl_version=7;
+ else
+  $ssl_version=0;
 //echo $link;
 //https://ridomovies.tv/movies/the-movie-star-and-the-cowboy
 //https://ridomovies.tv/core/api/movies/the-movie-star-and-the-cowboy/videos
 $host="https://".parse_url($link)['host'];
 //$movie=substr(strrchr($link, "/"), 1);
 //$link=$host."/core/api/movies/".$movie."/videos";
-$ua="Mozilla/5.0 (Windows NT 10.0; rv:75.0) Gecko/20100101 Firefox/75.0";
+$head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:148.0) Gecko/20100101 Firefox/148.0',
+'Accept: */*',
+'Accept-Language: ro-RO,ro-GB;q=0.9,en;q=0.8',
+'Accept-Encoding: deflate,',
+'Referer: https://ridomovies.tv/movies-rd1',
+'X-Requested-With: XMLHttpRequest',
+'Connection: keep-alive',
+'Sec-Fetch-Dest: empty',
+'Sec-Fetch-Mode: cors',
+'Sec-Fetch-Site: same-origin');
+//echo $l;
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $link);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
+  curl_setopt($ch, CURLOPT_HTTPHEADER, $head);
   curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
   curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+  curl_setopt($ch, CURLOPT_SSL_CIPHER_LIST, implode(":", $DEFAULT_CIPHERS));
+  curl_setopt($ch, CURLOPT_SSLVERSION,$ssl_version);
   curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
   curl_setopt($ch, CURLOPT_TIMEOUT, 25);
   $h = curl_exec($ch);
@@ -168,9 +204,40 @@ $ua="Mozilla/5.0 (Windows NT 10.0; rv:75.0) Gecko/20100101 Firefox/75.0";
    $imdbid="";
    //echo $imdbid;
 //die();
-
-
+/////////////////////////////////////////////
+  $host="https://".parse_url($l)['host'];
+  $head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/114.0',
+  'Accept: application/json, text/plain, */*',
+  'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
+  'Accept-Encoding: deflate',
+  'Origin: '.$host,
+  'Connection: keep-alive',
+  'Referer: '.$host);
+     $ch = curl_init();
+     curl_setopt($ch, CURLOPT_URL, $l);
+     curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+     //curl_setopt($ch, CURLOPT_USERAGENT, $ua);
+     curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+     curl_setopt($ch, CURLOPT_HTTPHEADER,$head);
+     //curl_setopt($ch, CURLOPT_POST,1);
+     //curl_setopt($ch, CURLOPT_POSTFIELDS,$post);
+     curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+     curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
+     curl_setopt($ch, CURLOPT_TIMEOUT, 25);
+     $h = curl_exec($ch);
+     curl_close($ch);
+     //echo $h;
+     preg_match("/var\s+([^\=]+)\=\s*([^\(]+)\(\[([^\]]+)\]\);/",$h,$n);
+     //print_r ($n);
 //print_r ($r);
+$t1=explode("function ".$n[2],$h);
+$t2=explode("</script>",$t1[1]);
+$out="<script>"."\n";
+$out .="function ".$n[2].$t2[0]."\n";
+$out .="document.getElementById('file1').value='".$l."#'+".trim($n[1]).";";
+//$out=str_replace("return unmix;","document.getElementById('server').innerHTML=unmix;alert(unmix);"."\n"."return unmix;",$out);
+$out .="\n"."</script>";
+echo $out;
 echo '<table border="1" width="100%">';
 echo '<TR><TD class="mp">Alegeti un server: Server curent:<label id="server">'.$s[0].'</label>
 <input type="hidden" id="file" value="'.urlencode($r[0]).'"></td></TR></TABLE>';

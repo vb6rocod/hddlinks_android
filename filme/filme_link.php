@@ -144,6 +144,110 @@ if (preg_match("/filmeonlinegratis\.org/",$filelink)) {
   }
   curl_close($ch);
   $html=$h;
+} elseif (preg_match("/filmebunehd1\./",$filelink)) {
+  $host="https://".parse_url($filelink)['host'];
+  $head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:120.0) Gecko/20100101 Firefox/120.0',
+  'Accept: */*',
+  'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
+  'Accept-Encoding: deflate',
+  'Origin: '.$host,
+  'Referer: '.$host.'/');
+  $ch = curl_init();
+  curl_setopt($ch, CURLOPT_URL, $filelink);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+  curl_setopt($ch, CURLOPT_HTTPHEADER,$head);
+  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 25);
+  $h = curl_exec($ch);
+  curl_close($ch);
+  //echo $h;
+  preg_match_all("/\/player\/[^\"]+/",$h,$m);
+  //print_r ($m);
+  
+  $ch = curl_init();
+
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+  curl_setopt($ch, CURLOPT_HTTPHEADER,$head);
+  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 25);
+  $html=$h."\n";
+  for ($j=0;$j<count($m);$j++) {
+    $l=fixurl($m[$j][0],$filelink);
+    //echo $l;
+    curl_setopt($ch, CURLOPT_URL, $l);
+    $html .= curl_exec($ch);
+  }
+  curl_close($ch);
+} elseif (preg_match("/gofilme\./",$filelink)) {
+//echo $filelink;
+  $host="https://".parse_url($filelink)['host'];
+  $head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:120.0) Gecko/20100101 Firefox/120.0',
+  'Accept: */*',
+  'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
+  'Accept-Encoding: deflate',
+  'Origin: https://gofilme.sx',
+  'Referer: '.$host.'/');
+  $ch = curl_init();
+  curl_setopt($ch, CURLOPT_URL, $filelink);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+  curl_setopt($ch, CURLOPT_HTTPHEADER,$head);
+  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 25);
+  $h = curl_exec($ch);
+  curl_close($ch);
+  //echo $h;
+  $t1=explode("data-type='",$h);
+  $t2=explode("'",$t1[1]);
+  $tip=$t2[0];
+  $t1=explode("data-post='",$h);
+  $t2=explode("'",$t1[1]);
+  $id=$t2[0];
+  $t1=explode("data-nume='",$h);
+  $t2=explode("'",$t1[1]);
+  $ep=$t2[0];
+  $l="https://gofilme.sx/wp-json/zetaplayer/v2/".$id."/".$tip."/".$ep;
+  $head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:151.0) Gecko/20100101 Firefox/151.0',
+  'Accept: application/json, text/javascript, */*; q=0.01',
+  'Accept-Language: ro-RO,ro-GB;q=0.9,en;q=0.8',
+  'Accept-Encoding: deflate,',
+  'Referer: https://gofilme.sx/filme/no-strings-attached-2011/',
+  'X-Requested-With: XMLHttpRequest');
+  $ch = curl_init();
+  curl_setopt($ch, CURLOPT_URL,$l);
+  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER  ,1);  // RETURN THE CONTENTS OF THE CALL
+  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+  curl_setopt($ch, CURLOPT_HTTPHEADER,$head);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+  $h=curl_exec($ch);
+  curl_close($ch);
+  //echo $h;
+  $z=json_decode($h,1);
+  $t1=explode('src="',$z['embed_url']);
+  $t2=explode('"',$t1[1]);
+  $l=$t2[0];
+  $head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:151.0) Gecko/20100101 Firefox/151.0',
+  'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+  'Accept-Language: ro-RO,ro-GB;q=0.9,en;q=0.8',
+  'Accept-Encoding: deflate');
+  $ch = curl_init();
+  curl_setopt($ch, CURLOPT_URL,$l);
+  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER  ,1);  // RETURN THE CONTENTS OF THE CALL
+  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+  curl_setopt($ch, CURLOPT_HTTPHEADER,$head);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+  $html=curl_exec($ch);
+  curl_close($ch);
+  $html=str_replace("\u0026","&",$html);
 } elseif (preg_match("/filmebro\./",$filelink)) {
   $host="https://".parse_url($filelink)['host'];
   $head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:120.0) Gecko/20100101 Firefox/120.0',
@@ -151,7 +255,6 @@ if (preg_match("/filmeonlinegratis\.org/",$filelink)) {
   'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
   'Accept-Encoding: deflate',
   'Origin: https://filmebro.com',
-  'Connection: https://filmebro.com',
   'Referer: '.$host.'/');
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $filelink);
@@ -1725,7 +1828,7 @@ $s=$s."powvideo|povvideo|cloudvideo|vidtodo|vidcloud\.co|flashx\.|vidcloud\d*";
 $s=$s."|putload\.|event\.2target\.net|fembed\.com|streamcherry\.com|hideiframe\.com|";
 $s=$s."filmeonlinehd\.tv\/sharemovie|rovideo\.net\/video|flix555\.com|gamovideo\.com|playhd\.fun|idtbox\.com|";
 $s=$s."bitporno\.com|thevideobee\.to|mangovideo\.|smartshare\.tv|datoporn\.co|xstreamcdn\.com|onlystream\.tv|";
-$s=$s."database\.seriale|drive\.google\.com|videomega\.|vidload\.co|mixdro{0,}p\.|mdy48tn97\.|mystream\.to|mstream\.cloud";
+$s=$s."database\.seriale|drive\.google\.com|videomega\.|vidload\.co|mixdro{0,}p\.|mdy48tn97\.|mystream\.to|mstream\.cloud|cdn\.filmehd\.to";
 $s=$s."|hxload\.|bazavox\.com|cloud\.vidhubstr\.org|vidia\.tv|gomostream\.com|viduplayer\.com|leaked-celebrities\.";
 $s=$s."|prostream\.to|videobin\.co|upstream\.to|playtvid\.com|jetload\.net|vidfast\.co|clipwatching\.";
 $s=$s."|(video|player)\.filmeserialeonline\.org|streamwire\.|cloudvid\.icu|mstream\.xyz|streamhoe\.online|videyo\.";
@@ -1736,8 +1839,8 @@ $s=$s."|sbembed\.com|sbembed1\.com|sbplay\.|sbvideo\.net|streamsb\.net|sbplay\.o
 $s=$s."|\w+ssb\.|lvturbo\.|sb\w+\.|sbbrisk\.|sbanh\.|sblanh\.|sbchill\.|sbfast\.com|sblongvu\.com|sbfull\.|sbthe\.|sbspeed\.|tubeload\.|embedo\.|filemoon\.|utbrgebzvhfa\.";
 $s=$s."|streamhide\.|moonmov\.pro|vgfplay\.|fslinks\.|embedv\.|furher\.|truepoweroflove\.|streamdav\.";
 $s=$s."|d0o0d\.|mdfx\w+|do0od|lulu\.st|filmm\.link\/\d+|vinovo\.to|stf\d+\.vip\/\d+";
-$s=$s."|movearnpre|minochinos|vidmoly|vidnest|strmup\.";
-$s=$s."|embed4me\.|strp2p\.live|vidara\.to|vsembed\.";
+$s=$s."|movearnpre|minochinos|vidmoly|embedsun|vidnest|strmup\.";
+$s=$s."|embed4me\.|strp2p\.live|vidara\.to|vsembed\w*\.";
 $s=$s."|vembed\.net|vgembed\.|luluvdo+\.com|luluvid\.|guard|voe\.|mdbekjwqa\.|mdzsmut|vidmoly\.to|vidhidevip\.|vidhidepre\.|streamflash\.sx/i";
 /////////////////////////////////////////////
 //$x=preg_grep($s,$links);
@@ -1872,7 +1975,7 @@ for ($i=0;$i<count($links);$i++) {
    }
  }
   //if (strpos($links[$i],"database.serialeonline.to") !== false) {
-  if (preg_match("/database\.serialeonline\.to|database\.seriale\-online\./",$links[$i])) {
+  if (preg_match("/database\.serialeonline\.to|database\.seriale\-online\.|cdn\.filmehd\.to/",$links[$i])) {
   if (strpos($links[$i],"https://database") === false)
   $l=trim("https:".$links[$i]);
   else

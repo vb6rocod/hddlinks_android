@@ -96,9 +96,10 @@ function ajaxrequest(url) {
        $.fancybox.close();
        setTimeout(function(){ document.getElementById(id_link).focus(); }, 500);
      } else if (charCode == "49" && e.target.type != "text") {
-       msg="tv/w.php";
-       document.getElementById("fancy").href=msg;
-       document.getElementById("fancy").click();
+       msg="tv/vremea.php";
+       window.open(msg);
+       //document.getElementById("fancy").href=msg;
+       //document.getElementById("fancy").click();
      } else if (charCode == "50" && e.target.type != "text") {
        window.open("https://fiber.google.com/speedtest/");
     }

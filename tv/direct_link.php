@@ -3,6 +3,29 @@
 
 error_reporting(0);
 $hw=2;
+ $DEFAULT_CIPHERS =array(
+            "ECDHE+AESGCM",
+            "ECDHE+CHACHA20",
+            "DHE+AESGCM",
+            "DHE+CHACHA20",
+            "ECDH+AESGCM",
+            "DH+AESGCM",
+            "ECDH+AES",
+            "DH+AES",
+            "RSA+AESGCM",
+            "RSA+AES",
+            "!aNULL",
+            "!eNULL",
+            "!MD5",
+            "!DSS",
+            "!ECDHE+SHA",
+            "!AES128-SHA",
+            "!DHE"
+        );
+ if (defined('CURL_SSLVERSION_TLSv1_3'))
+  $ssl_version=7;
+ else
+  $ssl_version=0;
 include ("../common.php");
 function get_max_res($h,$l) {
   // $h -- > contents of "master.m3u8"
@@ -2964,14 +2987,17 @@ if (preg_match("/godzlive\.com|b\ducast\.com|anarchy\-stream|processbigger\.com/
 }
 if ($from == "rds.live") {
 //echo $link;
+$ua="Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:147.0) Gecko/20100101 Firefox/147.0";
 $host="https://".parse_url($link)['host'];
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $link);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-  curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 10.0; rv:55.0) Gecko/20100101 Firefox/55.0');
+  curl_setopt($ch, CURLOPT_USERAGENT, $ua);
   curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
   curl_setopt($ch, CURLOPT_ENCODING, "");
   curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+  curl_setopt($ch, CURLOPT_SSL_CIPHER_LIST, implode(":", $DEFAULT_CIPHERS));
+  curl_setopt($ch, CURLOPT_SSLVERSION,$ssl_version);
   curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
   curl_setopt($ch, CURLOPT_TIMEOUT, 15);
   //curl_setopt($ch,CURLOPT_HTTPHEADER,$head);
@@ -2998,6 +3024,7 @@ $host="https://".parse_url($link)['host'];
   $l=$host."/wp-admin/admin-ajax.php";
   //$post="action=show_player&id=".$id."&nonce=".$nonce;
   $post="action=get_video_source&tab=tab1&post_id=".$id;
+  $post="action=rds_get_source&post_id=".$id."&index=0";
   //action=get_video_source&tab=tab3&post_id=1406
   //echo $post;
   $head=array('Accept: */*',
@@ -3017,12 +3044,14 @@ $host="https://".parse_url($link)['host'];
       curl_setopt($ch, CURLOPT_POST,1);
       curl_setopt($ch, CURLOPT_POSTFIELDS,$post);
       curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+      curl_setopt($ch, CURLOPT_SSL_CIPHER_LIST, implode(":", $DEFAULT_CIPHERS));
+      curl_setopt($ch, CURLOPT_SSLVERSION,$ssl_version);
       curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
       curl_setopt($ch, CURLOPT_TIMEOUT, 25);
       $h1 = curl_exec($ch);
       curl_close($ch);
       //echo $h1;
-      $x=json_decode($h1,1)['data'];
+      $x=json_decode($h1,1)['data']['source'];
       // tab3 source
       $post="action=get_video_source&tab=tab3&post_id=".$id;
       $ch = curl_init();
@@ -3039,7 +3068,7 @@ $host="https://".parse_url($link)['host'];
       $h1 = curl_exec($ch);
       curl_close($ch);
       //echo $h1;
-      $xx=json_decode($h1,1)['data'];
+      $xx=json_decode($h1,1)['data']['source'];
       //print_r ($xx);
       //$l2=str_replace("\${encodeURIComponent(response.data)}",urlencode($x),$l2);
       $l2="https://ivanturbinca.com/embed-video2.php?source=".urlencode($x);

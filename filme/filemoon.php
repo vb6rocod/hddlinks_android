@@ -7,6 +7,7 @@ $flash=trim(file_get_contents($base_pass."player.txt"));
 $flash="flash";
 }
 $l=urldecode($_GET['file']);
+$l=str_replace("/f/","/e/",$l);
 $host="https://".parse_url($l)['host'];
 $title=urldecode($_GET['title']);
 if (preg_match("/ref_filemoon/",$l)) {
@@ -17,6 +18,7 @@ if (preg_match("/ref_filemoon/",$l)) {
  $ref_filemoon=$host;
 //echo $l;
 //https://weneverbeenfree.com/assets/videoPagesBundle-CQv1AfZY.js
+//https://weneverbeenfree.com/assets/videoPagesBundle-CcU3ouyW.js
 echo '
 <html>
 <head>
@@ -36,6 +38,7 @@ echo '
 </style>
 </head>
 <body>
+<div id="demo"></div>;
 ';
   if (file_exists("1.txt")) unlink("1.txt");
 /*
@@ -77,8 +80,9 @@ $r=array("fingerprint" =>array(
   ));
 //print_r ($r);
 $post=json_encode($r);
-
-  $head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:144.0) Gecko/20100101 Firefox/144.0',
+$ua="Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:150.0) Gecko/20100101 Firefox/150.0";
+$ua=$_SERVER['HTTP_USER_AGENT'];
+  $head=array('User-Agent: '.$ua,
   'Accept: */*',
   'Accept-Language: ro-RO,ro;q=0.8,en-US;q=0.6,en-GB;q=0.4,en;q=0.2',
   'Accept-Encoding: deflate',
@@ -86,7 +90,7 @@ $post=json_encode($r);
   'X-Embed-Origin: '.$ref_filemoon,
   'X-Embed-Parent: '.$l);
 //print_r ($head);
-$head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:150.0) Gecko/20100101 Firefox/150.0',
+$head=array('User-Agent: '.$ua,
 'Accept: */*',
 'Accept-Language: ro-RO,ro-GB;q=0.9,en;q=0.8',
 'Accept-Encoding: deflate',
@@ -98,8 +102,10 @@ $head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:150.0) Gec
 'X-Embed-Origin: '.$ref_filemoon,
 'Connection: keep-alive');
   if (preg_match("/alias\=/",$l)) {
-    $t1=explode("&alias=",$l);
-    $host="https://".$t1[1];
+    parse_str(parse_url($l)['query'],$x);
+    //$t1=explode("&alias=",$l);
+    $host="https://".$x['alias'];
+    //echo "zzzz";
   } else {
     $host="https://".parse_url($l)['host'];
   }
@@ -107,7 +113,7 @@ $head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:150.0) Gec
    preg_match("/\/e\/(\w+)/",$l,$m);
    $id=$m[1];
    $l1=$host."/api/videos/".$id."/embed/playback";
-   //echo $l;
+   //echo $l1;
 //post={"fingerprint":{"token":"eyJ2aWV3ZXJfaWQiOiJjZjM2M2M2ZGEwNjI0ZTk5YTcyYmZlYmJjNzgwNGMzNyIsImRldmljZV9pZCI6ImU5ZDI3NmFiM2JlODQ1ZDE5ODc2YWFlMzgwZDRkOGI3IiwiY29uZmlkZW5jZSI6MC42LCJpYXQiOjE3Nzc3MTcwMzMsImV4cCI6MTc3NzcxNzYzM30.5aZb1E9RgzkfC7Vtb83JFx4Tw8S2NV74-p6_EBsF5XM","viewer_id":"cf363c6da0624e99a72bfebbc7804c37","device_id":"e9d276ab3be845d19876aae380d4d8b7","confidence":0.6}}
    $ch = curl_init();
    curl_setopt($ch, CURLOPT_URL, $l1);
@@ -122,6 +128,7 @@ $head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:150.0) Gec
    curl_setopt($ch, CURLOPT_TIMEOUT, 25);
    $h = curl_exec($ch);
    curl_close($ch);
+   file_put_contents("2.txt",$h);
 //echo $h;
 //die();
 echo '<script>';
@@ -149,10 +156,56 @@ const e = JSON.parse(jj).playback;
     };
 
 
-        const r = xn(e.key_parts);
+        //const r = xn(e.key_parts);
 
-            n = ft(e.iv);
-            a = ft(e.payload);
+        //    n = ft(e.iv);
+        //    a = ft(e.payload);
+/////////////////////
+    function Sr(e) {
+        const t = e.replace(/-/g, "+").replace(/_/g, "/"),
+            r = t.length % 4 === 0 ? 0 : 4 - t.length % 4,
+            n = t + "=".repeat(r);
+        let a;
+        a=atob(n);
+        const o = new Uint8Array(a.length);
+        for(let x = 0; x < a.length; x += 1) o[x] = a.charCodeAt(x);
+        return o
+    };
+    function Nn(e){
+        const r = Array.isArray(e.key_parts) ? e.key_parts : [],
+            t = Qa(e.version, r.length);
+        if(t.length === 0) return r;
+        const n = t.map(o => Number(o)).filter(o => Number.isInteger(o) && o >= 1 && o <= r.length).map(o => r[o - 1]).filter(o => typeof o == "string" && o.length > 0);
+        return n.length > 0 ? n : r
+    };
+    function Tn(e){
+        const r = e.filter(a => typeof a == "string" && a.length > 0).map(Sr),
+            t = r.reduce((a, s) => a + s.length, 0),
+            n = new Uint8Array(t);
+        let o = 0;
+        for(const a of r) n.set(a, o), o += a.length;
+        return n
+    };
+    function Qa(e, r) {
+        const t = typeof e == "string" ? e.trim() : "",
+            o = Ga()[t];
+        if(!o) return [];
+        const [a, s] = o;
+        return a < 1 || s < 1 || a > r || s > r ? [] : [a, s]
+    };
+    function Ga() {
+        const e = {};
+        for(let n = 1; n <= 20; n += 1) {
+            const o = n ^ 0,
+                a = 31 - n ^ 0;
+            e[String(n)] = [o, a]
+        }
+        return e
+    };
+        const r = Tn(Nn(e)),
+            n = Sr(e.iv),
+            a = Sr(e.payload);
+////////////////////
             o = new Uint8Array(r.slice());
 
             x = new Uint8Array(n.slice());
@@ -167,6 +220,7 @@ const e = JSON.parse(jj).playback;
             iv : x
         }, s, d);
         K = new TextDecoder().decode(p);
+        document.getElementById("demo").innerHTML=K;
         $.post( "filemoon_link.php", { link: K} );
 })();
 

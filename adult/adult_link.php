@@ -87,7 +87,7 @@ if (preg_match("/jizzbunker\.com|familyporn1\.tv|zbporn\.com|trannytube11\.net|2
         "verify_peer_name"=>false,
     ),
    );
-
+//echo $l;
    $h = file_get_contents($l, false, stream_context_create($arrContextOptions));
 } elseif (preg_match("/xhamster\./",$l)) {
   $ua="Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/116.0";
@@ -1052,9 +1052,47 @@ $head=array('Accept: */*',
   $out=$t2[0];
   if (strpos($out,"http") === false && $out) $out="https:".$out;
 } else if (preg_match("/trannytube\.net|trannytube\.tv/",$host)) {
-  $t1=explode('source src="',$h);
-  $t2=explode('"',$t1[1]);
-  $out=$t2[0];
+//echo $host;
+//echo $l;
+// if (preg_match("/view1\/(\d+)\/(.+)/",$l,$m)) {
+//print_r ($m);
+$host=str_replace("www.","",$host);
+if (preg_match("/movies\/(\d+)\/(.+)/",$l,$m)) {
+$l1="https://".$host."/api/v1/galleries/".$m[1]."-".$m[2]."?tubeUrl=".$host."&ck=1&region=1&presets%5Bgallery%5D=thumbUrl&presets%5Bposter%5D=posterUrl&presets%5Btwitter_image%5D=twitterThumbUrl";
+
+$l1="https://".$host."/api/v1/galleries/".$m[1]."-".$m[2]."?tubeUrl=".$host."&ck=1&region=1&lang=en&presets%5Bgallery%5D=thumbUrl&presets%5Bposter%5D=posterUrl&presets%5Btwitter_image%5D=twitterThumbUrl";
+//echo $l1;
+$head=array('User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:152.0) Gecko/20100101 Firefox/152.0',
+'Accept: */*',
+'Accept-Language: ro-RO,ro-GB;q=0.9,en;q=0.8',
+'Accept-Encoding: deflate',
+'Referer: '.$l,
+'x-region: 1',
+'x-request-id: undefined');
+  $ch = curl_init();
+  curl_setopt($ch, CURLOPT_URL, $l1);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+  curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+  curl_setopt($ch, CURLOPT_ENCODING,"");
+  curl_setopt($ch, CURLOPT_HTTPHEADER,$head);
+  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+  $h1 = curl_exec($ch);
+  curl_close($ch);
+  //echo $h1;
+  $x=json_decode($h1,1);
+  //print_r ($x);
+  //$t1=explode('source src="',$h);
+  //$t2=explode('"',$t1[1]);
+  //$out=$t2[0];
+  $out=$x['urls']['mp4'][0];
+  } else {
+   preg_match_all("/https[^\"]+\.mp4/",$h,$m);
+   //print_r ($m);
+   $z=count($m[0])-1;
+   $out=$m[0][$z];
+  }
   $out=str_replace("&amp;","&",$out);
   $out=str_replace("\\","",$out);
   if (strpos($out,"http") === false && $out) $out="https:".$out;

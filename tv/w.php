@@ -43,6 +43,7 @@ $ua="Mozilla/5.0 (iPhone; CPU iPhone OS 5_0_1 like Mac OS X)";
       //$h=file_get_contents("http://localhost/mobile1/nou/w.html");
       //file_put_contents("w.html",$h);
 //echo $h;
+//die();
 //$t1=explode('window.env =',$h);
 $t1=explode('window.__data=JSON.parse("',$h);
 //$t1=explode('window.__data=JSON.parse("',$h);

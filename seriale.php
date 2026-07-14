@@ -55,8 +55,12 @@ document.onkeypress =  zx;
 <TD width="25%"><a href="filme/serialeonline.php?page=1&tip=release&title=serialeonline&link=" target="_blank">serialeonline</a></TD>
 <TD width="25%"><a href="filme/cineplex_s_main.php" target="_blank">cineplex (cont)</a></TD>
 </TR>
-
-
+<TR>
+<TD width="25%"><a href="filme/gofilme_s.php?page=1&tip=release&title=gofilme&link=" target="_blank">gofilme</a></TD>
+<TD width="25%"></TD>
+<TD width="25%"></TD>
+<TD width="25%"></TD>
+</TR>
 
 <!-- straine -->
 <TR>

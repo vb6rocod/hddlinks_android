@@ -16,7 +16,7 @@ $last_good="https://filmebunehd1.com";
 $host=parse_url($last_good)['host'];
 /* ==================================================== */
 $has_fav="no";
-$has_search="yes";
+$has_search="no";
 $has_add="yes";
 $has_fs="no";
 $fav_target="";
@@ -173,15 +173,15 @@ echo '</TR>'."\r\n";
 //https://filmebunehd1.com/page/2/?s=star
 if($tip=="release") {
  if ($page>1)
-  $l ="https://".$host."/category/movies/page/".$page."/";
+  $l ="https://".$host."/movie?page=".$page;
  else
-  $l="https://".$host."/category/movies/";
+  $l="https://".$host."/movie";
 } else {
   $search=str_replace(" ","+",$tit);
   if ($page > 1)
-    $l="https://".$host."/?s=".$search;
+    $l="https://".$host."//search?q=".$search."&page=".$page;
   else
-    $l="https://".$host."/page/".$page."/?s=".$search;
+    $l="https://".$host."//search?q=".$search;
 }
 $r=array();
 $ua = $_SERVER['HTTP_USER_AGENT'];
@@ -197,21 +197,36 @@ $ua = $_SERVER['HTTP_USER_AGENT'];
   $html = curl_exec($ch);
   curl_close($ch);
   //echo $html;
-
-  $videos = explode('<div id="post-', $html);
+  $html=str_replace('&quot;','"',$html);
+  //echo $html;
+  $videos = explode('<div class="movie-grid-card"', $html);
   unset($videos[0]);
   $videos = array_values($videos);
   foreach($videos as $video) {
-    $t1=explode('href="',$video);
+    $t1=explode('openMovieModal(',$video);
+    $t2=explode(')',$t1[1]);
+    $x=json_decode($t2[0],1);
+    //print_r ($x);
+    $t1=explode('slug":"',$video);
     $t2=explode('"',$t1[1]);
-    $link=$t2[0];
-    $t1=explode('data-src="',$video);
+    $slug=$x['slug'];
+    $link="https://filmebunehd1.com/watch/".$slug;
+    $t1=explode('src="',$video);
     $t2=explode('"',$t1[1]);
     $image=trim($t2[0]);
-    $t1=explode('rel="bookmark">',$video);
-    $t2=explode('<',$t1[1]);
-    $title=$t2[0];
-    array_push($r ,array($title,$link, $image));
+    $t1=explode('class="movie-title-section">',$video);
+    $t2=explode('</h4>',$t1[1]);
+    $title=trim(strip_tags($t2[0]));
+    $t1=explode('title":"',$video);
+    $t2=explode('"',$t1[1]);
+    $title1=$t2[0];
+    $t1=explode('year":',$video);
+    $t2=explode(',',$t1[1]);
+    $year=$t2[0];
+    $t1=explode('imdb_id":"tt',$video);
+    $t2=explode('"',$t1[1]);
+    $imdb=$t2[0];
+    array_push($r ,array($title,$link, $image,$imdb,$year));
 }
 $c=count($r);
 for ($k=0;$k<$c;$k++) {
@@ -231,7 +246,8 @@ for ($k=0;$k<$c;$k++) {
    $year="";
    $tit_imdb=$title;
   }
-  $imdb="";
+  $imdb=$r[$k][3];
+  $year=$r[$k][4];
   if (strpos($link,"filme") !== false && $title <> "DMCA") {
   if ($has_fs == "no")
     $link_f='filme_link.php?file='.urlencode($link).'&title='.urlencode(fix_t($title));

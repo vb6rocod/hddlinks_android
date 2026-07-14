@@ -117,6 +117,31 @@ echo '<h2>'.$page_title.'</H2>';
 echo '<table border="1px" width="100%">'."\n\r";
 //$l="https://rds.live/canale-tv/";
 //$link="https://emisiuni.live/canale-tv-1/";
+//https://rds.live/canale-tv-gratis/
+ $DEFAULT_CIPHERS =array(
+            "ECDHE+AESGCM",
+            "ECDHE+CHACHA20",
+            "DHE+AESGCM",
+            "DHE+CHACHA20",
+            "ECDH+AESGCM",
+            "DH+AESGCM",
+            "ECDH+AES",
+            "DH+AES",
+            "RSA+AESGCM",
+            "RSA+AES",
+            "!aNULL",
+            "!eNULL",
+            "!MD5",
+            "!DSS",
+            "!ECDHE+SHA",
+            "!AES128-SHA",
+            "!DHE"
+        );
+ if (defined('CURL_SSLVERSION_TLSv1_3'))
+  $ssl_version=7;
+ else
+  $ssl_version=0;
+$link="https://rds.live/canale-tv-gratis/";
 $ua="Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:147.0) Gecko/20100101 Firefox/147.0";
 //$link="http://xplatinmedia.com:8080/get.php?username=@mouilha20&password=IfXR3J0mu6kes9eunQPVa7kl8YO8iw&type=m3u";
   $ch = curl_init();
@@ -126,26 +151,29 @@ $ua="Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:147.0) Gecko/20100101 Firefox/
   curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
   curl_setopt($ch, CURLOPT_ENCODING, "");
   curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+  curl_setopt($ch, CURLOPT_SSL_CIPHER_LIST, implode(":", $DEFAULT_CIPHERS));
+  curl_setopt($ch, CURLOPT_SSLVERSION,$ssl_version);
   curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
   curl_setopt($ch, CURLOPT_TIMEOUT, 15);
   //curl_setopt($ch,CURLOPT_HTTPHEADER,$head);
   $html = curl_exec($ch);
   curl_close($ch);
   //echo $html;
-$videos = explode('<a class="post-thumbnail', $html);
+$videos = explode('class="channel-card"', $html);
 unset($videos[0]);
 $n=0;
 $videos = array_values($videos);
   foreach($videos as $video) {
-  $t1=explode('alt="',$video);
+  $t1=explode('data-title="',$video);
   $t2=explode('"',$t1[1]);
   $title=$t2[0];
   $t1=explode('href="',$video);
   $t2=explode('"',$t1[1]);
   $link=$t2[0];
-  $t1=explode('src="',$video);
-  $t2=explode('"',$t1[1]);
-  $image=$t2[0];
+  //$t1=explode('src="',$video);
+  //$t2=explode('"',$t1[1]);
+  //$image=$t2[0];
+  $image="";
     $val_prog="link=".urlencode(fix_t($title));
     $link1="direct_link.php?link=".$link."&title=".urlencode($title)."&from=rds.live&mod=direct";
     $l="link=".urlencode(fix_t($link))."&title=".urlencode(fix_t($title))."&from=rds.live&mod=direct";

@@ -68,16 +68,16 @@ $ua="Mozilla/5.0 (Windows NT 10.0; rv:68.0) Gecko/20100101 Firefox/68.0";
   curl_setopt($ch, CURLOPT_TIMEOUT, 15);
   $html = curl_exec($ch);
   curl_close($ch);
-$videos = explode('class="js-category', $html);
-unset($videos[0]);
-$videos = array_values($videos);
-foreach($videos as $video) {
-    $t=explode('href="',$video);
-    $t1=explode('"',$t[1]);
-    $link="https://www.trannytube.tv".$t1[0];
-    $t2=explode('title="',$video);
-    $t3=explode('"',$t2[1]);
-  	$title=$t3[0];
+  preg_match_all("/a href\=\"\/category\/([^\"]+)\" class\=\"u-crd-link\" aria-label\=\"([^\"]+)\"/",$html,$m);
+//$videos = explode('class="js-category', $html);
+//unset($videos[0]);
+//$videos = array_values($videos);
+for ($z=0;$z<count($m[0]);$z++) {
+    $link="https://www.trannytube.tv/category/".$m[1][$z];
+//    $t2=explode('title="',$video);
+//    $t3=explode('"',$t2[1]);
+//  	$title=$t3[0];
+    $title=$m[2][$z];
   	$title=prep_tit($title);
     $link=$target."?page=1&tip=release&link=".urlencode(fix_t($link))."&title=".urlencode(fix_t($title));
     if ($title) {

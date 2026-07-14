@@ -258,6 +258,7 @@ if ($tip=="movie")
   $l="https://vsembed.su/embed/".$imdb."/";
 else
   $l="https://vsembed.su/embed/".$imdb."/".$sez."-".$ep."/";
+//echo '<a href="vidsrc.php?link='.$l.'" target="_blank">kkk</a>';
 $l1=$l;
 $r[]=$l;
 $s[]="vidsrc";
